@@ -11,9 +11,9 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class DeliveryCarrier(models.Model):
-    _name = 'delivery.carrier'
+    _name = "delivery.carrier"
     _description = "Delivery Method"
-    _order = 'sequence, id'
+    _order = "sequence, id"
 
     """A Shipping Provider
 
@@ -37,8 +37,8 @@ class DeliveryCarrier(models.Model):
     # This field will be overwritten by internal shipping providers by adding their own type.
     delivery_type = fields.Selection(
         string="Provider",
-        selection=[('base_on_rule', "Based on Rules"), ('fixed', "Fixed Price")],
-        default='fixed',
+        selection=[("base_on_rule", "Based on Rules"), ("fixed", "Fixed Price")],
+        default="fixed",
         required=True,
     )
     allow_cash_on_delivery = fields.Boolean(
@@ -47,8 +47,8 @@ class DeliveryCarrier(models.Model):
     )
     integration_level = fields.Selection(
         help="Action while validating Delivery Orders.",
-        selection=[('rate', "Get Rate"), ('rate_and_ship', "Get Rate and Create Shipment")],
-        default='rate_and_ship',
+        selection=[("rate", "Get Rate"), ("rate_and_ship", "Get Rate and Create Shipment")],
+        default="rate_and_ship",
     )
     prod_environment = fields.Boolean(
         string="Environment", help="Set to True if your credentials are certified for production."
@@ -57,12 +57,12 @@ class DeliveryCarrier(models.Model):
         string="Debug logging", help="Log requests in order to ease debugging"
     )
     company_id = fields.Many2one(
-        comodel_name='res.company', related='product_id.company_id', store=True, readonly=False
+        comodel_name="res.company", related="product_id.company_id", store=True, readonly=False
     )
     product_id = fields.Many2one(
         string="Delivery Product",
-        comodel_name='product.product',
-        ondelete='restrict',
+        comodel_name="product.product",
+        ondelete="restrict",
         required=True,
     )
     tracking_url = fields.Char(
@@ -70,29 +70,29 @@ class DeliveryCarrier(models.Model):
         help="This option adds a link for the customer in the portal to track their package easily."
         " Use <shipmenttrackingnumber> as a placeholder in your URL.",
     )
-    currency_id = fields.Many2one(related='product_id.currency_id')
+    currency_id = fields.Many2one(related="product_id.currency_id")
 
     invoice_policy = fields.Selection(
         string="Invoicing Policy",
         help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
-        selection=[('estimated', "Estimated cost")],
-        default='estimated',
+        selection=[("estimated", "Estimated cost")],
+        default="estimated",
         required=True,
     )
 
     country_ids = fields.Many2many(
         string="Countries",
-        comodel_name='res.country',
-        relation='delivery_carrier_country_rel',
-        column1='carrier_id',
-        column2='country_id',
+        comodel_name="res.country",
+        relation="delivery_carrier_country_rel",
+        column1="carrier_id",
+        column2="country_id",
     )
     state_ids = fields.Many2many(
         string="States",
-        comodel_name='res.country.state',
-        relation='delivery_carrier_state_rel',
-        column1='carrier_id',
-        column2='state_id',
+        comodel_name="res.country.state",
+        relation="delivery_carrier_state_rel",
+        column1="carrier_id",
+        column2="state_id",
     )
     zip_prefix_ids = fields.Many2many(
         string="Zip Prefixes",
@@ -100,37 +100,37 @@ class DeliveryCarrier(models.Model):
         " expressions can be used to support countries with varying zip code lengths, i.e. '$'"
         " can be added to end of prefix to match the exact zip (e.g. '100$' will only match"
         " '100' and not '1000')",
-        comodel_name='delivery.zip.prefix',
-        relation='delivery_zip_prefix_rel',
-        column1='carrier_id',
-        column2='zip_prefix_id',
+        comodel_name="delivery.zip.prefix",
+        relation="delivery_zip_prefix_rel",
+        column1="carrier_id",
+        column2="zip_prefix_id",
     )
 
     max_weight = fields.Float(
         help="If the total weight of the order is over this weight, the method won't be available."
     )
     weight_uom_name = fields.Char(
-        string="Weight unit of measure label", compute='_compute_weight_uom_name'
+        string="Weight unit of measure label", compute="_compute_weight_uom_name"
     )
     max_volume = fields.Float(
         help="If the total volume of the order is over this volume, the method won't be available."
     )
     volume_uom_name = fields.Char(
-        string="Volume unit of measure label", compute='_compute_volume_uom_name'
+        string="Volume unit of measure label", compute="_compute_volume_uom_name"
     )
     must_have_tag_ids = fields.Many2many(
         string="Must Have Tags",
         help="The method is available only if at least one product of the order has one of these"
         " tags.",
-        comodel_name='product.tag',
-        relation='product_tag_delivery_carrier_must_have_rel',
+        comodel_name="product.tag",
+        relation="product_tag_delivery_carrier_must_have_rel",
     )
     excluded_tag_ids = fields.Many2many(
         string="Excluded Tags",
         help="The method is NOT available if at least one product of the order has one of these"
         " tags.",
-        comodel_name='product.tag',
-        relation='product_tag_delivery_carrier_excluded_rel',
+        comodel_name="product.tag",
+        relation="product_tag_delivery_carrier_excluded_rel",
     )
 
     carrier_description = fields.Text(
@@ -154,7 +154,7 @@ class DeliveryCarrier(models.Model):
         default=1000,
     )
 
-    can_generate_return = fields.Boolean(compute='_compute_can_generate_return')
+    can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
     return_label_on_delivery = fields.Boolean(
         string="Generate Return Label",
         help="The return label is automatically generated at the delivery.",
@@ -164,7 +164,7 @@ class DeliveryCarrier(models.Model):
         help="The return label can be downloaded by the customer from the customer portal.",
     )
 
-    supports_shipping_insurance = fields.Boolean(compute='_compute_supports_shipping_insurance')
+    supports_shipping_insurance = fields.Boolean(compute="_compute_supports_shipping_insurance")
     shipping_insurance = fields.Integer(
         string="Insurance Percentage",
         help="Shipping insurance is a service which may reimburse senders whose parcels are lost,"
@@ -174,20 +174,20 @@ class DeliveryCarrier(models.Model):
 
     price_rule_ids = fields.One2many(
         string="Pricing Rules",
-        comodel_name='delivery.price.rule',
-        inverse_name='carrier_id',
+        comodel_name="delivery.price.rule",
+        inverse_name="carrier_id",
         copy=True,
     )
 
     _margin_not_under_100_percent = models.Constraint(
-        'CHECK (margin >= -1)', "Margin cannot be lower than -100%"
+        "CHECK (margin >= -1)", "Margin cannot be lower than -100%"
     )
     _shipping_insurance_is_percentage = models.Constraint(
-        'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)',
+        "CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)",
         "The shipping insurance must be a percentage between 0 and 100.",
     )
 
-    @api.constrains('must_have_tag_ids', 'excluded_tag_ids')
+    @api.constrains("must_have_tag_ids", "excluded_tag_ids")
     def _check_tags(self):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
@@ -201,20 +201,20 @@ class DeliveryCarrier(models.Model):
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env[
-            'product.template'
+            "product.template"
         ]._get_weight_uom_name_from_ir_config_parameter()
 
     def _compute_volume_uom_name(self):
         self.volume_uom_name = self.env[
-            'product.template'
+            "product.template"
         ]._get_volume_uom_name_from_ir_config_parameter()
 
-    @api.depends('delivery_type')
+    @api.depends("delivery_type")
     def _compute_can_generate_return(self):
         for carrier in self:
             carrier.can_generate_return = False
 
-    @api.depends('delivery_type')
+    @api.depends("delivery_type")
     def _compute_supports_shipping_insurance(self):
         for carrier in self:
             carrier.supports_shipping_insurance = False
@@ -228,20 +228,20 @@ class DeliveryCarrier(models.Model):
             c.debug_logging = not c.debug_logging
 
     def install_more_provider(self):
-        exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
+        exclude_apps = ["delivery_barcode", "delivery_stock_picking_batch", "delivery_iot"]
         return {
-            'name': _('New Providers'),
-            'res_model': 'ir.module.module',
-            'view_mode': 'kanban,list',
-            'views': [
-                (self.env.ref('delivery.delivery_provider_module_kanban').id, 'kanban'),
-                (self.env.ref('delivery.delivery_provider_module_list').id, 'list'),
+            "name": _("New Providers"),
+            "res_model": "ir.module.module",
+            "view_mode": "kanban,list",
+            "views": [
+                (self.env.ref("delivery.delivery_provider_module_kanban").id, "kanban"),
+                (self.env.ref("delivery.delivery_provider_module_list").id, "list"),
             ],
-            'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
-            'type': 'ir.actions.act_window',
-            'help': _('''<p class="o_view_nocontent">
+            "domain": [["name", "=like", "delivery_%"], ["name", "not in", exclude_apps]],
+            "type": "ir.actions.act_window",
+            "help": _("""<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
-                </p>'''),
+                </p>"""),
         }
 
     def _is_available_for_order(self, order):
@@ -250,8 +250,8 @@ class DeliveryCarrier(models.Model):
         if not self._match(order.partner_shipping_id, order):
             return False
 
-        if self.delivery_type == 'base_on_rule':
-            return self.rate_shipment(order).get('success')
+        if self.delivery_type == "base_on_rule":
+            return self.rate_shipment(order).get("success")
 
         return True
 
@@ -276,7 +276,7 @@ class DeliveryCarrier(models.Model):
             return False
         if self.zip_prefix_ids:
             regex = re.compile(
-                '|'.join(['^' + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped('name')])
+                "|".join(["^" + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped("name")])
             )
             if not partner.zip or not re.match(regex, partner.zip.upper()):
                 return False
@@ -284,10 +284,10 @@ class DeliveryCarrier(models.Model):
 
     def _match_must_have_tags(self, source):
         self.ensure_one()
-        if source._name == 'sale.order':
+        if source._name == "sale.order":
             products = source.order_line.product_id
-        elif source._name == 'stock.picking':
-            products = source.move_ids.with_prefetch().mapped('product_id')
+        elif source._name == "stock.picking":
+            products = source.move_ids.with_prefetch().mapped("product_id")
         else:
             raise UserError(_("Invalid source document type"))
         return not self.must_have_tag_ids or any(
@@ -296,21 +296,21 @@ class DeliveryCarrier(models.Model):
 
     def _match_excluded_tags(self, source):
         self.ensure_one()
-        if source._name == 'sale.order':
+        if source._name == "sale.order":
             products = source.order_line.product_id
-        elif source._name == 'stock.picking':
-            products = source.move_ids.with_prefetch().mapped('product_id')
+        elif source._name == "stock.picking":
+            products = source.move_ids.with_prefetch().mapped("product_id")
         else:
             raise UserError(_("Invalid source document type"))
         return not any(tag in products.all_product_tag_ids for tag in self.excluded_tag_ids)
 
     def _match_weight(self, source):
         self.ensure_one()
-        if source._name == 'sale.order':
+        if source._name == "sale.order":
             total_weight = sum(
                 line.product_id.weight * line.product_qty for line in source.order_line
             )
-        elif source._name == 'stock.picking':
+        elif source._name == "stock.picking":
             total_weight = sum(
                 move.product_id.weight * move.product_uom_qty for move in source.move_ids
             )
@@ -320,11 +320,11 @@ class DeliveryCarrier(models.Model):
 
     def _match_volume(self, source):
         self.ensure_one()
-        if source._name == 'sale.order':
+        if source._name == "sale.order":
             total_volume = sum(
                 line.product_id.volume * line.product_qty for line in source.order_line
             )
-        elif source._name == 'stock.picking':
+        elif source._name == "stock.picking":
             total_volume = sum(
                 move.product_id.volume * move.product_uom_qty for move in source.move_ids
             )
@@ -332,22 +332,22 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Invalid source document type"))
         return not self.max_volume or total_volume <= self.max_volume
 
-    @api.onchange('integration_level')
+    @api.onchange("integration_level")
     def _onchange_integration_level(self):
-        if self.integration_level == 'rate':
-            self.invoice_policy = 'estimated'
+        if self.integration_level == "rate":
+            self.invoice_policy = "estimated"
 
-    @api.onchange('can_generate_return')
+    @api.onchange("can_generate_return")
     def _onchange_can_generate_return(self):
         if not self.can_generate_return:
             self.return_label_on_delivery = False
 
-    @api.onchange('return_label_on_delivery')
+    @api.onchange("return_label_on_delivery")
     def _onchange_return_label_on_delivery(self):
         if not self.return_label_on_delivery:
             self.get_return_label_from_portal = False
 
-    @api.onchange('country_ids')
+    @api.onchange("country_ids")
     def _onchange_country_ids(self):
         self.state_ids -= self.state_ids.filtered(
             lambda state: state._origin.id not in self.country_ids.state_ids.ids
@@ -373,10 +373,10 @@ class DeliveryCarrier(models.Model):
 
     def _apply_margins(self, price, order=False):
         self.ensure_one()
-        if self.delivery_type == 'fixed':
+        if self.delivery_type == "fixed":
             return float(price)
         fixed_margin_in_sale_currency = (
-            self._compute_currency(order, self.fixed_margin, 'company_to_pricelist')
+            self._compute_currency(order, self.fixed_margin, "company_to_pricelist")
             if order
             else self.fixed_margin
         )
@@ -401,42 +401,42 @@ class DeliveryCarrier(models.Model):
         """
         # TODO maybe the currency code?
         self.ensure_one()
-        if hasattr(self, '%s_rate_shipment' % self.delivery_type):
-            res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
+        if hasattr(self, "%s_rate_shipment" % self.delivery_type):
+            res = getattr(self, "%s_rate_shipment" % self.delivery_type)(order)
             # apply fiscal position
             company = self.company_id or order.company_id or self.env.company
-            res['price'] = self.product_id._get_tax_included_unit_price(
+            res["price"] = self.product_id._get_tax_included_unit_price(
                 company,
                 company.currency_id,
                 order.date_order,
-                'sale',
+                "sale",
                 fiscal_position=order.fiscal_position_id,
-                product_price_unit=res['price'],
+                product_price_unit=res["price"],
                 product_currency=company.currency_id,
             )
             # apply margin on computed price
-            res['price'] = self._apply_margins(res['price'], order)
+            res["price"] = self._apply_margins(res["price"], order)
             # save the real price in case a free_over rule overide it to 0
-            res['carrier_price'] = res['price']
+            res["carrier_price"] = res["price"]
             # free when order is large enough
             amount_without_delivery = order._compute_amount_total_without_delivery()
             if (
-                res['success']
+                res["success"]
                 and self.free_over
-                and self.delivery_type != 'base_on_rule'
-                and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company')
+                and self.delivery_type != "base_on_rule"
+                and self._compute_currency(order, amount_without_delivery, "pricelist_to_company")
                 >= self.amount
             ):
-                res['warning_message'] = _(
-                    'The shipping is free since the order amount exceeds %.2f.', self.amount
+                res["warning_message"] = _(
+                    "The shipping is free since the order amount exceeds %.2f.", self.amount
                 )
-                res['price'] = 0.0
+                res["price"] = 0.0
             return res
         return {
-            'success': False,
-            'price': 0.0,
-            'error_message': _('Error: this delivery method is not available.'),
-            'warning_message': False,
+            "success": False,
+            "price": 0.0,
+            "error_message": _("Error: this delivery method is not available."),
+            "warning_message": False,
         }
 
     def log_xml(self, xml_string, func):
@@ -451,16 +451,16 @@ class DeliveryCarrier(models.Model):
                 db_registry = Registry(db_name)
                 with db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    IrLogging = env['ir.logging']
+                    IrLogging = env["ir.logging"]
                     IrLogging.sudo().create({
-                        'name': 'delivery.carrier',
-                        'type': 'server',
-                        'dbname': db_name,
-                        'level': 'DEBUG',
-                        'message': xml_string,
-                        'path': self.delivery_type,
-                        'func': func,
-                        'line': 1,
+                        "name": "delivery.carrier",
+                        "type": "server",
+                        "dbname": db_name,
+                        "level": "DEBUG",
+                        "message": xml_string,
+                        "path": self.delivery_type,
+                        "func": func,
+                        "line": 1,
                     })
             except psycopg2.Error:
                 pass
@@ -471,12 +471,12 @@ class DeliveryCarrier(models.Model):
 
     fixed_price = fields.Float(
         string="Fixed Price",
-        compute='_compute_fixed_price',
-        inverse='_set_product_fixed_price',
+        compute="_compute_fixed_price",
+        inverse="_set_product_fixed_price",
         store=True,
     )
 
-    @api.depends('product_id.list_price', 'product_id.product_tmpl_id.list_price')
+    @api.depends("product_id.list_price", "product_id.product_tmpl_id.list_price")
     def _compute_fixed_price(self):
         for carrier in self:
             carrier.fixed_price = carrier.product_id.list_price
@@ -489,15 +489,15 @@ class DeliveryCarrier(models.Model):
         carrier = self._match_address(order.partner_shipping_id)
         if not carrier:
             return {
-                'success': False,
-                'price': 0.0,
-                'error_message': _(
-                    'Error: this delivery method is not available for this address.'
+                "success": False,
+                "price": 0.0,
+                "error_message": _(
+                    "Error: this delivery method is not available for this address."
                 ),
-                'warning_message': False,
+                "warning_message": False,
             }
         price = order.pricelist_id._get_product_price(self.product_id, 1.0)
-        return {'success': True, 'price': price, 'error_message': False, 'warning_message': False}
+        return {"success": True, "price": price, "error_message": False, "warning_message": False}
 
     # ----------------------------------- #
     # Based on rule delivery type methods #
@@ -507,42 +507,42 @@ class DeliveryCarrier(models.Model):
         carrier = self._match_address(order.partner_shipping_id)
         if not carrier:
             return {
-                'success': False,
-                'price': 0.0,
-                'error_message': _(
-                    'Error: this delivery method is not available for this address.'
+                "success": False,
+                "price": 0.0,
+                "error_message": _(
+                    "Error: this delivery method is not available for this address."
                 ),
-                'warning_message': False,
+                "warning_message": False,
             }
 
         try:
             price_unit = self._get_price_available(order)
         except UserError as e:
             return {
-                'success': False,
-                'price': 0.0,
-                'error_message': e.args[0],
-                'warning_message': False,
+                "success": False,
+                "price": 0.0,
+                "error_message": e.args[0],
+                "warning_message": False,
             }
 
-        price_unit = self._compute_currency(order, price_unit, 'company_to_pricelist')
+        price_unit = self._compute_currency(order, price_unit, "company_to_pricelist")
 
         return {
-            'success': True,
-            'price': price_unit,
-            'error_message': False,
-            'warning_message': False,
+            "success": True,
+            "price": price_unit,
+            "error_message": False,
+            "warning_message": False,
         }
 
     def _get_conversion_currencies(self, order, conversion):
         company_currency = (
-            self.company_id or self.env['res.company']._get_main_company()
+            self.company_id or self.env["res.company"]._get_main_company()
         ).currency_id
         pricelist_currency = order.currency_id
 
-        if conversion == 'company_to_pricelist':
+        if conversion == "company_to_pricelist":
             return company_currency, pricelist_currency
-        if conversion == 'pricelist_to_company':
+        if conversion == "pricelist_to_company":
             return pricelist_currency, company_currency
 
     def _compute_currency(self, order, price, conversion):
@@ -560,7 +560,7 @@ class DeliveryCarrier(models.Model):
         total = weight = volume = quantity = wv = 0
         total_delivery = 0.0
         for line in order.order_line:
-            if line.state == 'cancel':
+            if line.state == "cancel":
                 continue
             if line.is_delivery:
                 total_delivery += line.price_total
@@ -577,12 +577,12 @@ class DeliveryCarrier(models.Model):
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
-        total = self._compute_currency(order, total, 'pricelist_to_company')
+        total = self._compute_currency(order, total, "pricelist_to_company")
         # weight is either,
         # 1- weight chosen by user in choose.delivery.carrier wizard passed by context
         # 2- saved weight to use on sale order
         # 3- total order line weight as fallback
-        weight = self.env.context.get('order_weight') or order.shipping_weight or weight
+        weight = self.env.context.get("order_weight") or order.shipping_weight or weight
         return self._get_price_from_picking(total, weight, volume, quantity, wv=wv)
 
     def _get_price_dict(self, total, weight, volume, quantity, wv=0.0):
@@ -592,11 +592,11 @@ class DeliveryCarrier(models.Model):
         factor from price rules.
         """
         return {
-            'price': total,
-            'volume': volume,
-            'weight': weight,
-            'wv': wv or volume * weight,
-            'quantity': quantity,
+            "price": total,
+            "volume": volume,
+            "weight": weight,
+            "wv": wv or volume * weight,
+            "quantity": quantity,
         }
 
     def _get_price_from_picking(self, total, weight, volume, quantity, wv=0.0):

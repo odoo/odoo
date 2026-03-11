@@ -7,8 +7,8 @@ from odoo.addons.website.models import ir_http
 
 
 class ProductPricelist(models.Model):
-    _inherit = 'product.pricelist'
-    _clear_cache_name = 'default'
+    _inherit = "product.pricelist"
+    _clear_cache_name = "default"
 
     # === DEFAULT METHODS ===#
 
@@ -16,18 +16,18 @@ class ProductPricelist(models.Model):
         """Find the first company's website, if there is one."""
         company_id = self.env.company.id
 
-        if self.env.context.get('default_company_id'):
-            company_id = self.env.context.get('default_company_id')
+        if self.env.context.get("default_company_id"):
+            company_id = self.env.context.get("default_company_id")
 
-        domain = [('company_id', '=', company_id)]
-        return self.env['website'].search(domain, limit=1)
+        domain = [("company_id", "=", company_id)]
+        return self.env["website"].search(domain, limit=1)
 
     # === FIELDS ===#
 
     website_id = fields.Many2one(
         string="Website",
-        comodel_name='website',
-        ondelete='restrict',
+        comodel_name="website",
+        ondelete="restrict",
         default=_default_website,
         domain="[('company_id', '=?', company_id)]",
         tracking=20,
@@ -35,12 +35,12 @@ class ProductPricelist(models.Model):
         "you must fill in this field or make it selectable."
         "Otherwise, the pricelist will not apply to any website.",
     )
-    code = fields.Char(string="E-commerce Promotional Code", groups='base.group_user')
+    code = fields.Char(string="E-commerce Promotional Code", groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('company_id', 'website_id')
+    @api.constrains("company_id", "website_id")
     def _check_websites_in_company(self):
         """Prevent misconfiguration multi-website/multi-companies.
 
@@ -60,13 +60,13 @@ class ProductPricelist(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('company_id') and not vals.get('website_id'):
+            if vals.get("company_id") and not vals.get("website_id"):
                 # l10n modules install will change the company currency, creating a
                 # pricelist for that currency. Do not use user's company in that
                 # case as module install are done with OdooBot (company 1)
                 # YTI FIXME: The fix is not at the correct place
                 # It be set when we actually create the pricelist
-                self = self.with_context(default_company_id=vals['company_id'])
+                self = self.with_context(default_company_id=vals["company_id"])
         return super().create(vals_list)
 
     # === BUSINESS METHODS ===#
@@ -108,20 +108,20 @@ class ProductPricelist(models.Model):
         self.ensure_one()
         if not country_code or not self.country_group_ids:
             return True
-        return country_code in self.country_group_ids.country_ids.mapped('code')
+        return country_code in self.country_group_ids.country_ids.mapped("code")
 
     def _get_website_pricelists_domain(self, website):
         """Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         """
         return [
-            ('active', '=', True),
-            ('company_id', 'in', [False, website.company_id.id]),
-            '|',
-            ('website_id', '=', website.id),
-            '&',
-            ('website_id', '=', False),
-            '|',
-            ('selectable', '=', True),
-            ('code', '!=', False),
+            ("active", "=", True),
+            ("company_id", "in", [False, website.company_id.id]),
+            "|",
+            ("website_id", "=", website.id),
+            "&",
+            ("website_id", "=", False),
+            "|",
+            ("selectable", "=", True),
+            ("code", "!=", False),
         ]

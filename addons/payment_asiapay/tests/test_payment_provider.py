@@ -6,16 +6,16 @@ from odoo.addons.payment_asiapay import const
 from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestPaymentProvider(AsiaPayCommon):
     def test_incompatible_with_unsupported_currencies(self):
         """Test that AsiaPay providers are filtered out from compatible providers when the currency
         is not supported."""
-        compatible_providers = self.env['payment.provider']._get_compatible_providers(
+        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
             self.env.company.id,
             self.partner.id,
             self.amount,
-            currency_id=self.env.ref('base.AFN').id,
+            currency_id=self.env.ref("base.AFN").id,
         )
         self.assertNotIn(self.asiapay, compatible_providers)
 
@@ -23,19 +23,19 @@ class TestPaymentProvider(AsiaPayCommon):
         """Test that the calculated signature matches the expected signature for outgoing data."""
         calculated_signature = self.asiapay._asiapay_calculate_signature(
             {
-                'merchantId': self.asiapay.asiapay_merchant_id,
-                'amount': self.amount,
-                'orderRef': self.reference,
-                'currCode': const.CURRENCY_MAPPING[self.currency.name],
-                'payType': 'N',
+                "merchantId": self.asiapay.asiapay_merchant_id,
+                "amount": self.amount,
+                "orderRef": self.reference,
+                "currCode": const.CURRENCY_MAPPING[self.currency.name],
+                "payType": "N",
             },
             incoming=False,
         )
-        self.assertEqual(calculated_signature, '41667af8f428b5a55f44e14e5ab942f57da1ea31')
+        self.assertEqual(calculated_signature, "41667af8f428b5a55f44e14e5ab942f57da1ea31")
 
     def test_signature_calculation_for_incoming_data(self):
         """Test that the calculated signature matches the expected signature for incoming data."""
         calculated_signature = self.asiapay._asiapay_calculate_signature(
             self.webhook_payment_data, incoming=True
         )
-        self.assertEqual(calculated_signature, '3e5bf55d9a23969130a6686db7aa4f0230956d0a')
+        self.assertEqual(calculated_signature, "3e5bf55d9a23969130a6686db7aa4f0230956d0a")

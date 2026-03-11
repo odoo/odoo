@@ -3,9 +3,9 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestSaleOrder(SaleCommon):
     def test_avoid_setting_pickup_location_as_default_delivery_address(self):
-        self._create_partner(type='delivery', parent_id=self.partner.id, is_pickup_location=True)
+        self._create_partner(type="delivery", parent_id=self.partner.id, is_pickup_location=True)
         so = self._create_so(order_line=[])
         self.assertFalse(so.partner_shipping_id.is_pickup_location)

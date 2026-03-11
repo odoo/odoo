@@ -23,12 +23,12 @@ class PaymentPostProcessing(http.Controller):
     their post-processing.
     """
 
-    MONITORED_TX_ID_KEY = '__payment_monitored_tx_id__'
+    MONITORED_TX_ID_KEY = "__payment_monitored_tx_id__"
 
     @http.route(
-        '/payment/status',
-        type='http',
-        auth='public',
+        "/payment/status",
+        type="http",
+        auth="public",
         website=True,
         sitemap=False,
         list_as_website_content=_lt("Payment Status"),
@@ -42,10 +42,10 @@ class PaymentPostProcessing(http.Controller):
         """
         monitored_tx = self._get_monitored_transaction()
         # The session might have expired, or the transaction never existed.
-        values = {'tx': monitored_tx} if monitored_tx else {'payment_not_found': True}
-        return request.render('payment.payment_status', values)
+        values = {"tx": monitored_tx} if monitored_tx else {"payment_not_found": True}
+        return request.render("payment.payment_status", values)
 
-    @http.route('/payment/status/poll', type='jsonrpc', auth='public')
+    @http.route("/payment/status/poll", type="jsonrpc", auth="public")
     def poll_status(self, **_kwargs):
         """Fetch the transaction and trigger its post-processing.
 
@@ -62,7 +62,7 @@ class PaymentPostProcessing(http.Controller):
                 monitored_tx._post_process()
             except (psycopg2.OperationalError, psycopg2.IntegrityError):  # Concurrent update error.
                 request.env.cr.rollback()  # Rollback and try later.
-                msg = 'retry'
+                msg = "retry"
                 raise UserError(msg) from None
             except Exception:
                 request.env.cr.rollback()
@@ -73,9 +73,9 @@ class PaymentPostProcessing(http.Controller):
                 raise
 
         return {
-            'provider_code': monitored_tx.provider_code,
-            'state': monitored_tx.state,
-            'landing_route': monitored_tx.landing_route,
+            "provider_code": monitored_tx.provider_code,
+            "state": monitored_tx.state,
+            "landing_route": monitored_tx.landing_route,
         }
 
     @classmethod
@@ -95,7 +95,7 @@ class PaymentPostProcessing(http.Controller):
         """
         return (
             request
-            .env['payment.transaction']
+            .env["payment.transaction"]
             .sudo()
             .browse(request.session.get(self.MONITORED_TX_ID_KEY))
             .exists()

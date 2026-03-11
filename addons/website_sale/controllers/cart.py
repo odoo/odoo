@@ -16,8 +16,8 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class Cart(PaymentPortal):
-    @route(route='/shop/cart', type='http', auth='public', website=True, sitemap=False)
-    def cart(self, id=None, access_token=None, revive_method='', **post):
+    @route(route="/shop/cart", type="http", auth="public", website=True, sitemap=False)
+    def cart(self, id=None, access_token=None, revive_method="", **post):
         """Display the cart page.
 
         This route is responsible for the main cart management and abandoned cart revival logic.
@@ -30,51 +30,51 @@ class Cart(PaymentPortal):
         :rtype: str
         """
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect("/web/login")
 
         order_sudo = request.cart
 
         values = {}
         if id and access_token:
-            abandoned_order = request.env['sale.order'].sudo().browse(int(id)).exists()
+            abandoned_order = request.env["sale.order"].sudo().browse(int(id)).exists()
             if not abandoned_order or not consteq(
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state != 'draft':  # abandoned cart already finished
-                values.update({'abandoned_proceed': True})
-            elif revive_method == 'squash' or (
-                revive_method == 'merge' and not request.session.get('sale_order_id')
+            if abandoned_order.state != "draft":  # abandoned cart already finished
+                values.update({"abandoned_proceed": True})
+            elif revive_method == "squash" or (
+                revive_method == "merge" and not request.session.get("sale_order_id")
             ):  # restore old cart or merge with unexistant
-                request.session['sale_order_id'] = abandoned_order.id
-                return request.redirect('/shop/cart')
-            elif revive_method == 'merge':
-                abandoned_order.order_line.write({'order_id': request.session['sale_order_id']})
+                request.session["sale_order_id"] = abandoned_order.id
+                return request.redirect("/shop/cart")
+            elif revive_method == "merge":
+                abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
                 abandoned_order.action_cancel()
             elif abandoned_order.id != request.session.get(
-                'sale_order_id'
+                "sale_order_id"
             ):  # abandoned cart found, user have to choose what to do
                 values.update({
-                    'id': abandoned_order.id,
-                    'access_token': abandoned_order.access_token,
+                    "id": abandoned_order.id,
+                    "access_token": abandoned_order.access_token,
                 })
 
         values.update({
-            'website_sale_order': order_sudo,
-            'date': fields.Date.today(),
-            'suggested_products': [],
+            "website_sale_order": order_sudo,
+            "date": fields.Date.today(),
+            "suggested_products": [],
         })
         if order_sudo:
             order_sudo.order_line.filtered(
                 lambda sol: sol.product_id and not sol.product_id.active
             ).unlink()
-            values['suggested_products'] = order_sudo._cart_accessories()
+            values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
         values.update(request.website._get_checkout_step_values())
         values.update(self._cart_values(**post))
         values.update(self._prepare_order_history())
-        return request.render('website_sale.cart', values)
+        return request.render("website_sale.cart", values)
 
     def _cart_values(self, **_post):
         """Pass additional values when rendering the 'website_sale.cart' template (e.g. add a
@@ -83,10 +83,10 @@ class Cart(PaymentPortal):
         return {}
 
     @route(
-        route='/shop/cart/add',
-        type='jsonrpc',
-        auth='public',
-        methods=['POST'],
+        route="/shop/cart/add",
+        type="jsonrpc",
+        auth="public",
+        methods=["POST"],
         website=True,
         sitemap=False,
     )
@@ -124,7 +124,7 @@ class Cart(PaymentPortal):
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
 
-        product = request.env['product.product'].browse(product_id).exists()
+        product = request.env["product.product"].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(
                 _("The given product does not exist therefore it cannot be added to cart.")
@@ -139,29 +139,30 @@ class Cart(PaymentPortal):
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs,
         )
-        line_ids = {product_template_id: values['line_id']}
-        added_qty_per_line[values['line_id']] = values['added_qty']
-        is_combo = product.type == 'combo'
+        line_ids = {product_template_id: values["line_id"]}
+        added_qty_per_line[values["line_id"]] = values["added_qty"]
+        is_combo = product.type == "combo"
         updated_line = (
-            values['line_id']
-            and order_sudo.order_line.filtered(lambda line: line.id == values['line_id'])
-        ) or order_sudo.env['sale.order.line']
+            values["line_id"]
+            and order_sudo.order_line.filtered(lambda line: line.id == values["line_id"])
+        ) or order_sudo.env["sale.order.line"]
 
-        if linked_products and values['line_id']:
+        if linked_products and values["line_id"]:
             for product_data in linked_products:
                 product_sudo = (
-                    request.env['product.product']
+                    request
+                    .env["product.product"]
                     .sudo()
-                    .browse(product_data['product_id'])
+                    .browse(product_data["product_id"])
                     .exists()
                 )
-                if product_data['quantity'] and (
+                if product_data["quantity"] and (
                     not product_sudo
                     or (
                         not product_sudo._is_add_to_cart_allowed()
                         # For combos, the validity of the given product will be checked
                         # through the SOline constraints (_check_combo_item_id)
-                        and not product_data.get('combo_item_id')
+                        and not product_data.get("combo_item_id")
                     )
                 ):
                     raise UserError(
@@ -169,40 +170,40 @@ class Cart(PaymentPortal):
                     )
 
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
-                    product_id=product_data['product_id'],
-                    quantity=product_data['quantity'],
-                    uom_id=product_data.get('uom_id'),
-                    product_custom_attribute_values=product_data['product_custom_attribute_values'],
+                    product_id=product_data["product_id"],
+                    quantity=product_data["quantity"],
+                    uom_id=product_data.get("uom_id"),
+                    product_custom_attribute_values=product_data["product_custom_attribute_values"],
                     no_variant_attribute_value_ids=[
-                        int(value_id) for value_id in product_data['no_variant_attribute_value_ids']
+                        int(value_id) for value_id in product_data["no_variant_attribute_value_ids"]
                     ],
                     # Using `line_ids[...]` instead of `line_ids.get(...)` ensures that this throws
                     # if an optional product contains bad data.
-                    linked_line_id=line_ids[product_data['parent_product_template_id']],
+                    linked_line_id=line_ids[product_data["parent_product_template_id"]],
                     **self._get_additional_cart_update_values(product_data),
                     **kwargs,
                 )
-                if is_combo and not product_values.get('quantity'):
+                if is_combo and not product_values.get("quantity"):
                     # Early return when one of the combo products if fully unavailable
                     # Delete main combo line (and existing children in cascade)
                     updated_line.unlink()
                     # Return empty notification since cart update is considered as failed
                     return {
-                        'cart_quantity': order_sudo.cart_quantity,
-                        'notifications': [
+                        "cart_quantity": order_sudo.cart_quantity,
+                        "notifications": [
                             {
-                                'type': 'warning',
-                                'data': {'warning_message': product_values.get('warning', '')},
+                                "type": "warning",
+                                "data": {"warning_message": product_values.get("warning", "")},
                             }
                         ],
-                        'quantity': 0,
-                        'tracking_info': [],
+                        "quantity": 0,
+                        "tracking_info": [],
                     }
 
-                line_ids[product_data['product_template_id']] = product_values['line_id']
-                added_qty_per_line[product_values['line_id']] = product_values['added_qty']
+                line_ids[product_data["product_template_id"]] = product_values["line_id"]
+                added_qty_per_line[product_values["line_id"]] = product_values["added_qty"]
 
-        warning = values.pop('warning', '')
+        warning = values.pop("warning", "")
         if is_combo and order_sudo._check_combo_quantities(updated_line):
             # If quantities were modified through `_check_combo_quantities`, the added qty per line
             # must be adapted accordingly, and the returned warning should be the final one saved
@@ -212,15 +213,15 @@ class Cart(PaymentPortal):
                 for line in (updated_line + updated_line.linked_line_ids)
             }
             warning = updated_line.shop_warning
-            values['quantity'] = updated_line.product_uom_qty
+            values["quantity"] = updated_line.product_uom_qty
 
         # Recompute delivery prices & other cart stuff (loyalty rewards)
         order_sudo._verify_cart_after_update()
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
-        main_product_line = request.env['sale.order.line'].browse(values['line_id'])
-        if main_product_line.product_type == 'combo':
+        main_product_line = request.env["sale.order.line"].browse(values["line_id"])
+        if main_product_line.product_type == "combo":
             main_product_line._check_validity()
 
         positive_added_qty_per_line = {
@@ -231,48 +232,48 @@ class Cart(PaymentPortal):
         if notification := self._get_cart_notification_information(
             order_sudo, positive_added_qty_per_line
         ):
-            notifications.append({'type': 'item_added', 'data': notification})
+            notifications.append({"type": "item_added", "data": notification})
 
         if warning:
-            notifications.append({'type': 'warning', 'data': {'warning_message': warning}})
+            notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
         return {
-            'cart_quantity': order_sudo.cart_quantity,
-            'notifications': notifications,
-            'quantity': values.pop('quantity', 0),
-            'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
+            "cart_quantity": order_sudo.cart_quantity,
+            "notifications": notifications,
+            "quantity": values.pop("quantity", 0),
+            "tracking_info": self._get_tracking_information(order_sudo, line_ids.values()),
         }
 
     @route(
-        route='/shop/cart/quick_add', type='jsonrpc', auth='user', methods=['POST'], website=True
+        route="/shop/cart/quick_add", type="jsonrpc", auth="user", methods=["POST"], website=True
     )
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        IrUiView = request.env['ir.ui.view']
+        IrUiView = request.env["ir.ui.view"]
         order_sudo = request.cart
-        values['website_sale.cart_lines'] = IrUiView._render_template(
-            'website_sale.cart_lines',
+        values["website_sale.cart_lines"] = IrUiView._render_template(
+            "website_sale.cart_lines",
             {
-                'website_sale_order': order_sudo,
-                'date': fields.Date.today(),
-                'suggested_products': order_sudo._cart_accessories(),
+                "website_sale_order": order_sudo,
+                "date": fields.Date.today(),
+                "suggested_products": order_sudo._cart_accessories(),
             },
         )
-        values['website_sale.shorter_cart_summary'] = IrUiView._render_template(
-            'website_sale.shorter_cart_summary',
+        values["website_sale.shorter_cart_summary"] = IrUiView._render_template(
+            "website_sale.shorter_cart_summary",
             {
-                'website_sale_order': order_sudo,
-                'show_shorter_cart_summary': True,
+                "website_sale_order": order_sudo,
+                "show_shorter_cart_summary": True,
                 **self._get_express_shop_payment_values(order_sudo),
                 **request.website._get_checkout_step_values(),
             },
         )
-        values['website_sale.quick_reorder_history'] = IrUiView._render_template(
-            'website_sale.quick_reorder_history',
-            {'website_sale_order': order_sudo, **self._prepare_order_history()},
+        values["website_sale.quick_reorder_history"] = IrUiView._render_template(
+            "website_sale.quick_reorder_history",
+            {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
-        values['cart_ready'] = order_sudo._is_cart_ready()
+        values["cart_ready"] = order_sudo._is_cart_ready()
         return values
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
@@ -280,33 +281,33 @@ class Cart(PaymentPortal):
             self, order, website_id=request.website.id, is_express_checkout=True
         )
         payment_form_values.update({
-            'payment_access_token': payment_form_values.pop('access_token'),  # Rename the key.
+            "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
             # Do not include delivery related lines
-            'minor_amount': payment_utils.to_minor_currency_units(
+            "minor_amount": payment_utils.to_minor_currency_units(
                 order._get_amount_total_excluding_delivery(), order.currency_id
             ),
-            'merchant_name': request.website.name,
-            'transaction_route': f'/shop/payment/transaction/{order.id}',
-            'express_checkout_route': WebsiteSale._express_checkout_route,
-            'landing_route': '/shop/payment/validate',
-            'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
-            'shipping_info_required': order._has_deliverable_products(),
+            "merchant_name": request.website.name,
+            "transaction_route": f"/shop/payment/transaction/{order.id}",
+            "express_checkout_route": WebsiteSale._express_checkout_route,
+            "landing_route": "/shop/payment/validate",
+            "payment_method_unknown_id": request.env.ref("payment.payment_method_unknown").id,
+            "shipping_info_required": order._has_deliverable_products(),
             # Todo: remove in master
-            'delivery_amount': payment_utils.to_minor_currency_units(
+            "delivery_amount": payment_utils.to_minor_currency_units(
                 order.amount_total - order._compute_amount_total_without_delivery(),
                 order.currency_id,
             ),
-            'shipping_address_update_route': WebsiteSale._express_checkout_delivery_route,
+            "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
         })
         if request.website.is_public_user():
-            payment_form_values['partner_id'] = -1
+            payment_form_values["partner_id"] = -1
         return payment_form_values
 
     @route(
-        route='/shop/cart/update',
-        type='jsonrpc',
-        auth='public',
-        methods=['POST'],
+        route="/shop/cart/update",
+        type="jsonrpc",
+        auth="public",
+        methods=["POST"],
         website=True,
         sitemap=False,
     )
@@ -323,7 +324,7 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
-        IrUiView = request.env['ir.ui.view']
+        IrUiView = request.env["ir.ui.view"]
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
@@ -335,29 +336,29 @@ class Cart(PaymentPortal):
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 
-        values['cart_quantity'] = order_sudo.cart_quantity
-        values['cart_ready'] = order_sudo._is_cart_ready()
-        values['amount'] = order_sudo.amount_total
-        values['minor_amount'] = (
+        values["cart_quantity"] = order_sudo.cart_quantity
+        values["cart_ready"] = order_sudo._is_cart_ready()
+        values["amount"] = order_sudo.amount_total
+        values["minor_amount"] = (
             order_sudo
             and payment_utils.to_minor_currency_units(
                 order_sudo.amount_total, order_sudo.currency_id
             )
         ) or 0.0
-        values['website_sale.cart_lines'] = IrUiView._render_template(
-            'website_sale.cart_lines',
+        values["website_sale.cart_lines"] = IrUiView._render_template(
+            "website_sale.cart_lines",
             {
-                'website_sale_order': order_sudo,
-                'date': fields.Date.today(),
-                'suggested_products': order_sudo._cart_accessories(),
+                "website_sale_order": order_sudo,
+                "date": fields.Date.today(),
+                "suggested_products": order_sudo._cart_accessories(),
             },
         )
-        values['website_sale.total'] = IrUiView._render_template(
-            'website_sale.total', {'website_sale_order': order_sudo}
+        values["website_sale.total"] = IrUiView._render_template(
+            "website_sale.total", {"website_sale_order": order_sudo}
         )
-        values['website_sale.quick_reorder_history'] = IrUiView._render_template(
-            'website_sale.quick_reorder_history',
-            {'website_sale_order': order_sudo, **self._prepare_order_history()},
+        values["website_sale.quick_reorder_history"] = IrUiView._render_template(
+            "website_sale.quick_reorder_history",
+            {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
         return values
 
@@ -386,22 +387,23 @@ class Cart(PaymentPortal):
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (
-            request.env['sale.order']
+            request
+            .env["sale.order"]
             .sudo()
             .search(
                 [
-                    ('partner_id', '=', request.env.user.partner_id.id),
-                    ('state', '=', 'sale'),
-                    ('website_id', '=', request.website.id),
+                    ("partner_id", "=", request.env.user.partner_id.id),
+                    ("state", "=", "sale"),
+                    ("website_id", "=", request.website.id),
                 ],
-                order='date_order desc',
+                order="date_order desc",
                 limit=10,
             )
             .order_line
         )
 
         # Prepare the order history.
-        SaleOrderLineSudo = request.env['sale.order.line'].sudo()
+        SaleOrderLineSudo = request.env["sale.order.line"].sudo()
         cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
         seen_lines_sudo = SaleOrderLineSudo
         lines_per_order_date = {}
@@ -409,20 +411,20 @@ class Cart(PaymentPortal):
             # Ignore lines that are combo parents, unsellable, or prevented from sale.
             product_id = line_sudo.product_id.id
             if (
-                line_sudo.linked_line_id.product_type == 'combo'
+                line_sudo.linked_line_id.product_type == "combo"
                 or not line_sudo._is_sellable()
                 or (
                     request.website.prevent_sale
                     and request.website._prevent_product_sale(
                         line_sudo.product_id,
-                        line_sudo.product_id._get_combination_info_variant()['price'] == 0,
+                        line_sudo.product_id._get_combination_info_variant()["price"] == 0,
                     )
                 )
             ):
                 continue
 
             # Ignore lines that are already in the cart or have already been seen.
-            is_combo = line_sudo.product_type == 'combo'
+            is_combo = line_sudo.product_type == "combo"
             if any(
                 line.product_id.id == product_id
                 and (not is_combo or is_same_combo(line_sudo, line))
@@ -444,8 +446,8 @@ class Cart(PaymentPortal):
 
         # Flatten the line groups to get the final order history.
         return {
-            'order_history': [
-                {'label': label, 'lines': lines} for label, lines in lines_per_order_date.items()
+            "order_history": [
+                {"label": label, "lines": lines} for label, lines in lines_per_order_date.items()
             ]
         }
 
@@ -473,18 +475,18 @@ class Cart(PaymentPortal):
         if not lines:
             return {}
 
-        show_tax = order.website_id.show_line_subtotals_tax_selection == 'tax_included'
+        show_tax = order.website_id.show_line_subtotals_tax_selection == "tax_included"
         return {
-            'currency_id': order.currency_id.id,
-            'lines': [
+            "currency_id": order.currency_id.id,
+            "lines": [
                 {
-                    'id': line.id,
-                    'image_url': order.website_id.image_url(line.product_id, 'image_128'),
-                    'quantity': added_qty_per_line[line.id],
-                    'name': line._get_line_header(),
-                    'combination_name': line._get_combination_name(),
-                    'description': line._get_sale_order_line_multiline_description_variants(),
-                    'price_total': (
+                    "id": line.id,
+                    "image_url": order.website_id.image_url(line.product_id, "image_128"),
+                    "quantity": added_qty_per_line[line.id],
+                    "name": line._get_line_header(),
+                    "combination_name": line._get_combination_name(),
+                    "description": line._get_sale_order_line_multiline_description_variants(),
+                    "price_total": (
                         line.price_reduce_taxinc if show_tax else line.price_reduce_taxexcl
                     )
                     * added_qty_per_line[line.id],
@@ -507,13 +509,13 @@ class Cart(PaymentPortal):
         )
         return [
             {
-                'item_id': line.product_id.barcode or line.product_id.id,
-                'item_name': line.product_id.display_name,
-                'item_category': line.product_id.categ_id.name,
-                'currency': line.currency_id.name,
-                'price': line.price_reduce_taxexcl,
-                'discount': line.price_unit - line.price_reduce_taxexcl,
-                'quantity': line.product_uom_qty,
+                "item_id": line.product_id.barcode or line.product_id.id,
+                "item_name": line.product_id.display_name,
+                "item_category": line.product_id.categ_id.name,
+                "currency": line.currency_id.name,
+                "price": line.price_reduce_taxexcl,
+                "discount": line.price_unit - line.price_reduce_taxexcl,
+                "quantity": line.product_uom_qty,
             }
             for line in lines
         ]
@@ -525,26 +527,26 @@ class Cart(PaymentPortal):
         :return: addition values to be passed to `_cart_add`.
         :rtype: dict
         """
-        if data.get('combo_item_id'):
-            return {'combo_item_id': data['combo_item_id']}
+        if data.get("combo_item_id"):
+            return {"combo_item_id": data["combo_item_id"]}
         return {}
 
     def _get_additional_cart_notification_information(self, line):
         infos = {}
         # Only set the linked line id for combo items, not for optional products.
         if combo_item := line.combo_item_id:
-            infos['linked_line_id'] = line.linked_line_id.id
+            infos["linked_line_id"] = line.linked_line_id.id
             # To sell a product type 'combo', one doesn't need to publish all combo choices. This
             # causes an issue when public users access the image of each choice via the /web/image
             # route. To bypass this access check, we send the raw image URL if the product is
             # inaccessible to the current user.
             if (
-                not combo_item.product_id.sudo(False).has_access('read')
+                not combo_item.product_id.sudo(False).has_access("read")
                 and combo_item.product_id.image_128
             ):
-                infos['image_url'] = image_data_uri(combo_item.product_id.image_128)
+                infos["image_url"] = image_data_uri(combo_item.product_id.image_128)
 
         if line.product_template_id._has_multiple_uoms():
-            infos['uom_name'] = line.product_uom_id.name
+            infos["uom_name"] = line.product_uom_id.name
 
         return infos

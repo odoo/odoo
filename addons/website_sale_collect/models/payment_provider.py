@@ -7,16 +7,16 @@ from odoo.addons.website_sale_collect import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
-    custom_mode = fields.Selection(selection_add=[('on_site', "Pay on site")])
+    custom_mode = fields.Selection(selection_add=[("on_site", "Pay on site")])
 
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.custom_mode != 'on_site':
+        if self.custom_mode != "on_site":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -44,16 +44,16 @@ class PaymentProvider(models.Model):
             report=report,
             **kwargs,
         )
-        order = self.env['sale.order'].browse(sale_order_id).exists()
+        order = self.env["sale.order"].browse(sale_order_id).exists()
 
         # Show on-site payment providers only if in-store delivery methods exist and the order
         # contains physical products.
-        if order.carrier_id.delivery_type != 'in_store' or not any(
-            product.type == 'consu' for product in order.order_line.product_id
+        if order.carrier_id.delivery_type != "in_store" or not any(
+            product.type == "consu" for product in order.order_line.product_id
         ):
             unfiltered_providers = compatible_providers
             compatible_providers = compatible_providers.filtered(
-                lambda p: p.code != 'custom' or p.custom_mode != 'on_site'
+                lambda p: p.code != "custom" or p.custom_mode != "on_site"
             )
             payment_utils.add_to_report(
                 report,

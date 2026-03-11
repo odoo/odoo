@@ -4,7 +4,7 @@ from odoo import _, models
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         """Override of `website_sale` to prevent mixing Gelato and non-Gelato products in the cart.
@@ -21,11 +21,11 @@ class SaleOrder(models.Model):
         :return: The new quantity and an optional warning message.
         :rtype: tuple[int, str]
         """
-        product = self.env['product.product'].browse(product_id)
-        mixing_products = product.type != 'service' and any(
+        product = self.env["product.product"].browse(product_id)
+        mixing_products = product.type != "service" and any(
             (product.gelato_product_uid and not line.product_id.gelato_product_uid)
             or (not product.gelato_product_uid and line.product_id.gelato_product_uid)
-            for line in self.order_line.filtered(lambda line: line.product_id.type != 'service')
+            for line in self.order_line.filtered(lambda line: line.product_id.type != "service")
         )  # Whether Gelato and non-Gelato products that require delivery are mixed.
         if mixing_products:
             return 0, _(

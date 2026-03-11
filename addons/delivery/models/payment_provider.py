@@ -7,16 +7,16 @@ from odoo.addons.payment import utils as payment_utils
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
-    custom_mode = fields.Selection(selection_add=[('cash_on_delivery', "Cash On Delivery")])
+    custom_mode = fields.Selection(selection_add=[("cash_on_delivery", "Cash On Delivery")])
 
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.custom_mode != 'cash_on_delivery':
+        if self.custom_mode != "cash_on_delivery":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -35,11 +35,11 @@ class PaymentProvider(models.Model):
             *args, sale_order_id=sale_order_id, report=report, **kwargs
         )
 
-        sale_order = self.env['sale.order'].browse(sale_order_id).exists()
+        sale_order = self.env["sale.order"].browse(sale_order_id).exists()
         if not sale_order.carrier_id.allow_cash_on_delivery:
             unfiltered_providers = compatible_providers
             compatible_providers = compatible_providers.filtered(
-                lambda p: p.custom_mode != 'cash_on_delivery'
+                lambda p: p.custom_mode != "cash_on_delivery"
             )
             payment_utils.add_to_report(
                 report,

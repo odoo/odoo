@@ -9,10 +9,10 @@ from odoo.addons.html_editor.tools import get_video_embed_code, get_video_thumbn
 
 
 class ProductImage(models.Model):
-    _name = 'product.image'
+    _name = "product.image"
     _description = "Product Image"
-    _inherit = ['image.mixin']
-    _order = 'sequence, id'
+    _inherit = ["image.mixin"]
+    _order = "sequence, id"
 
     name = fields.Char(string="Name", required=True)
     sequence = fields.Integer(default=10)
@@ -20,43 +20,43 @@ class ProductImage(models.Model):
     image_1920 = fields.Image()
 
     product_tmpl_id = fields.Many2one(
-        string="Product Template", comodel_name='product.template', ondelete='cascade', index=True
+        string="Product Template", comodel_name="product.template", ondelete="cascade", index=True
     )
     product_variant_id = fields.Many2one(
-        string="Product Variant", comodel_name='product.product', ondelete='cascade', index=True
+        string="Product Variant", comodel_name="product.product", ondelete="cascade", index=True
     )
     video_url = fields.Char(string="Video URL", help="URL of a video for showcasing your product.")
-    embed_code = fields.Html(compute='_compute_embed_code', sanitize=False)
+    embed_code = fields.Html(compute="_compute_embed_code", sanitize=False)
 
     can_image_1024_be_zoomed = fields.Boolean(
-        string="Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True
+        string="Can Image 1024 be zoomed", compute="_compute_can_image_1024_be_zoomed", store=True
     )
 
     # === COMPUTE METHODS ===#
 
-    @api.depends('image_1920', 'image_1024')
+    @api.depends("image_1920", "image_1024")
     def _compute_can_image_1024_be_zoomed(self):
         for image in self:
             image.can_image_1024_be_zoomed = image.image_1920 and is_image_size_above(
                 image.image_1920, image.image_1024
             )
 
-    @api.depends('video_url')
+    @api.depends("video_url")
     def _compute_embed_code(self):
         for image in self:
             image.embed_code = (image.video_url and get_video_embed_code(image.video_url)) or False
 
     # === ONCHANGE METHODS ===#
 
-    @api.onchange('video_url')
+    @api.onchange("video_url")
     def _onchange_video_url(self):
         if not self.image_1920:
             thumbnail = get_video_thumbnail(self.video_url)
-            self.image_1920 = BinaryBytes(thumbnail or b'')
+            self.image_1920 = BinaryBytes(thumbnail or b"")
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('video_url')
+    @api.constrains("video_url")
     def _check_valid_video_url(self):
         for image in self:
             if image.video_url and not image.embed_code:
@@ -78,13 +78,13 @@ class ProductImage(models.Model):
         But we want it if we don't have a product_variant_id set.
         """
         context_without_template = self.with_context({
-            k: v for k, v in self.env.context.items() if k != 'default_product_tmpl_id'
+            k: v for k, v in self.env.context.items() if k != "default_product_tmpl_id"
         })
         normal_vals = []
         variant_vals_list = []
 
         for vals in vals_list:
-            if vals.get('product_variant_id') and 'default_product_tmpl_id' in self.env.context:
+            if vals.get("product_variant_id") and "default_product_tmpl_id" in self.env.context:
                 variant_vals_list.append(vals)
             else:
                 normal_vals.append(vals)

@@ -4,10 +4,10 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = "res.config.settings"
 
     group_sale_order_template = fields.Boolean(
-        string="Quotation Templates", implied_group='sale_management.group_sale_order_template'
+        string="Quotation Templates", implied_group="sale_management.group_sale_order_template"
     )
     company_so_template_id = fields.Many2one(
         string="Default Template",
@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
             if self.company_so_template_id:
                 self.company_so_template_id = False
             companies = (
-                self.env['res.company'].sudo().search([('sale_order_template_id', '!=', False)])
+                self.env["res.company"].sudo().search([("sale_order_template_id", "!=", False)])
             )
             if companies:
                 companies.sale_order_template_id = False

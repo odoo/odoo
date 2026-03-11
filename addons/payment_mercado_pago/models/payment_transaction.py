@@ -16,7 +16,7 @@ _logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = "payment.transaction"
 
     def _get_specific_rendering_values(self, processing_values):
         """Override of `payment` to return Mercado Pago-specific rendering values.
@@ -27,24 +27,24 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        if self.provider_code != 'mercado_pago':
+        if self.provider_code != "mercado_pago":
             return super()._get_specific_rendering_values(processing_values)
 
         # Initiate the payment and retrieve the payment link data.
         payload = self._mercado_pago_prepare_preference_request_payload()
         try:
-            response_content = self._send_api_request('POST', '/checkout/preferences', json=payload)
+            response_content = self._send_api_request("POST", "/checkout/preferences", json=payload)
         except ValidationError as error:
             self._set_error(str(error))
             return {}
 
         api_url = response_content[
-            'init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point'
+            "init_point" if self.provider_id.state == "enabled" else "sandbox_init_point"
         ]
         return {
-            'api_url': api_url,
-            'http_method': 'get',
-            'url_params': payment_utils.extract_url_params(api_url),
+            "api_url": api_url,
+            "http_method": "get",
+            "url_params": payment_utils.extract_url_params(api_url),
         }
 
     def _mercado_pago_prepare_preference_request_payload(self):
@@ -58,21 +58,21 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         return_url = urljoin(base_url, const.PAYMENT_RETURN_ROUTE)
         payload.update({
-            'auto_return': 'all',
-            'back_urls': {'success': return_url, 'pending': return_url, 'failure': return_url},
-            'items': [
+            "auto_return": "all",
+            "back_urls": {"success": return_url, "pending": return_url, "failure": return_url},
+            "items": [
                 {
-                    'title': self.reference,
-                    'quantity': 1,
-                    'currency_id': self.currency_id.name,
-                    'unit_price': self._mercado_pago_convert_amount(),
+                    "title": self.reference,
+                    "quantity": 1,
+                    "currency_id": self.currency_id.name,
+                    "unit_price": self._mercado_pago_convert_amount(),
                 }
             ],
-            'payer': {
-                'name': self.partner_name,
-                'email': self.partner_email,
-                'phone': {'number': self.partner_phone},
-                'address': {'zip_code': self.partner_zip, 'street_name': self.partner_address},
+            "payer": {
+                "name": self.partner_name,
+                "email": self.partner_email,
+                "phone": {"number": self.partner_phone},
+                "address": {"zip_code": self.partner_zip, "street_name": self.partner_address},
             },
         })
         return payload
@@ -86,19 +86,19 @@ class PaymentTransaction(models.Model):
         payload = self._mercado_pago_prepare_base_request_payload()
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         payload.update({
-            'additional_info': {
-                'items': [
+            "additional_info": {
+                "items": [
                     {
-                        'title': self.reference,
-                        'quantity': 1,
-                        'unit_price': self._mercado_pago_convert_amount(),
+                        "title": self.reference,
+                        "quantity": 1,
+                        "unit_price": self._mercado_pago_convert_amount(),
                     }
                 ]
             },
-            'payer': {
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': self.partner_email,
+            "payer": {
+                "first_name": first_name,
+                "last_name": last_name,
+                "email": self.partner_email,
             },
         })
         return payload
@@ -112,8 +112,8 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         sanitized_reference = url_quote(self.reference)
         # Append the reference to identify the transaction from the webhook payment data.
-        webhook_url = urljoin(base_url, f'{const.WEBHOOK_ROUTE}/{sanitized_reference}')
-        return {'external_reference': self.reference, 'notification_url': webhook_url}
+        webhook_url = urljoin(base_url, f"{const.WEBHOOK_ROUTE}/{sanitized_reference}")
+        return {"external_reference": self.reference, "notification_url": webhook_url}
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Mercado Pago.
@@ -122,29 +122,29 @@ class PaymentTransaction(models.Model):
 
         :rtype: None
         """
-        if self.provider_code != 'mercado_pago':
+        if self.provider_code != "mercado_pago":
             super()._send_payment_request()
             return
 
         # A new token has to be generated based on 'card_id' for every payment.
         response_content = self._send_api_request(
-            'POST', '/v1/card_tokens', data={'card_id': self.token_id.provider_ref}
+            "POST", "/v1/card_tokens", data={"card_id": self.token_id.provider_ref}
         )
 
         # Send the payment request to Mercado Pago.
         data = {
-            'transaction_amount': self._mercado_pago_convert_amount(),
-            'token': response_content['id'],
-            'installments': 1,
-            'payer': {'type': 'customer', 'id': self.token_id.mercado_pago_customer_id},
+            "transaction_amount": self._mercado_pago_convert_amount(),
+            "token": response_content["id"],
+            "installments": 1,
+            "payer": {"type": "customer", "id": self.token_id.mercado_pago_customer_id},
         }
         response_content = self._send_api_request(
-            'POST',
-            endpoint='/v1/payments',
+            "POST",
+            endpoint="/v1/payments",
             json=data,
-            idempotency_key=payment_utils.generate_idempotency_key(self, scope='token_payment'),
+            idempotency_key=payment_utils.generate_idempotency_key(self, scope="token_payment"),
         )
-        self._process('mercado_pago', response_content)
+        self._process("mercado_pago", response_content)
 
     def _mercado_pago_convert_amount(self):
         """Convert the transaction amount according to Mercado Pago's currency requirements.
@@ -161,78 +161,78 @@ class PaymentTransaction(models.Model):
             self.currency_id.name, CURRENCY_MINOR_UNITS.get(self.currency_id.name)
         )
         if decimal_places is not None:
-            unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
+            unit_price = float_round(unit_price, decimal_places, rounding_method="DOWN")
         return unit_price
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
         """Override of `payment` to extract the reference from the payment data."""
-        if provider_code != 'mercado_pago':
+        if provider_code != "mercado_pago":
             return super()._extract_reference(provider_code, payment_data)
-        return payment_data.get('external_reference')
+        return payment_data.get("external_reference")
 
     def _extract_amount_data(self, payment_data):
         """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != 'mercado_pago':
+        if self.provider_code != "mercado_pago":
             return super()._extract_amount_data(payment_data)
 
-        if self.operation in ('online_redirect', 'online_direct'):
-            amount = payment_data.get('additional_info', {}).get('items', [{}])[0].get('unit_price')
+        if self.operation in ("online_redirect", "online_direct"):
+            amount = payment_data.get("additional_info", {}).get("items", [{}])[0].get("unit_price")
         else:  # 'online_token', 'offline'
-            amount = payment_data.get('transaction_amount')
-        currency_code = payment_data.get('currency_id')
+            amount = payment_data.get("transaction_amount")
+        currency_code = payment_data.get("currency_id")
         return {
-            'amount': float(amount),
-            'currency_code': currency_code,
-            'precision_digits': const.CURRENCY_DECIMALS.get(currency_code),
+            "amount": float(amount),
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
         }
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
-        if self.provider_code != 'mercado_pago':
+        if self.provider_code != "mercado_pago":
             super()._apply_updates(payment_data)
             return
 
         # Update the provider reference.
-        payment_id = payment_data.get('id')
+        payment_id = payment_data.get("id")
         if not payment_id:
             self._set_error(_("Received data with missing payment id."))
             return
         self.provider_reference = payment_id
 
         # Update the payment method.
-        payment_method_type = payment_data.get('payment_type_id', '')
+        payment_method_type = payment_data.get("payment_type_id", "")
         for odoo_code, mp_codes in const.PAYMENT_METHODS_MAPPING.items():
-            if any(payment_method_type == mp_code for mp_code in mp_codes.split(',')):
+            if any(payment_method_type == mp_code for mp_code in mp_codes.split(",")):
                 payment_method_type = odoo_code
                 break
-        if payment_method_type == 'card':
-            payment_method_code = payment_data.get('payment_method_id')
+        if payment_method_type == "card":
+            payment_method_code = payment_data.get("payment_method_id")
         else:
             payment_method_code = payment_method_type
-        payment_method = self.env['payment.method']._get_from_code(
+        payment_method = self.env["payment.method"]._get_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         # Fall back to "unknown" if the payment method is not found (and if "unknown" is found), as
         # the user might have picked a different payment method than on Odoo's payment form.
         if not payment_method:
-            payment_method = self.env['payment.method'].search([('code', '=', 'unknown')], limit=1)
+            payment_method = self.env["payment.method"].search([("code", "=", "unknown")], limit=1)
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = payment_data.get('status')
+        payment_status = payment_data.get("status")
         if not payment_status:
             self._set_error(_("Received data with missing status."))
             return
 
-        if payment_status in const.TRANSACTION_STATUS_MAPPING['pending']:
+        if payment_status in const.TRANSACTION_STATUS_MAPPING["pending"]:
             self._set_pending()
-        elif payment_status in const.TRANSACTION_STATUS_MAPPING['done']:
+        elif payment_status in const.TRANSACTION_STATUS_MAPPING["done"]:
             self._set_done()
-        elif payment_status in const.TRANSACTION_STATUS_MAPPING['canceled']:
+        elif payment_status in const.TRANSACTION_STATUS_MAPPING["canceled"]:
             self._set_canceled()
-        elif payment_status in const.TRANSACTION_STATUS_MAPPING['error']:
-            status_detail = payment_data.get('status_detail')
+        elif payment_status in const.TRANSACTION_STATUS_MAPPING["error"]:
+            status_detail = payment_data.get("status_detail")
             _logger.warning(
                 "Received data for transaction %s with status %s and error code: %s.",
                 self.reference,
@@ -251,35 +251,35 @@ class PaymentTransaction(models.Model):
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on payment data."""
-        if self.provider_code != 'mercado_pago':
+        if self.provider_code != "mercado_pago":
             return super()._extract_token_values(payment_data)
 
         # Fetch the customer id or create a new one.
-        email_data = {'email': payment_data['payer']['email']}
-        response_content = self._send_api_request('GET', '/v1/customers/search', params=email_data)
-        if customers_data := response_content['results']:
-            customer_id = customers_data[0]['id']
+        email_data = {"email": payment_data["payer"]["email"]}
+        response_content = self._send_api_request("GET", "/v1/customers/search", params=email_data)
+        if customers_data := response_content["results"]:
+            customer_id = customers_data[0]["id"]
         else:  # No customer found.
             # Create a new customer.
-            response_content = self._send_api_request('POST', '/v1/customers', json=email_data)
-            customer_id = response_content['id']
+            response_content = self._send_api_request("POST", "/v1/customers", json=email_data)
+            customer_id = response_content["id"]
 
         # Fetch the card data.
         payload = {
-            'token': payment_data['token'],
-            'issuer_id': int(payment_data['issuer_id']),
-            'payment_method_id': payment_data['payment_method_id'],
+            "token": payment_data["token"],
+            "issuer_id": int(payment_data["issuer_id"]),
+            "payment_method_id": payment_data["payment_method_id"],
         }
         response_content = self._send_api_request(
-            'POST', f'/v1/customers/{customer_id}/cards', json=payload
+            "POST", f"/v1/customers/{customer_id}/cards", json=payload
         )
-        card_id = response_content['id']
-        last_four_digits = response_content['last_four_digits']
+        card_id = response_content["id"]
+        last_four_digits = response_content["last_four_digits"]
 
         return {
-            'mercado_pago_customer_id': customer_id,
-            'payment_details': last_four_digits,
-            'provider_ref': card_id,
+            "mercado_pago_customer_id": customer_id,
+            "payment_details": last_four_digits,
+            "provider_ref": card_id,
         }
 
     @api.model
@@ -291,5 +291,5 @@ class PaymentTransaction(models.Model):
         :rtype: str
         """
         return const.ERROR_MESSAGE_MAPPING.get(
-            status_detail, const.ERROR_MESSAGE_MAPPING['cc_rejected_other_reason']
+            status_detail, const.ERROR_MESSAGE_MAPPING["cc_rejected_other_reason"]
         )

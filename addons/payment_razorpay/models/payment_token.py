@@ -7,7 +7,7 @@ from odoo.addons.payment_razorpay import const
 
 
 class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+    _inherit = "payment.token"
 
     def _razorpay_get_limit_exceed_warning(self, amount, currency_id):
         """Return a warning message when the maximum payment amount is exceeded.
@@ -19,13 +19,13 @@ class PaymentToken(models.Model):
         """
         self.ensure_one()
 
-        if not amount or self.provider_code != 'razorpay':
+        if not amount or self.provider_code != "razorpay":
             return ""
 
         # Try to get the maximum amount based on the transaction from which this token was created.
-        Transaction = self.env['payment.transaction']
+        Transaction = self.env["payment.transaction"]
         primary_tx = Transaction.search(
-            [('token_id', '=', self.id), ('operation', 'not in', ['offline', 'online_token'])],
+            [("token_id", "=", self.id), ("operation", "not in", ["offline", "online_token"])],
             limit=1,
         )
         if primary_tx:
@@ -33,7 +33,7 @@ class PaymentToken(models.Model):
         else:  # Get the maximum amount based on the token's payment method code.
             pm = self.payment_method_id.primary_payment_method_id or self.payment_method_id
             mandate_max_amount_INR = const.MANDATE_MAX_AMOUNT.get(
-                pm.code, const.MANDATE_MAX_AMOUNT['card']
+                pm.code, const.MANDATE_MAX_AMOUNT["card"]
             )
             mandate_max_amount = Transaction._razorpay_convert_inr_to_currency(
                 mandate_max_amount_INR, currency_id

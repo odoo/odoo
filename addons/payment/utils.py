@@ -28,8 +28,8 @@ def generate_access_token(*values, env=None):
     """
     env = env or (request and request.env)
     assert isinstance(env, api.Environment), "Environment required to generate access token."
-    token_str = '|'.join(str(val) for val in values)
-    return hmac_tool(env(su=True), 'generate_access_token', token_str)
+    token_str = "|".join(str(val) for val in values)
+    return hmac_tool(env(su=True), "generate_access_token", token_str)
 
 
 def check_access_token(access_token, *values):
@@ -50,7 +50,7 @@ def check_access_token(access_token, *values):
 # Availability report
 
 
-def add_to_report(report, records, available=True, reason=''):
+def add_to_report(report, records, available=True, reason=""):
     """Add records to the report with the provided values.
 
         Structure of the report:
@@ -79,15 +79,15 @@ def add_to_report(report, records, available=True, reason=''):
     if report is None or not records:  # The report might not be initialized, or no records to add.
         return
 
-    category = 'providers' if records._name == 'payment.provider' else 'payment_methods'
+    category = "providers" if records._name == "payment.provider" else "payment_methods"
     report.setdefault(category, {})
     for r in records:
-        report[category][r] = {'available': available, 'reason': reason}
-        if category == 'payment_methods' and 'providers' in report:
-            report[category][r]['supported_providers'] = [
-                (p, report['providers'][p]['available'])
+        report[category][r] = {"available": available, "reason": reason}
+        if category == "payment_methods" and "providers" in report:
+            report[category][r]["supported_providers"] = [
+                (p, report["providers"][p]["available"])
                 for p in r.provider_ids
-                if p in report['providers']
+                if p in report["providers"]
             ]
 
 
@@ -113,7 +113,7 @@ def extract_url_params(url):
 # Transaction values formatting
 
 
-def singularize_reference_prefix(prefix='tx', separator='-', max_length=None):
+def singularize_reference_prefix(prefix="tx", separator="-", max_length=None):
     """Make the prefix more unique by suffixing it with the current datetime.
 
     When the prefix is a placeholder that would be part of a large sequence of references sharing
@@ -135,12 +135,12 @@ def singularize_reference_prefix(prefix='tx', separator='-', max_length=None):
     :rtype: str
     """
     if prefix is None:
-        prefix = 'tx'
+        prefix = "tx"
     if max_length:
         DATETIME_LENGTH = 14
         assert max_length >= 1 + len(separator) + DATETIME_LENGTH  # 1 char + separator + datetime
         prefix = prefix[: max_length - len(separator) - DATETIME_LENGTH]
-    return f'{prefix}{separator}{fields.Datetime.now().strftime("%Y%m%d%H%M%S")}'
+    return f"{prefix}{separator}{fields.Datetime.now().strftime('%Y%m%d%H%M%S')}"
 
 
 def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=None):
@@ -187,7 +187,7 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     else:
         decimal_number = arbitrary_decimal_number
     return int(
-        float_round(major_amount * (10**decimal_number), precision_digits=0, rounding_method='DOWN')
+        float_round(major_amount * (10**decimal_number), precision_digits=0, rounding_method="DOWN")
     )
 
 
@@ -225,7 +225,7 @@ def split_partner_name(partner_name):
 
 
 def get_customer_ip_address():
-    return (request and request.httprequest.remote_addr) or ''
+    return (request and request.httprequest.remote_addr) or ""
 
 
 def check_rights_on_recordset(recordset):
@@ -237,7 +237,7 @@ def check_rights_on_recordset(recordset):
     :param recordset: The recordset for which the rights should be checked.
     :return: None
     """
-    recordset.check_access('write')
+    recordset.check_access("write")
 
 
 # Idempotency
@@ -263,5 +263,5 @@ def generate_idempotency_key(tx, scope=None):
     :return: The generated idempotency key.
     :rtype: str
     """
-    database_uuid = tx.env['ir.config_parameter'].sudo().get_str('database.uuid')
-    return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
+    database_uuid = tx.env["ir.config_parameter"].sudo().get_str("database.uuid")
+    return sha1(f"{database_uuid}{tx.reference}{scope or ''}".encode()).hexdigest()

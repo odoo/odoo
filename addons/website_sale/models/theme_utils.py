@@ -4,15 +4,15 @@ from odoo import api, models
 
 
 class ThemeUtils(models.AbstractModel):
-    _inherit = 'theme.utils'
+    _inherit = "theme.utils"
 
     category_style_templates = [
-        'website_sale.filmstrip_categories_bordered',
-        'website_sale.filmstrip_categories_tabs',
-        'website_sale.filmstrip_categories_pills',
-        'website_sale.filmstrip_categories_images',
-        'website_sale.filmstrip_categories_grid',
-        'website_sale.filmstrip_categories_large_images',
+        "website_sale.filmstrip_categories_bordered",
+        "website_sale.filmstrip_categories_tabs",
+        "website_sale.filmstrip_categories_pills",
+        "website_sale.filmstrip_categories_images",
+        "website_sale.filmstrip_categories_grid",
+        "website_sale.filmstrip_categories_large_images",
     ]
 
     @api.model
@@ -25,4 +25,4 @@ class ThemeUtils(models.AbstractModel):
 
     @property
     def _footer_templates(self):
-        return ['website_sale.template_footer_website_sale'] + super()._footer_templates
+        return ["website_sale.template_footer_website_sale"] + super()._footer_templates

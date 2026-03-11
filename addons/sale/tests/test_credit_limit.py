@@ -7,7 +7,7 @@ from odoo.tests import Form, tagged, users
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestSaleOrderCreditLimit(TestSaleCommon):
     @classmethod
     def setUpClass(cls):
@@ -15,43 +15,43 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         cls.env.company.account_use_credit_limit = True
 
-        buck_currency = cls.env['res.currency'].create({'name': 'TB', 'symbol': 'TB'})
-        cls.env['res.currency.rate'].create({
-            'name': '2023-01-01',
-            'rate': 2.0,
-            'currency_id': buck_currency.id,
-            'company_id': cls.env.company.id,
+        buck_currency = cls.env["res.currency"].create({"name": "TB", "symbol": "TB"})
+        cls.env["res.currency.rate"].create({
+            "name": "2023-01-01",
+            "rate": 2.0,
+            "currency_id": buck_currency.id,
+            "company_id": cls.env.company.id,
         })
 
-        cls.buck_pricelist = cls.env['product.pricelist'].create({
-            'name': 'Test Buck Pricelist',
-            'currency_id': buck_currency.id,
+        cls.buck_pricelist = cls.env["product.pricelist"].create({
+            "name": "Test Buck Pricelist",
+            "currency_id": buck_currency.id,
         })
 
         cls.company_data_2 = cls.setup_other_company()
 
-        cls.sales_user = cls.company_data['default_user_salesman']
-        cls.sales_user.write({'login': "notaccountman", 'email': "bad@accounting.com"})
+        cls.sales_user = cls.company_data["default_user_salesman"]
+        cls.sales_user.write({"login": "notaccountman", "email": "bad@accounting.com"})
 
-        cls.empty_order = cls.env['sale.order'].create({'partner_id': cls.partner_a.id})
+        cls.empty_order = cls.env["sale.order"].create({"partner_id": cls.partner_a.id})
 
     def test_credit_limit_multi_company(self):
         # multi-company setup
-        company2 = self.company_data_2['company']
+        company2 = self.company_data_2["company"]
 
         # Activate the Credit Limit feature
         company2.account_use_credit_limit = True
 
         # Create and confirm a SO for that company
-        sale_order = company2.env['sale.order'].create({
-            'company_id': company2.id,
-            'partner_id': self.partner_a.id,
-            'partner_invoice_id': self.partner_a.id,
-            'partner_shipping_id': self.partner_a.id,
-            'order_line': [
+        sale_order = company2.env["sale.order"].create({
+            "company_id": company2.id,
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
                 Command.create({
-                    'product_id': self.company_data_2['product_order_no'].id,
-                    'price_unit': 1000.0,
+                    "product_id": self.company_data_2["product_order_no"].id,
+                    "price_unit": 1000.0,
                 })
             ],
         })
@@ -59,7 +59,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         self.assertEqual(self.partner_a.with_company(company2).credit_to_invoice, 0.0)
         sale_order.action_confirm()
 
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
         self.assertEqual(self.partner_a.with_company(company2).credit_to_invoice, 1000.0)
         partner_a_multi_company = self.partner_a.with_context(
             allowed_company_ids=[self.env.company.id, company2.id]
@@ -75,13 +75,13 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
         sale_order = self.empty_order
         sale_order.write({
-            'order_line': [
+            "order_line": [
                 Command.create({
-                    'name': self.company_data['product_order_no'].name,
-                    'product_id': self.company_data['product_order_no'].id,
-                    'product_uom_qty': 1,
-                    'price_unit': 1000.0,
-                    'tax_ids': False,
+                    "name": self.company_data["product_order_no"].name,
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 1000.0,
+                    "tax_ids": False,
                 })
             ]
         })
@@ -92,23 +92,23 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Make sure partner_a's credit_to_invoice includes the newly confirmed SO.
         sale_order.action_confirm()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
         self.assertEqual(self.partner_a.credit, 0.0)
         self.assertEqual(self.partner_a.credit_to_invoice, 1000.0)
 
         # Create a 50% down payment invoice.
-        self.env['sale.advance.payment.inv'].with_context({
-            'active_model': 'sale.order',
-            'active_ids': [sale_order.id],
-            'active_id': sale_order.id,
-            'default_journal_id': self.company_data['default_journal_sale'].id,
-        }).create({'advance_payment_method': 'percentage', 'amount': 50}).create_invoices()
+        self.env["sale.advance.payment.inv"].with_context({
+            "active_model": "sale.order",
+            "active_ids": [sale_order.id],
+            "active_id": sale_order.id,
+            "default_journal_id": self.company_data["default_journal_sale"].id,
+        }).create({"advance_payment_method": "percentage", "amount": 50}).create_invoices()
 
         invoice = sale_order.invoice_ids
 
         # Check that the warning does not appear even though we are creating an invoice
         # that should bring partner_a's credit above its limit.
-        self.assertEqual(invoice.partner_credit_warning, '')
+        self.assertEqual(invoice.partner_credit_warning, "")
 
         # Make the down payment invoice amount larger than the Amount to Invoice
         # and check that the warning appears with the correct amounts,
@@ -124,9 +124,9 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         invoice.action_post()
 
         # Create a credit note reversing the invoice
-        self.env['account.move.reversal'].with_company(self.env.company).with_context(
+        self.env["account.move.reversal"].with_company(self.env.company).with_context(
             active_model="account.move", active_ids=invoice.ids
-        ).create({'journal_id': invoice.journal_id.id}).reverse_moves()
+        ).create({"journal_id": invoice.journal_id.id}).reverse_moves()
 
         credit_note = sale_order.invoice_ids[1]
         credit_note.action_post()
@@ -137,30 +137,30 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
     def test_credit_limit_multicurrency(self):
         self.partner_a.credit_limit = 50
 
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 0.0}])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 0.0}])
 
         order = self.empty_order
         order.write({
-            'pricelist_id': self.buck_pricelist.id,
-            'order_line': [
+            "pricelist_id": self.buck_pricelist.id,
+            "order_line": [
                 Command.create({
-                    'product_id': self.company_data['product_order_no'].id,
-                    'product_uom_qty': 1,
-                    'price_unit': 45.0,
-                    'tax_ids': False,
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 45.0,
+                    "tax_ids": False,
                 })
             ],
         })
         self.assertEqual(order.amount_total / order.currency_rate, 22.5)
-        self.assertEqual(order.partner_credit_warning, '')
+        self.assertEqual(order.partner_credit_warning, "")
 
         order.write({
-            'order_line': [
+            "order_line": [
                 Command.create({
-                    'product_id': self.company_data['product_order_no'].id,
-                    'product_uom_qty': 1,
-                    'price_unit': 65.0,
-                    'tax_ids': False,
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 65.0,
+                    "tax_ids": False,
                 })
             ]
         })
@@ -174,12 +174,12 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # Make sure partner_a's credit_to_invoice includes the newly confirmed SO in the correct
         # currency
         order.action_confirm()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 55.0}])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 55.0}])
 
         # Make sure the invoice amount is converted correctly for the warning
         invoice = order._create_invoices(final=True)
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
         self.assertEqual(
             invoice.partner_credit_warning,
             "partner_a has reached its credit limit of: $\xa050.00\n"
@@ -188,8 +188,8 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Make sure the invoice amount is converted correctly for the partner.credit computation
         invoice.action_post()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertRecordValues(self.partner_a, [{'credit': 55.0, 'credit_to_invoice': 0.0}])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 55.0, "credit_to_invoice": 0.0}])
 
     def test_invoice_independent_of_credit_to_invoice(self):
         # Activate the Credit Limit feature and set a value for partner_a.
@@ -199,39 +199,39 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
         sale_order = self.empty_order
         sale_order.write({
-            'order_line': [
+            "order_line": [
                 Command.create({
-                    'product_id': self.company_data['product_order_no'].id,
-                    'price_unit': 1000.0,
+                    "product_id": self.company_data["product_order_no"].id,
+                    "price_unit": 1000.0,
                 })
             ]
         })
 
         # Check that partner_a's credit and credit_to_invoice is 0.0.
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 0.0}])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 0.0}])
 
         # Make sure partner_a's credit_to_invoice includes the newly confirmed SO.
         sale_order.action_confirm()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 1000.0}])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 1000.0}])
 
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [
+        invoice = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_a.id,
+            "invoice_line_ids": [
                 (
                     0,
                     0,
                     {
-                        'name': 'test line',
-                        'quantity': 1,
-                        'price_unit': 100.0,  # <= 1000 (sales order amount_total)
-                        'tax_ids': False,
+                        "name": "test line",
+                        "quantity": 1,
+                        "price_unit": 100.0,  # <= 1000 (sales order amount_total)
+                        "tax_ids": False,
                     },
                 )
             ],
         })
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 1000.0}])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 1000.0}])
 
         self.assertEqual(
             invoice.partner_credit_warning,
@@ -247,8 +247,8 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         )
 
         invoice.action_post()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertRecordValues(self.partner_a, [{'credit': 2000.0, 'credit_to_invoice': 1000.0}])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 2000.0, "credit_to_invoice": 1000.0}])
 
     def test_credit_limit_and_warning_overinvoiced_sales_order(self):
         # Activate the Credit Limit feature and set a value for partner_a.
@@ -257,30 +257,30 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Create 2 SOs
         self.empty_order.write({
-            'order_line': [
+            "order_line": [
                 Command.create({
-                    'product_id': self.company_data['product_order_no'].id,
-                    'price_unit': 1000.0,
+                    "product_id": self.company_data["product_order_no"].id,
+                    "price_unit": 1000.0,
                 })
             ]
         })
         sale_orders = self.empty_order + self.empty_order.copy()
 
         # Check that partner_a's credit and credit_to_invoice is 0.0.
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 0.0}])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 0.0}])
 
         for order in sale_orders:
             order.action_confirm()
 
         # Make sure partner_a's credit_to_invoice includes the newly confirmed SOs.
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertRecordValues(self.partner_a, [{'credit': 0.0, 'credit_to_invoice': 2000.0}])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 2000.0}])
 
         # Invoice 1 of the SOs.
         sale_order = sale_orders[0]
         self.assertEqual(sale_order.amount_to_invoice, 1000.0)
         invoice = sale_order._create_invoices(final=True)
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
         self.assertEqual(invoice.amount_total, 1000.0)
         # Modify the amount of the invoice to be greater than the amount of the (single) SO.
         invoice.invoice_line_ids[0].price_unit = 2000.0
@@ -296,10 +296,10 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Check that confirming the invoice changes the credit amounts as described above.
         invoice.action_post()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        self.assertRecordValues(self.partner_a, [{'credit': 2000.0, 'credit_to_invoice': 1000.0}])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 2000.0, "credit_to_invoice": 1000.0}])
 
-    @users('notaccountman')
+    @users("notaccountman")
     def test_credit_limit_access(self):
         """Ensure credit warning gets displayed without Accounting access."""
         self.empty_order.user_id = self.env.user  # it's our order now
@@ -323,26 +323,26 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
     def test_commercial_partner_credit(self):
         """Ensure that credit to invoice gets computed on partners' companies."""
-        company_a = self.env['res.partner'].create({
-            'name': "Company A",
-            'vat': 'BE0477472701',
-            'credit_limit': 10000.0,
-            'child_ids': [
+        company_a = self.env["res.partner"].create({
+            "name": "Company A",
+            "vat": "BE0477472701",
+            "credit_limit": 10000.0,
+            "child_ids": [
                 Command.link(self.partner_a.id),
-                Command.create({'name': "Company A Invoice", 'type': 'invoice'}),
+                Command.create({"name": "Company A Invoice", "type": "invoice"}),
             ],
         })
-        invoice_partner = company_a.child_ids.filtered(lambda p: p.type == 'invoice')
+        invoice_partner = company_a.child_ids.filtered(lambda p: p.type == "invoice")
 
         order = self.empty_order
         order.order_line = [
             Command.create({
-                'product_id': self.company_data['product_order_no'].id,
-                'price_unit': 600.0,
-                'tax_ids': False,
+                "product_id": self.company_data["product_order_no"].id,
+                "price_unit": 600.0,
+                "tax_ids": False,
             })
         ]
-        orders = order + order.copy({'partner_invoice_id': invoice_partner.id})
+        orders = order + order.copy({"partner_invoice_id": invoice_partner.id})
         orders.action_confirm()
 
         self.assertFalse(

@@ -53,12 +53,12 @@ class WebsiteSaleCommon(DeliveryCommon):
 
         cls.website = cls.env.company.website_id
         if not cls.website:
-            cls.website = cls.env['website'].create({
-                'name': 'Test Website',
-                'company_id': cls.env.company.id,
+            cls.website = cls.env["website"].create({
+                "name": "Test Website",
+                "company_id": cls.env.company.id,
             })
 
-        if 'enforce_cities' in cls.env['res.country']._fields:
+        if "enforce_cities" in cls.env["res.country"]._fields:
             cls.env.company.country_id.enforce_cities = False
 
         # Publish tests products
@@ -66,37 +66,37 @@ class WebsiteSaleCommon(DeliveryCommon):
 
         cls.public_user = cls.website.user_id
         cls.public_partner = cls.public_user.partner_id
-        cls.cart = cls.env['sale.order'].create({
-            'partner_id': cls.partner.id,
-            'website_id': cls.website.id,
-            'order_line': [
-                Command.create({'product_id': cls.product.id, 'product_uom_qty': 5.0}),
-                Command.create({'product_id': cls.service_product.id, 'product_uom_qty': 12.5}),
+        cls.cart = cls.env["sale.order"].create({
+            "partner_id": cls.partner.id,
+            "website_id": cls.website.id,
+            "order_line": [
+                Command.create({"product_id": cls.product.id, "product_uom_qty": 5.0}),
+                Command.create({"product_id": cls.service_product.id, "product_uom_qty": 12.5}),
             ],
         })
 
-        cls.country_be = cls.quick_ref('base.be')
-        cls.country_us = cls.quick_ref('base.us')
-        cls.country_us_state_id = cls.env['ir.model.data']._xmlid_to_res_id('base.state_us_39')
+        cls.country_be = cls.quick_ref("base.be")
+        cls.country_us = cls.quick_ref("base.us")
+        cls.country_us_state_id = cls.env["ir.model.data"]._xmlid_to_res_id("base.state_us_39")
         cls.dummy_partner_address_values = {
-            'street': '215 Vine St',
-            'city': 'Scranton',
-            'zip': '18503',
-            'country_id': cls.country_us.id,
-            'state_id': cls.country_us_state_id,
-            'phone': '+1 555-555-5555',
-            'email': 'admin@yourcompany.example.com',
+            "street": "215 Vine St",
+            "city": "Scranton",
+            "zip": "18503",
+            "country_id": cls.country_us.id,
+            "state_id": cls.country_us_state_id,
+            "phone": "+1 555-555-5555",
+            "email": "admin@yourcompany.example.com",
         }
 
     @classmethod
     def _create_pricelist(cls, **create_vals):
-        create_vals.setdefault('website_id', cls.website.id)
+        create_vals.setdefault("website_id", cls.website.id)
         return super()._create_pricelist(**create_vals)
 
     @classmethod
     def _create_product(cls, **create_vals):
         """Override of `product` to auto-publish test products by default."""
-        create_vals.setdefault('website_published', True)
+        create_vals.setdefault("website_published", True)
         return super()._create_product(**create_vals)
 
     @classmethod
@@ -105,7 +105,7 @@ class WebsiteSaleCommon(DeliveryCommon):
 
     @classmethod
     def _create_so(cls, **values):
-        values.setdefault('website_id', cls.website.id)
+        values.setdefault("website_id", cls.website.id)
         return super()._create_so(**values)
 
     @classmethod
@@ -127,7 +127,7 @@ class WebsiteSaleCommon(DeliveryCommon):
         :return: The created categories.
         :rtype: public.product.category
         """
-        categs = cls.env['product.public.category'].create(list_vals)
+        categs = cls.env["product.public.category"].create(list_vals)
         for i in range(0, len(categs) - 1):
             categs[i].parent_id = categs[i + 1]
         return categs
@@ -135,7 +135,7 @@ class WebsiteSaleCommon(DeliveryCommon):
     @classmethod
     def _create_image(cls, color):
         f = io.BytesIO()
-        Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
+        Image.new("RGB", (1920, 1080), color).save(f, "JPEG")
         f.seek(0)
         return BinaryBytes(f.read())
 

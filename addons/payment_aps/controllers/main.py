@@ -14,11 +14,11 @@ _logger = get_payment_logger(__name__)
 
 
 class APSController(http.Controller):
-    _return_url = '/payment/aps/return'
-    _webhook_url = '/payment/aps/webhook'
+    _return_url = "/payment/aps/return"
+    _webhook_url = "/payment/aps/webhook"
 
     @http.route(
-        _return_url, type='http', auth='public', methods=['POST'], csrf=False, save_session=False
+        _return_url, type="http", auth="public", methods=["POST"], csrf=False, save_session=False
     )
     def aps_return_from_checkout(self, **data):
         """Process the payment data sent by APS after redirection.
@@ -35,13 +35,13 @@ class APSController(http.Controller):
         """
         _logger.info("Handling redirection from APS with data:\n%s", pprint.pformat(data))
 
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('aps', data)
+        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("aps", data)
         if tx_sudo:
             self._verify_signature(data, tx_sudo)
-            tx_sudo._process('aps', data)
-        return request.redirect('/payment/status')
+            tx_sudo._process("aps", data)
+        return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
     def aps_webhook(self, **data):
         """Process the payment data sent by APS to the webhook.
 
@@ -52,11 +52,11 @@ class APSController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from APS with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('aps', data)
+        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("aps", data)
         if tx_sudo:
             self._verify_signature(data, tx_sudo)
-            tx_sudo._process('aps', data)
-        return ''  # Acknowledge the notification.
+            tx_sudo._process("aps", data)
+        return ""  # Acknowledge the notification.
 
     @staticmethod
     def _verify_signature(payment_data, tx_sudo):
@@ -67,7 +67,7 @@ class APSController(http.Controller):
         :return: None
         :raise Forbidden: If the signatures don't match.
         """
-        received_signature = payment_data.get('signature')
+        received_signature = payment_data.get("signature")
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
             raise Forbidden

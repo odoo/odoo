@@ -8,38 +8,38 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
     @classmethod
     def default_env_context(cls):
         ctx = super().default_env_context()
-        ctx['from_services_and_material'] = True
+        ctx["from_services_and_material"] = True
         return ctx
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.reinvoice_at_cost_product = cls.env['product.product'].create({
-            'name': 'Reinvoice at Cost product',
-            'type': 'service',
-            'standard_price': 100,
-            'list_price': 110,
-            'expense_policy': 'cost',
-            'invoice_policy': 'delivery',
+        cls.reinvoice_at_cost_product = cls.env["product.product"].create({
+            "name": "Reinvoice at Cost product",
+            "type": "service",
+            "standard_price": 100,
+            "list_price": 110,
+            "expense_policy": "cost",
+            "invoice_policy": "delivery",
         })
-        cls.reinvoice_at_sales_price_product = cls.env['product.product'].create({
-            'name': 'Reinvoice at Sales Price product',
-            'type': 'service',
-            'standard_price': 100,
-            'list_price': 110,
-            'expense_policy': 'sales_price',
-            'invoice_policy': 'delivery',
+        cls.reinvoice_at_sales_price_product = cls.env["product.product"].create({
+            "name": "Reinvoice at Sales Price product",
+            "type": "service",
+            "standard_price": 100,
+            "list_price": 110,
+            "expense_policy": "sales_price",
+            "invoice_policy": "delivery",
         })
-        cls.services_sale_order = cls.env['sale.order'].create({
-            'partner_id': cls.partner.id,
-            'order_line': [
+        cls.services_sale_order = cls.env["sale.order"].create({
+            "partner_id": cls.partner.id,
+            "order_line": [
                 Command.create({
-                    'name': 'Reinvoice at Cost Line',
-                    'product_id': cls.reinvoice_at_cost_product.id,
+                    "name": "Reinvoice at Cost Line",
+                    "product_id": cls.reinvoice_at_cost_product.id,
                 }),
                 Command.create({
-                    'name': 'Reinvoice at Sales Price Line',
-                    'product_id': cls.reinvoice_at_sales_price_product.id,
+                    "name": "Reinvoice at Sales Price Line",
+                    "product_id": cls.reinvoice_at_sales_price_product.id,
                 }),
             ],
         })
@@ -47,18 +47,18 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         # confirm the sale order
         cls.services_sale_order.action_confirm()
 
-        cls.at_cost_aal = cls.env['account.analytic.line'].create({
-            'name': 'At cost Upsale line',
-            'product_id': cls.reinvoice_at_cost_product.id,
-            'unit_amount': 1,
-            'order_id': cls.services_sale_order.id,
+        cls.at_cost_aal = cls.env["account.analytic.line"].create({
+            "name": "At cost Upsale line",
+            "product_id": cls.reinvoice_at_cost_product.id,
+            "unit_amount": 1,
+            "order_id": cls.services_sale_order.id,
         })
 
-        cls.at_sale_price_aal = cls.env['account.analytic.line'].create({
-            'name': 'At sale price Upsale line',
-            'product_id': cls.reinvoice_at_sales_price_product.id,
-            'unit_amount': 1,
-            'order_id': cls.services_sale_order.id,
+        cls.at_sale_price_aal = cls.env["account.analytic.line"].create({
+            "name": "At sale price Upsale line",
+            "product_id": cls.reinvoice_at_sales_price_product.id,
+            "unit_amount": 1,
+            "order_id": cls.services_sale_order.id,
         })
 
     def test_upsale_lines_created_based_on_reinvoice_policy(self):
@@ -136,7 +136,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
 
         self.assertEqual(
             self.services_sale_order.analytic_account_id.plan_id,
-            self.env.ref('sale.analytic_plan_sale_orders'),
+            self.env.ref("sale.analytic_plan_sale_orders"),
             "The sale order analytic account should have the sale orders analytic plan",
         )
 
@@ -176,7 +176,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         at_cost_upsale_order_line = self.at_cost_aal.so_line
         at_sale_price_upsale_order_line = self.at_sale_price_aal.so_line
 
-        empty_services_sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        empty_services_sale_order = self.env["sale.order"].create({"partner_id": self.partner.id})
 
         empty_services_sale_order.action_confirm()
 
@@ -237,23 +237,23 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         at_cost_upsale_order_line = self.at_cost_aal.so_line
         at_sale_price_upsale_order_line = self.at_sale_price_aal.so_line
 
-        reinvoice_at_cost_product_new = self.env['product.product'].create({
-            'name': 'New Reinvoice at Cost product',
-            'type': 'service',
-            'standard_price': 200,
-            'list_price': 210,
-            'expense_policy': 'cost',
-            'invoice_policy': 'delivery',
-            'uom_id': self.uom_hour.id,
+        reinvoice_at_cost_product_new = self.env["product.product"].create({
+            "name": "New Reinvoice at Cost product",
+            "type": "service",
+            "standard_price": 200,
+            "list_price": 210,
+            "expense_policy": "cost",
+            "invoice_policy": "delivery",
+            "uom_id": self.uom_hour.id,
         })
-        reinvoice_at_sales_price_product_new = self.env['product.product'].create({
-            'name': 'New Reinvoice at Sales Price product',
-            'type': 'service',
-            'standard_price': 200,
-            'list_price': 210,
-            'expense_policy': 'sales_price',
-            'invoice_policy': 'delivery',
-            'uom_id': self.uom_hour.id,
+        reinvoice_at_sales_price_product_new = self.env["product.product"].create({
+            "name": "New Reinvoice at Sales Price product",
+            "type": "service",
+            "standard_price": 200,
+            "list_price": 210,
+            "expense_policy": "sales_price",
+            "invoice_policy": "delivery",
+            "uom_id": self.uom_hour.id,
         })
 
         self.at_cost_aal.product_id = reinvoice_at_cost_product_new
@@ -358,11 +358,11 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         """When multiple analytic lines point to the same sales-price product,
         they should all update the same sale order line instead of creating duplicates.
         """
-        extra_at_sale_price_aal = self.env['account.analytic.line'].create({
-            'name': 'Extra work',
-            'product_id': self.reinvoice_at_sales_price_product.id,
-            'unit_amount': 2,
-            'order_id': self.services_sale_order.id,
+        extra_at_sale_price_aal = self.env["account.analytic.line"].create({
+            "name": "Extra work",
+            "product_id": self.reinvoice_at_sales_price_product.id,
+            "unit_amount": 2,
+            "order_id": self.services_sale_order.id,
         })
 
         self.assertEqual(
@@ -387,18 +387,18 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
           should be decreased.
         - At sale price expense policy -> contributed delivered quantity should be decreased.
         """
-        extra_at_sale_price_aal = self.env['account.analytic.line'].create({
-            'name': 'Extra work At sales Price',
-            'product_id': self.reinvoice_at_sales_price_product.id,
-            'unit_amount': 2,
-            'order_id': self.services_sale_order.id,
+        extra_at_sale_price_aal = self.env["account.analytic.line"].create({
+            "name": "Extra work At sales Price",
+            "product_id": self.reinvoice_at_sales_price_product.id,
+            "unit_amount": 2,
+            "order_id": self.services_sale_order.id,
         })
 
-        extra_at_cost_aal = self.env['account.analytic.line'].create({
-            'name': 'Extra work At cost',
-            'product_id': self.reinvoice_at_cost_product.id,
-            'unit_amount': 2,
-            'order_id': self.services_sale_order.id,
+        extra_at_cost_aal = self.env["account.analytic.line"].create({
+            "name": "Extra work At cost",
+            "product_id": self.reinvoice_at_cost_product.id,
+            "unit_amount": 2,
+            "order_id": self.services_sale_order.id,
         })
 
         # we need to replicate the case when some nasty user deliberately changes the quantity
@@ -449,14 +449,14 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
 
         extra_work_at_cost = (
             self
-            .env['account.analytic.line']
+            .env["account.analytic.line"]
             .with_context(from_services_and_material=True)
             .create({
-                'name': 'Extra work At cost line',
-                'product_id': self.reinvoice_at_cost_product.id,
-                'unit_amount': 2,
-                'order_id': self.services_sale_order.id,
-                'amount': -30,
+                "name": "Extra work At cost line",
+                "product_id": self.reinvoice_at_cost_product.id,
+                "unit_amount": 2,
+                "order_id": self.services_sale_order.id,
+                "amount": -30,
             })
         )
 

@@ -13,9 +13,9 @@ _logger = logging.getLogger(__name__)
 
 
 class GelatoController(Controller):
-    _webhook_url = '/gelato/webhook'
+    _webhook_url = "/gelato/webhook"
 
-    @route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)
     def gelato_webhook(self):
         """Process the notification data sent by Gelato to the webhook.
 
@@ -28,33 +28,33 @@ class GelatoController(Controller):
         event_data = request.get_json_data()
         _logger.info("Webhook notification received from Gelato:\n%s", pprint.pformat(event_data))
 
-        if event_data['event'] == 'order_status_updated':
+        if event_data["event"] == "order_status_updated":
             try:
-                order_id = int(event_data['orderReferenceId'])
+                order_id = int(event_data["orderReferenceId"])
             except ValueError:  # A test notification was sent with the "{{MyOrderId}}" placeholder.
-                return request.make_json_response('')  # Discard test webhook notifications.
-            order_sudo = request.env['sale.order'].sudo().browse(order_id).exists()
+                return request.make_json_response("")  # Discard test webhook notifications.
+            order_sudo = request.env["sale.order"].sudo().browse(order_id).exists()
             if not order_sudo:
-                return request.make_json_response('')  # Discard unknown orders.
+                return request.make_json_response("")  # Discard unknown orders.
 
             # Check the signature of the webhook notification.
-            received_signature = request.httprequest.headers.get('signature', '')
+            received_signature = request.httprequest.headers.get("signature", "")
             self._verify_notification_signature(received_signature, order_sudo)
 
             # Process the event.
-            fulfillment_status = event_data.get('fulfillmentStatus')
-            if fulfillment_status == 'failed':
+            fulfillment_status = event_data.get("fulfillmentStatus")
+            if fulfillment_status == "failed":
                 # Log a message on the order.
                 log_message = _(
                     "Gelato could not proceed with the fulfillment of order %(order_reference)s:"
                     " %(gelato_message)s",
                     order_reference=order_sudo.display_name,
-                    gelato_message=event_data['comment'],
+                    gelato_message=event_data["comment"],
                 )
                 order_sudo.message_post(
-                    body=log_message, author_id=request.env.ref('base.partner_root').id
+                    body=log_message, author_id=request.env.ref("base.partner_root").id
                 )
-            elif fulfillment_status == 'canceled':
+            elif fulfillment_status == "canceled":
                 # Cancel the order.
                 order_sudo.with_user(SUPERUSER_ID)._action_cancel()
 
@@ -71,32 +71,32 @@ class GelatoController(Controller):
                     "Gelato has canceled order %(reference)s.", reference=order_sudo.display_name
                 )
                 order_sudo.message_post(
-                    body=log_message, author_id=request.env.ref('base.partner_root').id
+                    body=log_message, author_id=request.env.ref("base.partner_root").id
                 )
-            elif fulfillment_status == 'in_transit':
+            elif fulfillment_status == "in_transit":
                 # Send the Gelato order status update email.
-                tracking_data = self._extract_tracking_data(item_data=event_data['items'])
-                order_sudo.with_context({'tracking_data': tracking_data}).message_post_with_source(
-                    source_ref=request.env.ref('sale_gelato.order_status_update'),
-                    subtype_xmlid='mail.mt_comment',
-                    author_id=request.env.ref('base.partner_root').id,
+                tracking_data = self._extract_tracking_data(item_data=event_data["items"])
+                order_sudo.with_context({"tracking_data": tracking_data}).message_post_with_source(
+                    source_ref=request.env.ref("sale_gelato.order_status_update"),
+                    subtype_xmlid="mail.mt_comment",
+                    author_id=request.env.ref("base.partner_root").id,
                 )
-            elif fulfillment_status == 'delivered':
+            elif fulfillment_status == "delivered":
                 # Send the Gelato order status update email.
-                order_sudo.with_context({'order_delivered': True}).message_post_with_source(
-                    source_ref=request.env.ref('sale_gelato.order_status_update'),
-                    subtype_xmlid='mail.mt_comment',
-                    author_id=request.env.ref('base.partner_root').id,
+                order_sudo.with_context({"order_delivered": True}).message_post_with_source(
+                    source_ref=request.env.ref("sale_gelato.order_status_update"),
+                    subtype_xmlid="mail.mt_comment",
+                    author_id=request.env.ref("base.partner_root").id,
                 )
-            elif fulfillment_status == 'returned':
+            elif fulfillment_status == "returned":
                 # Log a message on the order.
                 log_message = _(
                     "Gelato has returned order %(reference)s.", reference=order_sudo.display_name
                 )
                 order_sudo.message_post(
-                    body=log_message, author_id=request.env.ref('base.partner_root').id
+                    body=log_message, author_id=request.env.ref("base.partner_root").id
                 )
-        return request.make_json_response('')
+        return request.make_json_response("")
 
     @staticmethod
     def _verify_notification_signature(received_signature, order_sudo):
@@ -131,8 +131,8 @@ class GelatoController(Controller):
         """
         tracking_data = {}
         for i in item_data:
-            for fulfilment_data in i['fulfillments']:
+            for fulfilment_data in i["fulfillments"]:
                 tracking_data.setdefault(
-                    fulfilment_data['trackingUrl'], fulfilment_data['trackingCode']
+                    fulfilment_data["trackingUrl"], fulfilment_data["trackingCode"]
                 )  # Different items can have the same tracking URL.
         return tracking_data

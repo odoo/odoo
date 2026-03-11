@@ -27,37 +27,37 @@ ATTACHMENT_DATA = [
 ATTACHMENT_COUNT = 5
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestProductPictureController(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env['website'].browse(1)
+        cls.website = cls.env["website"].browse(1)
         cls.WebsiteSaleController = WebsiteSale()
-        cls.product = cls.env['product.product'].create({
-            'name': 'Storage Test Box',
-            'standard_price': 70.0,
-            'list_price': 79.0,
-            'website_published': True,
+        cls.product = cls.env["product.product"].create({
+            "name": "Storage Test Box",
+            "standard_price": 70.0,
+            "list_price": 79.0,
+            "website_published": True,
         })
 
-        cls.attachments = cls.env['ir.attachment'].create([
-            {'raw': ATTACHMENT_DATA[i], 'name': f'image0{i}.gif', 'public': True}
+        cls.attachments = cls.env["ir.attachment"].create([
+            {"raw": ATTACHMENT_DATA[i], "name": f"image0{i}.gif", "public": True}
             for i in range(ATTACHMENT_COUNT)
         ])
 
     def _create_product_images(self):
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.add_product_media(
-                [{'id': attachment.id} for attachment in self.attachments],
-                'image',
+                [{"id": attachment.id} for attachment in self.attachments],
+                "image",
                 self.product.id,
                 self.product.product_tmpl_id.id,
             )
 
     def _get_product_image_data(self):
         return [
-            (hasattr(image, 'video_url') and image.video_url) or image.image_1920.content
+            (hasattr(image, "video_url") and image.video_url) or image.image_1920.content
             for image in self.product._get_images()
         ]
 
@@ -68,7 +68,7 @@ class TestProductPictureController(HttpCase):
         # Check if the media now exists on the product :
         for i, image in enumerate(self.product.product_template_image_ids):
             # Check if all names are now in the product
-            self.assertIn(image.name, self.attachments.mapped('name'))
+            self.assertIn(image.name, self.attachments.mapped("name"))
             # Check if image content are the same
             self.assertEqual(image.image_1920.content, ATTACHMENT_DATA[i].content)
         # Check if exactly ATTACHMENT_COUNT images were saved (no dupes/misses?)
@@ -90,19 +90,19 @@ class TestProductPictureController(HttpCase):
 
     def test_extra_images_with_new_variant(self):
         # Test that adding images for a variant that is not yet created works
-        product_attribute = self.env['product.attribute'].create({
+        product_attribute = self.env["product.attribute"].create({
             "name": "Test attribute",
             "create_variant": "dynamic",
         })
-        product_attribute_values = self.env['product.attribute.value'].create([
+        product_attribute_values = self.env["product.attribute.value"].create([
             {"name": "Test Dynamic 1", "attribute_id": product_attribute.id, "sequence": 1},
             {"name": "Test Dynamic 2", "attribute_id": product_attribute.id, "sequence": 2},
         ])
-        product_template = self.env['product.template'].create({
+        product_template = self.env["product.template"].create({
             "name": "test product",
             "website_published": True,
         })
-        product_template_attribute_line = self.env['product.template.attribute.line'].create({
+        product_template_attribute_line = self.env["product.template.attribute.line"].create({
             "attribute_id": product_attribute.id,
             "product_tmpl_id": product_template.id,
             "value_ids": product_attribute_values,
@@ -110,8 +110,8 @@ class TestProductPictureController(HttpCase):
         self.assertEqual(0, len(product_template.product_variant_ids))
         with MockRequest(product_template.env, website=self.website):
             self.WebsiteSaleController.add_product_media(
-                [{'id': self.attachments[0].id}],
-                'image',
+                [{"id": self.attachments[0].id}],
+                "image",
                 False,
                 product_template.id,
                 [product_template_attribute_line.product_template_value_ids[0].id],
@@ -124,10 +124,10 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'first'
+                images[2]._name, images[2].id, "first"
             )
             # Trigger the reordering of product.image records based on their sequence.
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
             self.assertEqual(self.product.image_1920.content, i3)
 
@@ -137,9 +137,9 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'left'
+                images[2]._name, images[2].id, "left"
             )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
 
     def test_resequence_image_right(self):
@@ -148,9 +148,9 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'right'
+                images[2]._name, images[2].id, "right"
             )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i3, i5, i6])
 
     def test_resequence_image_last(self):
@@ -159,9 +159,9 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'last'
+                images[2]._name, images[2].id, "last"
             )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i5, i6, i3])
 
     def test_resequence_image_first_to_last(self):
@@ -171,9 +171,9 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[0]._name, images[0].id, 'last'
+                images[0]._name, images[0].id, "last"
             )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
             self.assertEqual(self.product.image_1920.content, i2)
 
@@ -184,9 +184,9 @@ class TestProductPictureController(HttpCase):
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'left'
+                images[2]._name, images[2].id, "left"
             )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
 
     def test_resequence_video_first(self):
@@ -198,9 +198,9 @@ class TestProductPictureController(HttpCase):
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.resequence_product_image(
-                    images[2]._name, images[2].id, 'first'
+                    images[2]._name, images[2].id, "first"
                 )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
 
     def test_resequence_video_replace_first(self):
@@ -212,78 +212,78 @@ class TestProductPictureController(HttpCase):
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.resequence_product_image(
-                    images[0]._name, images[0].id, 'right'
+                    images[0]._name, images[0].id, "right"
                 )
-            self.env['product.image'].invalidate_model()
+            self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_website_user.group_ids += cls.env.ref('sales_team.group_sale_manager')
-        cls.user_website_user.group_ids += cls.env.ref('product.group_product_manager')
+        cls.user_website_user.group_ids += cls.env.ref("sales_team.group_sale_manager")
+        cls.user_website_user.group_ids += cls.env.ref("product.group_product_manager")
 
     def test_category_page_and_products_snippet(self):
-        category = self.env['product.public.category'].create({'name': 'Test Category'})
-        self.env['product.public.category'].create({
-            'parent_id': category.id,
-            'name': 'Test Category - Child',
+        category = self.env["product.public.category"].create({"name": "Test Category"})
+        self.env["product.public.category"].create({
+            "parent_id": category.id,
+            "name": "Test Category - Child",
         })
-        self.env['product.template'].create({
-            'name': 'Test Product',
-            'website_published': True,
-            'public_categ_ids': [Command.link(category.id)],
+        self.env["product.template"].create({
+            "name": "Test Product",
+            "website_published": True,
+            "public_categ_ids": [Command.link(category.id)],
         })
-        self.env['product.template'].create({
-            'name': 'Test Product Outside Category',
-            'website_published': True,
+        self.env["product.template"].create({
+            "name": "Test Product Outside Category",
+            "website_published": True,
         })
         self.start_tour(
-            self.env['website'].get_client_action_url('/shop'),
-            'website_sale.category_page_and_products_snippet_edition',
-            login='admin',
+            self.env["website"].get_client_action_url("/shop"),
+            "website_sale.category_page_and_products_snippet_edition",
+            login="admin",
         )
-        self.start_tour('/shop', 'website_sale.category_page_and_products_snippet_use', login=None)
+        self.start_tour("/shop", "website_sale.category_page_and_products_snippet_use", login=None)
 
     def test_website_sale_restricted_editor_ui(self):
-        self.env['product.template'].create({
-            'name': 'Test Product',
-            'website_sequence': 0,
-            'website_published': True,
+        self.env["product.template"].create({
+            "name": "Test Product",
+            "website_sequence": 0,
+            "website_published": True,
         })
         self.start_tour(
-            self.env['website'].get_client_action_url('/shop'),
-            'website_sale.restricted_editor_ui',
-            login='website_user',
+            self.env["website"].get_client_action_url("/shop"),
+            "website_sale.restricted_editor_ui",
+            login="website_user",
         )
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestProductVideoUpload(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env['website'].browse(1)
+        cls.website = cls.env["website"].browse(1)
         cls.WebsiteSaleController = WebsiteSale()
-        cls.product = cls.env['product.product'].create({
-            'name': 'Test Video Product',
-            'standard_price': 100.0,
-            'list_price': 120.0,
-            'website_published': True,
+        cls.product = cls.env["product.product"].create({
+            "name": "Test Video Product",
+            "standard_price": 100.0,
+            "list_price": 120.0,
+            "website_published": True,
         })
         cls.video_data = {
-            'src': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',  # A placeholder video URL
-            'name': 'Test Video',
+            "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # A placeholder video URL
+            "name": "Test Video",
         }
 
     def _upload_video(self):
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.add_product_media(
-                [{'src': self.video_data['src'], 'name': self.video_data['name']}],
-                'video',
+                [{"src": self.video_data["src"], "name": self.video_data["name"]}],
+                "video",
                 self.product.id,
                 self.product.product_tmpl_id.id,
             )
@@ -297,7 +297,7 @@ class TestProductVideoUpload(HttpCase):
         image_1920 = self.product.product_template_image_ids[0].image_1920
 
         # Check that the video URL and thumbnail are correctly saved
-        self.assertEqual(video_url, self.video_data['src'])
+        self.assertEqual(video_url, self.video_data["src"])
         self.assertIsNotNone(image_1920)  # Ensure a thumbnail was generated
 
         # Verify that the video was added as part of the media
@@ -308,8 +308,8 @@ class TestProductVideoUpload(HttpCase):
         with MockRequest(self.product.env, website=self.website):
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.add_product_media(
-                    [{'src': '', 'name': 'Invalid Video'}],
-                    'video',
+                    [{"src": "", "name": "Invalid Video"}],
+                    "video",
                     self.product.id,
                     self.product.product_tmpl_id.id,
                 )

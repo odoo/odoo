@@ -9,4 +9,4 @@ class CashOnDeliveryCommon(PaymentCustomCommon, DeliveryCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.sale_order = cls._create_so(order_line=[])
-        cls.cod_provider = cls._prepare_provider(code='custom', custom_mode='cash_on_delivery')
+        cls.cod_provider = cls._prepare_provider(code="custom", custom_mode="cash_on_delivery")

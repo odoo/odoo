@@ -6,82 +6,82 @@ from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
 
 class SaleReport(models.Model):
-    _name = 'sale.report'
+    _name = "sale.report"
     _description = "Sales Analysis Report"
     _auto = False
-    _rec_name = 'date'
-    _order = 'date desc'
+    _rec_name = "date"
+    _order = "date desc"
 
     @api.model
     def _get_done_states(self):
-        return ['sale']
+        return ["sale"]
 
     @api.model
     def _selection_target_model(self):
         return [
             (model.model, model.name)
-            for model in self.env['ir.model'].sudo().search([])
+            for model in self.env["ir.model"].sudo().search([])
             if not model.is_transient()
         ]
 
     # sale.order fields
     name = fields.Char(string="Order Reference", readonly=True)
     date = fields.Datetime(string="Order Date", readonly=True)
-    partner_id = fields.Many2one(comodel_name='res.partner', string="Customer", readonly=True)
-    company_id = fields.Many2one(comodel_name='res.company', readonly=True)
-    pricelist_id = fields.Many2one(comodel_name='product.pricelist', readonly=True)
-    team_id = fields.Many2one(comodel_name='crm.team', string="Sales Team", readonly=True)
-    user_id = fields.Many2one(comodel_name='res.users', string="Salesperson", readonly=True)
+    partner_id = fields.Many2one(comodel_name="res.partner", string="Customer", readonly=True)
+    company_id = fields.Many2one(comodel_name="res.company", readonly=True)
+    pricelist_id = fields.Many2one(comodel_name="product.pricelist", readonly=True)
+    team_id = fields.Many2one(comodel_name="crm.team", string="Sales Team", readonly=True)
+    user_id = fields.Many2one(comodel_name="res.users", string="Salesperson", readonly=True)
     state = fields.Selection(selection=SALE_ORDER_STATE, string="Status", readonly=True)
     invoice_status = fields.Selection(
         selection=[
-            ('upselling', "Upselling Opportunity"),
-            ('invoiced', "Fully Invoiced"),
-            ('to invoice', "To Invoice"),
-            ('no', "Nothing to Invoice"),
+            ("upselling", "Upselling Opportunity"),
+            ("invoiced", "Fully Invoiced"),
+            ("to invoice", "To Invoice"),
+            ("no", "Nothing to Invoice"),
         ],
         string="Order Invoice Status",
         readonly=True,
     )
 
-    campaign_id = fields.Many2one(comodel_name='utm.campaign', string="Campaign", readonly=True)
-    medium_id = fields.Many2one(comodel_name='utm.medium', string="Medium", readonly=True)
-    source_id = fields.Many2one(comodel_name='utm.source', string="Source", readonly=True)
-    utm_reference = fields.Reference(string='UTM Reference', selection='_selection_target_model')
+    campaign_id = fields.Many2one(comodel_name="utm.campaign", string="Campaign", readonly=True)
+    medium_id = fields.Many2one(comodel_name="utm.medium", string="Medium", readonly=True)
+    source_id = fields.Many2one(comodel_name="utm.source", string="Source", readonly=True)
+    utm_reference = fields.Reference(string="UTM Reference", selection="_selection_target_model")
 
     # res.partner fields
     commercial_partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Customer Entity", readonly=True
+        comodel_name="res.partner", string="Customer Entity", readonly=True
     )
     country_id = fields.Many2one(
-        comodel_name='res.country', string="Customer Country", readonly=True
+        comodel_name="res.country", string="Customer Country", readonly=True
     )
     industry_id = fields.Many2one(
-        comodel_name='res.partner.industry', string="Customer Industry", readonly=True
+        comodel_name="res.partner.industry", string="Customer Industry", readonly=True
     )
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
     state_id = fields.Many2one(
-        comodel_name='res.country.state', string="Customer State", readonly=True
+        comodel_name="res.country.state", string="Customer State", readonly=True
     )
     partner_tag_ids = fields.Many2many(
-        string="Customer Tags", related='partner_id.category_id', readonly=True
+        string="Customer Tags", related="partner_id.category_id", readonly=True
     )
 
     # sale.order.line fields
     order_reference = fields.Reference(
-        string='Order', selection=[('sale.order', 'Sales Order')], aggregator="count_distinct"
+        string="Order", selection=[("sale.order", "Sales Order")], aggregator="count_distinct"
     )
 
     categ_id = fields.Many2one(
-        comodel_name='product.category', string="Product Category", readonly=True
+        comodel_name="product.category", string="Product Category", readonly=True
     )
     product_id = fields.Many2one(
-        comodel_name='product.product', string="Product Variant", readonly=True
+        comodel_name="product.product", string="Product Variant", readonly=True
     )
     product_tmpl_id = fields.Many2one(
-        comodel_name='product.template', string="Product", readonly=True
+        comodel_name="product.template", string="Product", readonly=True
     )
-    product_uom_id = fields.Many2one(comodel_name='uom.uom', string="Unit", readonly=True)
+    product_uom_id = fields.Many2one(comodel_name="uom.uom", string="Unit", readonly=True)
     product_uom_qty = fields.Float(string="Qty Ordered", readonly=True)
     qty_to_deliver = fields.Float(string="Qty To Deliver", readonly=True)
     qty_delivered = fields.Float(string="Qty Delivered", readonly=True)
@@ -94,10 +94,10 @@ class SaleReport(models.Model):
     untaxed_delivered_amount = fields.Monetary(string="Untaxed Amount Delivered", readonly=True)
     line_invoice_status = fields.Selection(
         selection=[
-            ('upselling', "Upselling Opportunity"),
-            ('invoiced', "Fully Invoiced"),
-            ('to invoice', "To Invoice"),
-            ('no', "Nothing to Invoice"),
+            ("upselling", "Upselling Opportunity"),
+            ("invoiced", "Fully Invoiced"),
+            ("to invoice", "To Invoice"),
+            ("no", "Nothing to Invoice"),
         ],
         string="Invoice Status",
         readonly=True,
@@ -105,13 +105,13 @@ class SaleReport(models.Model):
 
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
-    price_unit = fields.Float(string="Unit Price", aggregator='avg', readonly=True)
-    discount = fields.Float(string="Discount %", readonly=True, aggregator='avg')
+    price_unit = fields.Float(string="Unit Price", aggregator="avg", readonly=True)
+    discount = fields.Float(string="Discount %", readonly=True, aggregator="avg")
     discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
 
     # aggregates or computed fields
     nbr = fields.Integer(string="# of Lines", readonly=True)
-    currency_id = fields.Many2one(comodel_name='res.currency', readonly=True)
+    currency_id = fields.Many2one(comodel_name="res.currency", readonly=True)
 
     def _with_sale(self):
         return ""
@@ -128,33 +128,33 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_invoiced * u.factor / u2.factor) ELSE 0 END AS qty_invoiced,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice * u.factor / u2.factor) ELSE 0 END AS qty_to_invoice,
             CASE WHEN l.product_id IS NOT NULL THEN AVG(l.price_unit
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS price_unit,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS price_total,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS price_subtotal,
             CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_to_invoice
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS untaxed_amount_to_invoice,
             CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_invoiced
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS untaxed_amount_invoiced,
             CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM((l.price_unit * l.qty_delivered)
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS untaxed_delivered_amount,
             COUNT(*) AS nbr,
@@ -182,8 +182,8 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty * u.factor / u2.factor) ELSE 0 END AS volume,
             l.discount AS discount,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
+                / {self._case_value_or_one("s.currency_rate")}
+                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS discount_amount,
             {self.env.company.currency_id.id} AS currency_id,
@@ -210,7 +210,7 @@ class SaleReport(models.Model):
         return {}
 
     def _from_sale(self):
-        currency_table = self.env['res.currency']._get_simple_currency_table(self.env.companies)
+        currency_table = self.env["res.currency"]._get_simple_currency_table(self.env.companies)
         currency_table = self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding)
         return f"""
             sale_order_line l
@@ -278,8 +278,8 @@ class SaleReport(models.Model):
     def action_open_order(self):
         self.ensure_one()
         return {
-            'res_model': self.order_reference._name,
-            'type': 'ir.actions.act_window',
-            'views': [[False, 'form']],
-            'res_id': self.order_reference.id,
+            "res_model": self.order_reference._name,
+            "type": "ir.actions.act_window",
+            "views": [[False, "form"]],
+            "res_id": self.order_reference.id,
         }

@@ -9,28 +9,28 @@ _logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[('xendit', "Xendit")], ondelete={'xendit': 'set default'}
+        selection_add=[("xendit", "Xendit")], ondelete={"xendit": "set default"}
     )
     xendit_public_key = fields.Char(
         string="Xendit Public Key",
-        required_if_provider='xendit',
+        required_if_provider="xendit",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
     xendit_secret_key = fields.Char(
         string="Xendit Secret Key",
-        required_if_provider='xendit',
+        required_if_provider="xendit",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
     xendit_webhook_token = fields.Char(
         string="Xendit Webhook Token",
-        required_if_provider='xendit',
+        required_if_provider="xendit",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS === #
@@ -38,12 +38,12 @@ class PaymentProvider(models.Model):
     def _compute_feature_support_fields(self):
         """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'xendit').support_tokenization = True
+        self.filtered(lambda p: p.code == "xendit").support_tokenization = True
 
     def _get_supported_currencies(self):
         """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
-        if self.code == 'xendit':
+        if self.code == "xendit":
             supported_currencies = supported_currencies.filtered(
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
@@ -54,7 +54,7 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.code != 'xendit':
+        if self.code != "xendit":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -76,7 +76,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.code == 'xendit' and is_validation:
+        if self.code == "xendit" and is_validation:
             return None
         return super()._get_redirect_form_view(is_validation)
 
@@ -84,18 +84,18 @@ class PaymentProvider(models.Model):
 
     def _build_request_url(self, endpoint, **kwargs):
         """Override of `payment` to build the request URL."""
-        if self.code != 'xendit':
+        if self.code != "xendit":
             return super()._build_request_url(endpoint, **kwargs)
-        return f'https://api.xendit.co/{endpoint}'
+        return f"https://api.xendit.co/{endpoint}"
 
     def _build_request_auth(self, **kwargs):
         """Override of `payment` to build the request Auth."""
-        if self.code != 'xendit':
+        if self.code != "xendit":
             return super()._build_request_auth(**kwargs)
-        return self.xendit_secret_key, ''
+        return self.xendit_secret_key, ""
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""
-        if self.code != 'xendit':
+        if self.code != "xendit":
             return super()._parse_response_error(response)
-        return response.json().get('message')
+        return response.json().get("message")

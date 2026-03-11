@@ -19,26 +19,26 @@ _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[('stripe', "Stripe")], ondelete={'stripe': 'set default'}
+        selection_add=[("stripe", "Stripe")], ondelete={"stripe": "set default"}
     )
     stripe_publishable_key = fields.Char(
         string="Publishable Key",
         help="The key solely used to identify the account with Stripe",
-        required_if_provider='stripe',
+        required_if_provider="stripe",
         copy=False,
     )
     stripe_secret_key = fields.Char(
-        string="Secret Key", required_if_provider='stripe', copy=False, groups='base.group_system'
+        string="Secret Key", required_if_provider="stripe", copy=False, groups="base.group_system"
     )
     stripe_webhook_secret = fields.Char(
         string="Webhook Signing Secret",
         help="If a webhook is enabled on your Stripe account, this signing secret must be set to"
         " authenticate the messages sent from Stripe to Odoo.",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS === #
@@ -46,16 +46,16 @@ class PaymentProvider(models.Model):
     def _compute_feature_support_fields(self):
         """Override of `payment` to enable additional features."""
         super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'stripe').update({
-            'support_express_checkout': True,
-            'support_manual_capture': 'full_only',
-            'support_refund': 'partial',
-            'support_tokenization': True,
+        self.filtered(lambda p: p.code == "stripe").update({
+            "support_express_checkout": True,
+            "support_manual_capture": "full_only",
+            "support_refund": "partial",
+            "support_tokenization": True,
         })
 
     # === CONSTRAINT METHODS === #
 
-    @api.constrains('state', 'stripe_publishable_key', 'stripe_secret_key')
+    @api.constrains("state", "stripe_publishable_key", "stripe_secret_key")
     def _check_state_of_connected_account_is_never_test(self):
         """Check that the provider of a connected account can never been set to 'test'.
 
@@ -71,7 +71,7 @@ class PaymentProvider(models.Model):
         :raise ValidationError: If the provider of a connected account is set in state 'test'.
         """
         for provider in self:
-            if provider.state == 'test' and provider._stripe_has_connected_account():
+            if provider.state == "test" and provider._stripe_has_connected_account():
                 raise ValidationError(
                     _(
                         "You cannot set the provider to Test Mode while it is linked with your"
@@ -91,7 +91,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return False
 
-    @api.constrains('state')
+    @api.constrains("state")
     def _check_onboarding_of_enabled_provider_is_completed(self):
         """Check that the provider cannot be set to 'enabled' if the onboarding is ongoing.
 
@@ -104,7 +104,7 @@ class PaymentProvider(models.Model):
                                 while the onboarding is not finished.
         """
         for provider in self:
-            if provider.state == 'enabled' and provider._stripe_onboarding_is_ongoing():
+            if provider.state == "enabled" and provider._stripe_onboarding_is_ongoing():
                 raise ValidationError(
                     _(
                         "You cannot set the provider state to Enabled until your onboarding to"
@@ -129,7 +129,7 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.code != 'stripe':
+        if self.code != "stripe":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -154,7 +154,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.code != 'stripe':
+        if self.code != "stripe":
             return super().action_start_onboarding(menu_id=menu_id)
 
         if (
@@ -166,12 +166,12 @@ class PaymentProvider(models.Model):
                     "Stripe Connect is not available in your country, please use another payment"
                     " provider."
                 ),
-                self.env.ref('payment.action_payment_provider').id,
+                self.env.ref("payment.action_payment_provider").id,
                 _("Other Payment Providers"),
             )
 
-        if self.state == 'enabled':
-            action = {'type': 'ir.actions.act_window_close'}
+        if self.state == "enabled":
+            action = {"type": "ir.actions.act_window_close"}
         else:
             # Account creation
             connected_account = self._stripe_fetch_or_create_connected_account()
@@ -180,18 +180,18 @@ class PaymentProvider(models.Model):
             if not menu_id:
                 # Fall back on `account_payment`'s menu if it is installed. If not, the user is
                 # redirected to the provider's form view but without any menu in the breadcrumb.
-                menu = self.env.ref('account_payment.payment_provider_menu', False)
+                menu = self.env.ref("account_payment.payment_provider_menu", False)
                 menu_id = menu and menu.id  # Only set if `account_payment` is installed.
 
-            account_link_url = self._stripe_create_account_link(connected_account['id'], menu_id)
+            account_link_url = self._stripe_create_account_link(connected_account["id"], menu_id)
             if account_link_url:
-                action = {'type': 'ir.actions.act_url', 'url': account_link_url, 'target': 'self'}
+                action = {"type": "ir.actions.act_url", "url": account_link_url, "target": "self"}
             else:
                 action = {
-                    'type': 'ir.actions.act_window',
-                    'model': 'payment.provider',
-                    'views': [[False, 'form']],
-                    'res_id': self.id,
+                    "type": "ir.actions.act_window",
+                    "model": "payment.provider",
+                    "views": [[False, "form"]],
+                    "res_id": self.id,
                 }
         return action
 
@@ -207,32 +207,32 @@ class PaymentProvider(models.Model):
 
         if self.stripe_webhook_secret:
             message = _("Your Stripe Webhook is already set up.")
-            notification_type = 'warning'
+            notification_type = "warning"
         elif not self.stripe_secret_key:
             message = _("You cannot create a Stripe Webhook if your Stripe Secret Key is not set.")
-            notification_type = 'danger'
+            notification_type = "danger"
         else:
             webhook = self._send_api_request(
-                'POST',
-                'webhook_endpoints',
+                "POST",
+                "webhook_endpoints",
                 data={
-                    'url': self._get_stripe_webhook_url(),
-                    'enabled_events[]': const.HANDLED_WEBHOOK_EVENTS,
-                    'api_version': const.API_VERSION,
+                    "url": self._get_stripe_webhook_url(),
+                    "enabled_events[]": const.HANDLED_WEBHOOK_EVENTS,
+                    "api_version": const.API_VERSION,
                 },
             )
-            self.stripe_webhook_secret = webhook.get('secret')
+            self.stripe_webhook_secret = webhook.get("secret")
             message = _("You Stripe Webhook was successfully set up!")
-            notification_type = 'info'
+            notification_type = "info"
 
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': message,
-                'sticky': False,
-                'type': notification_type,
-                'next': {'type': 'ir.actions.act_window_close'},  # Refresh the form to show the key
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "message": message,
+                "sticky": False,
+                "type": notification_type,
+                "next": {"type": "ir.actions.act_window_close"},  # Refresh the form to show the key
             },
         }
 
@@ -252,19 +252,19 @@ class PaymentProvider(models.Model):
 
         web_domain = url_parse(self.get_base_url()).netloc
         response_content = self._send_api_request(
-            'POST', 'apple_pay/domains', data={'domain_name': web_domain}
+            "POST", "apple_pay/domains", data={"domain_name": web_domain}
         )
-        if not response_content['livemode']:
+        if not response_content["livemode"]:
             # If test keys are used to send the request, Stripe will respond with an HTTP 200 but
             # will not register the domain. Ask the user to use live credentials.
             raise UserError(_("Please use live credentials to enable Apple Pay."))
 
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _("Your web domain was successfully verified."),
-                'type': 'success',
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "message": _("Your web domain was successfully verified."),
+                "type": "success",
             },
         }
 
@@ -316,11 +316,11 @@ class PaymentProvider(models.Model):
                 ._get_validation_currency()
                 .name.lower()
             )
-        partner = self.env['res.partner'].with_context(show_address=1).browse(partner_id).exists()
+        partner = self.env["res.partner"].with_context(show_address=1).browse(partner_id).exists()
         inline_form_values = {
-            'publishable_key': self._stripe_get_publishable_key(),
-            'currency_name': currency_name,
-            'minor_amount': (
+            "publishable_key": self._stripe_get_publishable_key(),
+            "currency_name": currency_name,
+            "minor_amount": (
                 amount
                 and payment_utils.to_minor_currency_units(
                     amount,
@@ -328,26 +328,26 @@ class PaymentProvider(models.Model):
                     arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
                 )
             ),
-            'capture_method': 'manual' if self.capture_manually else 'automatic',
-            'billing_details': {
-                'name': partner.name or '',
-                'email': partner.email or '',
-                'phone': partner.phone or '',
-                'address': {
-                    'line1': partner.street or '',
-                    'line2': partner.street2 or '',
-                    'city': partner.city or '',
-                    'state': partner.state_id.code or '',
-                    'country': partner.country_id.code or '',
-                    'postal_code': partner.zip or '',
+            "capture_method": "manual" if self.capture_manually else "automatic",
+            "billing_details": {
+                "name": partner.name or "",
+                "email": partner.email or "",
+                "phone": partner.phone or "",
+                "address": {
+                    "line1": partner.street or "",
+                    "line2": partner.street2 or "",
+                    "city": partner.city or "",
+                    "state": partner.state_id.code or "",
+                    "country": partner.country_id.code or "",
+                    "postal_code": partner.zip or "",
                 },
             },
-            'is_tokenization_required': (
+            "is_tokenization_required": (
                 self.allow_tokenization
                 and self._is_tokenization_required(**kwargs)
                 and payment_method_sudo.support_tokenization
             ),
-            'payment_methods_mapping': const.PAYMENT_METHODS_MAPPING,
+            "payment_methods_mapping": const.PAYMENT_METHODS_MAPPING,
         }
         return json.dumps(inline_form_values)
 
@@ -376,7 +376,7 @@ class PaymentProvider(models.Model):
         proxy_payload = self._prepare_json_rpc_payload(
             self._stripe_prepare_connect_account_payload()
         )
-        return self._send_api_request('POST', 'accounts', json=proxy_payload, is_proxy_request=True)
+        return self._send_api_request("POST", "accounts", json=proxy_payload, is_proxy_request=True)
 
     def _stripe_prepare_connect_account_payload(self):
         """Prepare the payload for the creation of a connected account in Stripe format.
@@ -390,18 +390,18 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         return {
-            'type': 'standard',
-            'country': self._stripe_get_country(self.company_id.country_id.code),
-            'email': self.company_id.email,
-            'business_type': 'company',
-            'company[address][city]': self.company_id.city or '',
-            'company[address][country]': self._stripe_get_country(self.company_id.country_id.code),
-            'company[address][line1]': self.company_id.street or '',
-            'company[address][line2]': self.company_id.street2 or '',
-            'company[address][postal_code]': self.company_id.zip or '',
-            'company[address][state]': self.company_id.state_id.name or '',
-            'company[name]': self.company_id.name,
-            'business_profile[name]': self.company_id.name,
+            "type": "standard",
+            "country": self._stripe_get_country(self.company_id.country_id.code),
+            "email": self.company_id.email,
+            "business_type": "company",
+            "company[address][city]": self.company_id.city or "",
+            "company[address][country]": self._stripe_get_country(self.company_id.country_id.code),
+            "company[address][line1]": self.company_id.street or "",
+            "company[address][line2]": self.company_id.street2 or "",
+            "company[address][postal_code]": self.company_id.zip or "",
+            "company[address][state]": self.company_id.state_id.name or "",
+            "company[name]": self.company_id.name,
+            "business_profile[name]": self.company_id.name,
         }
 
     def _stripe_create_account_link(self, connected_account_id, menu_id):
@@ -427,25 +427,25 @@ class PaymentProvider(models.Model):
         refresh_params = dict(**return_params, account_id=connected_account_id)
 
         payload = {
-            'account': connected_account_id,
-            'return_url': f'{url_join(base_url, return_url)}?{url_encode(return_params)}',
-            'refresh_url': f'{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}',
-            'type': 'account_onboarding',
+            "account": connected_account_id,
+            "return_url": f"{url_join(base_url, return_url)}?{url_encode(return_params)}",
+            "refresh_url": f"{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}",
+            "type": "account_onboarding",
         }
         proxy_payload = self._prepare_json_rpc_payload(payload)
 
         account_link = self._send_api_request(
-            'POST', 'account_links', json=proxy_payload, is_proxy_request=True
+            "POST", "account_links", json=proxy_payload, is_proxy_request=True
         )
-        return account_link['url']
+        return account_link["url"]
 
     def _prepare_json_rpc_payload(self, data):
         res = super()._prepare_json_rpc_payload(data)
-        if self.code != 'stripe':
+        if self.code != "stripe":
             return res
-        res['params'] = {
-            'payload': data,  # Stripe data.
-            'proxy_data': self._stripe_prepare_proxy_data(stripe_payload=data),
+        res["params"] = {
+            "payload": data,  # Stripe data.
+            "proxy_data": self._stripe_prepare_proxy_data(stripe_payload=data),
         }
         return res
 
@@ -466,18 +466,18 @@ class PaymentProvider(models.Model):
     # === REQUEST HELPERS === #
 
     def _build_request_url(self, endpoint, *, is_proxy_request=False, version=1, **kwargs):
-        if self.code != 'stripe':
+        if self.code != "stripe":
             return super()._build_request_url(
                 endpoint, is_proxy_request=is_proxy_request, version=version, **kwargs
             )
         if is_proxy_request:
-            return url_join(const.PROXY_URL, f'{version}/{endpoint}')
-        return url_join('https://api.stripe.com/v1/', endpoint)
+            return url_join(const.PROXY_URL, f"{version}/{endpoint}")
+        return url_join("https://api.stripe.com/v1/", endpoint)
 
     def _build_request_headers(
         self, method, *args, idempotency_key=None, is_proxy_request=False, **kwargs
     ):
-        if self.code != 'stripe':
+        if self.code != "stripe":
             return super()._build_request_headers(
                 method,
                 *args,
@@ -490,21 +490,21 @@ class PaymentProvider(models.Model):
             return {}
 
         headers = {
-            'AUTHORIZATION': f'Bearer {stripe_utils.get_secret_key(self)}',
-            'Stripe-Version': const.API_VERSION,  # SetupIntent requires a specific version.
+            "AUTHORIZATION": f"Bearer {stripe_utils.get_secret_key(self)}",
+            "Stripe-Version": const.API_VERSION,  # SetupIntent requires a specific version.
             **self._get_stripe_extra_request_headers(),
         }
-        if method == 'POST' and idempotency_key:
-            headers['Idempotency-Key'] = idempotency_key
+        if method == "POST" and idempotency_key:
+            headers["Idempotency-Key"] = idempotency_key
         return headers
 
     def _parse_response_error(self, response):
-        if self.code != 'stripe':
+        if self.code != "stripe":
             return super()._parse_response_error(response)
-        return response.json().get('error', {}).get('message', '')
+        return response.json().get("error", {}).get("message", "")
 
     def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        if self.code != 'stripe' or not is_proxy_request:
+        if self.code != "stripe" or not is_proxy_request:
             return super()._parse_response_content(
                 response, is_proxy_request=is_proxy_request, **kwargs
             )

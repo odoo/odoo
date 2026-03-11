@@ -12,12 +12,12 @@ except ModuleNotFoundError:
 
 
 class ResCountry(models.Model):
-    _inherit = 'res.country'
+    _inherit = "res.country"
 
-    is_mercado_pago_supported_country = fields.Boolean(compute='_compute_provider_support')
-    is_stripe_supported_country = fields.Boolean(compute='_compute_provider_support')
+    is_mercado_pago_supported_country = fields.Boolean(compute="_compute_provider_support")
+    is_stripe_supported_country = fields.Boolean(compute="_compute_provider_support")
 
-    @api.depends('code')
+    @api.depends("code")
     def _compute_provider_support(self):
         for country in self:
             country.is_stripe_supported_country = (

@@ -13,10 +13,10 @@ _logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = "payment.transaction"
 
     @api.model
-    def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
+    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
         """Override of `payment` to ensure that APS' requirements for references are satisfied.
 
         APS' requirements for transaction are as follows:
@@ -31,7 +31,7 @@ class PaymentTransaction(models.Model):
         :return: The unique reference for the transaction.
         :rtype: str
         """
-        if provider_code == 'aps':
+        if provider_code == "aps":
             prefix = payment_utils.singularize_reference_prefix()
 
         return super()._compute_reference(
@@ -47,74 +47,74 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        if self.provider_code != 'aps':
+        if self.provider_code != "aps":
             return super()._get_specific_rendering_values(processing_values)
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         base_url = self.provider_id.get_base_url()
         payment_option = aps_utils.get_payment_option(self.payment_method_id.code)
         url_params = {
-            'command': 'PURCHASE',
-            'access_code': self.provider_id.aps_access_code,
-            'merchant_identifier': self.provider_id.aps_merchant_identifier,
-            'merchant_reference': self.reference,
-            'amount': str(converted_amount),
-            'currency': self.currency_id.name,
-            'language': self.partner_lang[:2],
-            'customer_email': self.partner_id.email_normalized,
-            'return_url': urls.urljoin(base_url, APSController._return_url),
+            "command": "PURCHASE",
+            "access_code": self.provider_id.aps_access_code,
+            "merchant_identifier": self.provider_id.aps_merchant_identifier,
+            "merchant_reference": self.reference,
+            "amount": str(converted_amount),
+            "currency": self.currency_id.name,
+            "language": self.partner_lang[:2],
+            "customer_email": self.partner_id.email_normalized,
+            "return_url": urls.urljoin(base_url, APSController._return_url),
         }
         if payment_option:  # Not included if the payment method is 'card'.
-            url_params['payment_option'] = payment_option
-        url_params['signature'] = self.provider_id._aps_calculate_signature(
+            url_params["payment_option"] = payment_option
+        url_params["signature"] = self.provider_id._aps_calculate_signature(
             url_params, incoming=False
         )
-        return {'api_url': self.provider_id._aps_get_api_url(), 'url_params': url_params}
+        return {"api_url": self.provider_id._aps_get_api_url(), "url_params": url_params}
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
         """Override of `payment` to extract the reference from the APS data."""
-        if provider_code != 'aps':
+        if provider_code != "aps":
             return super()._extract_reference(provider_code, payment_data)
-        return payment_data.get('merchant_reference')
+        return payment_data.get("merchant_reference")
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != 'aps':
+        if self.provider_code != "aps":
             return super()._extract_amount_data(payment_data)
 
         amount = payment_utils.to_major_currency_units(
-            float(payment_data.get('amount', 0)), self.currency_id
+            float(payment_data.get("amount", 0)), self.currency_id
         )
-        return {'amount': amount, 'currency_code': payment_data.get('currency')}
+        return {"amount": amount, "currency_code": payment_data.get("currency")}
 
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
-        if self.provider_code != 'aps':
+        if self.provider_code != "aps":
             return super()._apply_updates(payment_data)
 
         # Update the provider reference.
-        self.provider_reference = payment_data.get('fort_id')
+        self.provider_reference = payment_data.get("fort_id")
 
         # Update the payment method.
-        payment_option = payment_data.get('payment_option', '')
-        payment_method = self.env['payment.method']._get_from_code(payment_option.lower())
+        payment_option = payment_data.get("payment_option", "")
+        payment_method = self.env["payment.method"]._get_from_code(payment_option.lower())
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        status = payment_data.get('status')
+        status = payment_data.get("status")
         if not status:
             self._set_error(_("Received data with missing payment state."))
-        elif status in PAYMENT_STATUS_MAPPING['pending']:
+        elif status in PAYMENT_STATUS_MAPPING["pending"]:
             self._set_pending()
-        elif status in PAYMENT_STATUS_MAPPING['done']:
+        elif status in PAYMENT_STATUS_MAPPING["done"]:
             self._set_done()
         else:  # Classify unsupported payment state as `error` tx state.
-            status_description = payment_data.get('response_message')
+            status_description = payment_data.get("response_message")
             _logger.info(
                 "Received data with invalid payment status (%(status)s) and reason '%(reason)s' "
                 "for transaction %(ref)s.",
-                {'status': status, 'reason': status_description, 'ref': self.reference},
+                {"status": status, "reason": status_description, "ref": self.reference},
             )
             self._set_error(
                 _(

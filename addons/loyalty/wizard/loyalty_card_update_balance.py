@@ -5,11 +5,11 @@ from odoo.exceptions import ValidationError
 
 
 class LoyaltyCardUpdateBalance(models.TransientModel):
-    _name = 'loyalty.card.update.balance'
+    _name = "loyalty.card.update.balance"
     _description = "Update Loyalty Card Points"
 
-    card_id = fields.Many2one(comodel_name='loyalty.card', required=True, readonly=True)
-    old_balance = fields.Float(related='card_id.points')
+    card_id = fields.Many2one(comodel_name="loyalty.card", required=True, readonly=True)
+    old_balance = fields.Float(related="card_id.points")
     new_balance = fields.Float()
     description = fields.Char(required=True)
 
@@ -26,10 +26,10 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
         else:
             used = abs(difference)
 
-        self.env['loyalty.history'].create({
-            'card_id': self.card_id.id,
-            'description': self.description or _("Gift for customer"),
-            'used': used,
-            'issued': issued,
+        self.env["loyalty.history"].create({
+            "card_id": self.card_id.id,
+            "description": self.description or _("Gift for customer"),
+            "used": used,
+            "issued": issued,
         })
         self.card_id.points = self.new_balance

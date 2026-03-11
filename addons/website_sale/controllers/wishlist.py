@@ -5,13 +5,13 @@ from odoo.http.session import touch
 
 
 class ProductWishlist(Controller):
-    @route('/shop/wishlist/add', type='jsonrpc', auth='public', website=True)
+    @route("/shop/wishlist/add", type="jsonrpc", auth="public", website=True)
     def add_to_wishlist(self, product_id, **_kw):
-        product = request.env['product.product'].browse(product_id)
+        product = request.env["product.product"].browse(product_id)
 
-        price = product._get_combination_info_variant()['price']
+        price = product._get_combination_info_variant()["price"]
 
-        Wishlist = request.env['product.wishlist']
+        Wishlist = request.env["product.wishlist"]
         if request.website.is_public_user():
             Wishlist = Wishlist.sudo()
             partner_id = False
@@ -28,26 +28,26 @@ class ProductWishlist(Controller):
         )
 
         if not partner_id:
-            request.session['wishlist_ids'] = request.session.get('wishlist_ids', []) + [wish.id]
+            request.session["wishlist_ids"] = request.session.get("wishlist_ids", []) + [wish.id]
 
         return wish
 
-    @route('/shop/wishlist', type='http', auth='public', website=True, readonly=True, sitemap=False)
+    @route("/shop/wishlist", type="http", auth="public", website=True, readonly=True, sitemap=False)
     def shop_wishlist(self, **_kw):
-        wishes = request.env['product.wishlist'].current()
+        wishes = request.env["product.wishlist"].current()
 
         return request.render(
-            'website_sale.product_wishlist',
-            {'wishes': wishes.with_context(display_default_code=False)},
+            "website_sale.product_wishlist",
+            {"wishes": wishes.with_context(display_default_code=False)},
         )
 
-    @route('/shop/wishlist/remove/<int:wish_id>', type='jsonrpc', auth='public', website=True)
+    @route("/shop/wishlist/remove/<int:wish_id>", type="jsonrpc", auth="public", website=True)
     def remove_from_wishlist(self, wish_id, **_kw):
-        wish = request.env['product.wishlist'].browse(wish_id)
+        wish = request.env["product.wishlist"].browse(wish_id)
         if request.website.is_public_user():
-            wish_ids = request.session.get('wishlist_ids') or []
+            wish_ids = request.session.get("wishlist_ids") or []
             if wish_id in wish_ids:
-                request.session['wishlist_ids'].remove(wish_id)
+                request.session["wishlist_ids"].remove(wish_id)
                 touch(request.session)
                 wish.sudo().unlink()
         else:
@@ -55,7 +55,7 @@ class ProductWishlist(Controller):
         return True
 
     @route(
-        '/shop/wishlist/get_product_ids', type='jsonrpc', auth='public', website=True, readonly=True
+        "/shop/wishlist/get_product_ids", type="jsonrpc", auth="public", website=True, readonly=True
     )
     def shop_wishlist_get_product_ids(self):
-        return request.env['product.wishlist'].current().product_id.ids
+        return request.env["product.wishlist"].current().product_id.ids

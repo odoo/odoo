@@ -5,28 +5,28 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class PaymentToken(models.Model):
-    _name = 'payment.token'
-    _order = 'partner_id, id desc'
-    _description = 'Payment Token'
+    _name = "payment.token"
+    _order = "partner_id, id desc"
+    _description = "Payment Token"
     _check_company_auto = True
-    _rec_names_search = ['payment_details', 'partner_id', 'provider_id']
+    _rec_names_search = ["payment_details", "partner_id", "provider_id"]
 
-    provider_id = fields.Many2one(string="Provider", comodel_name='payment.provider', required=True)
-    provider_code = fields.Selection(string="Provider Code", related='provider_id.code')
+    provider_id = fields.Many2one(string="Provider", comodel_name="payment.provider", required=True)
+    provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
     company_id = fields.Many2one(
-        related='provider_id.company_id', store=True, index=True
+        related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others).
     payment_method_id = fields.Many2one(
-        string="Payment Method", comodel_name='payment.method', readonly=True, required=True
+        string="Payment Method", comodel_name="payment.method", readonly=True, required=True
     )
     payment_method_code = fields.Char(
-        string="Payment Method Code", related='payment_method_id.code'
+        string="Payment Method Code", related="payment_method_id.code"
     )
     payment_details = fields.Char(
         string="Payment Details", help="The clear part of the payment method's payment details."
     )
     partner_id = fields.Many2one(
-        string="Partner", comodel_name='res.partner', required=True, index=True
+        string="Partner", comodel_name="res.partner", required=True, index=True
     )
     provider_ref = fields.Char(
         string="Provider Reference",
@@ -34,13 +34,13 @@ class PaymentToken(models.Model):
         required=True,
     )  # This is not the same thing as the provider reference of the transaction.
     transaction_ids = fields.One2many(
-        string="Payment Transactions", comodel_name='payment.transaction', inverse_name='token_id'
+        string="Payment Transactions", comodel_name="payment.transaction", inverse_name="token_id"
     )
     active = fields.Boolean(string="Active", default=True)
 
     # === COMPUTE METHODS === #
 
-    @api.depends('payment_details', 'create_date')
+    @api.depends("payment_details", "create_date")
     def _compute_display_name(self):
         for token in self:
             # Need to compute it as sudo, in case some provider's override need info.
@@ -52,8 +52,8 @@ class PaymentToken(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if 'provider_id' in values:
-                provider = self.env['payment.provider'].browse(values['provider_id'])
+            if "provider_id" in values:
+                provider = self.env["payment.provider"].browse(values["provider_id"])
 
                 # Include provider-specific create values
                 values.update(self._get_specific_create_values(provider.code, values))
@@ -84,10 +84,10 @@ class PaymentToken(models.Model):
         :rtype: bool
         :raise UserError: If at least one token is being unarchived.
         """
-        if 'active' in vals:
-            if vals['active']:
+        if "active" in vals:
+            if vals["active"]:
                 if any(
-                    not token.payment_method_id.active or token.provider_id.state == 'disabled'
+                    not token.payment_method_id.active or token.provider_id.state == "disabled"
                     for token in self
                 ):
                     raise UserError(
@@ -98,11 +98,11 @@ class PaymentToken(models.Model):
                     )
             else:
                 # Call the handlers in sudo mode because this method might have been called by RPC.
-                self.filtered('active').sudo()._handle_archiving()
+                self.filtered("active").sudo()._handle_archiving()
 
         return super().write(vals)
 
-    @api.constrains('partner_id')
+    @api.constrains("partner_id")
     def _check_partner_is_never_public(self):
         """Check that the partner associated with the token is never public."""
         for token in self:
@@ -135,16 +135,16 @@ class PaymentToken(models.Model):
         :rtype: payment.token
         """
         if not is_validation:
-            return self.env['payment.token'].search([
-                ('provider_id', 'in', providers_ids),
-                ('partner_id', '=', partner_id),
+            return self.env["payment.token"].search([
+                ("provider_id", "in", providers_ids),
+                ("partner_id", "=", partner_id),
             ])
 
         # Get all the tokens of the partner and of their commercial partner, regardless of
         # whether the providers are available.
-        partner = self.env['res.partner'].browse(partner_id)
-        return self.env['payment.token'].search([
-            ('partner_id', 'in', [partner.id, partner.commercial_partner_id.id])
+        partner = self.env["res.partner"].browse(partner_id)
+        return self.env["payment.token"].search([
+            ("partner_id", "in", [partner.id, partner.commercial_partner_id.id])
         ])
 
     def _build_display_name(self, *_args, max_length=34, should_pad=True, **_kwargs):
@@ -171,19 +171,19 @@ class PaymentToken(models.Model):
         self.ensure_one()
 
         if not self.create_date:
-            return ''
+            return ""
 
-        padding_length = max_length - len(self.payment_details or '')
+        padding_length = max_length - len(self.payment_details or "")
         if not self.payment_details:
-            create_date_str = self.create_date.strftime('%Y/%m/%d')
+            create_date_str = self.create_date.strftime("%Y/%m/%d")
             display_name = _("Payment details saved on %(date)s", date=create_date_str)
         elif padding_length >= 2:  # Enough room for padding.
-            padding = '•' * min(padding_length - 1, 4) + ' ' if should_pad else ''
-            display_name = f'{padding}{self.payment_details}'
+            padding = "•" * min(padding_length - 1, 4) + " " if should_pad else ""
+            display_name = f"{padding}{self.payment_details}"
         elif padding_length > 0:  # Not enough room for padding.
             display_name = self.payment_details
         else:  # Not enough room for neither padding nor the payment details.
-            display_name = self.payment_details[-max_length:] if max_length > 0 else ''
+            display_name = self.payment_details[-max_length:] if max_length > 0 else ""
         return display_name
 
     def get_linked_records_info(self):

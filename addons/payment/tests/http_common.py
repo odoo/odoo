@@ -43,7 +43,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         :rtype: :class:`requests.models.Response`
         """
         formatted_data = self._format_http_request_payload(payload=data)
-        return self.url_open(url, data=formatted_data, method='POST')
+        return self.url_open(url, data=formatted_data, method="POST")
 
     def _format_http_request_payload(self, payload=None):
         """Format a request payload to replace float values by their string representation.
@@ -90,10 +90,10 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         values = {}
         for key, val in payment_form.items():
             if key.startswith("data-"):
-                formatted_key = key[5:].replace('-', '_')
-                if formatted_key.endswith('_id'):
+                formatted_key = key[5:].replace("-", "_")
+                if formatted_key.endswith("_id"):
                     formatted_val = int(val)
-                elif formatted_key == 'amount':
+                elif formatted_key == "amount":
                     formatted_val = float(val)
                 else:
                     formatted_val = val
@@ -105,21 +105,21 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         for p_o_input in payment_options_inputs:
             data = dict()
             for key, val in p_o_input.items():
-                if key.startswith('data-'):
+                if key.startswith("data-"):
                     data[key[5:]] = val
-            if data['payment-option-type'] == 'token':
-                token_ids.append(int(data['payment-option-id']))
+            if data["payment-option-type"] == "token":
+                token_ids.append(int(data["payment-option-id"]))
             else:  # 'payment_method'
-                payment_method_ids.append(int(data['payment-option-id']))
+                payment_method_ids.append(int(data["payment-option-id"]))
 
-        values.update({'token_ids': token_ids, 'payment_method_ids': payment_method_ids})
+        values.update({"token_ids": token_ids, "payment_method_ids": payment_method_ids})
 
         return values
 
     # payment/pay #
     ###############
 
-    def _prepare_pay_values(self, amount=0.0, currency=None, reference='', partner=None):
+    def _prepare_pay_values(self, amount=0.0, currency=None, reference="", partner=None):
         """Prepare basic payment/pay route values.
 
         NOTE: needs PaymentCommon to enable fallback values.
@@ -131,11 +131,11 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         reference = reference or self.reference
         partner = partner or self.partner
         return {
-            'amount': amount,
-            'currency_id': currency.id,
-            'reference': reference,
-            'partner_id': partner.id,
-            'access_token': self._generate_test_access_token(partner.id, amount, currency.id),
+            "amount": amount,
+            "currency_id": currency.id,
+            "reference": reference,
+            "partner_id": partner.id,
+            "access_token": self._generate_test_access_token(partner.id, amount, currency.id),
         }
 
     def _portal_pay(self, **route_kwargs):
@@ -144,7 +144,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         NOTE: must be authenticated before calling method.
         Or an access_token should be specified in route_kwargs
         """
-        uri = '/payment/pay'
+        uri = "/payment/pay"
         url = self._build_url(uri)
         return self._make_http_get_request(url, route_kwargs)
 
@@ -164,7 +164,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         NOTE: must be authenticated before calling method
             validation flow is restricted to logged users
         """
-        uri = '/my/payment_method'
+        uri = "/my/payment_method"
         url = self._build_url(uri)
         return self._make_http_get_request(url, {})
 
@@ -188,23 +188,23 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         :rtype: dict
         """
         return {
-            'provider_id': self.provider.id,
-            'payment_method_id': payment_method_id,
-            'token_id': token_id,
-            'amount': self.amount,
-            'currency_id': self.currency.id,
-            'partner_id': self.partner.id,
-            'access_token': self._generate_test_access_token(
+            "provider_id": self.provider.id,
+            "payment_method_id": payment_method_id,
+            "token_id": token_id,
+            "amount": self.amount,
+            "currency_id": self.currency.id,
+            "partner_id": self.partner.id,
+            "access_token": self._generate_test_access_token(
                 self.partner.id, self.amount, self.currency.id
             ),
-            'tokenization_requested': True,
-            'landing_route': 'Test',
-            'reference_prefix': 'test',
-            'is_validation': False,
-            'flow': flow,
+            "tokenization_requested": True,
+            "landing_route": "Test",
+            "reference_prefix": "test",
+            "is_validation": False,
+            "flow": flow,
         }
 
-    def _portal_transaction(self, tx_route='/payment/transaction', **route_kwargs):
+    def _portal_transaction(self, tx_route="/payment/transaction", **route_kwargs):
         """/payment/transaction feedback.
 
         :return: The response to the json request

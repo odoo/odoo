@@ -11,7 +11,7 @@ def format_partner_name(partner_name):
     :rtype: dict
     """
     first_name, last_name = payment_utils.split_partner_name(partner_name)
-    return {'firstName': first_name, 'lastName': last_name}
+    return {"firstName": first_name, "lastName": last_name}
 
 
 def include_partner_addresses(tx_sudo):
@@ -28,12 +28,12 @@ def include_partner_addresses(tx_sudo):
     """
     tx_sudo.ensure_one()
 
-    if 'sale_order_ids' in tx_sudo._fields:  # The module `sale` is installed.
+    if "sale_order_ids" in tx_sudo._fields:  # The module `sale` is installed.
         order = tx_sudo.sale_order_ids[:1]
         if order:
             return {
-                'billingAddress': format_partner_address(order.partner_invoice_id),
-                'deliveryAddress': format_partner_address(order.partner_shipping_id),
+                "billingAddress": format_partner_address(order.partner_invoice_id),
+                "deliveryAddress": format_partner_address(order.partner_shipping_id),
             }
     return {}
 
@@ -51,11 +51,11 @@ def format_partner_address(partner):
     # blocking the payment (empty string are not accepted) or passing `False` (which may not pass
     # the fraud check).
     return {
-        'city': partner.city or 'Unknown',
-        'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
-        'stateOrProvince': partner.state_id.code or 'Unknown',  # The state is not always required.
-        'postalCode': partner.zip or '',
+        "city": partner.city or "Unknown",
+        "country": partner.country_id.code or "ZZ",  # 'ZZ' if the country is not known.
+        "stateOrProvince": partner.state_id.code or "Unknown",  # The state is not always required.
+        "postalCode": partner.zip or "",
         # Fill in the address fields if the format is supported, or fallback to the raw address.
-        'street': street_data.get('street_name', partner.street) or 'Unknown',
-        'houseNumberOrName': street_data.get('street_number') or '',
+        "street": street_data.get("street_name", partner.street) or "Unknown",
+        "houseNumberOrName": street_data.get("street_number") or "",
     }

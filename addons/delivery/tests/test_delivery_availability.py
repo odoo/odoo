@@ -6,15 +6,15 @@ from odoo.tests import Form, tagged
 from odoo.addons.delivery.tests.common import DeliveryCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestDeliveryAvailability(DeliveryCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.must_have_tag, cls.exclude_tag = cls.env['product.tag'].create([
-            {'name': 'Must Have'},
-            {'name': 'Exclude'},
+        cls.must_have_tag, cls.exclude_tag = cls.env["product.tag"].create([
+            {"name": "Must Have"},
+            {"name": "Exclude"},
         ])
 
         cls.non_restricted_carrier = cls._prepare_carrier(cls.carrier.product_id)
@@ -25,14 +25,14 @@ class TestDeliveryAvailability(DeliveryCommon):
         cls.product_line.product_uom_qty = 1.0
 
     def test_00_order_with_heavy_product_simple(self):
-        self.carrier.write({'max_weight': 10.0})
+        self.carrier.write({"max_weight": 10.0})
 
-        self.product.write({'weight': 11.0})
+        self.product.write({"weight": 11.0})
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -42,16 +42,16 @@ class TestDeliveryAvailability(DeliveryCommon):
         )
 
     def test_01_order_with_heavy_product_different_uom(self):
-        self.carrier.write({'max_weight': 10.0})
+        self.carrier.write({"max_weight": 10.0})
 
-        self.product.write({'weight': 1.0})
+        self.product.write({"weight": 1.0})
 
-        self.product_line.write({'product_uom_id': self.uom_dozen.id})
+        self.product_line.write({"product_uom_id": self.uom_dozen.id})
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -61,14 +61,14 @@ class TestDeliveryAvailability(DeliveryCommon):
         )
 
     def test_02_order_with_big_product_simple(self):
-        self.carrier.write({'max_volume': 10.0})
+        self.carrier.write({"max_volume": 10.0})
 
-        self.product.write({'volume': 11.0})
+        self.product.write({"volume": 11.0})
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -78,16 +78,16 @@ class TestDeliveryAvailability(DeliveryCommon):
         )
 
     def test_03_order_with_big_product_different_uom(self):
-        self.carrier.write({'max_volume': 10.0})
+        self.carrier.write({"max_volume": 10.0})
 
-        self.product.write({'volume': 1.0})
+        self.product.write({"volume": 1.0})
 
-        self.product_line.write({'product_uom_id': self.uom_dozen.id})
+        self.product_line.write({"product_uom_id": self.uom_dozen.id})
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -99,13 +99,13 @@ class TestDeliveryAvailability(DeliveryCommon):
     def test_04_check_must_have_tag(self):
         self.carrier.must_have_tag_ids = [
             Command.link(self.must_have_tag.id),
-            Command.link(self.must_have_tag.copy({'name': "Alt Must Have"}).id),
+            Command.link(self.must_have_tag.copy({"name": "Alt Must Have"}).id),
         ]
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -114,11 +114,11 @@ class TestDeliveryAvailability(DeliveryCommon):
             "Delivery method's must have tag is not set on any product in the order",
         )
 
-        self.product.write({'product_tag_ids': [self.must_have_tag.id]})
+        self.product.write({"product_tag_ids": [self.must_have_tag.id]})
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -130,12 +130,12 @@ class TestDeliveryAvailability(DeliveryCommon):
         )
 
     def test_05_check_excluded_tag(self):
-        self.carrier.write({'excluded_tag_ids': [self.exclude_tag.id]})
+        self.carrier.write({"excluded_tag_ids": [self.exclude_tag.id]})
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -144,11 +144,11 @@ class TestDeliveryAvailability(DeliveryCommon):
             "Delivery method's excluded tag is not set on any product in the order",
         )
 
-        self.product.write({'product_tag_ids': [self.exclude_tag.id]})
+        self.product.write({"product_tag_ids": [self.exclude_tag.id]})
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -159,14 +159,14 @@ class TestDeliveryAvailability(DeliveryCommon):
 
     def test_06_check_tags_complex(self):
         self.carrier.write({
-            'must_have_tag_ids': [self.must_have_tag.id],
-            'excluded_tag_ids': [self.exclude_tag.id],
+            "must_have_tag_ids": [self.must_have_tag.id],
+            "excluded_tag_ids": [self.exclude_tag.id],
         })
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -175,11 +175,11 @@ class TestDeliveryAvailability(DeliveryCommon):
             "Delivery method's must have tag is not set on any product in the order",
         )
 
-        self.product.write({'product_tag_ids': [self.must_have_tag.id]})
+        self.product.write({"product_tag_ids": [self.must_have_tag.id]})
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -188,11 +188,11 @@ class TestDeliveryAvailability(DeliveryCommon):
             "Delivery method's must have tag is set on one product in the order",
         )
 
-        self.product.write({'product_tag_ids': [self.exclude_tag.id, self.must_have_tag.id]})
+        self.product.write({"product_tag_ids": [self.exclude_tag.id, self.must_have_tag.id]})
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -201,12 +201,12 @@ class TestDeliveryAvailability(DeliveryCommon):
             "Delivery method's excluded tag is set on one product in the order",
         )
 
-        self.product.write({'product_tag_ids': [self.must_have_tag.id]})
-        self.service_product.write({'product_tag_ids': [self.exclude_tag.id]})
+        self.product.write({"product_tag_ids": [self.must_have_tag.id]})
+        self.service_product.write({"product_tag_ids": [self.exclude_tag.id]})
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': self.sale_order.id,
-                'default_carrier_id': self.non_restricted_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -222,7 +222,7 @@ class TestDeliveryAvailability(DeliveryCommon):
         )
         delivery_wizard = self.sale_order.action_open_delivery_wizard()
         self.assertEqual(
-            delivery_wizard['context']['default_carrier_id'], self.non_restricted_carrier.id
+            delivery_wizard["context"]["default_carrier_id"], self.non_restricted_carrier.id
         )
 
     def test_dont_set_default_carrier_when_partner_delivery_method_is_not_available(self):
@@ -232,13 +232,13 @@ class TestDeliveryAvailability(DeliveryCommon):
         self.product.weight = 1.0
         self.sale_order.partner_shipping_id.property_delivery_carrier_id = restricted_carrier
         delivery_wizard = self.sale_order.action_open_delivery_wizard()
-        self.assertFalse(delivery_wizard['context']['default_carrier_id'])
+        self.assertFalse(delivery_wizard["context"]["default_carrier_id"])
 
     def test_dont_set_default_carrier_when_partner_delivery_method_is_not_set(self):
         """The default carrier is not set as property_delivery_carrier_id is not set on partner."""
         self.sale_order.partner_shipping_id.property_delivery_carrier_id = False
         delivery_wizard = self.sale_order.action_open_delivery_wizard()
-        self.assertFalse(delivery_wizard['context']['default_carrier_id'])
+        self.assertFalse(delivery_wizard["context"]["default_carrier_id"])
 
     def test_set_default_carrier_when_sale_order_delivery_method_is_set(self):
         """The default carrier is set as delivery_carrier_id is set on sale.order."""
@@ -247,5 +247,5 @@ class TestDeliveryAvailability(DeliveryCommon):
             carrier_recompute=True
         ).action_open_delivery_wizard()
         self.assertEqual(
-            delivery_wizard['context']['default_carrier_id'], self.non_restricted_carrier.id
+            delivery_wizard["context"]["default_carrier_id"], self.non_restricted_carrier.id
         )

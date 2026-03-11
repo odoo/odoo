@@ -5,14 +5,14 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
-    name_short = fields.Char(compute='_compute_name_short')
+    name_short = fields.Char(compute="_compute_name_short")
     shop_warning = fields.Char(string="Warning")
 
     # === COMPUTE METHODS ===#
 
-    @api.depends('product_id.display_name')
+    @api.depends("product_id.display_name")
     def _compute_name_short(self):
         """Compute a short name for this sale order line, to be used on the website where we don't
         have much space. To keep it short, instead of using the first line of the description,
@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
 
     def _get_order_date(self):
         self.ensure_one()
-        if self.order_id.website_id and self.state == 'draft':
+        if self.order_id.website_id and self.state == "draft":
             # cart prices must always be computed based on the current time, not on the order
             # creation date.
             return fields.Datetime.now()
@@ -49,13 +49,13 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         warn = self.shop_warning
         if clear:
-            self.shop_warning = ''
+            self.shop_warning = ""
         return warn
 
     def _get_displayed_unit_price(self):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
-        tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
-        is_combo = self.product_type == 'combo'
+        tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
+        is_combo = self.product_type == "combo"
         unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
 
         return self.tax_ids.compute_all(
@@ -63,15 +63,15 @@ class SaleOrderLine(models.Model):
         )[tax_display]
 
     def _get_selected_combo_items(self):
-        if self.product_id.type == 'combo':
+        if self.product_id.type == "combo":
             return [
                 {
-                    'id': linked_line.combo_item_id.id,
-                    'no_variant_ptav_ids': linked_line.product_no_variant_attribute_value_ids.ids,
-                    'custom_ptavs': [
+                    "id": linked_line.combo_item_id.id,
+                    "no_variant_ptav_ids": linked_line.product_no_variant_attribute_value_ids.ids,
+                    "custom_ptavs": [
                         {
-                            'id': pcav.custom_product_template_attribute_value_id.id,
-                            'value': pcav.custom_value,
+                            "id": pcav.custom_product_template_attribute_value_id.id,
+                            "value": pcav.custom_value,
                         }
                         for pcav in linked_line.product_custom_attribute_value_ids
                     ],
@@ -83,7 +83,7 @@ class SaleOrderLine(models.Model):
 
     def _get_displayed_quantity(self):
         rounded_uom_qty = round(
-            self.product_uom_qty, self.env['decimal.precision'].precision_get('Product Unit')
+            self.product_uom_qty, self.env["decimal.precision"].precision_get("Product Unit")
         )
         return (int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty)) or rounded_uom_qty
 
@@ -103,9 +103,9 @@ class SaleOrderLine(models.Model):
     def _get_cart_display_price(self):
         self.ensure_one()
         price_type = (
-            'price_subtotal'
-            if self.order_id.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
-            else 'price_total'
+            "price_subtotal"
+            if self.order_id.website_id.show_line_subtotals_tax_selection == "tax_excluded"
+            else "price_total"
         )
         return sum(self._get_lines_with_price().mapped(price_type))
 
@@ -116,13 +116,13 @@ class SaleOrderLine(models.Model):
             and website.prevent_sale
             and website._prevent_product_sale(
                 self.product_template_id,
-                sum(self._get_lines_with_price().mapped('price_unit')) == 0,
+                sum(self._get_lines_with_price().mapped("price_unit")) == 0,
             )
             # Only allow zero-price exemption for zero_price mode, not for category-based prevention
             and not (
-                website.prevent_sale_for == 'zero_price'
+                website.prevent_sale_for == "zero_price"
                 and self.product_template_id.service_tracking
-                in self.env['product.template']._get_product_types_allow_zero_price()
+                in self.env["product.template"]._get_product_types_allow_zero_price()
             )
         ):
             raise UserError(

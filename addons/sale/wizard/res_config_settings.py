@@ -4,30 +4,30 @@ from odoo import _, api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = "res.config.settings"
 
     # Defaults
     default_invoice_policy = fields.Selection(
-        selection=[('order', "Invoice what is ordered"), ('delivery', "Invoice what is delivered")],
+        selection=[("order", "Invoice what is ordered"), ("delivery", "Invoice what is delivered")],
         string="Invoicing Policy",
-        default='order',
-        default_model='product.template',
+        default="order",
+        default_model="product.template",
     )
 
     # Groups
     group_auto_done_setting = fields.Boolean(
-        string="Lock Confirmed Sales", implied_group='sale.group_auto_done_setting'
+        string="Lock Confirmed Sales", implied_group="sale.group_auto_done_setting"
     )
     group_discount_per_so_line = fields.Boolean(
-        string="Discounts", implied_group='sale.group_discount_per_so_line'
+        string="Discounts", implied_group="sale.group_discount_per_so_line"
     )
     group_proforma_sales = fields.Boolean(
         string="Pro Forma Invoice",
-        implied_group='sale.group_proforma_sales',
+        implied_group="sale.group_proforma_sales",
         help="Allows you to send pro forma invoice.",
     )
     group_warning_sale = fields.Boolean(
-        string="Sale Order Warnings", implied_group='sale.group_warning_sale'
+        string="Sale Order Warnings", implied_group="sale.group_warning_sale"
     )
 
     # Config params
@@ -38,28 +38,28 @@ class ResConfigSettings(models.TransientModel):
         "the payment is registered in the payment journal defined in the configuration of the "
         "payment provider.\nThis mode is advised if you issue the final invoice at the order "
         "and not after the delivery.",
-        config_parameter='sale.automatic_invoice',
+        config_parameter="sale.automatic_invoice",
     )
 
     invoice_mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
+        comodel_name="mail.template",
         string="Email Template",
-        domain=[('model', '=', 'account.move')],
-        config_parameter='sale.default_invoice_email_template',
+        domain=[("model", "=", "account.move")],
+        config_parameter="sale.default_invoice_email_template",
         help="Email sent to the customer once the invoice is available.",
     )
     quotation_validity_days = fields.Integer(
-        related='company_id.quotation_validity_days', readonly=False
+        related="company_id.quotation_validity_days", readonly=False
     )
     portal_confirmation_sign = fields.Boolean(
-        related='company_id.portal_confirmation_sign', readonly=False
+        related="company_id.portal_confirmation_sign", readonly=False
     )
     portal_confirmation_pay = fields.Boolean(
-        related='company_id.portal_confirmation_pay', readonly=False
+        related="company_id.portal_confirmation_pay", readonly=False
     )
-    prepayment_percent = fields.Float(related='company_id.prepayment_percent', readonly=False)
+    prepayment_percent = fields.Float(related="company_id.prepayment_percent", readonly=False)
     downpayment_account_id = fields.Many2one(
-        related='company_id.downpayment_account_id', readonly=False
+        related="company_id.downpayment_account_id", readonly=False
     )
 
     # Modules
@@ -87,36 +87,36 @@ class ResConfigSettings(models.TransientModel):
 
     # === ONCHANGE METHODS ===#
 
-    @api.depends('group_discount_per_so_line')
+    @api.depends("group_discount_per_so_line")
     def _onchange_group_discount_per_so_line(self):
         if self.group_discount_per_so_line:
             self.group_product_pricelist = True
 
-    @api.onchange('group_product_variant')
+    @api.onchange("group_product_variant")
     def _onchange_group_product_variant(self):
         """Disable the Product Grid module if variants are disabled."""
         if self.module_sale_product_matrix and not self.group_product_variant:
             self.module_sale_product_matrix = False
 
-    @api.onchange('portal_confirmation_pay')
+    @api.onchange("portal_confirmation_pay")
     def _onchange_portal_confirmation_pay(self):
         self.prepayment_percent = self.prepayment_percent or 1.0
 
-    @api.onchange('prepayment_percent')
+    @api.onchange("prepayment_percent")
     def _onchange_prepayment_percent(self):
         if not self.prepayment_percent:
             self.portal_confirmation_pay = False
 
-    @api.onchange('quotation_validity_days')
+    @api.onchange("quotation_validity_days")
     def _onchange_quotation_validity_days(self):
         if self.quotation_validity_days < 0:
-            self.quotation_validity_days = self.env['res.company'].default_get([
-                'quotation_validity_days'
-            ])['quotation_validity_days']
+            self.quotation_validity_days = self.env["res.company"].default_get([
+                "quotation_validity_days"
+            ])["quotation_validity_days"]
             return {
-                'warning': {
-                    'title': _("Warning"),
-                    'message': _(
+                "warning": {
+                    "title": _("Warning"),
+                    "message": _(
                         "Quotation Validity is required and must be greater or equal to 0."
                     ),
                 }
@@ -126,12 +126,12 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         super().set_values()
-        if self.default_invoice_policy != 'order':
-            self.env['ir.config_parameter'].set_bool('sale.automatic_invoice', False)
+        if self.default_invoice_policy != "order":
+            self.env["ir.config_parameter"].set_bool("sale.automatic_invoice", False)
 
     # === ACTION METHODS === #
 
     # Unique name to avoid colliding with `website_payment`.
     def action_sale_start_payment_onboarding(self):
-        menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
+        menu = self.env.ref("sale.menu_sale_general_settings", raise_if_not_found=False)
         return self.company_id._start_payment_onboarding(menu and menu.id)

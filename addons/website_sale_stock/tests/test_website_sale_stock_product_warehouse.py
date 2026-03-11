@@ -8,7 +8,7 @@ from odoo.addons.product.tests.test_product_attribute_value_config import (
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleStockProductWarehouse(
     TestProductAttributeValueCommon, WebsiteSaleStockCommon, HttpCase
 ):
@@ -17,7 +17,7 @@ class TestWebsiteSaleStockProductWarehouse(
         super().setUpClass()
 
         # Set two warehouses (one was created on company creation)
-        cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)])
+        cls.warehouse_1 = cls.env["stock.warehouse"].search([("company_id", "=", cls.company.id)])
         cls.warehouse_2 = cls._create_warehouse()
         cls.product_A = cls._create_product()
         cls.product_B = cls._create_product()
@@ -34,63 +34,63 @@ class TestWebsiteSaleStockProductWarehouse(
         combination_info = self.make_jsonrpc_request(
             "/website_sale/get_combination_info",
             {
-                'product_template_id': self.product_A.product_tmpl_id.id,
-                'product_id': None,
-                'combination': [],
-                'add_qty': 1,
+                "product_template_id": self.product_A.product_tmpl_id.id,
+                "product_id": None,
+                "combination": [],
+                "add_qty": 1,
             },
         )
-        self.assertEqual(combination_info['free_qty'], 15)
+        self.assertEqual(combination_info["free_qty"], 15)
         combination_info = self.make_jsonrpc_request(
             "/website_sale/get_combination_info",
             {
-                'product_template_id': self.product_B.product_tmpl_id.id,
-                'product_id': None,
-                'combination': [],
-                'add_qty': 1,
+                "product_template_id": self.product_B.product_tmpl_id.id,
+                "product_id": None,
+                "combination": [],
+                "add_qty": 1,
             },
         )
-        self.assertEqual(combination_info['free_qty'], 10)
+        self.assertEqual(combination_info["free_qty"], 10)
 
     def test_get_combination_info_free_qty_when_no_warehouse_is_set(self):
         self.website.warehouse_id = False
         combination_info = self.make_jsonrpc_request(
             "/website_sale/get_combination_info",
             {
-                'product_template_id': self.product_A.product_tmpl_id.id,
-                'product_id': None,
-                'combination': [],
-                'add_qty': 1,
+                "product_template_id": self.product_A.product_tmpl_id.id,
+                "product_id": None,
+                "combination": [],
+                "add_qty": 1,
             },
         )
-        self.assertEqual(combination_info['free_qty'], 25)
+        self.assertEqual(combination_info["free_qty"], 25)
         combination_info = self.make_jsonrpc_request(
             "/website_sale/get_combination_info",
             {
-                'product_template_id': self.product_B.product_tmpl_id.id,
-                'product_id': None,
-                'combination': [],
-                'add_qty': 1,
+                "product_template_id": self.product_B.product_tmpl_id.id,
+                "product_id": None,
+                "combination": [],
+                "add_qty": 1,
             },
         )
-        self.assertEqual(combination_info['free_qty'], 10)
+        self.assertEqual(combination_info["free_qty"], 10)
 
     def test_02_update_cart_with_multi_warehouses(self):
         """When the user updates his cart and increases a product quantity, if
         this quantity is not available in the SO's warehouse, a warning should
         be returned and the quantity updated to its maximum."""
-        so = self.env['sale.order'].create({
-            'website_id': self.website.id,
-            'partner_id': self.env.user.partner_id.id,
-            'order_line': [
+        so = self.env["sale.order"].create({
+            "website_id": self.website.id,
+            "partner_id": self.env.user.partner_id.id,
+            "order_line": [
                 (
                     0,
                     0,
                     {
-                        'name': self.product_A.name,
-                        'product_id': self.product_A.id,
-                        'product_uom_qty': 5,
-                        'price_unit': self.product_A.list_price,
+                        "name": self.product_A.name,
+                        "product_id": self.product_A.id,
+                        "product_uom_qty": 5,
+                        "price_unit": self.product_A.list_price,
                     },
                 )
             ],
@@ -106,5 +106,5 @@ class TestWebsiteSaleStockProductWarehouse(
             )
 
             values = so._cart_update_line_quantity(line_id=so.order_line.id, quantity=30)
-            self.assertTrue(values.get('warning', False))
-            self.assertEqual(values.get('quantity'), 25)
+            self.assertTrue(values.get("warning", False))
+            self.assertEqual(values.get("quantity"), 25)

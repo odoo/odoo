@@ -4,16 +4,16 @@ from odoo import fields, models
 
 
 class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+    _inherit = "payment.token"
 
     demo_simulated_state = fields.Selection(
         string="Simulated State",
         help="The state in which transactions created from this token should be set.",
         selection=[
-            ('pending', "Pending"),
-            ('done', "Confirmed"),
-            ('cancel', "Canceled"),
-            ('error', "Error"),
+            ("pending", "Pending"),
+            ("done", "Confirmed"),
+            ("cancel", "Canceled"),
+            ("error", "Error"),
         ],
     )
 
@@ -28,6 +28,6 @@ class PaymentToken(models.Model):
         :return: The demo token name.
         :rtype: str
         """
-        if self.provider_code != 'demo':
+        if self.provider_code != "demo":
             return super()._build_display_name(*args, should_pad=should_pad, **kwargs)
         return super()._build_display_name(*args, should_pad=False, **kwargs)

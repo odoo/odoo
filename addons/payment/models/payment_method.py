@@ -9,9 +9,9 @@ from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 
 
 class PaymentMethod(models.Model):
-    _name = 'payment.method'
+    _name = "payment.method"
     _description = "Payment Method"
-    _order = 'active desc, sequence, name'
+    _order = "active desc, sequence, name"
 
     name = fields.Char(string="Name", required=True, translate=True)
     code = fields.Char(
@@ -21,25 +21,25 @@ class PaymentMethod(models.Model):
     primary_payment_method_id = fields.Many2one(
         string="Primary Payment Method",
         help="The primary payment method of the current payment method, if the latter is a brand."
-        "\nFor example, \"Card\" is the primary payment method of the card brand \"VISA\".",
-        comodel_name='payment.method',
-        index='btree_not_null',
+        '\nFor example, "Card" is the primary payment method of the card brand "VISA".',
+        comodel_name="payment.method",
+        index="btree_not_null",
     )
     brand_ids = fields.One2many(
         string="Brands",
         help="The brands of the payment methods that will be displayed on the payment form.",
-        comodel_name='payment.method',
-        inverse_name='primary_payment_method_id',
+        comodel_name="payment.method",
+        inverse_name="primary_payment_method_id",
     )
     is_primary = fields.Boolean(
         string="Is Primary Payment Method",
-        compute='_compute_is_primary',
-        search='_search_is_primary',
+        compute="_compute_is_primary",
+        search="_search_is_primary",
     )
     provider_ids = fields.Many2many(
         string="Providers",
         help="The list of providers supporting this payment method.",
-        comodel_name='payment.provider',
+        comodel_name="payment.provider",
     )
     active = fields.Boolean(string="Active", default=True)
     image = fields.Image(
@@ -51,7 +51,7 @@ class PaymentMethod(models.Model):
     )
     image_payment_form = fields.Image(
         string="The resized image displayed on the payment form.",
-        related='image',
+        related="image",
         max_width=45,
         max_height=30,
         store=True,
@@ -73,37 +73,37 @@ class PaymentMethod(models.Model):
         string="Manual Capture",
         help="The payment is authorized and captured in two steps instead of one.",
         selection=[
-            ('none', "Unsupported"),
-            ('full_only', "Full Only"),
-            ('partial', "Full & Partial"),
+            ("none", "Unsupported"),
+            ("full_only", "Full Only"),
+            ("partial", "Full & Partial"),
         ],
-        default='none',
+        default="none",
         required=True,
     )
     support_refund = fields.Selection(
         string="Refund",
         help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
         selection=[
-            ('none', "Unsupported"),
-            ('full_only', "Full Only"),
-            ('partial', "Full & Partial"),
+            ("none", "Unsupported"),
+            ("full_only", "Full Only"),
+            ("partial", "Full & Partial"),
         ],
-        default='none',
+        default="none",
         required=True,
     )
     supported_country_ids = fields.Many2many(
         string="Countries",
         help="The list of countries in which this payment method can be used (if the provider"
         " allows it). In other countries, this payment method is not available to customers.",
-        comodel_name='res.country',
+        comodel_name="res.country",
     )
     supported_currency_ids = fields.Many2many(
         string="Currencies",
         help="The list of currencies for that are supported by this payment method (if the provider"
         " allows it). When paying with another currency, this payment method is not available to"
         " customers.",
-        comodel_name='res.currency',
-        context={'active_test': False},
+        comodel_name="res.currency",
+        context={"active_test": False},
     )
 
     # === COMPUTE METHODS === #
@@ -113,13 +113,13 @@ class PaymentMethod(models.Model):
             payment_method.is_primary = not payment_method.primary_payment_method_id
 
     def _search_is_primary(self, operator, value):  # noqa: ARG002
-        if operator not in ('in', 'not in'):
+        if operator not in ("in", "not in"):
             return NotImplemented
-        return [('primary_payment_method_id', operator, [False])]
+        return [("primary_payment_method_id", operator, [False])]
 
     # === ONCHANGE METHODS === #
 
-    @api.onchange('active', 'provider_ids', 'support_tokenization')
+    @api.onchange("active", "provider_ids", "support_tokenization")
     def _onchange_warn_before_disabling_tokens(self):
         """Display a warning about the consequences of archiving the payment method, detaching it
         from a provider, or removing its support for tokenization.
@@ -136,21 +136,21 @@ class PaymentMethod(models.Model):
         blocking_tokenization = self._origin.support_tokenization and not self.support_tokenization
         if disabling or detached_providers or blocking_tokenization:
             related_tokens_domain = Domain(
-                'payment_method_id', 'in', (self._origin + self._origin.brand_ids).ids
+                "payment_method_id", "in", (self._origin + self._origin.brand_ids).ids
             )
             if detached_providers:
-                related_tokens_domain &= Domain('provider_id', 'in', detached_providers.ids)
+                related_tokens_domain &= Domain("provider_id", "in", detached_providers.ids)
             related_tokens = (
                 self
-                .env['payment.token']
+                .env["payment.token"]
                 .with_context(active_test=True)  # Fix the context forwarded by the view.
                 .search(related_tokens_domain)
             )
             if related_tokens:
                 return {
-                    'warning': {
-                        'title': _("Warning"),
-                        'message': _(
+                    "warning": {
+                        "title": _("Warning"),
+                        "message": _(
                             "This action will also archive %s tokens that are registered with this"
                             " payment method.",
                             len(related_tokens),
@@ -158,7 +158,7 @@ class PaymentMethod(models.Model):
                     }
                 }
 
-    @api.onchange('provider_ids')
+    @api.onchange("provider_ids")
     def _onchange_provider_ids_warn_before_attaching_payment_method(self):
         """Display a warning before attaching a payment method to a provider.
 
@@ -170,24 +170,24 @@ class PaymentMethod(models.Model):
         )
         if attached_providers:
             return {
-                'warning': {
-                    'title': _("Warning"),
-                    'message': _(
+                "warning": {
+                    "title": _("Warning"),
+                    "message": _(
                         "Please make sure that %(payment_method)s is supported by %(provider)s.",
                         payment_method=self.name,
-                        provider=', '.join(attached_providers.mapped('name')),
+                        provider=", ".join(attached_providers.mapped("name")),
                     ),
                 }
             }
 
     # === CONSTRAINT METHODS === #
 
-    @api.constrains('active', 'support_manual_capture')
+    @api.constrains("active", "support_manual_capture")
     def _check_manual_capture_supported_by_providers(self):
         incompatible_pms = self.filtered(
             lambda pm: (
                 pm.active
-                and (pm.primary_payment_method_id or pm).support_manual_capture == 'none'
+                and (pm.primary_payment_method_id or pm).support_manual_capture == "none"
                 and any(provider.capture_manually for provider in pm.provider_ids)
             )
         )
@@ -196,7 +196,7 @@ class PaymentMethod(models.Model):
                 _(
                     "The following payment methods cannot be enabled because their payment provider"
                     " has manual capture activated: %s",
-                    ", ".join(incompatible_pms.mapped('name')),
+                    ", ".join(incompatible_pms.mapped("name")),
                 )
             )
 
@@ -204,33 +204,33 @@ class PaymentMethod(models.Model):
 
     def write(self, vals):
         # Handle payment methods being archived, detached from providers, or blocking tokenization.
-        archiving = vals.get('active') is False
-        if 'provider_ids' in vals:
+        archiving = vals.get("active") is False
+        if "provider_ids" in vals:
             detached_provider_ids = [
-                v[0] for command, *v in vals['provider_ids'] if command == Command.UNLINK
+                v[0] for command, *v in vals["provider_ids"] if command == Command.UNLINK
             ]
         else:
             detached_provider_ids = []
-        blocking_tokenization = vals.get('support_tokenization') is False
+        blocking_tokenization = vals.get("support_tokenization") is False
         if archiving or detached_provider_ids or blocking_tokenization:
-            related_tokens_domain = Domain('payment_method_id', 'in', (self + self.brand_ids).ids)
+            related_tokens_domain = Domain("payment_method_id", "in", (self + self.brand_ids).ids)
             if detached_provider_ids:
-                related_tokens_domain &= Domain('provider_id', 'in', detached_provider_ids)
+                related_tokens_domain &= Domain("provider_id", "in", detached_provider_ids)
             linked_tokens = (
                 self
-                .env['payment.token']
+                .env["payment.token"]
                 .with_context(active_test=True)  # Fix the context forwarded by the view.
                 .search(related_tokens_domain)
             )
             linked_tokens.active = False
 
         # Prevent enabling a payment method if it is not linked to an enabled provider.
-        if vals.get('active'):
+        if vals.get("active"):
             for pm in self:
                 primary_pm = pm if pm.is_primary else pm.primary_payment_method_id
                 if (
                     not primary_pm.active  # Don't bother for already enabled payment methods.
-                    and all(p.state == 'disabled' for p in primary_pm.provider_ids)
+                    and all(p.state == "disabled" for p in primary_pm.provider_ids)
                 ):
                     raise UserError(
                         _(
@@ -243,7 +243,7 @@ class PaymentMethod(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_default_payment_method(self):
-        payment_method_unknown = self.env.ref('payment.payment_method_unknown')
+        payment_method_unknown = self.env.ref("payment.payment_method_unknown")
         if payment_method_unknown in self:
             raise UserError(_("You cannot delete the default payment method."))
 
@@ -285,7 +285,7 @@ class PaymentMethod(models.Model):
         :rtype: payment.method
         """
         # Search compatible payment methods with the base domain.
-        payment_methods = self.env['payment.method'].search([('is_primary', '=', True)])
+        payment_methods = self.env["payment.method"].search([("is_primary", "=", True)])
         payment_utils.add_to_report(report, payment_methods)
 
         # Filter by compatible providers.
@@ -297,11 +297,11 @@ class PaymentMethod(models.Model):
             report,
             unfiltered_pms - payment_methods,
             available=False,
-            reason=REPORT_REASONS_MAPPING['provider_not_available'],
+            reason=REPORT_REASONS_MAPPING["provider_not_available"],
         )
 
         # Handle the partner country; allow all countries if the list is empty.
-        partner = self.env['res.partner'].browse(partner_id)
+        partner = self.env["res.partner"].browse(partner_id)
         if partner.country_id:  # The partner country must either not be set or be supported.
             unfiltered_pms = payment_methods
             payment_methods = payment_methods.filtered(
@@ -314,7 +314,7 @@ class PaymentMethod(models.Model):
                 report,
                 unfiltered_pms - payment_methods,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['incompatible_country'],
+                reason=REPORT_REASONS_MAPPING["incompatible_country"],
             )
 
         # Handle the supported currencies; allow all currencies if the list is empty.
@@ -329,29 +329,29 @@ class PaymentMethod(models.Model):
                 report,
                 unfiltered_pms - payment_methods,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['incompatible_currency'],
+                reason=REPORT_REASONS_MAPPING["incompatible_currency"],
             )
 
         # Handle tokenization support requirements.
         if force_tokenization:
             unfiltered_pms = payment_methods
-            payment_methods = payment_methods.filtered('support_tokenization')
+            payment_methods = payment_methods.filtered("support_tokenization")
             payment_utils.add_to_report(
                 report,
                 unfiltered_pms - payment_methods,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['tokenization_not_supported'],
+                reason=REPORT_REASONS_MAPPING["tokenization_not_supported"],
             )
 
         # Handle express checkout.
         if is_express_checkout:
             unfiltered_pms = payment_methods
-            payment_methods = payment_methods.filtered('support_express_checkout')
+            payment_methods = payment_methods.filtered("support_express_checkout")
             payment_utils.add_to_report(
                 report,
                 unfiltered_pms - payment_methods,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['express_checkout_not_supported'],
+                reason=REPORT_REASONS_MAPPING["express_checkout_not_supported"],
             )
 
         return payment_methods
@@ -370,4 +370,4 @@ class PaymentMethod(models.Model):
         """
         generic_to_specific_mapping = mapping or {}
         specific_to_generic_mapping = {v: k for k, v in generic_to_specific_mapping.items()}
-        return self.search([('code', '=', specific_to_generic_mapping.get(code, code))], limit=1)
+        return self.search([("code", "=", specific_to_generic_mapping.get(code, code))], limit=1)

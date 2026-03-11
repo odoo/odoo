@@ -5,8 +5,8 @@ from odoo.addons.payment import reset_payment_provider, setup_provider
 
 
 def post_init_hook(env):
-    setup_provider(env, 'worldline')
+    setup_provider(env, "worldline")
 
 
 def uninstall_hook(env):
-    reset_payment_provider(env, 'worldline')
+    reset_payment_provider(env, "worldline")

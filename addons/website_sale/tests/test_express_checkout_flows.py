@@ -12,7 +12,7 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
     """The goal of this method class is to test the address management on
     express checkout.
@@ -25,76 +25,76 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         cls.sale_order = cls.cart
         cls.sale_order.partner_id = cls.public_partner.id
         cls.express_checkout_billing_values = {
-            'name': 'Express Checkout Partner',
-            'email': 'express@check.out',
-            'phone': '0000000000',
-            'street': 'ooo',
-            'street2': 'ppp',
-            'city': 'ooo',
-            'zip': '1200',
-            'country': "US",  # United States
-            'state': "CA",  # California
+            "name": "Express Checkout Partner",
+            "email": "express@check.out",
+            "phone": "0000000000",
+            "street": "ooo",
+            "street2": "ppp",
+            "city": "ooo",
+            "zip": "1200",
+            "country": "US",  # United States
+            "state": "CA",  # California
         }
         cls.express_checkout_shipping_values = {
-            'name': "Express Checkout Shipping Partner",
-            'email': "express_shipping@check.out",
-            'phone': "1111111111",
-            'street': "ooo shipping",
-            'street2': "ppp shipping",
-            'city': "ooo shipping",
-            'zip': "25781",
-            'country': "US",  # United States
-            'state': "WA",  # Washington
+            "name": "Express Checkout Shipping Partner",
+            "email": "express_shipping@check.out",
+            "phone": "1111111111",
+            "street": "ooo shipping",
+            "street2": "ppp shipping",
+            "city": "ooo shipping",
+            "zip": "25781",
+            "country": "US",  # United States
+            "state": "WA",  # Washington
         }
         cls.express_checkout_anonymized_shipping_values = {
-            'city': "ooo shipping",
-            'zip': "6155",
-            'country': "AU",  # Australia
-            'state': "WA",  # Western Australia
+            "city": "ooo shipping",
+            "zip": "6155",
+            "country": "AU",  # Australia
+            "state": "WA",  # Western Australia
         }
         cls.express_checkout_anonymized_shipping_values_2 = {
-            'city': "ooo shipping 2",
-            'zip': "11519",
-            'country': "ES",  # Spain
-            'state': "CA",  # Cádiz
+            "city": "ooo shipping 2",
+            "zip": "11519",
+            "country": "ES",  # Spain
+            "state": "CA",  # Cádiz
         }
 
         cls.user_demo = cls._create_new_internal_user(**cls.dummy_partner_address_values)
 
         cls.express_checkout_demo_shipping_values = {
-            'name': cls.user_demo.partner_id.name,
-            'email': cls.user_demo.partner_id.email,
-            'phone': cls.user_demo.partner_id.phone,
-            'street': cls.user_demo.partner_id.street,
-            'street2': cls.user_demo.partner_id.street2,
-            'city': cls.user_demo.partner_id.city,
-            'zip': cls.user_demo.partner_id.zip,
-            'country': cls.user_demo.partner_id.country_id.code,
-            'state': cls.user_demo.partner_id.state_id.code,
+            "name": cls.user_demo.partner_id.name,
+            "email": cls.user_demo.partner_id.email,
+            "phone": cls.user_demo.partner_id.phone,
+            "street": cls.user_demo.partner_id.street,
+            "street2": cls.user_demo.partner_id.street2,
+            "city": cls.user_demo.partner_id.city,
+            "zip": cls.user_demo.partner_id.zip,
+            "country": cls.user_demo.partner_id.country_id.code,
+            "state": cls.user_demo.partner_id.state_id.code,
         }
         cls.express_checkout_anonymized_demo_shipping_values = {
-            'city': cls.user_demo.partner_id.city,
-            'zip': cls.user_demo.partner_id.zip,
-            'country': cls.user_demo.partner_id.country_id.code,
-            'state': cls.user_demo.partner_id.state_id.code,
+            "city": cls.user_demo.partner_id.city,
+            "zip": cls.user_demo.partner_id.zip,
+            "country": cls.user_demo.partner_id.country_id.code,
+            "state": cls.user_demo.partner_id.state_id.code,
         }
         cls.express_checkout_demo_shipping_values_2 = {
-            'name': "Express Checkout Shipping Partner",
-            'email': "express_shipping@check.out",
-            'phone': "1111111111",
-            'street': "ooo shipping",
-            'street2': "ppp shipping",
-            'city': cls.user_demo.partner_id.city,
-            'zip': cls.user_demo.partner_id.zip,
-            'country': cls.user_demo.partner_id.country_id.code,
-            'state': cls.user_demo.partner_id.state_id.code,
+            "name": "Express Checkout Shipping Partner",
+            "email": "express_shipping@check.out",
+            "phone": "1111111111",
+            "street": "ooo shipping",
+            "street2": "ppp shipping",
+            "city": cls.user_demo.partner_id.city,
+            "zip": cls.user_demo.partner_id.zip,
+            "country": cls.user_demo.partner_id.country_id.code,
+            "state": cls.user_demo.partner_id.state_id.code,
         }
-        cls.rate_shipment_result = {'success': True, 'price': 5.0, 'warning_message': ""}
+        cls.rate_shipment_result = {"success": True, "price": 5.0, "warning_message": ""}
 
     def assert_partner_shipping_values(self, partner, shipping_values):
         for key, expected in shipping_values.items():
-            if key in {'state', 'country'}:
-                value = partner[f'{key}_id'].code
+            if key in {"state", "country"}:
+                value = partner[f"{key}_id"].code
             else:
                 value = partner[key]
             self.assertEqual(value, expected, "Shipping value should match")
@@ -115,15 +115,15 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         with self.mock_request(sale_order_id=self.cart.id):
             payment_values = Cart()._get_express_shop_payment_values(self.cart)
 
-        self.assertEqual(payment_values['minor_amount'], amount_without_delivery)
+        self.assertEqual(payment_values["minor_amount"], amount_without_delivery)
 
     def test_express_checkout_public_user(self):
         """Test that when using express checkout as a public user, a new partner is created."""
-        self.authenticate(None, None, session_extra={'sale_order_id': self.sale_order.id})
+        self.authenticate(None, None, session_extra={"sale_order_id": self.sale_order.id})
 
         self.make_jsonrpc_request(
             urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
-            params={'billing_address': dict(self.express_checkout_billing_values)},
+            params={"billing_address": dict(self.express_checkout_billing_values)},
         )
 
         new_partner = self.sale_order.partner_id
@@ -139,22 +139,22 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         self.make_jsonrpc_request(
             urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
             params={
-                'billing_address': {
-                    'name': self.user_demo.partner_id.name,
-                    'email': self.user_demo.partner_id.email,
-                    'phone': self.user_demo.partner_id.phone,
-                    'street': self.user_demo.partner_id.street,
-                    'street2': self.user_demo.partner_id.street2,
-                    'city': self.user_demo.partner_id.city,
-                    'zip': self.user_demo.partner_id.zip,
-                    'country': self.user_demo.partner_id.country_id.code,
-                    'state': self.user_demo.partner_id.state_id.code,
+                "billing_address": {
+                    "name": self.user_demo.partner_id.name,
+                    "email": self.user_demo.partner_id.email,
+                    "phone": self.user_demo.partner_id.phone,
+                    "street": self.user_demo.partner_id.street,
+                    "street2": self.user_demo.partner_id.street2,
+                    "city": self.user_demo.partner_id.city,
+                    "zip": self.user_demo.partner_id.zip,
+                    "country": self.user_demo.partner_id.country_id.code,
+                    "state": self.user_demo.partner_id.state_id.code,
                 }
             },
         )
@@ -169,21 +169,21 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         """
         # Create a child partner for the demo partner
         child_partner_address = dict(self.express_checkout_billing_values)
-        child_partner_country = self.env['res.country'].search(
-            [('code', '=', child_partner_address.pop('country'))], limit=1
+        child_partner_country = self.env["res.country"].search(
+            [("code", "=", child_partner_address.pop("country"))], limit=1
         )
-        child_partner_state = self.env['res.country.state'].search(
+        child_partner_state = self.env["res.country.state"].search(
             [
-                ('code', '=', child_partner_address.pop('state')),
-                ('country_id', '=', child_partner_country.id),
+                ("code", "=", child_partner_address.pop("state")),
+                ("country_id", "=", child_partner_country.id),
             ],
             limit=1,
         )
-        child_partner = self.env['res.partner'].create(
+        child_partner = self.env["res.partner"].create(
             dict(
                 **child_partner_address,
                 parent_id=self.user_demo.partner_id.id,
-                type='invoice',
+                type="invoice",
                 country_id=child_partner_country.id,
                 state_id=child_partner_state.id,
             )
@@ -193,12 +193,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         self.make_jsonrpc_request(
             urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
-            params={'billing_address': dict(self.express_checkout_billing_values)},
+            params={"billing_address": dict(self.express_checkout_billing_values)},
         )
 
         self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -213,12 +213,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         self.make_jsonrpc_request(
             urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
-            params={'billing_address': dict(self.express_checkout_billing_values)},
+            params={"billing_address": dict(self.express_checkout_billing_values)},
         )
 
         self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -230,10 +230,10 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         """Test that when using express checkout as a public user and selecting a shipping address,
         a new partner is created if the partner of the SO is the public partner.
         """
-        self.authenticate(None, None, session_extra={'sale_order_id': self.sale_order.id})
+        self.authenticate(None, None, session_extra={"sale_order_id": self.sale_order.id})
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             self.make_jsonrpc_request(
@@ -241,7 +241,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values
                     )
                 },
@@ -258,10 +258,10 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         more than once, a new partner is created if the partner of the SO is the public partner
         (only creates one new partner that is updated).
         """
-        self.authenticate(None, None, session_extra={'sale_order_id': self.sale_order.id})
+        self.authenticate(None, None, session_extra={"sale_order_id": self.sale_order.id})
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             self.make_jsonrpc_request(
@@ -269,7 +269,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values
                     )
                 },
@@ -280,7 +280,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values_2
                     )
                 },
@@ -298,11 +298,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             self.make_jsonrpc_request(
@@ -310,7 +310,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values
                     )
                 },
@@ -326,11 +326,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             self.make_jsonrpc_request(
@@ -338,7 +338,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values
                     )
                 },
@@ -360,11 +360,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             self.make_jsonrpc_request(
@@ -372,7 +372,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values
                     )
                 },
@@ -383,7 +383,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_shipping_values_2
                     )
                 },
@@ -408,7 +408,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             delivery_carrier_mock, self.sale_order, is_express_checkout_flow=True
         )
         sale_order = delivery_carrier_mock.rate_shipment.call_args[0][0]
-        self.assertTrue(sale_order.env.context.get('express_checkout_partial_delivery_address'))
+        self.assertTrue(sale_order.env.context.get("express_checkout_partial_delivery_address"))
 
     def test_express_checkout_registered_user_with_shipping_option(self):
         """Test that when you use the express checkout as a registered user and the shipping
@@ -419,11 +419,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             shipping_options = self.make_jsonrpc_request(
@@ -431,7 +431,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_demo_shipping_values
                     )
                 },
@@ -443,9 +443,9 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_route
                 ),
                 params={
-                    'billing_address': dict(self.express_checkout_billing_values),
-                    'shipping_address': dict(self.express_checkout_demo_shipping_values),
-                    'shipping_option': shipping_options['delivery_methods'][0],
+                    "billing_address": dict(self.express_checkout_billing_values),
+                    "shipping_address": dict(self.express_checkout_demo_shipping_values),
+                    "shipping_option": shipping_options["delivery_methods"][0],
                 },
             )
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -459,11 +459,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(
             self.user_demo.login,
             self.user_demo.login,
-            session_extra={'sale_order_id': self.sale_order.id},
+            session_extra={"sale_order_id": self.sale_order.id},
         )
 
         with patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
             return_value=self.rate_shipment_result,
         ):
             # Won't create a new partner because the partial information are the same as an
@@ -473,7 +473,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_delivery_route
                 ),
                 params={
-                    'partial_delivery_address': dict(
+                    "partial_delivery_address": dict(
                         self.express_checkout_anonymized_demo_shipping_values
                     )
                 },
@@ -487,9 +487,9 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     self.base_url(), WebsiteSaleDeliveryController._express_checkout_route
                 ),
                 params={
-                    'billing_address': dict(self.express_checkout_billing_values),
-                    'shipping_address': dict(self.express_checkout_demo_shipping_values_2),
-                    'shipping_option': shipping_options['delivery_methods'][0],
+                    "billing_address": dict(self.express_checkout_billing_values),
+                    "shipping_address": dict(self.express_checkout_demo_shipping_values_2),
+                    "shipping_option": shipping_options["delivery_methods"][0],
                 },
             )
             self.assertNotEqual(
@@ -510,7 +510,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
 
         with (
             patch(
-                'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+                "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
                 return_value=self.rate_shipment_result,
             ),
             self.mock_request(user=self.env.user, sale_order_id=self.sale_order.id),
@@ -518,4 +518,4 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             result = websiteSaleDeliveryController.express_checkout_process_delivery_address(
                 partial_delivery_address=self.express_checkout_anonymized_shipping_values
             )
-            self.assertEqual(result['adjusted_minor_amount'], expected_amount * 100)
+            self.assertEqual(result["adjusted_minor_amount"], expected_amount * 100)

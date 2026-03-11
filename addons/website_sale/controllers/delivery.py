@@ -9,9 +9,9 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class Delivery(WebsiteSale):
-    _express_checkout_delivery_route = '/shop/express/shipping_address_change'
+    _express_checkout_delivery_route = "/shop/express/shipping_address_change"
 
-    @route('/shop/delivery_methods', type='jsonrpc', auth='public', website=True)
+    @route("/shop/delivery_methods", type="jsonrpc", auth="public", website=True)
     def shop_delivery_methods(self):
         """Fetch available delivery methods and render them in the delivery form.
 
@@ -20,18 +20,18 @@ class Delivery(WebsiteSale):
         """
         order_sudo = request.cart
         values = {
-            'delivery_methods': order_sudo._get_delivery_methods(),
-            'selected_dm_id': order_sudo.carrier_id.id,
-            'order': order_sudo,  # Needed for accessing default values for pickup points.
+            "delivery_methods": order_sudo._get_delivery_methods(),
+            "selected_dm_id": order_sudo.carrier_id.id,
+            "order": order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
-        return request.env['ir.ui.view']._render_template('website_sale.delivery_form', values)
+        return request.env["ir.ui.view"]._render_template("website_sale.delivery_form", values)
 
     def _get_additional_delivery_context(self):
         """Update values used for rendering the website_sale.delivery_form template."""
         return {}
 
-    @route('/shop/set_delivery_method', type='jsonrpc', auth='public', website=True)
+    @route("/shop/set_delivery_method", type="jsonrpc", auth="public", website=True)
     def shop_set_delivery_method(self, dm_id=None, **kwargs):
         """Set the delivery method on the current order and return the order summary values.
 
@@ -48,7 +48,7 @@ class Delivery(WebsiteSale):
         dm_id = int(dm_id)
         if dm_id in order_sudo._get_delivery_methods().ids and dm_id != order_sudo.carrier_id.id:
             for tx_sudo in order_sudo.transaction_ids:
-                if tx_sudo.state not in {'draft', 'cancel', 'error'}:
+                if tx_sudo.state not in {"draft", "cancel", "error"}:
                     raise UserError(
                         _(
                             "It seems that there is already a transaction for your order; you can't"
@@ -56,7 +56,7 @@ class Delivery(WebsiteSale):
                         )
                     )
 
-            delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(dm_id).exists()
+            delivery_method_sudo = request.env["delivery.carrier"].sudo().browse(dm_id).exists()
             order_sudo._set_delivery_method(delivery_method_sudo)
         return self._order_summary_values(order_sudo, **kwargs)
 
@@ -68,28 +68,28 @@ class Delivery(WebsiteSale):
         :return: The order summary values.
         :rtype: dict
         """
-        Monetary = request.env['ir.qweb.field.monetary']
+        Monetary = request.env["ir.qweb.field.monetary"]
         currency = order.currency_id
-        rendered_tax_lines = request.env['ir.ui.view']._render_template(
-            'website_sale.order_tax_lines', {'website_sale_order': order}
+        rendered_tax_lines = request.env["ir.ui.view"]._render_template(
+            "website_sale.order_tax_lines", {"website_sale_order": order}
         )
         return {
-            'success': True,
-            'is_free_delivery': not bool(order.amount_delivery),
-            'compute_price_after_delivery': order.carrier_id.invoice_policy == 'real',
-            'amount_delivery': Monetary.value_to_html(
-                order.amount_delivery, {'display_currency': currency}
+            "success": True,
+            "is_free_delivery": not bool(order.amount_delivery),
+            "compute_price_after_delivery": order.carrier_id.invoice_policy == "real",
+            "amount_delivery": Monetary.value_to_html(
+                order.amount_delivery, {"display_currency": currency}
             ),
-            'amount_untaxed': Monetary.value_to_html(
-                order.amount_untaxed, {'display_currency': currency}
+            "amount_untaxed": Monetary.value_to_html(
+                order.amount_untaxed, {"display_currency": currency}
             ),
-            'amount_tax_lines': rendered_tax_lines,
-            'amount_total': Monetary.value_to_html(
-                order.amount_total, {'display_currency': currency}
+            "amount_tax_lines": rendered_tax_lines,
+            "amount_total": Monetary.value_to_html(
+                order.amount_total, {"display_currency": currency}
             ),
         }
 
-    @route('/shop/get_delivery_rate', type='jsonrpc', auth='public', methods=['POST'], website=True)
+    @route("/shop/get_delivery_rate", type="jsonrpc", auth="public", methods=["POST"], website=True)
     def shop_get_delivery_rate(self, dm_id):
         """Return the delivery rate data for the given delivery method.
 
@@ -108,22 +108,22 @@ class Delivery(WebsiteSale):
                 )
             )
 
-        Monetary = request.env['ir.qweb.field.monetary']
-        delivery_method = request.env['delivery.carrier'].sudo().browse(int(dm_id)).exists()
+        Monetary = request.env["ir.qweb.field.monetary"]
+        delivery_method = request.env["delivery.carrier"].sudo().browse(int(dm_id)).exists()
         rate = Delivery._get_rate(delivery_method, order_sudo)
-        if rate['success']:
-            rate['amount_delivery'] = Monetary.value_to_html(
-                rate['price'], {'display_currency': order_sudo.currency_id}
+        if rate["success"]:
+            rate["amount_delivery"] = Monetary.value_to_html(
+                rate["price"], {"display_currency": order_sudo.currency_id}
             )
-            rate['is_free_delivery'] = not bool(rate['price'])
-            rate['compute_price_after_delivery'] = delivery_method.invoice_policy == 'real'
+            rate["is_free_delivery"] = not bool(rate["price"])
+            rate["compute_price_after_delivery"] = delivery_method.invoice_policy == "real"
         else:
-            rate['amount_delivery'] = Monetary.value_to_html(
-                0.0, {'display_currency': order_sudo.currency_id}
+            rate["amount_delivery"] = Monetary.value_to_html(
+                0.0, {"display_currency": order_sudo.currency_id}
             )
         return rate
 
-    @route('/website_sale/set_pickup_location', type='jsonrpc', auth='public', website=True)
+    @route("/website_sale/set_pickup_location", type="jsonrpc", auth="public", website=True)
     def website_sale_set_pickup_location(self, pickup_location_data):
         """Fetch the order from the request and set the pickup location on the current order.
 
@@ -135,7 +135,7 @@ class Delivery(WebsiteSale):
         order_sudo._set_pickup_location(pickup_location_data)
         return self._order_summary_values(order_sudo)
 
-    @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
+    @route("/website_sale/get_pickup_locations", type="jsonrpc", auth="public", website=True)
     def website_sale_get_pickup_locations(self, **kwargs):
         """Fetch the order from the request and return the pickup locations close to the zip code.
 
@@ -146,7 +146,7 @@ class Delivery(WebsiteSale):
         country = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(country=country, **kwargs)
 
-    @route(_express_checkout_delivery_route, type='jsonrpc', auth='public', website=True)
+    @route(_express_checkout_delivery_route, type="jsonrpc", auth="public", website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
         """Process the shipping address and return the available delivery methods.
 
@@ -167,19 +167,19 @@ class Delivery(WebsiteSale):
             # The partner_shipping_id and partner_invoice_id will be automatically computed when
             # changing the partner_id of the SO. This allows website_sale to avoid creating
             # duplicates.
-            partial_delivery_address['name'] = _(
-                'Anonymous express checkout partner for order %s', order_sudo.name
+            partial_delivery_address["name"] = _(
+                "Anonymous express checkout partner for order %s", order_sudo.name
             )
             new_partner_sudo = self._create_new_address(
                 address_values=partial_delivery_address,
-                address_type='delivery',
+                address_type="delivery",
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
             # Pricelists are recomputed every time the partner is changed. We don't want to
             # recompute the price with another pricelist at this state since the customer has
             # already accepted the amount and validated the payment.
-            with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
+            with request.env.protecting([order_sudo._fields["pricelist_id"]], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
         elif order_sudo.name in order_sudo.partner_shipping_id.name:
             order_sudo.partner_shipping_id.write(partial_delivery_address)
@@ -193,12 +193,12 @@ class Delivery(WebsiteSale):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_delivery_address
             )
-            partial_delivery_address['name'] = _(
-                'Anonymous express checkout partner for order %s', order_sudo.name
+            partial_delivery_address["name"] = _(
+                "Anonymous express checkout partner for order %s", order_sudo.name
             )
             order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(
                 address_values=partial_delivery_address,
-                address_type='delivery',
+                address_type="delivery",
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
@@ -207,28 +207,28 @@ class Delivery(WebsiteSale):
         sorted_delivery_methods = sorted(
             [
                 {
-                    'id': dm.id,
-                    'name': dm.name,
-                    'description': dm.website_description,
-                    'minorAmount': payment_utils.to_minor_currency_units(
+                    "id": dm.id,
+                    "name": dm.name,
+                    "description": dm.website_description,
+                    "minorAmount": payment_utils.to_minor_currency_units(
                         price, order_sudo.currency_id
                     ),
                 }
                 for dm, price in self._get_delivery_methods_express_checkout(order_sudo).items()
             ],
-            key=lambda dm: dm['minorAmount'],
+            key=lambda dm: dm["minorAmount"],
         )
 
         # Preselect the cheapest method imitating the behavior of the express checkout form.
         if (
             sorted_delivery_methods
-            and order_sudo.carrier_id.id != sorted_delivery_methods[0]['id']
+            and order_sudo.carrier_id.id != sorted_delivery_methods[0]["id"]
             and (
                 cheapest_dm := next(
                     (
                         dm
                         for dm in order_sudo._get_delivery_methods()
-                        if dm.id == sorted_delivery_methods[0]['id']
+                        if dm.id == sorted_delivery_methods[0]["id"]
                     ),
                     None,
                 )
@@ -240,8 +240,8 @@ class Delivery(WebsiteSale):
 
         # Return the list of delivery methods available for the sales order.
         return {
-            'delivery_methods': sorted_delivery_methods,
-            'adjusted_minor_amount': payment_utils.to_minor_currency_units(
+            "delivery_methods": sorted_delivery_methods,
+            "adjusted_minor_amount": payment_utils.to_minor_currency_units(
                 amount_without_delivery, order_sudo.currency_id
             ),
         }
@@ -258,11 +258,11 @@ class Delivery(WebsiteSale):
         res = {}
         for dm in order_sudo._get_delivery_methods():
             rate = Delivery._get_rate(dm, order_sudo, is_express_checkout_flow=True)
-            if rate['success']:
-                fname = f'{dm.delivery_type}_use_locations'
+            if rate["success"]:
+                fname = f"{dm.delivery_type}_use_locations"
                 if hasattr(dm, fname) and getattr(dm, fname):
                     continue  # Express checkout doesn't allow selecting locations.
-                res[dm] = rate['price']
+                res[dm] = rate["price"]
         return res
 
     @staticmethod
@@ -284,7 +284,7 @@ class Delivery(WebsiteSale):
         rate = delivery_method.rate_shipment(
             order.with_context(express_checkout_partial_delivery_address=is_express_checkout_flow)
         )
-        if rate.get('success'):
+        if rate.get("success"):
             tax_ids = delivery_method.product_id.taxes_id.filtered(
                 lambda t: t.company_id == order.company_id
             )
@@ -292,7 +292,7 @@ class Delivery(WebsiteSale):
                 fpos = order.fiscal_position_id
                 tax_ids = fpos.map_tax(tax_ids)
                 taxes = tax_ids.compute_all(
-                    rate['price'],
+                    rate["price"],
                     currency=order.currency_id,
                     quantity=1.0,
                     product=delivery_method.product_id,
@@ -300,14 +300,14 @@ class Delivery(WebsiteSale):
                 )
                 if (
                     not is_express_checkout_flow
-                    and request.website.show_line_subtotals_tax_selection == 'tax_excluded'
+                    and request.website.show_line_subtotals_tax_selection == "tax_excluded"
                 ):
-                    rate['price'] = taxes['total_excluded']
+                    rate["price"] = taxes["total_excluded"]
                 else:
-                    rate['price'] = taxes['total_included']
+                    rate["price"] = taxes["total_included"]
         return rate
 
-    @route('/website_sale/set_delivery_date', type='jsonrpc', auth='public', website=True)
+    @route("/website_sale/set_delivery_date", type="jsonrpc", auth="public", website=True)
     def website_sale_set_delivery_date(self, delivery_date, **_kwargs):
         """Fetch the order from the request and set the delivery date on the current order.
 

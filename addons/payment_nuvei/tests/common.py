@@ -8,11 +8,11 @@ class NuveiCommon(PaymentHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.nuvei = cls._prepare_provider(
-            'nuvei',
+            "nuvei",
             update_values={
-                'nuvei_merchant_identifier': '123456abc',
-                'nuvei_site_identifier': '1234',
-                'nuvei_secret_key': 'dummy',
+                "nuvei_merchant_identifier": "123456abc",
+                "nuvei_site_identifier": "1234",
+                "nuvei_secret_key": "dummy",
             },
         )
 

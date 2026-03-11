@@ -19,7 +19,7 @@ class WebsiteSale(main.WebsiteSale):
         if not res or not order_sudo:
             return res
 
-        if any(order_sudo.order_line.product_id.mapped('gelato_product_uid')):
+        if any(order_sudo.order_line.product_id.mapped("gelato_product_uid")):
             try:
                 partner_sudo._gelato_check_address_length_limit()
             except ValidationError:

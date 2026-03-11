@@ -5,21 +5,21 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = "product.product"
 
     def write(self, vals):
-        if not vals.get('active', True) and any(product.active for product in self):
+        if not vals.get("active", True) and any(product.active for product in self):
             # Prevent archiving products used for giving rewards
             rewards = (
                 self
-                .env['loyalty.reward']
+                .env["loyalty.reward"]
                 .sudo()
                 .search(
                     [
-                        ('active', '=', True),
-                        '|',
-                        ('discount_line_product_id', 'in', self.ids),
-                        ('discount_product_ids', 'in', self.ids),
+                        ("active", "=", True),
+                        "|",
+                        ("discount_line_product_id", "in", self.ids),
+                        ("discount_product_ids", "in", self.ids),
                     ],
                     limit=1,
                 )
@@ -36,8 +36,8 @@ class ProductProduct(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_loyalty_products(self):
         product_data = [
-            self.env.ref('loyalty.gift_card_product_50', False),
-            self.env.ref('loyalty.ewallet_product_50', False),
+            self.env.ref("loyalty.gift_card_product_50", False),
+            self.env.ref("loyalty.ewallet_product_50", False),
         ]
         for product in self.filtered(lambda p: p in product_data):
             raise UserError(

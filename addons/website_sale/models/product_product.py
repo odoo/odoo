@@ -8,16 +8,16 @@ from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
-    _mail_post_access = 'read'
+    _inherit = "product.product"
+    _mail_post_access = "read"
 
-    variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
-    website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
+    variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
+    website_id = fields.Many2one(related="product_tmpl_id.website_id", readonly=False)
 
     product_variant_image_ids = fields.One2many(
         string="Extra Variant Images",
-        comodel_name='product.image',
-        inverse_name='product_variant_id',
+        comodel_name="product.image",
+        inverse_name="product_variant_id",
     )
 
     base_unit_count = fields.Float(
@@ -30,19 +30,19 @@ class ProductProduct(models.Model):
     base_unit_id = fields.Many2one(
         string="Custom Unit of Measure",
         help="Define a custom unit to display in the price per unit of measure field.",
-        comodel_name='website.base.unit',
+        comodel_name="website.base.unit",
     )
-    base_unit_price = fields.Monetary(string="Price Per Unit", compute='_compute_base_unit_price')
+    base_unit_price = fields.Monetary(string="Price Per Unit", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(
         help="Displays the custom unit for the products if defined or the selected unit of measure"
         " otherwise.",
-        compute='_compute_base_unit_name',
+        compute="_compute_base_unit_name",
     )
 
     website_url = fields.Char(
         string="Website URL",
         help="The full URL to access the document through the website.",
-        compute='_compute_product_website_url',
+        compute="_compute_product_website_url",
     )
 
     # === COMPUTE METHODS ===#
@@ -51,7 +51,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.base_unit_count and price / self.base_unit_count
 
-    @api.depends('lst_price', 'base_unit_count')
+    @api.depends("lst_price", "base_unit_count")
     def _compute_base_unit_price(self):
         for product in self:
             if not product.id:
@@ -59,24 +59,24 @@ class ProductProduct(models.Model):
             else:
                 product.base_unit_price = product._get_base_unit_price(product.lst_price)
 
-    @api.depends('uom_name', 'base_unit_id')
+    @api.depends("uom_name", "base_unit_id")
     def _compute_base_unit_name(self):
         for product in self:
             product.base_unit_name = product.base_unit_id.name or product.uom_name
 
-    @api.depends_context('lang')
-    @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
+    @api.depends_context("lang")
+    @api.depends("product_tmpl_id.website_url", "product_template_attribute_value_ids")
     def _compute_product_website_url(self):
         for product in self:
             url = product.product_tmpl_id.website_url
             if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
                 pav_ids = [str(pav.id) for pav in pavs]
-                url = f'{url}?attribute_values={",".join(pav_ids)}'
+                url = f"{url}?attribute_values={','.join(pav_ids)}"
             product.website_url = url
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('base_unit_count')
+    @api.constrains("base_unit_count")
     def _check_base_unit_count(self):
         if any(product.base_unit_count < 0 for product in self):
             raise ValidationError(
@@ -90,7 +90,7 @@ class ProductProduct(models.Model):
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
-        variant_dict['base_unit_count'] = self.base_unit_count
+        variant_dict["base_unit_count"] = self.base_unit_count
         return variant_dict
 
     def website_publish_button(self):
@@ -100,7 +100,7 @@ class ProductProduct(models.Model):
     def open_website_url(self):
         self.ensure_one()
         res = self.product_tmpl_id.open_website_url()
-        res['url'] = self.website_url
+        res["url"] = self.website_url
         return res
 
     def action_unschedule(self):
@@ -133,9 +133,9 @@ class ProductProduct(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        if not self.filtered_domain(self.env['website']._product_domain()):
+        if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         return not (
             website.prevent_sale
             and website._prevent_product_sale(self, not self._get_contextual_price())
@@ -143,20 +143,20 @@ class ProductProduct(models.Model):
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
-        if self.env.user.has_group('base.group_system'):
+        if self.env.user.has_group("base.group_system"):
             return True
         if not self.active or not self.website_published:
             return False
-        if not self.filtered_domain(self.env['website']._product_domain()):
+        if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         if website.prevent_sale and website._prevent_product_sale(
             self, not self._get_contextual_price()
         ):
             return False
         return website.has_ecommerce_access()
 
-    @api.onchange('public_categ_ids')
+    @api.onchange("public_categ_ids")
     def _onchange_public_categ_ids(self):
         if self.public_categ_ids:
             self.website_published = True
@@ -184,17 +184,17 @@ class ProductProduct(models.Model):
 
         base_url = website.get_base_url()
         markup_data = {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            'name': self.with_context(display_default_code=False).display_name,
-            'url': f'{base_url}{self.website_url}',
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'offers': {'@type': 'Offer', 'price': price, 'priceCurrency': website.currency_id.name},
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": self.with_context(display_default_code=False).display_name,
+            "url": f"{base_url}{self.website_url}",
+            "image": f"{base_url}{website.image_url(self, 'image_1920')}",
+            "offers": {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name},
         }
         if self.website_meta_description or self.description_sale:
-            markup_data['description'] = self.website_meta_description or self.description_sale
+            markup_data["description"] = self.website_meta_description or self.description_sale
         if self.barcode:
-            markup_data['gtin'] = self.barcode
+            markup_data["gtin"] = self.barcode
         return markup_data
 
     def _get_image_1920_url(self):
@@ -205,7 +205,7 @@ class ProductProduct(models.Model):
         :rtype: str
         """
         self.ensure_one()
-        return self.env['website'].image_url(self, 'image_1920')
+        return self.env["website"].image_url(self, "image_1920")
 
     def _get_extra_image_1920_urls(self):
         """Return the local url of the product additional images, no videos. This includes the
@@ -217,18 +217,18 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return [
-            self.env['website'].image_url(extra_image, 'image_1920')
+            self.env["website"].image_url(extra_image, "image_1920")
             for extra_image in self.product_variant_image_ids + self.product_template_image_ids
             if extra_image.image_128  # only images, no video urls
         ]
 
     def write(self, vals):
-        if 'active' in vals and not vals['active']:
+        if "active" in vals and not vals["active"]:
             # unlink draft lines containing the archived product
-            self.env['sale.order.line'].sudo().search([
-                ('state', '=', 'draft'),
-                ('product_id', 'in', self.ids),
-                ('order_id', 'any', [('website_id', '!=', False)]),
+            self.env["sale.order.line"].sudo().search([
+                ("state", "=", "draft"),
+                ("product_id", "in", self.ids),
+                ("order_id", "any", [("website_id", "!=", False)]),
             ]).unlink()
         return super().write(vals)
 
@@ -236,7 +236,7 @@ class ProductProduct(models.Model):
         if not self:
             return False
         self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id')
+        return self in self.env["product.wishlist"].current().mapped("product_id")
 
     def _prepare_categories_for_display(self):
         """On the comparison page group on the same line the values of each
@@ -259,7 +259,7 @@ class ProductProduct(models.Model):
         categories = OrderedDict([(cat, OrderedDict()) for cat in attributes.category_id.sorted()])
         if any(not pa.category_id for pa in attributes):
             # category_id is not required and the mapped does not return empty
-            categories[self.env['product.attribute.category']] = OrderedDict()
+            categories[self.env["product.attribute.category"]] = OrderedDict()
         for pa in attributes:
             categories[pa.category_id][pa] = OrderedDict([
                 (
@@ -282,4 +282,4 @@ class ProductProduct(models.Model):
         :rtype: str
         """
         self.ensure_one()
-        return self.env['website'].image_url(self, 'image_1024')
+        return self.env["website"].image_url(self, "image_1024")

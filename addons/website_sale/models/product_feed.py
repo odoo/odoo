@@ -17,80 +17,80 @@ from odoo.addons.website_sale import const, utils
 
 
 class ProductFeed(models.Model):
-    _name = 'product.feed'
-    _inherit = ['mail.thread']
+    _name = "product.feed"
+    _inherit = ["mail.thread"]
     _description = "Product Feed"
 
     name = fields.Char(required=True)
-    website_id = fields.Many2one('website', required=True)
+    website_id = fields.Many2one("website", required=True)
     pricelist_id = fields.Many2one(
-        'product.pricelist',
+        "product.pricelist",
         help="Specify a pricelist to localize the feed with a specific currency."
         " If not set, the default website pricelist will be used."
         "\nNote that the pricelist must be selectable on the website.",
         domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
     )
     lang_id = fields.Many2one(
-        'res.lang',
+        "res.lang",
         string="Language",
         help="Select the language to translate product names, descriptions,"
         " and other text in the feed.",
-        compute='_compute_lang_id',
+        compute="_compute_lang_id",
         precompute=True,
         store=True,
         readonly=False,
         required=True,
         domain="[('id', 'in', website_lang_ids)]",
     )
-    website_lang_ids = fields.Many2many(related='website_id.language_ids')
-    product_category_ids = fields.Many2many('product.public.category', string="Categories")
+    website_lang_ids = fields.Many2many(related="website_id.language_ids")
+    product_category_ids = fields.Many2many("product.public.category", string="Categories")
     target = fields.Selection(
-        selection=[('gmc', "Google Merchant Center")], required=True, default='gmc'
+        selection=[("gmc", "Google Merchant Center")], required=True, default="gmc"
     )
     access_token = fields.Char(
         readonly=True, required=True, default=lambda _: uuid.uuid4().hex, copy=False
     )
-    url = fields.Char(compute='_compute_url')
+    url = fields.Char(compute="_compute_url")
 
     last_notification_date = fields.Date()
 
     # Caching mechanism (technical fields)
-    feed_cache = fields.Binary(compute='_compute_feed_cache', store=True, readonly=True)
+    feed_cache = fields.Binary(compute="_compute_feed_cache", store=True, readonly=True)
     cache_expiry = fields.Datetime(readonly=True, required=True, default=fields.Datetime.now)
 
-    @api.depends('website_id', 'target', 'access_token')
+    @api.depends("website_id", "target", "access_token")
     def _compute_url(self):
         """Compute the full feed url."""
         for feed in self:
             match feed.target:
-                case 'gmc':
-                    path = '/gmc.xml'
+                case "gmc":
+                    path = "/gmc.xml"
                 case _:
                     raise NotImplementedError
 
             feed.url = urls.urljoin(
                 feed.website_id.get_base_url(),
-                f'{path}?feed_id={feed.id}&access_token={feed.access_token}',
+                f"{path}?feed_id={feed.id}&access_token={feed.access_token}",
             )
 
-    @api.depends('website_id')
+    @api.depends("website_id")
     def _compute_lang_id(self):
         for feed in self.filtered(lambda f: not f.lang_id):
             feed.lang_id = feed.website_id.default_lang_id
 
-    @api.depends('website_id', 'pricelist_id', 'lang_id', 'product_category_ids')
+    @api.depends("website_id", "pricelist_id", "lang_id", "product_category_ids")
     def _compute_feed_cache(self):
         """Invalidate cache on feed parameter changes."""
         self.action_invalidate_cache()
 
-    @api.constrains('product_category_ids', 'website_id')
+    @api.constrains("product_category_ids", "website_id")
     def _check_product_limit(self):
         """Add a soft limit on the number of products a feed can contain.
 
         A strong limit of 6000 is applied during the feed rendering phase.
         """
         for feed in self:
-            product_count = feed.env['product.product'].search_count(
+            product_count = feed.env["product.product"].search_count(
                 feed._get_feed_product_domain(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
             )
             if product_count > const.PRODUCT_FEED_SOFT_LIMIT:
@@ -106,9 +106,9 @@ class ProductFeed(models.Model):
         self.cache_expiry = fields.Datetime.now() - relativedelta(days=1)
 
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {'type': 'success', 'message': self.env._("Feed cache successfully reset.")},
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"type": "success", "message": self.env._("Feed cache successfully reset.")},
         }
 
     def _render_and_cache_compressed_gmc_feed(self):
@@ -152,22 +152,22 @@ class ProductFeed(models.Model):
         if self.pricelist_id:
             request.pricelist = self.pricelist_id
 
-        homepage_url = self.website_id.homepage_url or '/'
+        homepage_url = self.website_id.homepage_url or "/"
         website_homepage = self.website_id._get_website_pages(
-            Domain([('url', '=', homepage_url), ('website_id', '!=', False)]), limit=1
+            Domain([("url", "=", homepage_url), ("website_id", "!=", False)]), limit=1
         )
 
         gmc_data = {
-            'title': website_homepage.website_meta_title or self.website_id.name,
-            'link': urls.urljoin(
+            "title": website_homepage.website_meta_title or self.website_id.name,
+            "link": urls.urljoin(
                 self.website_id.get_base_url(),
-                self.env['ir.http']._url_lang(homepage_url, lang_code=self.lang_id.code),
+                self.env["ir.http"]._url_lang(homepage_url, lang_code=self.lang_id.code),
             ),
-            'description': website_homepage.website_meta_description or self.website_id,
-            'items': self._prepare_gmc_items(),
+            "description": website_homepage.website_meta_description or self.website_id,
+            "items": self._prepare_gmc_items(),
         }
 
-        return self.env['ir.ui.view'].sudo()._render_template('website_sale.gmc_xml', gmc_data)
+        return self.env["ir.ui.view"].sudo()._render_template("website_sale.gmc_xml", gmc_data)
 
     def _prepare_gmc_items(self):
         """Prepare Google Merchant Center items' fields.
@@ -185,18 +185,18 @@ class ProductFeed(models.Model):
             if self.pricelist_id:
                 parsed_url = url_parse(url_)
                 query = parsed_url.decode_query()
-                query['pricelist'] = self.pricelist_id.id
+                query["pricelist"] = self.pricelist_id.id
                 url_ = parsed_url._replace(query=url_encode(query)).to_url()
             return urls.urljoin(
-                base_url, self.env['ir.http']._url_lang(url_, lang_code=self.lang_id.code)
+                base_url, self.env["ir.http"]._url_lang(url_, lang_code=self.lang_id.code)
             )
 
         return {
             product: {
-                'id': product.default_code or product.id,
-                'title': product.with_context(display_default_code=False).display_name,
-                'description': product.website_meta_description or product.description_sale,
-                'link': format_product_link(product.website_url),
+                "id": product.default_code or product.id,
+                "title": product.with_context(display_default_code=False).display_name,
+                "description": product.website_meta_description or product.description_sale,
+                "link": format_product_link(product.website_url),
                 **self._prepare_gmc_identifier(product),
                 **self._prepare_gmc_image_links(product, base_url),
                 **price_info,
@@ -211,14 +211,14 @@ class ProductFeed(models.Model):
     def _get_feed_product_domain(self):
         product_domain = self.website_id._get_basic_feed_product_domain()
         if self.product_category_ids:
-            product_domain &= Domain('public_categ_ids', 'child_of', self.product_category_ids.ids)
+            product_domain &= Domain("public_categ_ids", "child_of", self.product_category_ids.ids)
 
         return product_domain
 
     def _get_feed_products(self):
         product_domain = self._get_feed_product_domain()
 
-        products = self.env['product.product'].search(
+        products = self.env["product.product"].search(
             product_domain, limit=const.PRODUCT_FEED_HARD_LIMIT
         )
 
@@ -251,8 +251,8 @@ class ProductFeed(models.Model):
         :rtype: dict
         """
         if product.barcode:
-            return {'gtin': product.barcode, 'identifier_exists': 'yes'}
-        return {'identifier_exists': 'no'}
+            return {"gtin": product.barcode, "identifier_exists": "yes"}
+        return {"identifier_exists": "no"}
 
     def _prepare_gmc_image_links(self, product, base_url):  # noqa: PLR6301
         """Prepare the product image links for Google Merchant Center.
@@ -262,11 +262,11 @@ class ProductFeed(models.Model):
         """
         return {
             # Don't send any image link if there isn't. Google does not allow placeholder
-            'image_link': (
-                urls.urljoin(base_url, product._get_image_1920_url()) if product.image_128 else ''
+            "image_link": (
+                urls.urljoin(base_url, product._get_image_1920_url()) if product.image_128 else ""
             ),
             # Supports up to 10 extra images
-            'additional_image_link': [
+            "additional_image_link": [
                 urls.urljoin(base_url, url) for url in product._get_extra_image_1920_urls()[:10]
             ],
         }
@@ -296,26 +296,26 @@ class ProductFeed(models.Model):
             date=fields.Date.context_today(self),
             website=self.website_id,
         )
-        if combination_info['prevent_sale']:
+        if combination_info["prevent_sale"]:
             return {}
 
         price_info = {
-            'price': utils.gmc_format_price(
-                combination_info['list_price'], combination_info['currency']
+            "price": utils.gmc_format_price(
+                combination_info["list_price"], combination_info["currency"]
             )
         }
 
-        if combination_info['has_discounted_price']:
-            price_info['sale_price'] = utils.gmc_format_price(
-                combination_info['price'], combination_info['currency']
+        if combination_info["has_discounted_price"]:
+            price_info["sale_price"] = utils.gmc_format_price(
+                combination_info["price"], combination_info["currency"]
             )
-            start_date = combination_info['discount_start_date']
-            end_date = combination_info['discount_end_date']
+            start_date = combination_info["discount_start_date"]
+            end_date = combination_info["discount_end_date"]
             if start_date and end_date:
-                price_info['sale_price_effective_date'] = (
-                    start_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
-                    + '/'
-                    + end_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
+                price_info["sale_price_effective_date"] = (
+                    start_date.replace(tzinfo=UTC).isoformat(timespec="minutes")
+                    + "/"
+                    + end_date.replace(tzinfo=UTC).isoformat(timespec="minutes")
                 )
 
         # Note: Google only supports a restricted set of unit and computes the comparison prices
@@ -326,56 +326,56 @@ class ProductFeed(models.Model):
         #   - in google: unit_pricing_measure="4500ml", unit_pricing_base_measure="750ml"
         #       => displayed: "$10.83 / 750ml"
         if (
-            combination_info.get('base_unit_name')
+            combination_info.get("base_unit_name")
             and product.base_unit_count
             and (
                 match := const.GMC_BASE_MEASURE.match(
-                    combination_info['base_unit_name'].strip().lower()
+                    combination_info["base_unit_name"].strip().lower()
                 )
             )
         ):
-            base_count, base_unit = match['base_count'] or '1', match['base_unit']
+            base_count, base_unit = match["base_count"] or "1", match["base_unit"]
             count = product.base_unit_count * int(base_count)
             if base_unit in const.GMC_SUPPORTED_UOM and not float_is_zero(
                 count, precision_digits=2
             ):
-                price_info['unit_pricing_measure'] = (
-                    f'{float_round(count, precision_digits=2)}{base_unit}'
+                price_info["unit_pricing_measure"] = (
+                    f"{float_round(count, precision_digits=2)}{base_unit}"
                 )
-                price_info['unit_pricing_base_measure'] = f'{base_count}{base_unit}'
+                price_info["unit_pricing_base_measure"] = f"{base_count}{base_unit}"
 
         return price_info
 
     def _prepare_gmc_stock_info(self, _product):  # noqa: PLR6301
         """Intended to be overridden in stock."""
-        return {'availability': 'in_stock'}
+        return {"availability": "in_stock"}
 
     def _prepare_gmc_additional_info(self, product):  # noqa: PLR6301
         additional_info = {
-            'product_detail': [
+            "product_detail": [
                 (attr.attribute_id.name, attr.name)
                 for attr in product.product_template_attribute_value_ids
             ],
-            'is_bundle': 'yes' if product.type == 'combo' else 'no',
-            'product_type': [
-                category.replace('/', '>')  # Google uses a different format
+            "is_bundle": "yes" if product.type == "combo" else "no",
+            "product_type": [
+                category.replace("/", ">")  # Google uses a different format
                 for category in (
                     # Up to 5 categories
-                    product.public_categ_ids.sorted('sequence').mapped('display_name')[:5]
+                    product.public_categ_ids.sorted("sequence").mapped("display_name")[:5]
                 )
             ],
-            'custom_label': [
-                (f'custom_label_{i}', tag_name)
+            "custom_label": [
+                (f"custom_label_{i}", tag_name)
                 for i, tag_name in enumerate(
                     # Supports up to 5 custom labels
-                    product.all_product_tag_ids.sorted('sequence').mapped('name')[:5]
+                    product.all_product_tag_ids.sorted("sequence").mapped("name")[:5]
                 )
             ],
         }
 
         # Link variants together
         if len(product.product_tmpl_id.product_variant_ids) > 1:
-            additional_info['item_group_id'] = product.product_tmpl_id.id
+            additional_info["item_group_id"] = product.product_tmpl_id.id
 
         return additional_info
 

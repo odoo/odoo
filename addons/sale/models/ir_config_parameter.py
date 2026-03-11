@@ -7,7 +7,7 @@ from odoo.addons.sale import const
 
 
 class IrConfigParameter(models.Model):
-    _inherit = 'ir.config_parameter'
+    _inherit = "ir.config_parameter"
 
     @api.model_create_multi
     def create(self, vals_list):

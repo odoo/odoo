@@ -10,26 +10,26 @@ class AsiaPayCommon(PaymentCommon):
         super().setUpClass()
 
         cls.asiapay = cls._prepare_provider(
-            'asiapay',
+            "asiapay",
             update_values={
-                'asiapay_merchant_id': '123456789',
-                'asiapay_secure_hash_secret': 'coincoin_motherducker',
-                'asiapay_secure_hash_function': 'sha1',
-                'available_currency_ids': [Command.set(cls.currency_euro.ids)],
+                "asiapay_merchant_id": "123456789",
+                "asiapay_secure_hash_secret": "coincoin_motherducker",
+                "asiapay_secure_hash_function": "sha1",
+                "available_currency_ids": [Command.set(cls.currency_euro.ids)],
             },
         )
 
         cls.provider = cls.asiapay
 
-        cls.redirect_payment_data = {'Ref': cls.reference}
+        cls.redirect_payment_data = {"Ref": cls.reference}
         cls.webhook_payment_data = {
-            'src': 'dummy',
-            'prc': 'dummy',
-            'successcode': '0',
-            'Ref': cls.reference,
-            'PayRef': 'dummy',
-            'Cur': cls.currency.name,
-            'Amt': cls.amount,
-            'payerAuth': 'dummy',
-            'secureHash': '3e5bf55d9a23969130a6686db7aa4f0230956d0a',
+            "src": "dummy",
+            "prc": "dummy",
+            "successcode": "0",
+            "Ref": cls.reference,
+            "PayRef": "dummy",
+            "Cur": cls.currency.name,
+            "Amt": cls.amount,
+            "payerAuth": "dummy",
+            "secureHash": "3e5bf55d9a23969130a6686db7aa4f0230956d0a",
         }

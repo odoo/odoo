@@ -8,42 +8,42 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
     def request_get_values(self, product_template, ptav_ids=None):
         base_url = product_template.get_base_url()
         response = self.url_open(
-            url=base_url + '/sale/product_configurator/get_values',
+            url=base_url + "/sale/product_configurator/get_values",
             json={
-                'params': {
-                    'product_template_id': product_template.id,
-                    'quantity': 1.0,
-                    'currency_id': 1,
-                    'so_date': str(self.env.cr.now()),
-                    'product_uom_id': None,
-                    'company_id': None,
-                    'pricelist_id': None,
-                    'ptav_ids': ptav_ids,
-                    'only_main_product': False,
+                "params": {
+                    "product_template_id": product_template.id,
+                    "quantity": 1.0,
+                    "currency_id": 1,
+                    "so_date": str(self.env.cr.now()),
+                    "product_uom_id": None,
+                    "company_id": None,
+                    "pricelist_id": None,
+                    "ptav_ids": ptav_ids,
+                    "only_main_product": False,
                 }
             },
         )
-        return response.json()['result']
+        return response.json()["result"]
 
     def create_product_template_with_2_attributes(self):
-        return self.env['product.template'].create({
-            'name': 'Shirt',
-            'categ_id': self.product_category.id,
-            'attribute_line_ids': [
+        return self.env["product.template"].create({
+            "name": "Shirt",
+            "categ_id": self.product_category.id,
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': self.size_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.size_attribute.id,
+                    "value_ids": [
                         Command.set([self.size_attribute_l.id, self.size_attribute_m.id])
                     ],
                 }),
                 Command.create({
-                    'attribute_id': self.color_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.color_attribute.id,
+                    "value_ids": [
                         Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
@@ -51,17 +51,17 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         })
 
     def create_product_template_with_attribute_no_variant(self):
-        return self.env['product.template'].create({
-            'name': 'Chair',
-            'categ_id': self.product_category.id,
-            'attribute_line_ids': [
+        return self.env["product.template"].create({
+            "name": "Chair",
+            "categ_id": self.product_category.id,
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': self.no_variant_attribute.id,
-                    'value_ids': [Command.set([self.no_variant_attribute_extra.id])],
+                    "attribute_id": self.no_variant_attribute.id,
+                    "value_ids": [Command.set([self.no_variant_attribute_extra.id])],
                 }),
                 Command.create({
-                    'attribute_id': self.color_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.color_attribute.id,
+                    "value_ids": [
                         Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
@@ -69,13 +69,13 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         })
 
     def create_product_template_with_2_attribute_no_variant(self):
-        return self.env['product.template'].create({
-            'name': 'Chair',
-            'categ_id': self.product_category.id,
-            'attribute_line_ids': [
+        return self.env["product.template"].create({
+            "name": "Chair",
+            "categ_id": self.product_category.id,
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': self.no_variant_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.no_variant_attribute.id,
+                    "value_ids": [
                         Command.set([
                             self.no_variant_attribute_extra.id,
                             self.no_variant_attribute_second.id,
@@ -83,8 +83,8 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                     ],
                 }),
                 Command.create({
-                    'attribute_id': self.color_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.color_attribute.id,
+                    "value_ids": [
                         Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
@@ -97,20 +97,20 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Use variants s.t. they are archived and not deleted when value is removed
         self._create_so(
             order_line=[
-                Command.create({'product_id': product.id})
+                Command.create({"product_id": product.id})
                 for product in self.product_template_sofa.product_variant_ids
             ]
         )
 
         # Remove attribute value
         self.product_template_sofa.attribute_line_ids.value_ids -= self.color_attribute_red
-        self.assertEqual(len(self.product_template_sofa.product_variant_ids.filtered('active')), 2)
+        self.assertEqual(len(self.product_template_sofa.product_variant_ids.filtered("active")), 2)
 
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
         result = self.request_get_values(self.product_template_sofa)
 
         # Make sure the inactive ptav was removed from the loaded attributes
-        self.assertEqual(len(result['products'][0]['attribute_lines'][0]['attribute_values']), 2)
+        self.assertEqual(len(result["products"][0]["attribute_lines"][0]["attribute_values"]), 2)
 
     def test_dropped_attribute(self):
         product_template = self.create_product_template_with_2_attributes()
@@ -119,7 +119,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Use variants s.t. they are archived and not deleted when value is removed
         self._create_so(
             order_line=[
-                Command.create({'product_id': product.id})
+                Command.create({"product_id": product.id})
                 for product in product_template.product_variant_ids
             ]
         )
@@ -128,12 +128,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         product_template.attribute_line_ids[0].unlink()
         self.assertEqual(len(product_template.product_variant_ids), 2)
 
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
         result = self.request_get_values(product_template)
 
         # Make sure archived combinations with inactive ptav are not loaded as it's useless to
         # exclude combinations that are not even available
-        self.assertFalse(result['products'][0]['archived_combinations'])
+        self.assertFalse(result["products"][0]["archived_combinations"])
 
     def test_dropped_attribute_value(self):
         product_template = self.create_product_template_with_2_attributes()
@@ -142,7 +142,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Use variants s.t. they are archived and not deleted when value is removed
         self._create_so(
             order_line=[
-                Command.create({'product_id': product.id})
+                Command.create({"product_id": product.id})
                 for product in product_template.product_variant_ids
             ]
         )
@@ -168,7 +168,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 lambda ptav: ptav.product_attribute_value_id == self.size_attribute_l
             ).id,
         ]
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
         result = self.request_get_values(product_template, variant_ptav_ids)
         archived_ptav = archived_variants.product_template_attribute_value_ids.filtered(
             lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
@@ -176,12 +176,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
 
         # When requested combination contains inactive ptav
         # check that archived combinations are loaded
-        self.assertEqual(len(result['products'][0]['archived_combinations']), 2)
-        for combination in result['products'][0]['archived_combinations']:
+        self.assertEqual(len(result["products"][0]["archived_combinations"]), 2)
+        for combination in result["products"][0]["archived_combinations"]:
             self.assertIn(archived_ptav.id, combination)
 
         # When requested combination contains inactive ptav check that exclusions contains it
-        self.assertIn(str(archived_ptav.id), result['products'][0]['exclusions'])
+        self.assertIn(str(archived_ptav.id), result["products"][0]["exclusions"])
 
     def test_excluded_inactive_ptav(self):
         product_template = self.create_product_template_with_2_attributes()
@@ -191,41 +191,41 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         ptav_excluded = product_template.attribute_line_ids[1].product_template_value_ids[0]
 
         # Add an exclusion
-        ptav_with_exclusion.write({'excluded_value_ids': [Command.link(ptav_excluded.id)]})
+        ptav_with_exclusion.write({"excluded_value_ids": [Command.link(ptav_excluded.id)]})
         self.assertEqual(len(product_template.product_variant_ids), 3)
 
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
         result = self.request_get_values(product_template)
         # The PTAVs should be mutually excluded
         self.assertEqual(
-            result['products'][0]['exclusions'][str(ptav_with_exclusion.id)], [ptav_excluded.id]
+            result["products"][0]["exclusions"][str(ptav_with_exclusion.id)], [ptav_excluded.id]
         )
         self.assertEqual(
-            result['products'][0]['exclusions'][str(ptav_excluded.id)], [ptav_with_exclusion.id]
+            result["products"][0]["exclusions"][str(ptav_excluded.id)], [ptav_with_exclusion.id]
         )
 
-        ptav_with_exclusion.write({'ptav_active': False})
+        ptav_with_exclusion.write({"ptav_active": False})
         result = self.request_get_values(product_template)
         # The inactive PTAV should not be in the product exclusions dict
-        self.assertFalse(str(ptav_with_exclusion.id) in result['products'][0]['exclusions'])
+        self.assertFalse(str(ptav_with_exclusion.id) in result["products"][0]["exclusions"])
         # The inactive PTAV should not be in the exclusions of the excluded PTAV
-        self.assertEqual(result['products'][0]['exclusions'][str(ptav_excluded.id)], [])
+        self.assertEqual(result["products"][0]["exclusions"][str(ptav_excluded.id)], [])
 
-        ptav_with_exclusion.write({'ptav_active': True})
-        ptav_excluded.write({'ptav_active': False})
+        ptav_with_exclusion.write({"ptav_active": True})
+        ptav_excluded.write({"ptav_active": False})
         result = self.request_get_values(product_template)
         # The excluded inactive PTAV should not be in the exclusions of the first PTAV
-        self.assertEqual(result['products'][0]['exclusions'][str(ptav_with_exclusion.id)], [])
+        self.assertEqual(result["products"][0]["exclusions"][str(ptav_with_exclusion.id)], [])
         # The excluded inactive PTAV should not be in the product exclusions dict
-        self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
+        self.assertFalse(str(ptav_excluded.id) in result["products"][0]["exclusions"])
 
-        ptav_with_exclusion.write({'ptav_active': False})
-        ptav_excluded.write({'ptav_active': False})
+        ptav_with_exclusion.write({"ptav_active": False})
+        ptav_excluded.write({"ptav_active": False})
         result = self.request_get_values(product_template)
 
         # The inactive PTAVs should not be in the product exclusions dict
-        self.assertFalse(str(ptav_with_exclusion.id) in result['products'][0]['exclusions'])
-        self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
+        self.assertFalse(str(ptav_with_exclusion.id) in result["products"][0]["exclusions"])
+        self.assertFalse(str(ptav_excluded.id) in result["products"][0]["exclusions"])
 
     def test_ptal_values_set_for_no_variant_atribute(self):
         """
@@ -234,13 +234,13 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         """
         product_template = self.create_product_template_with_attribute_no_variant()
 
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
 
         ptav_red = product_template.attribute_line_ids.product_template_value_ids.filtered(
             lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
         )
         result = self.request_get_values(product_template, [ptav_red.id])
-        self.assertTrue(result['products'][0]['attribute_lines'][1]['selected_attribute_value_ids'])
+        self.assertTrue(result["products"][0]["attribute_lines"][1]["selected_attribute_value_ids"])
 
     def test_dropped_attribute_value_custom_no_variant(self):
         product_template = self.create_product_template_with_2_attribute_no_variant()
@@ -250,9 +250,9 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': product.id,
-                    'product_no_variant_attribute_value_ids': product.attribute_line_ids.product_template_value_ids.filtered(  # noqa: E501
-                        lambda p: p.attribute_id.create_variant == 'no_variant'
+                    "product_id": product.id,
+                    "product_no_variant_attribute_value_ids": product.attribute_line_ids.product_template_value_ids.filtered(  # noqa: E501
+                        lambda p: p.attribute_id.create_variant == "no_variant"
                     ),
                 })
                 for product in product_template.product_variant_ids
@@ -280,32 +280,32 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
             ).id
         ]
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
         result = self.request_get_values(product_template, variant_ptav_ids)
         selected_values = [
             selected_value
-            for product in result['products'][0]['attribute_lines']
-            for selected_value in product['selected_attribute_value_ids']
+            for product in result["products"][0]["attribute_lines"]
+            for selected_value in product["selected_attribute_value_ids"]
         ]
 
         # Make sure that deleted value is not selected
         self.assertNotIn(archived_ptav.id, selected_values)
 
     def test_attribute_removal(self):
-        product_template_2lines_2attributes = self.env['product.template'].create({
-            'name': '2 lines 2 attributes',
-            'uom_id': self.uom_unit.id,
-            'categ_id': self.product_category.id,
-            'attribute_line_ids': [
+        product_template_2lines_2attributes = self.env["product.template"].create({
+            "name": "2 lines 2 attributes",
+            "uom_id": self.uom_unit.id,
+            "categ_id": self.product_category.id,
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': self.color_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.color_attribute.id,
+                    "value_ids": [
                         Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
                 Command.create({
-                    'attribute_id': self.size_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.size_attribute.id,
+                    "value_ids": [
                         Command.set([self.size_attribute_s.id, self.size_attribute_m.id])
                     ],
                 }),
@@ -315,7 +315,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Sell all variants
         self._create_so(
             order_line=[
-                Command.create({'product_id': product.id})
+                Command.create({"product_id": product.id})
                 for product in product_template_2lines_2attributes.product_variant_ids
             ]
         )
@@ -346,7 +346,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Use products s.t. they are archived and not deleted
         self._create_so(
             order_line=[
-                Command.create({'product_id': product.id})
+                Command.create({"product_id": product.id})
                 for product in product_template_2lines_2attributes.product_variant_ids
             ]
         )
@@ -356,8 +356,8 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
 
         product_template_2lines_2attributes.attribute_line_ids = [
             Command.create({
-                'attribute_id': self.size_attribute.id,
-                'value_ids': [Command.set([self.size_attribute_s.id])],
+                "attribute_id": self.size_attribute.id,
+                "value_ids": [Command.set([self.size_attribute_s.id])],
             })
         ]
         self.assertEqual(len(_get_ptavs()), 4)
@@ -373,7 +373,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertTrue(
             all(
                 tuple(product.product_template_attribute_value_ids.ids)
-                not in exclusions_data['archived_combinations']
+                not in exclusions_data["archived_combinations"]
                 for product in _get_active_variants()
             )
         )
@@ -385,38 +385,38 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         when building the attrs_map in _get_product_information.
         """
         # Create a product template with two attribute lines referencing the same attribute
-        product_template = self.env['product.template'].create({
-            'name': 'Multi Size Shirt',
-            'categ_id': self.product_category.id,
-            'attribute_line_ids': [
+        product_template = self.env["product.template"].create({
+            "name": "Multi Size Shirt",
+            "categ_id": self.product_category.id,
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': self.size_attribute.id,
-                    'value_ids': [Command.set([self.size_attribute_l.id])],
+                    "attribute_id": self.size_attribute.id,
+                    "value_ids": [Command.set([self.size_attribute_l.id])],
                 }),
                 Command.create({
-                    'attribute_id': self.color_attribute.id,
-                    'value_ids': [
+                    "attribute_id": self.color_attribute.id,
+                    "value_ids": [
                         Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
                 Command.create({
-                    'attribute_id': self.size_attribute.id,
-                    'value_ids': [Command.set([self.size_attribute_m.id])],
+                    "attribute_id": self.size_attribute.id,
+                    "value_ids": [Command.set([self.size_attribute_m.id])],
                 }),
             ],
         })
 
-        self.authenticate('demo', 'demo')
+        self.authenticate("demo", "demo")
         # This should not raise a KeyError
         result = self.request_get_values(product_template)
 
         # Verify we got the expected number of attribute lines
-        self.assertEqual(len(result['products'][0]['attribute_lines']), 3)
+        self.assertEqual(len(result["products"][0]["attribute_lines"]), 3)
         # Verify that each attribute line has its attribute info correctly mapped
         attribute_names = [
-            line['attribute']['name'] for line in result['products'][0]['attribute_lines']
+            line["attribute"]["name"] for line in result["products"][0]["attribute_lines"]
         ]
-        self.assertIn('Size', attribute_names)
-        self.assertIn('Color', attribute_names)
+        self.assertIn("Size", attribute_names)
+        self.assertIn("Color", attribute_names)
         # Count occurrences of 'Size' - should be 2 since we have two lines with the same attribute
-        self.assertEqual(attribute_names.count('Size'), 2)
+        self.assertEqual(attribute_names.count("Size"), 2)

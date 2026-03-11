@@ -29,10 +29,10 @@ def _post_init_hook(env):
 def _synchronize_crons(env):
     for param, cron_xmlid in const.PARAM_CRON_MAPPING.items():
         if cron := env.ref(cron_xmlid, raise_if_not_found=False):
-            cron.active = env['ir.config_parameter'].get_bool(param)
+            cron.active = env["ir.config_parameter"].get_bool(param)
 
 
 def _setup_downpayment_account(env):
-    env['account.chart.template']._load_pre_defined_data({
-        'res.company': {'downpayment_account_id'}
+    env["account.chart.template"]._load_pre_defined_data({
+        "res.company": {"downpayment_account_id"}
     })

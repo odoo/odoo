@@ -4,7 +4,7 @@ from odoo import models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     def _set_shop_warning_stock(self, desired_qty, new_qty, save=True):
         self.ensure_one()

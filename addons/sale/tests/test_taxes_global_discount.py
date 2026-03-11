@@ -7,7 +7,7 @@ from odoo.addons.account.tests.test_taxes_global_discount import TestTaxesGlobal
 from odoo.addons.sale.tests.common import TestTaxCommonSale
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
     # -------------------------------------------------------------------------
     # GENERIC TAXES TEST SUITE
@@ -69,28 +69,28 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
     # -------------------------------------------------------------------------
 
     def test_global_discount_with_sol_discount(self):
-        product = self.company_data['product_order_cost']
+        product = self.company_data["product_order_cost"]
         so = self._create_sale_order(
             order_line=[
                 self._prepare_order_line(
-                    name='line_1', product_id=product, price_unit=1000.0, discount=50.0
+                    name="line_1", product_id=product, price_unit=1000.0, discount=50.0
                 ),
-                self._prepare_order_line(name='line_2', product_id=product, price_unit=2000.0),
+                self._prepare_order_line(name="line_2", product_id=product, price_unit=2000.0),
             ]
         )
         self.assertRecordValues(
-            so, [{'amount_untaxed': 2500.0, 'amount_tax': 0.0, 'amount_total': 2500.0}]
+            so, [{"amount_untaxed": 2500.0, "amount_tax": 0.0, "amount_total": 2500.0}]
         )
 
         # Put a discount of 30% on all SO lines.
-        wizard = self._apply_sale_order_discount(so, 'all', 30)
+        wizard = self._apply_sale_order_discount(so, "all", 30)
 
         self.assertRecordValues(
             so.order_line,
-            [{'name': 'line_1', 'discount': 30.0}, {'name': 'line_2', 'discount': 30.0}],
+            [{"name": "line_1", "discount": 30.0}, {"name": "line_2", "discount": 30.0}],
         )
         self.assertRecordValues(
-            so, [{'amount_untaxed': 2100.0, 'amount_tax': 0.0, 'amount_total': 2100.0}]
+            so, [{"amount_untaxed": 2100.0, "amount_tax": 0.0, "amount_total": 2100.0}]
         )
 
         # Use the same wizard to clear the discount.
@@ -99,10 +99,10 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
 
         self.assertRecordValues(
             so.order_line,
-            [{'name': 'line_1', 'discount': 0.0}, {'name': 'line_2', 'discount': 0.0}],
+            [{"name": "line_1", "discount": 0.0}, {"name": "line_2", "discount": 0.0}],
         )
         self.assertRecordValues(
-            so, [{'amount_untaxed': 3000.0, 'amount_tax': 0.0, 'amount_total': 3000.0}]
+            so, [{"amount_untaxed": 3000.0, "amount_tax": 0.0, "amount_total": 3000.0}]
         )
 
         # Try to put a percentage higher than 100%.
@@ -110,18 +110,18 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
             wizard.discount_percentage = 110.0
 
     def test_cumulative_global_discounts(self):
-        product = self.company_data['product_order_cost']
-        so = self._create_sale_order_one_line(name='line_1', product_id=product, price_unit=2000.0)
+        product = self.company_data["product_order_cost"]
+        so = self._create_sale_order_one_line(name="line_1", product_id=product, price_unit=2000.0)
         self.assertRecordValues(
-            so, [{'amount_untaxed': 2000.0, 'amount_tax': 0.0, 'amount_total': 2000.0}]
+            so, [{"amount_untaxed": 2000.0, "amount_tax": 0.0, "amount_total": 2000.0}]
         )
 
         # Put a discount of 25%.
-        wizard = self._apply_sale_order_discount(so, 'percent', 25)
+        wizard = self._apply_sale_order_discount(so, "percent", 25)
 
-        self.assertRecordValues(so.order_line, [{'price_unit': 2000.0}, {'price_unit': -500.0}])
+        self.assertRecordValues(so.order_line, [{"price_unit": 2000.0}, {"price_unit": -500.0}])
         self.assertRecordValues(
-            so, [{'amount_untaxed': 1500.0, 'amount_tax': 0.0, 'amount_total': 1500.0}]
+            so, [{"amount_untaxed": 1500.0, "amount_tax": 0.0, "amount_total": 1500.0}]
         )
 
         # Put another discount of 10%.
@@ -129,8 +129,8 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
         wizard.action_apply_discount()
 
         self.assertRecordValues(
-            so.order_line, [{'price_unit': 2000.0}, {'price_unit': -500.0}, {'price_unit': -150.0}]
+            so.order_line, [{"price_unit": 2000.0}, {"price_unit": -500.0}, {"price_unit": -150.0}]
         )
         self.assertRecordValues(
-            so, [{'amount_untaxed': 1350.0, 'amount_tax': 0.0, 'amount_total': 1350.0}]
+            so, [{"amount_untaxed": 1350.0, "amount_tax": 0.0, "amount_total": 1350.0}]
         )

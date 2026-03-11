@@ -11,52 +11,52 @@ from odoo.tests import HttpCase, tagged
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleComparisonUi(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.attribute_varieties = cls.env['product.attribute'].create({
-            'name': 'Grape Varieties',
-            'sequence': 2,
-            'value_ids': [
-                Command.create({'name': n, 'sequence': i})
+        cls.attribute_varieties = cls.env["product.attribute"].create({
+            "name": "Grape Varieties",
+            "sequence": 2,
+            "value_ids": [
+                Command.create({"name": n, "sequence": i})
                 for i, n in enumerate([
-                    'Cabernet Sauvignon',
-                    'Merlot',
-                    'Cabernet Franc',
-                    'Petit Verdot',
+                    "Cabernet Sauvignon",
+                    "Merlot",
+                    "Cabernet Franc",
+                    "Petit Verdot",
                 ])
             ],
         })
-        cls.attribute_vintage = cls.env['product.attribute'].create({
-            'name': 'Vintage',
-            'sequence': 1,
-            'value_ids': [
-                Command.create({'name': n, 'sequence': i})
-                for i, n in enumerate(['2018', '2017', '2016', '2015'])
+        cls.attribute_vintage = cls.env["product.attribute"].create({
+            "name": "Vintage",
+            "sequence": 1,
+            "value_ids": [
+                Command.create({"name": n, "sequence": i})
+                for i, n in enumerate(["2018", "2017", "2016", "2015"])
             ],
         })
         cls.values_varieties = cls.attribute_varieties.value_ids
         cls.values_vintage = cls.attribute_vintage.value_ids
-        cls.template_margaux = cls.env['product.template'].create({
-            'name': "Château Margaux",
-            'website_published': True,
-            'list_price': 0,
-            'attribute_line_ids': [
+        cls.template_margaux = cls.env["product.template"].create({
+            "name": "Château Margaux",
+            "website_published": True,
+            "list_price": 0,
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': cls.attribute_vintage.id,
-                    'value_ids': [Command.set(cls.values_vintage.ids)],
+                    "attribute_id": cls.attribute_vintage.id,
+                    "value_ids": [Command.set(cls.values_vintage.ids)],
                 })
             ],
         })
         cls.attribute_line_vintage = cls.template_margaux.attribute_line_ids
-        cls.attribute_line_varieties = cls.env['product.template.attribute.line'].create([
+        cls.attribute_line_varieties = cls.env["product.template.attribute.line"].create([
             {
-                'product_tmpl_id': cls.template_margaux.id,
-                'attribute_id': cls.attribute_varieties.id,
-                'value_ids': [(6, 0, v.ids)],
+                "product_tmpl_id": cls.template_margaux.id,
+                "attribute_id": cls.attribute_varieties.id,
+                "value_ids": [(6, 0, v.ids)],
             }
             for v in cls.values_varieties
         ])
@@ -68,82 +68,82 @@ class TestWebsiteSaleComparisonUi(HttpCase):
             ).price_extra = price
 
     def test_01_admin_tour_product_comparison(self):
-        attribute = self.env['product.attribute'].create({
-            'name': 'Color',
-            'sequence': 10,
-            'display_type': 'color',
-            'value_ids': [
-                Command.create({'name': 'Red'}),
-                Command.create({'name': 'Pink'}),
-                Command.create({'name': 'Blue'}),
+        attribute = self.env["product.attribute"].create({
+            "name": "Color",
+            "sequence": 10,
+            "display_type": "color",
+            "value_ids": [
+                Command.create({"name": "Red"}),
+                Command.create({"name": "Pink"}),
+                Command.create({"name": "Blue"}),
             ],
         })
-        self.env['product.template'].create([
+        self.env["product.template"].create([
             {
-                'name': 'Color T-Shirt',
-                'list_price': 20.0,
-                'website_sequence': 1,
-                'is_published': True,
-                'type': 'service',
-                'invoice_policy': 'delivery',
-                'attribute_line_ids': [
-                    Command.create({'attribute_id': attribute.id, 'value_ids': attribute.value_ids})
+                "name": "Color T-Shirt",
+                "list_price": 20.0,
+                "website_sequence": 1,
+                "is_published": True,
+                "type": "service",
+                "invoice_policy": "delivery",
+                "attribute_line_ids": [
+                    Command.create({"attribute_id": attribute.id, "value_ids": attribute.value_ids})
                 ],
             },
             {
-                'name': 'Color Pants',
-                'list_price': 20.0,
-                'website_sequence': 1,
-                'is_published': True,
-                'type': 'service',
-                'invoice_policy': 'delivery',
-                'attribute_line_ids': [
-                    Command.create({'attribute_id': attribute.id, 'value_ids': attribute.value_ids})
+                "name": "Color Pants",
+                "list_price": 20.0,
+                "website_sequence": 1,
+                "is_published": True,
+                "type": "service",
+                "invoice_policy": "delivery",
+                "attribute_line_ids": [
+                    Command.create({"attribute_id": attribute.id, "value_ids": attribute.value_ids})
                 ],
             },
             {
-                'name': 'Color Shoes',
-                'list_price': 20.0,
-                'website_sequence': 1,
-                'is_published': True,
-                'type': 'service',
-                'invoice_policy': 'delivery',
-                'attribute_line_ids': [
-                    Command.create({'attribute_id': attribute.id, 'value_ids': attribute.value_ids})
+                "name": "Color Shoes",
+                "list_price": 20.0,
+                "website_sequence": 1,
+                "is_published": True,
+                "type": "service",
+                "invoice_policy": "delivery",
+                "attribute_line_ids": [
+                    Command.create({"attribute_id": attribute.id, "value_ids": attribute.value_ids})
                 ],
             },
         ])
-        self.start_tour("/shop", 'website_sale.product_comparison', login='admin')
+        self.start_tour("/shop", "website_sale.product_comparison", login="admin")
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)
-        self.env['website'].viewref('website_sale.product_attributes_body').active = False
-        res = self.url_open('/shop/%d' % self.template_margaux.id)
+        self.env["website"].viewref("website_sale.product_attributes_body").active = False
+        res = self.url_open("/shop/%d" % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
         # Case product page with "Product attributes table" enabled
-        self.env['website'].viewref('website_sale.product_attributes_body').active = True
-        res = self.url_open('/shop/%d' % self.template_margaux.id)
+        self.env["website"].viewref("website_sale.product_attributes_body").active = True
+        res = self.url_open("/shop/%d" % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
         tr_vintage = root.xpath('//div[@id="product_specifications"]//tr')[0]
-        text_vintage = etree.tostring(tr_vintage, encoding='unicode', method='text')
+        text_vintage = etree.tostring(tr_vintage, encoding="unicode", method="text")
         self.assertEqual(
-            text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018,2017,2016,2015"
+            text_vintage.replace(" ", "").replace("\n", ""), "Vintage2018,2017,2016,2015"
         )
 
         tr_varieties = root.xpath('//div[@id="product_specifications"]//tr')[1]
-        text_varieties = etree.tostring(tr_varieties, encoding='unicode', method='text')
+        text_varieties = etree.tostring(tr_varieties, encoding="unicode", method="text")
         self.assertEqual(
-            text_varieties.replace(' ', '').replace('\n', ''),
+            text_varieties.replace(" ", "").replace("\n", ""),
             "GrapeVarietiesCabernetSauvignon,Merlot,CabernetFranc,PetitVerdot",
         )
 
         # Case compare page
         res = self.url_open(
-            '/shop/compare?products=%s' % ','.join(str(id) for id in self.variants_margaux.ids)
+            "/shop/compare?products=%s" % ",".join(str(id) for id in self.variants_margaux.ids)
         )
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
@@ -155,23 +155,23 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         for product, name in zip(
             products,
             [
-                'ChâteauMargaux(2018)',
-                'ChâteauMargaux(2017)',
-                'ChâteauMargaux(2016)',
-                'ChâteauMargaux(2015)',
+                "ChâteauMargaux(2018)",
+                "ChâteauMargaux(2017)",
+                "ChâteauMargaux(2016)",
+                "ChâteauMargaux(2015)",
             ],
         ):
-            text = etree.tostring(product, encoding='unicode', method='text')
-            self.assertEqual(text.replace(' ', '').replace('\n', ''), name)
+            text = etree.tostring(product, encoding="unicode", method="text")
+            self.assertEqual(text.replace(" ", "").replace("\n", ""), name)
 
         attribute_vintage = table.xpath('//div[@id="o_comparelist_attribute"]')[0]
-        text_vintage = etree.tostring(attribute_vintage, encoding='unicode', method='text')
-        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018")
+        text_vintage = etree.tostring(attribute_vintage, encoding="unicode", method="text")
+        self.assertEqual(text_vintage.replace(" ", "").replace("\n", ""), "Vintage2018")
 
         attribute_varieties = table.xpath('//div[@id="o_comparelist_attribute"]')[4]
-        text_varieties = etree.tostring(attribute_varieties, encoding='unicode', method='text')
+        text_varieties = etree.tostring(attribute_varieties, encoding="unicode", method="text")
         self.assertEqual(
-            text_varieties.replace(' ', '').replace('\n', ''),
+            text_varieties.replace(" ", "").replace("\n", ""),
             "GrapeVarietiesCabernetSauvignon,Merlot,CabernetFranc,PetitVerdot",
         )
 
@@ -179,13 +179,13 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         """Test that categories are shown in the correct order when the
         attributes are in a different order.
         """
-        category_vintage = self.env['product.attribute.category'].create({
-            'name': 'Vintage',
-            'sequence': 2,
+        category_vintage = self.env["product.attribute.category"].create({
+            "name": "Vintage",
+            "sequence": 2,
         })
-        category_varieties = self.env['product.attribute.category'].create({
-            'name': 'Varieties',
-            'sequence': 1,
+        category_varieties = self.env["product.attribute.category"].create({
+            "name": "Varieties",
+            "sequence": 1,
         })
         self.attribute_vintage.category_id = category_vintage
         self.attribute_varieties.category_id = category_varieties
@@ -246,32 +246,32 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         """Test that attribute with single custom value shouldn't be displayed in specifications.
         The attribute with 'multi type single value' attribute should be displayed in specs
         table."""
-        custom_attribute = self.env['product.attribute'].create([
+        custom_attribute = self.env["product.attribute"].create([
             {
-                'name': 'Write here',
-                'value_ids': [Command.create({'name': 'Custom', 'is_custom': True})],
+                "name": "Write here",
+                "value_ids": [Command.create({"name": "Custom", "is_custom": True})],
             }
         ])
-        multi_attribute = self.env['product.attribute'].create([
+        multi_attribute = self.env["product.attribute"].create([
             {
-                'name': 'multi',
-                'display_type': 'multi',
-                'create_variant': 'no_variant',
-                'value_ids': [Command.create({'name': 'multi type single value'})],
+                "name": "multi",
+                "display_type": "multi",
+                "create_variant": "no_variant",
+                "value_ids": [Command.create({"name": "multi type single value"})],
             }
         ])
-        product = self.env['product.template'].create([
+        product = self.env["product.template"].create([
             {
-                'name': 'T-Shirt',
-                'is_published': True,
-                'attribute_line_ids': [
+                "name": "T-Shirt",
+                "is_published": True,
+                "attribute_line_ids": [
                     Command.create({
-                        'attribute_id': custom_attribute.id,
-                        'value_ids': custom_attribute.value_ids,
+                        "attribute_id": custom_attribute.id,
+                        "value_ids": custom_attribute.value_ids,
                     }),
                     Command.create({
-                        'attribute_id': multi_attribute.id,
-                        'value_ids': multi_attribute.value_ids,
+                        "attribute_id": multi_attribute.id,
+                        "value_ids": multi_attribute.value_ids,
                     }),
                 ],
             }

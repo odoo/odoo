@@ -6,7 +6,7 @@ from odoo.addons.website_sale_collect.controllers.delivery import InStoreDeliver
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestClickAndCollectExpressCheckout(ClickAndCollectCommon):
     def test_exclude_in_store_delivery_methods(self):
         express_delivery_methods = InStoreDelivery._get_delivery_methods_express_checkout(self.cart)

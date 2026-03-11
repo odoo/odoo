@@ -7,7 +7,7 @@ from odoo.tools import groupby
 
 
 class SaleComboConfiguratorController(Controller):
-    @route(route='/sale/combo_configurator/get_data', type='jsonrpc', auth='user', readonly=True)
+    @route(route="/sale/combo_configurator/get_data", type="jsonrpc", auth="user", readonly=True)
     def sale_combo_configurator_get_data(
         self,
         product_tmpl_id,
@@ -44,24 +44,24 @@ class SaleComboConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_tmpl_id)
-        currency = request.env['res.currency'].browse(currency_id)
-        pricelist = request.env['product.pricelist'].browse(pricelist_id)
+        product_template = request.env["product.template"].browse(product_tmpl_id)
+        currency = request.env["res.currency"].browse(currency_id)
+        pricelist = request.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
-        selected_combo_item_dict = {item['id']: item for item in selected_combo_items or []}
+        selected_combo_item_dict = {item["id"]: item for item in selected_combo_items or []}
 
         return {
-            'product_tmpl_id': product_tmpl_id,
-            'display_name': product_template.display_name,
-            'quantity': quantity,
-            'price': product_template._get_configurator_display_price(
+            "product_tmpl_id": product_tmpl_id,
+            "display_name": product_template.display_name,
+            "quantity": quantity,
+            "price": product_template._get_configurator_display_price(
                 product_template, quantity, date, currency, pricelist, **kwargs
             )[0],
-            'combos': [
+            "combos": [
                 {
-                    'id': combo.id,
-                    'name': combo.name,
-                    'combo_items': [
+                    "id": combo.id,
+                    "name": combo.name,
+                    "combo_items": [
                         self._get_combo_item_data(
                             combo,
                             combo_item,
@@ -78,13 +78,13 @@ class SaleComboConfiguratorController(Controller):
                 }
                 for combo in product_template.sudo().combo_ids
             ],
-            'currency_id': currency_id,
+            "currency_id": currency_id,
             **product_template._get_additional_configurator_data(
                 product_template, date, currency, pricelist, quantity=quantity, **kwargs
             ),
         }
 
-    @route(route='/sale/combo_configurator/get_price', type='jsonrpc', auth='user', readonly=True)
+    @route(route="/sale/combo_configurator/get_price", type="jsonrpc", auth="user", readonly=True)
     def sale_combo_configurator_get_price(
         self,
         product_tmpl_id,
@@ -112,9 +112,9 @@ class SaleComboConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_tmpl_id)
-        currency = request.env['res.currency'].browse(currency_id)
-        pricelist = request.env['product.pricelist'].browse(pricelist_id)
+        product_template = request.env["product.template"].browse(product_tmpl_id)
+        currency = request.env["res.currency"].browse(currency_id)
+        pricelist = request.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
 
         return product_template._get_configurator_display_price(
@@ -138,7 +138,7 @@ class SaleComboConfiguratorController(Controller):
         # - Configurable `no_variant` PTALs,
         # - Or custom PTAVs.
         is_configurable = any(
-            ptal.attribute_id.create_variant == 'no_variant' and ptal._is_configurable()
+            ptal.attribute_id.create_variant == "no_variant" and ptal._is_configurable()
             for ptal in combo_item.product_id.attribute_line_ids
         ) or any(
             ptav.is_custom for ptav in combo_item.product_id.product_template_attribute_value_ids
@@ -148,18 +148,18 @@ class SaleComboConfiguratorController(Controller):
         is_preselected = len(combo.combo_item_ids) == 1 and not is_configurable
 
         return {
-            'id': combo_item.id,
-            'extra_price': combo_item.extra_price,
-            'is_preselected': is_preselected,
-            'is_selected': bool(selected_combo_item) or is_preselected,
-            'is_configurable': is_configurable,
-            'product': {
-                'id': combo_item.product_id.id,
-                'product_tmpl_id': combo_item.product_id.product_tmpl_id.id,
-                'display_name': combo_item.product_id.display_name,
-                'ptals': self._get_ptals_data(combo_item.product_id, selected_combo_item),
-                'description': combo_item.product_id.description_sale,
-                **request.env['product.template']._get_additional_configurator_data(
+            "id": combo_item.id,
+            "extra_price": combo_item.extra_price,
+            "is_preselected": is_preselected,
+            "is_selected": bool(selected_combo_item) or is_preselected,
+            "is_configurable": is_configurable,
+            "product": {
+                "id": combo_item.product_id.id,
+                "product_tmpl_id": combo_item.product_id.product_tmpl_id.id,
+                "display_name": combo_item.product_id.display_name,
+                "ptals": self._get_ptals_data(combo_item.product_id, selected_combo_item),
+                "description": combo_item.product_id.description_sale,
+                **request.env["product.template"]._get_additional_configurator_data(
                     combo_item.product_id, date, currency, pricelist, **kwargs
                 ),
             },
@@ -182,8 +182,8 @@ class SaleComboConfiguratorController(Controller):
         :return: A list of dicts containing data about the specified product's PTALs.
         """
         variant_ptavs = product.product_template_attribute_value_ids
-        no_variant_ptavs = request.env['product.template.attribute.value'].browse(
-            selected_combo_item.get('no_variant_ptav_ids')
+        no_variant_ptavs = request.env["product.template.attribute.value"].browse(
+            selected_combo_item.get("no_variant_ptav_ids")
         )
         preselected_ptavs = product.attribute_line_ids.filtered(
             lambda ptal: not ptal._is_configurable()
@@ -196,15 +196,15 @@ class SaleComboConfiguratorController(Controller):
             )
         )
 
-        custom_ptavs = selected_combo_item.get('custom_ptavs', [])
-        custom_value_by_ptav_id = {ptav['id']: ptav['value'] for ptav in custom_ptavs}
+        custom_ptavs = selected_combo_item.get("custom_ptavs", [])
+        custom_value_by_ptav_id = {ptav["id"]: ptav["value"] for ptav in custom_ptavs}
 
         return [
             {
-                'id': ptal.id,
-                'name': ptal.attribute_id.name,
-                'create_variant': ptal.attribute_id.create_variant,
-                'selected_ptavs': self._get_selected_ptavs_data(
+                "id": ptal.id,
+                "name": ptal.attribute_id.name,
+                "create_variant": ptal.attribute_id.create_variant,
+                "selected_ptavs": self._get_selected_ptavs_data(
                     ptavs_by_ptal_id.get(ptal.id, []), custom_value_by_ptav_id
                 ),
             }
@@ -221,10 +221,10 @@ class SaleComboConfiguratorController(Controller):
         """
         return [
             {
-                'id': ptav.id,
-                'name': ptav.name,
-                'price_extra': ptav.price_extra,
-                'custom_value': custom_value_by_ptav_id.get(ptav.id),
+                "id": ptav.id,
+                "name": ptav.name,
+                "price_extra": ptav.price_extra,
+                "custom_value": custom_value_by_ptav_id.get(ptav.id),
             }
             for ptav in selected_ptavs
         ]

@@ -14,7 +14,7 @@ _logger = get_payment_logger(__name__)
 
 
 class MercadoPagoPaymentController(http.Controller):
-    @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
+    @http.route("/payment/mercado_pago/payments", type="jsonrpc", auth="public")
     def mercado_pago_payment(
         self, reference, transaction_amount, token, installments, payment_method_brand, issuer_id
     ):
@@ -30,48 +30,48 @@ class MercadoPagoPaymentController(http.Controller):
         """
         tx_sudo = (
             request
-            .env['payment.transaction']
+            .env["payment.transaction"]
             .sudo()
-            ._search_by_reference('mercado_pago', {'external_reference': reference})
+            ._search_by_reference("mercado_pago", {"external_reference": reference})
         )
         payload = tx_sudo._mercado_pago_prepare_payment_request_payload()
         payload.update({
-            'transaction_amount': float(transaction_amount),
-            'token': token,
-            'installments': installments,
-            'payment_method_id': payment_method_brand,
-            'issuer_id': issuer_id,
+            "transaction_amount": float(transaction_amount),
+            "token": token,
+            "installments": installments,
+            "payment_method_id": payment_method_brand,
+            "issuer_id": issuer_id,
         })
         response_content = tx_sudo._send_api_request(
-            'POST',
-            endpoint='/v1/payments',
+            "POST",
+            endpoint="/v1/payments",
             json=payload,
-            idempotency_key=payment_utils.generate_idempotency_key(tx_sudo, scope='direct_payment'),
+            idempotency_key=payment_utils.generate_idempotency_key(tx_sudo, scope="direct_payment"),
         )
         tx_sudo._process(
-            'mercado_pago', dict(response_content, merchantReference=reference, token=token)
+            "mercado_pago", dict(response_content, merchantReference=reference, token=token)
         )
 
-    @http.route(const.PAYMENT_RETURN_ROUTE, type='http', methods=['GET'], auth='public')
+    @http.route(const.PAYMENT_RETURN_ROUTE, type="http", methods=["GET"], auth="public")
     def mercado_pago_return_from_checkout(self, **data):
         """Process the payment data sent by Mercado Pago after redirection from checkout.
 
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from Mercado Pago with data:\n%s", pprint.pformat(data))
-        if data.get('payment_id') != 'null':
+        if data.get("payment_id") != "null":
             self._verify_and_process(data)
         else:  # The customer cancelled the payment by clicking on the return button.
             pass  # Don't try to process this case because the payment id was not provided.
 
         # Redirect the user to the status page.
-        return request.redirect('/payment/status')
+        return request.redirect("/payment/status")
 
     @http.route(
-        f'{const.WEBHOOK_ROUTE}/<reference>',
-        type='http',
-        auth='public',
-        methods=['POST'],
+        f"{const.WEBHOOK_ROUTE}/<reference>",
+        type="http",
+        auth="public",
+        methods=["POST"],
         csrf=False,
     )
     def mercado_pago_webhook(self, reference, **_kwargs):
@@ -90,12 +90,12 @@ class MercadoPagoPaymentController(http.Controller):
         # information. Therefore, we filter the notifications we receive based on the 'action'
         # (type of event) key as it is not populated for IPNs, and we don't want to process the
         # other types of events.
-        if data.get('action') in ('payment.created', 'payment.updated'):
+        if data.get("action") in ("payment.created", "payment.updated"):
             self._verify_and_process({
-                'external_reference': reference,
-                'payment_id': data.get('data', {}).get('id'),
+                "external_reference": reference,
+                "payment_id": data.get("data", {}).get("id"),
             })  # Use 'external_reference' as the reference key like in the redirect data.
-        return ''  # Acknowledge the notification.
+        return ""  # Acknowledge the notification.
 
     @staticmethod
     def _verify_and_process(data):
@@ -105,16 +105,16 @@ class MercadoPagoPaymentController(http.Controller):
         :return: None
         """
         tx_sudo = (
-            request.env['payment.transaction'].sudo()._search_by_reference('mercado_pago', data)
+            request.env["payment.transaction"].sudo()._search_by_reference("mercado_pago", data)
         )
         if not tx_sudo:
             return
 
         try:
             verified_data = tx_sudo._send_api_request(
-                'GET', f'/v1/payments/{data.get("payment_id")}'
+                "GET", f"/v1/payments/{data.get('payment_id')}"
             )
         except ValidationError:
             _logger.error("Unable to verify the payment data")
         else:
-            tx_sudo._process('mercado_pago', verified_data)
+            tx_sudo._process("mercado_pago", verified_data)

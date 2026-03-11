@@ -21,32 +21,32 @@ _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 
 class PaymentTransaction(models.Model):
-    _name = 'payment.transaction'
-    _description = 'Payment Transaction'
-    _order = 'id desc'
-    _rec_name = 'reference'
+    _name = "payment.transaction"
+    _description = "Payment Transaction"
+    _order = "id desc"
+    _rec_name = "reference"
 
     @api.model
     def _lang_get(self):
-        return self.env['res.lang'].get_installed()
+        return self.env["res.lang"].get_installed()
 
     provider_id = fields.Many2one(
-        string="Provider", comodel_name='payment.provider', readonly=True, required=True
+        string="Provider", comodel_name="payment.provider", readonly=True, required=True
     )
-    provider_code = fields.Selection(string="Provider Code", related='provider_id.code')
+    provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
     company_id = fields.Many2one(
-        related='provider_id.company_id', store=True, index=True
+        related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others)
     payment_method_id = fields.Many2one(
-        string="Payment Method", comodel_name='payment.method', readonly=True, required=True
+        string="Payment Method", comodel_name="payment.method", readonly=True, required=True
     )
     payment_method_code = fields.Char(
-        string="Payment Method Code", related='payment_method_id.code'
+        string="Payment Method Code", related="payment_method_id.code"
     )
     primary_payment_method_id = fields.Many2one(
         string="Primary Payment Method",
-        comodel_name='payment.method',
-        compute='_compute_primary_payment_method_id',
+        comodel_name="payment.method",
+        compute="_compute_primary_payment_method_id",
     )
     reference = fields.Char(
         string="Reference",
@@ -58,30 +58,30 @@ class PaymentTransaction(models.Model):
         string="Provider Reference", help="The provider reference of the transaction", readonly=True
     )  # This is not the same thing as the provider reference of the token.
     amount = fields.Monetary(
-        string="Amount", currency_field='currency_id', readonly=True, required=True
+        string="Amount", currency_field="currency_id", readonly=True, required=True
     )
     currency_id = fields.Many2one(
-        string="Currency", comodel_name='res.currency', readonly=True, required=True
+        string="Currency", comodel_name="res.currency", readonly=True, required=True
     )
     token_id = fields.Many2one(
         string="Payment Token",
-        comodel_name='payment.token',
+        comodel_name="payment.token",
         domain='[("provider_id", "=", "provider_id")]',
-        ondelete='restrict',
+        ondelete="restrict",
         readonly=True,
-        index='btree_not_null',
+        index="btree_not_null",
     )
     state = fields.Selection(
         string="Status",
         selection=[
-            ('draft', "Draft"),
-            ('pending', "Pending"),
-            ('authorized', "Authorized"),
-            ('done', "Confirmed"),
-            ('cancel', "Canceled"),
-            ('error', "Error"),
+            ("draft", "Draft"),
+            ("pending", "Pending"),
+            ("authorized", "Authorized"),
+            ("done", "Confirmed"),
+            ("cancel", "Canceled"),
+            ("error", "Error"),
         ],
-        default='draft',
+        default="draft",
         readonly=True,
         required=True,
         copy=False,
@@ -100,12 +100,12 @@ class PaymentTransaction(models.Model):
     operation = fields.Selection(  # This should not be trusted if the state is draft or pending.
         string="Operation",
         selection=[
-            ('online_redirect', "Online payment with redirection"),
-            ('online_direct', "Online direct payment"),
-            ('online_token', "Online payment by token"),
-            ('validation', "Validation of the payment method"),
-            ('offline', "Offline payment by token"),
-            ('refund', "Refund"),
+            ("online_redirect", "Online payment with redirection"),
+            ("online_direct", "Online direct payment"),
+            ("online_token", "Online payment by token"),
+            ("validation", "Validation of the payment method"),
+            ("offline", "Offline payment by token"),
+            ("refund", "Refund"),
         ],
         readonly=True,
         index=True,
@@ -117,19 +117,19 @@ class PaymentTransaction(models.Model):
     )
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
-        comodel_name='payment.transaction',
-        index='btree_not_null',
+        comodel_name="payment.transaction",
+        index="btree_not_null",
         help="The source transaction of the related child transactions",
         readonly=True,
     )
     child_transaction_ids = fields.One2many(
         string="Child Transactions",
         help="The child transactions of the transaction.",
-        comodel_name='payment.transaction',
-        inverse_name='source_transaction_id',
+        comodel_name="payment.transaction",
+        inverse_name="source_transaction_id",
         readonly=True,
     )
-    refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
+    refunds_count = fields.Integer(string="Refunds Count", compute="_compute_refunds_count")
 
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
@@ -146,8 +146,8 @@ class PaymentTransaction(models.Model):
     # Duplicated partner values allowing to keep a record of them, should they be later updated.
     partner_id = fields.Many2one(
         string="Customer",
-        comodel_name='res.partner',
-        ondelete='restrict',
+        comodel_name="res.partner",
+        ondelete="restrict",
         readonly=True,
         required=True,
     )
@@ -157,23 +157,23 @@ class PaymentTransaction(models.Model):
     partner_address = fields.Char(string="Address")
     partner_zip = fields.Char(string="Zip")
     partner_city = fields.Char(string="City")
-    partner_state_id = fields.Many2one(string="State", comodel_name='res.country.state')
-    partner_country_id = fields.Many2one(string="Country", comodel_name='res.country')
+    partner_state_id = fields.Many2one(string="State", comodel_name="res.country.state")
+    partner_country_id = fields.Many2one(string="Country", comodel_name="res.country")
     partner_phone = fields.Char(string="Phone")
 
-    _reference_uniq = models.Constraint('unique(reference)', 'Reference must be unique!')
+    _reference_uniq = models.Constraint("unique(reference)", "Reference must be unique!")
 
     # === COMPUTE METHODS === #
 
     def _compute_primary_payment_method_id(self):
-        for pm, txs in self.grouped('payment_method_id').items():
+        for pm, txs in self.grouped("payment_method_id").items():
             txs.primary_payment_method_id = pm.primary_payment_method_id or pm
 
     def _compute_refunds_count(self):
-        rg_data = self.env['payment.transaction']._read_group(
-            domain=[('source_transaction_id', 'in', self.ids), ('operation', '=', 'refund')],
-            groupby=['source_transaction_id'],
-            aggregates=['__count'],
+        rg_data = self.env["payment.transaction"]._read_group(
+            domain=[("source_transaction_id", "in", self.ids), ("operation", "=", "refund")],
+            groupby=["source_transaction_id"],
+            aggregates=["__count"],
         )
         data = {source_transaction.id: count for source_transaction, count in rg_data}
         for record in self:
@@ -181,22 +181,22 @@ class PaymentTransaction(models.Model):
 
     # === CONSTRAINT METHODS === #
 
-    @api.constrains('state')
+    @api.constrains("state")
     def _check_state_authorized_supported(self):
         """Check that authorization is supported for a transaction in the `authorized` state."""
         illegal_authorize_state_txs = self.filtered(
-            lambda tx: tx.state == 'authorized' and not tx.provider_id.support_manual_capture
+            lambda tx: tx.state == "authorized" and not tx.provider_id.support_manual_capture
         )
         if illegal_authorize_state_txs:
             raise ValidationError(
                 _(
                     "Transaction authorization is not supported by the following payment providers:"
                     " %s",
-                    ', '.join(set(illegal_authorize_state_txs.mapped('provider_id.name'))),
+                    ", ".join(set(illegal_authorize_state_txs.mapped("provider_id.name"))),
                 )
             )
 
-    @api.constrains('token_id')
+    @api.constrains("token_id")
     def _check_token_is_active(self):
         """Check that the token used to create the transaction is active."""
         if self.token_id and not self.token_id.active:
@@ -207,29 +207,29 @@ class PaymentTransaction(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            provider = self.env['payment.provider'].browse(values['provider_id'])
+            provider = self.env["payment.provider"].browse(values["provider_id"])
 
-            if not values.get('reference'):
-                values['reference'] = self._compute_reference(provider.code, **values)
+            if not values.get("reference"):
+                values["reference"] = self._compute_reference(provider.code, **values)
 
-            values['is_live'] = provider.state == 'enabled'
+            values["is_live"] = provider.state == "enabled"
 
             # Duplicate partner values.
-            partner = self.env['res.partner'].browse(values['partner_id'])
+            partner = self.env["res.partner"].browse(values["partner_id"])
             partner_emails = email_normalize_all(partner.email)
             values.update({
                 # Use the parent partner as fallback if the invoicing address has no name.
-                'partner_name': partner.name or partner.parent_id.name,
-                'partner_lang': partner.lang,
-                'partner_email': partner_emails[0] if partner_emails else None,
-                'partner_address': payment_utils.format_partner_address(
+                "partner_name": partner.name or partner.parent_id.name,
+                "partner_lang": partner.lang,
+                "partner_email": partner_emails[0] if partner_emails else None,
+                "partner_address": payment_utils.format_partner_address(
                     partner.street, partner.street2
                 ),
-                'partner_zip': partner.zip,
-                'partner_city': partner.city,
-                'partner_state_id': partner.state_id.id,
-                'partner_country_id': partner.country_id.id,
-                'partner_phone': partner.phone,
+                "partner_zip": partner.zip,
+                "partner_city": partner.city,
+                "partner_state_id": partner.state_id.id,
+                "partner_country_id": partner.country_id.id,
+                "partner_phone": partner.phone,
             })
 
             # Include provider-specific create values
@@ -245,7 +245,7 @@ class PaymentTransaction(models.Model):
         # the DB where there were stored using `float_repr`, which produces a result consistent with
         # the format expected by providers.
         # E.g., tx.create(amount=1111.11) ; tx.invalidate_recordset() -> tx.amount == 1111.11
-        txs.invalidate_recordset(['amount'])
+        txs.invalidate_recordset(["amount"])
 
         return txs
 
@@ -277,19 +277,19 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         action = {
-            'name': _("Refund"),
-            'res_model': 'payment.transaction',
-            'type': 'ir.actions.act_window',
+            "name": _("Refund"),
+            "res_model": "payment.transaction",
+            "type": "ir.actions.act_window",
         }
         if self.refunds_count == 1:
-            refund_tx = self.env['payment.transaction'].search([
-                ('source_transaction_id', '=', self.id)
+            refund_tx = self.env["payment.transaction"].search([
+                ("source_transaction_id", "=", self.id)
             ])[0]
-            action['res_id'] = refund_tx.id
-            action['view_mode'] = 'form'
+            action["res_id"] = refund_tx.id
+            action["view_mode"] = "form"
         else:
-            action['view_mode'] = 'list,form'
-            action['domain'] = [('source_transaction_id', '=', self.id)]
+            action["view_mode"] = "list,form"
+            action["domain"] = [("source_transaction_id", "=", self.id)]
         return action
 
     def action_capture(self):
@@ -301,22 +301,22 @@ class PaymentTransaction(models.Model):
         """
         payment_utils.check_rights_on_recordset(self)
 
-        if any(tx.provider_id.sudo().support_manual_capture == 'partial' for tx in self):
+        if any(tx.provider_id.sudo().support_manual_capture == "partial" for tx in self):
             return {
-                'name': _("Capture"),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'payment.capture.wizard',
-                'target': 'new',
-                'context': {
-                    'active_model': 'payment.transaction',
+                "name": _("Capture"),
+                "type": "ir.actions.act_window",
+                "view_mode": "form",
+                "res_model": "payment.capture.wizard",
+                "target": "new",
+                "context": {
+                    "active_model": "payment.transaction",
                     # Consider also confirmed transactions to calculate the total authorized amount.
-                    'active_ids': self.filtered(lambda tx: tx.state in ['authorized', 'done']).ids,
-                    'payment_backend_action': True,
+                    "active_ids": self.filtered(lambda tx: tx.state in ["authorized", "done"]).ids,
+                    "payment_backend_action": True,
                 },
             }
-        captured_txs_sudo = self.env['payment.transaction'].sudo()
-        for tx in self.filtered(lambda tx: tx.state == 'authorized'):
+        captured_txs_sudo = self.env["payment.transaction"].sudo()
+        for tx in self.filtered(lambda tx: tx.state == "authorized"):
             # In sudo mode to read on provider fields.
             captured_txs_sudo |= tx.sudo().with_context(payment_backend_action=True)._capture()
         return captured_txs_sudo._build_action_feedback_notification()
@@ -325,16 +325,16 @@ class PaymentTransaction(models.Model):
         """Check the state of the transaction and request to have them voided."""
         payment_utils.check_rights_on_recordset(self)
 
-        if any(tx.state != 'authorized' for tx in self):
+        if any(tx.state != "authorized" for tx in self):
             raise ValidationError(_("Only authorized transactions can be voided."))
 
-        voided_txs_sudo = self.env['payment.transaction'].sudo()
+        voided_txs_sudo = self.env["payment.transaction"].sudo()
         for tx in self:
             # Consider all the confirmed partial capture (same operation as parent) child txs.
             captured_amount = sum(
                 child_tx.amount
                 for child_tx in tx.child_transaction_ids.filtered(
-                    lambda t: t.state == 'done' and t.operation == tx.operation
+                    lambda t: t.state == "done" and t.operation == tx.operation
                 )
             )
             voided_txs_sudo |= (
@@ -353,10 +353,10 @@ class PaymentTransaction(models.Model):
         """
         payment_utils.check_rights_on_recordset(self)
 
-        if any(tx.state != 'done' for tx in self):
+        if any(tx.state != "done" for tx in self):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
-        refunded_txs_sudo = self.env['payment.transaction'].sudo()
+        refunded_txs_sudo = self.env["payment.transaction"].sudo()
         for tx in self:
             refunded_txs_sudo |= (
                 tx
@@ -372,23 +372,23 @@ class PaymentTransaction(models.Model):
         :return: The client notification.
         :rtype: dict
         """
-        if not (failed_txs := self.filtered(lambda tx: tx.state == 'error')):
-            notification_type = 'success'
+        if not (failed_txs := self.filtered(lambda tx: tx.state == "error")):
+            notification_type = "success"
             msg = self.env._("Your payment operation has been successfully submitted.")
         else:
-            notification_type = 'danger'
+            notification_type = "danger"
             msg = self.env._(
                 "Your payment operation could not be completed for following transactions:"
                 " %(tx_refs)s",
-                tx_refs=', '.join(failed_txs.mapped('reference')),
+                tx_refs=", ".join(failed_txs.mapped("reference")),
             )
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': notification_type,
-                'message': msg,
-                'next': {'type': 'ir.actions.act_window_close'},  # Close any open wizard.
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "type": notification_type,
+                "message": msg,
+                "next": {"type": "ir.actions.act_window_close"},  # Close any open wizard.
             },
         }
 
@@ -399,12 +399,12 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         self._post_process()
-        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
+        return {"type": "ir.actions.client", "tag": "soft_reload"}
 
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
     @api.model
-    def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):  # noqa: ARG002
+    def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):  # noqa: ARG002
         """Compute a unique reference for the transaction.
 
         The reference corresponds to the prefix if no other transaction with that prefix already
@@ -444,7 +444,7 @@ class PaymentTransaction(models.Model):
         # Compute the prefix.
         if prefix:
             # Replace special characters by their ASCII alternative (é -> e ; ä -> a ; ...)
-            prefix = unicodedata.normalize('NFKD', prefix).encode('ascii', 'ignore').decode('utf-8')
+            prefix = unicodedata.normalize("NFKD", prefix).encode("ascii", "ignore").decode("utf-8")
         if not prefix:  # Prefix not provided or voided above, compute it based on the kwargs.
             prefix = self.sudo()._compute_reference_prefix(separator, **kwargs)
         if not prefix:  # Prefix not computed from the kwargs, fallback on time-based value
@@ -452,7 +452,7 @@ class PaymentTransaction(models.Model):
 
         # Compute the sequence number.
         reference = prefix  # The first reference of a sequence has no sequence number.
-        if self.sudo().search_count([('reference', '=', prefix)], limit=1):  # Reference collision!
+        if self.sudo().search_count([("reference", "=", prefix)], limit=1):  # Reference collision!
             # We now execute a second search on `payment.transaction` to fetch all the references
             # starting with the given prefix. The load of these two searches is mitigated by the
             # index on `reference`. Although not ideal, this solution allows for quickly knowing
@@ -462,9 +462,9 @@ class PaymentTransaction(models.Model):
             same_prefix_references = (
                 self
                 .sudo()
-                .search([('reference', '=like', f'{prefix}{separator}%')])
+                .search([("reference", "=like", f"{prefix}{separator}%")])
                 .with_context(prefetch_fields=False)
-                .mapped('reference')
+                .mapped("reference")
             )
 
             # A final regex search is necessary to figure out the next sequence number. The previous
@@ -474,7 +474,7 @@ class PaymentTransaction(models.Model):
             # For instance, the prefix 'example' is a valid match for the existing references
             # 'example', 'example-1' and 'example-ref', in that order. Trusting the order to infer
             # the sequence number would lead to a collision with 'example-1'.
-            search_pattern = re.compile(rf'^{re.escape(prefix)}{separator}(\d+)$')
+            search_pattern = re.compile(rf"^{re.escape(prefix)}{separator}(\d+)$")
             max_sequence_number = 0  # If no match is found, start the sequence with this reference.
             for existing_reference in same_prefix_references:
                 search_result = re.search(search_pattern, existing_reference)
@@ -484,7 +484,7 @@ class PaymentTransaction(models.Model):
                     max_sequence_number = max(max_sequence_number, current_sequence)
 
             # Compute the full reference.
-            reference = f'{prefix}{separator}{max_sequence_number + 1}'
+            reference = f"{prefix}{separator}{max_sequence_number + 1}"
         return reference
 
     @api.model
@@ -500,7 +500,7 @@ class PaymentTransaction(models.Model):
         :return: The computed reference prefix.
         :rtype: str
         """
-        return ''
+        return ""
 
     def _get_processing_values(self):
         """Return the values used to process the transaction.
@@ -524,33 +524,33 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         processing_values = {
-            'provider_id': self.provider_id.id,
-            'provider_code': self.provider_code,
-            'reference': self.reference,
-            'amount': self.amount,
-            'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
-            'should_tokenize': self.tokenize,
+            "provider_id": self.provider_id.id,
+            "provider_code": self.provider_code,
+            "reference": self.reference,
+            "amount": self.amount,
+            "currency_id": self.currency_id.id,
+            "partner_id": self.partner_id.id,
+            "should_tokenize": self.tokenize,
         }
 
         # Complete generic processing values with provider-specific values.
         processing_values.update(self._get_specific_processing_values(processing_values))
 
         # Render the HTML form for the redirect flow if available.
-        if self.operation in ('online_redirect', 'validation'):
+        if self.operation in ("online_redirect", "validation"):
             redirect_form_view = self.provider_id._get_redirect_form_view(
-                is_validation=self.operation == 'validation'
+                is_validation=self.operation == "validation"
             )
             if redirect_form_view:  # Some providers don't need a redirect form.
                 rendering_values = self._get_specific_rendering_values(processing_values)
-                redirect_form_html = self.env['ir.qweb']._render(
+                redirect_form_html = self.env["ir.qweb"]._render(
                     redirect_form_view.id, rendering_values
                 )
                 processing_values.update(redirect_form_html=redirect_form_html)
 
         # Include the state and state message only after they might have been updated by calling the
         # `_get_specific_rendering/processing_values` methods (due to possible external requests).
-        processing_values.update({'state': self.state, 'state_message': self.state_message})
+        processing_values.update({"state": self.state, "state_message": self.state_message})
 
         return processing_values
 
@@ -728,7 +728,7 @@ class PaymentTransaction(models.Model):
         :return: None
         :raise UserError: If the provider's state is `disabled`.
         """
-        if self.provider_id.state == 'disabled':
+        if self.provider_id.state == "disabled":
             raise UserError(
                 _(
                     "Making a request to the provider is not possible because the provider is"
@@ -753,23 +753,23 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         if is_refund:
-            reference_prefix = f'R-{self.reference}'
+            reference_prefix = f"R-{self.reference}"
             amount = -amount
-            operation = 'refund'
+            operation = "refund"
         else:  # Partial capture or void.
-            reference_prefix = f'P-{self.reference}'
+            reference_prefix = f"P-{self.reference}"
             operation = self.operation
 
         return self.create({
-            'provider_id': self.provider_id.id,
-            'payment_method_id': self.payment_method_id.id,
-            'reference': self._compute_reference(self.provider_code, prefix=reference_prefix),
-            'amount': amount,
-            'currency_id': self.currency_id.id,
-            'token_id': self.token_id.id,
-            'operation': operation,
-            'source_transaction_id': self.id,
-            'partner_id': self.partner_id.id,
+            "provider_id": self.provider_id.id,
+            "payment_method_id": self.payment_method_id.id,
+            "reference": self._compute_reference(self.provider_code, prefix=reference_prefix),
+            "amount": amount,
+            "currency_id": self.currency_id.id,
+            "token_id": self.token_id.id,
+            "operation": operation,
+            "source_transaction_id": self.id,
+            "partner_id": self.partner_id.id,
             **custom_create_values,
         })
 
@@ -788,10 +788,10 @@ class PaymentTransaction(models.Model):
             tx.ensure_one()
             previous_state = tx.state
             tx._validate_amount(payment_data)
-            if tx.state == 'error' and tx.state != previous_state:
+            if tx.state == "error" and tx.state != previous_state:
                 return tx
             tx._apply_updates(payment_data)
-            if tx.tokenize and tx.state in {'authorized', 'done'}:
+            if tx.tokenize and tx.state in {"authorized", "done"}:
                 tx._tokenize(payment_data)
         return tx
 
@@ -812,7 +812,7 @@ class PaymentTransaction(models.Model):
             return self
 
         tx = self.search(
-            Domain('reference', '=', reference) & Domain('provider_code', '=', provider_code)
+            Domain("reference", "=", reference) & Domain("provider_code", "=", provider_code)
         )
         if not tx:
             _logger.warning("No transaction found matching reference %s.", reference)
@@ -829,7 +829,7 @@ class PaymentTransaction(models.Model):
         :return: The transaction reference.
         :rtype: str
         """
-        return payment_data.get('reference')
+        return payment_data.get("reference")
 
     def _validate_amount(self, payment_data):
         """Ensure that the transaction's amount and currency match the ones from the payment data.
@@ -842,16 +842,16 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        if self.operation == 'validation':
+        if self.operation == "validation":
             return  # Skip validation for $0-auth transactions.
 
         amount_data = self._extract_amount_data(payment_data)
         if amount_data is None:
             return  # Skip validation for transactions where the provider opts out of amount check.
 
-        amount = amount_data['amount']
-        currency_code = amount_data['currency_code']
-        precision_digits = amount_data.get('precision_digits')
+        amount = amount_data["amount"]
+        currency_code = amount_data["currency_code"]
+        precision_digits = amount_data.get("precision_digits")
 
         if not amount or not currency_code:
             error_message = _("The amount or currency is missing from the payment data.")
@@ -860,14 +860,14 @@ class PaymentTransaction(models.Model):
 
         # Negate the amount for refunds, as refunds have a negative amount in Odoo, but all
         # providers send a positive one.
-        if self.operation == 'refund':
+        if self.operation == "refund":
             amount = -amount
         if precision_digits is None:
             precision_digits = CURRENCY_MINOR_UNITS.get(
                 self.currency_id.name, self.currency_id.decimal_places
             )
         tx_amount = float_round(
-            self.amount, precision_digits=precision_digits, rounding_method='DOWN'
+            self.amount, precision_digits=precision_digits, rounding_method="DOWN"
         )
         if self.currency_id.compare_amounts(amount, tx_amount) != 0:
             error_message = _(
@@ -924,16 +924,16 @@ class PaymentTransaction(models.Model):
         if not (token_values := self._extract_token_values(payment_data)):
             return
 
-        token = self.env['payment.token'].create({
-            'provider_id': self.provider_id.id,
-            'payment_method_id': self.payment_method_id.id,
-            'partner_id': self.partner_id.id,
+        token = self.env["payment.token"].create({
+            "provider_id": self.provider_id.id,
+            "payment_method_id": self.payment_method_id.id,
+            "partner_id": self.partner_id.id,
             **token_values,
         })
-        self.write({'token_id': token, 'tokenize': False})
+        self.write({"token_id": token, "tokenize": False})
         _logger.info(
             "Token %(token_id)s created for partner %(partner_id)s from transaction %(ref)s.",
-            {'token_id': token.id, 'partner_id': self.partner_id.id, 'ref': self.reference},
+            {"token_id": token.id, "partner_id": self.partner_id.id, "ref": self.reference},
         )
 
     def _extract_token_values(self, payment_data):  # noqa: ARG002
@@ -958,8 +958,8 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft',)
-        target_state = 'pending'
+        allowed_states = ("draft",)
+        target_state = "pending"
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
@@ -975,8 +975,8 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending')
-        target_state = 'authorized'
+        allowed_states = ("draft", "pending")
+        target_state = "authorized"
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
@@ -992,8 +992,8 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending', 'authorized', 'error')
-        target_state = 'done'
+        allowed_states = ("draft", "pending", "authorized", "error")
+        target_state = "done"
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
@@ -1010,8 +1010,8 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending', 'authorized')
-        target_state = 'cancel'
+        allowed_states = ("draft", "pending", "authorized")
+        target_state = "cancel"
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
@@ -1028,8 +1028,8 @@ class PaymentTransaction(models.Model):
         :return: The updated transactions.
         :rtype: recordset of `payment.transaction`
         """
-        allowed_states = ('draft', 'pending', 'authorized')
-        target_state = 'error'
+        allowed_states = ("draft", "pending", "authorized")
+        target_state = "error"
         txs_to_process = self._update_state(
             allowed_states + extra_allowed_states, target_state, state_message
         )
@@ -1074,24 +1074,24 @@ class PaymentTransaction(models.Model):
         for tx in txs_already_processed:
             _logger.info(
                 "Skipped the update of transaction %(ref)s as it is already in state %(state)s.",
-                {'ref': tx.reference, 'state': tx.state},
+                {"ref": tx.reference, "state": tx.state},
             )
         for tx in txs_wrong_state:
             _logger.warning(
                 "Refused to update transaction %(ref)s from state %(tx_state)s to state"
                 " %(target_state)s; allowed source states are: %(allowed_states)s.",
                 {
-                    'ref': tx.reference,
-                    'tx_state': tx.state,
-                    'target_state': target_state,
-                    'allowed_states': allowed_states,
+                    "ref": tx.reference,
+                    "tx_state": tx.state,
+                    "target_state": target_state,
+                    "allowed_states": allowed_states,
                 },
             )
         txs_to_process.write({
-            'state': target_state,
-            'state_message': state_message,
-            'last_state_change': fields.Datetime.now(),
-            'is_post_processed': False,  # Reset to allow post-processing again for other states.
+            "state": target_state,
+            "state_message": state_message,
+            "last_state_change": fields.Datetime.now(),
+            "is_post_processed": False,  # Reset to allow post-processing again for other states.
         })
         return txs_to_process
 
@@ -1101,18 +1101,18 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        for child_tx in self.filtered('source_transaction_id'):
+        for child_tx in self.filtered("source_transaction_id"):
             sibling_txs = child_tx.source_transaction_id.child_transaction_ids.filtered(
-                lambda tx: tx.state in ['done', 'cancel'] and tx.operation == child_tx.operation
+                lambda tx: tx.state in ["done", "cancel"] and tx.operation == child_tx.operation
             )
             processed_amount = round(
                 sum(tx.amount for tx in sibling_txs), child_tx.currency_id.decimal_places
             )
             if child_tx.source_transaction_id.amount == processed_amount:
-                fully_voided = all(tx.state == 'cancel' for tx in sibling_txs)
-                target_state = 'cancel' if fully_voided else 'done'
+                fully_voided = all(tx.state == "cancel" for tx in sibling_txs)
+                target_state = "cancel" if fully_voided else "done"
                 # Call `_update_state` directly instead of `_set_authorized` to avoid looping.
-                child_tx.source_transaction_id._update_state(('authorized',), target_state, '')
+                child_tx.source_transaction_id._update_state(("authorized",), target_state, "")
                 child_tx.source_transaction_id._log_received_message()
 
     # === BUSINESS METHODS - POST-PROCESSING === #
@@ -1130,8 +1130,8 @@ class PaymentTransaction(models.Model):
             retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
             txs_to_post_process = self.search([
-                ('is_post_processed', '=', False),
-                ('last_state_change', '>=', retry_limit_date),
+                ("is_post_processed", "=", False),
+                ("last_state_change", ">=", retry_limit_date),
             ])
         for tx in txs_to_post_process:
             try:
@@ -1239,13 +1239,13 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         # Choose the message based on the payment flow.
-        if self.operation in {'online_redirect', 'online_direct', 'online_token', 'offline'}:
+        if self.operation in {"online_redirect", "online_direct", "online_token", "offline"}:
             sent_message = _(
                 "The transaction %(ref)s of %(formatted_amount)s has been initiated.",
                 ref=self._get_html_link(),
                 formatted_amount=self.currency_id.format(self.amount),
             )
-        elif self.operation == 'refund':
+        elif self.operation == "refund":
             sent_message = _(
                 "The refund %(ref)s of %(formatted_amount)s has been initiated.",
                 ref=self._get_html_link(),
@@ -1265,44 +1265,44 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        if self.operation == 'validation':
+        if self.operation == "validation":
             return None  # Don't log anything as the token is not yet created.
 
         # Choose the message based on the transaction's state.
         msg_values = {
-            'tx_label': 'refund' if self.operation == 'refund' else 'transaction',
-            'ref': self._get_html_link(),
-            'formatted_amount': self.currency_id.format(self.amount),
+            "tx_label": "refund" if self.operation == "refund" else "transaction",
+            "ref": self._get_html_link(),
+            "formatted_amount": self.currency_id.format(self.amount),
         }
         received_message = None
         match self.state:
-            case 'pending':
+            case "pending":
                 received_message = _(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending.", **msg_values
                 )
-            case 'authorized':
+            case "authorized":
                 received_message = _(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized.",
                     **msg_values,
                 )
-            case 'done':
+            case "done":
                 received_message = _(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed.",
                     **msg_values,
                 )
-            case 'cancel':
+            case "cancel":
                 received_message = _(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled.",
                     **msg_values,
                 )
-            case 'error':
+            case "error":
                 received_message = _(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error.",
                     **msg_values,
                 )
 
         # Append any state_message for cancel or error.
-        if self.state in {'cancel', 'error'} and self.state_message:
+        if self.state in {"cancel", "error"} and self.state_message:
             received_message += Markup("<br/>") + self.state_message
 
         return received_message
@@ -1313,4 +1313,4 @@ class PaymentTransaction(models.Model):
         :return: The last transaction of the recordset, sorted by id.
         :rtype: recordset of `payment.transaction`
         """
-        return self.filtered(lambda t: t.state != 'draft').sorted()[:1]
+        return self.filtered(lambda t: t.state != "draft").sorted()[:1]

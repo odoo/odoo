@@ -14,7 +14,7 @@ _logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = "payment.transaction"
 
     def _get_specific_rendering_values(self, processing_values):
         """Override of payment to return Mollie-specific rendering values.
@@ -25,25 +25,25 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific rendering values
         :rtype: dict
         """
-        if self.provider_code != 'mollie':
+        if self.provider_code != "mollie":
             return super()._get_specific_rendering_values(processing_values)
 
         payload = self._mollie_prepare_payment_request_payload()
         try:
-            payment_data = self._send_api_request('POST', '/payments', json=payload)
+            payment_data = self._send_api_request("POST", "/payments", json=payload)
         except ValidationError as error:
             self._set_error(str(error))
             return {}
 
         # The provider reference is set now to allow fetching the payment status after redirection
-        self.provider_reference = payment_data.get('id')
+        self.provider_reference = payment_data.get("id")
 
-        checkout_url = payment_data['_links']['checkout']['href']
+        checkout_url = payment_data["_links"]["checkout"]["href"]
         return {
-            'api_url': checkout_url,
-            'http_method': 'get',
+            "api_url": checkout_url,
+            "http_method": "get",
             # The URL may include a query string when only one payment method is enabled on Mollie.
-            'url_params': payment_utils.extract_url_params(checkout_url),
+            "url_params": payment_utils.extract_url_params(checkout_url),
         }
 
     def _mollie_prepare_payment_request_payload(self):
@@ -52,7 +52,7 @@ class PaymentTransaction(models.Model):
         :return: The request payload
         :rtype: dict
         """
-        user_lang = self.env.context.get('lang')
+        user_lang = self.env.context.get("lang")
         base_url = self.provider_id.get_base_url()
         redirect_url = urls.urljoin(base_url, MollieController._return_url)
         webhook_url = urls.urljoin(base_url, MollieController._webhook_url)
@@ -61,25 +61,25 @@ class PaymentTransaction(models.Model):
         )
 
         return {
-            'description': self.reference,
-            'amount': {
-                'currency': self.currency_id.name,
-                'value': f"{self.amount:.{decimal_places}f}",
+            "description": self.reference,
+            "amount": {
+                "currency": self.currency_id.name,
+                "value": f"{self.amount:.{decimal_places}f}",
             },
-            'locale': user_lang if user_lang in const.SUPPORTED_LOCALES else 'en_US',
-            'method': [
+            "locale": user_lang if user_lang in const.SUPPORTED_LOCALES else "en_US",
+            "method": [
                 const.PAYMENT_METHODS_MAPPING.get(
                     self.payment_method_code, self.payment_method_code
                 )
             ],
             # Since Mollie does not provide the transaction reference when returning from
             # redirection, we include it in the redirect URL to be able to match the transaction.
-            'redirectUrl': f'{redirect_url}?ref={self.reference}',
-            'webhookUrl': f'{webhook_url}?ref={self.reference}',
-            'billingAddress': self._mollie_prepare_billing_address_payload(),
-            'lines': [
+            "redirectUrl": f"{redirect_url}?ref={self.reference}",
+            "webhookUrl": f"{webhook_url}?ref={self.reference}",
+            "billingAddress": self._mollie_prepare_billing_address_payload(),
+            "lines": [
                 {
-                    "description": 'Odoo purchase',
+                    "description": "Odoo purchase",
                     "quantity": 1,
                     "unitPrice": {
                         "currency": self.currency_id.name,
@@ -113,44 +113,44 @@ class PaymentTransaction(models.Model):
     @api.model
     def _extract_reference(self, provider_code, payment_data):
         """Override of `payment` to extract the reference from the payment data."""
-        if provider_code != 'mollie':
+        if provider_code != "mollie":
             return super()._extract_reference(provider_code, payment_data)
-        return payment_data.get('ref')
+        return payment_data.get("ref")
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != 'mollie':
+        if self.provider_code != "mollie":
             return super()._extract_amount_data(payment_data)
 
-        amount_data = payment_data.get('amount', {})
-        amount = amount_data.get('value')
-        currency_code = amount_data.get('currency')
-        return {'amount': float(amount), 'currency_code': currency_code}
+        amount_data = payment_data.get("amount", {})
+        amount = amount_data.get("value")
+        currency_code = amount_data.get("currency")
+        return {"amount": float(amount), "currency_code": currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
-        if self.provider_code != 'mollie':
+        if self.provider_code != "mollie":
             super()._apply_updates(payment_data)
             return
 
         # Update the payment method.
-        payment_method_type = payment_data.get('method', '')
-        if payment_method_type == 'creditcard':
-            payment_method_type = payment_data.get('details', {}).get('cardLabel', '').lower()
-        payment_method = self.env['payment.method']._get_from_code(
+        payment_method_type = payment_data.get("method", "")
+        if payment_method_type == "creditcard":
+            payment_method_type = payment_data.get("details", {}).get("cardLabel", "").lower()
+        payment_method = self.env["payment.method"]._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = payment_data.get('status')
-        if payment_status in ('pending', 'open'):
+        payment_status = payment_data.get("status")
+        if payment_status in ("pending", "open"):
             self._set_pending()
-        elif payment_status == 'authorized':
+        elif payment_status == "authorized":
             self._set_authorized()
-        elif payment_status == 'paid':
+        elif payment_status == "paid":
             self._set_done()
-        elif payment_status in ['expired', 'canceled', 'failed']:
+        elif payment_status in ["expired", "canceled", "failed"]:
             self._set_canceled(_("Cancelled payment with status: %s", payment_status))
         else:
             _logger.info(

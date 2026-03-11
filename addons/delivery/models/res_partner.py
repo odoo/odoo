@@ -5,15 +5,15 @@ from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = "res.partner"
 
     property_delivery_carrier_id = fields.Many2one(
         string="Delivery Method",
         help="Used in sales orders.",
-        comodel_name='delivery.carrier',
+        comodel_name="delivery.carrier",
         company_dependent=True,
     )
     is_pickup_location = fields.Boolean()  # Whether it is a pickup point address.
 
     def _get_delivery_address_domain(self):
-        return super()._get_delivery_address_domain() & Domain('is_pickup_location', '=', False)
+        return super()._get_delivery_address_domain() & Domain("is_pickup_location", "=", False)

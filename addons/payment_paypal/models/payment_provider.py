@@ -15,36 +15,36 @@ _logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[('paypal', "PayPal")], ondelete={'paypal': 'set default'}
+        selection_add=[("paypal", "PayPal")], ondelete={"paypal": "set default"}
     )
     paypal_email_account = fields.Char(
         string="Email",
         help="The public business email solely used to identify the account with PayPal",
-        required_if_provider='paypal',
+        required_if_provider="paypal",
         default=lambda self: self.env.company.email,
         copy=False,
     )
     paypal_client_id = fields.Char(
-        string="PayPal Client ID", required_if_provider='paypal', copy=False
+        string="PayPal Client ID", required_if_provider="paypal", copy=False
     )
     paypal_client_secret = fields.Char(
-        string="PayPal Client Secret", copy=False, groups='base.group_system'
+        string="PayPal Client Secret", copy=False, groups="base.group_system"
     )
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
         help="The short-lived token used to access Paypal APIs",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
     paypal_access_token_expiry = fields.Datetime(
         string="PayPal Access Token Expiry",
         help="The moment at which the access token becomes invalid.",
-        default='1970-01-01',
+        default="1970-01-01",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
     paypal_webhook_id = fields.Char(string="PayPal Webhook ID", copy=False)
 
@@ -53,7 +53,7 @@ class PaymentProvider(models.Model):
     def _get_supported_currencies(self):
         """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
-        if self.code == 'paypal':
+        if self.code == "paypal":
             supported_currencies = supported_currencies.filtered(
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
@@ -64,7 +64,7 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.code != 'paypal':
+        if self.code != "paypal":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -79,16 +79,16 @@ class PaymentProvider(models.Model):
         :raise UserError: If the base URL is not in HTTPS.
         """
         base_url = self.get_base_url()
-        if 'localhost' in base_url:
+        if "localhost" in base_url:
             raise UserError(
                 "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")
             )
         data = {
-            'url': urls.urljoin(base_url, PaypalController._webhook_url),
-            'event_types': [{'name': event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS],
+            "url": urls.urljoin(base_url, PaypalController._webhook_url),
+            "event_types": [{"name": event_type} for event_type in const.HANDLED_WEBHOOK_EVENTS],
         }
-        webhook_data = self._send_api_request('POST', '/v1/notifications/webhooks', json=data)
-        self.paypal_webhook_id = webhook_data.get('id')
+        webhook_data = self._send_api_request("POST", "/v1/notifications/webhooks", json=data)
+        self.paypal_webhook_id = webhook_data.get("id")
 
     # === BUSINESS METHODS === #
 
@@ -102,9 +102,9 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         inline_form_values = {
-            'provider_id': self.id,
-            'client_id': self.paypal_client_id,
-            'currency_code': currency and currency.name,
+            "provider_id": self.id,
+            "client_id": self.paypal_client_id,
+            "currency_code": currency and currency.name,
         }
         return json.dumps(inline_form_values)
 
@@ -112,7 +112,7 @@ class PaymentProvider(models.Model):
 
     def _build_request_url(self, endpoint, **kwargs):
         """Override of `payment` to build the request URL."""
-        if self.code != 'paypal':
+        if self.code != "paypal":
             return super()._build_request_url(endpoint, **kwargs)
         return self._paypal_get_api_url() + endpoint
 
@@ -126,17 +126,17 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.state == 'enabled':
-            api_url = 'https://api-m.paypal.com'
+        if self.state == "enabled":
+            api_url = "https://api-m.paypal.com"
         else:  # test
-            api_url = 'https://api-m.sandbox.paypal.com'
+            api_url = "https://api-m.sandbox.paypal.com"
         return api_url
 
     def _build_request_headers(
         self, *args, idempotency_key=None, is_refresh_token_request=False, **kwargs
     ):
         """Override of `payment` to build the request headers."""
-        if self.code != 'paypal':
+        if self.code != "paypal":
             return super()._build_request_headers(
                 *args,
                 idempotency_key=idempotency_key,
@@ -145,14 +145,14 @@ class PaymentProvider(models.Model):
             )
 
         headers = {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             # PayPal requires a reference specific to Odoo to be able to track Odoo customers.
-            'PayPal-Partner-Attribution-Id': 'OdooInc_SP_EC',
+            "PayPal-Partner-Attribution-Id": "OdooInc_SP_EC",
         }
         if idempotency_key:
-            headers['PayPal-Request-Id'] = idempotency_key
+            headers["PayPal-Request-Id"] = idempotency_key
         if not is_refresh_token_request:
-            headers['Authorization'] = f'Bearer {self._paypal_fetch_access_token()}'
+            headers["Authorization"] = f"Bearer {self._paypal_fetch_access_token()}"
         return headers
 
     def _paypal_fetch_access_token(self):
@@ -164,30 +164,30 @@ class PaymentProvider(models.Model):
         """
         if fields.Datetime.now() > self.paypal_access_token_expiry - timedelta(minutes=5):
             response_content = self._send_api_request(
-                'POST',
-                '/v1/oauth2/token',
-                data={'grant_type': 'client_credentials'},
+                "POST",
+                "/v1/oauth2/token",
+                data={"grant_type": "client_credentials"},
                 is_refresh_token_request=True,
             )
-            access_token = response_content['access_token']
+            access_token = response_content["access_token"]
             if not access_token:
                 raise ValidationError(_("Could not generate a new access token."))
             self.write({
-                'paypal_access_token': access_token,
-                'paypal_access_token_expiry': fields.Datetime.now()
-                + timedelta(seconds=response_content['expires_in']),
+                "paypal_access_token": access_token,
+                "paypal_access_token_expiry": fields.Datetime.now()
+                + timedelta(seconds=response_content["expires_in"]),
             })
         return self.paypal_access_token
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""
-        if self.code != 'paypal':
+        if self.code != "paypal":
             return super()._parse_response_error(response)
-        return response.json().get('message', '')
+        return response.json().get("message", "")
 
     def _build_request_auth(self, *, is_refresh_token_request=False, **kwargs):
         """Override of `payment` to build the request Auth."""
-        if self.code != 'paypal' or not is_refresh_token_request:
+        if self.code != "paypal" or not is_refresh_token_request:
             return super()._build_request_auth(
                 is_refresh_token_request=is_refresh_token_request, **kwargs
             )

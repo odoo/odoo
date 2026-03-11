@@ -19,11 +19,11 @@ from odoo.addons.website_sale.models.website import (
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     website_id = fields.Many2one(
         help="Website through which this order was placed for eCommerce orders.",
-        comodel_name='website',
+        comodel_name="website",
         readonly=True,
     )
 
@@ -33,60 +33,60 @@ class SaleOrder(models.Model):
     # Computed fields
     website_order_line = fields.One2many(
         string="Order Lines displayed on Website",
-        comodel_name='sale.order.line',
-        compute='_compute_website_order_line',
+        comodel_name="sale.order.line",
+        compute="_compute_website_order_line",
     )  # should not be used for computation purpose.',
     amount_delivery = fields.Monetary(
         string="Delivery Amount",
-        compute='_compute_amount_delivery',
+        compute="_compute_amount_delivery",
         help="Tax included or excluded depending on the website configuration.",
     )
-    cart_quantity = fields.Integer(string="Cart Quantity", compute='_compute_cart_info')
-    only_services = fields.Boolean(string="Only Services", compute='_compute_cart_info')
+    cart_quantity = fields.Integer(string="Cart Quantity", compute="_compute_cart_info")
+    only_services = fields.Boolean(string="Only Services", compute="_compute_cart_info")
     is_abandoned_cart = fields.Boolean(
-        string="Abandoned Cart", compute='_compute_abandoned_cart', search='_search_abandoned_cart'
+        string="Abandoned Cart", compute="_compute_abandoned_cart", search="_search_abandoned_cart"
     )
     # filter related fields
     is_unfulfilled = fields.Boolean(
-        string="Unfulfilled Orders", search='_search_is_unfulfilled', store=False
+        string="Unfulfilled Orders", search="_search_is_unfulfilled", store=False
     )
     is_rating_email_sent = fields.Boolean(string="Rating email already sent")
 
     # === COMPUTE METHODS ===#
 
-    @api.depends('order_line')
+    @api.depends("order_line")
     def _compute_website_order_line(self):
         # group saler.order.line to prefetch all in one query
-        order_lines = self.env['sale.order.line'].search_fetch([('order_id', 'in', self.ids)])
+        order_lines = self.env["sale.order.line"].search_fetch([("order_id", "in", self.ids)])
         for order in self:
             order.website_order_line = order_lines.filtered(
                 lambda sol: sol.order_id == order and sol._show_in_cart()
             )
 
-    @api.depends('order_line.price_total', 'order_line.price_subtotal')
+    @api.depends("order_line.price_total", "order_line.price_subtotal")
     def _compute_amount_delivery(self):
         self.amount_delivery = 0.0
-        for order in self.filtered('website_id'):
-            delivery_lines = order.order_line.filtered('is_delivery')
-            if order.website_id.show_line_subtotals_tax_selection == 'tax_excluded':
-                order.amount_delivery = sum(delivery_lines.mapped('price_subtotal'))
+        for order in self.filtered("website_id"):
+            delivery_lines = order.order_line.filtered("is_delivery")
+            if order.website_id.show_line_subtotals_tax_selection == "tax_excluded":
+                order.amount_delivery = sum(delivery_lines.mapped("price_subtotal"))
             else:
-                order.amount_delivery = sum(delivery_lines.mapped('price_total'))
+                order.amount_delivery = sum(delivery_lines.mapped("price_total"))
 
-    @api.depends('order_line.product_uom_qty', 'order_line.product_id')
+    @api.depends("order_line.product_uom_qty", "order_line.product_id")
     def _compute_cart_info(self):
         for order in self:
-            order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
+            order.cart_quantity = int(sum(order.mapped("website_order_line.product_uom_qty")))
             order.only_services = all(
-                sol.product_id.type == 'service' for sol in order.website_order_line
+                sol.product_id.type == "service" for sol in order.website_order_line
             )
 
-    @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
+    @api.depends("website_id", "date_order", "order_line", "state", "partner_id")
     def _compute_abandoned_cart(self):
         for order in self:
             # a quotation can be considered as an abandonned cart if it is linked to a website,
             # is in the 'draft' state and has an expiration date
-            if order.website_id and order.state == 'draft' and order.date_order:
+            if order.website_id and order.state == "draft" and order.date_order:
                 public_partner_id = order.website_id.user_id.partner_id
                 # by default the expiration date is 1 hour if not specified on the website
                 # configuration
@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
                 order.is_abandoned_cart = False
 
     def _compute_require_signature(self):
-        website_orders = self.filtered('website_id')
+        website_orders = self.filtered("website_id")
         website_orders.require_signature = False
         super(SaleOrder, self - website_orders)._compute_require_signature()
 
@@ -113,7 +113,7 @@ class SaleOrder(models.Model):
 
         # Try to find a payment term even if there wasn't any set on the partner
         default_pt = self.env.ref(
-            'account.account_payment_term_immediate', raise_if_not_found=False
+            "account.account_payment_term_immediate", raise_if_not_found=False
         )
         for order in website_orders:
             if default_pt and (
@@ -121,41 +121,41 @@ class SaleOrder(models.Model):
             ):
                 order.payment_term_id = default_pt
             else:
-                order.payment_term_id = order.env['account.payment.term'].search(
-                    [('company_id', '=', order.company_id.id)], limit=1
+                order.payment_term_id = order.env["account.payment.term"].search(
+                    [("company_id", "=", order.company_id.id)], limit=1
                 )
 
     def _compute_pricelist_id(self):
         # Override to compute pricelists for carts using the partner's GeoIP,
         # providing a fallback in case they don't have an address set.
-        if not (country_code := self.env['website']._get_geoip_country_code()):
+        if not (country_code := self.env["website"]._get_geoip_country_code()):
             return super()._compute_pricelist_id()
-        if website_orders := self.filtered('website_id'):
+        if website_orders := self.filtered("website_id"):
             website_orders = website_orders.with_context(country_code=country_code)
             super(SaleOrder, website_orders)._compute_pricelist_id()
         return super(SaleOrder, self - website_orders)._compute_pricelist_id()
 
     def _search_abandoned_cart(self, operator, _value):
-        if operator != 'in':
+        if operator != "in":
             return NotImplemented
-        website_ids = self.env['website'].search_read(
-            fields=['id', 'cart_abandoned_delay', 'partner_id']
+        website_ids = self.env["website"].search_read(
+            fields=["id", "cart_abandoned_delay", "partner_id"]
         )
         return Domain.AND((
-            Domain('state', '=', 'draft'),
-            Domain('order_line', '!=', False),
+            Domain("state", "=", "draft"),
+            Domain("order_line", "!=", False),
             Domain.OR(
                 [
-                    ('website_id', '=', website_id['id']),
+                    ("website_id", "=", website_id["id"]),
                     (
-                        'date_order',
-                        '<=',
+                        "date_order",
+                        "<=",
                         fields.Datetime.to_string(
                             fields.Datetime.now()
-                            - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0)
+                            - relativedelta(hours=website_id["cart_abandoned_delay"] or 1.0)
                         ),
                     ),
-                    ('partner_id', '!=', website_id['partner_id'][0]),
+                    ("partner_id", "!=", website_id["partner_id"][0]),
                 ]
                 for website_id in website_ids
             ),
@@ -166,10 +166,10 @@ class SaleOrder(models.Model):
 
         Leave salesman empty if no salesman is specified on partner or website.
         """
-        website_orders = self.filtered('website_id')
+        website_orders = self.filtered("website_id")
         super(SaleOrder, self - website_orders)._compute_user_id()
         for order in website_orders:
-            if order.state == 'draft' and not order.env.context.get('force_user_recomputation'):
+            if order.state == "draft" and not order.env.context.get("force_user_recomputation"):
                 # Do not assign any salesman to draft carts to avoid useless notifications/pings/...
                 # It'll be assigned on confirmation (see action_confirm)
                 continue
@@ -184,28 +184,28 @@ class SaleOrder(models.Model):
         return super()._default_team_id() or self.website_id.salesteam_id.id
 
     def _search_is_unfulfilled(self, operator, value):  # noqa: PLR6301
-        if operator not in {'=', '!='}:
+        if operator not in {"=", "!="}:
             return NotImplemented
 
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            effective_operator = 'any'
+        if (operator == "=" and value) or (operator == "!=" and not value):
+            effective_operator = "any"
         else:
-            effective_operator = 'not any'
+            effective_operator = "not any"
 
         line_domain = Domain.custom(
-            to_sql=lambda table: SQL('%s < %s', table.qty_delivered, table.product_uom_qty)
+            to_sql=lambda table: SQL("%s < %s", table.qty_delivered, table.product_uom_qty)
         )
-        return Domain('state', '=', 'sale') & Domain('order_line', effective_operator, line_domain)
+        return Domain("state", "=", "sale") & Domain("order_line", effective_operator, line_domain)
 
     # === CRUD METHODS ===#
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('website_id'):
-                website = self.env['website'].browse(vals['website_id'])
-                if 'company_id' in vals:
-                    company = self.env['res.company'].browse(vals['company_id'])
+            if vals.get("website_id"):
+                website = self.env["website"].browse(vals["website_id"])
+                if "company_id" in vals:
+                    company = self.env["res.company"].browse(vals["company_id"])
                     if website.company_id.id != company.id:
                         raise ValueError(
                             _(
@@ -217,39 +217,39 @@ class SaleOrder(models.Model):
                             )
                         )
                 else:
-                    vals['company_id'] = website.company_id.id
+                    vals["company_id"] = website.company_id.id
         return super().create(vals_list)
 
     # === ACTION METHODS ===#
 
     def action_preview_sale_order(self):
         action = super().action_preview_sale_order()
-        if action['url'].startswith('/'):
+        if action["url"].startswith("/"):
             # URL should always be relative, safety check
-            action['url'] = f'/@{action["url"]}'
+            action["url"] = f"/@{action['url']}"
         return action
 
     def action_recovery_email_send(self):
         for order in self:
             order._portal_ensure_token()
-        composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
+        composer_form_view_id = self.env.ref("mail.email_compose_message_wizard_form").id
 
         template_id = self._get_cart_recovery_template().id
 
         return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'view_id': composer_form_view_id,
-            'target': 'new',
-            'context': {
-                'default_composition_mode': 'mass_mail' if len(self.ids) > 1 else 'comment',
-                'default_res_ids': self.ids,
-                'default_model': 'sale.order',
-                'default_template_id': template_id,
-                'website_sale_send_recovery_email': True,
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "view_id": composer_form_view_id,
+            "target": "new",
+            "context": {
+                "default_composition_mode": "mass_mail" if len(self.ids) > 1 else "comment",
+                "default_res_ids": self.ids,
+                "default_model": "sale.order",
+                "default_template_id": template_id,
+                "website_sale_send_recovery_email": True,
                 # Already shown in the header (see `_notify_get_recipients_groups`)
-                'hide_recovery_button': True,
+                "hide_recovery_button": True,
             },
         }
 
@@ -260,12 +260,12 @@ class SaleOrder(models.Model):
         otherwise we return the default template.
         If the default is not found, the empty ['mail.template'] is returned.
         """
-        websites = self.mapped('website_id')
+        websites = self.mapped("website_id")
         template = websites.cart_recovery_mail_template_id if len(websites) == 1 else False
         template = template or self.env.ref(
-            'website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False
+            "website_sale.mail_template_sale_cart_recovery", raise_if_not_found=False
         )
-        return template or self.env['mail.template']
+        return template or self.env["mail.template"]
 
     # === BUSINESS METHODS ===#
 
@@ -274,7 +274,7 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda line: not line.is_delivery)
 
     def _get_amount_total_excluding_delivery(self):
-        return sum(self._get_non_delivery_lines().mapped('price_total'))
+        return sum(self._get_non_delivery_lines().mapped("price_total"))
 
     def _get_confirmation_template(self):
         """Override of `sale` to use the website specific order confirmation email template if
@@ -287,7 +287,7 @@ class SaleOrder(models.Model):
         return super()._get_confirmation_template()
 
     def action_confirm(self):
-        carts = self.filtered('website_id')
+        carts = self.filtered("website_id")
         if self.env.su:
             carts = carts.with_user(SUPERUSER_ID)
         # Assign the salesman to carts on confirmation, as SUPERUSER to send the
@@ -296,16 +296,16 @@ class SaleOrder(models.Model):
         return super().action_confirm()
 
     def _send_payment_succeeded_for_order_mail(self):
-        if carts := self.filtered('website_id'):
+        if carts := self.filtered("website_id"):
             # Assign a salesman before sending payment confirmation mail.
             carts.with_context(force_user_recomputation=True)._compute_user_id()
         return super()._send_payment_succeeded_for_order_mail()
 
     @api.model
     def _get_note_url(self):
-        website_id = self.env.context.get('website_id')
+        website_id = self.env.context.get("website_id")
         if website_id:
-            return self.env['website'].browse(website_id).get_base_url()
+            return self.env["website"].browse(website_id).get_base_url()
         return super()._get_note_url()
 
     def _needs_customer_address(self):  # noqa: PLR6301
@@ -338,7 +338,7 @@ class SaleOrder(models.Model):
         # If user explicitely selected a valid pricelist, we don't want to change it
         if selected_pricelist_id := request.session.get(PRICELIST_SELECTED_SESSION_CACHE_KEY):
             selected_pricelist = (
-                self.env['product.pricelist'].browse(selected_pricelist_id).exists()
+                self.env["product.pricelist"].browse(selected_pricelist_id).exists()
             )
             if (
                 selected_pricelist
@@ -358,7 +358,7 @@ class SaleOrder(models.Model):
             request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
             request.pricelist = new_pricelist
 
-        if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():
+        if self.carrier_id and "partner_shipping_id" in fnames and self._has_deliverable_products():
             # Update the delivery method on shipping address change.
             delivery_methods = self._get_delivery_methods()
             delivery_method = self._get_preferred_delivery_method(delivery_methods)
@@ -378,7 +378,7 @@ class SaleOrder(models.Model):
         self = self.with_company(self.company_id)
 
         if not uom_id:
-            uom_id = self.env['product.product'].browse(product_id).uom_id.id  # type: ignore
+            uom_id = self.env["product.product"].browse(product_id).uom_id.id  # type: ignore
         if existing_sol := self._cart_find_product_line(product_id, uom_id=uom_id, **kwargs)[:1]:
             # If a matching line is found, update the existing line instead.
             return self._cart_update_line_quantity(
@@ -388,7 +388,7 @@ class SaleOrder(models.Model):
             )
 
         quantity, warning = self._verify_updated_quantity(
-            self.env['sale.order.line'], product_id, quantity, uom_id, **kwargs
+            self.env["sale.order.line"], product_id, quantity, uom_id, **kwargs
         )
 
         order_line = self._create_new_cart_line(product_id, quantity, uom_id, **kwargs)
@@ -400,14 +400,14 @@ class SaleOrder(models.Model):
         if warning:
             (order_line or self).shop_warning = warning
 
-        if not self.env.context.get('skip_cart_verification'):
+        if not self.env.context.get("skip_cart_verification"):
             self._verify_cart_after_update()
 
         return {
-            'added_qty': quantity,
-            'line_id': order_line.id,
-            'quantity': quantity,
-            'warning': warning,
+            "added_qty": quantity,
+            "line_id": order_line.id,
+            "quantity": quantity,
+            "warning": warning,
         }
 
     def _cart_find_product_line(
@@ -436,33 +436,34 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         if not self.order_line:
-            return self.env['sale.order.line']
+            return self.env["sale.order.line"]
 
-        product = self.env['product.product'].browse(product_id)
-        if product.type == 'combo':
-            return self.env['sale.order.line']
+        product = self.env["product.product"].browse(product_id)
+        if product.type == "combo":
+            return self.env["sale.order.line"]
 
         domain = [
-            ('product_id', '=', product_id),
-            ('product_uom_id', '=', uom_id),
-            ('product_custom_attribute_value_ids', '=', False),
-            ('linked_line_id', '=', linked_line_id),
-            ('combo_item_id', '=', False),
+            ("product_id", "=", product_id),
+            ("product_uom_id", "=", uom_id),
+            ("product_custom_attribute_value_ids", "=", False),
+            ("linked_line_id", "=", linked_line_id),
+            ("combo_item_id", "=", False),
         ]
 
         filtered_sol = self.order_line.filtered_domain(domain)
         if not filtered_sol:
-            return self.env['sale.order.line']
+            return self.env["sale.order.line"]
 
         has_configurable_no_variant_attributes = any(
-            len(line.value_ids) > 1 or line.attribute_id.display_type == 'multi'
+            len(line.value_ids) > 1 or line.attribute_id.display_type == "multi"
             for line in product.attribute_line_ids
-            if line.attribute_id.create_variant == 'no_variant'
+            if line.attribute_id.create_variant == "no_variant"
         )
         if has_configurable_no_variant_attributes:
             filtered_sol = filtered_sol.filtered(
-                lambda sol: sol.product_no_variant_attribute_value_ids.ids
-                == no_variant_attribute_value_ids
+                lambda sol: (
+                    sol.product_no_variant_attribute_value_ids.ids == no_variant_attribute_value_ids
+                )
             )
 
         return filtered_sol
@@ -486,7 +487,7 @@ class SaleOrder(models.Model):
             # Note that if the cart is empty, the zero cart_quantity will trigger a page reload
             # and this warning won't be shown.
             return {
-                'warning': _(
+                "warning": _(
                     "We weren't able to update your cart. Please refresh your page before trying"
                     " again."
                 )
@@ -503,26 +504,26 @@ class SaleOrder(models.Model):
         else:
             # If the line will be removed anyway, there is no need to verify
             # the requested quantity update.
-            warning = ''
+            warning = ""
 
         added_qty = quantity - order_line.product_uom_qty  # new_qty - old_qty
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
-        if not self.env.context.get('skip_cart_verification'):
+        if not self.env.context.get("skip_cart_verification"):
             self._verify_cart_after_update()
 
         if warning:
             (order_line or self).shop_warning = warning
 
         return {
-            'added_qty': added_qty,
-            'line_id': order_line.id,
-            'quantity': quantity,
-            'warning': warning,
+            "added_qty": added_qty,
+            "line_id": order_line.id,
+            "quantity": quantity,
+            "warning": warning,
         }
 
     # hook to be overridden
     def _verify_updated_quantity(self, _order_line, _product_id, new_qty, _uom_id, **_kwargs):  # noqa: PLR6301
-        return new_qty, ''
+        return new_qty, ""
 
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
         self.ensure_one()
@@ -531,16 +532,16 @@ class SaleOrder(models.Model):
         if quantity <= 0:
             # Remove zero or negative lines
             order_line.unlink()
-            return self.env['sale.order.line']
+            return self.env["sale.order.line"]
 
         # Update existing line
         update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
         if update_values:
-            combo_item_lines = order_line.linked_line_ids.filtered('combo_item_id')
+            combo_item_lines = order_line.linked_line_ids.filtered("combo_item_id")
             if (
-                order_line.product_type == 'combo'
+                order_line.product_type == "combo"
                 and combo_item_lines
-                and 'product_uom_qty' in update_values
+                and "product_uom_qty" in update_values
             ):
                 # A combo product and its items should have the same quantity (by design). If the
                 # requested quantity isn't available for one or more combo items, we should lower
@@ -562,7 +563,7 @@ class SaleOrder(models.Model):
                         self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
                             line_id=item_line.id, quantity=combo_quantity
                         )
-                update_values['product_uom_qty'] = combo_quantity
+                update_values["product_uom_qty"] = combo_quantity
 
             order_line.write(update_values)
 
@@ -575,21 +576,21 @@ class SaleOrder(models.Model):
         values = {}
 
         if quantity != order_line.product_uom_qty:
-            values['product_uom_qty'] = quantity
+            values["product_uom_qty"] = quantity
 
         return values
 
     def _create_new_cart_line(self, product_id, quantity, uom_id, **kwargs):
         if quantity <= 0.0:
-            return self.env['sale.order.line']
+            return self.env["sale.order.line"]
 
-        line = self.env['sale.order.line'].create(
+        line = self.env["sale.order.line"].create(
             self._prepare_order_line_values(product_id, quantity, uom_id, **kwargs)
         )
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
-        if line.product_type != 'combo':
+        if line.product_type != "combo":
             line._check_validity()
         return line
 
@@ -606,9 +607,9 @@ class SaleOrder(models.Model):
         **_kwargs,
     ):
         self.ensure_one()
-        product = self.env['product.product'].browse(product_id)
+        product = self.env["product.product"].browse(product_id)
 
-        no_variant_attribute_values = product.env['product.template.attribute.value'].browse(
+        no_variant_attribute_values = product.env["product.template.attribute.value"].browse(
             no_variant_attribute_value_ids
         )
         received_combination = (
@@ -632,45 +633,45 @@ class SaleOrder(models.Model):
             raise UserError(_("Invalid request parameters."))
 
         values = {
-            'product_id': product.id,
-            'product_uom_qty': quantity,
-            'product_uom_id': uom_id or product.uom_id.id,
-            'order_id': self.id,
-            'linked_line_id': linked_line_id,
-            'combo_item_id': combo_item_id,
+            "product_id": product.id,
+            "product_uom_qty": quantity,
+            "product_uom_id": uom_id or product.uom_id.id,
+            "order_id": self.id,
+            "linked_line_id": linked_line_id,
+            "combo_item_id": combo_item_id,
         }
 
         # add no_variant attributes that were not received
         no_variant_attribute_values |= combination.filtered(
-            lambda ptav: ptav.attribute_id.create_variant == 'no_variant'
+            lambda ptav: ptav.attribute_id.create_variant == "no_variant"
         )
 
         if no_variant_attribute_values:
-            values['product_no_variant_attribute_value_ids'] = [
+            values["product_no_variant_attribute_value_ids"] = [
                 Command.set(no_variant_attribute_values.ids)
             ]
 
         # add is_custom attribute values that were not received
         custom_values = product_custom_attribute_values or []
-        received_custom_values = product.env['product.template.attribute.value'].browse([
-            int(ptav['custom_product_template_attribute_value_id']) for ptav in custom_values
+        received_custom_values = product.env["product.template.attribute.value"].browse([
+            int(ptav["custom_product_template_attribute_value_id"]) for ptav in custom_values
         ])
 
         for ptav in combination.filtered(
             lambda ptav: ptav.is_custom and ptav not in received_custom_values
         ):
             custom_values.append({
-                'custom_product_template_attribute_value_id': ptav.id,
-                'custom_value': '',
+                "custom_product_template_attribute_value_id": ptav.id,
+                "custom_value": "",
             })
 
         if custom_values:
-            values['product_custom_attribute_value_ids'] = [
+            values["product_custom_attribute_value_ids"] = [
                 fields.Command.create({
-                    'custom_product_template_attribute_value_id': custom_value[
-                        'custom_product_template_attribute_value_id'
+                    "custom_product_template_attribute_value_id": custom_value[
+                        "custom_product_template_attribute_value_id"
                     ],
-                    'custom_value': custom_value['custom_value'],
+                    "custom_value": custom_value["custom_value"],
                 })
                 for custom_value in custom_values
             ]
@@ -704,13 +705,13 @@ class SaleOrder(models.Model):
         elif self.carrier_id:
             # Recompute the delivery rate.
             rate = self.carrier_id.rate_shipment(self)
-            if rate['success']:
-                self.order_line.filtered('is_delivery').price_unit = rate['price']
+            if rate["success"]:
+                self.order_line.filtered("is_delivery").price_unit = rate["price"]
             else:
                 self._remove_delivery_line()
 
         if request:
-            request.session['website_sale_cart_quantity'] = self.cart_quantity
+            request.session["website_sale_cart_quantity"] = self.cart_quantity
 
     def _verify_cart(self):
         """Check cart content and clear outdated/invalid lines."""
@@ -722,22 +723,24 @@ class SaleOrder(models.Model):
     def _cart_accessories(self):
         """Suggest accessories based on 'Accessory Products' of products in cart."""
         product_ids = set(self.website_order_line.product_id.ids)
-        all_accessory_products = self.env['product.product']
-        for line in self.website_order_line.filtered('product_id'):
+        all_accessory_products = self.env["product.product"]
+        for line in self.website_order_line.filtered("product_id"):
             accessory_products = line.product_id.product_tmpl_id._get_website_accessory_product()
             if accessory_products:
                 # Do not read ptavs if there is no accessory products to filter
                 all_accessory_products |= accessory_products.filtered(
-                    lambda product: product.id not in product_ids
-                    and product._website_show_quick_add()
-                    and product.filtered_domain(
-                        self.env['product.product']._check_company_domain(line.company_id)
-                    )
-                    and product._is_variant_possible()
-                    and not (
-                        self.website_id.prevent_sale
-                        and self.website_id._prevent_product_sale(
-                            product, not product._get_contextual_price()
+                    lambda product: (
+                        product.id not in product_ids
+                        and product._website_show_quick_add()
+                        and product.filtered_domain(
+                            self.env["product.product"]._check_company_domain(line.company_id)
+                        )
+                        and product._is_variant_possible()
+                        and not (
+                            self.website_id.prevent_sale
+                            and self.website_id._prevent_product_sale(
+                                product, not product._get_contextual_price()
+                            )
                         )
                     )
                 )
@@ -746,7 +749,7 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         res = super()._prepare_invoice()
-        res['website_id'] = self.website_id.id
+        res["website_id"] = self.website_id.id
         return res
 
     def _cart_recovery_email_send(self):
@@ -755,27 +758,27 @@ class SaleOrder(models.Model):
         sent.
         Similar method to action_recovery_email_send, made to be called in automation rules.
         Contrary to the former, it will use the website-specific template for each order."""
-        sent_orders = self.env['sale.order']
+        sent_orders = self.env["sale.order"]
         for order in self:
             template = order._get_cart_recovery_template()
             if template:
                 order._portal_ensure_token()
                 template.send_mail(order.id)
                 sent_orders |= order
-        sent_orders.write({'cart_recovery_email_sent': True})
+        sent_orders.write({"cart_recovery_email_sent": True})
 
     def _message_mail_after_hook(self, mails):
         # After sending recovery cart emails, update orders to avoid sending it again
-        if self.env.context.get('website_sale_send_recovery_email'):
+        if self.env.context.get("website_sale_send_recovery_email"):
             self.filtered_domain([
-                ('cart_recovery_email_sent', '=', False),
-                ('is_abandoned_cart', '=', True),
+                ("cart_recovery_email_sent", "=", False),
+                ("is_abandoned_cart", "=", True),
             ]).cart_recovery_email_sent = True
         return super()._message_mail_after_hook(mails)
 
     def _message_post_after_hook(self, message, msg_vals):
         # After sending recovery cart emails, update orders to avoid sending it again
-        if self.env.context.get('website_sale_send_recovery_email'):
+        if self.env.context.get("website_sale_send_recovery_email"):
             self.cart_recovery_email_sent = True
         return super()._message_post_after_hook(message, msg_vals)
 
@@ -790,20 +793,20 @@ class SaleOrder(models.Model):
 
         self.ensure_one()
         customer_portal_group = next(
-            (group for group in groups if group[0] == 'portal_customer'), None
+            (group for group in groups if group[0] == "portal_customer"), None
         )
         if customer_portal_group:
-            access_opt = customer_portal_group[2].setdefault('button_access', {})
-            if self.env.context.get('website_sale_send_recovery_email'):
-                access_opt['title'] = _('Resume Order')
-                access_opt['url'] = (
-                    f'{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}'
+            access_opt = customer_portal_group[2].setdefault("button_access", {})
+            if self.env.context.get("website_sale_send_recovery_email"):
+                access_opt["title"] = _("Resume Order")
+                access_opt["url"] = (
+                    f"{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}"
                 )
         return groups
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(
+        return self.state == "sale" and any(
             line._is_reorder_allowed() for line in self.order_line if line.product_id
         )
 
@@ -813,11 +816,11 @@ class SaleOrder(models.Model):
             hours=self.website_id.cart_abandoned_delay
         )
 
-        sales_after_abandoned_date = self.env['sale.order'].search([
-            ('state', '=', 'sale'),
-            ('partner_id', 'in', self.partner_id.ids),
-            ('create_date', '>=', abandoned_datetime),
-            ('website_id', '=', self.website_id.id),
+        sales_after_abandoned_date = self.env["sale.order"].search([
+            ("state", "=", "sale"),
+            ("partner_id", "in", self.partner_id.ids),
+            ("create_date", ">=", abandoned_datetime),
+            ("website_id", "=", self.website_id.id),
         ])
         latest_create_date_per_partner = {}
         for sale in self:
@@ -848,16 +851,18 @@ class SaleOrder(models.Model):
         # order before the recovery email gets sent, then the email won't be sent.
 
         return self.filtered(
-            lambda abandoned_sale_order: abandoned_sale_order.partner_id.email
-            and not any(
-                transaction.sudo().state == 'error'
-                for transaction in abandoned_sale_order.transaction_ids
+            lambda abandoned_sale_order: (
+                abandoned_sale_order.partner_id.email
+                and not any(
+                    transaction.sudo().state == "error"
+                    for transaction in abandoned_sale_order.transaction_ids
+                )
+                and any(
+                    not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding)
+                    for line in abandoned_sale_order.order_line
+                )
+                and not has_later_sale_order.get(abandoned_sale_order.partner_id)
             )
-            and any(
-                not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding)
-                for line in abandoned_sale_order.order_line
-            )
-            and not has_later_sale_order.get(abandoned_sale_order.partner_id)
         )
 
     def _has_deliverable_products(self):
@@ -911,8 +916,8 @@ class SaleOrder(models.Model):
             return
 
         rate = rate or delivery_method.rate_shipment(self)
-        if rate.get('success'):
-            self.set_delivery_line(delivery_method, rate['price'])
+        if rate.get("success"):
+            self.set_delivery_line(delivery_method, rate["price"])
 
             if delivery_method.enable_delivery_estimate and (
                 estimated_delivery_date := delivery_method._get_estimate_delivery_days()
@@ -926,11 +931,12 @@ class SaleOrder(models.Model):
         # searching on website_published will also search for available website (_search method on
         # computed field)
         return (
-            self.env['delivery.carrier']
+            self
+            .env["delivery.carrier"]
             .sudo()
             .search([
-                ('website_published', '=', True),
-                *self.env['delivery.carrier']._check_company_domain(self.company_id),
+                ("website_published", "=", True),
+                *self.env["delivery.carrier"]._check_company_domain(self.company_id),
             ])
             .filtered(lambda carrier: carrier._is_available_for_order(self))
         )
@@ -940,32 +946,32 @@ class SaleOrder(models.Model):
         """Send rating request emails to customers a few days after order."""
         today = fields.Date.today()
         # Find websites with rating emails enabled and email template configured.
-        websites = self.env['website'].search([
-            ('send_order_rating_emails', '=', True),
-            ('rating_email_template_id', '!=', False),
+        websites = self.env["website"].search([
+            ("send_order_rating_emails", "=", True),
+            ("rating_email_template_id", "!=", False),
         ])
         if not websites:
             return
 
-        orders_to_process = self.env['sale.order']
+        orders_to_process = self.env["sale.order"]
         # Calculate total orders to process
         for website in websites:
             date_threshold = today - timedelta(days=max(0, website.rating_email_delay))
             orders_to_process |= self.search([
-                ('state', '=', 'sale'),
-                ('date_order', '>', date_threshold - timedelta(days=1)),
-                ('date_order', '<=', date_threshold),
-                ('is_rating_email_sent', '=', False),
-                ('website_id', '=', website.id),
+                ("state", "=", "sale"),
+                ("date_order", ">", date_threshold - timedelta(days=1)),
+                ("date_order", "<=", date_threshold),
+                ("is_rating_email_sent", "=", False),
+                ("website_id", "=", website.id),
             ])
 
-        self.env['ir.cron']._commit_progress(remaining=len(orders_to_process))
+        self.env["ir.cron"]._commit_progress(remaining=len(orders_to_process))
         for order in orders_to_process:
             # Send request rating emails.
             order.website_id.rating_email_template_id.send_mail(order.id)
 
             order.is_rating_email_sent = True
-            self.env['ir.cron']._commit_progress(processed=1)
+            self.env["ir.cron"]._commit_progress(processed=1)
 
     # === TOOLING ===#
 
@@ -993,7 +999,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         warn = self.shop_warning
         if clear:
-            self.shop_warning = ''
+            self.shop_warning = ""
         return warn
 
     def _is_cart_ready(self):
@@ -1026,11 +1032,11 @@ class SaleOrder(models.Model):
         self._recompute_prices()
 
     def _validate_order(self):
-        self.filtered('website_id')._archive_partner_if_no_user()
+        self.filtered("website_id")._archive_partner_if_no_user()
         super()._validate_order()
 
     def _archive_partner_if_no_user(self):
-        partners_to_archive = self.env['res.partner']
+        partners_to_archive = self.env["res.partner"]
         for order in self:
             if not (commercial_partner := order.partner_id).user_ids:
                 partners_to_archive |= commercial_partner + commercial_partner.child_ids
@@ -1052,28 +1058,28 @@ class SaleOrder(models.Model):
         """
         # Shape of the return value
         dashboard_data = {
-            'visitors': {'total': 0, 'gain': None},
-            'sales': {'total': 0, 'gain': None},
-            'orders': {'total': 0, 'gain': None},
-            'to_fulfill': 0,
-            'to_confirm': 0,
-            'to_invoice': 0,
-            'currency_id': self.env.company.currency_id.id,
+            "visitors": {"total": 0, "gain": None},
+            "sales": {"total": 0, "gain": None},
+            "orders": {"total": 0, "gain": None},
+            "to_fulfill": 0,
+            "to_confirm": 0,
+            "to_invoice": 0,
+            "currency_id": self.env.company.currency_id.id,
         }
 
         # Build domain for the given period
-        ecommerce_orders_domain = Domain('website_id', '!=', False) & Domain('state', '=', 'sale')
+        ecommerce_orders_domain = Domain("website_id", "!=", False) & Domain("state", "=", "sale")
 
         sale_report_period_domain = (
-            self._get_period_domain('date', period_days) & ecommerce_orders_domain
+            self._get_period_domain("date", period_days) & ecommerce_orders_domain
         )
         sale_report_previous_period_domain = (
-            self._get_period_domain('date', period_days, previous=True) & ecommerce_orders_domain
+            self._get_period_domain("date", period_days, previous=True) & ecommerce_orders_domain
         )
 
-        visitor_period_domain = self._get_period_domain('last_connection_datetime', period_days)
+        visitor_period_domain = self._get_period_domain("last_connection_datetime", period_days)
         visitor_previous_period_domain = self._get_period_domain(
-            'last_connection_datetime', period_days, previous=True
+            "last_connection_datetime", period_days, previous=True
         )
 
         current_period_totals = self._get_period_totals(
@@ -1088,22 +1094,22 @@ class SaleOrder(models.Model):
             current_total = current_period_totals[key]
             previous_total = previous_period_totals[key]
 
-            dashboard_data[key]['total'] = current_total
-            dashboard_data[key]['gain'] = (
+            dashboard_data[key]["total"] = current_total
+            dashboard_data[key]["gain"] = (
                 round(((current_total - previous_total) / previous_total) * 100)
                 if previous_total
                 else None
             )
 
         dashboard_data.update({
-            'to_fulfill': self.search_count(
-                Domain('is_unfulfilled', '=', True) & ecommerce_orders_domain
+            "to_fulfill": self.search_count(
+                Domain("is_unfulfilled", "=", True) & ecommerce_orders_domain
             ),
-            'to_confirm': self.search_count(
-                Domain('state', '=', 'sent') & Domain('website_id', '!=', False)
+            "to_confirm": self.search_count(
+                Domain("state", "=", "sent") & Domain("website_id", "!=", False)
             ),
-            'to_invoice': self.search_count(
-                Domain('invoice_status', '=', 'to invoice') & ecommerce_orders_domain
+            "to_invoice": self.search_count(
+                Domain("invoice_status", "=", "to invoice") & ecommerce_orders_domain
             ),
         })
 
@@ -1118,9 +1124,9 @@ class SaleOrder(models.Model):
         :return: Domain used to filter records by date range.
         """
         if not previous:
-            return Domain(field, '>', f'today -{period_days}d +1d')
-        return Domain(field, '>', f'today -{period_days * 2}d +1d') & Domain(
-            field, '<', f'today -{period_days}d +1d'
+            return Domain(field, ">", f"today -{period_days}d +1d")
+        return Domain(field, ">", f"today -{period_days * 2}d +1d") & Domain(
+            field, "<", f"today -{period_days}d +1d"
         )
 
     def _get_period_totals(self, report_period_domain, visitor_period_domain):
@@ -1132,13 +1138,13 @@ class SaleOrder(models.Model):
                 the given period.
         :rtype: dict
         """
-        aggregated_order_data = self.env['sale.report']._read_group(
-            domain=report_period_domain, aggregates=['price_total:sum', '__count']
+        aggregated_order_data = self.env["sale.report"]._read_group(
+            domain=report_period_domain, aggregates=["price_total:sum", "__count"]
         )
-        visitor_count = self.env['website.visitor'].sudo().search_count(visitor_period_domain)
+        visitor_count = self.env["website.visitor"].sudo().search_count(visitor_period_domain)
         total_sales, total_orders = aggregated_order_data[0]
         return {
-            'orders': total_orders,
-            'sales': float_round(total_sales, precision_rounding=0.01),
-            'visitors': visitor_count,
+            "orders": total_orders,
+            "sales": float_round(total_sales, precision_rounding=0.01),
+            "visitors": visitor_count,
         }

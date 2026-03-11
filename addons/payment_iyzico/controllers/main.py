@@ -15,13 +15,13 @@ _logger = get_payment_logger(__name__)
 class IyzicoController(http.Controller):
     @http.route(
         const.PAYMENT_RETURN_ROUTE,
-        type='http',
-        auth='public',
-        methods=['POST'],
+        type="http",
+        auth="public",
+        methods=["POST"],
         csrf=False,
         save_session=False,
     )
-    def iyzico_return_from_payment(self, tx_ref='', **data):
+    def iyzico_return_from_payment(self, tx_ref="", **data):
         """Process the payment data sent by Iyzico after redirection from checkout.
 
         The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
@@ -36,14 +36,14 @@ class IyzicoController(http.Controller):
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from Iyzico with data:\n%s", pprint.pformat(data))
-        if token := data.get('token'):
+        if token := data.get("token"):
             self._verify_and_process(tx_ref, token)
         else:
             _logger.warning("Received payment data with missing token.")
 
-        return request.redirect('/payment/status')
+        return request.redirect("/payment/status")
 
-    @http.route(const.WEBHOOK_ROUTE, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(const.WEBHOOK_ROUTE, type="http", auth="public", methods=["POST"], csrf=False)
     def iyzico_webhook(self):
         """Process the payment data sent by Iyzico to the webhook.
 
@@ -55,12 +55,12 @@ class IyzicoController(http.Controller):
         data = request.get_json_data()
         _logger.info("Notification received from Iyzico with data:\n%s", pprint.pformat(data))
 
-        if token := data.get('token'):
-            self._verify_and_process(data['paymentConversationId'], token)
+        if token := data.get("token"):
+            self._verify_and_process(data["paymentConversationId"], token)
         else:
             _logger.warning("Received webhook data with missing token.")
 
-        return request.make_json_response('')  # Acknowledge the notification.
+        return request.make_json_response("")  # Acknowledge the notification.
 
     @staticmethod
     def _verify_and_process(tx_ref, token):
@@ -72,22 +72,22 @@ class IyzicoController(http.Controller):
         """
         tx_sudo = (
             request
-            .env['payment.transaction']
+            .env["payment.transaction"]
             .sudo()
-            ._search_by_reference('iyzico', {'reference': tx_ref})
+            ._search_by_reference("iyzico", {"reference": tx_ref})
         )
         if not tx_sudo:
             return
         try:
             verified_payment_data = tx_sudo._send_api_request(
-                'POST',
-                'payment/iyzipos/checkoutform/auth/ecom/detail',
+                "POST",
+                "payment/iyzipos/checkoutform/auth/ecom/detail",
                 json={
-                    'conversationId': tx_sudo.reference,
-                    'locale': (request.env.lang == 'tr_TR' and 'tr') or 'en',
-                    'token': token,
+                    "conversationId": tx_sudo.reference,
+                    "locale": (request.env.lang == "tr_TR" and "tr") or "en",
+                    "token": token,
                 },
             )
-            tx_sudo._process('iyzico', verified_payment_data)
+            tx_sudo._process("iyzico", verified_payment_data)
         except ValidationError:
             _logger.error("Unable to process the payment data.")

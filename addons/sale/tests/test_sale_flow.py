@@ -5,7 +5,7 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestSaleFlow(TestSaleCommon):
     """Test running at-install to test flows independently to other modules, e.g. 'sale_stock'."""
 
@@ -13,30 +13,30 @@ class TestSaleFlow(TestSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        user = cls.env['res.users'].create({
-            'name': 'Because I am saleman!',
-            'login': 'saleman',
-            'group_ids': [
+        user = cls.env["res.users"].create({
+            "name": "Because I am saleman!",
+            "login": "saleman",
+            "group_ids": [
                 (6, 0, cls.env.user.group_ids.ids),
-                (4, cls.env.ref('account.group_account_user').id),
+                (4, cls.env.ref("account.group_account_user").id),
             ],
         })
-        user.partner_id.email = 'saleman@test.com'
+        user.partner_id.email = "saleman@test.com"
 
         # Shadow the current environment/cursor with the newly created user.
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
-        cls.partner_a = cls.env['res.partner'].create({'name': 'partner_a', 'company_id': False})
+        cls.partner_a = cls.env["res.partner"].create({"name": "partner_a", "company_id": False})
 
-        cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Plan'})
+        cls.analytic_plan = cls.env["account.analytic.plan"].create({"name": "Plan"})
 
-        cls.analytic_account = cls.env['account.analytic.account'].create({
-            'name': 'Test analytic_account',
-            'code': 'analytic_account',
-            'plan_id': cls.analytic_plan.id,
-            'company_id': cls.company.id,
-            'partner_id': cls.partner_a.id,
+        cls.analytic_account = cls.env["account.analytic.account"].create({
+            "name": "Test analytic_account",
+            "code": "analytic_account",
+            "plan_id": cls.analytic_plan.id,
+            "company_id": cls.company.id,
+            "partner_id": cls.partner_a.id,
         })
 
         user.company_ids |= cls.company
@@ -46,33 +46,33 @@ class TestSaleFlow(TestSaleCommon):
         """Test 'qty_delivered' at-install to avoid the change when 'sale_stock' is installed."""
         sale_order = (
             self
-            .env['sale.order']
+            .env["sale.order"]
             .with_context(mail_notrack=True, mail_create_nolog=True)
             .create({
-                'partner_id': self.partner_a.id,
-                'partner_invoice_id': self.partner_a.id,
-                'partner_shipping_id': self.partner_a.id,
-                'order_line': [
+                "partner_id": self.partner_a.id,
+                "partner_invoice_id": self.partner_a.id,
+                "partner_shipping_id": self.partner_a.id,
+                "order_line": [
                     (
                         0,
                         0,
                         {
-                            'name': self.company_data['product_order_cost'].name,
-                            'product_id': self.company_data['product_order_cost'].id,
-                            'product_uom_qty': 2,
-                            'qty_delivered': 1,
-                            'price_unit': self.company_data['product_order_cost'].list_price,
+                            "name": self.company_data["product_order_cost"].name,
+                            "product_id": self.company_data["product_order_cost"].id,
+                            "product_uom_qty": 2,
+                            "qty_delivered": 1,
+                            "price_unit": self.company_data["product_order_cost"].list_price,
                         },
                     ),
                     (
                         0,
                         0,
                         {
-                            'name': self.company_data['product_delivery_cost'].name,
-                            'product_id': self.company_data['product_delivery_cost'].id,
-                            'product_uom_qty': 4,
-                            'qty_delivered': 1,
-                            'price_unit': self.company_data['product_delivery_cost'].list_price,
+                            "name": self.company_data["product_delivery_cost"].name,
+                            "product_id": self.company_data["product_delivery_cost"].id,
+                            "product_uom_qty": 4,
+                            "qty_delivered": 1,
+                            "price_unit": self.company_data["product_delivery_cost"].list_price,
                         },
                     ),
                 ],
@@ -82,5 +82,5 @@ class TestSaleFlow(TestSaleCommon):
         sale_order.action_confirm()
 
         self.assertRecordValues(
-            sale_order.order_line, [{'qty_delivered': 1.0}, {'qty_delivered': 1.0}]
+            sale_order.order_line, [{"qty_delivered": 1.0}, {"qty_delivered": 1.0}]
         )

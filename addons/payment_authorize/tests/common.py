@@ -11,12 +11,12 @@ class AuthorizeCommon(PaymentCommon):
         super().setUpClass()
 
         cls.authorize = cls._prepare_provider(
-            'authorize',
+            "authorize",
             update_values={
-                'authorize_login': 'dummy',
-                'authorize_transaction_key': 'dummy',
-                'authorize_signature_key': '00000000',
-                'available_currency_ids': [Command.set(cls.currency_usd.ids)],
+                "authorize_login": "dummy",
+                "authorize_transaction_key": "dummy",
+                "authorize_signature_key": "00000000",
+                "available_currency_ids": [Command.set(cls.currency_usd.ids)],
             },
         )
 

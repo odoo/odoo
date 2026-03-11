@@ -4,7 +4,7 @@ from odoo import models
 
 
 class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+    _inherit = "payment.token"
 
     def _get_available_tokens(self, *args, is_express_checkout=False, **kwargs):
         """Override of `payment` not to return the tokens in case of express checkout.
@@ -16,6 +16,6 @@ class PaymentToken(models.Model):
         :rtype: payment.token
         """
         if is_express_checkout:
-            return self.env['payment.token']
+            return self.env["payment.token"]
 
         return super()._get_available_tokens(*args, **kwargs)

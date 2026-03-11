@@ -15,11 +15,11 @@ _logger = get_payment_logger(__name__)
 
 
 class RazorpayController(http.Controller):
-    _return_url = '/payment/razorpay/return'
-    _webhook_url = '/payment/razorpay/webhook'
+    _return_url = "/payment/razorpay/return"
+    _webhook_url = "/payment/razorpay/webhook"
 
     @http.route(
-        _return_url, type='http', auth='public', methods=['POST'], csrf=False, save_session=False
+        _return_url, type="http", auth="public", methods=["POST"], csrf=False, save_session=False
     )
     def razorpay_return_from_checkout(self, reference, **data):
         """Process the payment data sent by Razorpay after redirection from checkout.
@@ -36,23 +36,23 @@ class RazorpayController(http.Controller):
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from Razorpay with data:\n%s", pprint.pformat(data))
-        if all(f'razorpay_{key}' in data for key in ('order_id', 'payment_id', 'signature')):
+        if all(f"razorpay_{key}" in data for key in ("order_id", "payment_id", "signature")):
             # Check the integrity of the notification.
             tx_sudo = (
                 request
-                .env['payment.transaction']
+                .env["payment.transaction"]
                 .sudo()
-                ._search_by_reference('razorpay', {'description': reference})
+                ._search_by_reference("razorpay", {"description": reference})
             )  # Use the same key as for webhook notifications' data.
-            self._verify_signature(data, data.get('razorpay_signature'), tx_sudo)
-            tx_sudo._process('razorpay', data)
+            self._verify_signature(data, data.get("razorpay_signature"), tx_sudo)
+            tx_sudo._process("razorpay", data)
         else:  # The customer cancelled the payment or the payment failed.
             pass  # Don't try to process this case because the payment id was not provided.
 
         # Redirect the user to the status page.
-        return request.redirect('/payment/status')
+        return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @http.route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)
     def razorpay_webhook(self):
         """Process the payment data sent by Razorpay to the webhook.
 
@@ -62,25 +62,25 @@ class RazorpayController(http.Controller):
         data = request.get_json_data()
         _logger.info("Notification received from Razorpay with data:\n%s", pprint.pformat(data))
 
-        event_type = data['event']
+        event_type = data["event"]
         if event_type in HANDLED_WEBHOOK_EVENTS:
-            entity_type = 'payment' if 'payment' in event_type else 'refund'
-            entity_data = data['payload'].get(entity_type, {}).get('entity', {})
+            entity_type = "payment" if "payment" in event_type else "refund"
+            entity_data = data["payload"].get(entity_type, {}).get("entity", {})
             entity_data.update(entity_type=entity_type)
-            received_signature = request.httprequest.headers.get('X-Razorpay-Signature')
+            received_signature = request.httprequest.headers.get("X-Razorpay-Signature")
             tx_sudo = (
                 request
-                .env['payment.transaction']
+                .env["payment.transaction"]
                 .sudo()
-                ._search_by_reference('razorpay', entity_data)
+                ._search_by_reference("razorpay", entity_data)
             )
             if tx_sudo:
                 self._verify_signature(
                     request.httprequest.data, received_signature, tx_sudo, is_redirect=False
                 )
-                tx_sudo._process('razorpay', entity_data)
+                tx_sudo._process("razorpay", entity_data)
 
-        return request.make_json_response('')
+        return request.make_json_response("")
 
     @staticmethod
     def _verify_signature(payment_data, received_signature, tx_sudo, is_redirect=True):

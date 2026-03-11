@@ -11,69 +11,69 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-@tagged('post_install', '-at_install', 'mail_thread')
+@tagged("post_install", "-at_install", "mail_thread")
 class TestWebsiteSaleMail(HttpCaseWithUserPortal):
     def test_01_shop_mail_tour(self):
         """The goal of this test is to make sure sending SO by email works."""
-        self.env.ref('base.user_admin').write({'email': 'mitchell.admin@example.com'})
-        test_product = self.env['product.template'].create({
-            'name': 'Acoustic Bloc Screens',
-            'list_price': 2950.0,
-            'sale_ok': True,
-            'website_published': True,
+        self.env.ref("base.user_admin").write({"email": "mitchell.admin@example.com"})
+        test_product = self.env["product.template"].create({
+            "name": "Acoustic Bloc Screens",
+            "list_price": 2950.0,
+            "sale_ok": True,
+            "website_published": True,
         })
-        self.env['res.partner'].create({
-            'name': 'Azure Interior',
-            'email': 'azure.Interior24@example.com',
+        self.env["res.partner"].create({
+            "name": "Azure Interior",
+            "email": "azure.Interior24@example.com",
         })
 
         # we override unlink because we don't want the email to be auto deleted
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
         # as we check some link content, avoid mobile doing its link management
-        self.env['ir.config_parameter'].sudo().set_bool(
-            'mail_mobile.disable_redirect_firebase_dynamic_link', True
+        self.env["ir.config_parameter"].sudo().set_bool(
+            "mail_mobile.disable_redirect_firebase_dynamic_link", True
         )
 
-        main_website = self.env.ref('website.default_website')
-        other_websites = self.env['website'].search([]) - main_website
+        main_website = self.env.ref("website.default_website")
+        other_websites = self.env["website"].search([]) - main_website
 
         # We change the domain of the website to test that the email that
         # will be sent uses the correct domain for its links.
         main_website.domain = "my-test-domain.com"
         for w in other_websites:
-            w.domain = f'domain-not-used-{w.id}.fr'
-        with patch.object(MailMail, 'unlink', lambda _self: None):
+            w.domain = f"domain-not-used-{w.id}.fr"
+        with patch.object(MailMail, "unlink", lambda _self: None):
             start_time = fields.Datetime.now()
-            self.start_tour(test_product.website_url, 'website_sale.so_mail', login='admin')
-            new_mail = self.env['mail.mail'].search(
+            self.start_tour(test_product.website_url, "website_sale.so_mail", login="admin")
+            new_mail = self.env["mail.mail"].search(
                 [
-                    ('create_date', '>=', start_time),
-                    ('body_html', 'ilike', 'https://my-test-domain.com'),
+                    ("create_date", ">=", start_time),
+                    ("body_html", "ilike", "https://my-test-domain.com"),
                 ],
-                order='create_date DESC',
+                order="create_date DESC",
                 limit=None,
             )
             self.assertTrue(new_mail)
-            self.assertIn('Your', new_mail.body_html)
-            self.assertIn('order', new_mail.body_html)
+            self.assertIn("Your", new_mail.body_html)
+            self.assertIn("order", new_mail.body_html)
 
     def test_shop_product_mail_action_redirection(self):
-        product_template = self.env['product.template'].create({
-            'name': "test product template",
-            'sale_ok': True,
-            'website_published': True,
+        product_template = self.env["product.template"].create({
+            "name": "test product template",
+            "sale_ok": True,
+            "website_published": True,
         })
-        url = f'/mail/view?model=product.template&res_id={product_template.id}'
-        shop_url = f'/shop/test-product-template-{product_template.id}'
+        url = f"/mail/view?model=product.template&res_id={product_template.id}"
+        shop_url = f"/shop/test-product-template-{product_template.id}"
 
-        with self.subTest(user='admin'):
-            self.authenticate('admin', 'admin')
+        with self.subTest(user="admin"):
+            self.authenticate("admin", "admin")
             res = self.url_open(url)
             self.assertEqual(res.status_code, 200)
-            self.assertTrue(res.request.path_url.startswith('/odoo/product.template'))
+            self.assertTrue(res.request.path_url.startswith("/odoo/product.template"))
 
-        with self.subTest(user='portal'):
-            self.authenticate('portal', 'portal')
+        with self.subTest(user="portal"):
+            self.authenticate("portal", "portal")
             res = self.url_open(url)
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.request.path_url, shop_url)
@@ -88,10 +88,10 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
         self.env["ir.ui.view"].with_context(active_test=False).search([
             ("key", "=", "website_sale.product_comment")
         ]).write({"active": True})
-        product_template = self.env['product.template'].create({
-            'name': 'Test Product',
-            'sale_ok': True,
-            'website_published': True,
+        product_template = self.env["product.template"].create({
+            "name": "Test Product",
+            "sale_ok": True,
+            "website_published": True,
         })
         product_message = self.env["mail.message"].create({
             "author_id": self.env.ref("base.user_admin").partner_id.id,
@@ -105,17 +105,17 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
         )
 
 
-@tagged('post_install', '-at_install', 'mail_thread')
+@tagged("post_install", "-at_install", "mail_thread")
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
     def test_salesman_assignation(self):
         self.website.salesperson_id = self.user_admin
         MailThread = odoo.addons.mail.models.mail_thread.MailThread
         base_method = MailThread._message_create
-        superuser = self.env['res.users'].browse(SUPERUSER_ID)
+        superuser = self.env["res.users"].browse(SUPERUSER_ID)
 
         # Public user
         with patch.object(
-            MailThread, '_message_create', autospec=True, side_effect=base_method
+            MailThread, "_message_create", autospec=True, side_effect=base_method
         ) as patcher:
             self.cart.with_user(self.public_user).with_context(
                 tracking_disable=False, mail_no_track=False
@@ -124,22 +124,22 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
 
             order, msg_values = None, {}
             for (record, call_args), _whatever in patcher.call_args_list:
-                if record._name == 'sale.order':
+                if record._name == "sale.order":
                     order = record
                     msg_values = call_args[0]
                     break
 
             self.assertEqual(order, self.cart)
-            self.assertEqual(msg_values['author_id'], superuser.partner_id.id)
-            self.assertEqual(msg_values['partner_ids'], self.partner_admin.ids)
-            self.assertEqual(msg_values['subject'], f"You have been assigned to {order.name}")
+            self.assertEqual(msg_values["author_id"], superuser.partner_id.id)
+            self.assertEqual(msg_values["partner_ids"], self.partner_admin.ids)
+            self.assertEqual(msg_values["subject"], f"You have been assigned to {order.name}")
 
         # Portal user
         user_portal = self._create_portal_user()
         portal_partner = user_portal.partner_id
-        portal_user_cart = self.cart.copy({'partner_id': portal_partner.id, 'user_id': False})
+        portal_user_cart = self.cart.copy({"partner_id": portal_partner.id, "user_id": False})
         with patch.object(
-            MailThread, '_message_create', autospec=True, side_effect=base_method
+            MailThread, "_message_create", autospec=True, side_effect=base_method
         ) as patcher:
             portal_user_cart.with_user(user_portal).with_context(
                 tracking_disable=False, mail_no_track=False
@@ -148,27 +148,27 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
 
             order, msg_values = None, {}
             for (record, call_args), _whatever in patcher.call_args_list:
-                if record._name == 'sale.order':
+                if record._name == "sale.order":
                     order = record
                     msg_values = call_args[0]
                     break
 
             self.assertEqual(order, portal_user_cart)
-            self.assertEqual(msg_values['author_id'], superuser.partner_id.id)
-            self.assertEqual(msg_values['partner_ids'], self.partner_admin.ids)
-            self.assertEqual(msg_values['subject'], f"You have been assigned to {order.name}")
+            self.assertEqual(msg_values["author_id"], superuser.partner_id.id)
+            self.assertEqual(msg_values["partner_ids"], self.partner_admin.ids)
+            self.assertEqual(msg_values["subject"], f"You have been assigned to {order.name}")
 
     def test_website_specific_confirmation_template_is_used(self):
         """Ensure website-specific confirmation template is used."""
-        template = self.env['mail.template'].create({
-            'name': "Website Custom Confirmation Template",
-            'model_id': self.env.ref('sale.model_sale_order').id,
-            'subject': "Website Confirmation",
-            'body_html': '<p>Hello</p>',
+        template = self.env["mail.template"].create({
+            "name": "Website Custom Confirmation Template",
+            "model_id": self.env.ref("sale.model_sale_order").id,
+            "subject": "Website Confirmation",
+            "body_html": "<p>Hello</p>",
         })
         self.website.confirmation_email_template_id = template
 
-        with patch.object(self.env.registry['sale.order'], '_send_order_notification_mail') as mock:
+        with patch.object(self.env.registry["sale.order"], "_send_order_notification_mail") as mock:
             self.cart._send_order_confirmation_mail()
             mock.assert_called_once()
             returned_confirmation_template = mock.call_args[0][0]

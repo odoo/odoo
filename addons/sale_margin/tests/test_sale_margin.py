@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestSaleMargin(SaleCommon):
     def test_sale_margin(self):
         """Test the sale_margin module in Odoo."""
@@ -14,9 +14,9 @@ class TestSaleMargin(SaleCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'price_unit': 1000.0,
-                    'product_uom_qty': 10.0,
-                    'product_id': self.product.id,
+                    "price_unit": 1000.0,
+                    "product_uom_qty": 10.0,
+                    "product_id": self.product.id,
                 })
             ]
         )
@@ -33,17 +33,17 @@ class TestSaleMargin(SaleCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'price_unit': 20.0,
-                    'product_uom_qty': 1.0,
-                    'state': 'draft',
-                    'product_id': self.service_product.id,
+                    "price_unit": 20.0,
+                    "product_uom_qty": 1.0,
+                    "state": "draft",
+                    "product_id": self.service_product.id,
                 }),
                 Command.create({
-                    'price_unit': -100.0,
-                    'purchase_price': 0.0,
-                    'product_uom_qty': 1.0,
-                    'state': 'draft',
-                    'product_id': self.product.id,
+                    "price_unit": -100.0,
+                    "purchase_price": 0.0,
+                    "product_uom_qty": 1.0,
+                    "state": "draft",
+                    "product_id": self.product.id,
                 }),
             ]
         )
@@ -71,9 +71,9 @@ class TestSaleMargin(SaleCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product.id,
-                    'price_unit': 70.0,
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product.id,
+                    "price_unit": 70.0,
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -98,14 +98,14 @@ class TestSaleMargin(SaleCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'price_unit': 100.0,
-                    'product_uom_qty': 3.0,
-                    'product_id': self.service_product.id,
+                    "price_unit": 100.0,
+                    "product_uom_qty": 3.0,
+                    "product_id": self.service_product.id,
                 }),
                 Command.create({
-                    'price_unit': -50.0,
-                    'product_uom_qty': 1.0,
-                    'product_id': self.product.id,
+                    "price_unit": -50.0,
+                    "product_uom_qty": 1.0,
+                    "product_id": self.product.id,
                 }),
             ]
         )
@@ -132,9 +132,9 @@ class TestSaleMargin(SaleCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'price_unit': 1000.0,
-                    'product_uom_qty': 10.0,
-                    'product_id': self.product.id,
+                    "price_unit": 1000.0,
+                    "product_uom_qty": 10.0,
+                    "product_id": self.product.id,
                 })
             ]
         )

@@ -5,25 +5,25 @@ from odoo.exceptions import ValidationError
 
 
 class ProductRibbon(models.Model):
-    _name = 'product.ribbon'
+    _name = "product.ribbon"
     _description = "Product ribbon"
-    _order = 'sequence ASC, id'
+    _order = "sequence ASC, id"
 
     name = fields.Char(string="Ribbon Name", required=True, translate=True, size=20)
     sequence = fields.Integer(default=10)
-    bg_color = fields.Char(string="Background Color", required=True, default='#000000')
-    text_color = fields.Char(string="Text Color", required=True, default='#FFFFFF')
+    bg_color = fields.Char(string="Background Color", required=True, default="#000000")
+    text_color = fields.Char(string="Text Color", required=True, default="#FFFFFF")
     position = fields.Selection(
-        string='Position',
-        selection=[('left', "Left"), ('right', "Right")],
+        string="Position",
+        selection=[("left", "Left"), ("right", "Right")],
         required=True,
-        default='left',
+        default="left",
     )
     style = fields.Selection(
         string="Style",
-        selection=[('ribbon', "Ribbon"), ('tag', "Badge")],
+        selection=[("ribbon", "Ribbon"), ("tag", "Badge")],
         required=True,
-        default='ribbon',
+        default="ribbon",
         help=(
             "Defines the display style:\n"
             "- Ribbon: Shows a ribbon banner on the product image.\n"
@@ -32,9 +32,9 @@ class ProductRibbon(models.Model):
     )
     assign = fields.Selection(
         string="Assign",
-        selection=[('manual', "Manually"), ('sale', "On Sale"), ('new', "When New")],
+        selection=[("manual", "Manually"), ("sale", "On Sale"), ("new", "When New")],
         required=True,
-        default='manual',
+        default="manual",
         help=(
             "Defines how this ribbon is assigned to products:\n"
             "- Manually: You assign the ribbon manually to products.\n"
@@ -44,7 +44,7 @@ class ProductRibbon(models.Model):
     )
     new_period = fields.Integer(default=30)
 
-    @api.constrains('assign')
+    @api.constrains("assign")
     def _check_assign(self):
         """
         Ensure only one ribbon exists per automatic assign type.
@@ -52,15 +52,15 @@ class ProductRibbon(models.Model):
         with a given assign value.
         """
         for ribbon in self:
-            if ribbon.assign != 'manual':
+            if ribbon.assign != "manual":
                 existing_ribbons = self.search(
-                    [('id', '!=', ribbon.id), ('assign', '=', ribbon.assign)], limit=1
+                    [("id", "!=", ribbon.id), ("assign", "=", ribbon.assign)], limit=1
                 )
                 if existing_ribbons:
                     raise ValidationError(
                         _(
                             "Only one ribbon with the assign %s is allowed.",
-                            dict(self._fields['assign'].selection).get(ribbon.assign),
+                            dict(self._fields["assign"].selection).get(ribbon.assign),
                         )
                     )
 
@@ -72,15 +72,15 @@ class ProductRibbon(models.Model):
         """
         css_classes = ""
         match self.style:
-            case 'ribbon':
+            case "ribbon":
                 css_classes += "o_wsale_ribbon"
-            case 'tag':
+            case "tag":
                 css_classes += "o_wsale_badge"
 
         match self.position:
-            case 'left':
+            case "left":
                 css_classes += " o_left"
-            case 'right':
+            case "right":
                 css_classes += " o_right"
         return css_classes
 
@@ -99,26 +99,26 @@ class ProductRibbon(models.Model):
         # Check if a discount is applied to the product using a pricelist, comparison price, or
         # others.
         if (  # noqa: SIM103
-            self.assign == 'sale'
+            self.assign == "sale"
             and price_data
             and (
                 # for /shop page
                 (
-                    'base_price' in price_data
-                    and (price_data['base_price'] > price_data['price_reduce'])
+                    "base_price" in price_data
+                    and (price_data["base_price"] > price_data["price_reduce"])
                 )
                 # for /product page
                 or (
-                    'compare_list_price' in price_data
-                    and price_data['compare_list_price'] > price_data['price']
+                    "compare_list_price" in price_data
+                    and price_data["compare_list_price"] > price_data["price"]
                 )
-                or price_data.get('has_discounted_price')
+                or price_data.get("has_discounted_price")
             )
         ):
             return True
         # Check if the product is published within the ribbon's new period.
         if (  # noqa: SIM103
-            self.assign == 'new'
+            self.assign == "new"
             and self.new_period >= (fields.Datetime.today() - product.publish_date).days
         ):
             return True

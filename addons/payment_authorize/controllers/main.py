@@ -13,7 +13,7 @@ _logger = get_payment_logger(__name__)
 
 
 class AuthorizeController(http.Controller):
-    @http.route('/payment/authorize/payment', type='jsonrpc', auth='public')
+    @http.route("/payment/authorize/payment", type="jsonrpc", auth="public")
     def authorize_payment(self, reference, partner_id, access_token, opaque_data):
         """Make a payment request and handle the response.
 
@@ -28,7 +28,7 @@ class AuthorizeController(http.Controller):
             raise ValidationError(_("Received tampered payment request data."))
 
         # Send the payment request to Authorize.Net.
-        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        tx_sudo = request.env["payment.transaction"].sudo().search([("reference", "=", reference)])
         response_content = tx_sudo._authorize_create_transaction_request(opaque_data)
 
         # Handle the payment request response
@@ -37,4 +37,4 @@ class AuthorizeController(http.Controller):
             reference,
             pprint.pformat(response_content),
         )
-        tx_sudo._process('authorize', {'response': response_content})
+        tx_sudo._process("authorize", {"response": response_content})

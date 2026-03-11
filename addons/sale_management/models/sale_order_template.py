@@ -6,24 +6,24 @@ from odoo.fields import Command
 
 
 class SaleOrderTemplate(models.Model):
-    _name = 'sale.order.template'
+    _name = "sale.order.template"
     _description = "Quotation Template"
-    _order = 'sequence, id'
+    _order = "sequence, id"
 
     active = fields.Boolean(
         default=True,
         help="If unchecked, it will allow you to hide the quotation template without removing it.",
     )
-    company_id = fields.Many2one(comodel_name='res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company)
 
     name = fields.Char(string="Quotation Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)
     sequence = fields.Integer(default=10)
 
     mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
+        comodel_name="mail.template",
         string="Confirmation Mail",
-        domain=[('model', '=', 'sale.order')],
+        domain=[("model", "=", "sale.order")],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.",
     )
     number_of_days = fields.Integer(
@@ -33,14 +33,14 @@ class SaleOrderTemplate(models.Model):
 
     require_signature = fields.Boolean(
         string="Online Signature",
-        compute='_compute_require_signature',
+        compute="_compute_require_signature",
         store=True,
         readonly=False,
         help="Request a online signature to the customer in order to confirm orders automatically.",
     )
     require_payment = fields.Boolean(
         string="Online Payment",
-        compute='_compute_require_payment',
+        compute="_compute_require_payment",
         store=True,
         readonly=False,
         help="Request an online payment to the customer in order to confirm orders automatically.",
@@ -54,15 +54,15 @@ class SaleOrderTemplate(models.Model):
     )
 
     sale_order_template_line_ids = fields.One2many(
-        comodel_name='sale.order.template.line',
-        inverse_name='sale_order_template_id',
+        comodel_name="sale.order.template.line",
+        inverse_name="sale_order_template_id",
         string="Lines",
         copy=True,
     )
     journal_id = fields.Many2one(
-        'account.journal',
+        "account.journal",
         string="Invoicing Journal",
-        domain=[('type', '=', 'sale')],
+        domain=[("type", "=", "sale")],
         company_dependent=True,
         check_company=True,
         help="If set, SO with this template will invoice in this journal; "
@@ -71,19 +71,19 @@ class SaleOrderTemplate(models.Model):
 
     # === COMPUTE METHODS ===#
 
-    @api.depends('company_id')
+    @api.depends("company_id")
     def _compute_require_signature(self):
         for order in self:
             order.require_signature = (
                 order.company_id or order.env.company
             ).portal_confirmation_sign
 
-    @api.depends('company_id')
+    @api.depends("company_id")
     def _compute_require_payment(self):
         for order in self:
             order.require_payment = (order.company_id or order.env.company).portal_confirmation_pay
 
-    @api.depends('company_id', 'require_payment')
+    @api.depends("company_id", "require_payment")
     def _compute_prepayment_percent(self):
         for template in self:
             template.prepayment_percent = (
@@ -92,7 +92,7 @@ class SaleOrderTemplate(models.Model):
 
     # === ONCHANGE METHODS ===#
 
-    @api.onchange('prepayment_percent')
+    @api.onchange("prepayment_percent")
     def _onchange_prepayment_percent(self):
         for template in self:
             if not template.prepayment_percent:
@@ -100,11 +100,11 @@ class SaleOrderTemplate(models.Model):
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('company_id', 'sale_order_template_line_ids')
+    @api.constrains("company_id", "sale_order_template_line_ids")
     def _check_company_id(self):
         for template in self:
             restricted_products = template.sale_order_template_line_ids.product_id.filtered(
-                'company_id'
+                "company_id"
             )
             if not restricted_products:
                 continue
@@ -119,7 +119,7 @@ class SaleOrderTemplate(models.Model):
                 )
 
             authorized_products = restricted_products.filtered_domain(
-                self.env['product.product']._check_company_domain(template.company_id)
+                self.env["product.product"]._check_company_domain(template.company_id)
             )
             if unauthorized_products := restricted_products - authorized_products:
                 unaccessible_companies = unauthorized_products.company_id
@@ -130,8 +130,8 @@ class SaleOrderTemplate(models.Model):
                             " products from other companies (%(product_company)s) that are not"
                             " accessible to %(template_company)s.\nPlease change the company of"
                             " your template or remove the products from other companies.",
-                            product_company=', '.join(
-                                unaccessible_companies.mapped('display_name')
+                            product_company=", ".join(
+                                unaccessible_companies.mapped("display_name")
                             ),
                             template_company=template.company_id.display_name,
                         )
@@ -148,7 +148,7 @@ class SaleOrderTemplate(models.Model):
                     )
                 )
 
-    @api.constrains('prepayment_percent')
+    @api.constrains("prepayment_percent")
     def _check_prepayment_percent(self):
         for template in self:
             if template.require_payment and not (0 < template.prepayment_percent <= 1.0):
@@ -163,9 +163,9 @@ class SaleOrderTemplate(models.Model):
         return records
 
     def write(self, vals):
-        if 'active' in vals and not vals.get('active'):
+        if "active" in vals and not vals.get("active"):
             companies = (
-                self.env['res.company'].sudo().search([('sale_order_template_id', 'in', self.ids)])
+                self.env["res.company"].sudo().search([("sale_order_template_id", "in", self.ids)])
             )
             companies.sale_order_template_id = None
         result = super().write(vals)
@@ -173,7 +173,7 @@ class SaleOrderTemplate(models.Model):
         return result
 
     def _update_product_translations(self):
-        languages = self.env['res.lang'].search([('active', '=', True)])
+        languages = self.env["res.lang"].search([("active", "=", True)])
         for lang in languages:
             for line in self.sale_order_template_line_ids:
                 if line.name == line.product_id.get_product_multiline_description_sale():
@@ -184,64 +184,64 @@ class SaleOrderTemplate(models.Model):
     @api.model
     def _demo_configure_template(self):
         demo_template = self.env.ref(
-            'sale_management.sale_order_template_1', raise_if_not_found=False
+            "sale_management.sale_order_template_1", raise_if_not_found=False
         )
         if not demo_template or demo_template.sale_order_template_line_ids:
             # Skip if template not found, or already configured
             return
 
         acoustic_bloc_screen_product = self.env.ref(
-            'product.product_template_acoustic_bloc_screens'
+            "product.product_template_acoustic_bloc_screens"
         ).product_variant_id
         chair_protection_product = self.env.ref(
-            'sale.product_product_1_product_template'
+            "sale.product_product_1_product_template"
         ).product_variant_id
         demo_template.sale_order_template_line_ids = [
             Command.create({
-                'name': self.env._("Regular Section"),
-                'display_type': 'line_section',
-                'product_uom_qty': 0,
+                "name": self.env._("Regular Section"),
+                "display_type": "line_section",
+                "product_uom_qty": 0,
             }),
             Command.create({
-                'product_id': self.env.ref('product.product_template_dining_table').id
+                "product_id": self.env.ref("product.product_template_dining_table").id
             }),
-            Command.create({'product_id': self.env.ref('product.monitor_stand').id}),
+            Command.create({"product_id": self.env.ref("product.monitor_stand").id}),
             Command.create({
-                'name': self.env._("Hidden Composition Section"),
-                'display_type': 'line_section',
-                'collapse_composition': True,
-                'product_uom_qty': 0,
+                "name": self.env._("Hidden Composition Section"),
+                "display_type": "line_section",
+                "collapse_composition": True,
+                "product_uom_qty": 0,
             }),
-            Command.create({'product_id': self.env.ref('product.consu_delivery_02').id}),
+            Command.create({"product_id": self.env.ref("product.consu_delivery_02").id}),
             Command.create({
-                'product_id': self.env.ref('product.product_delivery_01').id,
-                'product_uom_qty': 8,
-            }),
-            Command.create({
-                'name': self.env._("Hidden Prices Section"),
-                'display_type': 'line_section',
-                'collapse_prices': True,
-                'product_uom_qty': 0,
-            }),
-            Command.create({'product_id': acoustic_bloc_screen_product.id}),
-            Command.create({'product_id': chair_protection_product.id, 'product_uom_qty': 8}),
-            Command.create({
-                'name': self.env._("Optional Section"),
-                'display_type': 'line_section',
-                'is_optional': True,
-                'product_uom_qty': 0,
+                "product_id": self.env.ref("product.product_delivery_01").id,
+                "product_uom_qty": 8,
             }),
             Command.create({
-                'product_id': self.env.ref('product.product_product_16').id,
-                'product_uom_qty': 0,
+                "name": self.env._("Hidden Prices Section"),
+                "display_type": "line_section",
+                "collapse_prices": True,
+                "product_uom_qty": 0,
+            }),
+            Command.create({"product_id": acoustic_bloc_screen_product.id}),
+            Command.create({"product_id": chair_protection_product.id, "product_uom_qty": 8}),
+            Command.create({
+                "name": self.env._("Optional Section"),
+                "display_type": "line_section",
+                "is_optional": True,
+                "product_uom_qty": 0,
             }),
             Command.create({
-                'name': self.env._("Subsection"),
-                'display_type': 'line_subsection',
-                'product_uom_qty': 0,
+                "product_id": self.env.ref("product.product_product_16").id,
+                "product_uom_qty": 0,
             }),
             Command.create({
-                'product_id': self.env.ref('product.product_product_12').id,
-                'product_uom_qty': 0,
+                "name": self.env._("Subsection"),
+                "display_type": "line_subsection",
+                "product_uom_qty": 0,
+            }),
+            Command.create({
+                "product_id": self.env.ref("product.product_product_12").id,
+                "product_uom_qty": 0,
             }),
         ]

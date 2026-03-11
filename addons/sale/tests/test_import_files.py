@@ -10,7 +10,7 @@ class TestImportFiles(TransactionCase):
     )
     def test_import_quotation_template_xls(self):
         if not loaded_demo_data(self.env):
-            self.skipTest('Needs demo data to be able to import those files')
+            self.skipTest("Needs demo data to be able to import those files")
         model = "sale.order"
         filename = "quotations_import_template.xlsx"
 
@@ -23,7 +23,7 @@ class TestImportFiles(TransactionCase):
 
         result = import_wizard.parse_preview({"has_headers": True})
         self.assertIsNone(result.get("error"))
-        field_names = ['/'.join(v) for v in result["matches"].values()]
+        field_names = ["/".join(v) for v in result["matches"].values()]
         results = import_wizard.execute_import(
             field_names,
             [r.lower() for r in result["headers"]],

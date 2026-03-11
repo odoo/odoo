@@ -4,26 +4,26 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = "res.config.settings"
 
     # Groups
     group_show_uom_price = fields.Boolean(
         string="Base Unit Price",
         default=False,
         implied_group="website_sale.group_show_uom_price",
-        group='base.group_user',
+        group="base.group_user",
     )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",
-        group='base.group_user',
+        group="base.group_user",
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
         "It will not be displayed if pricelists apply.",
     )
     group_gmc_feed = fields.Boolean(
         string="Google Merchant Center",
-        implied_group='website_sale.group_product_feed',
-        group='base.group_user',
+        implied_group="website_sale.group_product_feed",
+        group="base.group_user",
     )
 
     # Modules
@@ -31,34 +31,34 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_collect = fields.Boolean("Click & Collect")
 
     # Website-dependent settings
-    add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
+    add_to_cart_action = fields.Selection(related="website_id.add_to_cart_action", readonly=False)
     cart_recovery_mail_template = fields.Many2one(
-        related='website_id.cart_recovery_mail_template_id', readonly=False
+        related="website_id.cart_recovery_mail_template_id", readonly=False
     )
-    cart_abandoned_delay = fields.Float(related='website_id.cart_abandoned_delay', readonly=False)
+    cart_abandoned_delay = fields.Float(related="website_id.cart_abandoned_delay", readonly=False)
     send_abandoned_cart_email = fields.Boolean(
-        string="Abandoned Email", related='website_id.send_abandoned_cart_email', readonly=False
+        string="Abandoned Email", related="website_id.send_abandoned_cart_email", readonly=False
     )
-    salesperson_id = fields.Many2one(related='website_id.salesperson_id', readonly=False)
-    salesteam_id = fields.Many2one(related='website_id.salesteam_id', readonly=False)
-    prevent_sale = fields.Boolean(related='website_id.prevent_sale', readonly=False)
-    prevent_sale_for = fields.Selection(related='website_id.prevent_sale_for', readonly=False)
+    salesperson_id = fields.Many2one(related="website_id.salesperson_id", readonly=False)
+    salesteam_id = fields.Many2one(related="website_id.salesteam_id", readonly=False)
+    prevent_sale = fields.Boolean(related="website_id.prevent_sale", readonly=False)
+    prevent_sale_for = fields.Selection(related="website_id.prevent_sale_for", readonly=False)
     prevent_sale_for_categories = fields.Many2many(
-        related='website_id.prevent_sale_for_categories', readonly=False
+        related="website_id.prevent_sale_for_categories", readonly=False
     )
-    contact_us_link_url = fields.Char(related='website_id.contact_us_link_url', readonly=False)
+    contact_us_link_url = fields.Char(related="website_id.contact_us_link_url", readonly=False)
     show_line_subtotals_tax_selection = fields.Selection(
-        related='website_id.show_line_subtotals_tax_selection', readonly=False
+        related="website_id.show_line_subtotals_tax_selection", readonly=False
     )
     confirmation_email_template_id = fields.Many2one(
-        related='website_id.confirmation_email_template_id', readonly=False
+        related="website_id.confirmation_email_template_id", readonly=False
     )
     send_order_rating_emails = fields.Boolean(
-        related='website_id.send_order_rating_emails', readonly=False
+        related="website_id.send_order_rating_emails", readonly=False
     )
-    rating_email_delay = fields.Integer(related='website_id.rating_email_delay', readonly=False)
+    rating_email_delay = fields.Integer(related="website_id.rating_email_delay", readonly=False)
     rating_email_template_id = fields.Many2one(
-        related='website_id.rating_email_template_id', readonly=False
+        related="website_id.rating_email_template_id", readonly=False
     )
 
     # Additional settings
@@ -70,14 +70,14 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         required=True,
     )
-    ecommerce_access = fields.Selection(related='website_id.ecommerce_access', readonly=False)
+    ecommerce_access = fields.Selection(related="website_id.ecommerce_access", readonly=False)
 
     # === COMPUTE METHODS === #
 
-    @api.depends('website_id.account_on_checkout')
+    @api.depends("website_id.account_on_checkout")
     def _compute_account_on_checkout(self):
         for record in self:
-            record.account_on_checkout = record.website_id.account_on_checkout or 'disabled'
+            record.account_on_checkout = record.website_id.account_on_checkout or "disabled"
 
     def _inverse_account_on_checkout(self):
         for record in self:
@@ -85,10 +85,10 @@ class ResConfigSettings(models.TransientModel):
                 continue
             # account_on_checkout implies different values for `auth_signup_uninvited`
             if record.website_id.account_on_checkout != record.account_on_checkout:
-                if self.account_on_checkout in ['optional', 'mandatory']:
-                    record.website_id.auth_signup_uninvited = 'b2c'
+                if self.account_on_checkout in ["optional", "mandatory"]:
+                    record.website_id.auth_signup_uninvited = "b2c"
                 else:
-                    record.website_id.auth_signup_uninvited = 'b2b'
+                    record.website_id.auth_signup_uninvited = "b2b"
             record.website_id.account_on_checkout = record.account_on_checkout
 
     # === CRUD METHODS === #
@@ -99,28 +99,28 @@ class ResConfigSettings(models.TransientModel):
             website = self.with_context(website_id=self.website_id.id).website_id
 
             # Pre-populate the website product feeds if none already exist (company-independent).
-            if self.group_gmc_feed and not self.env['product.feed'].sudo().search([], limit=1):
+            if self.group_gmc_feed and not self.env["product.feed"].sudo().search([], limit=1):
                 website._populate_product_feeds()
         # if Request ratings option is enabled activate Customer Reviews view
         if self.send_order_rating_emails:
-            view = self.env.ref('website_sale.product_comment', raise_if_not_found=False)
+            view = self.env.ref("website_sale.product_comment", raise_if_not_found=False)
             if view and not view.active:
                 view.active = True
 
     # === ACTION METHODS === #
 
     def action_view_delivery_provider_modules(self):
-        return self.env['delivery.carrier'].install_more_provider()
+        return self.env["delivery.carrier"].install_more_provider()
 
     @api.readonly
     def action_open_abandoned_cart_mail_template(self):
         return {
-            'name': self.env._("Customize Email Templates"),
-            'type': 'ir.actions.act_window',
-            'res_model': 'mail.template',
-            'view_id': False,
-            'view_mode': 'form',
-            'res_id': self.env['ir.model.data']._xmlid_to_res_id(
+            "name": self.env._("Customize Email Templates"),
+            "type": "ir.actions.act_window",
+            "res_model": "mail.template",
+            "view_id": False,
+            "view_mode": "form",
+            "res_id": self.env["ir.model.data"]._xmlid_to_res_id(
                 "website_sale.mail_template_sale_cart_recovery"
             ),
         }
@@ -128,12 +128,12 @@ class ResConfigSettings(models.TransientModel):
     @api.readonly
     def action_open_sale_mail_templates(self):
         return {
-            'name': self.env._("Customize Email Templates"),
-            'type': 'ir.actions.act_window',
-            'domain': [('model', '=', 'sale.order')],
-            'res_model': 'mail.template',
-            'view_id': False,
-            'view_mode': 'list,form',
+            "name": self.env._("Customize Email Templates"),
+            "type": "ir.actions.act_window",
+            "domain": [("model", "=", "sale.order")],
+            "res_model": "mail.template",
+            "view_id": False,
+            "view_mode": "list,form",
         }
 
     @api.readonly
@@ -141,11 +141,11 @@ class ResConfigSettings(models.TransientModel):
         """Open the list view to manage the feed specific to the current website."""
         self.ensure_one()
         return {
-            'name': self.env._("Product Feeds"),
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.feed',
-            'views': [(False, 'list')],
-            'target': 'new',
-            'context': {'default_website_id': self.website_id.id, 'hide_website_column': True},
-            'domain': [('website_id', '=', self.website_id.id)],
+            "name": self.env._("Product Feeds"),
+            "type": "ir.actions.act_window",
+            "res_model": "product.feed",
+            "views": [(False, "list")],
+            "target": "new",
+            "context": {"default_website_id": self.website_id.id, "hide_website_column": True},
+            "domain": [("website_id", "=", self.website_id.id)],
         }

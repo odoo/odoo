@@ -9,10 +9,10 @@ from odoo.addons.payment_asiapay import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[('asiapay', "AsiaPay")], ondelete={'asiapay': 'set default'}
+        selection_add=[("asiapay", "AsiaPay")], ondelete={"asiapay": "set default"}
     )
     asiapay_brand = fields.Selection(
         string="Asiapay Brand",
@@ -23,38 +23,38 @@ class PaymentProvider(models.Model):
             ("siampay", "SiamPay"),
             ("bimopay", "BimoPay"),
         ],
-        required_if_provider='asiapay',
-        default='paydollar',
+        required_if_provider="asiapay",
+        default="paydollar",
         copy=False,
     )
     asiapay_merchant_id = fields.Char(
         string="AsiaPay Merchant ID",
         help="The Merchant ID solely used to identify your AsiaPay account.",
-        required_if_provider='asiapay',
+        required_if_provider="asiapay",
         copy=False,
     )
     asiapay_secure_hash_secret = fields.Char(
         string="AsiaPay Secure Hash Secret",
-        required_if_provider='asiapay',
+        required_if_provider="asiapay",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
     asiapay_secure_hash_function = fields.Selection(
         string="AsiaPay Secure Hash Function",
         help="The secure hash function associated to your AsiaPay account.",
-        selection=[('sha1', "SHA1"), ('sha256', "SHA256"), ('sha512', 'SHA512')],
-        required_if_provider='asiapay',
-        default='sha1',
+        selection=[("sha1", "SHA1"), ("sha256", "SHA256"), ("sha512", "SHA512")],
+        required_if_provider="asiapay",
+        default="sha1",
         copy=False,
     )
 
     # ==== CONSTRAINT METHODS ===#
 
-    @api.constrains('available_currency_ids', 'state')
+    @api.constrains("available_currency_ids", "state")
     def _limit_available_currency_ids(self):
         allowed_codes = set(const.CURRENCY_MAPPING.keys())
-        for provider in self.filtered(lambda p: p.code == 'asiapay'):
-            if len(provider.available_currency_ids) > 1 and provider.state != 'disabled':
+        for provider in self.filtered(lambda p: p.code == "asiapay"):
+            if len(provider.available_currency_ids) > 1 and provider.state != "disabled":
                 raise ValidationError(_("Only one currency can be selected by AsiaPay account."))
 
             unsupported_currency_codes = [
@@ -75,7 +75,7 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.code != 'asiapay':
+        if self.code != "asiapay":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -89,9 +89,9 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        environment = 'production' if self.state == 'enabled' else 'test'
+        environment = "production" if self.state == "enabled" else "test"
         api_urls = const.API_URLS[environment]
-        return api_urls.get(self.asiapay_brand, api_urls['paydollar'])
+        return api_urls.get(self.asiapay_brand, api_urls["paydollar"])
 
     def _asiapay_calculate_signature(self, data, incoming=True):
         """Compute the signature for the provided data according to the AsiaPay documentation.
@@ -102,9 +102,9 @@ class PaymentProvider(models.Model):
         :return: The calculated signature.
         :rtype: str
         """
-        signature_keys = const.SIGNATURE_KEYS['incoming' if incoming else 'outgoing']
+        signature_keys = const.SIGNATURE_KEYS["incoming" if incoming else "outgoing"]
         data_to_sign = [str(data[k]) for k in signature_keys] + [self.asiapay_secure_hash_secret]
-        signing_string = '|'.join(data_to_sign)
+        signing_string = "|".join(data_to_sign)
         shasign = hashnew(self.asiapay_secure_hash_function)
         shasign.update(signing_string.encode())
         return shasign.hexdigest()

@@ -21,7 +21,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         return
 
-    @route('/shop/payment/transaction/<int:order_id>', type='jsonrpc', auth='public', website=True)
+    @route("/shop/payment/transaction/<int:order_id>", type="jsonrpc", auth="public", website=True)
     def shop_payment_transaction(self, order_id, access_token, **kwargs):
         """Create a draft transaction and return its processing values.
 
@@ -37,9 +37,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Check the order id and the access token
         # Then lock it during the transaction to prevent concurrent payments
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token)
+            order_sudo = self._document_check_access("sale.order", order_id, access_token)
             request.env.cr.execute(
-                SQL('SELECT 1 FROM sale_order WHERE id = %s FOR NO KEY UPDATE NOWAIT', order_id)
+                SQL("SELECT 1 FROM sale_order WHERE id = %s FOR NO KEY UPDATE NOWAIT", order_id)
             )
         except MissingError:
             raise
@@ -55,28 +55,28 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({
-            'partner_id': order_sudo.partner_invoice_id.id,
-            'currency_id': order_sudo.currency_id.id,
-            'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
+            "partner_id": order_sudo.partner_invoice_id.id,
+            "currency_id": order_sudo.currency_id.id,
+            "sale_order_id": order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
-        if not kwargs.get('amount'):
-            kwargs['amount'] = order_sudo.amount_total
+        if not kwargs.get("amount"):
+            kwargs["amount"] = order_sudo.amount_total
 
         compare_amounts = order_sudo.currency_id.compare_amounts
-        if compare_amounts(kwargs['amount'], order_sudo.amount_total):
+        if compare_amounts(kwargs["amount"], order_sudo.amount_total):
             raise ValidationError(_("The cart has been updated. Please refresh the page."))
         if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
             raise UserError(_("The cart has already been paid. Please refresh the page."))
 
-        if delay_token_charge := kwargs.get('flow') == 'token':
+        if delay_token_charge := kwargs.get("flow") == "token":
             request.update_context(delay_token_charge=True)  # wait until after tx validation
         tx_sudo = self._create_transaction(
-            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs
+            custom_create_values={"sale_order_ids": [Command.set([order_id])]}, **kwargs
         )
 
         # Store the new transaction into the transaction list and if there's an old one, we remove
         # it until the day the ecommerce supports multiple orders at the same time.
-        request.session['__website_sale_last_tx_id'] = tx_sudo.id
+        request.session["__website_sale_last_tx_id"] = tx_sudo.id
 
         self._validate_transaction_for_order(tx_sudo, order_sudo)
         if delay_token_charge:

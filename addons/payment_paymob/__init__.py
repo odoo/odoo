@@ -5,8 +5,8 @@ from odoo.addons.payment import reset_payment_provider, setup_provider
 
 
 def post_init_hook(env):
-    setup_provider(env, 'paymob')
+    setup_provider(env, "paymob")
 
 
 def uninstall_hook(env):
-    reset_payment_provider(env, 'paymob')
+    reset_payment_provider(env, "paymob")

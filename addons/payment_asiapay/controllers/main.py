@@ -14,10 +14,10 @@ _logger = get_payment_logger(__name__)
 
 
 class AsiaPayController(http.Controller):
-    _return_url = '/payment/asiapay/return'
-    _webhook_url = '/payment/asiapay/webhook'
+    _return_url = "/payment/asiapay/return"
+    _webhook_url = "/payment/asiapay/webhook"
 
-    @http.route(_return_url, type='http', auth='public', methods=['GET'])
+    @http.route(_return_url, type="http", auth="public", methods=["GET"])
     def asiapay_return_from_checkout(self, **_data):
         """Process the payment data sent by AsiaPay after redirection.
 
@@ -25,9 +25,9 @@ class AsiaPayController(http.Controller):
         """
         # Don't process the payment data as they contain no valuable information except for the
         # reference and AsiaPay doesn't expose an endpoint to fetch the data from the API.
-        return request.redirect('/payment/status')
+        return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
     def asiapay_webhook(self, **data):
         """Process the payment data sent by AsiaPay to the webhook.
 
@@ -36,11 +36,11 @@ class AsiaPayController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from AsiaPay with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('asiapay', data)
+        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("asiapay", data)
         if tx_sudo:
             self._verify_signature(data, tx_sudo)
-            tx_sudo._process('asiapay', data)
-        return 'OK'  # Acknowledge the notification.
+            tx_sudo._process("asiapay", data)
+        return "OK"  # Acknowledge the notification.
 
     @staticmethod
     def _verify_signature(payment_data, tx_sudo):
@@ -51,7 +51,7 @@ class AsiaPayController(http.Controller):
         :return: None
         :raise Forbidden: If the signatures don't match.
         """
-        received_signature = payment_data.get('secureHash')
+        received_signature = payment_data.get("secureHash")
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
             raise Forbidden

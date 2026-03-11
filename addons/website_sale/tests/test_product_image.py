@@ -12,37 +12,37 @@ from odoo.tools.image import binary_to_image
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
 
-def _create_image(color='black', dims=(1920, 1080), format='JPEG'):
+def _create_image(color="black", dims=(1920, 1080), format="JPEG"):
     f = io.BytesIO()
-    Image.new('RGB', dims, color).save(f, format)  # type: ignore
+    Image.new("RGB", dims, color).save(f, format)  # type: ignore
     f.seek(0)
     return BinaryBytes(f.read())
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
     # registry_test_mode = False  # uncomment to save the product to test in browser
 
     def test_01_admin_shop_zoom_tour(self):
-        color_red = '#CD5C5C'
-        name_red = 'Indian Red'
+        color_red = "#CD5C5C"
+        name_red = "Indian Red"
 
-        color_green = '#228B22'
-        name_green = 'Forest Green'
+        color_green = "#228B22"
+        name_green = "Forest Green"
 
-        color_blue = '#4169E1'
-        name_blue = 'Royal Blue'
+        color_blue = "#4169E1"
+        name_blue = "Royal Blue"
 
-        self.env['product.pricelist'].sudo().search([]).action_archive()
+        self.env["product.pricelist"].sudo().search([]).action_archive()
 
         # create the color attribute
-        product_attribute = self.env['product.attribute'].create({
-            'name': 'Beautiful Color',
-            'display_type': 'color',
-            'value_ids': [
-                Command.create({'name': name_red, 'html_color': color_red, 'sequence': 1}),
-                Command.create({'name': name_green, 'html_color': color_green, 'sequence': 2}),
-                Command.create({'name': name_blue, 'html_color': color_blue, 'sequence': 3}),
+        product_attribute = self.env["product.attribute"].create({
+            "name": "Beautiful Color",
+            "display_type": "color",
+            "value_ids": [
+                Command.create({"name": name_red, "html_color": color_red, "sequence": 1}),
+                Command.create({"name": name_green, "html_color": color_green, "sequence": 2}),
+                Command.create({"name": name_blue, "html_color": color_blue, "sequence": 3}),
             ],
         })
 
@@ -56,28 +56,28 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         green_image = _create_image(color=color_green)
 
         # Template Extra Image 1
-        image_gif = _create_image(dims=(124, 147), format='GIF')
+        image_gif = _create_image(dims=(124, 147), format="GIF")
 
         # Template Extra Image 2
-        image_svg = BinaryBytes(b'<svg></svg>')
+        image_svg = BinaryBytes(b"<svg></svg>")
 
         # Red Variant Extra Image 1
-        image_bmp = _create_image(dims=(767, 247), format='BMP')
+        image_bmp = _create_image(dims=(767, 247), format="BMP")
 
         # Green Variant Extra Image 1
-        image_png = _create_image(dims=(2147, 3251), format='PNG')
+        image_png = _create_image(dims=(2147, 3251), format="PNG")
 
         # create the template, without creating the variants
-        template = self.env['product.template'].create({
-            'name': 'A Colorful Image',
-            'product_template_image_ids': [
-                Command.create({'name': 'image 1', 'image_1920': image_gif}),
-                Command.create({'name': 'image 4', 'image_1920': image_svg}),
+        template = self.env["product.template"].create({
+            "name": "A Colorful Image",
+            "product_template_image_ids": [
+                Command.create({"name": "image 1", "image_1920": image_gif}),
+                Command.create({"name": "image 4", "image_1920": image_svg}),
             ],
-            'attribute_line_ids': [
+            "attribute_line_ids": [
                 Command.create({
-                    'attribute_id': product_attribute.id,
-                    'value_ids': [Command.set(product_attribute.value_ids.ids)],
+                    "attribute_id": product_attribute.id,
+                    "value_ids": [Command.set(product_attribute.value_ids.ids)],
                 })
             ],
         })
@@ -87,8 +87,8 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         value_green = line.product_template_value_ids[1]
 
         # set a different price on the variants to differentiate them
-        product_template_attribute_values = self.env['product.template.attribute.value'].search([
-            ('product_tmpl_id', '=', template.id)
+        product_template_attribute_values = self.env["product.template.attribute.value"].search([
+            ("product_tmpl_id", "=", template.id)
         ])
 
         for val in product_template_attribute_values:
@@ -101,8 +101,8 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # because the template image is empty and there is only one variant)
         product_red = template._get_variant_for_combination(value_red)
         product_red.write({
-            'image_1920': blue_image,
-            'product_variant_image_ids': [(0, 0, {'name': 'image 2', 'image_1920': image_bmp})],
+            "image_1920": blue_image,
+            "product_variant_image_ids": [(0, 0, {"name": "image 2", "image_1920": image_bmp})],
         })
 
         self.assertEqual(template.image_1920.content, blue_image.content)
@@ -110,8 +110,8 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # Get the green variant
         product_green = template._get_variant_for_combination(value_green)
         product_green.write({
-            'image_1920': green_image,
-            'product_variant_image_ids': [(0, 0, {'name': 'image 3', 'image_1920': image_png})],
+            "image_1920": green_image,
+            "product_variant_image_ids": [(0, 0, {"name": "image 3", "image_1920": image_png})],
         })
 
         # now set the red image on the first variant, that works because
@@ -200,18 +200,18 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # self.env.cr.commit()  # uncomment to save the product to test in browser
 
         # Make sure we have zoom on click
-        self.env['ir.ui.view'].with_context(active_test=False).search([
-            ('key', '=', 'website_sale.product_picture_magnify_click')
-        ]).write({'active': True})
+        self.env["ir.ui.view"].with_context(active_test=False).search([
+            ("key", "=", "website_sale.product_picture_magnify_click")
+        ]).write({"active": True})
 
         # Ensure that no pricelist is available during the test.
         # This ensures that tours with triggers on the amounts will run properly.
-        self.env['product.pricelist'].search([]).action_archive()
+        self.env["product.pricelist"].search([]).action_archive()
 
         self.start_tour(
-            '/shop?debug=1&search=A Colorful Image',
-            'website_sale.product_page_zoom',
-            login='website_user',
+            "/shop?debug=1&search=A Colorful Image",
+            "website_sale.product_page_zoom",
+            login="website_user",
         )
 
         # CASE: unlink move image to fallback if fallback image empty
@@ -220,9 +220,9 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         self.assertEqual(template.image_1920.content, red_image.content)
 
         # CASE: unlink does nothing special if fallback image already set
-        self.env['product.product'].create({
-            'product_tmpl_id': template.id,
-            'image_1920': green_image,
+        self.env["product.product"].create({
+            "product_tmpl_id": template.id,
+            "image_1920": green_image,
         }).unlink()
         self.assertEqual(template.image_1920.content, red_image.content)
 
@@ -245,25 +245,26 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # product_variant_id set we want the default_product_tmpl_id from the context to be applied
         # if we don't have a product_variant_id set
 
-        additionnal_context = {'default_product_tmpl_id': template.id}
+        additionnal_context = {"default_product_tmpl_id": template.id}
 
-        product = self.env['product.product'].create({'product_tmpl_id': template.id})
+        product = self.env["product.product"].create({"product_tmpl_id": template.id})
 
         product_image = (
-            self.env['product.image']
+            self
+            .env["product.image"]
             .with_context(**additionnal_context)
             .create([
-                {'name': 'Template image', 'image_1920': red_image},
+                {"name": "Template image", "image_1920": red_image},
                 {
-                    'name': 'Variant image',
-                    'image_1920': blue_image,
-                    'product_variant_id': product.id,
+                    "name": "Variant image",
+                    "image_1920": blue_image,
+                    "product_variant_id": product.id,
                 },
             ])
         )
 
-        template_image = product_image.filtered(lambda i: i.name == 'Template image')
-        variant_image = product_image.filtered(lambda i: i.name == 'Variant image')
+        template_image = product_image.filtered(lambda i: i.name == "Template image")
+        variant_image = product_image.filtered(lambda i: i.name == "Variant image")
 
         self.assertEqual(template_image.product_tmpl_id.id, template.id)
         self.assertFalse(template_image.product_variant_id.id)
@@ -271,35 +272,36 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         self.assertEqual(variant_image.product_variant_id.id, product.id)
 
     def test_02_image_holder(self):
-        image = _create_image(color='#FF0000', dims=(800, 500))
+        image = _create_image(color="#FF0000", dims=(800, 500))
 
         # create the color attribute
-        product_attribute = self.env['product.attribute'].create({
-            'name': 'Beautiful Color',
-            'display_type': 'color',
-            'value_ids': [
-                Command.create({'name': 'Red', 'sequence': 1}),
-                Command.create({'name': 'Green', 'sequence': 2}),
-                Command.create({'name': 'Blue', 'sequence': 3}),
+        product_attribute = self.env["product.attribute"].create({
+            "name": "Beautiful Color",
+            "display_type": "color",
+            "value_ids": [
+                Command.create({"name": "Red", "sequence": 1}),
+                Command.create({"name": "Green", "sequence": 2}),
+                Command.create({"name": "Blue", "sequence": 3}),
             ],
         })
 
         # create the template, without creating the variants
         template = (
-            self.env['product.template']
+            self
+            .env["product.template"]
             .with_context(create_product_product=False)
-            .create({'name': 'Test subject'})
+            .create({"name": "Test subject"})
         )
 
         # when there are no variants, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
 
         # set the color attribute and values on the template
-        line = self.env['product.template.attribute.line'].create([
+        line = self.env["product.template.attribute.line"].create([
             {
-                'attribute_id': product_attribute.id,
-                'product_tmpl_id': template.id,
-                'value_ids': [Command.set(product_attribute.value_ids.ids)],
+                "attribute_id": product_attribute.id,
+                "product_tmpl_id": template.id,
+                "value_ids": [Command.set(product_attribute.value_ids.ids)],
             }
         ])
         value_red = line.product_template_value_ids[0]
@@ -326,81 +328,82 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         self.assertEqual(template, template._get_image_holder())
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleRemoveImage(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         # First image (blue) for the template.
-        color_blue = '#4169E1'
-        name_blue = 'Royal Blue'
+        color_blue = "#4169E1"
+        name_blue = "Royal Blue"
         # Red for the variant.
-        color_red = '#CD5C5C'
-        name_red = 'Indian Red'
+        color_red = "#CD5C5C"
+        name_red = "Indian Red"
         # Green for the replacement
-        color_green = '#228B22'
+        color_green = "#228B22"
 
         # Attachment needed for the replacement of images
-        cls.env['ir.attachment'].create({
-            'public': True,
-            'name': 'green.jpg',
-            'type': 'binary',
-            'raw': _create_image(color=color_green),
+        cls.env["ir.attachment"].create({
+            "public": True,
+            "name": "green.jpg",
+            "type": "binary",
+            "raw": _create_image(color=color_green),
         })
 
         # Create the color attribute.
-        cls.product_attribute = cls.env['product.attribute'].create({
-            'name': 'Beautiful Color',
-            'display_type': 'color',
+        cls.product_attribute = cls.env["product.attribute"].create({
+            "name": "Beautiful Color",
+            "display_type": "color",
         })
 
         # create the color attribute values
-        cls.attr_values = cls.env['product.attribute.value'].create([
+        cls.attr_values = cls.env["product.attribute.value"].create([
             {
-                'name': name_blue,
-                'attribute_id': cls.product_attribute.id,
-                'html_color': color_blue,
-                'sequence': 1,
+                "name": name_blue,
+                "attribute_id": cls.product_attribute.id,
+                "html_color": color_blue,
+                "sequence": 1,
             },
             {
-                'name': name_red,
-                'attribute_id': cls.product_attribute.id,
-                'html_color': color_red,
-                'sequence': 2,
+                "name": name_red,
+                "attribute_id": cls.product_attribute.id,
+                "html_color": color_red,
+                "sequence": 2,
             },
         ])
 
         cls.template = (
-            cls.env['product.template']
+            cls
+            .env["product.template"]
             .with_context(create_product_product=False)
-            .create({'name': 'Test Remove Image', 'image_1920': _create_image(color=color_blue)})
+            .create({"name": "Test Remove Image", "image_1920": _create_image(color=color_blue)})
         )
 
     def test_website_sale_add_and_remove_main_product_image_no_variant(self):
-        self.product = self.env['product.product'].create({'product_tmpl_id': self.template.id})
+        self.product = self.env["product.product"].create({"product_tmpl_id": self.template.id})
 
         self.start_tour(
-            self.env['website'].get_client_action_url('/shop?search=Test Remove Image'),
-            'website_sale.add_and_remove_main_product_image_no_variant',
-            login='admin',
+            self.env["website"].get_client_action_url("/shop?search=Test Remove Image"),
+            "website_sale.add_and_remove_main_product_image_no_variant",
+            login="admin",
         )
         self.assertFalse(self.template.image_1920)
         self.assertFalse(self.product.image_1920)
 
     def test_website_sale_remove_main_product_image_with_variant(self):
         # Set the color attribute and values on the template.
-        self.env['product.template.attribute.line'].create([
+        self.env["product.template.attribute.line"].create([
             {
-                'attribute_id': self.product_attribute.id,
-                'product_tmpl_id': self.template.id,
-                'value_ids': [(6, 0, self.attr_values.ids)],
+                "attribute_id": self.product_attribute.id,
+                "product_tmpl_id": self.template.id,
+                "value_ids": [(6, 0, self.attr_values.ids)],
             }
         ])
-        self.product = self.env['product.product'].create({'product_tmpl_id': self.template.id})
+        self.product = self.env["product.product"].create({"product_tmpl_id": self.template.id})
         self.start_tour(
-            self.env['website'].get_client_action_url('/shop?search=Test Remove Image'),
-            'website_sale.remove_main_product_image_with_variant',
-            login='admin',
+            self.env["website"].get_client_action_url("/shop?search=Test Remove Image"),
+            "website_sale.remove_main_product_image_with_variant",
+            login="admin",
         )
         self.assertFalse(self.template.image_1920)
         self.assertFalse(self.product.image_1920)

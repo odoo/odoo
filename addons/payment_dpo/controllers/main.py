@@ -12,9 +12,9 @@ _logger = get_payment_logger(__name__)
 
 
 class DPOController(http.Controller):
-    _return_url = '/payment/dpo/return'
+    _return_url = "/payment/dpo/return"
 
-    @http.route(_return_url, type='http', auth='public', methods=['GET'])
+    @http.route(_return_url, type="http", auth="public", methods=["GET"])
     def dpo_return_from_checkout(self, **data):
         """Process the payment data sent by DPO after redirection.
 
@@ -24,7 +24,7 @@ class DPOController(http.Controller):
         self._verify_and_process(data)
 
         # Redirect the user to the status page.
-        return request.redirect('/payment/status')
+        return request.redirect("/payment/status")
 
     @staticmethod
     def _verify_and_process(data):
@@ -33,7 +33,7 @@ class DPOController(http.Controller):
         :param dict data: The payment data.
         :return: None
         """
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('dpo', data)
+        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("dpo", data)
         if not tx_sudo:
             return
 
@@ -41,15 +41,15 @@ class DPOController(http.Controller):
             # Verify the payment data.
             payload = (
                 f'<?xml version="1.0" encoding="utf-8"?>'
-                f'<API3G>'
-                f'<CompanyToken>{tx_sudo.provider_id.dpo_company_token}</CompanyToken>'
-                f'<Request>verifyToken</Request>'
-                f'<TransactionToken>{data.get("TransID")}</TransactionToken>'
-                f'</API3G>'
+                f"<API3G>"
+                f"<CompanyToken>{tx_sudo.provider_id.dpo_company_token}</CompanyToken>"
+                f"<Request>verifyToken</Request>"
+                f"<TransactionToken>{data.get('TransID')}</TransactionToken>"
+                f"</API3G>"
             )
-            verified_data = tx_sudo._send_api_request('POST', '', data=payload)
+            verified_data = tx_sudo._send_api_request("POST", "", data=payload)
         except ValidationError:
             _logger.error("Unable to verify the payment data.")
         else:
             data.update(verified_data)
-            tx_sudo._process('dpo', data)
+            tx_sudo._process("dpo", data)

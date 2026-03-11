@@ -10,10 +10,10 @@ _logger = get_payment_logger(__name__)
 
 
 class CustomController(Controller):
-    _process_url = '/payment/custom/process'
+    _process_url = "/payment/custom/process"
 
-    @route(_process_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @route(_process_url, type="http", auth="public", methods=["POST"], csrf=False)
     def custom_process_transaction(self, **post):
         _logger.info("Handling custom processing with data:\n%s", pprint.pformat(post))
-        request.env['payment.transaction'].sudo()._process('custom', post)
-        return request.redirect('/payment/status')
+        request.env["payment.transaction"].sudo()._process("custom", post)
+        return request.redirect("/payment/status")

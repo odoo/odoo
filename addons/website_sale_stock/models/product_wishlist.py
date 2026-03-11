@@ -7,7 +7,7 @@ class ProductWishlist(models.Model):
     _inherit = "product.wishlist"
 
     stock_notification = fields.Boolean(
-        compute='_compute_stock_notification', default=False, required=True
+        compute="_compute_stock_notification", default=False, required=True
     )
 
     @api.depends("product_id", "partner_id")

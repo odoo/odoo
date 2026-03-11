@@ -15,24 +15,24 @@ from odoo.tools.pdf import (
 
 
 class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+    _inherit = "ir.actions.report"
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         """Override to add and fill headers, footers and product documents to the sale quotation."""
         result = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
-        if self._get_report(report_ref).report_name != 'sale.report_saleorder':
+        if self._get_report(report_ref).report_name != "sale.report_saleorder":
             return result
 
-        ICP = self.env['ir.config_parameter'].sudo()
-        always_include = ICP.get_bool('sale.always_include_selected_documents')
-        orders = self.env['sale.order'].browse(res_ids)
+        ICP = self.env["ir.config_parameter"].sudo()
+        always_include = ICP.get_bool("sale.always_include_selected_documents")
+        orders = self.env["sale.order"].browse(res_ids)
 
         for order in orders:
-            if (order.state != 'sale' or always_include) and (
-                initial_stream := result.get(order.id, {}).get('stream')
+            if (order.state != "sale" or always_include) and (
+                initial_stream := result.get(order.id, {}).get("stream")
             ):
                 quotation_documents = order.quotation_document_ids
-                headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
+                headers = quotation_documents.filtered(lambda doc: doc.document_type == "header")
                 footers = quotation_documents - headers
                 has_product_document = any(line.product_document_ids for line in order.order_line)
 
@@ -48,7 +48,7 @@ class IrActionsReport(models.Model):
 
                 if headers:
                     for header in headers:
-                        prefix = f'quotation_document_id_{header.id}__'
+                        prefix = f"quotation_document_id_{header.id}__"
                         self_with_order_context._update_mapping_and_add_pages_to_writer(
                             writer, header, form_fields_values_mapping, prefix, order
                         )
@@ -57,14 +57,14 @@ class IrActionsReport(models.Model):
                         for doc in line.product_document_ids:
                             # Use both the id of the line and the doc as variants could use the same
                             # document.
-                            prefix = f'sol_id_{line.id}_product_document_id_{doc.id}__'
+                            prefix = f"sol_id_{line.id}_product_document_id_{doc.id}__"
                             self_with_order_context._update_mapping_and_add_pages_to_writer(
                                 writer, doc, form_fields_values_mapping, prefix, order, line
                             )
                 self._add_pages_to_writer(writer, initial_stream.getvalue())
                 if footers:
                     for footer in footers:
-                        prefix = f'quotation_document_id_{footer.id}__'
+                        prefix = f"quotation_document_id_{footer.id}__"
                         self_with_order_context._update_mapping_and_add_pages_to_writer(
                             writer, footer, form_fields_values_mapping, prefix, order
                         )
@@ -72,7 +72,7 @@ class IrActionsReport(models.Model):
                 with io.BytesIO() as _buffer:
                     writer.write(_buffer)
                     stream = io.BytesIO(_buffer.getvalue())
-                result[order.id].update({'stream': stream})
+                result[order.id].update({"stream": stream})
 
         return result
 
@@ -126,14 +126,14 @@ class IrActionsReport(models.Model):
         :return: value that need to be shown in the final pdf. Multiple values are joined by ', '
         :rtype: str
         """
-        tz = order.partner_id.tz or order.env.user.tz or 'UTC'
+        tz = order.partner_id.tz or order.env.user.tz or "UTC"
         base_record = order_line or order
         path = form_field.path
 
         # If path = 'order_id.order_line.product_id.name'
-        path = path.split('.')  # ['order_id', 'order_line', 'product_id', 'name']
+        path = path.split(".")  # ['order_id', 'order_line', 'product_id', 'name']
         # Sudo to be able to follow the path set by the admin
-        records = base_record.sudo().mapped('.'.join(path[:-1]))  # product.product(id1, id2, ...)
+        records = base_record.sudo().mapped(".".join(path[:-1]))  # product.product(id1, id2, ...)
         field_name = path[-1]  # 'name'
 
         def _get_formatted_value(self):
@@ -142,29 +142,29 @@ class IrActionsReport(models.Model):
             field_type_ = field_.type
             for record_ in records:
                 value_ = record_[field_name]
-                if field_type_ == 'boolean':
+                if field_type_ == "boolean":
                     formatted_value_ = _("Yes") if value_ else _("No")
-                elif field_type_ == 'monetary':
+                elif field_type_ == "monetary":
                     currency_id_ = record_[field_.get_currency_field(record_)]
                     formatted_value_ = format_amount(
                         self.env, value_, currency_id_ or order.currency_id
                     )
-                elif not value_ and field_type_ not in {'integer', 'float'}:
-                    formatted_value_ = ''
-                elif field_type_ == 'date':
+                elif not value_ and field_type_ not in {"integer", "float"}:
+                    formatted_value_ = ""
+                elif field_type_ == "date":
                     formatted_value_ = format_date(self.env, value_)
-                elif field_type_ == 'datetime':
+                elif field_type_ == "datetime":
                     formatted_value_ = format_datetime(self.env, value_, tz=tz, dt_format=False)
-                elif field_type_ == 'selection' and value_:
+                elif field_type_ == "selection" and value_:
                     formatted_value_ = dict(field_._description_selection(self.env))[value_]
-                elif field_type_ in {'one2many', 'many2one', 'many2many'}:
-                    formatted_value_ = ', '.join([v.display_name for v in value_])
+                elif field_type_ in {"one2many", "many2one", "many2many"}:
+                    formatted_value_ = ", ".join([v.display_name for v in value_])
                 else:
                     formatted_value_ = str(value_)
 
                 yield formatted_value_
 
-        return ', '.join(_get_formatted_value(self))
+        return ", ".join(_get_formatted_value(self))
 
     @api.model
     def _get_custom_value_from_order(self, document, form_field_name, order, order_line):
@@ -179,14 +179,14 @@ class IrActionsReport(models.Model):
         :return: value that need to be shown in the final pdf.
         :rtype: str
         """
-        existing_mapping = json.loads(order.customizable_pdf_form_fields or '{}')
+        existing_mapping = json.loads(order.customizable_pdf_form_fields or "{}")
         if order_line:
-            base_values = existing_mapping.get('line', {}).get(str(order_line.id), {})
-        elif document.document_type == 'header':
-            base_values = existing_mapping.get('header', {})
+            base_values = existing_mapping.get("line", {}).get(str(order_line.id), {})
+        elif document.document_type == "header":
+            base_values = existing_mapping.get("header", {})
         else:
-            base_values = existing_mapping.get('footer', {})
-        custom_form_fields = base_values.get(str(document.id), {}).get('custom_form_fields', {})
+            base_values = existing_mapping.get("footer", {})
+        custom_form_fields = base_values.get(str(document.id), {}).get("custom_form_fields", {})
         return custom_form_fields.get(form_field_name, "")
 
     @api.model
@@ -208,24 +208,24 @@ class IrActionsReport(models.Model):
             field_names = reader.get_form_text_fields()
 
         for page in reader.pages:
-            if prefix and page.get('/Annots'):
+            if prefix and page.get("/Annots"):
                 # Modifying the annots that hold every information about the form fields
-                for j in range(len(page['/Annots'])):
-                    reader_annot = page['/Annots'][j].get_object()
+                for j in range(len(page["/Annots"])):
+                    reader_annot = page["/Annots"][j].get_object()
                     # Check parent object for '/T' if missing.
-                    if '/T' not in reader_annot and '/Parent' in reader_annot:
-                        reader_annot = reader_annot['/Parent'].get_object()
-                    if reader_annot.get('/T') in field_names:
+                    if "/T" not in reader_annot and "/Parent" in reader_annot:
+                        reader_annot = reader_annot["/Parent"].get_object()
+                    if reader_annot.get("/T") in field_names:
                         # Prefix all form fields in the document with the document identifier.
                         # This is necessary to know which value needs to be taken when filling the
                         # forms.
-                        form_key = reader_annot.get('/T')
+                        form_key = reader_annot.get("/T")
                         new_key = prefix + form_key
 
                         # Modifying the form flags to force some characteristics
                         # 1. make all text fields read-only
                         # 2. make all text fields support multiline
-                        form_flags = reader_annot.get('/Ff', 0)
+                        form_flags = reader_annot.get("/Ff", 0)
                         readonly_flag = 1  # 1st bit sets readonly
                         multiline_flag = 1 << 12  # 13th bit sets multiline text
                         new_flags = form_flags | readonly_flag | multiline_flag

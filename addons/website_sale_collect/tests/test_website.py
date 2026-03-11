@@ -7,7 +7,7 @@ from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsite(ClickAndCollectCommon):
     @classmethod
     def setUpClass(cls):
@@ -45,7 +45,7 @@ class TestWebsite(ClickAndCollectCommon):
         self.website.warehouse_id = self.warehouse_2
         self._add_product_qty_to_wh(self.storable_product.id, 5, self.warehouse_2.lot_stock_id.id)
         order = self._create_in_store_delivery_order(
-            pickup_location_data={'id': self.warehouse_2.id, 'name': 'WH1'}
+            pickup_location_data={"id": self.warehouse_2.id, "name": "WH1"}
         )
         with MockRequest(self.env, website=self.website, sale_order_id=order.id):
             free_qty = self.website._get_product_available_qty(self.storable_product, order=order)

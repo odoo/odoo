@@ -8,7 +8,7 @@ from odoo.tests import Form, tagged
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 
-@tagged('-at_install', 'post_install')
+@tagged("-at_install", "post_install")
 class TestSaleOrder(SaleManagementCommon):
     @classmethod
     def setUpClass(cls):
@@ -35,69 +35,69 @@ class TestSaleOrder(SaleManagementCommon):
         )
 
         # create some products
-        cls.product_1, cls.optional_product = cls.env['product.product'].create([
+        cls.product_1, cls.optional_product = cls.env["product.product"].create([
             {
-                'name': 'Product 1',
-                'lst_price': cls.pub_product_price,
-                'description_sale': "This is a product description",
+                "name": "Product 1",
+                "lst_price": cls.pub_product_price,
+                "description_sale": "This is a product description",
             },
-            {'name': 'Optional product', 'lst_price': cls.pub_option_price},
+            {"name": "Optional product", "lst_price": cls.pub_option_price},
         ])
 
         # create some quotation templates
-        cls.quotation_template_no_discount = cls.env['sale.order.template'].create({
-            'name': 'A quotation template',
-            'sale_order_template_line_ids': [
-                Command.create({'product_id': cls.product_1.id}),
+        cls.quotation_template_no_discount = cls.env["sale.order.template"].create({
+            "name": "A quotation template",
+            "sale_order_template_line_ids": [
+                Command.create({"product_id": cls.product_1.id}),
                 Command.create({
-                    'name': 'Optional products',
-                    'display_type': 'line_section',
-                    'is_optional': True,
-                    'sequence': 11,  # to be sure optional products are last in the template
+                    "name": "Optional products",
+                    "display_type": "line_section",
+                    "is_optional": True,
+                    "sequence": 11,  # to be sure optional products are last in the template
                 }),
-                Command.create({'product_id': cls.optional_product.id, 'sequence': 12}),
+                Command.create({"product_id": cls.optional_product.id, "sequence": 12}),
             ],
         })
 
         # create two pricelist with different discount policies (same total price)
         pricelist_rule_values = [
             Command.create({
-                'name': 'Product 1 premium price',
-                'applied_on': '1_product',
-                'product_tmpl_id': cls.product_1.product_tmpl_id.id,
-                'compute_price': 'fixed',
-                'fixed_price': cls.pl_product_price,
+                "name": "Product 1 premium price",
+                "applied_on": "1_product",
+                "product_tmpl_id": cls.product_1.product_tmpl_id.id,
+                "compute_price": "fixed",
+                "fixed_price": cls.pl_product_price,
             }),
             Command.create({
-                'name': 'Optional product premium price',
-                'applied_on': '1_product',
-                'product_tmpl_id': cls.optional_product.product_tmpl_id.id,
-                'compute_price': 'fixed',
-                'fixed_price': cls.pl_option_price,
+                "name": "Optional product premium price",
+                "applied_on": "1_product",
+                "product_tmpl_id": cls.optional_product.product_tmpl_id.id,
+                "compute_price": "fixed",
+                "fixed_price": cls.pl_option_price,
             }),
         ]
         percentage_pricelist_rule_values = [
             Command.create({
-                'name': 'Product 1 premium price',
-                'applied_on': '1_product',
-                'product_tmpl_id': cls.product_1.product_tmpl_id.id,
-                'compute_price': 'percentage',
-                'percent_price': cls.pl_discount,
+                "name": "Product 1 premium price",
+                "applied_on": "1_product",
+                "product_tmpl_id": cls.product_1.product_tmpl_id.id,
+                "compute_price": "percentage",
+                "percent_price": cls.pl_discount,
             }),
             Command.create({
-                'name': 'Optional product premium price',
-                'applied_on': '1_product',
-                'product_tmpl_id': cls.optional_product.product_tmpl_id.id,
-                'compute_price': 'percentage',
-                'percent_price': cls.pl_option_discount,
+                "name": "Optional product premium price",
+                "applied_on": "1_product",
+                "product_tmpl_id": cls.optional_product.product_tmpl_id.id,
+                "compute_price": "percentage",
+                "percent_price": cls.pl_option_discount,
             }),
         ]
 
         (cls.discount_included_price_list, cls.discount_excluded_price_list) = cls.env[
-            'product.pricelist'
+            "product.pricelist"
         ].create([
-            {'name': 'Discount included Pricelist', 'item_ids': pricelist_rule_values},
-            {'name': 'Discount excluded Pricelist', 'item_ids': percentage_pricelist_rule_values},
+            {"name": "Discount included Pricelist", "item_ids": pricelist_rule_values},
+            {"name": "Discount excluded Pricelist", "item_ids": percentage_pricelist_rule_values},
         ])
 
         # variable kept to reduce code diff
@@ -110,7 +110,7 @@ class TestSaleOrder(SaleManagementCommon):
         quotation template.
         """
         # first case, without discount in the quotation template
-        self.sale_order.write({'sale_order_template_id': self.quotation_template_no_discount.id})
+        self.sale_order.write({"sale_order_template_id": self.quotation_template_no_discount.id})
         self.sale_order._onchange_sale_order_template_id()
 
         self.assertEqual(
@@ -174,8 +174,8 @@ class TestSaleOrder(SaleManagementCommon):
         """
         # first case, without discount in the quotation template
         self.sale_order.write({
-            'pricelist_id': self.discount_included_price_list.id,
-            'sale_order_template_id': self.quotation_template_no_discount.id,
+            "pricelist_id": self.discount_included_price_list.id,
+            "sale_order_template_id": self.quotation_template_no_discount.id,
         })
         self.sale_order._onchange_sale_order_template_id()
 
@@ -206,8 +206,8 @@ class TestSaleOrder(SaleManagementCommon):
         the discount is computed according to the price list.
         """
         self.sale_order.write({
-            'pricelist_id': self.discount_excluded_price_list.id,
-            'sale_order_template_id': self.quotation_template_no_discount.id,
+            "pricelist_id": self.discount_excluded_price_list.id,
+            "sale_order_template_id": self.quotation_template_no_discount.id,
         })
         self.sale_order._onchange_sale_order_template_id()
 
@@ -274,7 +274,7 @@ class TestSaleOrder(SaleManagementCommon):
 
     def test_04_update_pricelist_option_line(self):
         """Check that option line's are correctly updated after a pricelist update."""
-        self.sale_order.write({'sale_order_template_id': self.quotation_template_no_discount.id})
+        self.sale_order.write({"sale_order_template_id": self.quotation_template_no_discount.id})
         self.sale_order._onchange_sale_order_template_id()
 
         optional_lines = self._get_optional_product_lines(self.sale_order)
@@ -289,7 +289,7 @@ class TestSaleOrder(SaleManagementCommon):
             optional_lines[0].discount, 0, "If no pricelist is set, the discount should be 0."
         )
 
-        self.sale_order.write({'pricelist_id': self.discount_included_price_list.id})
+        self.sale_order.write({"pricelist_id": self.discount_included_price_list.id})
         self.sale_order._recompute_prices()
 
         self.assertEqual(
@@ -305,7 +305,7 @@ class TestSaleOrder(SaleManagementCommon):
             "If a pricelist is set with discount included, the discount should be 0.",
         )
 
-        self.sale_order.write({'pricelist_id': self.discount_excluded_price_list.id})
+        self.sale_order.write({"pricelist_id": self.discount_excluded_price_list.id})
         self.sale_order._recompute_prices()
 
         self.assertEqual(
@@ -327,15 +327,15 @@ class TestSaleOrder(SaleManagementCommon):
         Verifies that user defined price unit for optional products remains the same after
         update of quantities.
         """
-        sale_order_with_option = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [
+        sale_order_with_option = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
                 Command.create({
-                    'display_type': 'line_section',
-                    'name': "Optional products",
-                    'is_optional': True,
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
                 }),
-                Command.create({'product_id': self.optional_product.id}),
+                Command.create({"product_id": self.optional_product.id}),
             ],
         })
 
@@ -350,15 +350,15 @@ class TestSaleOrder(SaleManagementCommon):
         """Check quotation template are reloaded with correct translations on partner change."""
         # Add some display type lines to the template
         self.quotation_template_no_discount.sale_order_template_line_ids = [
-            Command.create({'name': "Section 1", 'display_type': 'line_section'}),
-            Command.create({'name': "Note 1", 'display_type': 'line_note'}),
+            Command.create({"name": "Section 1", "display_type": "line_section"}),
+            Command.create({"name": "Note 1", "display_type": "line_note"}),
         ]
         # Remove product description to ease comparing before/after translations
         self.product_1.description_sale = None
 
         # Commence activation of Dutch vernacular
-        self.env['res.lang']._activate_lang('nl_NL')
-        partner_NL = self.partner.copy({'lang': 'nl_NL', 'name': "Pieter-Jan Hollandman"})
+        self.env["res.lang"]._activate_lang("nl_NL")
+        partner_NL = self.partner.copy({"lang": "nl_NL", "name": "Pieter-Jan Hollandman"})
         names_EN = ["Product 1", "Section 1", "Note 1", "Optional products", "Optional product"]
         names_NL = ["Artikel 1", "Sectie 1", "Nota 1", "Optionele producten", "Optioneel product"]
         trans_dict = dict(zip(names_EN, names_NL))
@@ -368,7 +368,7 @@ class TestSaleOrder(SaleManagementCommon):
         ):
             if not record.name:
                 continue
-            record.with_context(lang='nl_NL').name = trans_dict[record.name]
+            record.with_context(lang="nl_NL").name = trans_dict[record.name]
 
         # Create sale order form (and a way to retrieve line names)
         def get_form_field_names(form):
@@ -431,7 +431,7 @@ class TestSaleOrder(SaleManagementCommon):
         """
         quotation_template_no_description = self.empty_order_template
         quotation_template_no_description.sale_order_template_line_ids = [
-            Command.create({'product_id': self.product_1.id, 'name': False})
+            Command.create({"product_id": self.product_1.id, "name": False})
         ]
         sale_order = self._create_so(order_line=[])
         sale_order.sale_order_template_id = quotation_template_no_description
@@ -451,8 +451,8 @@ class TestSaleOrder(SaleManagementCommon):
         quotation_template_with_description = self.empty_order_template
         quotation_template_with_description.sale_order_template_line_ids = [
             Command.create({
-                'product_id': self.product_1.id,
-                'name': "This is a template description",
+                "product_id": self.product_1.id,
+                "name": "This is a template description",
             })
         ]
         sale_order = self._create_so(order_line=[])
@@ -471,12 +471,12 @@ class TestSaleOrder(SaleManagementCommon):
         """
         quotation_template = self.empty_order_template
         quotation_template.sale_order_template_line_ids = [
-            Command.create({'product_id': self.product.id})
+            Command.create({"product_id": self.product.id})
         ]
-        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
+        self.env["ir.default"].set("sale.order", "sale_order_template_id", quotation_template.id)
         try:
-            with self.assertLogs('odoo.tests.form.onchange') as log_catcher:
-                Form(self.env['sale.order'])
+            with self.assertLogs("odoo.tests.form.onchange") as log_catcher:
+                Form(self.env["sale.order"])
         except AssertionError:
             pass
         self.assertEqual(len(log_catcher.output), 0, "Form creation shouldn't trigger a warning")
@@ -486,12 +486,12 @@ class TestSaleOrder(SaleManagementCommon):
         with a default quotation template applied.
         """
         self._enable_pricelists()
-        quotation_template = self.env['sale.order.template'].create({
-            'name': 'Test Quotation Template',
-            'sale_order_template_line_ids': [Command.create({'product_id': self.product.id})],
+        quotation_template = self.env["sale.order.template"].create({
+            "name": "Test Quotation Template",
+            "sale_order_template_line_ids": [Command.create({"product_id": self.product.id})],
         })
-        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
-        with Form(self.env['sale.order']) as sale_order_form:
+        self.env["ir.default"].set("sale.order", "sale_order_template_id", quotation_template.id)
+        with Form(self.env["sale.order"]) as sale_order_form:
             self.assertTrue(sale_order_form.sale_order_template_id)
             self.assertTrue(sale_order_form.order_line)
             self.assertFalse(sale_order_form.show_update_pricelist)

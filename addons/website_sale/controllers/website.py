@@ -17,28 +17,28 @@ from odoo.addons.website_sale.models.website import (
 
 class WebsiteSaleForm(WebsiteForm):
     @route(
-        '/website/form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True
+        "/website/form/shop.sale.order", type="http", auth="public", methods=["POST"], website=True
     )
     def website_form_saleorder(self, **kwargs):
-        model_record = request.env.ref('sale.model_sale_order').sudo()
+        model_record = request.env.ref("sale.model_sale_order").sudo()
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
-            return json.dumps({'error_fields': e.args[0]})
+            return json.dumps({"error_fields": e.args[0]})
 
         if not (order_sudo := request.cart):
-            return json.dumps({'error': "No order found; please add a product to your cart."})
+            return json.dumps({"error": "No order found; please add a product to your cart."})
 
-        if data['record']:
-            order_sudo.write(data['record'])
+        if data["record"]:
+            order_sudo.write(data["record"])
 
-        if data['custom']:
-            order_sudo._message_log(body=nl2br_enclose(data['custom'], 'p'), message_type='comment')
+        if data["custom"]:
+            order_sudo._message_log(body=nl2br_enclose(data["custom"], "p"), message_type="comment")
 
-        if data['attachments']:
-            self.insert_attachment(model_record, order_sudo.id, data['attachments'])
+        if data["attachments"]:
+            self.insert_attachment(model_record, order_sudo.id, data["attachments"])
 
-        return json.dumps({'id': order_sudo.id})
+        return json.dumps({"id": order_sudo.id})
 
 
 class Website(main.Website):
@@ -55,22 +55,22 @@ class Website(main.Website):
         self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None
     ):
         options = options or {}
-        if 'display_currency' not in options:
-            options['display_currency'] = request.website.currency_id
+        if "display_currency" not in options:
+            options["display_currency"] = request.website.currency_id
         return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
 
     @route()
     def get_current_currency(self, **_kwargs):
         return {
-            'id': request.website.currency_id.id,
-            'symbol': request.website.currency_id.symbol,
-            'position': request.website.currency_id.position,
+            "id": request.website.currency_id.id,
+            "symbol": request.website.currency_id.symbol,
+            "position": request.website.currency_id.position,
         }
 
     @route()
     def change_lang(self, lang, **kwargs):
         if cart := request.cart:
             request.env.add_to_compute(
-                cart.order_line._fields['name'], cart.order_line.with_context(lang=lang)
+                cart.order_line._fields["name"], cart.order_line.with_context(lang=lang)
             )
         return super().change_lang(lang, **kwargs)

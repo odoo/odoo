@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ProductCombo(models.Model):
-    _inherit = 'product.combo'
+    _inherit = "product.combo"
 
     def _get_max_quantity(self, website, sale_order, **kwargs):
         """Return the max quantity of a combo.

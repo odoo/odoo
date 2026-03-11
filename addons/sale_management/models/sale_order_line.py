@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     # Section-related fields
     is_optional = fields.Boolean(
@@ -13,7 +13,7 @@ class SaleOrderLine(models.Model):
 
     # === COMPUTE METHODS === #
 
-    @api.depends('product_id')
+    @api.depends("product_id")
     def _compute_name(self):
         # Take the description on the order template if the product is present in it
         super()._compute_name()
@@ -50,7 +50,7 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         return self.parent_id.is_optional or (
-            self.parent_id.display_type == 'line_subsection'
+            self.parent_id.display_type == "line_subsection"
             and self.parent_id.parent_id.is_optional
         )
 

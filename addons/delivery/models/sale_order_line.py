@@ -4,18 +4,18 @@ from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     is_delivery = fields.Boolean(string="Is a Delivery", default=False)
     product_qty = fields.Float(
-        string="Product Qty", compute='_compute_product_qty', digits='Product Unit'
+        string="Product Qty", compute="_compute_product_qty", digits="Product Unit"
     )
-    recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
+    recompute_delivery_price = fields.Boolean(related="order_id.recompute_delivery_price")
 
     def _can_be_invoiced_alone(self):
         return super()._can_be_invoiced_alone() and not self.is_delivery
 
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
+    @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_product_qty(self):
         for line in self:
             if not line.product_id or not line.product_uom_id or not line.product_uom_qty:
@@ -26,7 +26,7 @@ class SaleOrderLine(models.Model):
             )
 
     def unlink(self):
-        self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
+        self.filtered("is_delivery").order_id.filtered("carrier_id").carrier_id = False
         return super().unlink()
 
     def _is_delivery(self):
@@ -38,7 +38,7 @@ class SaleOrderLine(models.Model):
         return self.filtered(
             lambda line: (
                 line.product_qty > 0
-                and line.product_id.type not in ('service', 'combo')
+                and line.product_id.type not in ("service", "combo")
                 and line.product_id.weight == 0
             )
         )
@@ -57,6 +57,6 @@ class SaleOrderLine(models.Model):
         return undeletable_lines.filtered(lambda line: not line.is_delivery)
 
     def _compute_pricelist_item_id(self):
-        delivery_lines = self.filtered('is_delivery')
+        delivery_lines = self.filtered("is_delivery")
         super(SaleOrderLine, self - delivery_lines)._compute_pricelist_item_id()
         delivery_lines.pricelist_item_id = False

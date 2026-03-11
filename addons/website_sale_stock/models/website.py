@@ -4,9 +4,9 @@ from odoo import fields, models
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = "website"
 
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    warehouse_id = fields.Many2one("stock.warehouse", string="Warehouse")
 
     def _get_product_available_qty(self, product, **_kwargs):
         """Give the available quantity of a given product.

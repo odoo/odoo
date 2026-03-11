@@ -4,5 +4,5 @@ from odoo import models
 
 
 class ProductTag(models.Model):
-    _name = 'product.tag'
-    _inherit = ['website.multi.mixin', 'product.tag']
+    _name = "product.tag"
+    _inherit = ["website.multi.mixin", "product.tag"]

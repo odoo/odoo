@@ -27,7 +27,7 @@ def post_commit(func):
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     # === CRUD METHODS === #
 
@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
                 lambda line: line.product_id.gelato_product_uid
             )
             non_gelato_lines = (order.order_line - gelato_lines).filtered(
-                lambda line: line.product_id.sale_ok and line.product_id.type != 'service'
+                lambda line: line.product_id.sale_ok and line.product_id.type != "service"
             )  # Filter out non-saleable (sections, etc.) and non-deliverable products.
             if gelato_lines and non_gelato_lines:
                 raise ValidationError(
@@ -56,16 +56,16 @@ class SaleOrder(models.Model):
     # === ONCHANGE METHODS ===#
 
     # Depend on partner_id to trigger the onchange if partner_shipping_id is not in the view.
-    @api.onchange('partner_id', 'partner_shipping_id', 'order_line')
+    @api.onchange("partner_id", "partner_shipping_id", "order_line")
     def _onchange_gelato_validate_shipping_address(self):
         """Warn if the address doesn't comply with Gelato requirements."""
         for gelato_order in self.filtered(
-            lambda o: any(o.order_line.product_id.mapped('gelato_product_uid'))
+            lambda o: any(o.order_line.product_id.mapped("gelato_product_uid"))
         ):
             try:
                 gelato_order.partner_shipping_id._gelato_validate_address()
             except ValidationError as e:
-                return {'warning': {'title': _("The address is incorrect."), 'message': str(e)}}
+                return {"warning": {"title": _("The address is incorrect."), "message": str(e)}}
 
     # === ACTION METHODS === #
 
@@ -73,20 +73,20 @@ class SaleOrder(models.Model):
         """Override of `delivery` to set a Gelato delivery method by default in the wizard."""
         res = super().action_open_delivery_wizard()
 
-        if not self.env.context.get('carrier_recompute') and any(
+        if not self.env.context.get("carrier_recompute") and any(
             line.product_id.gelato_product_uid for line in self.order_line
         ):
-            gelato_delivery_method = self.env['delivery.carrier'].search(
-                [('delivery_type', '=', 'gelato')], limit=1
+            gelato_delivery_method = self.env["delivery.carrier"].search(
+                [("delivery_type", "=", "gelato")], limit=1
             )
-            res['context']['default_carrier_id'] = gelato_delivery_method.id
+            res["context"]["default_carrier_id"] = gelato_delivery_method.id
         return res
 
     def action_confirm(self):
         """Override of `sale` to send the order to Gelato on confirmation."""
         res = super().action_confirm()
         for order in self.filtered(
-            lambda o: any(o.order_line.product_id.mapped('gelato_product_uid'))
+            lambda o: any(o.order_line.product_id.mapped("gelato_product_uid"))
         ):
             shipping_address = order.partner_shipping_id
             shipping_address._gelato_validate_address()
@@ -101,25 +101,25 @@ class SaleOrder(models.Model):
         :return: None
         """
         delivery_line = self.order_line.filtered(
-            lambda line: line.is_delivery and line.product_id.default_code in ('normal', 'express')
+            lambda line: line.is_delivery and line.product_id.default_code in ("normal", "express")
         )
         payload = {
-            'orderType': 'draft',  # The order is confirmed/deleted later, see @post_commit hooks.
-            'orderReferenceId': self.id,
-            'customerReferenceId': f'Odoo Partner #{self.partner_id.id}',
-            'currency': self.currency_id.name,
-            'items': self._gelato_prepare_items_payload(),
-            'shipmentMethodUid': delivery_line.product_id.default_code or 'cheapest',
-            'shippingAddress': self.partner_shipping_id._gelato_prepare_address_payload(),
+            "orderType": "draft",  # The order is confirmed/deleted later, see @post_commit hooks.
+            "orderReferenceId": self.id,
+            "customerReferenceId": f"Odoo Partner #{self.partner_id.id}",
+            "currency": self.currency_id.name,
+            "items": self._gelato_prepare_items_payload(),
+            "shipmentMethodUid": delivery_line.product_id.default_code or "cheapest",
+            "shippingAddress": self.partner_shipping_id._gelato_prepare_address_payload(),
         }
         try:
             api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
-            data = utils.make_request(api_key, 'order', 'v4', 'orders', payload=payload)
+            data = utils.make_request(api_key, "order", "v4", "orders", payload=payload)
 
             # Add hooks to confirm/delete the order on Gelato only after the transaction is
             # committed/rolled back. This prevents creating duplicate confirmed orders on Gelato.
-            self.env.cr.postcommit.add(partial(self._confirm_order_on_gelato, data['id']))
-            self.env.cr.postrollback.add(partial(self._delete_order_on_gelato, data['id']))
+            self.env.cr.postcommit.add(partial(self._confirm_order_on_gelato, data["id"]))
+            self.env.cr.postrollback.add(partial(self._delete_order_on_gelato, data["id"]))
         except UserError as exc:
             raise UserError(
                 _(
@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
         _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(data))
         self.message_post(
             body=_("The order has been successfully passed on Gelato."),
-            author_id=self.env.ref('base.partner_root').id,
+            author_id=self.env.ref("base.partner_root").id,
         )
 
     def _gelato_prepare_items_payload(self):
@@ -148,19 +148,19 @@ class SaleOrder(models.Model):
         ):
             # Build the list of images to send as the set of defined variant images, plus the
             # template images that are not overridden by variant images.
-            defined_variant_images = gelato_line.product_id.gelato_variant_image_ids.filtered('raw')
+            defined_variant_images = gelato_line.product_id.gelato_variant_image_ids.filtered("raw")
             all_template_images = gelato_line.product_id.product_tmpl_id.gelato_image_ids
             remaining_template_images = all_template_images.filtered(
-                lambda image: image.name not in defined_variant_images.mapped('name')
+                lambda image: image.name not in defined_variant_images.mapped("name")
             )
             line_images = defined_variant_images | remaining_template_images
 
             # Build the item payload.
             item_data = {
-                'itemReferenceId': gelato_line.product_id.id,
-                'productUid': gelato_line.product_id.gelato_product_uid,
-                'files': [image._gelato_prepare_file_payload() for image in line_images],
-                'quantity': int(gelato_line.product_uom_qty),
+                "itemReferenceId": gelato_line.product_id.id,
+                "productUid": gelato_line.product_id.gelato_product_uid,
+                "files": [image._gelato_prepare_file_payload() for image in line_images],
+                "quantity": int(gelato_line.product_uom_qty),
             }
             items_payload.append(item_data)
         return items_payload
@@ -181,9 +181,9 @@ class SaleOrder(models.Model):
         data = None
         try:
             api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
-            payload = {'orderType': 'order'}  # Confirm the order (draft -> order).
+            payload = {"orderType": "order"}  # Confirm the order (draft -> order).
             data = utils.make_request(
-                api_key, 'order', 'v4', f'orders/{gelato_order_id}', payload=payload, method='PATCH'
+                api_key, "order", "v4", f"orders/{gelato_order_id}", payload=payload, method="PATCH"
             )
         except UserError as e:
             self.message_post(
@@ -192,7 +192,7 @@ class SaleOrder(models.Model):
                     order_reference=gelato_order_id,
                     error_message=Markup("<br/>%s") % e,
                 ),
-                author_id=self.env.ref('base.partner_root').id,
+                author_id=self.env.ref("base.partner_root").id,
             )
         finally:
             _logger.info(
@@ -218,7 +218,7 @@ class SaleOrder(models.Model):
         try:
             api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
             data = utils.make_request(
-                api_key, 'order', 'v4', f'orders/{gelato_order_id}', method='DELETE'
+                api_key, "order", "v4", f"orders/{gelato_order_id}", method="DELETE"
             )
         except UserError as e:
             self.message_post(
@@ -227,7 +227,7 @@ class SaleOrder(models.Model):
                     order_reference=gelato_order_id,
                     error_message=Markup("<br/>%s") % e,
                 ),
-                author_id=self.env.ref('base.partner_root').id,
+                author_id=self.env.ref("base.partner_root").id,
             )
         finally:
             _logger.info(

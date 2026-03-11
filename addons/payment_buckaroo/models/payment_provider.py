@@ -10,22 +10,22 @@ from odoo.addons.payment_buckaroo import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'}
+        selection_add=[("buckaroo", "Buckaroo")], ondelete={"buckaroo": "set default"}
     )
     buckaroo_website_key = fields.Char(
         string="Website Key",
         help="The key solely used to identify the website with Buckaroo",
-        required_if_provider='buckaroo',
+        required_if_provider="buckaroo",
         copy=False,
     )
     buckaroo_secret_key = fields.Char(
         string="Buckaroo Secret Key",
-        required_if_provider='buckaroo',
+        required_if_provider="buckaroo",
         copy=False,
-        groups='base.group_system',
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS ===#
@@ -33,7 +33,7 @@ class PaymentProvider(models.Model):
     def _get_supported_currencies(self):
         """Override of `payment` to return the supported currencies."""
         supported_currencies = super()._get_supported_currencies()
-        if self.code == 'buckaroo':
+        if self.code == "buckaroo":
             supported_currencies = supported_currencies.filtered(
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
@@ -44,7 +44,7 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.code != 'buckaroo':
+        if self.code != "buckaroo":
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -59,10 +59,10 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         self.ensure_one()
-        if self.state == 'enabled':
-            api_url = 'https://checkout.buckaroo.nl/html/'
+        if self.state == "enabled":
+            api_url = "https://checkout.buckaroo.nl/html/"
         else:  # test
-            api_url = 'https://testcheckout.buckaroo.nl/html/'
+            api_url = "https://testcheckout.buckaroo.nl/html/"
         return api_url
 
     def _buckaroo_generate_digital_sign(self, values, incoming=True):
@@ -80,7 +80,7 @@ class PaymentProvider(models.Model):
             items = [
                 (k, urls.url_unquote_plus(v))
                 for k, v in values.items()
-                if k.lower() != 'brq_signature'
+                if k.lower() != "brq_signature"
             ]
         else:
             items = values.items()
@@ -88,13 +88,13 @@ class PaymentProvider(models.Model):
         filtered_items = [
             (k, v)
             for k, v in items
-            if any(k.lower().startswith(key_prefix) for key_prefix in ('add_', 'brq_', 'cust_'))
+            if any(k.lower().startswith(key_prefix) for key_prefix in ("add_", "brq_", "cust_"))
         ]
         # Sort parameters by lower-cased key. Not upper-case because ord('A') < ord('_') < ord('a').
         sorted_items = sorted(filtered_items, key=lambda pair: pair[0].lower())
         # Build the signing string by concatenating all parameters
-        sign_string = ''.join(f'{k}={v or ""}' for k, v in sorted_items)
+        sign_string = "".join(f"{k}={v or ''}" for k, v in sorted_items)
         # Append the pre-shared secret key to the signing string
         sign_string += self.buckaroo_secret_key
         # Calculate the SHA-1 hash over the signing string
-        return sha1(sign_string.encode('utf-8')).hexdigest()
+        return sha1(sign_string.encode("utf-8")).hexdigest()

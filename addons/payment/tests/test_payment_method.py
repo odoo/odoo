@@ -9,7 +9,7 @@ from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
-@tagged('-at_install', 'post_install')
+@tagged("-at_install", "post_install")
 class TestPaymentMethod(PaymentCommon):
     def test_unlinking_payment_method_from_provider_state_archives_tokens(self):
         """Test that the active tokens of a payment method created through a provider are archived
@@ -21,46 +21,46 @@ class TestPaymentMethod(PaymentCommon):
     def test_payment_method_requires_provider_to_be_activated(self):
         """Test that activating a payment method that is not linked to an enabled provider is
         forbidden."""
-        self.provider.state = 'disabled'
+        self.provider.state = "disabled"
         with self.assertRaises(UserError):
             self.payment_methods.active = True
 
     def test_brand_compatible_with_manual_capture(self):
         """Test that a "brand" can be enabled for providers which support manual capture."""
-        self.provider.update({'capture_manually': True, 'support_manual_capture': 'partial'})
-        self.payment_method.support_manual_capture = 'partial'
-        brand_payment_method = self.env['payment.method'].create({
-            'name': "Dummy Brand",
-            'code': 'dumbrand',
-            'primary_payment_method_id': self.payment_method.id,
-            'active': False,
-            'provider_ids': self.provider.ids,
+        self.provider.update({"capture_manually": True, "support_manual_capture": "partial"})
+        self.payment_method.support_manual_capture = "partial"
+        brand_payment_method = self.env["payment.method"].create({
+            "name": "Dummy Brand",
+            "code": "dumbrand",
+            "primary_payment_method_id": self.payment_method.id,
+            "active": False,
+            "provider_ids": self.provider.ids,
         })
         self._assert_does_not_raise(ValidationError, brand_payment_method.action_unarchive)
         self.assertTrue(brand_payment_method.active)
 
     def test_unlink_not_allowed_when_linked_to_providers(self):
         """Test that the payment method cannot be deleted if it is linked to providers."""
-        payment_method_with_provider = self.env['payment.method'].create({
-            'name': "Dummy Method",
-            'code': 'dummymethod',
-            'provider_ids': self.provider.ids,
+        payment_method_with_provider = self.env["payment.method"].create({
+            "name": "Dummy Method",
+            "code": "dummymethod",
+            "provider_ids": self.provider.ids,
         })  # self.payment_method is already checked by _unlink_if_not_default_payment_method.
         with self.assertRaises(UserError):
             payment_method_with_provider.unlink()
 
     def test_unlink_allowed_when_not_linked_providers(self):
         """Test that the payment method can be deleted if it is not linked to providers."""
-        payment_method_without_provider = self.env['payment.method'].create({
-            'name': "Dummy Method",
-            'code': 'dummymethod',
-            'provider_ids': [],
+        payment_method_without_provider = self.env["payment.method"].create({
+            "name": "Dummy Method",
+            "code": "dummymethod",
+            "provider_ids": [],
         })  # self.payment_method is already checked by _unlink_if_not_default_payment_method.
         self._assert_does_not_raise(UserError, payment_method_without_provider.unlink)
 
     def test_payment_method_compatible_when_provider_is_enabled(self):
         """Test that a payment method is available when it is supported by an enabled provider."""
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
@@ -68,8 +68,8 @@ class TestPaymentMethod(PaymentCommon):
     def test_payment_method_not_compatible_when_provider_is_disabled(self):
         """Test that a payment method is not available when there is no enabled provider that
         supports it."""
-        self.provider.state = 'disabled'
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        self.provider.state = "disabled"
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id
         )
         self.assertNotIn(self.payment_method, compatible_payment_methods)
@@ -78,28 +78,28 @@ class TestPaymentMethod(PaymentCommon):
         """Test that a "brand" (i.e., non-primary) payment method is never available."""
         brand_payment_method = self.payment_method.copy()
         brand_payment_method.primary_payment_method_id = self.payment_method_id  # Make it a brand.
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id
         )
         self.assertNotIn(brand_payment_method, compatible_payment_methods)
 
     def test_payment_method_compatible_with_supported_countries(self):
         """Test that the payment method is compatible with its supported countries."""
-        belgium = self.env.ref('base.be')
+        belgium = self.env.ref("base.be")
         self.payment_method.supported_country_ids = [Command.set([belgium.id])]
         self.partner.country_id = belgium
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
 
     def test_payment_method_not_compatible_with_unsupported_countries(self):
         """Test that the payment method is not compatible with a country that is not supported."""
-        belgium = self.env.ref('base.be')
+        belgium = self.env.ref("base.be")
         self.payment_method.supported_country_ids = [Command.set([belgium.id])]
-        france = self.env.ref('base.fr')
+        france = self.env.ref("base.fr")
         self.partner.country_id = france
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id
         )
         self.assertNotIn(self.payment_method, compatible_payment_methods)
@@ -108,9 +108,9 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is always compatible when no supported countries are
         set."""
         self.payment_method.supported_country_ids = [Command.clear()]
-        belgium = self.env.ref('base.be')
+        belgium = self.env.ref("base.be")
         self.partner.country_id = belgium
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
@@ -118,7 +118,7 @@ class TestPaymentMethod(PaymentCommon):
     def test_payment_method_compatible_with_supported_currencies(self):
         """Test that the payment method is compatible with its supported currencies."""
         self.payment_method.supported_currency_ids = [Command.set([self.currency_euro.id])]
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, currency_id=self.currency_euro.id
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
@@ -127,7 +127,7 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is not compatible with a currency that is not
         supported."""
         self.payment_method.supported_currency_ids = [Command.set([self.currency_euro.id])]
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, currency_id=self.currency_usd.id
         )
         self.assertNotIn(self.payment_method, compatible_payment_methods)
@@ -136,7 +136,7 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is always compatible when no supported currencies are
         set."""
         self.payment_method.supported_currency_ids = [Command.clear()]
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, currency_id=self.currency_euro.id
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
@@ -145,7 +145,7 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is compatible when it supports tokenization while it is
         forced by the calling module."""
         self.payment_method.support_tokenization = True
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, force_tokenization=True
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
@@ -154,7 +154,7 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is not compatible when it does not support tokenization
         while it is forced by the calling module."""
         self.payment_method.support_tokenization = False
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, force_tokenization=True
         )
         self.assertNotIn(self.payment_method, compatible_payment_methods)
@@ -163,7 +163,7 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is compatible when it supports express checkout while it is
         an express checkout flow."""
         self.payment_method.support_express_checkout = True
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, is_express_checkout=True
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
@@ -172,7 +172,7 @@ class TestPaymentMethod(PaymentCommon):
         """Test that the payment method is not compatible when it does not support express checkout
         while it is an express checkout flow."""
         self.payment_method.support_express_checkout = False
-        compatible_payment_methods = self.env['payment.method']._get_compatible_payment_methods(
+        compatible_payment_methods = self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids, self.partner.id, is_express_checkout=True
         )
         self.assertNotIn(self.payment_method, compatible_payment_methods)
@@ -180,14 +180,14 @@ class TestPaymentMethod(PaymentCommon):
     def test_availability_report_covers_all_reasons(self):
         """Test that every possible unavailability reason is correctly reported."""
         # Disable all payment methods.
-        pms = self.env['payment.method'].search([('is_primary', '=', True)])
+        pms = self.env["payment.method"].search([("is_primary", "=", True)])
         pms.active = False
 
         # Prepare a base payment method.
         self.payment_method.write({
-            'active': True,
-            'support_express_checkout': True,
-            'support_tokenization': True,
+            "active": True,
+            "support_express_checkout": True,
+            "support_tokenization": True,
         })
 
         # Prepare the report with a provider to allow checking provider availability.
@@ -203,9 +203,9 @@ class TestPaymentMethod(PaymentCommon):
 
         # Prepare a payment method with an incompatible country.
         invalid_country_pm = self.payment_method.copy()
-        belgium = self.env.ref('base.be')
+        belgium = self.env.ref("base.be")
         invalid_country_pm.supported_country_ids = [Command.set([belgium.id])]
-        france = self.env.ref('base.fr')
+        france = self.env.ref("base.fr")
         self.partner.country_id = france
 
         # Prepare a payment method with an incompatible currency.
@@ -221,7 +221,7 @@ class TestPaymentMethod(PaymentCommon):
         no_express_checkout_pm.support_express_checkout = False
 
         # Get compatible payment methods to generate their availability report.
-        self.env['payment.method']._get_compatible_payment_methods(
+        self.env["payment.method"]._get_compatible_payment_methods(
             self.provider.ids,
             self.partner.id,
             currency_id=self.currency_usd.id,
@@ -233,35 +233,35 @@ class TestPaymentMethod(PaymentCommon):
         # Compare the generated payment methods report with the expected one.
         expected_pms_report = {
             self.payment_method: {
-                'available': True,
-                'reason': '',
-                'supported_providers': [(self.provider, True)],
+                "available": True,
+                "reason": "",
+                "supported_providers": [(self.provider, True)],
             },
             no_provider_pm: {
-                'available': False,
-                'reason': REPORT_REASONS_MAPPING['provider_not_available'],
-                'supported_providers': [(unavailable_provider, False)],
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["provider_not_available"],
+                "supported_providers": [(unavailable_provider, False)],
             },
             invalid_country_pm: {
-                'available': False,
-                'reason': REPORT_REASONS_MAPPING['incompatible_country'],
-                'supported_providers': [(self.provider, True)],
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["incompatible_country"],
+                "supported_providers": [(self.provider, True)],
             },
             invalid_currency_pm: {
-                'available': False,
-                'reason': REPORT_REASONS_MAPPING['incompatible_currency'],
-                'supported_providers': [(self.provider, True)],
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["incompatible_currency"],
+                "supported_providers": [(self.provider, True)],
             },
             no_tokenization_pm: {
-                'available': False,
-                'reason': REPORT_REASONS_MAPPING['tokenization_not_supported'],
-                'supported_providers': [(self.provider, True)],
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["tokenization_not_supported"],
+                "supported_providers": [(self.provider, True)],
             },
             no_express_checkout_pm: {
-                'available': False,
-                'reason': REPORT_REASONS_MAPPING['express_checkout_not_supported'],
-                'supported_providers': [(self.provider, True)],
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["express_checkout_not_supported"],
+                "supported_providers": [(self.provider, True)],
             },
         }
         self.maxDiff = None
-        self.assertDictEqual(report['payment_methods'], expected_pms_report)
+        self.assertDictEqual(report["payment_methods"], expected_pms_report)

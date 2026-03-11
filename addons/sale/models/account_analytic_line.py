@@ -6,29 +6,29 @@ from odoo.fields import Domain
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = "account.analytic.line"
 
     reinvoice_move_id = fields.Many2one(
         string="Invoice",
-        comodel_name='account.move',
+        comodel_name="account.move",
         readonly=True,
         copy=False,
         help="Invoice created from related SO line",
-        index='btree_not_null',
+        index="btree_not_null",
     )
     so_line = fields.Many2one(
-        string='Sales Order Item',
-        comodel_name='sale.order.line',
-        compute='_compute_so_line',
+        string="Sales Order Item",
+        comodel_name="sale.order.line",
+        compute="_compute_so_line",
         store=True,
         readonly=False,
-        index='btree_not_null',
+        index="btree_not_null",
         domain=lambda self: self._domain_so_line(),
     )
     order_id = fields.Many2one(
         string="Customer Order",
-        comodel_name='sale.order',
-        compute='_compute_order_id',
+        comodel_name="sale.order",
+        compute="_compute_order_id",
         store=True,
         readonly=False,
         index=True,
@@ -38,7 +38,7 @@ class AccountAnalyticLine(models.Model):
         return
 
     def _domain_so_line(self):
-        return Domain('qty_delivered_method', '=', 'analytic')
+        return Domain("qty_delivered_method", "=", "analytic")
 
     def _compute_order_id(self):
         return
@@ -46,10 +46,10 @@ class AccountAnalyticLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        if self.env.context.get('from_services_and_material'):
-            lines_with_manual_amount = self.env['account.analytic.line']
+        if self.env.context.get("from_services_and_material"):
+            lines_with_manual_amount = self.env["account.analytic.line"]
             for line, vals in zip(lines, vals_list):
-                if vals.get('amount'):
+                if vals.get("amount"):
                     lines_with_manual_amount |= line
             lines._sync_so_accounts_and_partners()
             lines._sync_so_lines()
@@ -57,21 +57,21 @@ class AccountAnalyticLine(models.Model):
         return lines
 
     def write(self, vals):
-        if self and self.env.context.get('from_services_and_material'):
-            order_changed_aals = self.env['account.analytic.line']
-            product_changed_aals = self.env['account.analytic.line']
-            amount_changed_aals = self.env['account.analytic.line']
+        if self and self.env.context.get("from_services_and_material"):
+            order_changed_aals = self.env["account.analytic.line"]
+            product_changed_aals = self.env["account.analytic.line"]
+            amount_changed_aals = self.env["account.analytic.line"]
 
-            if vals.get('order_id'):
-                order_changed_aals = self.filtered(lambda aal: aal.order_id.id != vals['order_id'])
+            if vals.get("order_id"):
+                order_changed_aals = self.filtered(lambda aal: aal.order_id.id != vals["order_id"])
 
-            if vals.get('product_id'):
+            if vals.get("product_id"):
                 product_changed_aals = self.filtered(
-                    lambda aal: aal.product_id.id != vals['product_id']
+                    lambda aal: aal.product_id.id != vals["product_id"]
                 )
 
-            if vals.get('amount'):
-                amount_changed_aals = self.filtered(lambda aal: aal.amount != vals['amount'])
+            if vals.get("amount"):
+                amount_changed_aals = self.filtered(lambda aal: aal.amount != vals["amount"])
 
             product_or_order_changed_aals = order_changed_aals | product_changed_aals
 
@@ -87,18 +87,18 @@ class AccountAnalyticLine(models.Model):
 
     def _check_can_write(self, vals):
         if self.filtered(
-            lambda aal: aal.reinvoice_move_id and aal.reinvoice_move_id.state != 'cancel'
+            lambda aal: aal.reinvoice_move_id and aal.reinvoice_move_id.state != "cancel"
         ):
             if any(field_name in vals for field_name in self._restricted_fields_when_invoiced()):
                 raise UserError(self._get_invoiced_line_write_error())
 
-        if 'unit_amount' in vals and vals['unit_amount'] < 0 and self.so_line:
+        if "unit_amount" in vals and vals["unit_amount"] < 0 and self.so_line:
             raise UserError(self.env._("You cannot set a negative quantity on services."))
 
         super()._check_can_write(vals)
 
     def _restricted_fields_when_invoiced(self):
-        return ['unit_amount', 'order_id', 'product_id', 'so_line', 'date', 'partner_id']
+        return ["unit_amount", "order_id", "product_id", "so_line", "date", "partner_id"]
 
     def _get_invoiced_line_write_error(self):
         return self.env._("You cannot modify already invoiced services.")
@@ -114,7 +114,7 @@ class AccountAnalyticLine(models.Model):
         expenses are left unchanged.
         """
         if any(
-            line.reinvoice_move_id and line.reinvoice_move_id.state == 'posted' for line in self
+            line.reinvoice_move_id and line.reinvoice_move_id.state == "posted" for line in self
         ):
             raise UserError(self._get_invoiced_line_delete_error())
         self._unsync_so_lines()
@@ -143,8 +143,8 @@ class AccountAnalyticLine(models.Model):
             if not line.order_id or not line.product_id:
                 continue
 
-            so_line = self.env['sale.order.line']
-            if line.product_id.expense_policy == 'sales_price':
+            so_line = self.env["sale.order.line"]
+            if line.product_id.expense_policy == "sales_price":
                 so_line = line._get_existing_so_line()
             line.so_line = so_line or line._create_so_line()
 
@@ -170,19 +170,19 @@ class AccountAnalyticLine(models.Model):
         """
         self.ensure_one()
         values = {
-            'order_id': self.order_id.id,
-            'product_id': self.product_id.id,
-            'product_uom_id': self.product_uom_id.id,
-            'product_uom_qty': 0,
+            "order_id": self.order_id.id,
+            "product_id": self.product_id.id,
+            "product_uom_id": self.product_uom_id.id,
+            "product_uom_qty": 0,
         }
 
-        if self.product_id.expense_policy == 'cost':
+        if self.product_id.expense_policy == "cost":
             product = self.product_id.with_company(self.order_id.company_id)
-            values['price_unit'] = product.currency_id._convert(
+            values["price_unit"] = product.currency_id._convert(
                 product.standard_price, self.order_id.currency_id, round=False
             )
 
-        return self.env['sale.order.line'].create(values)
+        return self.env["sale.order.line"].create(values)
 
     def _sync_so_lines_price_unit(self):
         """Update the sale order line unit price to match the analytic line amount.
@@ -191,7 +191,7 @@ class AccountAnalyticLine(models.Model):
         adjusted, ensuring the corresponding sale order line remains consistent.
         """
         for line in self:
-            if line.unit_amount and line.so_line and line.product_id.expense_policy == 'cost':
+            if line.unit_amount and line.so_line and line.product_id.expense_policy == "cost":
                 product = line.product_id.with_company(line.order_id.company_id)
                 unit_price = -line.amount / line.unit_amount
                 line.so_line.price_unit = product.currency_id._convert(
@@ -211,7 +211,7 @@ class AccountAnalyticLine(models.Model):
             if not line.so_line._is_analytic_reinvoice_line():
                 continue
             if (
-                line.product_id.expense_policy == 'cost'
+                line.product_id.expense_policy == "cost"
                 and not line.so_line.product_uom_qty
                 and line.unit_amount == line.so_line.qty_delivered
             ):
@@ -235,9 +235,9 @@ class AccountAnalyticLine(models.Model):
         if not self:
             return
 
-        plan_id = self.env.ref('sale.analytic_plan_sale_orders', raise_if_not_found=False)
+        plan_id = self.env.ref("sale.analytic_plan_sale_orders", raise_if_not_found=False)
         if not plan_id:
-            plan_id, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+            plan_id, _other_plans = self.env["account.analytic.plan"]._get_all_plans()
         column_name = plan_id._column_name()
 
         for line in self:

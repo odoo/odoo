@@ -17,23 +17,23 @@ _logger = get_payment_logger(__name__)
 
 
 class PaymobController(http.Controller):
-    _return_url = '/payment/paymob/return'
-    _webhook_url = '/payment/paymob/webhook'
+    _return_url = "/payment/paymob/return"
+    _webhook_url = "/payment/paymob/webhook"
 
-    @http.route(_return_url, type='http', auth='public', methods=['GET'])
+    @http.route(_return_url, type="http", auth="public", methods=["GET"])
     def paymob_return_from_checkout(self, **data):
         """Process the payment data sent by Paymob after redirection from checkout.
 
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from Paymob with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('paymob', data)
+        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
         if tx_sudo:
             self._verify_signature(data, tx_sudo)
-            tx_sudo._process('paymob', data)
-        return request.redirect('/payment/status')
+            tx_sudo._process("paymob", data)
+        return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
     def paymob_webhook(self, **data):
         """Process the payment data sent by Paymob to the webhook.
 
@@ -41,21 +41,21 @@ class PaymobController(http.Controller):
         :return: An empty string to acknowledge the notification.
         :rtype: str
         """
-        payment_data = request.get_json_data().get('obj')
+        payment_data = request.get_json_data().get("obj")
         _logger.info(
             "Notification received from Paymob with data:\n%s", pprint.pformat(payment_data)
         )
-        normalized_data = self._normalize_response(payment_data, data.get('hmac'))
+        normalized_data = self._normalize_response(payment_data, data.get("hmac"))
         tx_sudo = (
             request
-            .env['payment.transaction']
+            .env["payment.transaction"]
             .sudo()
-            ._search_by_reference('paymob', normalized_data)
+            ._search_by_reference("paymob", normalized_data)
         )
         if tx_sudo:
             self._verify_signature(data, tx_sudo)
-            tx_sudo._process('paymob', normalized_data)
-        return ''  # Acknowledge the notification
+            tx_sudo._process("paymob", normalized_data)
+        return ""  # Acknowledge the notification
 
     @staticmethod
     def _normalize_response(payment_data, hmac_sig):
@@ -75,17 +75,17 @@ class PaymobController(http.Controller):
             if isinstance(payment_data.get(field), bool):
                 response[field] = json.dumps(payment_data.get(field))
             else:
-                response[field] = str(payment_data.get(field, 'false'))
+                response[field] = str(payment_data.get(field, "false"))
 
-        order_data = payment_data.get('order', {})
+        order_data = payment_data.get("order", {})
         response.update({
-            'data.message': payment_data.get('data').get('message'),
-            'hmac': hmac_sig,
-            'order': str(order_data.get('id')),
-            'merchant_order_id': order_data.get('merchant_order_id'),
-            'source_data.pan': payment_data.get('source_data', {}).get('pan'),
-            'source_data.sub_type': payment_data.get('source_data', {}).get('sub_type'),
-            'source_data.type': payment_data.get('source_data', {}).get('type'),
+            "data.message": payment_data.get("data").get("message"),
+            "hmac": hmac_sig,
+            "order": str(order_data.get("id")),
+            "merchant_order_id": order_data.get("merchant_order_id"),
+            "source_data.pan": payment_data.get("source_data", {}).get("pan"),
+            "source_data.sub_type": payment_data.get("source_data", {}).get("sub_type"),
+            "source_data.type": payment_data.get("source_data", {}).get("type"),
         })
         return response
 
@@ -98,7 +98,7 @@ class PaymobController(http.Controller):
         :raise Forbidden: If the signatures don't match.
         """
         # Retrieve the received signature from the payload
-        received_signature = payment_data.get('hmac', '')
+        received_signature = payment_data.get("hmac", "")
         if not received_signature:
             _logger.warning("Received payment data with missing signature.")
             raise Forbidden
@@ -122,10 +122,10 @@ class PaymobController(http.Controller):
         :rtype: str
         """
         # Concatenate relevant fields used to check for signature and if not found add "false"
-        signing_string = ''.join(
-            payload.get(field, 'false') for field in const.SIGNATURE_FIELDS
-        ).encode('utf-8')
+        signing_string = "".join(
+            payload.get(field, "false") for field in const.SIGNATURE_FIELDS
+        ).encode("utf-8")
         # Calculate the signature using the hmac_key with SHA-512.
-        signed_hmac = hmac.new(hmac_key.encode('utf-8'), signing_string, hashlib.sha512)
+        signed_hmac = hmac.new(hmac_key.encode("utf-8"), signing_string, hashlib.sha512)
         # Calculate the signature by encoding the result with base16.
         return signed_hmac.hexdigest()

@@ -12,34 +12,34 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.ProductFeedController = ProductFeed()
-        cls.env['res.config.settings'].create({'group_gmc_feed': True}).execute()
+        cls.env["res.config.settings"].create({"group_gmc_feed": True}).execute()
 
-        cls.gmc_feed = cls.env['product.feed'].create({'name': "GMC", 'website_id': cls.website.id})
+        cls.gmc_feed = cls.env["product.feed"].create({"name": "GMC", "website_id": cls.website.id})
 
         # Prepare products
         cls.product_template_sofa.list_price = 1000.0
         (cls.red_sofa, cls.blue_sofa) = cls.product_template_sofa.product_variant_ids[:2]
-        cls.red_sofa.default_code = 'SOFA-R'
+        cls.red_sofa.default_code = "SOFA-R"
         cls.blue_sofa.product_template_attribute_value_ids.filtered(
-            lambda v: v.name == 'blue'
+            lambda v: v.name == "blue"
         ).price_extra = 200.0
         cls.blanket = cls._create_product(name="Blanket")
-        combos = cls.env['product.combo'].create([
+        combos = cls.env["product.combo"].create([
             {
-                'name': "Sofa Combo",
-                'combo_item_ids': [
-                    Command.create({'product_id': cls.red_sofa.id}),
-                    Command.create({'product_id': cls.blue_sofa.id}),
+                "name": "Sofa Combo",
+                "combo_item_ids": [
+                    Command.create({"product_id": cls.red_sofa.id}),
+                    Command.create({"product_id": cls.blue_sofa.id}),
                 ],
             },
             {
-                'name': "Blanket Combo",
-                'combo_item_ids': [Command.create({'product_id': cls.blanket.id})],
+                "name": "Blanket Combo",
+                "combo_item_ids": [Command.create({"product_id": cls.blanket.id})],
             },
         ])
         cls.sofa_bundle = cls._create_product(
             name="Sofa + Blanket",
-            type='combo',
+            type="combo",
             combo_ids=[Command.set(combos.ids)],
             list_price=1099.0,
         )
@@ -48,12 +48,12 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
 
         # Prepare pricelists
         cls.pricelist = cls._enable_pricelists()
-        cls.eur_currency = cls.env.ref('base.EUR')
+        cls.eur_currency = cls.env.ref("base.EUR")
         cls.eur_currency.write({
-            'active': True,
-            'rate_ids': [
+            "active": True,
+            "rate_ids": [
                 Command.clear(),
-                Command.create({'name': Date.subtract(Date.today(), days=1), 'rate': 1.1}),
+                Command.create({"name": Date.subtract(Date.today(), days=1), "rate": 1.1}),
             ],
         })
         cls.eur_pricelist = cls._create_pricelist(

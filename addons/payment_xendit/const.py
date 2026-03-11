@@ -1,34 +1,34 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # The currencies supported by Xendit, in ISO 4217 format.
-SUPPORTED_CURRENCIES = ['IDR', 'MYR', 'PHP', 'THB', 'VND']
+SUPPORTED_CURRENCIES = ["IDR", "MYR", "PHP", "THB", "VND"]
 
 # To correctly allow lowest decimal place rounding
 # https://docs.xendit.co/payment-link/payment-channels
-CURRENCY_DECIMALS = {'IDR': 0, 'MYR': 0, 'PHP': 0, 'THB': 0, 'VND': 0}
+CURRENCY_DECIMALS = {"IDR": 0, "MYR": 0, "PHP": 0, "THB": 0, "VND": 0}
 
 # The codes of the payment methods to activate when Xendit is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     # ID
-    'card',
-    'dana',
-    'ovo',
-    'qris',
+    "card",
+    "dana",
+    "ovo",
+    "qris",
     # MY
-    'fpx',
-    'touch_n_go',
+    "fpx",
+    "touch_n_go",
     # TH
-    'promptpay',
-    'linepay',
-    'shopeepay',
+    "promptpay",
+    "linepay",
+    "shopeepay",
     # VN
-    'appota',
-    'zalopay',
-    'vnptwallet'
+    "appota",
+    "zalopay",
+    "vnptwallet"
     # Brand payment methods.
-    'visa',
-    'mastercard',
+    "visa",
+    "mastercard",
 }
 
 # FPX is an online payment method in Malaysia that allows customers to make payments directly from
@@ -81,24 +81,24 @@ FPX_METHODS = [
 
 # Mapping of payment code to channel code according to Xendit API
 PAYMENT_METHODS_MAPPING = {
-    'bank_bca': 'BCA',
-    'bank_permata': 'PERMATA',
-    'bpi': 'DD_BPI',
-    'card': 'CREDIT_CARD',
-    'maya': 'PAYMAYA',
-    'wechat_pay': 'WECHATPAY',
-    'scb': 'DD_SCB_MB',
-    'krungthai_bank': 'DD_KTB_MB',
-    'bangkok_bank': 'DD_BBL_MB',
-    'touch_n_go': 'TOUCHNGO',
-    **{method: 'fpx' for method in FPX_METHODS},
+    "bank_bca": "BCA",
+    "bank_permata": "PERMATA",
+    "bpi": "DD_BPI",
+    "card": "CREDIT_CARD",
+    "maya": "PAYMAYA",
+    "wechat_pay": "WECHATPAY",
+    "scb": "DD_SCB_MB",
+    "krungthai_bank": "DD_KTB_MB",
+    "bangkok_bank": "DD_BBL_MB",
+    "touch_n_go": "TOUCHNGO",
+    **{method: "fpx" for method in FPX_METHODS},
 }
 
 # Mapping of transaction states to Xendit payment statuses.
 PAYMENT_STATUS_MAPPING = {
-    'draft': (),
-    'pending': ('PENDING'),
-    'done': ('SUCCEEDED', 'PAID', 'CAPTURED'),
-    'cancel': ('CANCELLED', 'EXPIRED'),
-    'error': ('FAILED',),
+    "draft": (),
+    "pending": ("PENDING"),
+    "done": ("SUCCEEDED", "PAID", "CAPTURED"),
+    "cancel": ("CANCELLED", "EXPIRED"),
+    "error": ("FAILED",),
 }

@@ -10,7 +10,7 @@ class WebsiteSale(main.WebsiteSale):
         values = super()._prepare_product_values(product, category, **kwargs)
         # We need the user mail to prefill the back of stock notification, so we put it in the value
         # that will be sent
-        values['user_email'] = request.env.user.email or request.session.get(
-            'stock_notification_email', ''
+        values["user_email"] = request.env.user.email or request.session.get(
+            "stock_notification_email", ""
         )
         return values

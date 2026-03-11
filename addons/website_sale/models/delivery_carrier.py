@@ -9,12 +9,12 @@ from odoo.tools.misc import format_date
 
 
 class DeliveryCarrier(models.Model):
-    _name = 'delivery.carrier'
-    _inherit = ['delivery.carrier', 'website.published.multi.mixin']
+    _name = "delivery.carrier"
+    _inherit = ["delivery.carrier", "website.published.multi.mixin"]
 
     website_description = fields.Text(
         string="Description for Online Quotations",
-        related='product_id.description_sale',
+        related="product_id.description_sale",
         readonly=False,
     )
     enable_delivery_estimate = fields.Boolean(
@@ -23,7 +23,7 @@ class DeliveryCarrier(models.Model):
     )
     delivery_estimate_lead_days = fields.Integer()
     delivery_estimate_range_days = fields.Integer()
-    delivery_calendar_id = fields.Many2one(comodel_name='resource.calendar', check_company=True)
+    delivery_calendar_id = fields.Many2one(comodel_name="resource.calendar", check_company=True)
 
     def _get_estimate_delivery_days(self):
         """Return the available days defined on the estimated delivery field based on the calendar.
@@ -53,4 +53,4 @@ class DeliveryCarrier(models.Model):
         :returns: The formatted date.
         :rtype: str
         """
-        return format_date(self.env, estimated_date, date_format='MMM d, yyyy')
+        return format_date(self.env, estimated_date, date_format="MMM d, yyyy")

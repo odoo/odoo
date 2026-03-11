@@ -10,9 +10,9 @@ from odoo.tools import pdf, unique
 
 
 class SalePdfFormField(models.Model):
-    _name = 'sale.pdf.form.field'
+    _name = "sale.pdf.form.field"
     _description = "Form fields of inside quotation documents."
-    _order = 'name'
+    _order = "name"
 
     name = fields.Char(
         string="Form Field Name",
@@ -23,8 +23,8 @@ class SalePdfFormField(models.Model):
     document_type = fields.Selection(
         string="Document Type",
         selection=[
-            ('quotation_document', "Header/Footer"),
-            ('product_document', "Product Document"),
+            ("quotation_document", "Header/Footer"),
+            ("product_document", "Product Document"),
         ],
         readonly=True,
         required=True,
@@ -35,26 +35,26 @@ class SalePdfFormField(models.Model):
         "Leave empty to be able to customized it in the quotation form.",
     )
     product_document_ids = fields.Many2many(
-        string="Product Documents", comodel_name='product.document'
+        string="Product Documents", comodel_name="product.document"
     )
     quotation_document_ids = fields.Many2many(
-        string="Quotation Documents", comodel_name='quotation.document'
+        string="Quotation Documents", comodel_name="quotation.document"
     )
 
     _unique_name_per_doc_type = models.Constraint(
-        'UNIQUE(name, document_type)', 'Form field name must be unique for a given document type.'
+        "UNIQUE(name, document_type)", "Form field name must be unique for a given document type."
     )
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains('name')
+    @api.constrains("name")
     def _check_form_field_name_follows_pattern(self):
         """Ensure the names only contains alphanumerics, hyphens and underscores.
 
         :return: None
         :raises: ValidationError if the names aren't alphanumerics, hyphens and underscores.
         """
-        name_pattern = re.compile(r'^(\w|-)+$')
+        name_pattern = re.compile(r"^(\w|-)+$")
         for form_field in self:
             if not re.match(name_pattern, form_field.name):
                 raise ValidationError(
@@ -64,24 +64,24 @@ class SalePdfFormField(models.Model):
                         field_name=form_field.name,
                     )
                 )
-            if form_field.name.startswith('sol_id_'):
+            if form_field.name.startswith("sol_id_"):
                 raise ValidationError(
                     _(
                         "Invalid form field name %(field_name)s. A form field name in a header or a"
-                        " footer can not start with \"sol_id_\".",
+                        ' footer can not start with "sol_id_".',
                         field_name=form_field.name,
                     )
                 )
 
-    @api.constrains('path')
+    @api.constrains("path")
     def _check_valid_and_existing_paths(self):
         """Verify that the paths exist and are valid.
 
         :return: None
         :raises: ValidationError if at least one of the paths isn't valid.
         """
-        name_pattern = re.compile(r'^(\w|-|\.)+$')
-        for form_field in self.filtered('path'):
+        name_pattern = re.compile(r"^(\w|-|\.)+$")
+        for form_field in self.filtered("path"):
             if not re.match(name_pattern, form_field.path):
                 raise ValidationError(
                     _(
@@ -91,9 +91,9 @@ class SalePdfFormField(models.Model):
                     )
                 )
 
-            path = form_field.path.split('.')
-            is_header_footer = form_field.document_type == 'quotation_document'
-            Model = self.env['sale.order'] if is_header_footer else self.env['sale.order.line']
+            path = form_field.path.split(".")
+            is_header_footer = form_field.document_type == "quotation_document"
+            Model = self.env["sale.order"] if is_header_footer else self.env["sale.order.line"]
             for i in range(len(path)):
                 field_name = path[i]
                 if Model == []:
@@ -111,18 +111,18 @@ class SalePdfFormField(models.Model):
                 if i != len(path) - 1:
                     Model = Model.mapped(field_name)
 
-    @api.constrains('document_type', 'product_document_ids', 'quotation_document_ids')
+    @api.constrains("document_type", "product_document_ids", "quotation_document_ids")
     def _check_document_type_and_document_linked_compatibility(self):
         for form_field in self:
             doc_type = form_field.document_type
-            if doc_type == 'quotation_document' and form_field.product_document_ids:
+            if doc_type == "quotation_document" and form_field.product_document_ids:
                 raise ValidationError(
                     _(
                         "A form field set as used in product documents can't be linked to a"
                         " quotation document."
                     )
                 )
-            if doc_type == 'product_document' and form_field.quotation_document_ids:
+            if doc_type == "product_document" and form_field.quotation_document_ids:
                 raise ValidationError(
                     _(
                         "A form field set as used in quotation documents can't be linked to a"
@@ -135,7 +135,7 @@ class SalePdfFormField(models.Model):
     @api.model
     def _add_basic_mapped_form_fields(self):
         mapped_form_fields = {
-            'quotation_document': {
+            "quotation_document": {
                 "amount_total": "amount_total",
                 "amount_untaxed": "amount_untaxed",
                 "client_order_ref": "client_order_ref",
@@ -147,7 +147,7 @@ class SalePdfFormField(models.Model):
                 "user_id__name": "user_id.name",
                 "validity_date": "validity_date",
             },
-            'product_document': {
+            "product_document": {
                 "amount_total": "order_id.amount_total",
                 "amount_untaxed": "order_id.amount_untaxed",
                 "client_order_ref": "order_id.client_order_ref",
@@ -167,16 +167,16 @@ class SalePdfFormField(models.Model):
                 "validity_date": "order_id.validity_date",
             },
         }
-        quote_doc = list(mapped_form_fields['quotation_document'])
-        product_doc = list(mapped_form_fields['product_document'])
-        existing_mapping = self.env['sale.pdf.form.field'].search([
-            '|',
-            '&',
-            ('document_type', '=', 'quotation_document'),
-            ('name', 'in', quote_doc),
-            '&',
-            ('document_type', '=', 'product_document'),
-            ('name', 'in', product_doc),
+        quote_doc = list(mapped_form_fields["quotation_document"])
+        product_doc = list(mapped_form_fields["product_document"])
+        existing_mapping = self.env["sale.pdf.form.field"].search([
+            "|",
+            "&",
+            ("document_type", "=", "quotation_document"),
+            ("name", "in", quote_doc),
+            "&",
+            ("document_type", "=", "product_document"),
+            ("name", "in", product_doc),
         ])
         if existing_mapping:
             form_fields_to_add = {
@@ -191,8 +191,8 @@ class SalePdfFormField(models.Model):
             }
         else:
             form_fields_to_add = mapped_form_fields
-        self.env['sale.pdf.form.field'].create([
-            {'name': name, 'document_type': doc_type, 'path': path}
+        self.env["sale.pdf.form.field"].create([
+            {"name": name, "document_type": doc_type, "path": path}
             for doc_type, mapping in form_fields_to_add.items()
             for name, path in mapping.items()
         ])
@@ -200,12 +200,12 @@ class SalePdfFormField(models.Model):
     @api.model
     def _cron_post_upgrade_assign_missing_form_fields(self):
         # Called post-upgrade as we can't access the files during the upgrade process
-        product_documents = self.env['product.document'].search([
-            ('attached_on_sale', '=', 'inside')
+        product_documents = self.env["product.document"].search([
+            ("attached_on_sale", "=", "inside")
         ])
-        quote_documents = self.env['quotation.document'].search([])
-        self._create_or_update_form_fields_on_pdf_records(product_documents, 'product_document')
-        self._create_or_update_form_fields_on_pdf_records(quote_documents, 'quotation_document')
+        quote_documents = self.env["quotation.document"].search([])
+        self._create_or_update_form_fields_on_pdf_records(product_documents, "product_document")
+        self._create_or_update_form_fields_on_pdf_records(quote_documents, "quotation_document")
 
     @api.model
     def _ensure_document_not_encrypted(self, document):
@@ -224,10 +224,10 @@ class SalePdfFormField(models.Model):
 
     @api.model
     def _create_or_update_form_fields_on_pdf_records(self, records, doc_type):
-        existing_form_fields = self.env['sale.pdf.form.field'].search([
-            ('document_type', '=', doc_type)
+        existing_form_fields = self.env["sale.pdf.form.field"].search([
+            ("document_type", "=", doc_type)
         ])
-        existing_form_fields_name = existing_form_fields.mapped('name')
+        existing_form_fields_name = existing_form_fields.mapped("name")
 
         for document in records:
             if document.raw:
@@ -236,7 +236,7 @@ class SalePdfFormField(models.Model):
                 for field in unique(reader.get_form_text_fields()):
                     if field not in existing_form_fields_name:
                         document.form_field_ids = [
-                            Command.create({'name': field, 'document_type': doc_type})
+                            Command.create({"name": field, "document_type": doc_type})
                         ]
                         existing_form_fields_name.append(field)
                         existing_form_fields += document.form_field_ids[-1]

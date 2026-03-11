@@ -23,98 +23,98 @@ logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
 
 
-CART_SESSION_CACHE_KEY = 'sale_order_id'
-FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
-PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
-PRICELIST_SELECTED_SESSION_CACHE_KEY = 'website_sale_selected_pl_id'
+CART_SESSION_CACHE_KEY = "sale_order_id"
+FISCAL_POSITION_SESSION_CACHE_KEY = "fiscal_position_id"
+PRICELIST_SESSION_CACHE_KEY = "website_sale_current_pl"
+PRICELIST_SELECTED_SESSION_CACHE_KEY = "website_sale_selected_pl_id"
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = "website"
 
     # === DEFAULT METHODS ===#
 
     def _default_salesteam_id(self):
-        team = self.env.ref('sales_team.salesteam_website_sales', raise_if_not_found=False)
+        team = self.env.ref("sales_team.salesteam_website_sales", raise_if_not_found=False)
         if team and team.active:
             return team.id
         return None
 
     def _default_recovery_mail_template(self):
         try:
-            return self.env.ref('website_sale.mail_template_sale_cart_recovery').id
+            return self.env.ref("website_sale.mail_template_sale_cart_recovery").id
         except ValueError:
             return False
 
     def _default_confirmation_email_template(self):
         template_id = (
-            self.env['ir.config_parameter'].sudo().get_int('sale.default_confirmation_template')
+            self.env["ir.config_parameter"].sudo().get_int("sale.default_confirmation_template")
         )
-        default_template = template_id and self.env['mail.template'].browse(template_id)
+        default_template = template_id and self.env["mail.template"].browse(template_id)
         if default_template.exists():
             return default_template
-        return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+        return self.env.ref("sale.mail_template_sale_confirmation", raise_if_not_found=False)
 
     # === FIELDS ===#
 
     salesperson_id = fields.Many2one(
-        string="Salesperson", comodel_name='res.users', domain=[('share', '=', False)]
+        string="Salesperson", comodel_name="res.users", domain=[("share", "=", False)]
     )
     salesteam_id = fields.Many2one(
         string="Sales Team",
-        comodel_name='crm.team',
-        index='btree_not_null',
-        ondelete='set null',
+        comodel_name="crm.team",
+        index="btree_not_null",
+        ondelete="set null",
         default=_default_salesteam_id,
     )
     show_line_subtotals_tax_selection = fields.Selection(
         string="Line Subtotals Tax Display",
-        selection=[('tax_excluded', "Tax Excluded"), ('tax_included', "Tax Included")],
-        compute='_compute_show_line_subtotals_tax_selection',
+        selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
+        compute="_compute_show_line_subtotals_tax_selection",
         readonly=False,
         store=True,
     )
 
     add_to_cart_action = fields.Selection(
-        selection=[('stay', "Stay on Product Page"), ('go_to_cart', "Go to cart")], default='stay'
+        selection=[("stay", "Stay on Product Page"), ("go_to_cart", "Go to cart")], default="stay"
     )
-    auth_signup_uninvited = fields.Selection(default='b2c')
+    auth_signup_uninvited = fields.Selection(default="b2c")
     account_on_checkout = fields.Selection(
         string="Customer Accounts",
         selection=[
-            ('optional', "Optional"),
-            ('disabled', "Disabled (buy as guest)"),
-            ('mandatory', "Mandatory (no guest checkout)"),
+            ("optional", "Optional"),
+            ("disabled", "Disabled (buy as guest)"),
+            ("mandatory", "Mandatory (no guest checkout)"),
         ],
-        default='optional',
+        default="optional",
     )
     cart_recovery_mail_template_id = fields.Many2one(
         string="Cart Recovery Email",
-        comodel_name='mail.template',
-        domain=[('model', '=', 'sale.order')],
+        comodel_name="mail.template",
+        domain=[("model", "=", "sale.order")],
         default=_default_recovery_mail_template,
     )
-    contact_us_link_url = fields.Char(string="Link URL", translate=True, default='/contactus')
+    contact_us_link_url = fields.Char(string="Link URL", translate=True, default="/contactus")
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
     send_abandoned_cart_email = fields.Boolean(
         string="Send email to customers who abandoned their cart."
     )
     send_abandoned_cart_email_activation_time = fields.Datetime(
         string="Time when the 'Send abandoned cart email' feature was activated.",
-        compute='_compute_send_abandoned_cart_email_activation_time',
+        compute="_compute_send_abandoned_cart_email_activation_time",
         store=True,
     )
     send_order_rating_emails = fields.Boolean(string="Request ratings", default=False)
     rating_email_delay = fields.Integer(string="Days After Order to Send Rating Email", default=5)
     rating_email_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        domain=[('model', '=', 'sale.order')],
-        default=lambda self: (
-            self.env.ref('website_sale.mail_template_sale_order_rating', raise_if_not_found=False)
+        comodel_name="mail.template",
+        domain=[("model", "=", "sale.order")],
+        default=lambda self: self.env.ref(
+            "website_sale.mail_template_sale_order_rating", raise_if_not_found=False
         ),
     )
     shop_page_container = fields.Selection(
-        selection=[('regular', "Regular"), ('fluid', "Full-width")], default='regular'
+        selection=[("regular", "Regular"), ("fluid", "Full-width")], default="regular"
     )
     shop_ppg = fields.Integer(string="Number of products in the grid on the shop", default=21)
     shop_ppr = fields.Integer(string="Number of grid columns on the shop", default=3)
@@ -124,94 +124,94 @@ class Website(models.Model):
     shop_opt_products_design_classes = fields.Char(
         string="Shop Design Class",
         default=(
-            'o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs '
-            'o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 '
-            'o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show '
-            'o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta '
-            'o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist '
-            'o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_has_description '
-            'o_wsale_products_opt_actions_subtle o_wsale_products_opt_cc1'
+            "o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
+            "o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 "
+            "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
+            "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta "
+            "o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist "
+            "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_has_description "
+            "o_wsale_products_opt_actions_subtle o_wsale_products_opt_cc1"
         ),
         help="CSS class for shop products design",
     )
 
     shop_default_sort = fields.Selection(
-        selection='_get_product_sort_mapping', required=True, default='website_sequence asc'
+        selection="_get_product_sort_mapping", required=True, default="website_sequence asc"
     )
 
     shop_extra_field_ids = fields.One2many(
         string="E-Commerce Extra Fields",
-        comodel_name='website.sale.extra.field',
-        inverse_name='website_id',
+        comodel_name="website.sale.extra.field",
+        inverse_name="website_id",
     )
 
     product_page_container = fields.Selection(
-        selection=[('unset', "Unset"), ('regular', "Regular"), ('fluid', "Full-width")],
-        default='unset',
+        selection=[("unset", "Unset"), ("regular", "Regular"), ("fluid", "Full-width")],
+        default="unset",
     )
 
     product_page_cols_order = fields.Selection(
-        selection=[('regular', "Regular order"), ('inverse', "Inverse order")],
+        selection=[("regular", "Regular order"), ("inverse", "Inverse order")],
         string="Product Page main columns order",
-        default='regular',
+        default="regular",
     )
 
     product_page_image_layout = fields.Selection(
-        selection=[('carousel', "Carousel"), ('grid', "Grid")], required=True, default='carousel'
+        selection=[("carousel", "Carousel"), ("grid", "Grid")], required=True, default="carousel"
     )
     product_page_image_width = fields.Selection(
         selection=[
-            ('none', "Hidden"),
-            ('33_pc', "33 %"),
-            ('50_pc', "50 %"),
-            ('66_pc', "66 %"),
-            ('100_pc', "100 %"),
+            ("none", "Hidden"),
+            ("33_pc", "33 %"),
+            ("50_pc", "50 %"),
+            ("66_pc", "66 %"),
+            ("100_pc", "100 %"),
         ],
         required=True,
-        default='50_pc',
+        default="50_pc",
     )
     product_page_image_spacing = fields.Selection(
-        selection=[('none', "None"), ('small', "Small"), ('medium', "Medium"), ('big', "Big")],
+        selection=[("none", "None"), ("small", "Small"), ("medium", "Medium"), ("big", "Big")],
         required=True,
-        default='none',
+        default="none",
     )
     product_page_image_roundness = fields.Selection(
-        selection=[('none', "None"), ('small', "Small"), ('medium', "Medium"), ('big', "Big")],
+        selection=[("none", "None"), ("small", "Small"), ("medium", "Medium"), ("big", "Big")],
         required=True,
-        default='none',
+        default="none",
     )
     product_page_image_ratio = fields.Selection(
         selection=[
-            ('auto', "Auto"),
-            ('21_9', "Wider (21/9)"),
-            ('16_9', "Wide (16/9)"),
-            ('4_3', "Landscape (4/3)"),
-            ('6_5', "Horizontal (6/5)"),
-            ('1_1', "Default (1/1)"),
-            ('4_5', "Portrait (4/5)"),
-            ('2_3', "Vertical (2/3)"),
+            ("auto", "Auto"),
+            ("21_9", "Wider (21/9)"),
+            ("16_9", "Wide (16/9)"),
+            ("4_3", "Landscape (4/3)"),
+            ("6_5", "Horizontal (6/5)"),
+            ("1_1", "Default (1/1)"),
+            ("4_5", "Portrait (4/5)"),
+            ("2_3", "Vertical (2/3)"),
         ],
         required=True,
-        default='1_1',
+        default="1_1",
     )
     product_page_image_ratio_mobile = fields.Selection(
         selection=[
-            ('auto', "Auto"),
-            ('21_9', "Wider (21/9)"),
-            ('16_9', "Wide (16/9)"),
-            ('4_3', "Landscape (4/3)"),
-            ('6_5', "Horizontal (6/5)"),
-            ('1_1', "Default (1/1)"),
-            ('4_5', "Portrait (4/5)"),
-            ('2_3', "Vertical (2/3)"),
+            ("auto", "Auto"),
+            ("21_9", "Wider (21/9)"),
+            ("16_9", "Wide (16/9)"),
+            ("4_3", "Landscape (4/3)"),
+            ("6_5", "Horizontal (6/5)"),
+            ("1_1", "Default (1/1)"),
+            ("4_5", "Portrait (4/5)"),
+            ("2_3", "Vertical (2/3)"),
         ],
         required=True,
-        default='auto',
+        default="auto",
     )
     ecommerce_access = fields.Selection(
-        selection=[('everyone', "All users"), ('logged_in', "Logged in users")],
+        selection=[("everyone", "All users"), ("logged_in", "Logged in users")],
         required=True,
-        default='everyone',
+        default="everyone",
     )
     product_page_grid_columns = fields.Integer(default=2)
 
@@ -219,12 +219,12 @@ class Website(models.Model):
         string="Wishlist Page Design Class",
         help="CSS class for wishlist page design",
         default=(
-            'o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs '
-            'o_wsale_products_opt_name_color_regular '
-            'o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show '
-            'o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta '
-            'o_wsale_products_opt_actions_inline o_wsale_products_opt_has_description '
-            'o_wsale_products_opt_actions_promote o_wsale_products_opt_cc1 '
+            "o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
+            "o_wsale_products_opt_name_color_regular "
+            "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
+            "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta "
+            "o_wsale_products_opt_actions_inline o_wsale_products_opt_has_description "
+            "o_wsale_products_opt_actions_promote o_wsale_products_opt_cc1 "
         ),
     )
 
@@ -249,27 +249,27 @@ class Website(models.Model):
     prevent_sale_for = fields.Selection(
         string="Prevent Sale For",
         selection=[
-            ('zero_price', "0 price products"),
-            ('specific_categories', "Specific categories"),
+            ("zero_price", "0 price products"),
+            ("specific_categories", "Specific categories"),
         ],
-        default='zero_price',
+        default="zero_price",
     )
 
     prevent_sale_for_categories = fields.Many2many(
-        string="Categories", comodel_name='product.public.category'
+        string="Categories", comodel_name="product.public.category"
     )
 
     currency_id = fields.Many2one(
-        string="Default Currency", comodel_name='res.currency', compute='_compute_currency_id'
+        string="Default Currency", comodel_name="res.currency", compute="_compute_currency_id"
     )
     pricelist_ids = fields.One2many(
         string="Price list available for this Ecommerce/Website",
-        comodel_name='product.pricelist',
+        comodel_name="product.pricelist",
         compute="_compute_pricelist_ids",
     )
     confirmation_email_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        domain=[('model', '=', 'sale.order')],
+        comodel_name="mail.template",
+        domain=[("model", "=", "sale.order")],
         default=_default_confirmation_email_template,
     )
 
@@ -278,39 +278,39 @@ class Website(models.Model):
     def _compute_pricelist_ids(self):
         for website in self:
             website = website.with_company(website.company_id)
-            ProductPricelist = website.env['product.pricelist']  # with correct company in env
+            ProductPricelist = website.env["product.pricelist"]  # with correct company in env
             website.pricelist_ids = ProductPricelist.sudo().search_fetch(
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
-    @api.depends('company_id')
+    @api.depends("company_id")
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = (
-                request and hasattr(request, 'pricelist') and request.pricelist.currency_id
+                request and hasattr(request, "pricelist") and request.pricelist.currency_id
             ) or website.company_id.sudo().currency_id
 
-    @api.depends('send_abandoned_cart_email')
+    @api.depends("send_abandoned_cart_email")
     def _compute_send_abandoned_cart_email_activation_time(self):
         for website in self:
             if website.send_abandoned_cart_email:
                 website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
 
-    @api.depends('company_id.account_fiscal_country_id')
+    @api.depends("company_id.account_fiscal_country_id")
     def _compute_show_line_subtotals_tax_selection(self):
         for website in self:
-            website.show_line_subtotals_tax_selection = 'tax_excluded'
+            website.show_line_subtotals_tax_selection = "tax_excluded"
 
     # === SELECTION METHODS ===#
 
     @staticmethod
     def _get_product_sort_mapping():
         return [
-            ('website_sequence asc', _("Featured")),
-            ('publish_date desc', _("Newest Arrivals")),
-            ('name asc', _("Name (A-Z)")),
-            ('list_price asc', _("Price - Low to High")),
-            ('list_price desc', _("Price - High to Low")),
+            ("website_sequence asc", _("Featured")),
+            ("publish_date desc", _("Newest Arrivals")),
+            ("name asc", _("Name (A-Z)")),
+            ("list_price asc", _("Price - Low to High")),
+            ("list_price desc", _("Price - High to Low")),
         ]
 
     # === BUSINESS METHODS ===#
@@ -323,7 +323,7 @@ class Website(models.Model):
         :rtype: list[dict]
         """
         return [
-            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            {"option": option, "img_src": config["img_src"], "title": config["title"]}
             for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
         ]
 
@@ -335,7 +335,7 @@ class Website(models.Model):
         :rtype: list[dict]
         """
         return [
-            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            {"option": option, "img_src": config["img_src"], "title": config["title"]}
             for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
         ]
 
@@ -358,15 +358,15 @@ class Website(models.Model):
         views_to_disable = []
         views_to_enable = []
         scss_customization_params = {}
-        ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
-        Assets = self.env['website.assets']
+        ThemeUtils = self.env["theme.utils"].with_context(website_id=website.id)
+        Assets = self.env["website.assets"]
 
         def parse_style_config(style_config_):
-            website_settings.update(style_config_['website_fields'])
-            category_settings.update(style_config_.get('category_fields', {}))
-            views_to_disable.extend(style_config_['views']['disable'])
-            views_to_enable.extend(style_config_['views']['enable'])
-            scss_customization_params.update(style_config_.get('scss_customization_params', {}))
+            website_settings.update(style_config_["website_fields"])
+            category_settings.update(style_config_.get("category_fields", {}))
+            views_to_disable.extend(style_config_["views"]["disable"])
+            views_to_enable.extend(style_config_["views"]["enable"])
+            scss_customization_params.update(style_config_.get("scss_customization_params", {}))
 
         # Extract shop page settings.
         if shop_page_style_option:
@@ -382,7 +382,7 @@ class Website(models.Model):
         if website_settings:
             website.write(website_settings)
         if category_settings:
-            self.env['product.public.category'].search(website.website_domain()).write(
+            self.env["product.public.category"].search(website.website_domain()).write(
                 category_settings
             )
         for xml_id in views_to_disable:
@@ -418,14 +418,14 @@ class Website(models.Model):
                         footer_id,
                     )
                 # Logic for matching header width
-                elif 'website.footer_copyright_content_width_fluid' in views_to_enable:
+                elif "website.footer_copyright_content_width_fluid" in views_to_enable:
                     footer_updated = True
                     footer_div_node[0].set("class", "container-fluid s_allow_columns")
-                elif 'website.footer_copyright_content_width_small' in views_to_enable:
+                elif "website.footer_copyright_content_width_small" in views_to_enable:
                     footer_updated = True
                     footer_div_node[0].set("class", "o_container_small s_allow_columns")
 
-                if footer_id == 'website_sale.template_footer_website_sale':
+                if footer_id == "website_sale.template_footer_website_sale":
                     ecommerce_categories_node = arch_tree.xpath(
                         "//t[@t-set='ecommerce_categories']"
                     )
@@ -435,28 +435,28 @@ class Website(models.Model):
                         )
                     else:
                         # Logic for inserting eCommerce categories in footer
-                        ecommerce_categories = self.env['product.public.category'].search(
+                        ecommerce_categories = self.env["product.public.category"].search(
                             [], limit=6
                         )
                         # Deliberately hardcode categories inside the view arch, it will be
                         # transformed into static nodes after a save/edit thanks to the t-ignore
                         # in parent node.
                         footer_updated = True
-                        ecommerce_categories_node[0].attrib['t-value'] = json.dumps([
-                            {'name': cat.name, 'id': cat.id} for cat in ecommerce_categories
+                        ecommerce_categories_node[0].attrib["t-value"] = json.dumps([
+                            {"name": cat.name, "id": cat.id} for cat in ecommerce_categories
                         ])
 
                 if footer_updated:
-                    footer_view.write({'arch': etree.tostring(arch_tree)})
+                    footer_view.write({"arch": etree.tostring(arch_tree)})
 
-        if 'website_sale.template_footer_website_sale' in views_to_enable:
-            scss_customization_params['footer-template'] = 'website_sale'
+        if "website_sale.template_footer_website_sale" in views_to_enable:
+            scss_customization_params["footer-template"] = "website_sale"
 
         # For a website editor to recognize the correct header/footer templates
         # (reason `isApplied` method of footer plugin)
         if scss_customization_params:
             Assets.make_scss_customization(
-                '/website/static/src/scss/options/user_values.scss', scss_customization_params
+                "/website/static/src/scss/options/user_values.scss", scss_customization_params
             )
 
         return res
@@ -465,7 +465,7 @@ class Website(models.Model):
         """Override of `website` to generate eCommerce categories for a given industry using AI."""
 
         def generate_categories(industry_name_):
-            lang = self.env.context.get('lang')
+            lang = self.env.context.get("lang")
             prompt = (
                 f"You are a seasoned Marketing Expert specializing in crafting high-converting"
                 f" eCommerce experiences.\n"
@@ -484,7 +484,7 @@ class Website(models.Model):
                 f'{{"name": "$category_name_6", "description": "$category_description_6"}}, '
                 f'{{"name": "$category_name_7", "description": "$category_description_7"}}, '
                 f'{{"name": "$category_name_8", "description": "$category_description_8"}}'
-                f']}}\n'
+                f"]}}\n"
                 f"Constraints:\n"
                 f"Language: {lang}\n"
                 f"Category Names: Must be nouns only (no adjectives).\n"
@@ -495,26 +495,26 @@ class Website(models.Model):
                 f"Now, generate the 8 eCommerce categories for the {industry_name_}, adhering to"
                 f" the specified format and constraints."
             )
-            IrConfigParameterSudo = self.env['ir.config_parameter'].sudo()
-            database_id = IrConfigParameterSudo.get_str('database.uuid')
+            IrConfigParameterSudo = self.env["ir.config_parameter"].sudo()
+            database_id = IrConfigParameterSudo.get_str("database.uuid")
             try:
                 response = self._OLG_api_rpc(
-                    '/api/olg/1/chat',
-                    {'prompt': prompt, 'conversation_history': [], 'database_id': database_id},
+                    "/api/olg/1/chat",
+                    {"prompt": prompt, "conversation_history": [], "database_id": database_id},
                 )
             except AccessError:
                 logger.warning("API is unreachable for the category generation")
                 return None
 
-            if response['status'] == 'success':
-                content = response['content'].replace('```json\n', '').replace('\n```', '')
+            if response["status"] == "success":
+                content = response["content"].replace("```json\n", "").replace("\n```", "")
                 try:
                     return json.loads(content)
                 except json.JSONDecodeError:
                     logger.warning("API response is not a valid JSON for the category generation")
-            elif response['status'] == 'error_prompt_too_long':
+            elif response["status"] == "error_prompt_too_long":
                 logger.warning("Prompt is too long for the category generation")
-            elif response['status'] == 'limit_call_reached':
+            elif response["status"] == "limit_call_reached":
                 logger.warning("Limit call reached for the category generation")
             else:
                 logger.warning("Response could not be generated for the category generation")
@@ -522,7 +522,7 @@ class Website(models.Model):
 
         res = super().configurator_addons_apply(industry_name=industry_name, **kwargs)
 
-        if self.env['product.public.category'].search_count([], limit=1):
+        if self.env["product.public.category"].search_count([], limit=1):
             logger.info("Categories already exist, skipping AI generation.")
             return None
 
@@ -530,26 +530,26 @@ class Website(models.Model):
         if not isinstance(category_specs, dict):
             return None
 
-        if len(category_specs.get('categories')) == 8:
-            images_names = [f'shape_mixed_{i}.png' for i in range(1, 9)]
+        if len(category_specs.get("categories")) == 8:
+            images_names = [f"shape_mixed_{i}.png" for i in range(1, 9)]
             categories = []
-            for idx, cat in enumerate(category_specs['categories']):
+            for idx, cat in enumerate(category_specs["categories"]):
                 image_name = images_names[idx]
-                img_path = 'website_sale/static/src/img/categories/' + image_name
-                with file_open(img_path, 'rb') as f:
+                img_path = "website_sale/static/src/img/categories/" + image_name
+                with file_open(img_path, "rb") as f:
                     image_bin = BinaryBytes(f.read())
                 categories.append({
-                    'name': cat['name'],
-                    'website_description': cat['description'],
-                    'image_1920': image_bin,
-                    'cover_image': image_bin,
+                    "name": cat["name"],
+                    "website_description": cat["description"],
+                    "image_1920": image_bin,
+                    "cover_image": image_bin,
                 })
-            self.env['product.public.category'].sudo().create(categories)
+            self.env["product.public.category"].sudo().create(categories)
         return res
 
     # This method is cached, must not return records! See also #8795
     @ormcache(
-        'country_code', 'show_visible', 'current_pl_id', 'website_pricelist_ids', 'partner_pl_id'
+        "country_code", "show_visible", "current_pl_id", "website_pricelist_ids", "partner_pl_id"
     )
     def _get_pl_partner_order(
         self, country_code, show_visible, current_pl_id, website_pricelist_ids, partner_pl_id=False
@@ -568,7 +568,7 @@ class Website(models.Model):
         :rtype: list
         """
         self.ensure_one()
-        pricelists = self.env['product.pricelist']
+        pricelists = self.env["product.pricelist"]
 
         def check_pricelist(pricelist):
             if show_visible:
@@ -584,8 +584,9 @@ class Website(models.Model):
         # If there is a GeoIP country, find a pricelist for it
         if country_code:
             pricelists |= (
-                self.env['res.country.group']
-                .search([('country_ids.code', '=', country_code)])
+                self
+                .env["res.country.group"]
+                .search([("country_ids.code", "=", country_code)])
                 .pricelist_ids.filtered(
                     lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
                 )
@@ -602,9 +603,11 @@ class Website(models.Model):
         if not self.env.user._is_public():
             # keep partner_pricelist only if website compliant
             partner_pricelist = pricelists.browse(partner_pl_id).filtered(
-                lambda pl: pl._is_available_on_website(self)
-                and check_pricelist(pl)
-                and pl._is_available_in_country(country_code)
+                lambda pl: (
+                    pl._is_available_on_website(self)
+                    and check_pricelist(pl)
+                    and pl._is_available_in_country(country_code)
+                )
             )
             pricelists |= partner_pricelist
 
@@ -623,9 +626,9 @@ class Website(models.Model):
         """
         self.ensure_one()
 
-        ProductPricelist = self.env['product.pricelist']
+        ProductPricelist = self.env["product.pricelist"]
 
-        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+        if not self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
             return ProductPricelist  # Skip pricelist computation if pricelists are disabled.
 
         country_code = self._get_geoip_country_code()
@@ -635,7 +638,7 @@ class Website(models.Model):
         is_user_public = self.env.user._is_public()
         if not is_user_public:
             # Don't needlessly trigger `depends_context` recompute
-            ctx = {'country_code': country_code} if country_code else {}
+            ctx = {"country_code": country_code} if country_code else {}
             partner_pricelist_id = partner_sudo.with_context(**ctx).property_product_pricelist.id
         else:  # public user: do not compute partner pl (not used)
             partner_pricelist_id = False
@@ -674,17 +677,17 @@ class Website(models.Model):
             user_domain = Domain.TRUE
         else:
             user_domain = [
-                ('is_published', '=', True),
+                ("is_published", "=", True),
                 (
-                    'service_tracking',
-                    'in',
-                    self.env['product.template']._get_saleable_tracking_types(),
+                    "service_tracking",
+                    "in",
+                    self.env["product.template"]._get_saleable_tracking_types(),
                 ),
             ]
         return Domain.AND([self._product_domain(), website_domain, user_domain])
 
     def _product_domain(self):  # noqa: PLR6301
-        return [('sale_ok', '=', True)]
+        return [("sale_ok", "=", True)]
 
     def _create_cart(self):
         self.ensure_one()
@@ -693,7 +696,8 @@ class Website(models.Model):
 
         so_data = self._prepare_sale_order_values(partner_sudo)
         sale_order_sudo = (
-            self.env['sale.order']
+            self
+            .env["sale.order"]
             .with_user(SUPERUSER_ID)
             .with_company(self.company_id)
             .create(so_data)
@@ -703,7 +707,7 @@ class Website(models.Model):
         sale_order_sudo = sale_order_sudo.with_user(self.env.user).sudo()
 
         request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
-        request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
+        request.session["website_sale_cart_quantity"] = sale_order_sudo.cart_quantity
         request.cart = sale_order_sudo
 
         return sale_order_sudo
@@ -712,12 +716,12 @@ class Website(models.Model):
         self.ensure_one()
 
         return {
-            'company_id': self.company_id.id,
-            'partner_id': partner_sudo.id,
-            'fiscal_position_id': request.fiscal_position.id,
-            'pricelist_id': request.pricelist.id,
-            'team_id': self.salesteam_id.id,
-            'website_id': self.id,
+            "company_id": self.company_id.id,
+            "partner_id": partner_sudo.id,
+            "fiscal_position_id": request.fiscal_position.id,
+            "pricelist_id": request.pricelist.id,
+            "team_id": self.salesteam_id.id,
+            "website_id": self.id,
         }
 
     def _get_and_cache_current_pricelist(self):
@@ -730,8 +734,8 @@ class Website(models.Model):
         """
         self.ensure_one()
 
-        ProductPricelistSudo = self.env['product.pricelist'].sudo()
-        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+        ProductPricelistSudo = self.env["product.pricelist"].sudo()
+        if not self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
             return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
         if PRICELIST_SESSION_CACHE_KEY in request.session:
@@ -770,7 +774,7 @@ class Website(models.Model):
         """
         self.ensure_one()
 
-        AccountFiscalPositionSudo = self.env['account.fiscal.position'].sudo()
+        AccountFiscalPositionSudo = self.env["account.fiscal.position"].sudo()
         fpos_sudo = AccountFiscalPositionSudo
 
         if FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
@@ -785,10 +789,10 @@ class Website(models.Model):
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
         if request and request.geoip.country_code and self.partner_id.id == partner_sudo.id:
-            country = self.env['res.country'].search(
-                [('code', '=', request.geoip.country_code)], limit=1
+            country = self.env["res.country"].search(
+                [("code", "=", request.geoip.country_code)], limit=1
             )
-            partner_geoip = self.env['res.partner'].sudo().new({'country_id': country.id})
+            partner_geoip = self.env["res.partner"].sudo().new({"country_id": country.id})
             fpos_sudo = AccountFiscalPositionSudo._get_fiscal_position(partner_geoip)
 
         if not fpos_sudo:
@@ -808,7 +812,7 @@ class Website(models.Model):
         """
         self.ensure_one()
 
-        SaleOrderSudo = self.env['sale.order'].sudo()
+        SaleOrderSudo = self.env["sale.order"].sudo()
 
         sale_order_sudo = SaleOrderSudo
         if CART_SESSION_CACHE_KEY in request.session:
@@ -823,9 +827,9 @@ class Website(models.Model):
                 sale_order_sudo = SaleOrderSudo
 
             if sale_order_sudo and (
-                sale_order_sudo.state != 'draft'
+                sale_order_sudo.state != "draft"
                 or sale_order_sudo.get_portal_last_transaction().state
-                in {'pending', 'authorized', 'done'}
+                in {"pending", "authorized", "done"}
                 or sale_order_sudo.website_id != self
             ):
                 self.sale_reset()
@@ -839,7 +843,7 @@ class Website(models.Model):
                 and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
                 and not request.env.cr.readonly
             ):
-                sale_order_sudo._update_address(self.env.user.partner_id.id, ['partner_id'])
+                sale_order_sudo._update_address(self.env.user.partner_id.id, ["partner_id"])
         elif (
             self.env.user
             and not self.env.user._is_public()
@@ -847,15 +851,15 @@ class Website(models.Model):
             # the cart customer would raise because of multi-company checks.
             # No abandoned cart should be returned in this situation.
             and self.env.user.partner_id.filtered_domain(
-                self.env['res.partner']._check_company_domain(self.company_id.id)
+                self.env["res.partner"]._check_company_domain(self.company_id.id)
             )
         ):  # Search for abandonned cart.
             partner_sudo = self.env.user.partner_id
             abandonned_cart_sudo = SaleOrderSudo.search(
                 [
-                    ('partner_id', '=', partner_sudo.id),
-                    ('website_id', '=', self.id),
-                    ('state', '=', 'draft'),
+                    ("partner_id", "=", partner_sudo.id),
+                    ("website_id", "=", self.id),
+                    ("state", "=", "draft"),
                 ],
                 limit=1,
             )
@@ -863,7 +867,7 @@ class Website(models.Model):
                 if not request.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
                     # an abandonned cart
-                    abandonned_cart_sudo._update_address(partner_sudo.id, ['partner_id'])
+                    abandonned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
                     abandonned_cart_sudo._verify_cart()
                 sale_order_sudo = abandonned_cart_sudo
 
@@ -873,29 +877,29 @@ class Website(models.Model):
             # Store the id of the cart if there is one, or False if the user is logged in, to avoid
             # searching for an abandoned cart again for that user.
             request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
-            if 'website_sale_cart_quantity' not in request.session:
-                request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
+            if "website_sale_cart_quantity" not in request.session:
+                request.session["website_sale_cart_quantity"] = sale_order_sudo.cart_quantity
         return sale_order_sudo
 
     def sale_reset(self):  # noqa: PLR6301
         request.session.pop(CART_SESSION_CACHE_KEY, None)
-        request.session.pop('website_sale_cart_quantity', None)
+        request.session.pop("website_sale_cart_quantity", None)
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
         request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 
     @api.model
     def action_dashboard_redirect(self):
-        if self.env.user.has_group('sales_team.group_sale_salesman'):
-            return self.env['ir.actions.actions']._for_xml_id('website.backend_dashboard')
+        if self.env.user.has_group("sales_team.group_sale_salesman"):
+            return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return super().action_dashboard_redirect()
 
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append((
-            _('eCommerce'),
-            self.env['ir.http']._url_for('/shop'),
-            'website_sale',
+            _("eCommerce"),
+            self.env["ir.http"]._url_for("/shop"),
+            "website_sale",
         ))
         return suggested_controllers
 
@@ -903,12 +907,12 @@ class Website(models.Model):
         result = super()._search_get_details(search_type, order, options)
         if not self.has_ecommerce_access():
             return result
-        if search_type in {'products', 'product_categories_only', 'all'}:
+        if search_type in {"products", "product_categories_only", "all"}:
             result.append(
-                self.env['product.public.category']._search_get_detail(self, order, options)
+                self.env["product.public.category"]._search_get_detail(self, order, options)
             )
-        if search_type in {'products', 'products_only', 'all'}:
-            result.append(self.env['product.template']._search_get_detail(self, order, options))
+        if search_type in {"products", "products_only", "all"}:
+            result.append(self.env["product.template"]._search_get_detail(self, order, options))
         return result
 
     def _get_product_page_proportions(self):
@@ -916,27 +920,27 @@ class Website(models.Model):
         take."""
         self.ensure_one()
 
-        return {'none': (0, 12), '50_pc': (6, 6), '66_pc': (8, 4), '100_pc': (12, 12)}.get(
+        return {"none": (0, 12), "50_pc": (6, 6), "66_pc": (8, 4), "100_pc": (12, 12)}.get(
             self.product_page_image_width
         )
 
     def _get_product_page_grid_image_spacing_classes(self):
-        spacing_map = {'none': 'gap-0', 'small': 'gap-1', 'medium': 'gap-2', 'big': 'gap-3'}
+        spacing_map = {"none": "gap-0", "small": "gap-1", "medium": "gap-2", "big": "gap-3"}
         return spacing_map.get(self.product_page_image_spacing)
 
     def _get_product_page_grid_image_rounded_classes(self):
         roundness_map = {
-            'none': 'o_wsale_product_page_opt_image_radius_none',
-            'small': 'o_wsale_product_page_opt_image_radius_small',
-            'medium': 'o_wsale_product_page_opt_image_radius_medium',
-            'big': 'o_wsale_product_page_opt_image_radius_big',
+            "none": "o_wsale_product_page_opt_image_radius_none",
+            "small": "o_wsale_product_page_opt_image_radius_small",
+            "medium": "o_wsale_product_page_opt_image_radius_medium",
+            "big": "o_wsale_product_page_opt_image_radius_big",
         }
         return roundness_map.get(self.product_page_image_roundness)
 
     def _get_product_page_container(self):
         return (
             self.shop_page_container
-            if self.product_page_container == 'unset'
+            if self.product_page_container == "unset"
             else self.product_page_container
         )
 
@@ -945,11 +949,11 @@ class Website(models.Model):
         for website in self.search([]):
             if not website.send_abandoned_cart_email:
                 continue
-            all_abandoned_carts = self.env['sale.order'].search([
-                ('is_abandoned_cart', '=', True),
-                ('cart_recovery_email_sent', '=', False),
-                ('website_id', '=', website.id),
-                ('date_order', '>=', website.send_abandoned_cart_email_activation_time),
+            all_abandoned_carts = self.env["sale.order"].search([
+                ("is_abandoned_cart", "=", True),
+                ("cart_recovery_email_sent", "=", False),
+                ("website_id", "=", website.id),
+                ("date_order", ">=", website.send_abandoned_cart_email_activation_time),
             ])
             if not all_abandoned_carts:
                 continue
@@ -959,12 +963,12 @@ class Website(models.Model):
             # once.
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
-                template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
+                template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
                 # fallback email_vals in case partner_to and email_to were emptied
                 email_vals = (
                     {}
                     if template.email_to or template.partner_to
-                    else {'email_to': sale_order.partner_id.email_formatted}
+                    else {"email_to": sale_order.partner_id.email_formatted}
                 )
                 template.send_mail(sale_order.id, email_values=email_vals)
                 sale_order.cart_recovery_email_sent = True
@@ -978,44 +982,46 @@ class Website(models.Model):
 
     def _create_checkout_steps(self):
         generic_steps = (
-            self.env['website.checkout.step'].sudo().search([('website_id', '=', False)])
+            self.env["website.checkout.step"].sudo().search([("website_id", "=", False)])
         )
         for step in generic_steps:
             is_published = True
-            if step.step_href == '/shop/extra_info':
+            if step.step_href == "/shop/extra_info":
                 is_published = (
-                    self.with_context(website_id=self.id).viewref('website_sale.extra_info').active
+                    self.with_context(website_id=self.id).viewref("website_sale.extra_info").active
                 )
-            step.copy({'website_id': self.id, 'is_published': is_published})
+            step.copy({"website_id": self.id, "is_published": is_published})
 
     def _get_checkout_step(self, href):
         return (
-            self.env['website.checkout.step']
+            self
+            .env["website.checkout.step"]
             .sudo()
-            .search([('website_id', '=', self.id), ('step_href', '=', href)], limit=1)
+            .search([("website_id", "=", self.id), ("step_href", "=", href)], limit=1)
         )
 
     def _get_allowed_steps_domain(self):
-        return [('website_id', '=', self.id), ('is_published', '=', True)]
+        return [("website_id", "=", self.id), ("is_published", "=", True)]
 
     def _get_checkout_steps(self):
         return (
-            self.env['website.checkout.step']
+            self
+            .env["website.checkout.step"]
             .sudo()
-            .search(self._get_allowed_steps_domain(), order='sequence')
+            .search(self._get_allowed_steps_domain(), order="sequence")
         )
 
     def _get_checkout_step_values(self):
         def rewrite(path):
-            return self.env['ir.http'].url_rewrite(path)[0]
+            return self.env["ir.http"].url_rewrite(path)[0]
 
         href = rewrite(request.httprequest.path)
         # /shop/address is associated with the delivery step
-        if href == rewrite('/shop/address'):
-            href = rewrite('/shop/checkout')
+        if href == rewrite("/shop/address"):
+            href = rewrite("/shop/checkout")
 
         allowed_steps_domain = self._get_allowed_steps_domain()
-        current_step = request.env['website.checkout.step'].sudo()
+        current_step = request.env["website.checkout.step"].sudo()
         for step in current_step.search(allowed_steps_domain):
             if rewrite(step.step_href) == href:
                 current_step = step
@@ -1026,22 +1032,22 @@ class Website(models.Model):
 
         next_href = next_step.step_href
         # try_skip_step option required on /shop/checkout next button
-        if next_step.step_href == '/shop/checkout':
-            next_href = '/shop/checkout?try_skip_step=true'
+        if next_step.step_href == "/shop/checkout":
+            next_href = "/shop/checkout?try_skip_step=true"
         # redirect handled by '/shop/address/submit' route when all values are properly filled
-        if request.httprequest.path == rewrite('/shop/address'):
+        if request.httprequest.path == rewrite("/shop/address"):
             next_href = False
 
         return {
-            'current_website_checkout_step_href': href,
-            'previous_website_checkout_step': previous_step,
-            'next_website_checkout_step': next_step,
-            'next_website_checkout_step_href': next_href,
+            "current_website_checkout_step_href": href,
+            "previous_website_checkout_step": previous_step,
+            "next_website_checkout_step": next_step,
+            "next_website_checkout_step_href": next_href,
         }
 
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""
-        return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+        return not (self.env.user._is_public() and self.ecommerce_access == "logged_in")
 
     def _get_canonical_url(self):
         """Override of `website` to customize the canonical URL for product pages.
@@ -1053,15 +1059,15 @@ class Website(models.Model):
         canonical_url = urls.url_parse(super()._get_canonical_url())
 
         try:
-            rule = self.env['ir.http']._match(canonical_url.path)[0].rule
+            rule = self.env["ir.http"]._match(canonical_url.path)[0].rule
         except NotFound:
             rule = None
         if rule == (
             '/shop/<model("product.public.category"):category>/<model("product.template"):product>'
         ):
-            path_parts = canonical_url.path.split('/')
+            path_parts = canonical_url.path.split("/")
             path_parts.pop(2)
-            canonical_url = canonical_url.replace(path='/'.join(path_parts))
+            canonical_url = canonical_url.replace(path="/".join(path_parts))
         return canonical_url.to_url()
 
     def _get_snippet_defaults(self, snippet):
@@ -1077,32 +1083,32 @@ class Website(models.Model):
         :rtype: boolean
         """
         # If the sale of zero-priced products should be prevented.
-        if self.prevent_sale_for == 'zero_price':
+        if self.prevent_sale_for == "zero_price":
             return is_zero_price_product
 
         # If the sale of products in specific categories should be prevented.
-        if self.prevent_sale_for == 'specific_categories' and self.prevent_sale_for_categories:
+        if self.prevent_sale_for == "specific_categories" and self.prevent_sale_for_categories:
             return bool(
                 product_or_template.public_categ_ids.filtered_domain([
-                    ('id', 'child_of', self.prevent_sale_for_categories.ids)
+                    ("id", "child_of", self.prevent_sale_for_categories.ids)
                 ])
             )
 
         return False
 
-    def _get_contact_us_url(self, subject=''):
+    def _get_contact_us_url(self, subject=""):
         """Build the contact us URL with an optional subject parameter.
 
         :param str subject: Optional subject to add as a query parameter.
         :return: The contact us URL with properly encoded parameters.
         :rtype: str
         """
-        base_url = self.contact_us_link_url or '/contactus'
+        base_url = self.contact_us_link_url or "/contactus"
         if not subject:
             return base_url
 
         parsed = urlsplit(base_url)
-        query = urlencode([*parse_qsl(parsed.query), ('subject', subject)])
+        query = urlencode([*parse_qsl(parsed.query), ("subject", subject)])
         return parsed._replace(query=query).geturl()
 
     def _get_product_image_ratio_classes(self):
@@ -1110,49 +1116,49 @@ class Website(models.Model):
         classes.
         """
         if design_classes := self.shop_opt_products_design_classes:
-            image_ratio_class_regex = r'o_wsale_products_opt_thumb_\d+_\d+(?:_mobile)?\b'
+            image_ratio_class_regex = r"o_wsale_products_opt_thumb_\d+_\d+(?:_mobile)?\b"
             ratio_classes = re.findall(image_ratio_class_regex, design_classes)
             has_mobile_ratio = (
-                'o_wsale_products_opt_design_list_large' in design_classes
-                or 'o_wsale_products_opt_design_showcase' in design_classes
+                "o_wsale_products_opt_design_list_large" in design_classes
+                or "o_wsale_products_opt_design_showcase" in design_classes
             )
             if has_mobile_ratio:
-                ratio_classes.append('o_wsale_has_mobile_ratio')
-            return ' '.join(ratio_classes)
-        return ''
+                ratio_classes.append("o_wsale_has_mobile_ratio")
+            return " ".join(ratio_classes)
+        return ""
 
     def _get_product_image_ratio_height(self):
         """Return the image height of products images, used in `sale.mail_template_data.xml`."""
-        design_classes = self.shop_opt_products_design_classes or ''
+        design_classes = self.shop_opt_products_design_classes or ""
         image_ratio_height_mapping = {
-            'o_wsale_products_opt_thumb_16_9': '36px',
-            'o_wsale_products_opt_thumb_4_3': '48px',
-            'o_wsale_products_opt_thumb_6_5': '53px',
-            'o_wsale_products_opt_thumb_4_5': '96px',
+            "o_wsale_products_opt_thumb_16_9": "36px",
+            "o_wsale_products_opt_thumb_4_3": "48px",
+            "o_wsale_products_opt_thumb_6_5": "53px",
+            "o_wsale_products_opt_thumb_4_5": "96px",
         }
         for class_name, image_height in image_ratio_height_mapping.items():
             if class_name in design_classes:
                 return image_height
-        return '64px'
+        return "64px"
 
     def _get_basic_feed_product_domain(self):
         return Domain.AND([
-            Domain('is_published', '=', True),
-            Domain('type', 'in', ('consu', 'combo')),
+            Domain("is_published", "=", True),
+            Domain("type", "in", ("consu", "combo")),
             self.website_domain(),
         ])
 
     def _default_feed_is_valid(self):
         self.ensure_one()
-        product_count = self.env['product.product'].search_count(
+        product_count = self.env["product.product"].search_count(
             self._get_basic_feed_product_domain(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
         )
         return product_count <= const.PRODUCT_FEED_SOFT_LIMIT
 
     def _populate_product_feeds(self):
         """Populate product feeds for the website with default values."""
-        self.env['product.feed'].create([
-            {'name': website.env._("GMC 1"), 'website_id': website.id}
+        self.env["product.feed"].create([
+            {"name": website.env._("GMC 1"), "website_id": website.id}
             for website in self.filtered(lambda w: w._default_feed_is_valid())
         ])
 
@@ -1177,12 +1183,12 @@ class Website(models.Model):
         base_url = self.get_base_url()
 
         return {
-            '@context': 'https://schema.org',
-            '@type': 'OnlineStore',
-            'name': self.name,
-            'url': base_url,
-            'logo': f"{base_url}/logo.png?company={self.company_id.id}",
-            'sameAs': [social for social in socials if social],
+            "@context": "https://schema.org",
+            "@type": "OnlineStore",
+            "name": self.name,
+            "url": base_url,
+            "logo": f"{base_url}/logo.png?company={self.company_id.id}",
+            "sameAs": [social for social in socials if social],
         }
 
     def _get_ecommerce_store_markup_json(self):
