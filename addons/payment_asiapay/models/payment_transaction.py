@@ -56,24 +56,6 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        def get_language_code(lang_):
-            """ Return the language code corresponding to the provided lang.
-
-            If the lang is not mapped to any language code, the country code is used instead. In
-            case the country code has no match either, we fall back to English.
-
-            :param str lang_: The lang, in IETF language tag format.
-            :return: The corresponding language code.
-            :rtype: str
-            """
-            language_code_ = const.LANGUAGE_CODES_MAPPING.get(lang_)
-            if not language_code_:
-                country_code_ = lang_.split('_')[0]
-                language_code_ = const.LANGUAGE_CODES_MAPPING.get(country_code_)
-            if not language_code_:
-                language_code_ = const.LANGUAGE_CODES_MAPPING['en']
-            return language_code_
-
         if self.provider_code != 'asiapay':
             return super()._get_specific_rendering_values(processing_values)
 
@@ -89,7 +71,7 @@ class PaymentTransaction(models.Model):
             'mps_mode': 'SCP',
             'return_url': urls.urljoin(base_url, AsiaPayController._return_url),
             'payment_type': 'N',
-            'language': get_language_code(lang),
+            'language': payment_utils.get_language_code(lang, const.LANGUAGE_CODES_MAPPING),
             'payment_method': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),
         }
         rendering_values.update({
