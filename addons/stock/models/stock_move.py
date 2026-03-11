@@ -2067,11 +2067,17 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'procure_method': 'make_to_stock',
                         'move_orig_ids': [Command.unlink(move.id)]
                     })
+        if not self.env.context.get('skip_cancel_activity'):
+            # log an activity on the non-cancelled origin to warn the user that some actions might be required
+            moves_to_cancel._log_cancel_activity()
         moves_to_cancel.write({
             'move_orig_ids': [(5, 0, 0)],
             'procure_method': 'make_to_stock',
         })
         return True
+
+    def _log_cancel_activity(self):
+        return
 
     def _skip_push(self):
         return self.is_inventory or (
