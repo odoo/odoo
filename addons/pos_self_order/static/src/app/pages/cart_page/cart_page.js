@@ -6,6 +6,7 @@ import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_w
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { _t } from "@web/core/l10n/translation";
 import { formatProductName } from "../../utils";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -23,7 +24,6 @@ export class CartPage extends Component {
         this.dialog = useService("dialog");
         this.router = useService("router");
         this.state = useState({
-            showOrderNote: this.orderNote,
             orderNoteValue: "",
         });
 
@@ -73,6 +73,20 @@ export class CartPage extends Component {
 
     getAttributes(line) {
         return [...(line.attribute_value_ids || [])];
+    }
+
+    async openNotePopup() {
+        const note = await makeAwaitable(this.dialog, TextInputPopup, {
+            title: _t("Add an order note"),
+            startingValue: this.orderNote,
+            placeholder: _t(
+                "Specify which utensils, napkins, straws, and condiments you want to be included or any special instructions that you want the restaurant to be aware of"
+            ),
+            rows: 4,
+        });
+        if (note !== undefined) {
+            this.state.orderNoteValue = note;
+        }
     }
 
     async cancelOrder() {

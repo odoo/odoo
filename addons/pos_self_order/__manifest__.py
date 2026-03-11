@@ -94,6 +94,7 @@
             'point_of_sale/static/src/app/utils/use_timed_press.js',
             'point_of_sale/static/src/app/services/pos_ticket_printer_service.js',
             'point_of_sale/static/src/app/components/popups/retry_print_popup/**',
+            'point_of_sale/static/src/app/components/popups/text_input_popup/**',
             "pos_self_order/static/src/app/**/*",
             "web/static/src/core/utils/render.js",
             "account/static/src/helpers/*.js",

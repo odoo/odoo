@@ -71,27 +71,16 @@
                 </div>
                 <div class="container o_self_container" t-if="!this.selfOrder.kioskMode">
                     <hr/>
-                    <div class="d-flex justify-content-between order-note"
-                        t-on-click="() => (display_change_quantity and (this.state.showOrderNote = !this.state.showOrderNote))">
-                        <div class="d-flex align-items-center">
-                            <i class="fa fa-pencil-square-o p-1"/>
-                            <span class="fw-bolder" style="font-size: 1.1rem;">
-                                <t t-out="display_change_quantity ? 'Add a note' : 'Note'"/>
-                            </span>
+                    <div class="d-flex rounded-4 bg-secondary p-3 justify-content-between align-items-center order-note">
+                        <div>
+                            <div class="fw-bolder" style="font-size: 1.1rem;" t-out="this.orderNote ? 'Order note' : 'Add an order note'"/>
+                            <div t-if="this.orderNote" class="text-muted mt-1" t-out="this.orderNote"/>
+                            <div t-else="" class="text-muted small">Utensils, special instructions, etc.</div>
                         </div>
-                        <div t-if="display_change_quantity" class="py-1 px-2">
-                            <i t-attf-class="fa {{ this.state.showOrderNote ? 'fa-chevron-up' : 'fa-chevron-down' }}"/>
-                        </div>
+                        <button class="btn p-0 d-flex align-items-center justify-content-center" style="width: 2.2rem; height: 2.2rem;" t-on-click="openNotePopup">
+                            <i t-att-class="'fa ' + (this.orderNote ? 'fa-pencil' : 'fa-plus')"/>
+                        </button>
                     </div>
-                    <t t-if="this.state.showOrderNote">
-                        <textarea
-                            class="form-control bg-white rounded-4 mt-1 order-note-textarea"
-                            t-custom-model="this.orderNote"
-                            t-on-input="(ev) => this.state.orderNoteValue = ev.target.value"
-                            t-att-readonly="!display_change_quantity"
-                            placeholder="E.g: Don't use food color, Extra spicy"
-                        />
-                    </t>
                 </div>
             </div>
             <div class="o_self_footer border-top border-bottom bg-white py-2 py-lg-3" t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">

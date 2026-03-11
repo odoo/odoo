@@ -372,7 +372,7 @@ registry.category("web_tour.tours").add("self_order_mobile_0_price_order", {
             Utils.clickOrderNoteBtn(),
             Utils.clickTextArea(),
             Utils.textInput("test"),
-            Utils.clickOrderNoteBtn(),
+            Utils.clickBtn("Apply"),
             Utils.clickBtn("Order"),
             ConfirmationPage.isShown(),
             Utils.clickBtn("Ok"),
