@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from odoo import Command, fields
 from odoo.addons.sale_project.tests.test_project_profitability import TestProjectProfitabilityCommon
 
@@ -101,3 +102,23 @@ class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
                 }
             }
         )
+        project = sale_order.project_ids
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': project.id,
+            'order_line': [Command.create({'product_id': other_avco_product.id, 'product_uom_qty': 10})],
+        })
+        sale_order_2.action_confirm()
+        delivery = sale_order_2.picking_ids
+        delivery.move_ids.quantity = 10
+        delivery.button_validate()
+        sale_order_2._create_invoices()
+        invoice_2 = sale_order_2.invoice_ids[0]
+        invoice_2.action_post()
+        costs = project._get_profitability_items()['costs']['data']
+        args = ast.literal_eval(costs[0]['action']['args'])
+        action = project.action_profitability_items(args[0], args[1])
+
+        # Ensure that the action domain correctly includes move_ids from both invoices
+        move_lines = self.env['account.move.line'].search(action['domain'])
+        self.assertTrue(move_lines)
