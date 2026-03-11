@@ -29,6 +29,17 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
 
+    l10n_pl_edi_ksef_mode = fields.Selection(
+        selection=[
+            ('test', 'TEST'),
+            ('prod', 'PRODUCTION')
+        ],
+        string="KSeF Environment",
+        config_parameter='l10n_pl_edi_ksef.mode',
+        default='test',
+        readonly=True,
+    )
+
     @api.depends('company_id')
     def _compute_l10n_pl_edi_certificate(self):
         for config in self:

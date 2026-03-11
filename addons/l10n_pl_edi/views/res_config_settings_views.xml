@@ -19,6 +19,19 @@
                                 placeholder="certificate.pem"
                             />
                         </div>
+                        <div class="row mt-3" invisible="not l10n_pl_edi_register">
+                            <div class="col-12">
+                                <div class="text-success fw-bold" invisible="not l10n_pl_edi_access_token">
+                                    <i class="fa fa-check-circle"/> Connected and Authenticated to KSeF
+                                    (<field name="l10n_pl_edi_ksef_mode" class="oe_inline"/>)
+                                </div>
+                                <div class="text-warning fw-bold" invisible="l10n_pl_edi_access_token">
+                                    <i class="fa fa-exclamation-triangle"/> Not Authenticated. Will connect to KSeF
+                                    (<field name="l10n_pl_edi_ksef_mode" class="oe_inline"/>) upon saving.
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </setting>
             </xpath>
