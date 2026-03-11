@@ -16,3 +16,9 @@
         width: 1px;
     }
 }
+
+// Ensure colored font wrapper is inherited by child links
+font[class^="text-o-"] a,
+font[style*="color"] a {
+    color: inherit !important;
+}
