@@ -124,10 +124,16 @@ export class MassMailingHtmlField extends HtmlField {
         return this.state.activeTheme !== "basic" && !this.props.readonly;
     }
 
+    /**
+     * @deprecated
+     */
     resetIframe() {
         this.iframeLoaded = new Deferred();
     }
 
+    /**
+     * @deprecated
+     */
     async ensureIframeLoaded() {
         const iframeLoaded = this.iframeLoaded;
         // iframeInfo is deprecated
@@ -135,6 +141,9 @@ export class MassMailingHtmlField extends HtmlField {
         return iframeLoaded === this.iframeLoaded ? iframeInfo : undefined;
     }
 
+    /**
+     * @deprecated
+     */
     onIframeLoad(iframeLoaded) {
         this.iframeLoaded.resolve(iframeLoaded);
     }
@@ -190,7 +199,7 @@ export class MassMailingHtmlField extends HtmlField {
             onFocus: this.onFocus.bind(this),
             onBlur: this.onBlur.bind(this), // deprecated
             onEditorLoad: this.onEditorLoad.bind(this),
-            onIframeLoad: this.onIframeLoad.bind(this),
+            onIframeLoad: this.onIframeLoad.bind(this), // deprecated
             readonly: this.props.readonly,
             showThemeSelector: this.state.showThemeSelector,
             showCodeView: this.state.showCodeView,
@@ -297,6 +306,10 @@ export class MassMailingHtmlField extends HtmlField {
         };
     }
 
+    isEditorReady() {
+        return this.editor && this.editor.isReady && !this.editor.isDestroyed;
+    }
+
     onChange() {
         // Ensure that a change in the edited field will reset the validity
         // of the inlineField (since it is most likely invisible and not
@@ -346,7 +359,7 @@ export class MassMailingHtmlField extends HtmlField {
     async commitChanges({ urgent } = {}) {
         if (!urgent) {
             await this.mutex.exec(() => {
-                if (this.withBuilder && this.editor && !this.editor.isDestroyed) {
+                if (this.withBuilder && this.isEditorReady()) {
                     return this.editor.shared.operation.getUnlockedDef();
                 }
             });
@@ -361,20 +374,15 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async _commitChanges({ urgent }) {
+        if (!this.state.showCodeView && !this.isEditorReady()) {
+            return;
+        }
         if (
-            this.editor &&
-            !this.editor.isDestroyed &&
+            this.props.record.data[this.props.name].toString() !== "" &&
             this.props.record.data[this.props.inlineField].toString() === ""
         ) {
-            if ((await this.ensureIframeLoaded()) && this.editor && !this.editor.isDestroyed) {
-                this.isDirty = true;
-                this.lastValue = undefined;
-            } else {
-                return;
-            }
-        }
-        if (!this.state.showCodeView && this.editor?.isDestroyed) {
-            return;
+            this.isDirty = true;
+            this.lastValue = undefined;
         }
         return super._commitChanges({ urgent });
     }

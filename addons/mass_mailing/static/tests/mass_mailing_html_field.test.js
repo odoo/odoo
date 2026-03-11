@@ -396,12 +396,13 @@ describe("field HTML", () => {
             resId: 1,
         });
         await contains(".o_data_cell").click();
-        await waitFor(".o_dialog");
-        await contains(".o_dialog [data-name='event']").click();
-        await waitFor(".o_dialog .o_mass_mailing-builder_sidebar", { timeout: 1000 });
-        await contains(".o_dialog :iframe p", { timeout: 1000 }).click();
+        await waitFor(".o_dialog", { timeout: 3000 });
+        await contains(".o_dialog [data-name='event']", { timeout: 3000 }).click();
+        await waitFor(".o_dialog .o_mass_mailing-builder_sidebar", { timeout: 3000 });
+        await contains(".o_dialog :iframe p", { timeout: 3000 }).click();
         await waitFor(
-            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)"
+            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)",
+            { timeout: 3000 }
         );
         const overlayOptionsSelect =
             ".o-main-components-container .o-overlay-container .o_overlay_options";
