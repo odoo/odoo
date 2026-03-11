@@ -978,19 +978,36 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             'order_line': [Command.create({
                 'name': self.product_fifo_auto.name,
                 'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1,
+                'product_uom_qty': 2,
                 'product_uom_id': unit_12.id,
                 'price_unit': 18,
                 'tax_ids': False,  # no love taxes amls
             })],
         })
         so_2.action_confirm()
-        so_2.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
-        so_2.picking_ids.button_validate()
 
-        # Invoice the sale order.
-        invoice_2 = so_2._create_invoices()
-        invoice_2.action_post()
+        picking = so_2.picking_ids
+        picking.move_ids.write({'quantity': 12, 'picked': True})
+        res = picking.button_validate()
+
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(
+            res['context']
+        ).create({})
+        backorder_wizard.process()
+        picking.button_validate()
+
+        # Invoice the first sale order.
+        invoice_2_1 = so_2._create_invoices()
+        invoice_2_1.line_ids[0].quantity = 1
+        invoice_2_1.action_post()
+
+        picking = so_2.picking_ids[1]
+        picking.move_ids.write({'quantity': 12, 'picked': True})
+        picking.button_validate()
+
+        # Invoice the second sale order.
+        invoice_2_2 = so_2._create_invoices()
+        invoice_2_2.action_post()
 
         # Invoice 2
 
@@ -1003,19 +1020,22 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Default Account Stock Out        0.00$       12.0$
         # Expenses                        12.00$        0.0$
 
-        aml = invoice_2.line_ids
-        # Product Sales
-        self.assertEqual(aml[0].debit, 0.0)
-        self.assertEqual(aml[0].credit, 18.0)
-        # Account Receivable
-        self.assertEqual(aml[1].debit, 18.0)
-        self.assertEqual(aml[1].credit, 0.0)
-        # Default Account Stock Out
-        self.assertEqual(aml[2].debit, 0.0)
-        self.assertEqual(aml[2].credit, 12.0)
-        # Expenses
-        self.assertEqual(aml[3].debit, 12.0)
-        self.assertEqual(aml[3].credit, 0.0)
+        aml1 = invoice_2_1.line_ids.sorted(lambda line: (max(line.credit, line.debit), line.credit), reverse=True)
+        aml2 = invoice_2_2.line_ids.sorted(lambda line: (max(line.credit, line.debit), line.credit), reverse=True)
+
+        expected = [
+            # Product Sales
+            {'debit': 0.0, 'credit': 18.0},
+            # Account Receivable
+            {'debit': 18.0, 'credit': 0.0},
+            # Default Account Stock Out
+            {'debit': 0.0, 'credit': 12.0},
+            # Expenses
+            {'debit': 12.0, 'credit': 0.0},
+        ]
+
+        self.assertRecordValues(aml1, expected)
+        self.assertRecordValues(aml2, expected)
 
     def test_fifo_return_and_credit_note(self):
         """
