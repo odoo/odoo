@@ -1100,10 +1100,19 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'id': value,
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
-        if product.lot_sequence_id:
-            first_number = product.lot_sequence_id.number_next_actual - product.lot_sequence_id.number_increment
-            if (first_lot and first_lot == product.lot_sequence_id.get_next_char(first_number)):
-                product.lot_sequence_id.sudo().write({'number_next_actual': first_number + len(lot_qties)})
+        if product.lot_sequence_id and first_lot:
+            current_sequence = product.lot_sequence_id._get_current_sequence()
+            increment = product.lot_sequence_id.number_increment
+            first_number = current_sequence.number_next_actual - increment
+            final_number = first_number
+            # Since the value might have been incremented by the "New" button of the "Generate Serial Numbers" wizard
+            # we need to consider both the decremented and the current value of the sequence
+            if first_lot == product.lot_sequence_id.get_next_char(first_number):
+                final_number = first_number + len(lot_qties)
+            elif first_lot == product.lot_sequence_id.get_next_char(first_number + increment):
+                final_number = first_number + increment + len(lot_qties)
+            if first_number != final_number:
+                current_sequence.sudo().write({'number_next_actual': final_number})
         return vals_list
 
     def _push_apply(self):

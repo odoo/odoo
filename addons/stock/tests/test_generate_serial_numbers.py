@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.exceptions import ValidationError
@@ -506,3 +507,97 @@ class StockGenerateCommon(TransactionCase):
                 'default_quantity': 0,
             }, "generate", "", 3, "test")
         self.assert_move_line_vals_values(move_line_vals, [])
+
+    @freeze_time('2020-11-12')
+    def test_serial_numbers_sequence_use_date_range(self):
+        """
+        In case the serial/lot sequence is date_range specific, check that
+        the associated subsequence is incremented accordingly.
+        """
+        product = self.product_serial
+        serial_sequence = product.lot_sequence_id
+        serial_sequence.write({
+            'use_date_range': True,
+            'date_range_ids': [
+                Command.create({
+                    'date_from': '2020-01-01',
+                    'date_to': '2020-09-30',
+                    'number_next_actual': 12,
+                }),
+                Command.create({
+                    'date_from': '2020-10-01',
+                    'date_to': '2020-12-31',
+                    'number_next_actual': 33,
+                }),
+                Command.create({
+                    'date_from': '2021-01-01',
+                    'date_to': '2022-12-31',
+                    'number_next_actual': 5,
+                }),
+            ]
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 3,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': warehouse.lot_stock_id.id,
+            })],
+        })
+        receipt.action_confirm()
+        # Mimic the flow of clicking on the "New" button of the generating wizzard which performs a `next_by_id`
+        # incrementing the sequence prior to the lot_name's generation.
+        move_line_vals = receipt.move_ids.action_generate_lot_line_vals(
+            {
+                'default_company_id': self.env.company.id,
+                'default_date': '2020-11-12 12:00:00',
+                'default_tracking': 'serial',
+                'default_product_id': product.id,
+                'default_picking_id': receipt.id,
+                'default_picking_type_id': warehouse.in_type_id.id,
+                'default_location_id': self.ref('stock.stock_location_suppliers'),
+                'default_location_dest_id': warehouse.lot_stock_id.id,
+                'default_quantity': 3,
+        }, 'generate', serial_sequence.next_by_id(), 3, 'test')
+        self.assertEqual([val.get('lot_name') for val in move_line_vals], ['0000033', '0000034', '0000035'])
+        # Check that the appropriate sub-sequence has been updated accordingly
+        self.assertEqual(serial_sequence._get_current_sequence().number_next_actual, 36)
+
+        # Mimic the flow of manually entering the appropriate next value without clicking on the "New" button
+        # In particular, without calling the `next_by_id` prior the lot_name's generation.
+        move_line_vals = receipt.move_ids.action_generate_lot_line_vals(
+            {
+                'default_company_id': self.env.company.id,
+                'default_date': '2020-11-12 12:00:00',
+                'default_tracking': 'serial',
+                'default_product_id': product.id,
+                'default_picking_id': receipt.id,
+                'default_picking_type_id': warehouse.in_type_id.id,
+                'default_location_id': self.ref('stock.stock_location_suppliers'),
+                'default_location_dest_id': warehouse.lot_stock_id.id,
+                'default_quantity': 3,
+        }, 'generate', '0000036', 3, 'test')
+        self.assertEqual([val.get('lot_name') for val in move_line_vals], ['0000036', '0000037', '0000038'])
+        # Check that the appropriate sub-sequence has been updated accordingly
+        self.assertEqual(serial_sequence._get_current_sequence().number_next_actual, 39)
+
+        # Mimic the flow of entering an arbitrary number unrelated to the current sequence
+        move_line_vals = receipt.move_ids.action_generate_lot_line_vals(
+            {
+                'default_company_id': self.env.company.id,
+                'default_date': '2020-11-12 12:00:00',
+                'default_tracking': 'serial',
+                'default_product_id': product.id,
+                'default_picking_id': receipt.id,
+                'default_picking_type_id': warehouse.in_type_id.id,
+                'default_location_id': self.ref('stock.stock_location_suppliers'),
+                'default_location_dest_id': warehouse.lot_stock_id.id,
+                'default_quantity': 3,
+        }, "generate", 'SN52', 3, "test")
+        self.assertEqual([val.get('lot_name') for val in move_line_vals], ['SN52', 'SN53', 'SN54'])
+        # Check that the asequence was not updated
+        self.assertEqual(serial_sequence.next_by_id(), '0000039')
