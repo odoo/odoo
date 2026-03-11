@@ -41,4 +41,5 @@ from . import (
     test_sort,
     test_timeit,
     test_transactions,
+    # test_uninstall,
 )
