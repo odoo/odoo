@@ -50,9 +50,7 @@ function _positionInputBoxOverlay(target) {
             const length = inputEl.value.length;
             closestInputBox.style.setProperty(
                 "--inputbox-overlay-inline-position",
-                `calc(100% - (${length}px + ${
-                    length * 0.5
-                }rem) - var(--inputbox-overlay-size) - var(--inputbox-spacing-unit))`
+                `calc(100% - (${length}px + ${length}ch) - var(--inputbox-overlay-size) - var(--inputbox-spacing-unit))`
             );
         }
     }
