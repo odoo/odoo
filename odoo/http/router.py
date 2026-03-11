@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 import psycopg2
 import werkzeug.routing
 from psycopg2.errors import OperationalError, ReadOnlySqlTransaction
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import Forbidden, HTTPException, NotFound
 from werkzeug.security import safe_join
 from werkzeug.urls import url_encode  # TODO: use urllib
 
@@ -260,7 +260,7 @@ class Application:
             _request_stack.push(request)
 
             try:
-                request._post_init()
+                _set_session_and_dbname(request)
                 current_thread.url = httprequest.url
 
                 if self.get_static_file(httprequest.path):
@@ -446,6 +446,44 @@ def serve_db(request: Request) -> Response:
             cr.close()
 
 
+def _set_session_and_dbname(request: Request) -> None:
+    sid = request.httprequest.cookies.get('session_id', '')
+    session = session_store().get(sid, keep_sid=True)
+
+    for key, val in get_default_session().items():
+        session.setdefault(key, val)
+    if not session.context.get('lang'):
+        session.context['lang'] = request.default_lang()
+
+    dbname = None
+    host = request.httprequest.environ['HTTP_HOST']
+    header_dbname = request.httprequest.headers.get('X-Odoo-Database')
+    if session.db and db_filter([session.db], host=host):
+        dbname = session.db
+        if header_dbname and header_dbname != dbname:
+            e = ("Cannot use both the session_id cookie and the "
+                    "x-odoo-database header.")
+            raise Forbidden(e)
+    elif header_dbname:
+        session.can_save = False  # stateless
+        if db_filter([header_dbname], host=host):
+            dbname = header_dbname
+    else:
+        all_dbs = db_list(force=True, host=host)
+        if len(all_dbs) == 1:
+            dbname = all_dbs[0]  # monodb
+
+    if session.db != dbname:
+        if session.db:
+            _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+            logout(session, keep_db=False)
+        session.db = dbname
+
+    session.is_dirty = False
+    request.session = session
+    request.db = dbname
+
+
 def _update_served_exception(request: Request, exc: Exception) -> Exception:
     if isinstance(exc, HTTPException) and exc.code is None:
         return exc  # bubble up to _serve_db
@@ -505,5 +543,5 @@ from .requestlib import (
 from .response import Response
 from .retrying import retrying
 from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, logout
+from .session import SessionExpiredException, get_default_session, logout, session_store
 from .stream import STATIC_CACHE, Stream

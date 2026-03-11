@@ -21,6 +21,7 @@ from odoo.tools import config, consteq, get_lang
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
+
     from .requestlib import Request
 
 
@@ -524,7 +525,7 @@ class SessionStore:
             recent_session = self.get(session.sid)
             if 'next_sid' in recent_session:
                 # A new session has already been saved on disk by a concurrent request,
-                # the _save_session is going to simply use session.sid to set a new cookie.
+                # the save_session is going to simply use session.sid to set a new cookie.
                 session.sid = recent_session['next_sid']
                 return
             next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
@@ -606,6 +607,42 @@ class SessionStore:
 def session_store():
     _logger.debug('HTTP sessions stored in: %s', config.session_dir)
     return SessionStore(path=config.session_dir)
+
+
+def save_session(request: Request, env: Environment | None = None) -> None:
+    """
+    Save a modified session on disk.
+
+    :param env: an environment to compute the session token.
+        MUST be left ``None`` (in which case it uses the request's
+        env) UNLESS the database changed.
+    """
+    sess = request.session
+    if env is None:
+        env = request.env
+
+    if not sess.can_save:
+        return
+
+    if sess.should_rotate:
+        session_store().rotate(sess, env)  # it saves
+    elif (
+        sess.uid
+        and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
+        and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
+    ):
+        session_store().rotate(sess, env, soft=True)
+    elif sess.is_dirty:
+        session_store().save(sess)
+
+    cookie_sid = request.cookies.get('session_id')
+    if sess.is_dirty or cookie_sid != sess.sid:
+        request.future_response.set_cookie(
+            'session_id',
+            sess.sid,
+            max_age=get_session_max_inactivity(env),
+            httponly=True,
+        )
 
 
 # ruff: noqa: E402

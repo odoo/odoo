@@ -17,7 +17,6 @@ class HTTPRequest:
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
         httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
-        self._session_id__ = httprequest.cookies.get('session_id', '')
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
