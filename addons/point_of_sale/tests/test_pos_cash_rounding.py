@@ -164,6 +164,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
         Tests that once product is archived after order is created
         product is not shown but the order can still be refunded.
         """
+        self.env['pos.session'].sudo().search([('state', '!=', 'closed')]).write({'state': 'closed'})
         self.pos_admin.write({
             'group_ids': [
                 (4, self.env.ref('product.group_product_manager').id),
