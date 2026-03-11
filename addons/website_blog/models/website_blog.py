@@ -7,7 +7,7 @@ from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 
-from odoo.addons.portal.controllers.thread import PortalWebClientController
+from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.website.tools import images_from_html, text_from_html
 
 
@@ -212,11 +212,13 @@ class BlogPost(models.Model):
     comment_count = fields.Integer("Comment count", compute='_compute_comment_count')
 
     def _compute_comment_count(self):
-        count_by_post = dict(self.env['mail.message']._read_group(
-            domain=PortalWebClientController._get_portal_message_fetch_domain(self),
-            groupby=["res_id"],
-            aggregates=['__count'],
-        ))
+        count_by_post = dict(
+            self.env["mail.message"]._read_group(
+                domain=WebclientController._get_fetch_share_domain(self),
+                groupby=["res_id"],
+                aggregates=["__count"],
+            )
+        )
         for post in self:
             post.comment_count = count_by_post.get(post.id, 0)
 

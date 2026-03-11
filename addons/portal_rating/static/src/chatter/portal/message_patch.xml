@@ -25,9 +25,9 @@
             <!--Only possible if a rating is link to the message, for now we can't comment if no rating
                 is link to the message (because publisher comment data
                 is on the rating.rating model - one comment max) -->
-            <div t-if="this.message.rating_id and this.message.rating_id.id" class="o_wrating_publisher_container">
+            <div t-if="this.message.rating_id" class="o_wrating_publisher_container">
                 <button t-if="this.store.self.is_user_publisher"
-                    t-attf-class="btn px-2 my-2 mb-0 btn-sm border o_wrating_js_publisher_comment_btn {{ this.message.rating_id.publisher_comment !== '' ? 'd-none' : '' }}"
+                    t-attf-class="btn px-2 my-2 mb-0 btn-sm border o_wrating_js_publisher_comment_btn {{ this.message.rating_id.publisher_comment ? 'd-none' : '' }}"
                     t-on-click="this.onClikEditComment">
                     <i class="oi text-muted me-1" data-icon="chat_bubble"/>Comment
                 </button>
@@ -39,13 +39,13 @@
                         <div class="o-mail-Message-sidebar flex-basis-auto d-flex flex-shrink-0 me-2">
                             <div class="o-mail-Message-avatarContainer position-relative">
                                 <img class="o-mail-Message-avatar w-100 h-100 rounded"
-                                     t-att-src="this.message.rating_id.publisher_avatar" t-att-class="this.authorAvatarAttClass"/>
+                                     t-att-src="this.message.rating_id.publisher_id.avatarUrl" t-att-class="this.authorAvatarAttClass"/>
                             </div>
                         </div>
                         <div class="w-100 min-w-0">
-                            <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1">
-                                <strong class="me-1 text-truncate smaller"><t t-out="this.message.rating_id.publisher_name"/></strong>
-                                <span class="o-mail-Message-date o-xsmaller">Published on <t t-out="this.message.rating_id.publisher_datetime"/></span>
+                            <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
+                                <strong class="me-1 text-truncate"><t t-out="this.message.rating_id.publisher_id.name"/></strong>
+                                <small class="text-muted opacity-50 me-2">Published <RelativeTime datetime="this.message.rating_id.publisher_datetime"/></small>
                                 <div t-if="this.store.self.is_user_publisher" class="d-flex rounded-0">
                                     <Dropdown>
                                         <button class="bg-transparent border-0">
