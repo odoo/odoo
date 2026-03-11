@@ -68,26 +68,39 @@ export class LivechatService {
         if (!thread.isTransient) {
             return thread;
         }
-        const temporaryThread = thread;
-        const savedChannel = await this._createChannel({ originThread: thread, persist: true });
-        if (!savedChannel) {
-            temporaryThread.channel.chatWindow?.close();
-            return;
+        if (this._persistResolvers) {
+            return this._persistResolvers.promise;
         }
-        savedChannel.fetchNewMessages();
-        this.env.services["mail.store"].initialize();
-        savedChannel.readyToSwapDeferred.then(async () => {
-            if (!savedChannel?.exists()) {
+        this._persistResolvers = Promise.withResolvers();
+        try {
+            const temporaryThread = thread;
+            const savedChannel = await this._createChannel({ originThread: thread, persist: true });
+            if (!savedChannel) {
+                temporaryThread.channel.chatWindow?.close();
+                this._persistResolvers.resolve(savedChannel);
                 return;
             }
-            // Do not load unread messages: new messages were loaded to avoid
-            // flickering, we do not want another load that would result in the
-            // same issue.
-            savedChannel.scrollUnread = false;
-            temporaryThread.channel?.chatWindow?.close();
-            savedChannel.openChatWindow({ focus: true });
-        });
-        return savedChannel;
+            savedChannel.fetchNewMessages();
+            this.env.services["mail.store"].initialize();
+            savedChannel.readyToSwapDeferred.then(async () => {
+                if (!savedChannel?.exists()) {
+                    return;
+                }
+                // Do not load unread messages: new messages were loaded to avoid
+                // flickering, we do not want another load that would result in the
+                // same issue.
+                savedChannel.scrollUnread = false;
+                temporaryThread.channel?.chatWindow?.close();
+                savedChannel.openChatWindow({ focus: true });
+            });
+            this._persistResolvers.resolve(savedChannel);
+            return savedChannel;
+        } catch (error) {
+            this._persistResolvers.reject(error);
+            throw error;
+        } finally {
+            this._persistResolvers = null;
+        }
     }
 
     /**
