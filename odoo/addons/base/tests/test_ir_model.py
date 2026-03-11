@@ -294,6 +294,17 @@ class TestIrModelEdition(TransactionCase):
             default_ttype="char"
         ).name_create("field_name")
 
+    def test_setup_models(self):
+        self.env['ir.model'].create({
+            'name': 'Bananas',
+            'model': 'x_bananas',
+            'field_id': [Command.create({'name': 'x_name', 'ttype': 'char'})],
+        })
+        # check that registry setup doesn't introduce duplicates in registry.field_depends
+        self.registry._setup_models__(self.env.cr, [])
+        fnames = [str(field) for field in self.registry.field_depends]
+        self.assertEqual(len(fnames), len(set(fnames)), "registry.field_depends contains duplicates")
+
 
 @tagged('test_eval_context')
 class TestEvalContext(TransactionCase):

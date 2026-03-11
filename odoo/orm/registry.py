@@ -451,6 +451,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # recursively mark fields to re-setup
             todo = []
             for model_cls in self.models.values():
+                if model_cls._custom:
+                    # custom models are going to be reloaded and set up below
+                    model_cls._setup_done__ = False
                 if model_cls._setup_done__:
                     models_field_depends_done.add(model_cls)
                 else:
