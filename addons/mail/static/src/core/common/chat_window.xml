@@ -72,9 +72,9 @@
                     <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps"/>
                 </div>
                 <t t-else="">
-                    <Thread autofocus="isMobileOS ? props.chatWindow.autofocus : undefined" thread="channel.thread" t-key="channel.thread.localId" jumpPresent="state.jumpThreadPresent" jumpToNewMessage="props.chatWindow.jumpToNewMessage"/>
+                    <Thread autofocus="autofocusThread" thread="channel.thread" t-key="channel.thread.localId" jumpPresent="state.jumpThreadPresent" jumpToNewMessage="props.chatWindow.jumpToNewMessage"/>
                     <t t-call="mail.ChatWindow.memberTyping"/>
-                    <Composer composer="channel.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType" disabled="channel.composerDisabled"/>
+                    <Composer composer="channel.composer" autofocus="autofocusComposer" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType" disabled="channel.composerDisabled"/>
                 </t>
             </t>
         </div>

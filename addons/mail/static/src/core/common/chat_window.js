@@ -64,6 +64,21 @@ export class ChatWindow extends Component {
         });
     }
 
+    get autofocusComposer() {
+        if (this.isMobileOS || this.channel.composerHidden) {
+            return undefined;
+        }
+        return this.props.chatWindow.autofocus;
+    }
+
+    get autofocusThread() {
+        const autofocus = this.props.chatWindow.autofocus;
+        if (this.isMobileOS) {
+            return autofocus + (this.channel.composerHidden ? 1 : 0);
+        }
+        return this.channel.composerHidden ? autofocus + 1 : undefined;
+    }
+
     get hasActionsMenu() {
         return (
             this.partitionedActions.group.length > 0 ||
