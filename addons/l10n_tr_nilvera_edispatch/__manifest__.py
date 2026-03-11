@@ -7,6 +7,7 @@
     'category': 'Accounting/Localizations',
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_cron_data.xml',
         'views/account_move_views.xml',
         'views/l10n_tr_nilvera_trailer_plate_views.xml',
         'views/res_partner_views.xml',
