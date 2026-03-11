@@ -558,8 +558,9 @@ class HrEmployee(models.Model):
         If no valid version is found, we return the very first version of the employee.
         """
         self.ensure_one()
-        versions = self.version_ids.filtered_domain([('date_version', '<=', date)])
-        return max(versions, key=lambda v: v.date_version) if versions else self.version_ids[0]
+        active_versions = self.version_ids.filtered(lambda v: v.active)
+        versions = active_versions.filtered_domain([('date_version', '<=', date)])
+        return max(versions, key=lambda v: v.date_version) if versions else active_versions[0]
 
     def create_version(self, values):
         self.ensure_one()
