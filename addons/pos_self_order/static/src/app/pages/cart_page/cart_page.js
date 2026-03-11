@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
@@ -28,6 +28,17 @@ export class CartPage extends Component {
         });
 
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
+        useLayoutEffect(
+            () => this.selfOrder.ensureDeliveryLine(),
+            () => {
+                const order = this.selfOrder.currentOrder;
+                const nonDeliveryId = order.preset_id?.delivery_product_id?.id;
+                const nonDeliveryTotal = order.lines
+                    .filter((l) => l.product_id?.id !== nonDeliveryId)
+                    .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
+                return [order.preset_id?.id, nonDeliveryTotal];
+            }
+        );
     }
 
     get showCancelButton() {
@@ -197,61 +208,7 @@ export class CartPage extends Component {
     }
 
     get presetTimingOptions() {
-        const availabilities = this.selfOrder.currentOrder.preset_id.availabilities;
-        const options = {
-            categories: {},
-        };
-
-        for (const [date, slots] of Object.entries(availabilities)) {
-            options.categories[date] = {
-                id: date,
-                name: DateTime.fromISO(date).toLocaleString(DateTime.DATE_SHORT),
-                subCategories: {},
-            };
-
-            for (const slot of Object.values(slots)) {
-                if (!options.categories[date].subCategories[slot.periode]) {
-                    let periodeName = _t("Full Day");
-
-                    switch (slot.periode) {
-                        case "morning":
-                            periodeName = _t("Morning");
-                            break;
-                        case "afternoon":
-                            periodeName = _t("Afternoon");
-                            break;
-                        case "evening":
-                            periodeName = _t("Evening");
-                            break;
-                    }
-
-                    options.categories[date].subCategories[slot.periode] = {
-                        id: slot.periode,
-                        name: periodeName,
-                        options: [],
-                    };
-                }
-
-                options.categories[date].subCategories[slot.periode].options.push({
-                    id: slot.datetime.toFormat("yyyy-MM-dd HH:mm:ss"),
-                    name: this.selfOrder.getTime(slot.datetime),
-                });
-            }
-        }
-
-        // Remove empty categories
-        for (const dateId of Object.keys(options.categories)) {
-            if (
-                Object.keys(options.categories[dateId].subCategories).length === 0 ||
-                Object.values(options.categories[dateId].subCategories).every(
-                    (subCateg) => subCateg.options.length === 0
-                )
-            ) {
-                delete options.categories[dateId];
-            }
-        }
-
-        return options;
+        return this.selfOrder.getTimingOptions(this.selfOrder.currentOrder.preset_id);
     }
 
     get tableOptions() {
@@ -389,6 +346,11 @@ export class CartPage extends Component {
     }
     get displayTaxes() {
         return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    isDeliveryLine(line) {
+        const deliveryProductId = this.selfOrder.currentOrder.preset_id?.delivery_product_id?.id;
+        return deliveryProductId && line.product_id?.id === deliveryProductId;
     }
 
     formatProductName(product) {

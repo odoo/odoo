@@ -44,36 +44,25 @@
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
                     </t>
                     <t t-if="this.preset.needsPartner">
-                        <select class="partner-select form-select form-select-lg" t-custom-model="state.countryId">
-                            <option value="">Select a country</option>
-                            <t t-foreach="this.countries" t-as="country" t-key="country.id">
-                                <option t-att-value="country.id" t-out="country.name" />
-                            </t>
-                        </select>
-                        <div class="d-flex gap-3">
-                            <input type="text"
-                                class="form-control form-control-lg w-75"
-                                placeholder="Street and Number"
-                                t-custom-model="state.street"/>
-                            <input
-                                type="text"
-                                class="form-control form-control-lg w-25"
-                                placeholder="Zip"
-                                t-custom-model="state.zip"/>
+                        <div t-att-class="'o_field_widget o_field_google_address_autocomplete' + (state.validationError?.type === 'delivery' ? ' address-delivery-error' : '')">
+                            <AddressAutoComplete t-props="this.addressAutoCompleteProps" />
+                            <div class="d-flex justify-content-end mt-1">
+                                <img src="/google_address_autocomplete/static/src/img/powered_by_google_on_white.png"
+                                    alt="Powered by Google"
+                                    style="height: 18px;"/>
+                            </div>
                         </div>
-                        <div class="d-flex gap-3">
-                            <t t-set="availableState" t-value="this.states" />
-                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="state.stateId">
-                                <option value="">Select a state</option>
-                                <t t-foreach="availableState" t-as="state" t-key="state.id">
-                                    <option t-att-value="state.id" t-out="state.name" />
-                                </t>
-                            </select>
-                            <input type="text"
-                                class="form-control form-control-lg"
-                                placeholder="City"
-                                t-custom-model="state.city"/>
-                        </div>
+                        <t t-if="state.validationError">
+                            <p class="text-danger mb-0" t-esc="state.validationError.message"/>
+                            <div t-if="state.validationError.type === 'delivery' and this.otherPresets.length" class="d-flex gap-2 flex-wrap justify-content-center">
+                                <button t-foreach="this.otherPresets" t-as="altPreset" t-key="altPreset.id"
+                                    type="button"
+                                    class="btn btn-light btn-sm"
+                                    t-on-click="() => this.selectPreset(altPreset)"
+                                    t-out="altPreset.name"
+                                />
+                            </div>
+                        </t>
                     </t>
                 </div>
                 <div class="w-100 d-flex mt-3">
@@ -83,8 +72,14 @@
                     </button>
                     <button class="btn btn-primary flex-grow-1 ms-1"
                         t-on-click="this.setInformations"
-                        t-att-disabled="!this.validSelection">
-                        Continue
+                        t-att-disabled="!this.validSelection || state.isSubmitting">
+                        <t t-if="state.isSubmitting">
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                            Validating...
+                        </t>
+                        <t t-else="">
+                            Continue
+                        </t>
                     </button>
                 </div>
             </div>

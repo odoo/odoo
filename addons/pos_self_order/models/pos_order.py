@@ -248,6 +248,8 @@ class PosOrder(models.Model):
         for line in self.lines:
             if len(line.combo_line_ids):
                 self._compute_combo_price(line)
+            elif line.product_id == self.preset_id.delivery_product_id:
+                self._compute_line_price(line, price=self.preset_id.delivery_product_price)
             elif not line.combo_parent_id:
                 self._compute_line_price(line)
 
@@ -263,11 +265,11 @@ class PosOrder(models.Model):
         self.amount_tax = tax_totals['tax_amount_currency']
         self.amount_total = tax_totals['total_amount_currency']
 
-    def _compute_line_price(self, line):
+    def _compute_line_price(self, line, price=False):
         pricelist = self.pricelist_id
         selected_attributes = line.attribute_value_ids
         product = line.product_id.with_context(line.product_id._get_product_price_context(selected_attributes))
-        price = pricelist._get_product_price(product, 1.0, currency=self.currency_id)
+        price = price or pricelist._get_product_price(product, 1.0, currency=self.currency_id)
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         tax_ids_after_fiscal_position = self.fiscal_position_id.map_tax(line.tax_ids)

@@ -1,10 +1,26 @@
+import math
+
 from odoo import http
+from odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete import AutoCompleteController
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.service.model import call_kw
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
 from odoo.tools import consteq
+
+
+def _haversine_distance(lat1, long1, lat2, long2):
+    """Compute the straight-line distance in km between two lat/long points."""
+    R = 6371  # earth's radius in km
+    dlat = math.radians(lat2 - lat1)
+    dlong = math.radians(long2 - long1)
+    arcsin = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
+        * math.sin(dlong / 2) ** 2
+    )
+    return 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))
 
 
 class PosSelfOrderController(http.Controller):
@@ -19,10 +35,15 @@ class PosSelfOrderController(http.Controller):
         safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, device_type, table)
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
+        preset_id = order_ids.preset_id
+
+        if preset_id and preset_id.service_at == 'delivery':
+            self._ensure_delivery_fee(order_ids, preset_id)
 
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
         amount_total = order_ids.amount_total
 
         if amount_total == 0:
@@ -49,12 +70,49 @@ class PosSelfOrderController(http.Controller):
     def _verify_line_price(self, lines, pos_config, preset_id):
         lines.order_id.recompute_prices()
 
+    def _ensure_delivery_fee(self, order, preset):
+        """Add or remove the delivery fee line based on the order total and preset configuration."""
+        delivery_product = preset.delivery_product_id
+        if not delivery_product:
+            return
+
+        non_delivery_lines = order.lines.filtered(
+            lambda l: l.product_id != delivery_product
+        )
+        tax_included = order.config_id.iface_tax_included == 'total'
+        total_field = 'price_subtotal_incl' if tax_included else 'price_subtotal'
+        non_delivery_total = sum(non_delivery_lines.mapped(total_field))
+
+        free_min = preset.free_delivery_min_amount
+        delivery_is_free = bool(free_min) and non_delivery_total >= free_min
+
+        existing_delivery_lines = order.lines.filtered(
+            lambda l: l.product_id == delivery_product
+        )
+        if delivery_is_free:
+            existing_delivery_lines.unlink()
+        elif not existing_delivery_lines:
+            new_line = order.env['pos.order.line'].sudo().create({
+                'order_id': order.id,
+                'product_id': delivery_product.id,
+                'qty': 1,
+                'price_subtotal': 0.0,
+                'price_subtotal_incl': 0.0,
+                'full_product_name': delivery_product.name,
+            })
+            order._compute_line_price(new_line, price=preset.delivery_product_price)
+
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
-    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
+    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None, preset_id=None):
         pos_config = self._verify_pos_config(access_token)
+        preset = pos_config.env['pos.preset'].browse(int(preset_id)) if preset_id else False
         existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
 
         if existing_partner and existing_partner.exists():
+            if preset and preset.exists() and preset.service_at == 'delivery':
+                error = self._check_delivery_address_for_partner(preset, existing_partner)
+                if error:
+                    return {'error': error}
             return {
                 'res.partner': existing_partner.read(['id'], load=False),
             }
@@ -72,10 +130,37 @@ class PosSelfOrderController(http.Controller):
             'state_id': state_id.id if state_id else False,
             'company_id': pos_config.company_id.id,
         })
+        if preset and preset.exists() and preset.service_at == 'delivery':
+            error = self._check_delivery_address_for_partner(preset, partner_sudo)
+            if error:
+                return {'error': error}
 
         return {
             'res.partner': partner_sudo.read(['id'], load=False),
         }
+
+    def _check_delivery_address_for_partner(self, preset, partner):
+        if not partner.partner_latitude and not partner.partner_longitude:
+            partner.geo_localize()
+        if not partner.partner_latitude and not partner.partner_longitude:
+            return {
+                'type': 'address',
+                'message': self.env._("We couldn't locate this address. Please enter a complete address with a street number."),
+            }
+        if not preset.delivery_from_address:
+            return None
+        distance_km = _haversine_distance(
+            partner.partner_latitude, partner.partner_longitude,
+            preset.delivery_from_latitude, preset.delivery_from_longitude,
+        )
+        max_distance = preset.delivery_max_distance_km
+        max_distance_km = max_distance * 1.60934 if preset.delivery_distance_unit == 'mi' else max_distance
+        if max_distance_km and distance_km > max_distance_km:
+            return {
+                'type': 'delivery',
+                'message': self.env._("Delivery isn't available for this address. You can still place your order using another method."),
+            }
+        return None
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
@@ -186,6 +271,22 @@ class PosSelfOrderController(http.Controller):
         amount_untaxed = sum(lines.mapped('price_subtotal'))
         amount_total = sum(lines.mapped('price_subtotal_incl'))
         return amount_total, amount_untaxed
+
+    @http.route('/pos-self/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
+    def pos_self_order_autocomplete_address(self, access_token, partial_address, **kwargs):
+        self._verify_pos_config(access_token)
+        api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if not api_key:
+            return {'results': []}
+        return AutoCompleteController()._perform_place_search(partial_address, api_key=api_key)
+
+    @http.route('/pos-self/autocomplete/address_full', methods=['POST'], type='jsonrpc', auth='public', website=True)
+    def pos_self_order_autocomplete_address_full(self, access_token, address, google_place_id=None, **kwargs):
+        self._verify_pos_config(access_token)
+        api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if not api_key:
+            return {'address': None}
+        return AutoCompleteController()._perform_complete_place_search(address, api_key=api_key, google_place_id=google_place_id)
 
     def _verify_pos_config(self, access_token, check_active_session=True):
         """

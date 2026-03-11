@@ -268,6 +268,101 @@ export class SelfOrder extends Reactive {
         this.currentOrder.removeOrderline(line);
     }
 
+    _shouldDeliveryBeFree() {
+        const preset = this.currentOrder?.preset_id;
+        const freeDeliveryMin = preset?.free_delivery_min_amount || 0;
+        if (!freeDeliveryMin) {
+            return false;
+        }
+        const deliveryProductId = preset?.delivery_product_id?.id;
+        const nonDeliveryLines = this.currentOrder.lines.filter(
+            (line) => line.product_id?.id !== deliveryProductId
+        );
+        const totalData = this.currentOrder.getPriceWithOptions({ lines: nonDeliveryLines });
+        const td = totalData.taxDetails;
+        const orderTotal = this.currency.round(
+            this.isTaxesIncludedInPrice() ? td.total_amount_no_rounding : td.base_amount_currency
+        );
+        return orderTotal >= freeDeliveryMin;
+    }
+
+    ensureDeliveryLine() {
+        const preset = this.currentOrder?.preset_id;
+        if (preset?.service_at !== "delivery") {
+            return;
+        }
+        const deliveryProduct = preset.delivery_product_id;
+        const deliveryTemplate = deliveryProduct?.product_tmpl_id;
+        if (!deliveryProduct || !deliveryTemplate) {
+            return;
+        }
+        const existingLine = this.currentOrder.lines.find(
+            (line) => line.product_id?.id === deliveryProduct.id
+        );
+        if (this._shouldDeliveryBeFree()) {
+            if (existingLine) {
+                this.removeLine(existingLine);
+            }
+            return;
+        }
+        if (existingLine) {
+            return;
+        }
+        const newLine = this.models["pos.order.line"].create(
+            getOrderLineValues(this, deliveryTemplate, 1, "", {}, {}, {})
+        );
+        newLine.price_unit = preset.delivery_product_price;
+        newLine.full_product_name = deliveryTemplate.name;
+    }
+
+    getTimingOptions(preset) {
+        const availabilities = preset.availabilities;
+        const options = { categories: {} };
+        for (const [date, slots] of Object.entries(availabilities)) {
+            options.categories[date] = {
+                id: date,
+                name: luxon.DateTime.fromISO(date).toLocaleString(luxon.DateTime.DATE_SHORT),
+                subCategories: {},
+            };
+            for (const slot of Object.values(slots)) {
+                if (!options.categories[date].subCategories[slot.periode]) {
+                    let periodeName = _t("Full Day");
+                    switch (slot.periode) {
+                        case "morning":
+                            periodeName = _t("Morning");
+                            break;
+                        case "afternoon":
+                            periodeName = _t("Afternoon");
+                            break;
+                        case "evening":
+                            periodeName = _t("Evening");
+                            break;
+                    }
+                    options.categories[date].subCategories[slot.periode] = {
+                        id: slot.periode,
+                        name: periodeName,
+                        options: [],
+                    };
+                }
+                options.categories[date].subCategories[slot.periode].options.push({
+                    id: slot.datetime.toFormat("yyyy-MM-dd HH:mm:ss"),
+                    name: this.getTime(slot.datetime),
+                });
+            }
+        }
+        for (const dateId of Object.keys(options.categories)) {
+            if (
+                Object.keys(options.categories[dateId].subCategories).length === 0 ||
+                Object.values(options.categories[dateId].subCategories).every(
+                    (subCateg) => subCateg.options.length === 0
+                )
+            ) {
+                delete options.categories[dateId];
+            }
+        }
+        return options;
+    }
+
     async syncPresetSlotAvaibility(preset) {
         try {
             const presetAvailabilities = await rpc(`/pos-self-order/get-slots`, {
@@ -603,11 +698,8 @@ export class SelfOrder extends Reactive {
 
     isValidSelection(slot, partner) {
         const preset = this.currentOrder.preset_id || {};
-        const { id, name, email, phone, street, city, country_id, state_id, zip } = partner || {};
-        const country = this.models["res.country"].get(country_id);
-        const hasStates = country?.state_ids?.length || 0;
-        const validState = !hasStates || state_id;
-        const partnerInfo = name && phone && street && city && country_id && validState && zip;
+        const { id, name, email, phone, street, city, country_id, zip } = partner || {};
+        const partnerInfo = name && phone && street && city && country_id && zip;
         const selectedPartner = typeof id === "number" && !isNaN(id);
         const validPartnerInfos = partnerInfo || selectedPartner;
 
@@ -842,8 +934,12 @@ export class SelfOrder extends Reactive {
         let result = true;
         const unavailableProducts = new Set();
 
+        const deliveryProductId = this.currentOrder.preset_id?.delivery_product_id?.id;
         for (const line of this.currentOrder.unsentLines) {
             if (line.combo_parent_id?.uuid) {
+                continue;
+            }
+            if (deliveryProductId && line.product_id?.id === deliveryProductId) {
                 continue;
             }
 

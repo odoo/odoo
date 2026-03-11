@@ -36,6 +36,16 @@ class ProductTemplate(models.Model):
             load=False
         )
         products.extend(combo_products_choice)
+
+        # Always include delivery product templates, even if the limit cut them off
+        loaded_ids = {p['id'] for p in products}
+        delivery_tmpl_ids = self.env['pos.preset'].sudo().search([
+            ('delivery_product_id', '!=', False),
+        ]).delivery_product_id.product_tmpl_id.ids
+        missing_delivery = [tid for tid in delivery_tmpl_ids if tid not in loaded_ids]
+        if missing_delivery:
+            products.extend(self.browse(missing_delivery).read(fields, load=False))
+
         self._process_pos_self_ui_products(products)
 
         return products
@@ -54,7 +64,14 @@ class ProductTemplate(models.Model):
     @api.model
     def _load_pos_self_data_domain(self, data, config):
         domain = super()._load_pos_self_data_domain(data, config)
-        return Domain.AND([domain, [('self_order_available', '=', True)]])
+        domain = Domain.AND([domain, [('self_order_available', '=', True)]])
+        # Also include templates for delivery products referenced by active presets
+        delivery_tmpl_ids = self.env['pos.preset'].sudo().search([
+            ('delivery_product_id', '!=', False),
+        ]).delivery_product_id.product_tmpl_id.ids
+        if delivery_tmpl_ids:
+            domain = Domain.OR([domain, [('id', 'in', delivery_tmpl_ids)]])
+        return domain
 
     @api.onchange('available_in_pos')
     def _on_change_available_in_pos(self):
