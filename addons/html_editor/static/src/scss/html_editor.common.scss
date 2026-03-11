@@ -854,3 +854,9 @@ code.o_inline_code {
     font-size: 85%;
     color: $gray-900;
 }
+
+// Ensure colored font wrapper is inherited by child links
+font[class^="text-o-"] a,
+font[style*="color"] a {
+    color: inherit !important;
+}
