@@ -59,7 +59,7 @@ export class MassMailingIframe extends Component {
         iframeRef: { type: Function },
         iframeWrapperRef: { type: Function },
         showThemeSelector: { type: Boolean, optional: true },
-        onIframeLoad: { type: Function, optional: true },
+        onIframeLoad: { type: Function, optional: true }, // deprecated
         showCodeView: { type: Boolean, optional: true },
         toggleCodeView: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
@@ -216,6 +216,9 @@ export class MassMailingIframe extends Component {
             if (this.htmlResizeObserver) {
                 this.htmlResizeObserver.disconnect();
             }
+        });
+        onWillDestroy(() => {
+            this.iframeLoaded.resolve(false);
         });
     }
 
@@ -376,7 +379,9 @@ export class MassMailingIframe extends Component {
         return {
             overlayRef: this.overlayRef,
             // TODO EGGMAIL: iframeInfo is deprecated (should resolve to iframe directly)
-            iframeLoaded: this.iframeLoaded.then((iframeInfo) => iframeInfo.iframe),
+            iframeLoaded: this.iframeLoaded.then((iframeInfo) =>
+                iframeInfo ? iframeInfo.iframe : false
+            ),
             snippetsName: "mass_mailing.email_designer_snippets",
             config: this.props.config,
             isMobile: this.state.isMobile,
