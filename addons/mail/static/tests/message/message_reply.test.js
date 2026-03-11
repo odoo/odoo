@@ -182,7 +182,9 @@ test("reply to logged note in chatter keeps prefilled mention in html composer",
     await click(".o-mail-Message:contains('Test message from B') [title='Reply']");
     await contains("button.active:text('Log note')");
     await contains(".o-mail-Composer.o-focused .o-mail-Composer-html.odoo-editor-editable");
-    await contains(".o-mail-Composer-html.odoo-editor-editable a.o_mail_redirect:text('@Partner B')");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable a.o_mail_redirect:text('@Partner B')"
+    );
     const editor = {
         document,
         editable: queryFirst(".o-mail-Composer-html.odoo-editor-editable"),
@@ -266,4 +268,31 @@ test("replying to a note restores focus on an already open composer", async () =
     await contains(".o-mail-Composer.o-focused", { count: 0 });
     await click(".o-mail-Message-actions [title='Reply']");
     await contains(".o-mail-Composer.o-focused");
+});
+
+test("click on message in reply in inbox navigates to the parent message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Parent message",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        body: "Reply to parent message",
+        message_type: "comment",
+        model: "discuss.channel",
+        needaction: true,
+        parent_id: messageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await click(".o-mail-MessageInReply-message", {
+        parent: [".o-mail-Message", { text: "Reply to parent message" }],
+    });
+    await contains(
+        ".o-mail-DiscussContent:has(.o-mail-DiscussContent-threadName[title='General']) .o-mail-Message.o-highlighted .o-mail-Message-content:has(:text('Parent message'))"
+    );
 });
