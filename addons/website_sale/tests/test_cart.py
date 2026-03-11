@@ -122,9 +122,12 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             ),
             self.mock_request() as request,
         ):
-            request.website._create_cart()
+            website = request.env['website'].get_current_website()
+            website._create_cart()
+            order = website.current_session_sale_order_id.sudo()
+
             # service_tracking 'no' should not raise error
-            request.cart._cart_add(
+            order._cart_add(
                 product_id=product_service.id,
                 quantity=1,
             )
@@ -136,7 +139,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_id=self.product.id,
                 quantity=1,
             )
-            sale_order = request.cart
+            website = request.env['website'].get_current_website()
+            sale_order = website.current_session_sale_order_id.sudo()
             sale_order.access_token = 'test_token'
             old_amount = sale_order.amount_total
             self.WebsiteSaleCartController.add_to_cart(
@@ -174,7 +178,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_id=self.product.id,
                 quantity=1,
             )
-            sale_order = request.cart
+            website = request.env['website'].get_current_website()
+            sale_order = website.current_session_sale_order_id.sudo()
             self.assertEqual(sale_order.amount_untaxed, 1000.0)
 
             # remove the product from the cart
@@ -212,15 +217,20 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             'auto_apply': True,
         })
 
+        website = self.website.with_user(self.public_user)
         with self.mock_request(country_code='BE') as request:
-            self.assertEqual(request.fiscal_position, fpos_be)
+            website = request.env['website'].get_current_website()
+            fiscal_position = website.current_session_fiscal_position_id.sudo()
+            self.assertEqual(fiscal_position, fpos_be)
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.product.product_tmpl_id,
                 product_id=self.product.id,
                 quantity=1,
             )
+            website = request.env['website'].get_current_website()
+            sale_order = website.current_session_sale_order_id.sudo()
             self.assertEqual(
-                request.cart.fiscal_position_id, fpos_be,
+                sale_order.fiscal_position_id, fpos_be,
                 "Fiscal position should be determined from GEOIP country for public users."
             )
 
@@ -432,7 +442,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_id=self.product.id,
                 quantity=1,
             )
-            cart = request.cart
+            website = request.env['website'].get_current_website()
+            cart = website.current_session_sale_order_id.sudo()
             self.assertEqual(cart.pricelist_id, pricelist_not_eu)
             cart.partner_id = self.partner.create({'name': "New Partner"})
             self.assertEqual(cart.pricelist_id, pricelist_not_eu)
@@ -453,7 +464,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_id=product.id,
                 quantity=1,
             )
-            order = request.cart
+            website = request.env['website'].get_current_website()
+            order = website.current_session_sale_order_id.sudo()
 
             # pre-condition: the order contains an active product
             self.assertRecordValues(order.order_line, [{
@@ -562,4 +574,6 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         with self.mock_request(user=internal_user) as request:
             # We shouldn't find any abandonned cart if the customer isn't allowed to
             # buy from this website (because their contact belongs to another company)
-            self.assertFalse(request.cart)
+            website = request.env['website'].get_current_website()
+            order = website.current_session_sale_order_id.sudo()
+            self.assertFalse(order)

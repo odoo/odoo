@@ -58,7 +58,7 @@ class IrQweb(models.AbstractModel):
         """
         irQweb = super()._prepare_frontend_environment(values)
 
-        current_website = request.website
+        current_website = self.env['website'].get_current_website()
         editable = irQweb.env.user.has_group('website.group_website_designer')
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if not editable and has_group_restricted_editor and 'main_object' in values:

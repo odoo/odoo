@@ -2,7 +2,6 @@
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.http import request
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
@@ -68,7 +67,6 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon):
             'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
         }).action_apply_inventory()
 
-        with self.mock_request():
-            request.cart = sale_order
+        with self.mock_request(sale_order_id=sale_order.id):
             with self.assertRaises(ValidationError):
                 WebsiteSaleController.shop_payment_validate()

@@ -319,7 +319,7 @@ class AccountChartTemplate(models.AbstractModel):
             *self.env['account.tax']._check_company_domain(company),
         ])
 
-        current_fiscal_positions =  self.env['account.fiscal.position'].with_context(active_test=False).search([
+        current_fiscal_positions = self.env['account.fiscal.position'].with_context(active_test=False).search([
             *self.env['account.fiscal.position']._check_company_domain(company),
         ])
 

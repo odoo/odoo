@@ -70,7 +70,8 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
                 product_id=self.sofa.id,
                 quantity=1,
             )
-            order = request.cart
+            website = request.env['website'].get_current_website()
+            order = website.current_session_sale_order_id.sudo()
             self.WebsiteSaleController.claim_reward(self.program.reward_ids[0].id)
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.carpet.product_tmpl_id,

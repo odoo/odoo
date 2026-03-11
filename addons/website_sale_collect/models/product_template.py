@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.http import request
 
 from odoo.addons.website_sale_collect import utils
 
@@ -21,7 +20,7 @@ class ProductTemplate(models.Model):
             and product_or_template.is_storable
         ):
             product_sudo = product_or_template.sudo()  # To read the stock values when public user.
-            order_sudo = request.cart
+            order_sudo = website.current_session_sale_order_id.sudo()
             cart_qty = order_sudo._get_cart_qty(product_sudo.id)
             # Enable the Click & Collect Availability widget.
             res['show_click_and_collect_availability'] = True

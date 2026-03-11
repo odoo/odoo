@@ -107,7 +107,7 @@
     <template id="website_sale.pricelist_list" name="Pricelists Dropdown">
         <t t-set="website_sale_pricelists" t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)" />
         <t t-set="hasPricelistDropdown" t-value="hasPricelistDropdown or (website_sale_pricelists and len(website_sale_pricelists)&gt;1)"/>
-        <t t-set="pricelist" t-value="request.pricelist"/>
+        <t t-set="pricelist" t-value="website.current_session_pricelist_id.sudo()"/>
         <t t-set="pricelist_label">Pricelist</t>
         <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
             <a
