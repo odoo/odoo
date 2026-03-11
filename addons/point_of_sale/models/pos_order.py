@@ -1196,6 +1196,14 @@ class PosOrder(models.Model):
     def _get_order_log_representation(order):
         return dict((k, order.get(k)) for k in ("name", "uuid"))
 
+    def _get_sync_records(self):
+            return {
+            'pos.order': self.ids,
+            'pos.order.line': self.lines.ids,
+            'pos.payment': self.payment_ids.ids,
+            'product.attribute.custom.value': self.lines.custom_attribute_value_ids.ids,
+        }
+
     @api.model
     def sync_from_ui(self, orders):
         """ Create and update Orders from the frontend PoS application.
@@ -1245,10 +1253,12 @@ class PosOrder(models.Model):
         pos_order_ids = self.env['pos.order'].browse(order_ids)
         config = pos_order_ids.config_id[0] if pos_order_ids else False
 
-        for order in pos_order_ids:
-            order._ensure_access_token()
-            if not self.env.context.get('preparation'):
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('device_identifier', 0))
+        for config, config_orders in pos_order_ids.grouped('config_id').items():
+            records = config_orders._get_sync_records()
+            for order in config_orders:
+                order._ensure_access_token()
+                if not self.env.context.get('preparation'):
+                    order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('device_identifier', 0), records=records)
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return pos_order_ids.read_pos_data(orders, config)

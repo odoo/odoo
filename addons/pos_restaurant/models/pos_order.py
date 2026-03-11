@@ -25,3 +25,8 @@ class PosOrder(models.Model):
         result = super().read_pos_data(data, config)
         result['restaurant.order.course'] = self.env['restaurant.order.course']._load_pos_data_read(self.course_ids, config)
         return result
+
+    def _get_sync_records(self):
+        records = super()._get_sync_records()
+        records['restaurant.order.course'] = self.course_ids.ids
+        return records
