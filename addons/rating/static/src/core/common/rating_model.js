@@ -1,4 +1,4 @@
-import { Record } from "@mail/model/export";
+import { fields, Record } from "@mail/model/export";
 import { convertLineBreakToBr } from "@mail/utils/common/format";
 
 export class Rating extends Record {
@@ -6,6 +6,7 @@ export class Rating extends Record {
 
     /** @type {number} */
     id;
+    message_id = fields.One("mail.message", { inverse: "rating_id" });
     /** @type {number} */
     rating;
     /** @type {string} */
