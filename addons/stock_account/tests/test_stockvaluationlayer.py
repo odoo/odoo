@@ -1,6 +1,9 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
-from odoo import Command
+from datetime import timedelta
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import ValidationError
@@ -320,15 +323,26 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
 
+    @freeze_time("2026-03-10 10:00:00")
     def test_return_receipt_1(self):
+        """
+        Receive a product twice, return one unit and deliver the other one.
+        The total value should be 0 and the price should be (10+20)/2 = 15.
+        Return the delivery and set the original quantity to 0.
+        The total value should be 15.
+        """
         move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
         self._make_in_move(self.product, 1, unit_cost=20)
-        self._make_out_move(self.product, 1)
+        move2 = self._make_out_move(self.product, 1)
         self._make_return(move1, 1)
 
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
         self.assertEqual(self.product.standard_price, 15)
+
+        self._make_return(move2, 1)
+        move2.quantity = 0
+        self.assertEqual(self.product.with_context(to_date=fields.Datetime.now() + timedelta(days=1)).total_value, 15.0)
 
     def test_return_delivery_1(self):
         self._make_in_move(self.product, 1, unit_cost=10)
