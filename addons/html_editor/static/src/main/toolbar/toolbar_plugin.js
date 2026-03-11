@@ -397,6 +397,7 @@ export class ToolbarPlugin extends Plugin {
      */
     updateToolbar = debounce(this._updateToolbar, 0, { trailing: true });
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
+        this.isToolbarExpanded |= this.services.ui.isSmall && hasTouch();
         // A debounced/deferred update can still fire after the plugin has been
         // destroyed (e.g. the "mouseup" handler re-arms `updateToolbar` through a
         // raw setTimeout that isn't cancelled by `destroy`). At that point the
