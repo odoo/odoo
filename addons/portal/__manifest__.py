@@ -41,14 +41,7 @@ a dependency towards website editing and customization capabilities.""",
             ('prepend', 'portal/static/src/scss/bootstrap_overridden.scss'),
         ],
         'web.assets_backend': [
-            "portal/static/src/core/common/**/*",
             'portal/static/src/views/**/*',
-        ],
-        "mail.assets_public": [
-            "portal/static/src/core/common/**/*",
-        ],
-        "im_livechat.assets_embed_core": [
-            "portal/static/src/core/common/**/*",
         ],
         'web.assets_frontend': [
             'portal/static/src/interactions/**/*',
@@ -67,7 +60,6 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/tests/**/*',
         ],
         "portal.assets_chatter_helpers": [
-            "portal/static/src/core/common/**/*",
             "web/static/src/views/view_dialogs/form_view_dialog.js",
             "web/static/src/views/view_dialogs/export_data_dialog.js",
             "web/static/src/core/debug/*",

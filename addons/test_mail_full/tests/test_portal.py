@@ -80,7 +80,7 @@ class TestPortalControllers(TestPortal):
         }
         result = self.make_jsonrpc_request(
             "/mail/store",
-            {"fetch_params": [["/mail/chatter_fetch", chatter_fetch_params]]},
+            {"fetch_params": [["/mail/thread/messages", chatter_fetch_params]]},
         )
         fetched_ids = [msg["id"] for msg in result["mail.message"]]
         self.assertIn(

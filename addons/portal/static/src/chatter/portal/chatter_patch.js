@@ -34,6 +34,14 @@ patch(Chatter.prototype, {
         });
     },
 
+    get extraMessageFetchRouteParams() {
+        const params = super.extraMessageFetchRouteParams;
+        if (this.env.inFrontendPortalChatter) {
+            params.share_only = true;
+        }
+        return params;
+    },
+
     get displayRating() {
         return this.portalChatterPlugin?.displayRating() ?? false;
     },
