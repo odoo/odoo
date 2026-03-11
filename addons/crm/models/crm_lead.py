@@ -462,7 +462,7 @@ class Lead(models.Model):
     @api.depends('email_normalized')
     def _compute_email_domain_criterion(self):
         self.email_domain_criterion = False
-        for lead in self.filtered('email_normalized'):
+        for lead in self.with_context(prefetch_fields=False).filtered('email_normalized'):
             lead.email_domain_criterion = iap_tools.mail_prepare_for_domain_search(
                 lead.email_normalized
             )
