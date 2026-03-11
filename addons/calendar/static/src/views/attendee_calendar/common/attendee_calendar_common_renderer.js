@@ -85,6 +85,13 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
 
     /**
      * @override
+     */
+    isEventToFade(event) {
+        return super.isEventToFade(...arguments) || event.rawRecord.is_draft;
+    }
+
+    /**
+     * @override
      * On event mounted, open popover if 'default_calendar_event_id' is specified in the context,
      * if the popover is not already opened and if the event is not being dragged.
      */

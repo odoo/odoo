@@ -1,9 +1,10 @@
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
-function shouldUseArchiveOrUnlinkWizard(now, partnerIds, recurrency, start) {
+function shouldUseArchiveOrUnlinkWizard(isDraft, now, partnerIds, recurrency, start) {
     return (
         start >= now
+        && !isDraft
         && (recurrency || !(partnerIds.length === 1 && partnerIds[0] === user.partnerId))
     )
 }
@@ -16,8 +17,8 @@ export function useArchiveOrUnlinkCalendarEvent() {
     const actionService = useService("action");
     const orm = useService("orm");
 
-    return async ({ requestedAction, resId, partnerIds, recurrency, start, defaultAction, nextAction }) => {
-        if (shouldUseArchiveOrUnlinkWizard(luxon.DateTime.now(), partnerIds, recurrency, start)) {
+    return async ({ requestedAction, resId, isDraft, partnerIds, recurrency, start, defaultAction, nextAction }) => {
+        if (shouldUseArchiveOrUnlinkWizard(isDraft, luxon.DateTime.now(), partnerIds, recurrency, start)) {
             const actionOpenArchiveOrUnlinkWizard = await orm.call("calendar.event", "action_open_archive_or_unlink_wizard", [resId, requestedAction, nextAction]);
             if (actionOpenArchiveOrUnlinkWizard?.type) {
                 actionService.doAction(actionOpenArchiveOrUnlinkWizard);
@@ -39,7 +40,7 @@ export function useArchiveOrUnlinkCalendarEvents() {
         let isArchiveOrUnlinkWizardRequired = false;
         const now = luxon.DateTime.now();
         for (const record of records) {
-            if (shouldUseArchiveOrUnlinkWizard(now, record.data.partner_ids.resIds, record.data.recurrency, record.data.start)) {
+            if (shouldUseArchiveOrUnlinkWizard(record.data.is_draft, now, record.data.partner_ids.resIds, record.data.recurrency, record.data.start)) {
                 isArchiveOrUnlinkWizardRequired = true;
                 break;
             }

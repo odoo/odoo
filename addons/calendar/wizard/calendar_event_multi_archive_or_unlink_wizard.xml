@@ -9,8 +9,8 @@
                     <span invisible="requested_action != 'unlink'">Are you sure you want to delete these events?</span>
                     <span invisible="requested_action != 'archive'">Are you sure you want to archive these events?</span>
                 </p>
-                <span invisible="not is_user_admin">Notify attendees that the event was canceled?</span>
-                <span invisible="is_user_admin">Notify attendees of events you organized that the event was canceled?</span>
+                <span invisible="not is_user_admin">Notify attendees of confirmed events that the event was canceled?</span>
+                <span invisible="is_user_admin">Notify attendees of confirmed events you organized that the event was canceled?</span>
                 <field name="archive_or_unlink_wizard_ids" invisible="1">
                     <list>
                         <field name="body"/>

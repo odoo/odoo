@@ -29,7 +29,9 @@ class CalendarEventMultiArchiveOrUnlinkWizard(models.TransientModel):
         now = fields.Datetime.now()
         self.env['mail.mail'].sudo().create([
             wizard._prepare_mail_values() for wizard in self.archive_or_unlink_wizard_ids
-            if wizard.calendar_event_id.partner_ids != self.env.user.partner_id and wizard.calendar_event_id.start > now
+            if wizard.calendar_event_id.partner_ids != self.env.user.partner_id
+               and wizard.calendar_event_id.start > now
+               and not wizard.calendar_event_id.is_draft
         ]).send_after_commit()
 
     def action_send_mails_and_archive(self):

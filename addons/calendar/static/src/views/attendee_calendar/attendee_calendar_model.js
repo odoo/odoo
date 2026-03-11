@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -189,6 +190,9 @@ export class AttendeeCalendarModel extends CalendarModel {
         const normalizedRecord = super.normalizeRecord(rawRecord);
         if (rawRecord.effective_privacy === "private") {
             normalizedRecord.titleIcon = "lock";
+        }
+        if (rawRecord.is_draft) {
+            normalizedRecord.title = _t("[Draft] %s", normalizedRecord.title);
         }
         return normalizedRecord;
     }
