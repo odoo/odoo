@@ -153,4 +153,4 @@ export const systrayAttendance = {
 
 registry
     .category("systray")
-    .add("hr_attendance.attendance_menu", systrayAttendance, { sequence: 101 });
+    .add("hr_attendance.attendance_menu", systrayAttendance, { sequence: 70 });
