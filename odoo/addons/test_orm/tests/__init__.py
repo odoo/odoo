@@ -30,4 +30,5 @@ from . import (
     test_properties,
     test_query,
     test_qweb_float,
+    test_read_group_override,
 )
