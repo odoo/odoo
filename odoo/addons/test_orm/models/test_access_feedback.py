@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class TestAccessFeedbackSomeObj(models.Model):
@@ -38,9 +38,3 @@ class TestAccessFeedbackObjCateg(models.Model):
     _description = "Context dependent searchable model"
 
     name = fields.Char(required=True)
-
-    @api.model
-    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
-        if self.env.context.get('only_media'):
-            domain += [('name', '=', 'Media')]
-        return super().search_fetch(domain, field_names, offset, limit, order)
