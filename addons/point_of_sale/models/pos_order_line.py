@@ -237,7 +237,13 @@ class PosOrderLine(models.Model):
         is_refund_line = line.qty * line.price_unit < 0
 
         lang = line.order_id.partner_id.lang or self.env.user.lang
-        product_name = line.with_context(lang=lang).full_product_name or line.product_id.with_context(lang=lang).display_name
+        product_name = line.product_id.with_context(lang=lang).display_name
+
+        product_full_name = line.with_context(lang=lang).full_product_name
+        if product_full_name:
+            product_code = f"[{line.with_context(lang=lang).product_id.code}] " if line.product_id.code else ""
+            product_name = product_code + product_full_name
+
         if line.product_id.description_sale:
             product_name += '\n' + line.product_id.with_context(lang=lang).description_sale
         return {
