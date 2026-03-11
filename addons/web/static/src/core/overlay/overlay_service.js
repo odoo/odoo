@@ -12,6 +12,7 @@ const services = registry.category("services");
  *  onRemove?: () => void;
  *  sequence?: number;
  *  rootId?: string;
+ *  overlayContainerId?: string,
  * }} OverlayServiceAddOptions
  */
 
@@ -50,6 +51,7 @@ export const overlayService = {
                 remove: removeCurrentOverlay,
                 sequence: options.sequence ?? 50,
                 rootId: options.rootId,
+                overlayContainerId: options.overlayContainerId,
             };
             return removeCurrentOverlay;
         };

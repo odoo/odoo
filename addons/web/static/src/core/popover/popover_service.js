@@ -62,6 +62,7 @@ export const popoverService = {
                 {
                     env: options.env,
                     onRemove: options.onClose,
+                    overlayContainerId: options.overlayContainerId,
                     rootId: target.getRootNode()?.host?.id,
                     sequence: options.sequence,
                 }

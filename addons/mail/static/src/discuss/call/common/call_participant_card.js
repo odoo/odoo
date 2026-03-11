@@ -2,6 +2,7 @@ import { useExternalListener, useRef } from "@web/owl2/utils";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
@@ -24,7 +25,7 @@ export class CallParticipantCard extends Component {
         "isSidebarItem?",
         "compact?",
     ];
-    static components = { CallParticipantVideo, CallContextMenu, CallDropdown };
+    static components = { CallParticipantVideo, CallContextMenu, CallDropdown, DiscussAvatar };
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
     rtc;
