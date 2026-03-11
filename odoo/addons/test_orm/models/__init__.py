@@ -23,4 +23,5 @@ from . import (
     test_qweb_float,
     test_read_group_override,
     test_read_group_private,
+    test_read_grouping_sets,
 )
