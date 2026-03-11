@@ -94,6 +94,7 @@
                 <field name="description" optional="hide" readonly="recurrency"/>
                 <field name="allday" column_invisible="True"/>
                 <field name="current_attendee" column_invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
+                <field name="is_draft" column_invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
                 <field name="message_needaction" column_invisible="True"/>
             </list>
         </field>
@@ -106,7 +107,8 @@
         <field name="arch" type="xml">
             <form string="Meetings" class="o_calendar_event_form_view" js_class="calendar_form">
                 <header>
-                    <button name="action_open_composer" class="btn btn-primary" type="object" string="Send email" invisible="not user_can_edit"/>
+                    <button name="action_open_composer" class="btn btn-primary" type="object" string="Send email" invisible="is_draft or not user_can_edit"/>
+                    <button name="action_open_confirm_wizard" class="btn btn-primary" type="object" string="Confirm" invisible="not is_draft"/>
                 </header>
                 <div invisible="not recurrence_id" class="alert alert-info oe_edit_only" role="status">
                     <label for="recurrence_update" class="me-2">Edit recurring event</label>
@@ -117,9 +119,11 @@
                     <field name="invalid_email_partner_ids" widget="many2many_tags"/>
                 </div>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" class="o_calendar_archived_web_ribbon" invisible="active"/>
+                    <widget name="web_ribbon" title="Draft" bg_color="text-bg-500" invisible="not active or not is_draft"/>
                     <field name="active" invisible="1"/>
                     <field name="current_attendee" invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
+                    <field name="is_draft" invisible="1"/> <!--Required to compute the names of the activities.-->
                     <field name="user_can_edit" invisible="1"/>
                     <field name="invalid_email_partner_ids" invisible="1"/> <!-- this field will be used in
                         many2many_attendees widget -->
@@ -232,7 +236,7 @@
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True, 'on_tag_click': 'open_form'}" readonly="not user_can_edit"/>
                                     <field name="recurrence_id" invisible="1" />
                                     <field name="rrule_type" invisible="1" />
-                                    <field name="recurrency" widget="boolean_toggle" readonly="not user_can_edit"/>
+                                    <field name="recurrency" invisible="is_draft" widget="boolean_toggle" readonly="not user_can_edit"/>
                                     <field name="rrule_type_ui" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
                                     <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
@@ -272,7 +276,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page name="page_invitations" string="Invitations" groups="base.group_no_one" invisible="not user_can_edit">
+                        <page name="page_invitations" string="Invitations" groups="base.group_no_one" invisible="is_draft or not user_can_edit">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="list,kanban" readonly="1">
                                 <list string="Invitation details" editable="top" create="false" delete="false">
@@ -414,6 +418,7 @@
                 <field name="declined_count" invisible="1"/>
                 <field name="user_can_edit" invisible="1"/>
                 <field name="user_id" invisible="1"/>
+                <field name="is_draft" invisible="1"/> <!--Used to change the opacity of the draft events.-->
                 <field name="is_highlighted" invisible="1"/>
                 <field name="privacy" invisible="1"/>
                 <field name="effective_privacy" invisible="1"/>
@@ -462,6 +467,7 @@
                 <filter string="Public" name="public" domain="[('privacy', '=', 'public')]"/>
                 <filter string="Private" name="private" domain="[('privacy', '=', 'private')]"/>
                 <filter string="Only Internal Users" name="confidential" domain="[('privacy', '=', 'confidential')]"/>
+                <filter string="Draft" name="draft" domain="[('is_draft', '=', True)]"/>
                 <separator/>
                 <filter string="Recurrent" name="recurrent" domain="[('recurrency', '=', True)]"/>
                 <separator/>

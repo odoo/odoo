@@ -724,6 +724,10 @@ class CalendarEvent(models.Model):
                 return user_id
         return self.env.user
 
+    def _is_confirmed(self):
+        self.ensure_one()
+        return not self.is_draft
+
     def _is_microsoft_insertion_blocked(self, sender_user):
         self.ensure_one()
         has_different_owner = self.user_id and self.user_id != sender_user

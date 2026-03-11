@@ -187,6 +187,9 @@ export class AttendeeCalendarModel extends CalendarModel {
         if (rawRecord.effective_privacy === "private") {
             normalizedRecord.titleIcon = "fa fa-lock";
         }
+        if (rawRecord.is_draft) {
+            normalizedRecord.title = `[Draft] ${normalizedRecord.title}`
+        }
         return normalizedRecord;
     }
 }

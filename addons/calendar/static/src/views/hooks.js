@@ -8,10 +8,11 @@ export function useCancelCalendarEvent() {
     const actionService = useService("action");
     const orm = useService("orm");
 
-    return async ({ requestedAction, resId, currentAttendeeId, currentStatus, organizerId, partnerIds, recurrency, start, fallback, nextAction }) => {
+    return async ({ requestedAction, resId, currentAttendeeId, currentStatus, isDraft, organizerId, partnerIds, recurrency, start, fallback, nextAction }) => {
         if (user.isAdmin || user.userId === organizerId) {
             if (
                 start >= luxon.DateTime.now()
+                && !isDraft
                 && (recurrency || !(partnerIds.length === 1 && partnerIds[0] === user.partnerId))
             ) {
                 const actionOpenCancelWizard = await orm.call("calendar.event", "action_open_cancel_wizard", [resId, requestedAction, currentAttendeeId, nextAction]);
@@ -46,6 +47,7 @@ export function useCancelCalendarEvents() {
                 const partnerIds = record.data.partner_ids.resIds;
                 if (
                     record.data.start >= now
+                    && !record.data.is_draft
                     && (record.data.recurrency || !(partnerIds.length === 1 && partnerIds[0] === user.partnerId))
                 ) {
                     isCancelWizardRequired = true;

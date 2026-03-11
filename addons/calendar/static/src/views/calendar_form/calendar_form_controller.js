@@ -21,6 +21,7 @@ export class CalendarFormController extends FormController {
                     resId: record.resId,
                     currentAttendeeId: record.data.current_attendee.id,
                     currentStatus: record.data.current_status,
+                    isDraft: record.data.is_draft,
                     organizerId: record.data.user_id.id,
                     partnerIds: record.data.partner_ids.resIds,
                     recurrency: record.data.recurrency,
@@ -57,6 +58,7 @@ export class CalendarFormController extends FormController {
             resId: record.resId,
             currentAttendeeId: record.data.current_attendee.id,
             currentStatus: record.data.current_status,
+            isDraft: record.data.is_draft,
             organizerId: record.data.user_id.id,
             partnerIds: record.data.partner_ids.resIds,
             recurrency: record.data.recurrency,
@@ -81,12 +83,20 @@ export class CalendarFormController extends FormController {
     /**
      * This method is meant to be overridden.
      */
+    canNotifyAttendees(record, changes) {
+        return !record.data.is_draft;
+    }
+
+    /**
+     * This method is meant to be overridden.
+     */
     async notifyAttendees(record, changes) {
         const invitedAttendees = this.getInvitedAttendees(record, changes);
         if (invitedAttendees.length > 0) {
             const actionOpenInviteWizard = await this.orm.call("calendar.event", "action_open_invite_wizard", [
                 record.resId,
                 invitedAttendees,
+                null,
                 this.props.redirectionObj ? { "type": "ir.actions.act_url", "url": this.props.redirectionObj.url, "target": "self" } : null,
             ]);
             if (actionOpenInviteWizard && actionOpenInviteWizard.type) {
@@ -101,7 +111,7 @@ export class CalendarFormController extends FormController {
      */
     async onRecordSaved(record, changes) {
         await super.onRecordSaved(...arguments);
-        if (record.data.start >= luxon.DateTime.now()) {
+        if (record.data.start >= luxon.DateTime.now() && this.canNotifyAttendees(record, changes)) {
             await this.notifyAttendees(record, changes);
         }
     }

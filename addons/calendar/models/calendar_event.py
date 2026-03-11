@@ -168,6 +168,7 @@ class CalendarEvent(models.Model):
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
         and vice versa.""")
+    is_draft = fields.Boolean(string="Is draft")
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user, index='btree_not_null')
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -191,7 +192,7 @@ class CalendarEvent(models.Model):
     )
     show_as = fields.Selection(
         [('free', 'Available'),
-         ('busy', 'Busy')], 'Show as', default='busy', required=True,
+         ('busy', 'Busy')], 'Show as', compute='_compute_show_as', readonly=False, store=True,
         help="If the time is shown as 'busy', this event will be visible to other people with either the full \
         information or simply 'busy' written depending on its privacy. Use this option to let other people know \
         that you are unavailable during that period of time. \n If the event is shown as 'free', other users know \
@@ -308,10 +309,10 @@ class CalendarEvent(models.Model):
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
 
-    @api.onchange("allday")
-    def _onchange_allday(self):
+    @api.depends('allday', 'is_draft')
+    def _compute_show_as(self):
         for event in self:
-            event.show_as = 'free' if event.allday else 'busy'
+            event.show_as = 'free' if event.allday or event.is_draft else 'busy'
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -723,6 +724,7 @@ class CalendarEvent(models.Model):
                 'meeting_activity_ids': vals.get('meeting_activity_ids', defaults.get('meeting_activity_ids')),
                 'allday': vals.get('allday', defaults.get('allday')),
                 'description': vals.get('description', defaults.get('description')),
+                'is_draft': vals.get('is_draft', defaults.get('is_draft')),
                 'name': vals.get('name', defaults.get('name')),
                 # when res_id is not defined or vals['res_id'] == 0, fallback on default
                 'res_id': vals.get('res_id') or defaults.get('res_id'),
@@ -775,8 +777,8 @@ class CalendarEvent(models.Model):
                 }
                 if values['description']:
                     activity_vals['note'] = values['description']
-                if values['name']:
-                    activity_vals['summary'] = values['name']
+                if values['name'] or values['is_draft']:
+                    activity_vals['summary'] = f'{'[Draft] ' if values['is_draft'] else ''}{values['name']}'
                 if values['start']:
                     activity_vals['date_deadline'] = self._get_activity_deadline_from_start(fields.Datetime.from_string(values['start']), values['allday'])
                 if values['user_id']:
@@ -1100,10 +1102,22 @@ class CalendarEvent(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
-    def action_open_invite_wizard(self, partner_ids=None, next_action=None):
+    def _action_confirm(self):
+        self.ensure_one()
+        self.is_draft = False
+
+    def action_open_confirm_wizard(self):
+        self.ensure_one()
+        action_open_confirm_wizard = self.action_open_invite_wizard(self.partner_ids, True) if self.start >= fields.Datetime.now() else {}
+        if not action_open_confirm_wizard:
+            self.with_context(block_automatic_invitation_email=True)._action_confirm()
+        return action_open_confirm_wizard
+
+    def action_open_invite_wizard(self, partner_ids=None, is_confirmation_required=False, next_action=None):
         """If needed, it displays a modal offering to send invitations to the event's attendees.
 
         :param partner_ids: The ids of the partners to invite. If not set, all the partners of the event are invited.
+        :param is_confirmation_required: If True, the modal offers to confirm the event as well as sending out invitations.
         :param next_action: The action to perform once the attendees are invited.
         :return: Action to display the modal."""
         self.ensure_one()
@@ -1119,6 +1133,7 @@ class CalendarEvent(models.Model):
             'name': _('Notify Attendees'),
             'context': {
                 'default_calendar_attendee_ids': self.attendee_ids.filtered_domain([('partner_id', 'in', partner_ids)]).ids,
+                'default_is_confirmation_required': is_confirmation_required,
                 'dialog_size': 'small',
                 'next_action': next_action,
             },
@@ -1431,8 +1446,8 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.meeting_activity_ids:
                 activity_values = {}
-                if 'name' in fields:
-                    activity_values['summary'] = event.name
+                if 'name' in fields or 'is_draft' in fields:
+                    activity_values['summary'] = f'{'[Draft] ' if event.is_draft else ''}{event.name}'
                 if 'description' in fields:
                     activity_values['note'] = event.description
                 # protect against loops in case of ill-managed timezones
@@ -1879,6 +1894,8 @@ class CalendarEvent(models.Model):
     def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
         """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
         to be overridden."""
+        if 'is_draft' in update_vals and not update_vals['is_draft']:
+            return current_attendees
         return current_attendees - previous_attendees
 
     @api.model

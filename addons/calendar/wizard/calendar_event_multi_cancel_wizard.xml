@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Cancel Events">
                 <p class="alert alert-warning" role="alert">Are you sure you want to <field name="requested_action" readonly="1"/> those events?</p>
-                Notify attendees of<span invisible="is_user_admin"> events you organized</span> that the event was canceled?
+                Notify attendees of confirmed events<span invisible="is_user_admin"> you organized</span> that the event was canceled?
                 <field name="cancel_wizard_ids" invisible="1">
                     <list>
                         <field name="body"/>

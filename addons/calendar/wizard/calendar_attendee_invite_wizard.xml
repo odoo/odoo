@@ -7,9 +7,14 @@
             <form string="Send Invitations">
                 Would you like to send invitation emails to attendees?
                 <field name="calendar_attendee_ids" invisible="1"/>
-                <footer>
+                <footer invisible="is_confirmation_required">
                     <button string="Send" name="action_send" type="object" class="btn-primary"/>
                     <button string="Don't send" name="action_close" type="object" class="btn-secondary"/>
+                </footer>
+                <footer invisible="not is_confirmation_required">
+                    <button string="Send and confirm" name="action_send_and_confirm" type="object" class="btn-primary"/>
+                    <button string="Confirm" name="action_confirm" type="object" class="btn-secondary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>
