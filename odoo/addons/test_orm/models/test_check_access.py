@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class Test_Access_RightTicket(models.Model):
+class TestCheckAccessTicket(models.Model):
     """We want to simulate a record that would typically be accessed by a portal user,
        with a relational field to records that could not be accessed by a portal user.
     """

@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class Test_Read_GroupAggregate(models.Model):
+class TestReadGroupPrivateAggregate(models.Model):
     _name = 'test_read_group_private.aggregate'
     _order = 'id'
     _description = 'Group Test Aggregate'
@@ -13,7 +13,7 @@ class Test_Read_GroupAggregate(models.Model):
     display_name = fields.Char(store=True)
 
 
-class Test_Read_GroupAggregateBoolean(models.Model):
+class TestReadGroupPrivateAggregateBoolean(models.Model):
     _name = 'test_read_group_private.aggregate.boolean'
     _description = 'Group Test Read Boolean Aggregate'
     _order = 'key DESC'
@@ -24,7 +24,7 @@ class Test_Read_GroupAggregateBoolean(models.Model):
     bool_array = fields.Boolean(default=False, aggregator='array_agg')
 
 
-class Test_Read_GroupOrder(models.Model):
+class TestReadGroupPrivateOrder(models.Model):
     _name = 'test_read_group_private.order'
     _description = 'Sales order'
 
@@ -42,7 +42,7 @@ class Test_Read_GroupOrder(models.Model):
         return super()._order
 
 
-class Test_Read_GroupOrderLine(models.Model):
+class TestReadGroupPrivateOrderLine(models.Model):
     _name = 'test_read_group_private.order.line'
     _description = 'Sales order line'
 
@@ -52,7 +52,7 @@ class Test_Read_GroupOrderLine(models.Model):
     date = fields.Date(related='order_id.date')
 
 
-class Test_Read_GroupFill_Temporal(models.Model):
+class TestReadGroupPrivateFillTemporal(models.Model):
     _name = 'test_read_group_private.fill_temporal'
     _description = 'Group Test Fill Temporal'
 
@@ -61,7 +61,7 @@ class Test_Read_GroupFill_Temporal(models.Model):
     value = fields.Integer()
 
 
-class Test_Read_GroupUser(models.Model):
+class TestReadGroupPrivateUser(models.Model):
     _name = 'test_read_group_private.user'
     _description = "User"
 
@@ -75,7 +75,7 @@ class Test_Read_GroupUser(models.Model):
     )
 
 
-class Test_Read_GroupTask(models.Model):
+class TestReadGroupPrivateTask(models.Model):
     _name = 'test_read_group_private.task'
     _description = "Project task"
 
@@ -122,7 +122,7 @@ class Test_Read_GroupTask(models.Model):
     key = fields.Char()
 
 
-class Test_Read_GroupTag(models.Model):
+class TestReadGroupPrivateTag(models.Model):
     _name = 'test_read_group_private.tag'
     _description = "Project tag"
 
@@ -130,7 +130,7 @@ class Test_Read_GroupTag(models.Model):
     active = fields.Boolean(default=True)
 
 
-class Test_Read_GroupRelated_Bar(models.Model):
+class TestReadGroupPrivateRelatedBar(models.Model):
     _name = 'test_read_group_private.related_bar'
     _description = "RelatedBar"
 
@@ -146,7 +146,7 @@ class Test_Read_GroupRelated_Bar(models.Model):
         self.computed_base_ids = False
 
 
-class Test_Read_GroupRelated_Foo(models.Model):
+class TestReadGroupPrivateRelatedFoo(models.Model):
     _name = 'test_read_group_private.related_foo'
     _description = "RelatedFoo"
 
@@ -161,7 +161,7 @@ class Test_Read_GroupRelated_Foo(models.Model):
     schedule_datetime = fields.Datetime()
 
 
-class Test_Read_GroupRelated_Base(models.Model):
+class TestReadGroupPrivateRelatedBase(models.Model):
     _name = 'test_read_group_private.related_base'
     _description = "RelatedBase"
 
@@ -177,7 +177,7 @@ class Test_Read_GroupRelated_Base(models.Model):
     foo_id_bar_name_sudo = fields.Char('foo_bar_name_sudo_2', related='foo_id.bar_name_sudo')
 
 
-class Test_Read_GroupRelated_Inherits(models.Model):
+class TestReadGroupPrivateRelatedInherits(models.Model):
     _name = 'test_read_group_private.related_inherits'
     _description = "RelatedInherits"
     _inherits = {

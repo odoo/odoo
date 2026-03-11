@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class Test_Read_GroupOrder(models.Model):
+class TestReadGroupOverrideOrder(models.Model):
     _name = 'test_read_group_override.order'
     _description = 'Sales order'
 
@@ -19,7 +19,7 @@ class Test_Read_GroupOrder(models.Model):
         return super()._order
 
 
-class Test_Read_GroupOrderLine(models.Model):
+class TestReadGroupOverrideOrderLine(models.Model):
     _name = 'test_read_group_override.order.line'
     _description = 'Sales order line'
 

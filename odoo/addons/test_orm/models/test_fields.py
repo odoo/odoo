@@ -7,7 +7,7 @@ from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger('precompute_setter')
 
 
-class TestOrmCategory(models.Model):
+class TestFieldsCategory(models.Model):
     _name = 'test_fields.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -80,7 +80,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestFieldsDiscussion(models.Model):
     _name = 'test_fields.discussion'
     _description = 'Test ORM Discussion'
 
@@ -130,7 +130,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestFieldsMessage(models.Model):
     _name = 'test_fields.message'
     _description = 'Test ORM Message'
 
@@ -233,7 +233,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestFieldsEmailmessage(models.Model):
     _name = 'test_fields.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_fields.message': 'message'}
@@ -245,7 +245,7 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmMultiTag(models.Model):
+class TestFieldsMultiTag(models.Model):
     _name = 'test_fields.multi.tag'
     _description = 'Test ORM Multi Tag'
 
@@ -261,7 +261,7 @@ class TestOrmMultiTag(models.Model):
             record.display_name = name or ""
 
 
-class TestOrmComputeOnchangeLine(models.Model):
+class TestFieldsComputeOnchangeLine(models.Model):
     _name = 'test_fields.compute.onchange.line'
     _description = "Line-like model for test_fields.compute.onchange"
 
@@ -275,7 +275,7 @@ class TestOrmComputeOnchangeLine(models.Model):
             line.bar = (line.foo or "") + "r"
 
 
-class TestOrmComputeOnchange(models.Model):
+class TestFieldsComputeOnchange(models.Model):
     _name = 'test_fields.compute.onchange'
     _description = "Compute method as an onchange"
 
@@ -335,7 +335,7 @@ class TestOrmComputeOnchange(models.Model):
         return [dict(vals, foo=self.env._("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
 
 
-class TestOrmFoo(models.Model):
+class TestFieldsFoo(models.Model):
     _name = 'test_fields.foo'
     _description = 'Test ORM Foo'
 
@@ -345,7 +345,7 @@ class TestOrmFoo(models.Model):
     text = fields.Char(trim=False)
 
 
-class TestOrmBar(models.Model):
+class TestFieldsBar(models.Model):
     _name = 'test_fields.bar'
     _description = 'Test ORM Bar'
 
@@ -368,7 +368,7 @@ class TestOrmBar(models.Model):
         return [('name', 'in', records.mapped('name'))]
 
 
-class TestOrmComputeContainer(models.Model):
+class TestFieldsComputeContainer(models.Model):
     _name = 'test_fields.compute.container'
     _description = 'test_orm.compute.container'
 
@@ -383,7 +383,7 @@ class TestOrmComputeContainer(models.Model):
             record.member_count = len(record.member_ids)
 
 
-class TestOrmComputeMember(models.Model):
+class TestFieldsComputeMember(models.Model):
     _name = 'test_fields.compute.member'
     _description = 'test_fields.compute.member'
 
@@ -422,7 +422,7 @@ class TestOrmComputeMember(models.Model):
         return [(field_name, operator, value)]
 
 
-class TestOrmMixed(models.Model):
+class TestFieldsMixed(models.Model):
     _name = 'test_fields.mixed'
     _description = 'Test ORM Mixed'
 
@@ -465,7 +465,7 @@ class TestOrmMixed(models.Model):
                 if not model.model.startswith('ir.')]
 
 
-class TestOrmComputeReadonly(models.Model):
+class TestFieldsComputeReadonly(models.Model):
     _name = 'test_fields.compute.readonly'
     _description = 'Model with a computed readonly field'
 
@@ -478,7 +478,7 @@ class TestOrmComputeReadonly(models.Model):
             record.bar = record.foo
 
 
-class TestOrmRecursive(models.Model):
+class TestFieldsRecursive(models.Model):
     _name = 'test_fields.recursive'
     _description = 'Test ORM Recursive'
 
@@ -517,7 +517,7 @@ class TestOrmRecursive(models.Model):
                 rec.context_dependent_name = rec.name
 
 
-class TestOrmRecursiveTree(models.Model):
+class TestFieldsRecursiveTree(models.Model):
     _name = 'test_fields.recursive.tree'
     _description = 'Test ORM Recursive with one2many field'
 
@@ -533,14 +533,14 @@ class TestOrmRecursiveTree(models.Model):
             rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
 
 
-class TestOrmRecursiveOrder(models.Model):
+class TestFieldsRecursiveOrder(models.Model):
     _name = 'test_fields.recursive.order'
     _description = 'test_fields.recursive.order'
 
     value = fields.Integer()
 
 
-class TestOrmRecursiveLine(models.Model):
+class TestFieldsRecursiveLine(models.Model):
     _name = 'test_fields.recursive.line'
     _description = 'test_fields.recursive.line'
 
@@ -556,7 +556,7 @@ class TestOrmRecursiveLine(models.Model):
             record.task_number = len(record.task_ids)
 
 
-class TestOrmRecursiveTask(models.Model):
+class TestFieldsRecursiveTask(models.Model):
     _name = 'test_fields.recursive.task'
     _description = 'test_fields.recursive.task'
 
@@ -575,7 +575,7 @@ class TestOrmRecursiveTask(models.Model):
             record.line_id = record.line_id.search(domain, order='id desc', limit=1)
 
 
-class TestOrmCascade(models.Model):
+class TestFieldsCascade(models.Model):
     _name = 'test_fields.cascade'
     _description = 'Test ORM Cascade'
 
@@ -594,7 +594,7 @@ class TestOrmCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
-class TestOrmComputeDynamicDepends(models.Model):
+class TestFieldsComputeDynamicDepends(models.Model):
     _name = 'test_fields.compute.dynamic.depends'
     _description = "Computed field with dynamic dependencies"
 
@@ -615,7 +615,7 @@ class TestOrmComputeDynamicDepends(models.Model):
             record.full_name = ", ".join(filter(None, (record[fname] for fname in fnames)))
 
 
-class TestOrmModel_Many2one_Reference(models.Model):
+class TestFieldsModelMany2oneReference(models.Model):
     _name = 'test_fields.model_many2one_reference'
     _description = 'dummy m2oref model'
 
@@ -624,7 +624,7 @@ class TestOrmModel_Many2one_Reference(models.Model):
     const = fields.Boolean(default=True)
 
 
-class TestOrmInverse_M2o_Ref(models.Model):
+class TestFieldsInverseM2oRef(models.Model):
     _name = 'test_fields.inverse_m2o_ref'
     _description = 'dummy m2oref inverse model'
 
@@ -647,7 +647,7 @@ class TestOrmInverse_M2o_Ref(models.Model):
         self.model_computed_ids = []
 
 
-class TestOrmComputeInverse(models.Model):
+class TestFieldsComputeInverse(models.Model):
     _name = 'test_fields.compute.inverse'
     _description = 'Model with a computed inversed field'
 
@@ -690,7 +690,7 @@ class TestOrmComputeInverse(models.Model):
                 rec.foo = 'has one child'
 
 
-class TestOrmMulti_Compute_Inverse(models.Model):
+class TestFieldsMultiComputeInverse(models.Model):
     """ Model with the same inverse method for several fields. """
     _name = 'test_fields.multi_compute_inverse'
     _description = 'Test ORM Multi Compute Inverse'
@@ -718,7 +718,7 @@ class TestOrmMulti_Compute_Inverse(models.Model):
             record.write({'foo': f'{record.bar1}/{record.bar2}/{record.bar3}'})
 
 
-class TestOrmComputeUnassigned(models.Model):
+class TestFieldsComputeUnassigned(models.Model):
     _name = 'test_fields.compute.unassigned'
     _description = "Model with computed fields left unassigned"
 
@@ -753,7 +753,7 @@ class TestOrmComputeUnassigned(models.Model):
                 record.bares = record.foo
 
 
-class TestOrmUser(models.Model):
+class TestFieldsUser(models.Model):
     _name = 'test_fields.user'
     _description = 'test_fields.user'
     _allow_sudo_commands = False
@@ -768,7 +768,7 @@ class TestOrmUser(models.Model):
             user.group_count = len(user.group_ids)
 
 
-class TestOrmGroup(models.Model):
+class TestFieldsGroup(models.Model):
     _name = 'test_fields.group'
     _description = 'test_fields.group'
     _allow_sudo_commands = False
@@ -777,7 +777,7 @@ class TestOrmGroup(models.Model):
     user_ids = fields.Many2many('test_fields.user')
 
 
-class TestOrmComputeCreated(models.Model):
+class TestFieldsComputeCreated(models.Model):
     """ This model has records created by another model, and has a stored
     computed field. The purpose of that field is to make sure that flushing the
     field above creates a record here and also flushes its computed field.
@@ -794,7 +794,7 @@ class TestOrmComputeCreated(models.Model):
             record.value = len(record.name or "")
 
 
-class TestOrmComputeCreator(models.Model):
+class TestFieldsComputeCreator(models.Model):
     """ This model has a computed field that creates a new record. """
     _name = 'test_fields.compute.creator'
     _description = 'test_fields.compute.creator'
@@ -812,7 +812,7 @@ class TestOrmComputeCreator(models.Model):
             )
 
 
-class TestOrmMonetary_Base(models.Model):
+class TestFieldsMonetaryBase(models.Model):
     _name = 'test_fields.monetary_base'
     _description = 'Monetary Base'
 
@@ -820,7 +820,7 @@ class TestOrmMonetary_Base(models.Model):
     amount = fields.Monetary(currency_field='base_currency_id')
 
 
-class TestOrmMonetary_Related(models.Model):
+class TestFieldsMonetaryRelated(models.Model):
     _name = 'test_fields.monetary_related'
     _description = 'Monetary Related'
 
@@ -830,7 +830,7 @@ class TestOrmMonetary_Related(models.Model):
     total = fields.Monetary()
 
 
-class TestOrmSelection(models.Model):
+class TestFieldsSelection(models.Model):
     _name = 'test_fields.selection'
     _description = "Selection"
 
@@ -838,7 +838,7 @@ class TestOrmSelection(models.Model):
     other = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
 
 
-class TestOrmRelated(models.Model):
+class TestFieldsRelated(models.Model):
     _name = 'test_fields.related'
     _description = 'Test ORM Related'
 
@@ -883,7 +883,7 @@ class TestOrmRelated(models.Model):
     foo_float_id = fields.Float(related='foo_id.test_float')
 
 
-class TestOrmRelated_Foo(models.Model):
+class TestFieldsRelatedFoo(models.Model):
     _name = 'test_fields.related_foo'
     _description = 'test_fields.related_foo'
 
@@ -905,7 +905,7 @@ class TestOrmRelated_Foo(models.Model):
     test_float = fields.Float(digits='ORM Precision')
 
 
-class TestOrmRelated_Bar(models.Model):
+class TestFieldsRelatedBar(models.Model):
     _name = 'test_fields.related_bar'
     _description = 'test_fields.related_bar'
 
@@ -913,7 +913,7 @@ class TestOrmRelated_Bar(models.Model):
     active = fields.Boolean(default=True)
 
 
-class TestOrmTriggerLeft(models.Model):
+class TestFieldsTriggerLeft(models.Model):
     _name = 'test_fields.trigger.left'
     _description = 'model with a related many2one'
 
@@ -921,7 +921,7 @@ class TestOrmTriggerLeft(models.Model):
     right_id = fields.Many2one(related='middle_ids.right_id', store=True)
 
 
-class TestOrmTriggerMiddle(models.Model):
+class TestFieldsTriggerMiddle(models.Model):
     _name = 'test_fields.trigger.middle'
     _description = 'model linking test_fields.trigger.left and test_fields.trigger.right'
 
@@ -929,7 +929,7 @@ class TestOrmTriggerMiddle(models.Model):
     right_id = fields.Many2one('test_fields.trigger.right', required=True)
 
 
-class TestOrmTriggerRight(models.Model):
+class TestFieldsTriggerRight(models.Model):
     _name = 'test_fields.trigger.right'
     _description = 'model with a dependency on the inverse of the related many2one'
 
@@ -942,7 +942,7 @@ class TestOrmTriggerRight(models.Model):
             record.left_size = len(record.left_ids)
 
 
-class TestOrmCompany(models.Model):
+class TestFieldsCompany(models.Model):
     _name = 'test_fields.company'
     _description = 'Test ORM Company'
 
@@ -960,7 +960,7 @@ class TestOrmCompany(models.Model):
     partner_id = fields.Many2one('res.partner', company_dependent=True)
 
 
-class TestOrmCompanyAttr(models.Model):
+class TestFieldsCompanyAttr(models.Model):
     _name = 'test_fields.company.attr'
     _description = 'Test ORM Company Attribute'
 
@@ -974,7 +974,7 @@ class TestOrmCompanyAttr(models.Model):
             record.bar = (record.company.foo or '') * record.quantity
 
 
-class TestOrmMulti(models.Model):
+class TestFieldsMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
     """
@@ -1003,7 +1003,7 @@ class TestOrmMulti(models.Model):
             line.tags |= self.tags
 
 
-class TestOrmMultiLine(models.Model):
+class TestFieldsMultiLine(models.Model):
     _name = 'test_fields.multi.line'
     _description = 'Test ORM Multi Line'
 
@@ -1013,7 +1013,7 @@ class TestOrmMultiLine(models.Model):
     tags = fields.Many2many('test_fields.multi.tag')
 
 
-class TestOrmMove(models.Model):
+class TestFieldsMove(models.Model):
     _name = 'test_fields.move'
     _description = 'Move'
 
@@ -1049,7 +1049,7 @@ class TestOrmMove(models.Model):
             record.payment_amount = sum(payment.amount for payment in record.payment_ids)
 
 
-class TestOrmMove_Line(models.Model):
+class TestFieldsMoveLine(models.Model):
     _name = 'test_fields.move_line'
     _description = 'Move Line'
 
@@ -1058,7 +1058,7 @@ class TestOrmMove_Line(models.Model):
     quantity = fields.Integer()
 
 
-class TestOrmPayment(models.Model):
+class TestFieldsPayment(models.Model):
     _name = 'test_fields.payment'
     _description = 'Payment inherits from Move'
     _inherits = {'test_fields.move': 'move_id'}
@@ -1067,7 +1067,7 @@ class TestOrmPayment(models.Model):
     amount = fields.Integer()
 
 
-class TestOrmModel_Active_Field(models.Model):
+class TestFieldsModelActiveField(models.Model):
     _name = 'test_fields.model_active_field'
     _description = 'A model with active field'
 
@@ -1091,7 +1091,7 @@ class TestOrmModel_Active_Field(models.Model):
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
-class TestOrmModel_Binary(models.Model):
+class TestFieldsModelBinary(models.Model):
     _name = 'test_fields.model_binary'
     _description = 'Test Image field'
 
@@ -1102,7 +1102,7 @@ class TestOrmModel_Binary(models.Model):
     binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, readonly=False)
 
 
-class TestOrmBinary_Svg(models.Model):
+class TestFieldsBinarySvg(models.Model):
     _name = 'test_fields.binary_svg'
     _description = 'Test SVG upload'
 
@@ -1115,7 +1115,7 @@ class TestOrmBinary_Svg(models.Model):
     )
 
 
-class TestOrmMonetary_Custom(models.Model):
+class TestFieldsMonetaryCustom(models.Model):
     _name = 'test_fields.monetary_custom'
     _description = 'Monetary Related Custom'
 
@@ -1124,7 +1124,7 @@ class TestOrmMonetary_Custom(models.Model):
     x_amount = fields.Monetary(related='monetary_id.amount')
 
 
-class TestOrmMonetary_Inherits(models.Model):
+class TestFieldsMonetaryInherits(models.Model):
     _name = 'test_fields.monetary_inherits'
     _description = 'Monetary Inherits'
     _inherits = {'test_fields.monetary_base': 'monetary_id'}
@@ -1133,7 +1133,7 @@ class TestOrmMonetary_Inherits(models.Model):
     currency_id = fields.Many2one('res.currency')
 
 
-class TestOrmModel_Image(models.Model):
+class TestFieldsModelImage(models.Model):
     _name = 'test_fields.model_image'
     _description = 'Test Image field'
 
@@ -1146,7 +1146,7 @@ class TestOrmModel_Image(models.Model):
     image_64 = fields.Image("Image 64", related='image', max_width=64, max_height=64, store=True, attachment=False, readonly=False)
 
 
-class TestOrmCountry(models.Model):
+class TestFieldsCountry(models.Model):
     _name = 'test_fields.country'
     _description = 'Country, ordered by name'
     _order = 'name, id'
@@ -1154,7 +1154,7 @@ class TestOrmCountry(models.Model):
     name = fields.Char()
 
 
-class TestOrmPrefetch(models.Model):
+class TestFieldsPrefetch(models.Model):
     _name = 'test_fields.prefetch'
     _description = 'A model to check the prefetching of fields (translated and group)'
 
@@ -1172,7 +1172,7 @@ class TestOrmPrefetch(models.Model):
     line_ids = fields.One2many('test_fields.prefetch.line', 'prefetch_id')
 
 
-class TestOrmPrefetchLine(models.Model):
+class TestFieldsPrefetchLine(models.Model):
     _name = 'test_fields.prefetch.line'
     _description = 'test_fields.prefetch.line'
 
@@ -1180,7 +1180,7 @@ class TestOrmPrefetchLine(models.Model):
     harry = fields.Integer(related='prefetch_id.harry', store=True)
 
 
-class TestOrmCity(models.Model):
+class TestFieldsCity(models.Model):
     _name = 'test_fields.city'
     _description = 'City, ordered by country then name'
     _order = 'country_id, name, id'
@@ -1189,7 +1189,7 @@ class TestOrmCity(models.Model):
     country_id = fields.Many2one('test_fields.country')
 
 
-class TestOrmRelated_Inherits(models.Model):
+class TestFieldsRelatedInherits(models.Model):
     _name = 'test_fields.related_inherits'
     _description = 'test_fields.related_inherits'
     _inherits = {'test_fields.related': 'base_id'}
@@ -1197,7 +1197,7 @@ class TestOrmRelated_Inherits(models.Model):
     base_id = fields.Many2one('test_fields.related', required=True, ondelete='cascade')
 
 
-class TestOrmModel_A(models.Model):
+class TestFieldsModelA(models.Model):
     _name = 'test_fields.model_a'
     _description = 'Model A'
 
@@ -1206,7 +1206,7 @@ class TestOrmModel_A(models.Model):
     b_restricted_b_ids = fields.Many2many('test_fields.model_b', relation='rel_model_a_model_b_2', ondelete='restrict')
 
 
-class TestOrmModel_B(models.Model):
+class TestFieldsModelB(models.Model):
     _name = 'test_fields.model_b'
     _description = 'Model B'
 
@@ -1215,14 +1215,14 @@ class TestOrmModel_B(models.Model):
     b_restricted_a_ids = fields.Many2many('test_fields.model_a', relation='rel_model_a_model_b_2')
 
 
-class TestOrmMultiLine2(models.Model):
+class TestFieldsMultiLine2(models.Model):
     _name = 'test_fields.multi.line2'
     _inherit = ['test_fields.multi.line']
     _description = 'Test ORM Multi Line 2'
 
 
 # model with explicit and stored field 'display_name'
-class TestOrmDisplay(models.Model):
+class TestFieldsDisplay(models.Model):
     _name = 'test_fields.display'
     _description = 'Model that overrides display_name'
 
@@ -1233,7 +1233,7 @@ class TestOrmDisplay(models.Model):
             record.display_name = 'My id is %s' % (record.id)
 
 
-class TestOrmReq_M2o(models.Model):
+class TestFieldsReqM2o(models.Model):
     _name = 'test_fields.req_m2o'
     _description = 'Required Many2one'
 
@@ -1241,7 +1241,7 @@ class TestOrmReq_M2o(models.Model):
     bar = fields.Many2one('res.country', required=True)
 
 
-class TestOrmReq_M2o_Transient(models.TransientModel):
+class TestFieldsReqM2oTransient(models.TransientModel):
     _name = 'test_fields.req_m2o_transient'
     _description = 'Transient Model with Required Many2one'
 
@@ -1250,7 +1250,7 @@ class TestOrmReq_M2o_Transient(models.TransientModel):
 
 
 # abstract model with a selection field
-class TestOrmState_Mixin(models.AbstractModel):
+class TestFieldsStateMixin(models.AbstractModel):
     _name = 'test_fields.state_mixin'
     _description = 'Dummy state mixin model'
 
@@ -1261,7 +1261,7 @@ class TestOrmState_Mixin(models.AbstractModel):
     ])
 
 
-class TestOrmModel_Selection_Base(models.Model):
+class TestFieldsModelSelectionBase(models.Model):
     _name = 'test_fields.model_selection_base'
     _description = "Model with a base selection field"
 
@@ -1272,7 +1272,7 @@ class TestOrmModel_Selection_Base(models.Model):
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Base(models.Model):  # noqa: F811
+class TestFieldsModelSelectionBase(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_base'
     _description = "Model with a selection field extension with ondelete null"
 
@@ -1281,7 +1281,7 @@ class TestOrmModel_Selection_Base(models.Model):  # noqa: F811
     ], ondelete={'quux': 'set null'})
 
 
-class TestOrmModel_Selection_Base(models.Model):
+class TestFieldsModelSelectionBase(models.Model):
     _name = 'test_fields.model_selection_base'
     _description = "Model with a base selection field"
 
@@ -1292,7 +1292,7 @@ class TestOrmModel_Selection_Base(models.Model):
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Base(models.Model):  # noqa: F811
+class TestFieldsModelSelectionBase(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_base'
     _description = "Model with a selection field extension with ondelete null"
 
@@ -1302,7 +1302,7 @@ class TestOrmModel_Selection_Base(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Base(models.Model):  # noqa: F811
+class TestFieldsModelSelectionBase(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_base'
     _description = "Model with a selection field extension without ondelete"
 
@@ -1311,7 +1311,7 @@ class TestOrmModel_Selection_Base(models.Model):  # noqa: F811
     ])
 
 
-class TestOrmModel_Selection_Related(models.Model):
+class TestFieldsModelSelectionRelated(models.Model):
     _name = 'test_fields.model_selection_related'
     _description = "Model with a related selection field"
 
@@ -1324,7 +1324,7 @@ class TestOrmModel_Selection_Related(models.Model):
     )
 
 
-class TestOrmModel_Selection_Related_Updatable(models.Model):
+class TestFieldsModelSelectionRelatedUpdatable(models.Model):
     _name = 'test_fields.model_selection_related_updatable'
     _description = "Model with an updatable related selection field"
 
@@ -1338,7 +1338,7 @@ class TestOrmModel_Selection_Related_Updatable(models.Model):
     )
 
 
-class TestOrmModel_Selection_Required(models.Model):
+class TestFieldsModelSelectionRequired(models.Model):
     _name = 'test_fields.model_selection_required'
     _description = "Model with a required selection field"
 
@@ -1350,7 +1350,7 @@ class TestOrmModel_Selection_Required(models.Model):
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
+class TestFieldsModelSelectionRequired(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_required'
     _description = "Model with a selection field extension with ondelete default"
 
@@ -1360,7 +1360,7 @@ class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
+class TestFieldsModelSelectionRequired(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_required'
     _description = "Model with a selection field extension with ondelete cascade"
 
@@ -1370,7 +1370,7 @@ class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
+class TestFieldsModelSelectionRequired(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_required'
     _description = "Model with a selection field extension with ondelete set <option>"
 
@@ -1380,7 +1380,7 @@ class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
+class TestFieldsModelSelectionRequired(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_required'
     _description = "Model with a selection field extension with multiple ondelete policies"
 
@@ -1391,7 +1391,7 @@ class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
+class TestFieldsModelSelectionRequired(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_required'
     _description = "Model with a selection field extension with ondelete callback"
 
@@ -1402,7 +1402,7 @@ class TestOrmModel_Selection_Required(models.Model):  # noqa: F811
     })
 
 
-class TestOrmModel_Selection_Non_Stored(models.Model):
+class TestFieldsModelSelectionNonStored(models.Model):
     _name = 'test_fields.model_selection_non_stored'
     _description = "Model with non-stored selection field"
 
@@ -1412,7 +1412,7 @@ class TestOrmModel_Selection_Non_Stored(models.Model):
     ], store=False)
 
 
-class TestOrmModel_Selection_Required_For_Write_Override(models.Model):
+class TestFieldsModelSelectionRequiredForWriteOverride(models.Model):
     _name = 'test_fields.model_selection_required_for_write_override'
     _description = "Model with required selection field for an extension with write override"
 
@@ -1423,7 +1423,7 @@ class TestOrmModel_Selection_Required_For_Write_Override(models.Model):
 
 
 # pylint: disable=E0102
-class TestOrmModel_Selection_Required_For_Write_Override(models.Model):  # noqa: F811
+class TestFieldsModelSelectionRequiredForWriteOverride(models.Model):  # noqa: F811
     _inherit = 'test_fields.model_selection_required_for_write_override'
 
     my_selection = fields.Selection(selection_add=[
@@ -1457,7 +1457,7 @@ class SelectionCompanyDependent(models.Model):  # noqa: F811
     ])
 
 
-class TestOrmComputeReadwrite(models.Model):
+class TestFieldsComputeReadwrite(models.Model):
     _name = 'test_fields.compute.readwrite'
     _description = 'Model with a computed non-readonly field'
 
@@ -1470,7 +1470,7 @@ class TestOrmComputeReadwrite(models.Model):
             record.bar = record.foo
 
 
-class TestOrmCreatePerformance(models.Model):
+class TestFieldsCreatePerformance(models.Model):
     _name = _description = 'test_fields.create.performance'
 
     confirmed = fields.Boolean()
@@ -1485,13 +1485,13 @@ class TestOrmCreatePerformance(models.Model):
             record.name_changes += 1
 
 
-class TestOrmCreatePerformanceLine(models.Model):
+class TestFieldsCreatePerformanceLine(models.Model):
     _name = _description = 'test_fields.create.performance.line'
 
     perf_id = fields.Many2one('test_fields.create.performance')
 
 
-class TestOrmOrder(models.Model):
+class TestFieldsOrder(models.Model):
     _name = 'test_fields.order'
     _description = 'test_fields.order'
 
@@ -1499,7 +1499,7 @@ class TestOrmOrder(models.Model):
     line_short_field_name = fields.Integer(index=True)
 
 
-class TestOrmOrderLine(models.Model):
+class TestFieldsOrderLine(models.Model):
     _name = 'test_fields.order.line'
     _description = 'test_fields.order.line'
 
@@ -1530,7 +1530,7 @@ class TestOrmOrderLine(models.Model):
         return super().unlink()
 
 
-class TestOrmComputeSudo(models.Model):
+class TestFieldsComputeSudo(models.Model):
     _name = 'test_fields.compute.sudo'
     _description = 'Model with a compute_sudo field'
 
@@ -1542,7 +1542,7 @@ class TestOrmComputeSudo(models.Model):
             record.name_for_uid = self.env.user.name
 
 
-class TestOrmModel_Constrained_Unlinks(models.Model):
+class TestFieldsModelConstrainedUnlinks(models.Model):
     _name = 'test_fields.model_constrained_unlinks'
     _description = 'Model with unlink override that is constrained'
 
@@ -1564,7 +1564,7 @@ class TestOrmModel_Constrained_Unlinks(models.Model):
                 raise ValueError(msg)
 
 
-class TestOrmPrecompute(models.Model):
+class TestFieldsPrecompute(models.Model):
     _name = 'test_fields.precompute'
     _description = 'model with precomputed fields'
 
@@ -1608,7 +1608,7 @@ class TestOrmPrecompute(models.Model):
             record.size = sum(record.line_ids.mapped('size'))
 
 
-class TestOrmPrecomputeLine(models.Model):
+class TestFieldsPrecomputeLine(models.Model):
     _name = 'test_fields.precompute.line'
     _description = 'secondary model with precomputed fields'
 
@@ -1622,7 +1622,7 @@ class TestOrmPrecomputeLine(models.Model):
             line.size = len(line.name or "")
 
 
-class TestOrmPrecomputeCombo(models.Model):
+class TestFieldsPrecomputeCombo(models.Model):
     _name = 'test_fields.precompute.combo'
     _description = 'yet another model with precomputed fields'
 
@@ -1650,7 +1650,7 @@ class TestOrmPrecomputeCombo(models.Model):
         _logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
 
 
-class TestOrmPrecomputeEditable(models.Model):
+class TestFieldsPrecomputeEditable(models.Model):
     _name = 'test_fields.precompute.editable'
     _description = 'yet another model with precomputed editable fields'
 
@@ -1675,7 +1675,7 @@ class TestOrmPrecomputeEditable(models.Model):
             record.baz2 = record.baz
 
 
-class TestOrmPrecomputeReadonly(models.Model):
+class TestFieldsPrecomputeReadonly(models.Model):
     _name = 'test_fields.precompute.readonly'
     _description = 'a model with precomputed readonly fields'
 
@@ -1696,7 +1696,7 @@ class TestOrmPrecomputeReadonly(models.Model):
         self.baz = "COMPUTED"
 
 
-class TestOrmPrecomputeRequired(models.Model):
+class TestFieldsPrecomputeRequired(models.Model):
     _name = 'test_fields.precompute.required'
     _description = 'a model with precomputed required fields'
 
@@ -1704,7 +1704,7 @@ class TestOrmPrecomputeRequired(models.Model):
     name = fields.Char(related='partner_id.name', precompute=True, store=True, required=True)
 
 
-class TestOrmPrecomputeMonetary(models.Model):
+class TestFieldsPrecomputeMonetary(models.Model):
     _name = 'test_fields.precompute.monetary'
     _description = 'a model with precomputed monetary and currency'
 
@@ -1721,7 +1721,7 @@ class TestOrmPrecomputeMonetary(models.Model):
         self.currency_id = 1  # EUR
 
 
-class TestOrmModified(models.Model):
+class TestFieldsModified(models.Model):
     _name = 'test_fields.modified'
     _description = 'A model to check modified trigger'
 
@@ -1735,7 +1735,7 @@ class TestOrmModified(models.Model):
             rec.total_quantity = sum(rec.line_ids.mapped('quantity'))
 
 
-class TestOrmModifiedLine(models.Model):
+class TestFieldsModifiedLine(models.Model):
     _name = 'test_fields.modified.line'
     _description = 'A model to check modified trigger'
 
@@ -1760,7 +1760,7 @@ class TestOrmModifiedLine(models.Model):
             rec.total_price_quantity = rec.total_price * rec.quantity
 
 
-class TestOrmModifiedLinePositive(models.Model):
+class TestFieldsModifiedLinePositive(models.Model):
     _name = 'test_fields.modified.line.positive'
     _description = 'Check perf when m2m without inverse + compute depeding on m2m'
 

@@ -2,7 +2,7 @@ from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
 
-class TestOrmRelated_Translation_1(models.Model):
+class TestRelatedTranslationRelatedTranslation1(models.Model):
     _name = 'test_related_translation.related_translation_1'
     _description = 'A model to test translation for related fields'
 
@@ -10,7 +10,7 @@ class TestOrmRelated_Translation_1(models.Model):
     html = fields.Html('HTML', translate=html_translate)
 
 
-class TestOrmRelated_Translation_2(models.Model):
+class TestRelatedTranslationRelatedTranslation2(models.Model):
     _name = 'test_related_translation.related_translation_2'
     _description = 'A model to test translation for related fields'
 
@@ -33,7 +33,7 @@ class TestOrmRelated_Translation_2(models.Model):
             record.computed_html = record.related_id.html
 
 
-class TestOrmRelated_Translation_3(models.Model):
+class TestRelatedTranslationRelatedTranslation3(models.Model):
     _name = 'test_related_translation.related_translation_3'
     _description = 'A model to test translation for related fields'
 

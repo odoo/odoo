@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class DecimalPrecisionTest(models.Model):
+class TestQwebFloatDecimalPrecisionTest(models.Model):
     _name = 'test_qweb_float.decimal.precision.test'
     _description = 'Decimal Precision Test'
 

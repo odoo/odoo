@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class Test_Access_RightSome_Obj(models.Model):
+class TestAccessFeedbackSomeObj(models.Model):
     _name = 'test_access_feedback.some_obj'
     _description = 'Object For Test Access Right'
 
@@ -17,7 +17,7 @@ class Test_Access_RightSome_Obj(models.Model):
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
 
 
-class Test_Access_RightInherits(models.Model):
+class TestAccessFeedbackInherits(models.Model):
     _name = 'test_access_feedback.inherits'
     _description = 'Object for testing related access rights'
 
@@ -26,14 +26,14 @@ class Test_Access_RightInherits(models.Model):
     some_id = fields.Many2one('test_access_feedback.some_obj', required=True, ondelete='restrict')
 
 
-class Test_Access_RightChild(models.Model):
+class TestAccessFeedbackChild(models.Model):
     _name = 'test_access_feedback.child'
     _description = 'Object for testing company ir rule'
 
     parent_id = fields.Many2one('test_access_feedback.some_obj')
 
 
-class Test_Access_RightObj_Categ(models.Model):
+class TestAccessFeedbackObjCateg(models.Model):
     _name = 'test_access_feedback.obj_categ'
     _description = "Context dependent searchable model"
 

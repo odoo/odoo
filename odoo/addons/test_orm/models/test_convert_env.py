@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 
 
-class Test_ConvertTest_Model(models.Model):
+class TestConvertEnvTestModel(models.Model):
     _name = 'test_convert_env.test_model'
     _description = "Test Convert Model"
 
@@ -23,7 +23,7 @@ class Test_ConvertTest_Model(models.Model):
         return True
 
 
-class Test_ConvertUsered(models.Model):
+class TestConvertEnvUsered(models.Model):
     _name = 'test_convert_env.usered'
     _description = "z test model ignore"
 

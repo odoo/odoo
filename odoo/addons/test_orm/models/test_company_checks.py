@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class TestOrmModel_Parent(models.Model):
+class TestOrmModelParent(models.Model):
     _name = 'test_orm.model_parent'
     _description = 'Model Multicompany parent'
 
@@ -9,7 +9,7 @@ class TestOrmModel_Parent(models.Model):
     company_id = fields.Many2one('res.company')
 
 
-class TestOrmModel_Child(models.Model):
+class TestOrmModelChild(models.Model):
     _name = 'test_orm.model_child'
     _description = 'Model Multicompany child'
     _check_company_auto = True
@@ -20,7 +20,7 @@ class TestOrmModel_Child(models.Model):
     parent_ids = fields.Many2many('test_orm.model_parent', string="Parents", check_company=True)
 
 
-class TestOrmModel_Child_Nocheck(models.Model):
+class TestOrmModelChildNocheck(models.Model):
     _name = 'test_orm.model_child_nocheck'
     _description = 'Model Multicompany child'
     _check_company_auto = True

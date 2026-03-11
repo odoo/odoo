@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class Test_Read_GroupAggregate(models.Model):
+class TestReadGroupingSetsAggregate(models.Model):
     _name = 'test_read_grouping_sets.aggregate'
     _order = 'id'
     _description = 'Group Test Aggregate'
@@ -13,7 +13,7 @@ class Test_Read_GroupAggregate(models.Model):
     display_name = fields.Char(store=True)
 
 
-class Test_Read_GroupUser(models.Model):
+class TestReadGroupingSetsUser(models.Model):
     _name = 'test_read_grouping_sets.user'
     _description = "User"
 
@@ -27,7 +27,7 @@ class Test_Read_GroupUser(models.Model):
     )
 
 
-class Test_Read_GroupTask(models.Model):
+class TestReadGroupingSetsTask(models.Model):
     _name = 'test_read_grouping_sets.task'
     _description = "Project task"
 
@@ -74,7 +74,7 @@ class Test_Read_GroupTask(models.Model):
     key = fields.Char()
 
 
-class Test_Read_GroupTag(models.Model):
+class TestReadGroupingSetsTag(models.Model):
     _name = 'test_read_grouping_sets.tag'
     _description = "Project tag"
 

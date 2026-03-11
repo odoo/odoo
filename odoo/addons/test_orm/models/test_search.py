@@ -5,7 +5,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import SQL
 
 
-class TestOrmCategory(models.Model):
+class TestSearchCategory(models.Model):
     _name = 'test_search.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -78,7 +78,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestSearchDiscussion(models.Model):
     _name = 'test_search.discussion'
     _description = 'Test ORM Discussion'
 
@@ -128,7 +128,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestSearchMessage(models.Model):
     _name = 'test_search.message'
     _description = 'Test ORM Message'
 
@@ -231,7 +231,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestSearchEmailmessage(models.Model):
     _name = 'test_search.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_search.message': 'message'}
@@ -243,7 +243,7 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmMulti(models.Model):
+class TestSearchMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
     """
@@ -272,7 +272,7 @@ class TestOrmMulti(models.Model):
             line.tags |= self.tags
 
 
-class TestOrmMultiLine(models.Model):
+class TestSearchMultiLine(models.Model):
     _name = 'test_search.multi.line'
     _description = 'Test ORM Multi Line'
 
@@ -282,7 +282,7 @@ class TestOrmMultiLine(models.Model):
     tags = fields.Many2many('test_search.multi.tag')
 
 
-class TestOrmMultiTag(models.Model):
+class TestSearchMultiTag(models.Model):
     _name = 'test_search.multi.tag'
     _description = 'Test ORM Multi Tag'
 
@@ -298,14 +298,14 @@ class TestOrmMultiTag(models.Model):
             record.display_name = name or ""
 
 
-class TestOrmHierarchyHead(models.Model):
+class TestSearchHierarchyHead(models.Model):
     _name = 'test_search.hierarchy.head'
     _description = 'Hierarchy Head'
 
     node_id = fields.Many2one('test_search.hierarchy.node')
 
 
-class TestOrmHierarchyNode(models.Model):
+class TestSearchHierarchyNode(models.Model):
     _name = 'test_search.hierarchy.node'
     _description = 'Hierarchy Node'
 
@@ -314,7 +314,7 @@ class TestOrmHierarchyNode(models.Model):
     child_ids = fields.One2many('test_search.hierarchy.node', inverse_name='parent_id')
 
 
-class TestOrmRelated(models.Model):
+class TestSearchRelated(models.Model):
     _name = 'test_search.related'
     _description = 'Test ORM Related'
 
@@ -359,7 +359,7 @@ class TestOrmRelated(models.Model):
     foo_float_id = fields.Float(related='foo_id.test_float')
 
 
-class TestOrmRelated_Foo(models.Model):
+class TestSearchRelatedFoo(models.Model):
     _name = 'test_search.related_foo'
     _description = 'test_search.related_foo'
 
@@ -381,7 +381,7 @@ class TestOrmRelated_Foo(models.Model):
     test_float = fields.Float(digits='ORM Precision')
 
 
-class TestOrmRelated_Bar(models.Model):
+class TestSearchRelatedBar(models.Model):
     _name = 'test_search.related_bar'
     _description = 'test_search.related_bar'
 
@@ -389,7 +389,7 @@ class TestOrmRelated_Bar(models.Model):
     active = fields.Boolean(default=True)
 
 
-class TestOrmRelated_Inherits(models.Model):
+class TestSearchRelatedInherits(models.Model):
     _name = 'test_search.related_inherits'
     _description = 'test_search.related_inherits'
     _inherits = {'test_search.related': 'base_id'}
@@ -397,7 +397,7 @@ class TestOrmRelated_Inherits(models.Model):
     base_id = fields.Many2one('test_search.related', required=True, ondelete='cascade')
 
 
-class TestOrmCountry(models.Model):
+class TestSearchCountry(models.Model):
     _name = 'test_search.country'
     _description = 'Country, ordered by name'
     _order = 'name, id'
@@ -405,7 +405,7 @@ class TestOrmCountry(models.Model):
     name = fields.Char()
 
 
-class TestOrmCity(models.Model):
+class TestSearchCity(models.Model):
     _name = 'test_search.city'
     _description = 'City, ordered by country then name'
     _order = 'country_id, name, id'
@@ -414,7 +414,7 @@ class TestOrmCity(models.Model):
     country_id = fields.Many2one('test_search.country')
 
 
-class TestOrmMove(models.Model):
+class TestSearchMove(models.Model):
     _name = 'test_search.move'
     _description = 'Move'
 
@@ -450,7 +450,7 @@ class TestOrmMove(models.Model):
             record.payment_amount = sum(payment.amount for payment in record.payment_ids)
 
 
-class TestOrmMove_Line(models.Model):
+class TestSearchMoveLine(models.Model):
     _name = 'test_search.move_line'
     _description = 'Move Line'
 
@@ -459,7 +459,7 @@ class TestOrmMove_Line(models.Model):
     quantity = fields.Integer()
 
 
-class TestOrmPayment(models.Model):
+class TestSearchPayment(models.Model):
     _name = 'test_search.payment'
     _description = 'Payment inherits from Move'
     _inherits = {'test_search.move': 'move_id'}
@@ -468,7 +468,7 @@ class TestOrmPayment(models.Model):
     amount = fields.Integer()
 
 
-class TestOrmAnyParent(models.Model):
+class TestSearchAnyParent(models.Model):
     _name = 'test_search.any.parent'
     _description = 'Any Parent'
 
@@ -476,7 +476,7 @@ class TestOrmAnyParent(models.Model):
     child_ids = fields.One2many('test_search.any.child', 'parent_id')
 
 
-class TestOrmAnyChild(models.Model):
+class TestSearchAnyChild(models.Model):
     _name = 'test_search.any.child'
     _description = 'Any Child'
     _inherits = {
@@ -489,7 +489,7 @@ class TestOrmAnyChild(models.Model):
     tag_ids = fields.Many2many('test_search.any.tag')
 
 
-class TestOrmAnyTag(models.Model):
+class TestSearchAnyTag(models.Model):
     _name = 'test_search.any.tag'
     _description = 'Any tag'
 
@@ -497,7 +497,7 @@ class TestOrmAnyTag(models.Model):
     child_ids = fields.Many2many('test_search.any.child')
 
 
-class TestOrmCustomView(models.Model):
+class TestSearchCustomView(models.Model):
     _name = 'test_search.custom.view'
     _description = "test_search.custom.view"
     _auto = False
@@ -522,7 +522,7 @@ class TestOrmCustomView(models.Model):
         self.env.cr.execute(query)
 
 
-class TestOrmCustomTable_Query(models.Model):
+class TestSearchCustomTableQuery(models.Model):
     _name = 'test_search.custom.table_query'
     _description = "test_search.custom.table_query"
     _auto = False
@@ -545,7 +545,7 @@ class TestOrmCustomTable_Query(models.Model):
         """
 
 
-class TestOrmCustomTable_Query_Sql(models.Model):
+class TestSearchCustomTableQuerySql(models.Model):
     _name = 'test_search.custom.table_query_sql'
     _description = "test_search.custom.table_query_sql"
     _auto = False
@@ -570,7 +570,7 @@ class TestOrmCustomTable_Query_Sql(models.Model):
         )
 
 
-class TestOrmCourse(models.Model):
+class TestSearchCourse(models.Model):
     _name = 'test_search.course'
     _description = 'a course'
 
@@ -586,7 +586,7 @@ class TestOrmCourse(models.Model):
         return [('test_search.lesson', None)]
 
 
-class TestOrmLesson(models.Model):
+class TestSearchLesson(models.Model):
     _name = 'test_search.lesson'
     _description = 'a lesson of a course (a day typically)'
 
@@ -608,7 +608,7 @@ class TestOrmLesson(models.Model):
                 record.display_name = record.name
 
 
-class TestOrmPerson(models.Model):
+class TestSearchPerson(models.Model):
     _name = 'test_search.person'
     _description = 'a person, can be an author, teacher or attendee of a lesson'
 
@@ -628,7 +628,7 @@ class TestOrmPerson(models.Model):
             record.display_name = f"{particular}{record.name}{special}"
 
 
-class TestOrmEmployer(models.Model):
+class TestSearchEmployer(models.Model):
     _name = 'test_search.employer'
     _description = 'the employer of a person'
 
@@ -637,7 +637,7 @@ class TestOrmEmployer(models.Model):
     all_employee_ids = fields.One2many('test_search.person', 'employer_id', context={'active_test': False})
 
 
-class TestOrmPersonAccount(models.Model):
+class TestSearchPersonAccount(models.Model):
     _name = 'test_search.person.account'
     _description = 'an account with credentials for a given person'
     _inherits = {'test_search.person': 'person_id'}
@@ -647,7 +647,7 @@ class TestOrmPersonAccount(models.Model):
     activation_date = fields.Date()
 
 
-class Test_New_ViewStrId(models.Model):
+class TestSearchViewStrId(models.Model):
     _name = 'test_search.view.str.id'
     _description = 'test_search.view.str.id'
     _auto = False

@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
-class TestOrmCountry(models.Model):
+class TestSortCountry(models.Model):
     _name = 'test_sort.country'
     _description = 'Country, ordered by name'
     _order = 'name, id'
@@ -12,7 +12,7 @@ class TestOrmCountry(models.Model):
     name = fields.Char()
 
 
-class TestOrmCity(models.Model):
+class TestSortCity(models.Model):
     _name = 'test_sort.city'
     _description = 'City, ordered by country then name'
     _order = 'country_id, name, id'
@@ -21,7 +21,7 @@ class TestOrmCity(models.Model):
     country_id = fields.Many2one('test_sort.country')
 
 
-class TestOrmModel_Active_Field(models.Model):
+class TestSortModelActiveField(models.Model):
     _name = 'test_sort.model_active_field'
     _description = 'A model with active field'
 
@@ -45,7 +45,7 @@ class TestOrmModel_Active_Field(models.Model):
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
-class TestOrmCategory(models.Model):
+class TestSortCategory(models.Model):
     _name = 'test_sort.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -118,7 +118,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestSortDiscussion(models.Model):
     _name = 'test_sort.discussion'
     _description = 'Test ORM Discussion'
 
@@ -168,7 +168,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestSortMessage(models.Model):
     _name = 'test_sort.message'
     _description = 'Test ORM Message'
 
@@ -271,7 +271,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestSortEmailmessage(models.Model):
     _name = 'test_sort.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_sort.message': 'message'}

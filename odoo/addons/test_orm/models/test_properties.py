@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
-class TestOrmPartner(models.Model):
+class TestPropertiesPartner(models.Model):
     """
     Simplified model for partners. Having a specific model avoids all the
     overrides from other modules that may change which fields are being read,
@@ -16,7 +16,7 @@ class TestOrmPartner(models.Model):
     name = fields.Char(string='Name')
 
 
-class TestOrmCategory(models.Model):
+class TestPropertiesCategory(models.Model):
     _name = 'test_properties.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -89,7 +89,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestPropertiesDiscussion(models.Model):
     _name = 'test_properties.discussion'
     _description = 'Test ORM Discussion'
 
@@ -139,7 +139,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestPropertiesMessage(models.Model):
     _name = 'test_properties.message'
     _description = 'Test ORM Message'
 
@@ -242,7 +242,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestPropertiesEmailmessage(models.Model):
     _name = 'test_properties.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_properties.message': 'message'}
@@ -254,12 +254,12 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmTransient_Model(models.TransientModel):
+class TestPropertiesTransient_Model(models.TransientModel):
     _name = 'test_properties.transient_model'
     _description = 'Transient Model'
 
 
-class TestOrmMultiTag(models.Model):
+class TestPropertiesMultiTag(models.Model):
     _name = 'test_properties.multi.tag'
     _description = 'Test ORM Multi Tag'
 
