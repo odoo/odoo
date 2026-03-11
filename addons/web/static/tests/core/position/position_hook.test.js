@@ -1,16 +1,11 @@
 import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
-import {
-    manuallyDispatchProgrammaticEvent,
-    queryOne,
-    queryRect,
-    resize,
-    scroll,
-} from "@odoo/hoot-dom";
+import { queryOne, queryRect, resize, scroll, click } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useRef, xml } from "@odoo/owl";
 import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { usePosition } from "@web/core/position/position_hook";
+import { useState } from "@web/owl2/utils";
 
 before(
     () =>
@@ -224,22 +219,6 @@ test("has no effect when component is destroyed", async () => {
     await animationFrame();
     // onPositioned not called even if scroll happened right before the component destroys
     expect.verifySteps([]);
-});
-
-test("reposition popper when a load event occurs", async () => {
-    const TestComp = getTestComponent({
-        onPositioned: () => {
-            expect.step("onPositioned called");
-        },
-    });
-
-    await mountWithCleanup(TestComp);
-    // onPositioned called when component mounted
-    expect.verifySteps(["onPositioned called"]);
-    manuallyDispatchProgrammaticEvent(queryOne("#popper"), "load");
-    await animationFrame();
-    // onPositioned called when load event is triggered
-    expect.verifySteps(["onPositioned called"]);
 });
 
 test("reposition popper when a scroll event occurs", async () => {
@@ -714,12 +693,13 @@ test("batch update call", async () => {
     class TestComponent extends Component {
         static template = xml`
             <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
-                <div id="target" t-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
+                <div id="target" t-ref="target" style="background-color: tomato; width: 200px;" t-att-style="this.state.style"/>
                 <div id="popper" t-ref="popper" style="background-color: olive; height: 50px; width: 50px"/>
             </div>
         `;
         static props = ["*"];
         setup() {
+            this.state = useState({ style: "height: 600px" });
             const target = useRef("target");
             position = usePosition("popper", () => target.el, {
                 onPositioned: () => {
@@ -729,11 +709,14 @@ test("batch update call", async () => {
         }
     }
 
-    await mountWithCleanup(TestComponent);
+    const comp = await mountWithCleanup(TestComponent);
     expect.verifySteps(["positioned"]);
 
+    comp.state.style = "height: 650px";
     position.unlock();
+    comp.state.style = "height: 700px";
     position.unlock();
+    comp.state.style = "height: 750px";
     position.unlock();
     await animationFrame();
     expect.verifySteps(["positioned"]);
@@ -768,6 +751,57 @@ test("not positioned if target not connected", async () => {
     comp.position.unlock();
     await animationFrame();
     expect.verifySteps([]);
+});
+
+test("reposition on body dom mutation", async () => {
+    // We have to use two separate components to avoid re-render to
+    // cause the position update and instead be triggered by dom mutation
+
+    class TestComponentA extends Component {
+        static template = xml`
+            <button t-on-click="() => this.state.expanded = true">Expand</button>
+            <div t-if="this.state.expanded" style="height: 200px; width: 200px;">
+                Large content
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            this.state = useState({ expanded: false });
+        }
+    }
+
+    class TestComponentB extends Component {
+        static template = xml`
+            <div t-ref="target">Target</div>
+            <div t-ref="popper" style="background: red">Popper</div>
+        `;
+        static props = ["*"];
+        setup() {
+            this.target = useRef("target");
+            this.position = usePosition("popper", () => this.target.el, {
+                onPositioned: () => {
+                    expect.step("positioned");
+                },
+            });
+        }
+    }
+
+    class Parent extends Component {
+        static template = xml`
+            <TestComponentA/>
+            <TestComponentB/>
+        `;
+        static components = { TestComponentA, TestComponentB };
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Parent);
+    await animationFrame();
+    expect.verifySteps(["positioned"]);
+
+    await click("button:contains(Expand)");
+    await animationFrame();
+    expect.verifySteps(["positioned"]);
 });
 
 function shrinkPopperTest(position, offset, onPositioned, popperStyle = {}) {

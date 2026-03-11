@@ -274,7 +274,7 @@ test("within iframe", async () => {
 
     await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 }, { scrollable: false });
     await animationFrame();
-    expect.verifySteps(["bottom", "bottom"]);
+    expect.verifySteps(["bottom"]);
     popoverBox = comp.popoverRef.el.getBoundingClientRect();
     expectedTop -= 100;
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
@@ -371,12 +371,7 @@ test("popover with arrow and onPositioned", async () => {
         },
     });
 
-    expect.verifySteps([
-        "onPositioned (from override)",
-        "onPositioned (from props)", // On mounted
-        "onPositioned (from override)",
-        "onPositioned (from props)", // arrow repositionning -> triggers resize observer
-    ]);
+    expect.verifySteps(["onPositioned (from override)", "onPositioned (from props)"]);
     expect(".o_popover").toHaveClass("o_popover popover mw-100 bs-popover-auto");
     expect(".o_popover").toHaveAttribute("data-popper-placement", "center");
     expect(".o_popover > .popover-arrow").toHaveClass("position-absolute z-n1");
@@ -437,10 +432,7 @@ test("popover repositions when content changes", async () => {
     });
 
     expect(".o_popover").toHaveCount(1);
-    await expect.waitForSteps([
-        "onPositioned", // Initial positioning
-        "onPositioned", // Resize on render
-    ]);
+    await expect.waitForSteps(["onPositioned"]);
 
     // Click to expand content
     await contains("#popover button").click();
