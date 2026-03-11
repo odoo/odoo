@@ -42,4 +42,5 @@ from . import (
     test_timeit,
     test_transactions,
     # test_uninstall,
+    test_views,
 )

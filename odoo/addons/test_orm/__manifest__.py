@@ -44,8 +44,10 @@
         'security/test_schema/ir.model.access.csv',
         'security/test_search/ir.model.access.csv',
         'security/test_sort/ir.model.access.csv',
+        'security/test_views/ir.model.access.csv',
 
         # VIEWS
+        'views/test_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
