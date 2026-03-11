@@ -75,7 +75,7 @@ class AccountMoveSend(models.AbstractModel):
                     move.write({
                         'l10n_pl_edi_status': 'sent',
                         'l10n_pl_edi_ref': l10n_pl_edi_ref,
-                        'l10n_pl_edi_session_id': move.company_id.l10n_pl_edi_session_id,
+                        'l10n_pl_edi_session_id': move.company_id.sudo().l10n_pl_edi_session_id,
                         'l10n_pl_edi_header': False,
                     })
                     # Will be linked in _link_invoice_documents
