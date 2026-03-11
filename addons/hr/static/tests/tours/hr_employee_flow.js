@@ -55,3 +55,14 @@ registry.category("web_tour.tours").add("hr_officer_create_employee_tour", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("hr_user_kanban_view_tour", {
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Employees app",
+            trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+            run: "click",
+        }
+    ]
+})
