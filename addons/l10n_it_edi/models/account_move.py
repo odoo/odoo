@@ -108,6 +108,9 @@ class AccountMove(models.Model):
         help="Public Investment Unique Identifier")
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute='_compute_l10n_it_partner_pa')
+    l10n_it_partner_is_public_administration = fields.Boolean(compute='_compute_l10n_it_partner_is_public_administration',
+        help='Only partners that have a 6-chars long l10n_it_pa_index actually belong to the Public Administration'
+    )
 
     # -------------------------------------------------------------------------
     # Computes
@@ -118,6 +121,12 @@ class AccountMove(models.Model):
         for move in self:
             partner = move.commercial_partner_id
             move.l10n_it_partner_pa = partner and (partner._l10n_it_edi_is_public_administration() or len(partner.l10n_it_pa_index or '') == 7)
+
+    @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
+    def _compute_l10n_it_partner_is_public_administration(self):
+        for move in self:
+            partner = move.commercial_partner_id
+            move.l10n_it_partner_is_public_administration = partner and partner._l10n_it_edi_is_public_administration()
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):
@@ -243,7 +252,13 @@ class AccountMove(models.Model):
 
     def action_check_l10n_it_edi(self):
         self.ensure_one()
-        if not self.l10n_it_edi_transaction and self.l10n_it_edi_state not in WAITING_STATES:
+        if (
+            not self.l10n_it_edi_transaction
+            and self.l10n_it_edi_state not in WAITING_STATES
+        ) or (
+            self.l10n_it_edi_state == 'forwarded'
+            and not self.l10n_it_partner_is_public_administration
+        ):
             raise UserError(_("This move is not waiting for updates from the SdI."))
         if self.l10n_it_edi_state == 'being_sent':
             return {'type': 'ir.actions.client', 'tag': 'reload'}
@@ -896,7 +911,15 @@ class AccountMove(models.Model):
                 moves_to_check = self.search([
                     ('company_id', '=', proxy_user.company_id.id),
                     ('l10n_it_edi_transaction', '!=', False),
-                    ('l10n_it_edi_state', 'in', WAITING_STATES)
+                    *expression.OR(
+                        [[('l10n_it_edi_state', 'in', WAITING_STATES)],
+                        expression.AND(
+                            [
+                                [('l10n_it_edi_state', '=', 'forwarded')],
+                                [('commercial_partner_id.l10n_it_pa_index', '=ilike', '_' * 6)],
+                            ]
+                        )]
+                    )
                 ])
                 if moves_to_check:
                     moves_to_check._l10n_it_edi_update_send_state()
