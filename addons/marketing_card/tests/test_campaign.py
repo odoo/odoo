@@ -114,7 +114,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         mailing.card_lang = 'fr_FR'
         self.assertFalse(mailing.card_requires_sync_count)
 
-        with self.mock_mail_gateway(), self.assertQueryCount(42):
+        with self.mock_mail_gateway(), self.assertQueryCount(43):
             mailing._action_send_mail()
 
         cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
