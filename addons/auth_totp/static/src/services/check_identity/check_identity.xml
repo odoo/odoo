@@ -6,7 +6,10 @@
             <i class="fa fa-3x fa-mobile" aria-hidden="true"/>
             <h3>Authentication code</h3>
         </div>
-        <input name="token" inputmode="numeric" pattern="[0-9]+" class="form-control" placeholder="XXXXXX"/>
+        <input
+            name="token" inputmode="numeric" pattern="[0-9]+" class="form-control" placeholder="XXXXXX"
+            autocomplete="one-time-code"
+        />
         <div class="text-center gap-1 d-grid mb-1 pt-3">
             <button type="submit" class="btn btn-primary">Verify</button>
         </div>

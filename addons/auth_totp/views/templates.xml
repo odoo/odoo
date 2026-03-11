@@ -15,8 +15,10 @@
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <div class="mb-3">
                         <label class="fw-bold" for="totp_token">Authentication Code</label>
-                        <input id="totp_token" name="totp_token" class="form-control mb-2"
-                                autocomplete="off" inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"/>
+                        <input
+                            id="totp_token" name="totp_token" class="form-control mb-2" autocomplete="one-time-code"
+                            inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"
+                        />
                     </div>
                     <div class="text-center py-2 border-top">
                         <p class="alert alert-danger" t-if="error" role="alert">
