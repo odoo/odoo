@@ -506,3 +506,19 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
             len(labour_moves), 1,
             "Labor entry should not be duplicated when backorder=always",
         )
+
+    def test_mrp_user_with_timesheet_permissions_can_produce_mo(self):
+        """ Test that an MRP user with timesheet access but without accounting rights
+        can complete a Manufacturing Order when analytic distribution is applied,
+        ensuring timesheet rules do not block the process. """
+        if 'hr_timesheet' not in self.env["ir.module.module"]._installed():
+            self.skipTest('Timesheets is not installed')
+
+        mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user, hr_timesheet.group_hr_timesheet_user')
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        wc_analytic_account = self.env['account.analytic.account'].create({'name': 'Analytic Account', 'plan_id': analytic_plan.id})
+        mo_1 = self._create_mo(self.bom_1, 1)
+
+        mo_1.workorder_ids[0].workcenter_id.analytic_distribution = {str(wc_analytic_account.id): 100.0}
+        mo_1.with_user(mrp_user).button_mark_done()
+        self.assertEqual(mo_1.state, 'done')

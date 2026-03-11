@@ -51,7 +51,7 @@ class MrpWorkorder(models.Model):
         if self.workcenter_id.analytic_distribution or self.wc_analytic_account_line_ids or self.mo_analytic_account_line_ids:
             wc_analytic_line_vals = self.env['account.analytic.account']._perform_analytic_distribution(self.workcenter_id.analytic_distribution, value, hours, self.wc_analytic_account_line_ids, self)
             if wc_analytic_line_vals:
-                self.wc_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(wc_analytic_line_vals)
+                self.sudo().wc_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(wc_analytic_line_vals)
 
     def unlink(self):
         (self.mo_analytic_account_line_ids | self.wc_analytic_account_line_ids).unlink()
