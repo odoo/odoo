@@ -14,7 +14,6 @@ from odoo.exceptions import (
     ValidationError,
 )
 from odoo.tests.common import tagged
-from odoo.tools import mute_logger
 
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.addons.pos_bancontact_pay import const
@@ -133,12 +132,11 @@ class TestModels(TestBancontactPay, CommonPosTest):
     # --------------------------------------
     # Create Bancontact Payment
     # --------------------------------------
-    @mute_logger("odoo.tools.translate")
+
     def test_create_bancontact_payment_not_found(self):
         with (self.assertRaises(ValidationError)):
             self.payment_method_display.create_bancontact_payment(payment_id=9999)
 
-    @mute_logger("odoo.tools.translate")
     def test_create_bancontact_payment_success(self):
         payment = self._init_bancontact_pos_payment()
         generated_bancontact_id = self._generate_bancontact_id()
@@ -152,7 +150,6 @@ class TestModels(TestBancontactPay, CommonPosTest):
             self.assertEqual(payment.bancontact_id, generated_bancontact_id)
             self.assertEqual(payment.qr_code, generated_qr_code)
 
-    @mute_logger("odoo.tools.translate")
     def test_create_bancontact_payment_already_exists_not_processing(self):
         existing_bancontact_id = "__bancontact_existing_id__"
         existing_qr_code = "__bancontact_existing_qr_code__"
@@ -173,7 +170,6 @@ class TestModels(TestBancontactPay, CommonPosTest):
             self.assertEqual(payment.bancontact_id, generated_bancontact_id)
             self.assertEqual(payment.qr_code, generated_qr_code)
 
-    @mute_logger("odoo.tools.translate")
     def test_create_bancontact_payment_already_exists_processing(self):
         existing_bancontact_id = "__bancontact_existing_id__"
         existing_qr_code = "__bancontact_existing_qr_code__"
@@ -194,7 +190,6 @@ class TestModels(TestBancontactPay, CommonPosTest):
             self.assertEqual(payment.bancontact_id, existing_bancontact_id)
             self.assertEqual(payment.qr_code, existing_qr_code)
 
-    @mute_logger("odoo.tools.translate")
     def test_create_bancontact_payment_api_error(self):
         codes = [(400, MissingError), (401, AccessDenied), (403, AccessDenied),
                  (404, UserError), (422, ValidationError), (429, AccessDenied),
@@ -208,12 +203,11 @@ class TestModels(TestBancontactPay, CommonPosTest):
     # --------------------------------------
     # Cancel Bancontact Payment
     # --------------------------------------
-    @mute_logger("odoo.tools.translate")
+
     def test_cancel_bancontact_payment_not_found(self):
         with (self.assertRaises(ValidationError)):
             self.payment_method_display.cancel_bancontact_payment(payment_id=9999)
 
-    @mute_logger("odoo.tools.translate")
     def test_cancel_bancontact_payment_success(self):
         bancontact_id = self._generate_bancontact_id()
         qr_code = self._generate_qr_code()
@@ -226,7 +220,6 @@ class TestModels(TestBancontactPay, CommonPosTest):
             self.assertFalse(payment.bancontact_id)
             self.assertFalse(payment.qr_code)
 
-    @mute_logger("odoo.tools.translate")
     def test_cancel_bancontact_payment_no_bancontact_id(self):
         payment = self._init_bancontact_pos_payment(payment_status="waitingScan", qr_code="some_qr_code")
         with self.mock_bancontact_call():
@@ -237,7 +230,6 @@ class TestModels(TestBancontactPay, CommonPosTest):
             self.assertFalse(payment.bancontact_id)
             self.assertEqual(payment.qr_code, "some_qr_code")
 
-    @mute_logger("odoo.tools.translate")
     def test_cancel_bancontact_payment_api_error(self):
         codes = [(400, MissingError), (401, AccessDenied), (403, AccessDenied),
                  (404, UserError), (422, ValidationError), (429, AccessDenied),

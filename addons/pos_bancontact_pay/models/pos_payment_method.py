@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 from urllib.parse import urlencode
 
 import requests
@@ -7,7 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.sql import column_exists, create_column
 
 from odoo.addons.pos_bancontact_pay import const
-from odoo.addons.pos_bancontact_pay.errors.http import assert_bancontact_http_success
+from odoo.addons.pos_bancontact_pay.errors.http import HTTP_ERRORS
 
 
 class PosPaymentMethod(models.Model):
@@ -128,7 +129,7 @@ class PosPaymentMethod(models.Model):
             }
             url, payload = self._prepare_bancontact_payment_request(**kwargs)
             response = requests.post(url, json=payload, headers=headers, timeout=5)
-            assert_bancontact_http_success(response)
+            self._assert_bancontact_http_success(response)
             bancontact_data = response.json()
 
             pos_payment.bancontact_id = bancontact_data["paymentId"]
@@ -156,7 +157,7 @@ class PosPaymentMethod(models.Model):
                 "Content-Type": "application/json",
             }
             response = requests.delete(url, headers=headers, timeout=5)
-            assert_bancontact_http_success(response,
+            self._assert_bancontact_http_success(response,
                 {422: (_("Unable to cancel payment. The payment may not be in a cancellable state."), ValidationError)},
             )
 
@@ -220,3 +221,21 @@ class PosPaymentMethod(models.Model):
         """Return the Bancontact endpoint URL for the current environment."""
         environment = "preprod" if self.bancontact_test_mode else "production"
         return const.API_URLS[environment][target]
+
+    def _assert_bancontact_http_success(self, response, extra_errors=None):
+        errors = {**HTTP_ERRORS, **(extra_errors or {})}
+        if response.status_code in errors:
+            error_message, exception_class = errors[response.status_code]
+            try:
+                error_data = response.json()
+            except JSONDecodeError:
+                error_data = {}
+            code = error_data.get("code", "")
+
+            exception_msg = f"{error_message} (ERR: {response.status_code}"
+            if code:
+                exception_msg += f" - {code}"
+            exception_msg += ")"
+            raise exception_class(exception_msg)
+
+        response.raise_for_status()
