@@ -36,4 +36,5 @@ from . import (
     test_registry_signaling,
     test_related_translation,
     test_schema,
+    test_search,
 )

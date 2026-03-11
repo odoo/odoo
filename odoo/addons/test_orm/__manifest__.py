@@ -4,16 +4,6 @@
     'description': """A module to test the ORM.""",
     'depends': ['base'],
     'data': [
-        # 'data/test_access_rights_data.xml',
-        # 'data/test_action_bindings.xml',
-        # 'data/test_inherits.xml',
-        # 'data/test_orm_data.xml',
-        # 'data/test_translated_field/test_model_data.xml',
-        # 'security/ir.model.access.csv',
-        # 'security/test_access_rights_security.xml',
-        # 'security/test_orm_security.xml',
-        # 'views/test_orm_views.xml',
-
         # DATA
         'data/test_access_feedback_data.xml',
         'data/test_action_bindings.xml',
@@ -24,6 +14,7 @@
         'data/test_json_field.xml',
         'data/test_one2many.xml',
         'data/test_properties.xml',
+        'data/test_search.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
@@ -51,6 +42,7 @@
         'security/test_read_grouping_sets/ir.model.access.csv',
         'security/test_related_translation/ir.model.access.csv',
         'security/test_schema/ir.model.access.csv',
+        'security/test_search/ir.model.access.csv',
 
         # VIEWS
     ],
