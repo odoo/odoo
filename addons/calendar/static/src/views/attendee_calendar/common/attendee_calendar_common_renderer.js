@@ -55,6 +55,9 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
             } else {
                 classesToAdd.push(`o_attendee_status_${record.attendeeStatus}`);
             }
+            if (record.rawRecord.is_draft) {
+                classesToAdd.push("o_calendar_event_draft");
+            }
         }
         return classesToAdd;
     }

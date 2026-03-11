@@ -39,6 +39,7 @@ test("scheduling a meeting leaves for the calendar, video call in hand", async (
             expect(options.additionalContext).toEqual({
                 default_access_token: "testtoken",
                 default_videocall_location: `${getOrigin()}/calendar/join_videocall/testtoken`,
+                default_is_draft: false,
                 return_to_parent_breadcrumb: true,
             });
         },

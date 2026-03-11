@@ -1,4 +1,5 @@
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
@@ -273,6 +274,9 @@ export class AttendeeCalendarModel extends CalendarModel {
         const normalizedRecord = super.normalizeRecord(rawRecord);
         if (rawRecord.effective_privacy === "private") {
             normalizedRecord.titleIcon = "lock";
+        }
+        if (rawRecord.is_draft) {
+            normalizedRecord.title = _t("[Draft] %s", normalizedRecord.title);
         }
         const displayedDateRange = this.computeRange();
         const isStartInScale = normalizedRecord.start >= displayedDateRange.start;
