@@ -133,7 +133,8 @@
                         string="Check Sending"
                         class="oe_highlight"
                         data-hotkey="shift+K"
-                        invisible="l10n_it_edi_state not in ('being_sent', 'processing', 'forward_attempt')"
+                        invisible="l10n_it_edi_state not in ('being_sent', 'processing', 'forward_attempt', 'forwarded')
+                                   or (l10n_it_edi_state == 'forwarded' and not l10n_it_partner_is_public_administration)"
                     />
                 </xpath>
                 <xpath expr="//button[@name='action_invoice_sent']" position="inside">
