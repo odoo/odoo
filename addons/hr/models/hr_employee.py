@@ -687,6 +687,11 @@ We can redirect you to the public employee list."""
             return
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
 
+    def filter_valid(self, checked_date):
+        # A method that can be overridden
+        # to get the valid employees with running contracts.
+        return self
+
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
