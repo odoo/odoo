@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { ParallaxOption } from "./parallax_option";
 import { useBackgroundOption } from "@html_builder/plugins/background_option/background_hook";

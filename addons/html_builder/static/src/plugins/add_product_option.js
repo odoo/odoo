@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 

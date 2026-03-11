@@ -20,7 +20,7 @@ import { animationFrame, queryText, tick } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 

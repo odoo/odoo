@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { getImageSrc, getMimetype } from "@html_editor/utils/image";
 import { clamp } from "@web/core/utils/numbers";
 

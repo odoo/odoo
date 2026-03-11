@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";

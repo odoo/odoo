@@ -4,7 +4,7 @@ import {
     getSnippetStructure,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";

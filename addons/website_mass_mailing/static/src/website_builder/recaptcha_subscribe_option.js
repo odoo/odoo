@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class RecaptchaSubscribeOption extends BaseOptionComponent {
     static template = "website_mass_mailing.RecaptchaSubscribeOption";

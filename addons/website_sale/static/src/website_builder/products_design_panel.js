@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { onMounted, onWillDestroy } from "@odoo/owl";
 
 export class ProductsDesignPanel extends BaseOptionComponent {

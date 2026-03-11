@@ -16,7 +16,7 @@ import {
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { ReplaceBgImageAction } from "@html_builder/plugins/background_option/background_image_option_plugin";
 import { renderToString } from "@web/core/utils/render";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 

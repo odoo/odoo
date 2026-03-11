@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { BuilderColorPicker } from "@html_builder/core/building_blocks/builder_colorpicker";
 import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select";
 import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";

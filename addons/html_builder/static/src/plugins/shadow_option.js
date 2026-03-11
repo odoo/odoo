@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class ShadowOption extends BaseOptionComponent {
     static template = "html_builder.ShadowOption";

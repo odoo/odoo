@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export const FONT_FAMILIES = {
     Arial: "Arial,Helvetica Neue,Helvetica,sans-serif",

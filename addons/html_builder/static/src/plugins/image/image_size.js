@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { getImageSrc } from "@html_editor/utils/image";
 import { getDataURLBinarySize } from "@html_editor/utils/image_processing";
 

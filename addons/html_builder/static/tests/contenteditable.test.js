@@ -10,7 +10,7 @@ import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 describe.current.tags("desktop");
 

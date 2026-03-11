@@ -9,7 +9,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 class Test extends models.Model {
     _name = "test";

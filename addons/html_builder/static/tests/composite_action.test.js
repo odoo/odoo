@@ -7,7 +7,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { describe, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 // TODO: test composite with each spec: prepare, load, getValue
 // TODO: test reloadComposite

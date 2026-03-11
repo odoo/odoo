@@ -5,7 +5,7 @@ import {
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Operation } from "@html_builder/core/operation";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, delay, hover, press, tick } from "@odoo/hoot-dom";

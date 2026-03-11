@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
 import { CardImagePositionOption } from "./card_image_position_option";
 

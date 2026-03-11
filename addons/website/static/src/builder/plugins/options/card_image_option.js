@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { CardImagePositionOption } from "./card_image_position_option";
 
 export class CardImageOption extends BaseOptionComponent {

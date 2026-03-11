@@ -1,6 +1,6 @@
 declare module "registries" {
     import { Plugin } from "@html_editor/plugin";
-    import { BaseOptionComponent } from "@html_builder/core/utils";
+    import { BaseOptionComponent } from "@html_builder/core/base_option_component";
     import { Interaction } from "@web/public/interaction";
 
     type Constructor<T = {}> = new (arg: T) => T;

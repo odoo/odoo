@@ -1,6 +1,6 @@
 import { useState } from "@web/owl2/utils";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class FormActionFieldsOption extends BaseOptionComponent {
     static template = "website.s_website_form_form_action_fields_option";

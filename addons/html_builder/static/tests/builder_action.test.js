@@ -6,7 +6,7 @@ import {
 import { Builder } from "@html_builder/builder";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { SavePlugin } from "@html_builder/core/save_plugin";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-dom";
 import { useState, xml } from "@odoo/owl";

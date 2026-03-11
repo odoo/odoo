@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { onWillStart } from "@odoo/owl";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { registry } from "@web/core/registry";

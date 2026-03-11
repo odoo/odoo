@@ -28,7 +28,7 @@ import {
 } from "@html_builder/../tests/helpers";
 import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBuilder } from "@website/builder/website_builder";

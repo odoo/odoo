@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { products_sort_mapping } from "@website_sale/website_builder/shared";
 import { registry } from "@web/core/registry";
 

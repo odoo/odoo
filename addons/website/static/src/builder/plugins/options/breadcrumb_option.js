@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BaseVisibilityOption } from "./base_visibility_option";
 import { registry } from "@web/core/registry";
 

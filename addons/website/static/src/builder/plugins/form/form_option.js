@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { getModelName } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";

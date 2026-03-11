@@ -1,5 +1,5 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";

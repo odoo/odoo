@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 
 export class BackgroundShapeSelector extends BaseOptionComponent {

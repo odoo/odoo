@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { registry } from "@web/core/registry";
 

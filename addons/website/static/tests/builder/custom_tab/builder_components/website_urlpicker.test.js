@@ -2,7 +2,7 @@ import { after, before, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,

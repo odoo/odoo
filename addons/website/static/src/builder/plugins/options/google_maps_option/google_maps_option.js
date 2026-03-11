@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { onMounted, onWillDestroy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 /** @import { Coordinates, Place } from './google_maps_option_plugin.js' */
 

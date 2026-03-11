@@ -1,6 +1,6 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { refreshSublevelLines } from "@html_builder/core/building_blocks/builder_row";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     advanceTime,

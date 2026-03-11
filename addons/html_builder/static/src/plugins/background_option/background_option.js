@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BackgroundImageOption } from "./background_image_option";
 import { BackgroundPositionOption } from "./background_position_option";
 import { BackgroundShapeOption } from "./background_shape_option";

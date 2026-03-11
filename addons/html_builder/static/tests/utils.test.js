@@ -4,7 +4,8 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, delay } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";

@@ -1,5 +1,6 @@
 import { useState } from "@web/owl2/utils";
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import {

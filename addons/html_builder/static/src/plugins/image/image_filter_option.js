@@ -1,4 +1,5 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { shouldPreventGifTransformation } from "@html_editor/main/media/image_post_process_plugin";
 import { loadImageInfo, isWebGLEnabled } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";

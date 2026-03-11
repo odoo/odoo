@@ -1,7 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 
 /**
  * @typedef {((
@@ -64,7 +65,9 @@ export class SetGalleryElementPositionAction extends BuilderAction {
 
         // Get the items to reorder.
         activeItemEl = activeItemEl.closest("a") || activeItemEl;
-        const itemEls = this.getResource("gallery_items_providers").flatMap((fn) => fn(activeItemEl, optionName));
+        const itemEls = this.getResource("gallery_items_providers").flatMap((fn) =>
+            fn(activeItemEl, optionName)
+        );
 
         // Reorder the items.
         const oldPosition = itemEls.indexOf(activeItemEl);

@@ -4,7 +4,7 @@ import { queryAllTexts, queryAllValues, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 describe.current.tags("desktop");

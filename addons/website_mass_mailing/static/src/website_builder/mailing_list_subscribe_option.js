@@ -1,5 +1,5 @@
 import { onWillStart } from "@odoo/owl";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class MailingListSubscribeOption extends BaseOptionComponent {
     static template = "website_mass_mailing.MailingListSubscribeOption";

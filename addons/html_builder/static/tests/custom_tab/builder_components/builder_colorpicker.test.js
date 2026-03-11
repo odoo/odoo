@@ -5,7 +5,7 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { before, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, hover, press, tick, waitFor } from "@odoo/hoot-dom";

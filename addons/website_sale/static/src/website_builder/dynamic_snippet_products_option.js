@@ -1,5 +1,6 @@
 import { useState } from "@web/owl2/utils";
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
 import { onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";

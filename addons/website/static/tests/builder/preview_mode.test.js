@@ -6,7 +6,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 

@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ToggleThanksMessageAction } from "./mailing_list_subscribe_option_plugin";

@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { getBgImageURLFromEl, normalizeColor } from "@html_builder/utils/utils_css";
 import { ImageSize } from "../image/image_size";
 import { getHtmlStyle } from "@html_editor/utils/formatting";

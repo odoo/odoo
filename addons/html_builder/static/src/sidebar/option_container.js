@@ -3,12 +3,8 @@ import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
-import {
-    BaseOptionComponent,
-    useApplyVisibility,
-    useGetItemValue,
-    useVisibilityObserver,
-} from "../core/utils";
+import { BaseOptionComponent } from "../core/base_option_component";
+import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";

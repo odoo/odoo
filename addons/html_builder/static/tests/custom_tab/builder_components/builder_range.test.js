@@ -10,7 +10,7 @@ import { expect, test, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, fill, freezeTime, press } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 describe.current.tags("desktop");
 

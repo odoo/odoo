@@ -15,7 +15,7 @@ import {
     confirmAddSnippet,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 

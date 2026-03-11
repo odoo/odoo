@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
 import { AddElementOption } from "@website/builder/plugins/layout_option/add_element_option";
 

@@ -5,7 +5,7 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";

@@ -1,5 +1,5 @@
 import { useState } from "@web/owl2/utils";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
 
 export class FooterTemplateOption extends BaseOptionComponent {
