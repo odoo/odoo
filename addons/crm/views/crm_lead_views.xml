@@ -63,23 +63,20 @@
                                     <field name="type" widget="badge"/>
                                 </div>
                             </div>
-                            <h2 class="d-flex pb-3 d-touch-none">
+                            <h2 class="d-none d-sm-flex d-touch-none align-items-end">
                                 <!-- in this view, we want to have a different desktop UI, so we have two different 'touch' and 'desktop' templates -->
                                 <div class="col-3 d-flex flex-column justify-content-between"  invisible="type == 'lead'">
+                                    <field name="company_currency" invisible="1"/>
                                     <label for="expected_revenue" class="oe_edit_only"/>
-                                    <div class="d-flex align-items-baseline o_input_box">
-                                        <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                        <span class="o_input_box_overlay_end" groups="crm.group_use_recurring_revenues"> + </span>
-                                        <span class="o_input_box_overlay_end" groups="!crm.group_use_recurring_revenues"> at </span>
-                                        <field name="recurring_revenue" class="o_input_10ch mx-auto mx-sm-0" widget="monetary"
-                                            options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
-                                        <div class="d-flex align-items-baseline mb-0" groups="crm.group_use_recurring_revenues">
-                                            <field name="recurring_plan" class="oe_inline o_input_13ch" placeholder='e.g. "Monthly"'
-                                                required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
-                                            <span class="o_input_box_overlay_end d-none d-sm-block"> at </span>
-                                        </div>
+                                    <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                    <div class="o_input_box" groups="crm.group_use_recurring_revenues">
+                                        <span class="o_input_box_overlay_start"> + </span>
+                                        <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                     </div>
+                                </div>
+                                <div style="width: 15ch;" groups="crm.group_use_recurring_revenues">
+                                    <field name="recurring_plan" placeholder='e.g. "Monthly"'
+                                        required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                                 </div>
                                 <div class="col-auto d-flex flex-column">
                                     <div>
@@ -100,15 +97,16 @@
                                             ~ <field class="w-auto" name="automated_probability" force_save="1"/> %
                                         </small>
                                     </div>
-                                    <div id="probability" class="o_input_box">
+                                    <div id="probability" class="o_input_box mb-0" style="width: 10ch;">
                                         <field name="is_automated_probability" invisible="1"/>
+                                        <span class="o_input_box_overlay_start">at</span>
                                         <field name="probability" widget="float" readonly="won_status != 'pending'"/>
-                                        <span class="o_input_box_overlay_end o_input_box_overlay_inline">%</span>
+                                        <span class="o_input_box_overlay_end">%</span>
                                     </div>
                                 </div>
                             </h2>
                         </div>
-                        <group class="d-none d-touch-flex">
+                        <group class="d-flex d-sm-none d-touch-flex">
                             <group>
                                 <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                             </group>
