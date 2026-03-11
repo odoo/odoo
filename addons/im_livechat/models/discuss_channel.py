@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_split, format_list, html2plaintext
+from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
 from odoo.tools.mimetypes import get_extension
 from odoo.tools.translate import LazyTranslate
 
@@ -572,6 +572,7 @@ class DiscussChannel(models.Model):
         render_context = {
             "company": company,
             "channel": self,
+            "is_html_empty": is_html_empty,
             "tz": ZoneInfo(tz),
             "correspondent_names": correspondent_names,
         }

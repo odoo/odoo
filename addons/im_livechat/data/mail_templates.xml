@@ -34,10 +34,21 @@
                                     <strong t-attf-style="color:{{header_background_color}}; font-size: 13px; margin-right: 2px;" t-out="author_name"/>
                                     <span style="font-size:10px; color:#666666;" t-out="message.date.astimezone(tz).strftime('%I:%M %p')"/>
                                 </div>
-                                <div style="display: flex;">
-                                    <div style="background-color: #E2F3F6; padding: 16px 12px 0; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
-                                        <span style="font-size: 13px; word-break: break-word;" t-out="message.body"/>
+                                <div>
+                                    <t t-set="is_deleted_message" t-value="message.sudo()._filter_empty()"/>
+                                    <div t-if="not is_html_empty(message.body) or is_deleted_message" style="background-color: #E2F3F6; padding: 16px 12px 0; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
+                                        <span style="font-size: 13px; word-break: break-word;">
+                                            <p t-if="is_deleted_message" style="color: #6c757d; font-style: italic;">
+                                                This message has been removed
+                                            </p>
+                                            <t t-else="" t-out="message.body"/>
+                                        </span>
                                     </div>
+                                    <t t-foreach="message.attachment_ids" t-as="attachment">
+                                        <img t-if="attachment.mimetype.startswith('image/')" t-attf-src="/web/image/{{attachment.id}}?access_token={{attachment._get_raw_access_token()}}" style="max-width: 100%;"/>
+                                        <div t-elif="not attachment.has_thumbnail" class="o_image" t-att-data-mimetype="attachment.mimetype"/>
+                                        <img t-else="" t-attf-src="/web/image/ir.attachment/{{attachment.id}}/thumbnail/180x110?access_token={{attachment._get_thumbnail_token()}}&amp;crop=top" t-att-alt="attachment.name"/>
+                                    </t>
                                 </div>
                             </td>
                         </tr>
