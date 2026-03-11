@@ -1,3 +1,4 @@
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 
 export class InputPlugin extends Plugin {
@@ -16,6 +17,9 @@ export class InputPlugin extends Plugin {
         }
         this.dependencies.history.stageSelection();
         this.dispatchTo("beforeinput_handlers", ev);
+        if (selection?.anchorNode) {
+            closestElement(selection.anchorNode)?.scrollIntoView({ block: "nearest" });
+        }
     }
 
     onInput(ev) {

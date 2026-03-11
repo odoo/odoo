@@ -22,7 +22,6 @@ import {
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
-import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /**
  * @typedef { Object } EditorSelection
@@ -111,41 +110,6 @@ function getUnselectedEdgeNodes(selection) {
 }
 
 /**
- * Scrolls the view to a specific node's position in the document
- * @param {Selection} selection - The current document selection
- * @returns {void}
- */
-function scrollToSelection(selection) {
-    const range = selection.getRangeAt(0);
-    const container = closestScrollableY(range.startContainer.parentElement);
-    if (!container) {
-        // If the container is not scrollable we don't scroll
-        return;
-    }
-    let rect = range.getBoundingClientRect();
-    // If the range is invisible (0 width & height),
-    // We call `getBoundingClientRect` on closest element.
-    if (rect.width === 0 && rect.height === 0 && selection.isCollapsed) {
-        rect = closestElement(selection.anchorNode).getBoundingClientRect();
-    }
-
-    const containerRect = container.getBoundingClientRect();
-    const offsetTop = rect.top - containerRect.top + container.scrollTop;
-    const offsetBottom = rect.bottom - containerRect.top + container.scrollTop;
-
-    if (rect.bottom > containerRect.top && rect.top < containerRect.bottom) {
-        // If selection is partially visible, no need to scroll.
-        return;
-    }
-    // Simulate the "nearest" behavior by scrolling to the closest top/bottom edge
-    if (rect.top < containerRect.top) {
-        container.scrollTo({ top: offsetTop, behavior: "instant" });
-    } else if (rect.bottom > containerRect.bottom) {
-        container.scrollTo({ top: offsetBottom - container.clientHeight, behavior: "instant" });
-    }
-}
-
-/**
  * @typedef { Object } SelectionShared
  * @property { SelectionPlugin['extractContent'] } extractContent
  * @property { SelectionPlugin['focusEditable'] } focusEditable
@@ -201,13 +165,7 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", () => {
-            this.updateActiveSelection();
-            const selection = this.document.getSelection();
-            if (this.isSelectionInEditable(selection)) {
-                scrollToSelection(selection);
-            }
-        });
+        this.addDomListener(this.document, "selectionchange", this.updateActiveSelection);
         this.addDomListener(this.editable, "mousedown", (ev) => {
             if (ev.detail === 2) {
                 this.correctDoubleClick = true;
