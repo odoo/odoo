@@ -39,4 +39,5 @@ from . import (
     test_search,
     test_search_order,
     test_sort,
+    test_timeit,
 )

@@ -28,4 +28,5 @@ from . import (
     test_schema,
     test_search,
     test_sort,
+    test_timeit,
 )
