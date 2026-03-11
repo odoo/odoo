@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="im_livechat.LivechatChannelInfoList">
-        <ActionPanel title.translate="Information" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 300" icon="'fa fa-info'">
+        <ActionPanel close="this.props.close" title.translate="Information" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 300" icon="'fa fa-info'">
             <a t-if="this.visitorProfileURL" class="btn btn-primary mt-1 d-flex align-items-center justify-content-between" t-on-click.prevent="this.openVisitorProfile" t-att-href="this.visitorProfileURL" title="View Contact">
                 <span class="flex-grow-1 text-center">
                     <i class="fa fa-address-book-o opacity-50 me-1"/>

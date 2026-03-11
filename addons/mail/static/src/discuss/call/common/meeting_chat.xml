@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MeetingChat">
-        <ActionPanel t-if="this.channel" title.translate="In call messages" resizable="true" minWidth="300" initialWidth="400" icon="'fa fa-comments'" contentRef="this.panelContentRef">
+        <ActionPanel t-if="this.channel" close="this.props.close" title.translate="In call messages" resizable="true" minWidth="300" initialWidth="400" icon="'fa fa-comments'" contentRef="this.panelContentRef">
             <t t-set-slot="header-extra">
                 <button t-if="this.env.pinMenu and this.channel?.pinnedMessages?.length > 0" title="Pinned Messages" class="btn opacity-75 opacity-100-hover p-1 me-3 position-relative" t-on-click="() => this.env.pinMenu.open()">
                     <i class="fa fa-thumb-tack"/>

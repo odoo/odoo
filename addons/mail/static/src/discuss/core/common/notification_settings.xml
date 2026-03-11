@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
-        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.env.inChatWindow" title.translate="Notification Settings" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
+        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.env.inChatWindow" close="this.props.close" title.translate="Notification Settings" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
             <t t-call="discuss.NotificationSettings.content"/>
         </ActionPanel>
         <t t-else="" t-call="discuss.NotificationSettings.content"/>

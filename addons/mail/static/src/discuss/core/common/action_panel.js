@@ -15,6 +15,7 @@ export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static components = { ResizablePanel };
     static props = [
+        "close?",
         "contentRef?",
         "icon?",
         "title?",
@@ -31,7 +32,10 @@ export class ActionPanel extends Component {
         this.ui = useService("ui");
         useForwardRefToParent("contentRef");
         useSubEnv({ inDiscussActionPanel: true });
-        useBackButton(() => this.env.closeActionPanel());
+        useBackButton(
+            () => this.props.close(),
+            () => this.props.close
+        );
     }
 
     get backButtonTitle() {

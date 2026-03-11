@@ -21,7 +21,7 @@ export class MeetingChat extends Component {
         Thread,
         Typing,
     };
-    static props = [];
+    static props = ["close?"];
 
     setup() {
         this.store = useService("mail.store");

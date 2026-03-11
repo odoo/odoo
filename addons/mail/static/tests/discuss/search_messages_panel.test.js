@@ -320,3 +320,16 @@ test("Search a message containing single quotes", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
+
+test.tags("mobile");
+test("Close message search panel when navigating back on mobile", async () => {
+    mockUserAgent("android");
+    patchUiSize({ size: SIZES.SM });
+    await startServer();
+    await start();
+    await openDiscuss("mail.box_bookmark");
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessagesPanel");
+    history.back();
+    await contains(".o-mail-SearchMessagesPanel", { count: 0 });
+});

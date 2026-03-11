@@ -144,7 +144,10 @@ export class Action {
 
     /** Props to pass to the action panel component of this action. */
     get actionPanelComponentProps() {
-        return this.definition.actionPanelComponentProps?.call(this, this.params);
+        return {
+            close: (opts) => this.actionPanelClose(opts),
+            ...(this.definition.actionPanelComponentProps?.call(this, this.params) ?? {}),
+        };
     }
 
     /**

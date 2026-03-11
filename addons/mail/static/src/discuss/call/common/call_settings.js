@@ -12,7 +12,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static props = ["withActionPanel?", "isCompact?"];
+    static props = ["close?", "withActionPanel?", "isCompact?"];
     static defaultProps = {
         withActionPanel: true,
     };

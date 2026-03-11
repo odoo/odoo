@@ -15,7 +15,7 @@ import { url } from "@web/core/utils/urls";
 export class LivechatChannelInfoList extends Component {
     static components = { ActionPanel, ExpertiseTagsAutocomplete, TranscriptSender };
     static template = "im_livechat.LivechatChannelInfoList";
-    static props = ["thread"];
+    static props = ["close?", "thread"];
 
     setup() {
         super.setup();

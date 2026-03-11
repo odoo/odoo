@@ -155,10 +155,7 @@ registerThreadAction("attachments", {
 registerThreadAction("invite-people", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: ChannelInvitation,
-    actionPanelComponentProps: ({ action, channel }) => ({
-        close: () => action.actionPanelClose(),
-        channel,
-    }),
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ owner, store, channel }) {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
@@ -308,9 +305,7 @@ registerThreadAction("leave", {
 registerThreadAction("delete-thread", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: DeleteThreadDialog,
-    actionPanelComponentProps({ action, channel }) {
-        return { channel, close: () => action.actionPanelClose() };
-    },
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "bg-100",
     condition({ channel, owner, store }) {
         return (

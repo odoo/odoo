@@ -57,10 +57,7 @@ export class ChatWindow extends Component {
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
 
-        useChildSubEnv({
-            closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
-            messageHighlight: this.messageHighlight,
-        });
+        useChildSubEnv({ messageHighlight: this.messageHighlight });
         useBackButton(() => this.close());
     }
 
