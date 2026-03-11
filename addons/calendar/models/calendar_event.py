@@ -130,6 +130,8 @@ class CalendarEvent(models.Model):
         if 'res_id' not in defaults and 'res_id' in fields and \
                 defaults.get('res_model_id') and context.get('active_id'):
             defaults['res_id'] = context['active_id']
+        if defaults.get('is_draft') and 'show_as' in fields and 'default_show_as' not in context:
+            defaults['show_as'] = 'free'
 
         return defaults
 
@@ -168,6 +170,11 @@ class CalendarEvent(models.Model):
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
         and vice versa.""")
+    is_draft = fields.Boolean(string="Is draft",
+        help="""When True, this field mutes the notifications of the event. It allows to save the event without \
+        confirming it and avoids notifying attendees with update messages because some information was unknown at \
+        the creation of the event. To prevent event's flow issues, the draft state should be set at the creation \
+        of the event and never reset once it is removed.""")
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user, index='btree_not_null')
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -315,10 +322,15 @@ class CalendarEvent(models.Model):
         'Access token should be unique',
     )
 
+    _check_no_recurrent_draft = models.Constraint(
+        'CHECK(NOT (is_draft AND recurrency))',
+        'A recurring event cannot be a draft.',
+    )
+
     @api.onchange("allday")
     def _onchange_allday(self):
-        for event in self:
-            event.show_as = 'free' if event.allday else 'busy'
+        for event in self.filtered(lambda event: event.allday):
+            event.show_as = 'free'
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -755,6 +767,7 @@ class CalendarEvent(models.Model):
                 'meeting_activity_ids': vals.get('meeting_activity_ids', defaults.get('meeting_activity_ids')),
                 'allday': vals.get('allday', defaults.get('allday')),
                 'description': vals.get('description', defaults.get('description')),
+                'is_draft': vals.get('is_draft', defaults.get('is_draft')),
                 'name': vals.get('name', defaults.get('name')),
                 # when res_id is not defined or vals['res_id'] == 0, fallback on default
                 'res_id': vals.get('res_id') or defaults.get('res_id'),
@@ -807,7 +820,11 @@ class CalendarEvent(models.Model):
                 }
                 if values['description']:
                     activity_vals['note'] = values['description']
-                if values['name']:
+                if values.get('is_draft') and values['name']:
+                    activity_vals['summary'] = _('[Draft] %s', values['name'])
+                elif values.get('is_draft'):
+                    activity_vals['summary'] = _('[Draft]')
+                elif values['name']:
                     activity_vals['summary'] = values['name']
                 if values['start']:
                     activity_vals['date_deadline'] = self._get_activity_deadline_from_start(fields.Datetime.from_string(values['start']), values['allday'])
@@ -1035,7 +1052,7 @@ class CalendarEvent(models.Model):
                     force_send=True,
                 )
 
-        if 'videocall_location' in values or update_time:
+        if 'videocall_location' in values or values.get('is_draft') is False or update_time:
             self._ensure_videocall_channels()
         if 'name' in values or update_time:
             self._sync_videocall_channels()
@@ -1150,6 +1167,13 @@ class CalendarEvent(models.Model):
         for old_event, new_event in zip(self, new_events):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
+
+    def action_confirm(self):
+        """The value of show_as for draft events is 'free' as the events are not yet confirmed and partners or resouces
+        can still be allocated to other events. Once the draft state is removed from the events, they are shown as
+        busy as the attendees receive a confirmation."""
+        self.is_draft = False
+        self.show_as = 'busy'
 
     def action_open_archive_or_unlink_wizard(self, requested_action, next_action=None):
         """
@@ -1278,6 +1302,8 @@ class CalendarEvent(models.Model):
             if event.stop and event.stop < now:
                 continue
             if event.recurrency and not event.recurrence_id:
+                continue
+            if event.is_draft:
                 continue
             event._create_videocall_channel()
 
@@ -1474,7 +1500,7 @@ class CalendarEvent(models.Model):
 
     def _skip_send_mail_status_update(self):
         """Overridable getter to identify whether to send invitation/cancelation emails."""
-        return False
+        return self.is_draft
 
     def _track_log_get_default_subtype(self, track_init_values):
         if {'start', 'stop', 'location'} & track_init_values.keys():
@@ -1490,8 +1516,13 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.meeting_activity_ids:
                 activity_values = {}
-                if 'name' in fields:
-                    activity_values['summary'] = event.name
+                if 'is_draft' in fields or 'name' in fields:
+                    if event.is_draft and event.name:
+                        activity_values['summary'] = _('[Draft] %s', event.name)
+                    elif event.is_draft:
+                        activity_values['summary'] = _('[Draft]')
+                    elif event.name:
+                        activity_values['summary'] = event.name
                 if 'description' in fields:
                     activity_values['note'] = event.description
                 # protect against loops in case of ill-managed timezones
@@ -1941,6 +1972,8 @@ class CalendarEvent(models.Model):
     def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
         """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
         to be overridden."""
+        if 'is_draft' in update_vals and not update_vals['is_draft']:
+            return current_attendees
         return current_attendees - previous_attendees
 
     @api.model
