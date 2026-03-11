@@ -8,7 +8,7 @@ class ReportPosOrder(models.Model):
     _name = 'report.pos.order'
     _description = "Point of Sale Orders Report"
     _auto = False
-    _order = 'date desc'
+    _order = 'date desc, id desc'
     _rec_name = 'order_id'
 
     date = fields.Datetime(string='Order Date', readonly=True)
