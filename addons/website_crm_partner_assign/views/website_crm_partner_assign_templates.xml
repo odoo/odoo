@@ -456,72 +456,74 @@
                             <span t-field="lead.medium_id"/>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2" class="ps-0">
+                            <a role="button" title="I'm interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</a>
+                            <a role="button" title="I'm not interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"> I'm not interested</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-            <div class='d-flex justify-content-center gap-2 mt-3'>
-                <a role="button" title="I'm interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</a>
-                <a role="button" title="I'm not interested" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"> I'm not interested</a>
-                <div class="modal fade modal_partner_assign_interested" role="form">
-                    <div class="modal-dialog">
-                        <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
-                            <header class="modal-header">
-                                <h4 class="modal-title">Lead Feedback</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </header>
-                            <main class="modal-body" id="sign-dialog">
-                                <div class="mb-3">
-                                    <label class="col-form-label" for="comment">What is the next action? When? What is the expected revenue?</label>
-                                    <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="col-form-label" for="customer_contacted">I have contacted the customer</label>
-                                    <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_interested"/>
-                                </div>
-                                <div>
-                                    <span class="text-danger error_partner_assign_interested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
-                                </div>
-                            </main>
-                            <footer class="modal-footer">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Discard</button>
-                                <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
-                            </footer>
-                        </form>
-                    </div>
+            <div class="modal fade modal_partner_assign_interested" role="form">
+                <div class="modal-dialog">
+                    <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
+                        <header class="modal-header">
+                            <h4 class="modal-title">Lead Feedback</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </header>
+                        <main class="modal-body" id="sign-dialog">
+                            <div class="mb-3">
+                                <label class="col-form-label" for="comment">What is the next action? When? What is the expected revenue?</label>
+                                <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" for="customer_contacted">I have contacted the customer</label>
+                                <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_interested"/>
+                            </div>
+                            <div>
+                                <span class="text-danger error_partner_assign_interested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Discard</button>
+                            <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
+                        </footer>
+                    </form>
                 </div>
-                <div role="dialog" class="modal fade modal_partner_assign_desinterested">
-                    <div class="modal-dialog">
-                        <form method="POST" class="js_accept_json modal-content js_website_submit_form desinterested_partner_assign_form">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
-                            <header class="modal-header">
-                                <h4 class="modal-title">Lead Feedback</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </header>
-                            <main class="modal-body" id="sign-dialog">
-                                <div class="mb-3">
-                                    <label class="col-form-label" for="comment">Why aren't you interested in this lead?</label>
-                                    <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="col-form-label" for="contacted_desinterested">I have contacted the customer</label>
-                                    <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="col-form-label" for="customer_mark_spam">This lead is a spam</label>
-                                    <input type="checkbox" name="customer_mark_spam" id="customer_mark_spam" class="customer_mark_spam"/>
-                                </div>
-                                <div>
-                                    <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
-                                </div>
-                            </main>
-                            <footer class="modal-footer">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Discard</button>
-                                <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
-                            </footer>
-                        </form>
-                    </div>
+            </div>
+            <div role="dialog" class="modal fade modal_partner_assign_desinterested">
+                <div class="modal-dialog">
+                    <form method="POST" class="js_accept_json modal-content js_website_submit_form desinterested_partner_assign_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
+                        <header class="modal-header">
+                            <h4 class="modal-title">Lead Feedback</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </header>
+                        <main class="modal-body" id="sign-dialog">
+                            <div class="mb-3">
+                                <label class="col-form-label" for="comment">Why aren't you interested in this lead?</label>
+                                <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" for="contacted_desinterested">I have contacted the customer</label>
+                                <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" for="customer_mark_spam">This lead is a spam</label>
+                                <input type="checkbox" name="customer_mark_spam" id="customer_mark_spam" class="customer_mark_spam"/>
+                            </div>
+                            <div>
+                                <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Discard</button>
+                            <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
+                        </footer>
+                    </form>
                 </div>
             </div>
             <hr/>
@@ -649,19 +651,15 @@
                                 </header>
                                 <main class="modal-body" id="sign-dialog">
                                     <div class="mb-3">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto flex-grow-1">
-                                                <div class="input-group">
-                                                    <div class="input-group-text"><span class="text-nowrap" t-out="opportunity.company_currency.symbol"/></div>
-                                                    <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
-                                                </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="input-group">
+                                                <div class="input-group-text"><span class="text-nowrap" t-out="opportunity.company_currency.symbol"/></div>
+                                                <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
                                             </div>
-                                            <div class="col-auto">at</div>
-                                            <div class="col-auto">
-                                                <div class="input-group">
-                                                    <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
-                                                    <div class="input-group-text">%</div>
-                                                </div>
+                                            <div>at</div>
+                                            <div class="input-group w-auto">
+                                                <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
+                                                <div class="input-group-text">%</div>
                                             </div>
                                         </div>
                                     </div>
