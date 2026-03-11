@@ -2870,7 +2870,7 @@ class HttpCase(TransactionCase):
             _route_profiler = sup.profile(description=request.httprequest.full_path, db=_profiler.db)
             _profiler.sub_profilers.append(_route_profiler)
             return _route_profiler
-        return profiler.Nested(_profiler, patch('odoo.http.requestlib.Request._get_profiler_context_manager', route_profiler))
+        return profiler.Nested(_profiler, patch('odoo.http.router._get_profiler_context_manager', route_profiler))
 
     def get_method_additional_tags(self, test_method):
         """

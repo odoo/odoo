@@ -9,8 +9,7 @@ import threading
 import time
 import typing
 import warnings
-from contextlib import contextmanager, nullcontext
-from datetime import datetime
+from contextlib import contextmanager
 from urllib.parse import urlsplit
 
 import babel.core
@@ -19,13 +18,12 @@ from werkzeug.datastructures import (
     ImmutableMultiDict,
     MultiDict,
 )
-from werkzeug.exceptions import NotFound, UnsupportedMediaType
+from werkzeug.exceptions import NotFound
 from werkzeug.local import LocalStack
 from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
 
-import odoo
-from odoo.tools import consteq, json_default, profiler
+from odoo.tools import consteq, json_default
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -248,43 +246,6 @@ class Request:
     def get_json_data(self):
         return json.loads(self.httprequest.get_data(as_text=True))
 
-    def _get_profiler_context_manager(self):
-        """
-        Get a profiler when the profiling is enabled and the requested
-        URL is profile-safe. Otherwise, get a context-manager that does
-        nothing.
-        """
-        if self.session.get('profile_session') and self.db:
-            if self.session['profile_expiration'] < str(datetime.now()):
-                # avoid having session profiling for too long if user forgets to disable profiling
-                self.session['profile_session'] = None
-                _logger.warning("Profiling expiration reached, disabling profiling")
-            elif 'set_profiling' in self.httprequest.path:
-                _logger.debug("Profiling disabled on set_profiling route")
-            elif self.httprequest.path.startswith('/websocket'):
-                _logger.debug("Profiling disabled for websocket")
-            elif odoo.evented:
-                # only longpolling should be in a evented server, but this is an additional safety
-                _logger.debug("Profiling disabled for evented server")
-            else:
-                try:
-                    return profiler.Profiler(
-                        db=self.db,
-                        description=self.httprequest.full_path,
-                        profile_session=self.session['profile_session'],
-                        collectors=self.session['profile_collectors'],
-                        params=self.session['profile_params'],
-                    )._get_cm_proxy()
-                except Exception:
-                    _logger.exception("Failure during Profiler creation")
-                    self.session['profile_session'] = None
-
-        return nullcontext()
-
-    def _inject_future_response(self, response: Response):
-        response.headers.extend(self.future_response.headers)
-        return response
-
     def make_response(self,
         data: str,
         headers: HeaderType | None = None,
@@ -402,27 +363,6 @@ class Request:
         threading.current_thread().url = httprequest.url
         self.httprequest = httprequest
 
-    def _set_request_dispatcher(self, rule: werkzeug.routing.Rule):
-        endpoint: Endpoint = rule.endpoint  # type: ignore
-        routing = endpoint.routing
-        dispatcher_cls = _dispatchers[routing['type']]
-        if (not is_cors_preflight(self, endpoint)
-            and not dispatcher_cls.is_compatible_with(self)):
-            compatible_dispatchers = [
-                disp.routing_type
-                for disp in _dispatchers.values()
-                if disp.is_compatible_with(self)
-            ]
-            e = (f"Request inferred type is compatible with {compatible_dispatchers} "
-                 f"but {routing['routes'][0]!r} is type={routing['type']!r}.\n\n"
-                 "Please verify the Content-Type request header and try again.")
-            # werkzeug doesn't let us add headers to UnsupportedMediaType
-            # so use the following (ugly) to still achieve what we want
-            res = UnsupportedMediaType(e).get_response()
-            res.headers['Accept'] = ', '.join(dispatcher_cls.mimetypes)
-            raise UnsupportedMediaType(response=res)
-        self.dispatcher = dispatcher_cls(self)
-
 
 # ruff: noqa: E402
 if typing.TYPE_CHECKING:
@@ -430,7 +370,7 @@ if typing.TYPE_CHECKING:
     from ._facade import DEFAULT_MAX_CONTENT_LENGTH
 else:
     from ._facade import DEFAULT_MAX_CONTENT_LENGTH, HTTPRequest  # noqa: F401
-from .dispatcher import HttpDispatcher, _dispatchers
+from .dispatcher import HttpDispatcher
 from .geoip import GeoIP
 from .response import FutureResponse, Response
 from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session

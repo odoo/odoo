@@ -149,7 +149,7 @@ class Dispatcher(ABC):
         save the session when it is dirty.
         """
         save_session(self.request)
-        self.request._inject_future_response(response)
+        response.headers.extend(self.request.future_response.headers)
         root.set_csp(response)
 
     @abstractmethod
