@@ -389,3 +389,10 @@ export function waitForOrdersSync() {
         },
     ];
 }
+
+export function isLoader() {
+    return {
+        content: "Check that the loader is visible",
+        trigger: "body .loader-feedback",
+    };
+}
