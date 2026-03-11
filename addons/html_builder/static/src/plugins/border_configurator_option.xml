@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BorderConfiguratorOption">
-    <BuilderRow label="this.props.label">
+    <BuilderRow label="this.props.label" level="this.props.level">
         <BuilderNumberInput action="this.props.action" actionParam="{ mainParam: this.getStyleActionParam('width'), extraClass: this.props.withBSClass and 'border' }" unit="'px'" min="0" composable="true"/>
         <BuilderSelect action="this.props.action" actionParam="this.getStyleActionParam('style')" t-if="this.state.hasBorder">
             <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
@@ -17,7 +17,7 @@
     </BuilderRow>
 
     <!-- TODO: handle the dependency with border_width_opt bg_color_opt-->
-    <BuilderRow t-if="this.props.withRoundCorner and this.state.hasBorder" label.translate="Round Corners">
+    <BuilderRow t-if="this.props.withRoundCorner and this.state.hasBorder" label.translate="Round Corners" level="this.props.level">
         <BuilderNumberInput action="this.props.action" actionParam="{ mainParam: this.getStyleActionParam('radius'), extraClass: this.props.withBSClass and 'rounded' }" unit="'px'" min="0" composable="true"/>
     </BuilderRow>
 </t>

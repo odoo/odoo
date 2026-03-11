@@ -36,6 +36,7 @@ export class ButtonStyleOption extends BaseOptionComponent {
         BuilderNumberInput,
         BorderConfigurator,
     };
+    static dependencies = ["history"];
 
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
@@ -43,16 +44,102 @@ export class ButtonStyleOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.state = useDomState(async (el) => {
+            const buttonType = getButtonType(el);
+            const buttonStyles = await this.getButtonStyles(el);
+            const state = {
+                buttonStyles: buttonStyles,
+                buttonCombinationClass: this.findColorCombination(el),
+                currentButtonType: buttonType,
+                currentButtonTypeData: this.buttonTypesData.find((btn) => btn.type == buttonType),
+            };
+            return state;
+        });
+    }
 
-        const editingElement = this.env.getEditingElement();
-        const computedStyle =
-            editingElement.ownerDocument.defaultView.getComputedStyle(editingElement);
-        this.state = useDomState((el) => ({
-            type: getButtonType(el),
-            textColor: computedStyle.color,
-            fillColor: computedStyle.backgroundColor,
-            border: computedStyle.border,
-        }));
+    goToThemeTab() {
+        this.env.editColorCombination(
+            parseInt(this.state.buttonCombinationClass.replace("o_cc", ""))
+        );
+    }
+
+    async getButtonStyles(el) {
+        // Button variant styles depend on user-customized theme settings
+        // and on where the builder is running (website or mass mailing). The
+        // cleanest approach to generate a preview is to add a temporary button
+        // to the DOM and copy its computed styles. See commit message for more.
+        const buttonVariants = {
+            primary: "btn-primary",
+            secondary: "btn-secondary",
+        };
+        const previewVariables = [
+            "background-color",
+            "border",
+            "border-radius",
+            "color",
+            "font-family",
+            "font-weight",
+            "text-transform",
+        ];
+
+        const buttonContainerEl = el.parentElement;
+        const iframeDocument = el.ownerDocument;
+        const styles = {
+            primary: "",
+            secondary: "",
+            custom: "",
+        };
+        for (const [variantName, variantClass] of Object.entries(buttonVariants)) {
+            const tempButtonEl = iframeDocument.createElement("a");
+            tempButtonEl.className = `btn ${variantClass}`;
+            this.dependencies.history.ignoreDOMMutations(() =>
+                buttonContainerEl.appendChild(tempButtonEl)
+            );
+            const computedStyle = getComputedStyle(tempButtonEl);
+            for (const style of previewVariables) {
+                const value = computedStyle.getPropertyValue(style);
+                if (value) {
+                    styles[variantName] += `${style}: ${value};`;
+                }
+            }
+            this.dependencies.history.ignoreDOMMutations(() => tempButtonEl.remove());
+        }
+
+        // The style for btn-custom is always a copy of the current button style.
+        // This way, if a custom button is currently in use, the customization is
+        // correctly represented in the button preview. Otherwise, the custom
+        // button style represents the style that the button would adopt once
+        // the customization begins.
+
+        // requestAnimationFrame is a temporary workaround necessary because
+        // the change of color seems to be animated even if it should not (see
+        // `withoutTransition` in `StyleAction.apply`). This should be removed
+        // once the transition problem is fixed.
+        await new Promise((resolve) => {
+            requestAnimationFrame(() => {
+                const computedStyle = getComputedStyle(el);
+                for (const style of previewVariables) {
+                    const value = computedStyle.getPropertyValue(style);
+                    if (value) {
+                        styles.custom += `${style}: ${value};`;
+                    }
+                }
+                resolve();
+            });
+        });
+        return styles;
+    }
+
+    findColorCombination(el) {
+        // Crawl the DOM upwards until a cc class is found, otherwise return cc1
+        const ccClasses = ["o_cc1", "o_cc2", "o_cc3", "o_cc4", "o_cc5"];
+        const ccSelector = ccClasses.map((cls) => `.${cls}`).join(",");
+        const ccElement = el.closest(ccSelector);
+        if (!ccElement) {
+            return ccClasses[0];
+        }
+        const matchedClass = ccClasses.find((cls) => ccElement.classList?.contains(cls));
+        return matchedClass;
     }
 }
 

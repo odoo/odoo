@@ -1,6 +1,7 @@
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, queryOne, describe } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -65,6 +66,8 @@ test("should load the current custom style correctly", async () => {
         '<p><a href="https://test.com/" class="btn btn-custom" style="color: rgb(0, 255, 0); background-color: rgb(0, 0, 255); border-width: 4px; border-color: rgb(255, 0, 0); border-style: dotted;">Link label</a></p>'
     );
     await contains(":iframe p > a").click();
+    // Necessary because of the requestAnimationFrame in ButtonStyleOption.getButtonStyle
+    await animationFrame();
 
     expect("[data-label=Type] .o-hb-select-toggle").toHaveText("Custom");
     expect("[data-label=Text] .o_we_color_preview").toHaveStyle("background-color: rgb(0, 255, 0)");
@@ -152,6 +155,8 @@ test("border works even if current border style is none", async () => {
 
     await contains("[data-label=Type] .o-hb-select-toggle").click();
     await contains(".o_popover .dropdown-item:contains('Custom')").click();
+    // Necessary because of the requestAnimationFrame in ButtonStyleOption.getButtonStyle
+    await animationFrame();
 
     expect("[data-label=Border] .o-hb-input-number").toHaveValue("0");
 

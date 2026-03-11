@@ -4,22 +4,35 @@
 <t t-name="html_builder.ButtonStyleOption">
     <BuilderRow label.translate="Type">
         <BuilderSelect action="'buttonStyleAction'" actionParam="'type'">
+            <t t-set-slot="fixedButton">
+                <div class="btn flex-grow-1 my-2 w-100"
+                    t-attf-class="o-hb-button-style-preview o-hb-button-style-preview-{{this.state.currentButtonType}}"
+                    t-att-style="this.state.buttonStyles[this.state.currentButtonType]"
+                    t-out="this.state.currentButtonTypeData.label"/>
+            </t>
             <t t-foreach="this.buttonTypesData.slice(1)" t-as="opt" t-key="opt.type">
                 <BuilderSelectItem actionValue="opt.type" preview="opt.type !== 'custom'">
-                    <t t-out="opt.label"/>
+                    <div class="btn flex-grow-1 my-2 w-100"
+                        t-att-class="opt.className"
+                        t-attf-class="o-hb-button-style-preview o-hb-button-style-preview-{{opt.type}}"
+                        t-att-style="this.state.buttonStyles[opt.type]"
+                        t-out="opt.label"/>
                 </BuilderSelectItem>
             </t>
         </BuilderSelect>
+        <a class="fa fa-pencil btn o-hb-button-style-btn-edit"
+            title="Edit Color Combination"
+            t-on-click="this.goToThemeTab"/>
     </BuilderRow>
 
-    <t t-if="this.state.type === 'custom'">
+    <t t-if="this.state.currentButtonType === 'custom'">
         <BuilderRow label.translate="Text" level="1">
             <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
         </BuilderRow>
         <BuilderRow label.translate="Fill" level="1">
             <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
         </BuilderRow>
-        <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" />
+        <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" level="1"/>
     </t>
 
     <BuilderRow label.translate="Size">

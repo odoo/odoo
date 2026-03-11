@@ -10,6 +10,7 @@ export class BorderConfigurator extends BaseOptionComponent {
         withRoundCorner: { type: Boolean, optional: true },
         withBSClass: { type: Boolean, optional: true },
         action: { type: String, optional: true },
+        level: { type: Number, optional: true },
     };
     static defaultProps = {
         withRoundCorner: true,
