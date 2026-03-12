@@ -149,7 +149,10 @@ export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
 }
 
 export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
-    const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
+    const readonly =
+        fieldInfo.viewType === "form" && !record.isInEdition
+            ? true
+            : evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
     const required = evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds);
     const inEdit = record.isInEdition;
 

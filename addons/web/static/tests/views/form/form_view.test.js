@@ -11228,6 +11228,22 @@ test(`form view with edit='0' but create='1', new record`, async () => {
     expect(`.o_form_editable`).toHaveCount(1);
 });
 
+test(`form view with edit='0': all fields should be readonly`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form edit="0"><group><field name="foo"/></group></form>`,
+        resId: 1,
+    });
+    expect(`.o_form_editable`).toHaveCount(0);
+    expect(`.o_form_readonly`).toHaveCount(1);
+
+    expect(`label[for=foo_0].o_form_label_readonly`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo].o_readonly_modifier`).toHaveCount(1);
+
+    expect(`input`).toHaveCount(0);
+});
+
 test(`save a form view with an invisible required field`, async () => {
     Partner._fields.text = fields.Text({ required: 1 });
 
