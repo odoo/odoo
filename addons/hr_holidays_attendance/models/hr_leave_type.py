@@ -45,7 +45,7 @@ class HRLeaveType(models.Model):
                         {
                             'remaining_leaves': 0,
                             'virtual_remaining_leaves': employee.sudo().total_overtime,
-                            'max_leaves': 0,
+                            'max_leaves': employee.sudo().total_overtime,
                             'leaves_taken': 0,
                             'virtual_leaves_taken': 0,
                             'closest_allocation_remaining': 0,
