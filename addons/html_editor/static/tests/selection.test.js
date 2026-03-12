@@ -1403,3 +1403,14 @@ describe("Preserve selection", () => {
         expect(isSameCursor(c1, c2)).toBe(true);
     });
 });
+
+describe("Focus changes", () => {
+    test("Should not lose selection on focus change from the command palette", async () => {
+        const { el } = await setupEditor("<p>ab[]cd</p>");
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        await press(["Escape"]);
+        await animationFrame();
+        expect(getContent(el)).toBe("<p>ab[]cd</p>");
+    });
+});
