@@ -6,24 +6,6 @@
         <div class="container-md p-0">
             <div class="o_form_view align-items-center">
                 <div class="row">
-                    <div class="col" t-if="profiles._compute_has_memory()">
-                        <div class="o_form_sheet">
-                            <form method="get" t-attf-action="/web/profile_config/{{profile_str}}">
-                                <h4>Memory profile</h4>
-                                <div class="mt-3">
-                                    <label for="memory_limit">Memory limit (in bytes)</label>
-                                    <input type="number" id="memory_limit" name="memory_limit" class="form-control" value="1000"/>
-                                </div>
-
-                                <input type="hidden" name="profile_id" t-att-value="profile_str" />
-                                
-                                <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="action" value="memory_open">open</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
                     <div class="col">
                         <div class="o_form_sheet">
                             <!-- Single Form -->
@@ -77,6 +59,10 @@
                                 <div class="form-check" t-if="has_traces">
                                     <input type="checkbox" class="form-check-input" id="frames_profile" name="frames_profile" value="True" t-att-checked="default_params.get('frames_profile')"/>
                                     <label class="form-check-label" for="frames_profile">Frames</label>
+                                </div>
+                                <div class="form-check" t-if="has_traces and profiles._has_memory_traces()">
+                                    <input type="checkbox" class="form-check-input" id="memory_profile" name="memory_profile" value="True" t-att-checked="default_params.get('memory_profile')"/>
+                                    <label class="form-check-label" for="memory_profile">Memory (heuristic)</label>
                                 </div>
 
                                 <input type="hidden" name="profile_id" t-att-value="profile_str" />
