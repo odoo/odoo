@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hr.demo_company_hr" model="res.company">
+        <field name="l10n_hr_mer_username">12513</field>
+        <field name="l10n_hr_mer_password">AeXLoJf9Ld</field>
+        <field name="l10n_hr_mer_company_ident">BE0477472701</field>
+        <field name="l10n_hr_mer_software_ident">Test-002</field>
+    </record>
+
+    <record id="partner_demo_customer_hr" model="res.partner">
+        <field name="name">HR Customer</field>
+        <field name="vat">HR90512249179</field>
+        <field name="street">Ulica</field>
+        <field name="city">Grad</field>
+        <field name="country_id" ref="base.hr"/>
+        <field name="zip">00000</field>
+        <field name="phone">+385 00 000 0000</field>
+        <field name="email">info@customer.hrexample.com</field>
+        <field name="is_company" eval="True"/>
+        <field name="ubl_cii_format">ubl_hr</field>
+    </record>
+</odoo>
