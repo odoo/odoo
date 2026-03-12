@@ -450,24 +450,25 @@ class StockGenerateCommon(TransactionCase):
         )
         first_num = self.product_serial.lot_sequence_id.number_next_actual
         self.product_serial.lot_sequence_id.invalidate_recordset(['number_next_actual'])
+        next_char = self.product_serial.lot_sequence_id.get_next_char
         move_line_vals = self.env['stock.move'].with_user(inventory_user.id).action_generate_lot_line_vals(
-            action_context, 'generate', self.product_serial.lot_sequence_id.next_by_id(), 5, False
+            action_context, 'generate', next_char(self.product_serial.lot_sequence_id.number_next_actual), 5, False
         )
         self.assert_move_line_vals_values(move_line_vals, [
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 1)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 2)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 3)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 4)},
+            {'quantity': 1, 'lot_name': next_char(first_num)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 1)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 2)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 3)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 4)},
         ])
 
         move_line_vals = self.env['stock.move'].with_user(inventory_user.id).action_generate_lot_line_vals(
-            action_context, 'generate', self.product_serial.lot_sequence_id.next_by_id(), 5, False
+            action_context, 'generate', next_char(self.product_serial.lot_sequence_id.number_next_actual), 5, False
         )
         self.assert_move_line_vals_values(move_line_vals, [
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 5)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 6)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 7)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 8)},
-            {'quantity': 1, 'lot_name': self.product_serial.lot_sequence_id.get_next_char(first_num + 9)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 5)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 6)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 7)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 8)},
+            {'quantity': 1, 'lot_name': next_char(first_num + 9)},
         ])
