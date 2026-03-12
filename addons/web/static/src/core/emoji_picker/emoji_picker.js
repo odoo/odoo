@@ -526,7 +526,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
         ...options,
         onClose: () => {
             state.isOpen = false;
-            options.onClose?.();
+            props.onClose?.();
         },
     };
     const popover = usePopover(PickerComponent, {
@@ -592,6 +592,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     context: component,
                     onClose: () => {
                         state.isOpen = false;
+                        props.onClose?.();
                         return resolve(false);
                     },
                 });
