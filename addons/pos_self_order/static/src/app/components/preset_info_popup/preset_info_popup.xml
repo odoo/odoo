@@ -11,43 +11,26 @@
                     <button class="btn-close" aria-label="close" t-on-click="this.close"/>
                 </div>
                 <div class="d-flex flex-column gap-3 overflow-y-auto overflow-x-hidden flex-grow-1">
-                    <select t-if="this.preset.needsPartner and this.existingPartners.length"
-                        class="partner-select form-select form-select-lg"
-                        t-on-change="this.selectExistingPartner"
-                        t-custom-model="state.selectedPartnerId">
-                        <option value="">
-                            Select your address
-                        </option>
-                        <t t-foreach="this.existingPartners" t-as="partner" t-key="partner.id">
-                            <option t-att-value="partner.id" t-out="partner.name + ' ' + partner.address" />
-                        </t>
-                    </select>
                     <input t-if="this.preset.needsName || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
-                        t-att-placeholder="this.partnerIsSelected ? '*************' : 'Name'"
-                        t-custom-model="state.name"
-                        t-att-disabled="this.partnerIsSelected" />
+                        placeholder="Name"
+                        t-custom-model="state.name"/>
                     <input t-if="this.preset.needsEmail || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
-                        t-att-placeholder="this.partnerIsSelected ? '*************' : 'Email'"
-                        t-custom-model="state.email"
-                        t-att-disabled="this.partnerIsSelected" />
+                        placeholder="Email"
+                        t-custom-model="state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <input type="text"
                             class="form-control form-control-lg"
-                            t-att-placeholder="this.partnerIsSelected ? '*************' : 'Phone'"
-                            t-custom-model="state.phone"
-                            t-att-disabled="this.partnerIsSelected"/>
+                            placeholder="Phone"
+                            t-custom-model="state.phone"/>
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
                     </t>
                     <t t-if="this.preset.needsPartner">
-                        <select class="partner-select form-select form-select-lg" t-custom-model="state.countryId" t-att-disabled="this.partnerIsSelected">
-                            <option value="">
-                                <t t-if="this.partnerIsSelected">*************</t>
-                                <t t-else="">Select a country</t>
-                            </option>
+                        <select class="partner-select form-select form-select-lg" t-custom-model="state.countryId">
+                            <option value="">Select a country</option>
                             <t t-foreach="this.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id" t-out="country.name" />
                             </t>
@@ -55,32 +38,26 @@
                         <div class="d-flex gap-3">
                             <input type="text"
                                 class="form-control form-control-lg w-75"
-                                t-att-placeholder="this.partnerIsSelected ? '*************' : 'Street and Number'"
-                                t-custom-model="state.street"
-                                t-att-disabled="this.partnerIsSelected"/>
+                                placeholder="Street and Number"
+                                t-custom-model="state.street"/>
                             <input
                                 type="text"
                                 class="form-control form-control-lg w-25"
-                                t-att-placeholder="this.partnerIsSelected ? '*************' : 'Zip'"
-                                t-custom-model="state.zip"
-                                t-att-disabled="this.partnerIsSelected"/>
+                                placeholder="Zip"
+                                t-custom-model="state.zip"/>
                         </div>
                         <div class="d-flex gap-3">
                             <t t-set="availableState" t-value="this.states" />
-                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="state.stateId" t-att-disabled="this.partnerIsSelected">
-                                <option value="">
-                                    <t t-if="this.partnerIsSelected">*************</t>
-                                    <t t-else="">Select a state</t>
-                                </option>
+                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="state.stateId">
+                                <option value="">Select a state</option>
                                 <t t-foreach="availableState" t-as="state" t-key="state.id">
                                     <option t-att-value="state.id" t-out="state.name" />
                                 </t>
                             </select>
                             <input type="text"
                                 class="form-control form-control-lg"
-                                t-att-placeholder="this.partnerIsSelected ? '*************' : 'City'"
-                                t-custom-model="state.city"
-                                t-att-disabled="this.partnerIsSelected"/>
+                                placeholder="City"
+                                t-custom-model="state.city"/>
                         </div>
                     </t>
                 </div>
