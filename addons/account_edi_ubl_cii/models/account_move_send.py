@@ -190,7 +190,9 @@ class AccountMoveSend(models.AbstractModel):
 
         attachment_name = 'factur-x.xml'
         if invoice.commercial_partner_id.country_code == 'DE' and invoice.commercial_partner_id.peppol_eas != '0204':
-            attachment_name = 'zugferd.xml'
+            attachment_name = self.env['ir.config_parameter'].sudo().get_param(
+                'account_edi_ubl_cii.zugferd_filename'
+            ) or 'zugferd.xml'
 
         writer.addAttachment(attachment_name, xml_facturx, subtype='text/xml')
 
