@@ -9,7 +9,7 @@ from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
@@ -20,41 +20,41 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
 
         cls.website = cls.website.with_user(cls.user_portal)
 
-        cls.sofa, cls.carpet = cls.env['product.product'].create([
-            {'name': "Test Sofa", 'list_price': 2950.0, 'website_published': True},
-            {'name': "Test Carpet", 'list_price': 500.0, 'website_published': True},
+        cls.sofa, cls.carpet = cls.env["product.product"].create([
+            {"name": "Test Sofa", "list_price": 2950.0, "website_published": True},
+            {"name": "Test Carpet", "list_price": 500.0, "website_published": True},
         ])
 
         # Disable any other program
-        cls.program = cls.env['loyalty.program'].search([]).write({'active': False})
+        cls.program = cls.env["loyalty.program"].search([]).write({"active": False})
 
-        cls.program = cls.env['loyalty.program'].create({
-            'name': 'Get a product for free',
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'trigger': 'auto',
-            'rule_ids': [
+        cls.program = cls.env["loyalty.program"].create({
+            "name": "Get a product for free",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "trigger": "auto",
+            "rule_ids": [
                 Command.create({
-                    'minimum_qty': 1,
-                    'minimum_amount': 0.00,
-                    'reward_point_amount': 1,
-                    'reward_point_mode': 'order',
-                    'product_ids': cls.sofa,
+                    "minimum_qty": 1,
+                    "minimum_amount": 0.00,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "order",
+                    "product_ids": cls.sofa,
                 })
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'product',
-                    'reward_product_id': cls.carpet.id,
-                    'reward_product_qty': 1,
-                    'required_points': 1,
+                    "reward_type": "product",
+                    "reward_product_id": cls.carpet.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
                 })
             ],
         })
 
-        installed_modules = cls.env['ir.module.module'].search([('state', '=', 'installed')])
+        installed_modules = cls.env["ir.module.module"].search([("state", "=", "installed")])
         for _ in http.routing_map._generate_routing_rules(
-            installed_modules.mapped('name'), nodb_only=False
+            installed_modules.mapped("name"), nodb_only=False
         ):
             pass
 
@@ -92,16 +92,16 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
     def test_get_claimable_free_shipping(self):
         cart = self._create_so(order_line=[])
         self.program.write({
-            'program_type': 'next_order_coupons',
-            'applies_on': 'future',
-            'coupon_ids': [
+            "program_type": "next_order_coupons",
+            "applies_on": "future",
+            "coupon_ids": [
                 Command.clear(),
-                Command.create({'partner_id': cart.partner_id.id, 'points': 100}),
+                Command.create({"partner_id": cart.partner_id.id, "points": 100}),
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.update(
                     self.program.reward_ids.id,
-                    {'reward_type': 'shipping', 'reward_product_id': None},
+                    {"reward_type": "shipping", "reward_product_id": None},
                 )
             ],
         })

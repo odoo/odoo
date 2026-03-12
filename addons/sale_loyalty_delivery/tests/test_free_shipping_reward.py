@@ -6,45 +6,45 @@ from odoo.tests import Form, tagged
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestSaleCouponProgramRules(TestSaleCouponCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.iPadMini = cls.env['product.product'].create({
-            'name': 'Large Cabinet',
-            'list_price': 320.0,
+        cls.iPadMini = cls.env["product.product"].create({
+            "name": "Large Cabinet",
+            "list_price": 320.0,
         })
-        tax_15pc_excl = cls.env['account.tax'].create({
-            'name': "15% Tax excl",
-            'amount_type': 'percent',
-            'amount': 15,
+        tax_15pc_excl = cls.env["account.tax"].create({
+            "name": "15% Tax excl",
+            "amount_type": "percent",
+            "amount": 15,
         })
-        cls.product_delivery_poste = cls.env['product.product'].create({
-            'name': 'The Poste',
-            'type': 'service',
-            'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
-            'sale_ok': False,
-            'purchase_ok': False,
-            'list_price': 20.0,
-            'taxes_id': [(6, 0, [tax_15pc_excl.id])],
+        cls.product_delivery_poste = cls.env["product.product"].create({
+            "name": "The Poste",
+            "type": "service",
+            "categ_id": cls.env.ref("delivery.product_category_deliveries").id,
+            "sale_ok": False,
+            "purchase_ok": False,
+            "list_price": 20.0,
+            "taxes_id": [(6, 0, [tax_15pc_excl.id])],
         })
-        cls.carrier = cls.env['delivery.carrier'].create({
-            'name': 'The Poste',
-            'fixed_price': 20.0,
-            'delivery_type': 'base_on_rule',
-            'product_id': cls.product_delivery_poste.id,
+        cls.carrier = cls.env["delivery.carrier"].create({
+            "name": "The Poste",
+            "fixed_price": 20.0,
+            "delivery_type": "base_on_rule",
+            "product_id": cls.product_delivery_poste.id,
         })
-        cls.env['delivery.price.rule'].create([
-            {'carrier_id': cls.carrier.id, 'max_value': 5, 'list_base_price': 20},
-            {'carrier_id': cls.carrier.id, 'operator': '>=', 'max_value': 5, 'list_base_price': 50},
+        cls.env["delivery.price.rule"].create([
+            {"carrier_id": cls.carrier.id, "max_value": 5, "list_base_price": 20},
+            {"carrier_id": cls.carrier.id, "operator": ">=", "max_value": 5, "list_base_price": 50},
             {
-                'carrier_id': cls.carrier.id,
-                'operator': '>=',
-                'max_value': 300,
-                'variable': 'price',
-                'list_base_price': 0,
+                "carrier_id": cls.carrier.id,
+                "operator": ">=",
+                "max_value": 300,
+                "variable": "price",
+                "list_base_price": 0,
             },
         ])
 
@@ -55,20 +55,20 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Test case 1: The minimum amount is not reached, the reward should
         # not be created
         self.immediate_promotion_program.active = False
-        program = self.env['loyalty.program'].create({
-            'name': 'Free Shipping if at least 100 euros',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {'minimum_amount': 100, 'minimum_amount_tax_mode': 'incl'})],
-            'reward_ids': [(0, 0, {'reward_type': 'shipping'})],
+        program = self.env["loyalty.program"].create({
+            "name": "Free Shipping if at least 100 euros",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {"minimum_amount": 100, "minimum_amount_tax_mode": "incl"})],
+            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
         })
 
         # Price of order will be 5*1.15 = 5.75 (tax included)
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'name': 'Product B',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_B.id,
+                    "name": "Product B",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -77,9 +77,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.env['delivery.carrier'].search([])[1],
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.env["delivery.carrier"].search([])[1],
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -93,15 +93,15 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # yet the program shouldn't be applied
         # Order price will be 5.75 + 81.74*1.15 = 99.75
         order.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_B.id,
-                        'name': 'Product 1B',
-                        'product_uom_qty': 1.0,
-                        'price_unit': 81.74,
+                        "product_id": self.product_B.id,
+                        "name": "Product 1B",
+                        "product_uom_qty": 1.0,
+                        "price_unit": 81.74,
                     },
                 )
             ]
@@ -112,15 +112,15 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Test case 2: the amount is sufficient, the shipping should
         # be reimbursed
         order.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': 'Product 1',
-                        'product_uom_qty': 1.0,
-                        'price_unit': 0.30,
+                        "product_id": self.product_A.id,
+                        "name": "Product 1",
+                        "product_uom_qty": 1.0,
+                        "price_unit": 0.30,
                     },
                 )
             ]
@@ -131,7 +131,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         # Test case 3: the amount is not sufficient now, the reward should be removed
         order.write({
-            'order_line': [
+            "order_line": [
                 (
                     2,
                     order.order_line.filtered(
@@ -148,25 +148,25 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         """Free delivery should not be taken into account when checking for minimum required
         threshold.
         """
-        p_minimum_threshold_free_delivery = self.env['loyalty.program'].create({
-            'name': 'free shipping if > 872 tax excl',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {'minimum_amount': 872})],
-            'reward_ids': [(0, 0, {'reward_type': 'shipping'})],
+        p_minimum_threshold_free_delivery = self.env["loyalty.program"].create({
+            "name": "free shipping if > 872 tax excl",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {"minimum_amount": 872})],
+            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
         })
-        p_2 = self.env['loyalty.program'].create({
-            'name': '10% reduction if > 872 tax excl',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {'minimum_amount': 872})],
-            'reward_ids': [
+        p_2 = self.env["loyalty.program"].create({
+            "name": "10% reduction if > 872 tax excl",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {"minimum_amount": 872})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 10,
-                        'discount_mode': 'percent',
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
                     },
                 )
             ],
@@ -176,9 +176,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.iPadMini.id,
-                    'name': 'Large Cabinet',
-                    'product_uom_qty': 3.0,
+                    "product_id": self.iPadMini.id,
+                    "name": "Large Cabinet",
+                    "product_uom_qty": 3.0,
                 })
             ]
         )
@@ -192,18 +192,18 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
         self.assertEqual(
             order.order_line.filtered(
-                lambda line: line.reward_id.reward_type == 'shipping'
+                lambda line: line.reward_id.reward_type == "shipping"
             ).price_unit,
             0,
         )
         self.assertEqual(order.amount_total, 960 * 0.9)
-        order.carrier_id = self.env['delivery.carrier'].search([])[1]
+        order.carrier_id = self.env["delivery.carrier"].search([])[1]
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.env['delivery.carrier'].search([])[1],
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.env["delivery.carrier"].search([])[1],
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -218,9 +218,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         (order.order_line - sol1).unlink()
         # I add delivery cost in Sales order
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.env['delivery.carrier'].search([])[1],
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.env["delivery.carrier"].search([])[1],
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -234,27 +234,27 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         """Free delivery should not be taken into account when checking for minimum required
         threshold.
         """
-        p_1 = self.env['loyalty.program'].create({
-            'name': 'Free shipping if > 872 tax excl',
-            'trigger': 'with_code',
-            'rule_ids': [
-                (0, 0, {'mode': 'with_code', 'code': 'free_shipping', 'minimum_amount': 872})
+        p_1 = self.env["loyalty.program"].create({
+            "name": "Free shipping if > 872 tax excl",
+            "trigger": "with_code",
+            "rule_ids": [
+                (0, 0, {"mode": "with_code", "code": "free_shipping", "minimum_amount": 872})
             ],
-            'reward_ids': [(0, 0, {'reward_type': 'shipping'})],
+            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
         })
-        p_2 = self.env['loyalty.program'].create({
-            'name': 'Buy 4 large cabinet, get one for free',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {'product_ids': self.iPadMini, 'minimum_qty': 4})],
-            'reward_ids': [
+        p_2 = self.env["loyalty.program"].create({
+            "name": "Buy 4 large cabinet, get one for free",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {"product_ids": self.iPadMini, "minimum_qty": 4})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'product',
-                        'reward_product_id': self.iPadMini.id,
-                        'reward_product_qty': 1,
-                        'required_points': 1,
+                        "reward_type": "product",
+                        "reward_product_id": self.iPadMini.id,
+                        "reward_product_qty": 1,
+                        "required_points": 1,
                     },
                 )
             ],
@@ -264,9 +264,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.iPadMini.id,
-                    'name': 'Large Cabinet',
-                    'product_uom_qty': 3.0,
+                    "product_id": self.iPadMini.id,
+                    "name": "Large Cabinet",
+                    "product_uom_qty": 3.0,
                 })
             ]
         )
@@ -274,9 +274,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -290,7 +290,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
         self.assertEqual(order.amount_untaxed, 872.73 + 20)
 
-        self._apply_promo_code(order, 'free_shipping')
+        self._apply_promo_code(order, "free_shipping")
         self._auto_rewards(order, programs)
         self.assertEqual(
             len(order.order_line.ids),
@@ -312,19 +312,19 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
         self.assertEqual(order.amount_untaxed, 1163.64)
 
-        programs |= self.env['loyalty.program'].create({
-            'name': '20% reduction on large cabinet in cart',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {})],
-            'reward_ids': [
+        programs |= self.env["loyalty.program"].create({
+            "name": "20% reduction on large cabinet in cart",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 20,
-                        'discount_mode': 'percent',
-                        'discount_applicability': 'cheapest',
+                        "reward_type": "discount",
+                        "discount": 20,
+                        "discount_mode": "percent",
+                        "discount_applicability": "cheapest",
                     },
                 )
             ],
@@ -343,19 +343,19 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         """
         self.immediate_promotion_program.active = False
         # Create a loyalty program
-        loyalty_program = self.env['loyalty.program'].create({
-            'name': 'GIFT Free Shipping',
-            'program_type': 'loyalty',
-            'applies_on': 'both',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {'reward_point_mode': 'money', 'reward_point_amount': 1})],
-            'reward_ids': [(0, 0, {'reward_type': 'shipping', 'required_points': 100})],
+        loyalty_program = self.env["loyalty.program"].create({
+            "name": "GIFT Free Shipping",
+            "program_type": "loyalty",
+            "applies_on": "both",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {"reward_point_mode": "money", "reward_point_amount": 1})],
+            "reward_ids": [(0, 0, {"reward_type": "shipping", "required_points": 100})],
         })
         # Add points to a partner to trigger the promotion
-        self.env['loyalty.card'].create({
-            'program_id': loyalty_program.id,
-            'partner_id': self.partner.id,
-            'points': 250,
+        self.env["loyalty.card"].create({
+            "program_id": loyalty_program.id,
+            "partner_id": self.partner.id,
+            "points": 250,
         })
         order = self._create_so(order_line=[])
         # Check if we can claim the free shipping reward
@@ -368,60 +368,60 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # via `_apply_program_reward` in `_claim_reward` method
 
     def test_nothing_delivered_nothing_to_invoice(self):
-        program = self.env['loyalty.program'].create({
-            'name': '10% reduction on all orders',
-            'trigger': 'auto',
-            'program_type': 'promotion',
-            'rule_ids': [Command.create({'minimum_amount': 50})],
-            'reward_ids': [
+        program = self.env["loyalty.program"].create({
+            "name": "10% reduction on all orders",
+            "trigger": "auto",
+            "program_type": "promotion",
+            "rule_ids": [Command.create({"minimum_amount": 50})],
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
                 })
             ],
         })
-        product = self.env['product.product'].create({
-            'name': 'Test product',
-            'type': 'consu',
-            'list_price': 200.0,
-            'invoice_policy': 'delivery',
+        product = self.env["product.product"].create({
+            "name": "Test product",
+            "type": "consu",
+            "list_price": 200.0,
+            "invoice_policy": "delivery",
         })
-        order = self._create_so(order_line=[Command.create({'product_id': product.id})])
+        order = self._create_so(order_line=[Command.create({"product_id": product.id})])
         self._auto_rewards(order, program)
         self.assertNotEqual(order.reward_amount, 0)
-        self.assertEqual(order.invoice_status, 'no')
+        self.assertEqual(order.invoice_status, "no")
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
         order.action_confirm()
         self.assertEqual(order.delivery_set, True)
-        self.assertEqual(order.invoice_status, 'no')
+        self.assertEqual(order.invoice_status, "no")
 
     def test_delivery_shant_count_toward_quantity_bought(self):
 
         # Create promotion: 10% for everything
-        discount_program = self.env['loyalty.program'].create({
-            'name': '10 percent off order with min. 2 products',
-            'trigger': 'auto',
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'rule_ids': [(0, 0, {'minimum_qty': 2, 'minimum_amount': 0})],
-            'reward_ids': [
+        discount_program = self.env["loyalty.program"].create({
+            "name": "10 percent off order with min. 2 products",
+            "trigger": "auto",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "rule_ids": [(0, 0, {"minimum_qty": 2, "minimum_amount": 0})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount_mode': 'percent',
-                        'discount': 10.0,
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount_mode": "percent",
+                        "discount": 10.0,
+                        "discount_applicability": "order",
                     },
                 )
             ],
@@ -430,11 +430,11 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Create an order including: product and delivery
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.iPadMini.id, 'name': self.iPadMini.name}),
+                Command.create({"product_id": self.iPadMini.id, "name": self.iPadMini.name}),
                 Command.create({
-                    'product_id': self.product_delivery_poste.id,
-                    'name': 'Free delivery charges\nFree Shipping',
-                    'is_delivery': True,
+                    "product_id": self.product_delivery_poste.id,
+                    "name": "Free delivery charges\nFree Shipping",
+                    "is_delivery": True,
                 }),
             ]
         )
@@ -450,22 +450,22 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 2, err_msg)
 
     def test_free_shipping_should_be_removed_when_rules_are_not_met(self):
-        p_1 = self.env['loyalty.program'].create({
-            'name': 'Free shipping if > 872 tax excl',
-            'trigger': 'with_code',
-            'rule_ids': [
-                (0, 0, {'mode': 'with_code', 'code': 'free_shipping', 'minimum_amount': 872})
+        p_1 = self.env["loyalty.program"].create({
+            "name": "Free shipping if > 872 tax excl",
+            "trigger": "with_code",
+            "rule_ids": [
+                (0, 0, {"mode": "with_code", "code": "free_shipping", "minimum_amount": 872})
             ],
-            'reward_ids': [(0, 0, {'reward_type': 'shipping'})],
+            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
         })
         programs = p_1
         self.iPadMini.taxes_id = self.tax_10pc_incl
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.iPadMini.id,
-                    'name': 'Large Cabinet',
-                    'product_uom_qty': 3.0,
+                    "product_id": self.iPadMini.id,
+                    "name": "Large Cabinet",
+                    "product_uom_qty": 3.0,
                 })
             ]
         )
@@ -473,9 +473,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -489,7 +489,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
         self.assertEqual(order.amount_untaxed, 872.73 + 20)
 
-        self._apply_promo_code(order, 'free_shipping')
+        self._apply_promo_code(order, "free_shipping")
         self._auto_rewards(order, programs)
         self.assertEqual(
             len(order.order_line.ids),
@@ -513,35 +513,35 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     def test_discount_reward_claimable_when_shipping_reward_already_claimed_from_same_coupon(self):
         """Check that a discount reward is still claimable after the shipping reward is claimed."""
-        program = self.env['loyalty.program'].create({
-            'name': "10% Discount & Shipping",
-            'applies_on': 'current',
-            'trigger': 'with_code',
-            'program_type': 'promotion',
-            'rule_ids': [Command.create({'mode': 'with_code', 'code': "10PERCENT&SHIPPING"})],
-            'reward_ids': [
-                Command.create({'reward_type': 'shipping', 'reward_product_qty': 1}),
+        program = self.env["loyalty.program"].create({
+            "name": "10% Discount & Shipping",
+            "applies_on": "current",
+            "trigger": "with_code",
+            "program_type": "promotion",
+            "rule_ids": [Command.create({"mode": "with_code", "code": "10PERCENT&SHIPPING"})],
+            "reward_ids": [
+                Command.create({"reward_type": "shipping", "reward_product_qty": 1}),
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'specific',
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "specific",
                 }),
             ],
         })
 
-        coupon = self.env['loyalty.card'].create({
-            'program_id': program.id,
-            'points': 20,
-            'code': 'GIFT_CARD',
+        coupon = self.env["loyalty.card"].create({
+            "program_id": program.id,
+            "points": 20,
+            "code": "GIFT_CARD",
         })
 
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [Command.create({'product_id': self.product_B.id})],
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({"product_id": self.product_B.id})],
         })
 
-        ship_reward = program.reward_ids.filtered(lambda reward: reward.reward_type == 'shipping')
+        ship_reward = program.reward_ids.filtered(lambda reward: reward.reward_type == "shipping")
         discount_reward = program.reward_ids - ship_reward
         order._apply_program_reward(ship_reward, coupon)
         rewards = order._get_claimable_rewards()[coupon]

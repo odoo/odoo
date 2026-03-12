@@ -8,13 +8,13 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
 from odoo.addons.website_sale.tests.common import MockRequest
 
 
-@tagged('-at_install', 'post_install')
+@tagged("-at_install", "post_install")
 class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env['website'].browse(1)
-        cls.website2 = cls.env['website'].create({'name': 'website 2'})
+        cls.website = cls.env["website"].browse(1)
+        cls.website2 = cls.env["website"].create({"name": "website 2"})
 
     def test_01_multiwebsite_checks(self):
         """Ensure the multi website compliance of programs and coupons, both in
@@ -22,12 +22,12 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
         """
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.largeCabinet.id, 'product_uom_qty': 2.0})
+                Command.create({"product_id": self.largeCabinet.id, "product_uom_qty": 2.0})
             ]
         )
 
         def _remove_reward():
-            order.order_line.filtered('is_reward_line').unlink()
+            order.order_line.filtered("is_reward_line").unlink()
             self.assertEqual(len(order.order_line.ids), 1, "Program should have been removed")
 
         def _apply_code(code, backend=True):
@@ -102,9 +102,9 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
         # ==============================
 
         order.website_id = False
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.discount_coupon_program.id
-        ).create({'coupon_qty': 4, 'points_granted': 1}).generate_coupons()
+        ).create({"coupon_qty": 4, "points_granted": 1}).generate_coupons()
         coupons = self.discount_coupon_program.coupon_ids
 
         # 1. Backend - Generic
@@ -170,11 +170,11 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
         order.website_id = False
         self.p1.website_id = False
         self.p1.rule_ids.code = False
-        self.p1.trigger = 'auto'
-        self.p1.rule_ids.mode = 'auto'
+        self.p1.trigger = "auto"
+        self.p1.rule_ids.mode = "auto"
 
         # 1. Backend - Generic
-        all_programs = self.env['loyalty.program'].search([])
+        all_programs = self.env["loyalty.program"].search([])
         self._auto_rewards(order, all_programs)
         self.assertEqual(
             len(order.order_line.ids),

@@ -15,32 +15,32 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
         res = super().express_checkout_process_delivery_address(partial_delivery_address)
         order_sudo = request.cart
         if free_shipping_lines := order_sudo._get_free_shipping_lines():
-            res['delivery_discount_minor_amount'] = payment_utils.to_minor_currency_units(
-                sum(free_shipping_lines.mapped('price_total')), order_sudo.currency_id
+            res["delivery_discount_minor_amount"] = payment_utils.to_minor_currency_units(
+                sum(free_shipping_lines.mapped("price_total")), order_sudo.currency_id
             )
         return res
 
     def _order_summary_values(self, order, **post):
         to_html = partial(
-            request.env['ir.qweb.field.monetary'].value_to_html,
-            options={'display_currency': order.currency_id},
+            request.env["ir.qweb.field.monetary"].value_to_html,
+            options={"display_currency": order.currency_id},
         )
         res = super()._order_summary_values(order, **post)
         free_shipping_lines = order._get_free_shipping_lines()
         if free_shipping_lines:
-            shipping_discount = sum(free_shipping_lines.mapped('price_total'))
-            res['amount_delivery_discounted'] = to_html(shipping_discount)
-            res['delivery_discount_minor_amount'] = payment_utils.to_minor_currency_units(
+            shipping_discount = sum(free_shipping_lines.mapped("price_total"))
+            res["amount_delivery_discounted"] = to_html(shipping_discount)
+            res["delivery_discount_minor_amount"] = payment_utils.to_minor_currency_units(
                 shipping_discount, order.currency_id
             )
         discount_lines = order.order_line.filtered(
-            lambda line: line.reward_id.reward_type == 'discount'
+            lambda line: line.reward_id.reward_type == "discount"
         )
         groupable_lines = discount_lines.filtered(
-            lambda line: line.reward_id.discount_mode == 'percent'
+            lambda line: line.reward_id.discount_mode == "percent"
         )
-        res['discount_reward_amounts'] = [
-            to_html(sum(lines.mapped('price_subtotal')))
-            for lines in groupable_lines.grouped('reward_id').values()
+        res["discount_reward_amounts"] = [
+            to_html(sum(lines.mapped("price_subtotal")))
+            for lines in groupable_lines.grouped("reward_id").values()
         ] + [to_html(line.price_subtotal) for line in discount_lines - groupable_lines]
         return res

@@ -6,81 +6,81 @@ from odoo.fields import Command
 from odoo.tests import Form, common
 
 
-@common.tagged('post_install', '-at_install')
+@common.tagged("post_install", "-at_install")
 class TestLoyaltyDeliveryCost(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.partner_1 = cls.env['res.partner'].create({'name': 'My Test Customer'})
-        cls.pricelist = cls.env['product.pricelist'].create({'name': 'Test Pricelist'})
-        cls.product_4 = cls.env['product.product'].create({
-            'name': "A product to deliver",
-            'type': 'consu',
-            'list_price': 200.0,
+        cls.partner_1 = cls.env["res.partner"].create({"name": "My Test Customer"})
+        cls.pricelist = cls.env["product.pricelist"].create({"name": "Test Pricelist"})
+        cls.product_4 = cls.env["product.product"].create({
+            "name": "A product to deliver",
+            "type": "consu",
+            "list_price": 200.0,
         })
-        cls.product_uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.product_delivery = cls.env['product.product'].create({
-            'name': 'Delivery Charges',
-            'type': 'service',
-            'list_price': 40.0,
-            'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
+        cls.product_uom_unit = cls.env.ref("uom.product_uom_unit")
+        cls.product_delivery = cls.env["product.product"].create({
+            "name": "Delivery Charges",
+            "type": "service",
+            "list_price": 40.0,
+            "categ_id": cls.env.ref("delivery.product_category_deliveries").id,
         })
-        cls.delivery_carrier = cls.env['delivery.carrier'].create({
-            'name': 'Delivery Now Free Over 100',
-            'fixed_price': 40,
-            'delivery_type': 'fixed',
-            'product_id': cls.product_delivery.id,
-            'free_over': True,
-            'amount': 100,
+        cls.delivery_carrier = cls.env["delivery.carrier"].create({
+            "name": "Delivery Now Free Over 100",
+            "fixed_price": 40,
+            "delivery_type": "fixed",
+            "product_id": cls.product_delivery.id,
+            "free_over": True,
+            "amount": 100,
         })
         # Create a 50% discount on order code
-        cls.env['loyalty.program'].create({
-            'name': "50% discount code",
-            'program_type': 'promo_code',
-            'trigger': 'with_code',
-            'applies_on': 'current',
-            'rule_ids': [Command.create({'code': "test-50pc"})],
-            'reward_ids': [
+        cls.env["loyalty.program"].create({
+            "name": "50% discount code",
+            "program_type": "promo_code",
+            "trigger": "with_code",
+            "applies_on": "current",
+            "rule_ids": [Command.create({"code": "test-50pc"})],
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 50.0,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
+                    "reward_type": "discount",
+                    "discount": 50.0,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
                 })
             ],
         })
-        cls.order = cls.env['sale.order'].create({
-            'partner_id': cls.partner_1.id,
-            'pricelist_id': cls.pricelist.id,
-            'order_line': [Command.create({'product_id': cls.product_4.id})],
+        cls.order = cls.env["sale.order"].create({
+            "partner_id": cls.partner_1.id,
+            "pricelist_id": cls.pricelist.id,
+            "order_line": [Command.create({"product_id": cls.product_4.id})],
         })
 
     def test_delivery_cost_gift_card(self):
         """Test that the order amount used to trigger the free delivery doesn't consider gift
         cards.
         """
-        program_gift_card = self.env['loyalty.program'].create({
-            'name': 'Gift Cards',
-            'applies_on': 'future',
-            'program_type': 'gift_card',
-            'trigger': 'auto',
-            'reward_ids': [
+        program_gift_card = self.env["loyalty.program"].create({
+            "name": "Gift Cards",
+            "applies_on": "future",
+            "program_type": "gift_card",
+            "trigger": "auto",
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 1,
-                        'discount_mode': 'per_point',
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount": 1,
+                        "discount_mode": "per_point",
+                        "discount_applicability": "order",
                     },
                 )
             ],
         })
-        self.env['loyalty.generate.wizard'].with_context(active_id=program_gift_card.id).create({
-            'coupon_qty': 1,
-            'points_granted': 200,
+        self.env["loyalty.generate.wizard"].with_context(active_id=program_gift_card.id).create({
+            "coupon_qty": 1,
+            "points_granted": 200,
         }).generate_coupons()
         gift_card = program_gift_card.coupon_ids[0]
 
@@ -89,14 +89,14 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         order.action_confirm()
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.delivery_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.delivery_carrier.id,
             })
         )
         delivery_wizard.save().button_confirm()
 
-        self.assertEqual(order.order_line.filtered('is_delivery').price_total, 0)
+        self.assertEqual(order.order_line.filtered("is_delivery").price_total, 0)
 
     def test_free_delivery_cost_with_ewallet(self):
         """Automatic free shipping of a delivery method should not be affected by the
@@ -107,22 +107,22 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         over 100.
         """
         # Create an eWallet Program and its corresponding rewards and coupons.
-        program_ewallet = self.env['loyalty.program'].create({
-            'name': 'eWallet',
-            'program_type': 'ewallet',
-            'reward_ids': [
+        program_ewallet = self.env["loyalty.program"].create({
+            "name": "eWallet",
+            "program_type": "ewallet",
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount_mode': 'per_point',
-                    'discount': 1,
-                    'discount_applicability': 'order',
-                    'required_points': 1,
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
+                    "discount_applicability": "order",
+                    "required_points": 1,
                 })
             ],
         })
-        self.env['loyalty.generate.wizard'].with_context(active_id=program_ewallet.id).create({
-            'coupon_qty': 1,
-            'points_granted': 200,
+        self.env["loyalty.generate.wizard"].with_context(active_id=program_ewallet.id).create({
+            "coupon_qty": 1,
+            "points_granted": 200,
         }).generate_coupons()
         reward_ewallet = program_ewallet.reward_ids[0]
         ewallet = program_ewallet.coupon_ids[0]
@@ -132,32 +132,32 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         order._apply_program_reward(reward_ewallet, ewallet)
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.delivery_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.delivery_carrier.id,
             })
         )
         delivery_wizard.save().button_confirm()
 
-        self.assertEqual(order.order_line.filtered('is_delivery').price_total, 0)
+        self.assertEqual(order.order_line.filtered("is_delivery").price_total, 0)
 
     def test_delivery_cost_discounts(self):
         """Make sure discounts aren't taken into account for free delivery."""
-        discount90 = self.env['loyalty.program'].create({
-            'name': '90% Discount',
-            'program_type': 'coupons',
-            'applies_on': 'current',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {})],
-            'reward_ids': [
+        discount90 = self.env["loyalty.program"].create({
+            "name": "90% Discount",
+            "program_type": "coupons",
+            "applies_on": "current",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 90,
-                        'discount_mode': 'percent',
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount": 90,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
                     },
                 )
             ],
@@ -171,31 +171,31 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         order.action_confirm()
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': order.id,
-                'default_carrier_id': self.delivery_carrier.id,
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": order.id,
+                "default_carrier_id": self.delivery_carrier.id,
             })
         )
         delivery_wizard.save().button_confirm()
 
         self.assertEqual(
-            order.order_line.filtered('is_delivery').price_unit, self.product_delivery.list_price
+            order.order_line.filtered("is_delivery").price_unit, self.product_delivery.list_price
         )
 
     def test_discount_percentage_ignores_delivery_lines(self):
         """Check that percentage discounts ignore shipping costs."""
         self.delivery_carrier.free_over = False
-        self._apply_promo_code(self.order, 'test-50pc')
+        self._apply_promo_code(self.order, "test-50pc")
 
         delivery_wizard = Form(
-            self.env['choose.delivery.carrier'].with_context(
+            self.env["choose.delivery.carrier"].with_context(
                 default_order_id=self.order.id, default_carrier_id=self.delivery_carrier.id
             )
         )
         delivery_wizard.save().button_confirm()
 
         self.assertEqual(
-            self.order.order_line.filtered('is_reward_line').price_unit,
+            self.order.order_line.filtered("is_reward_line").price_unit,
             -self.product_4.list_price / 2,
             "Reward line should be half of the product's price",
         )
@@ -207,17 +207,17 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
 
     def _apply_promo_code(self, order, code, no_reward_fail=True):
         status = order._try_apply_code(code)
-        if 'error' in status:
-            raise ValidationError(status['error'])
+        if "error" in status:
+            raise ValidationError(status["error"])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
             raise ValidationError(_("No reward to claim with this coupon"))
-        coupons = self.env['loyalty.card']
-        rewards = self.env['loyalty.reward']
+        coupons = self.env["loyalty.card"]
+        rewards = self.env["loyalty.reward"]
         for coupon, coupon_rewards in status.items():
             coupons |= coupon
             rewards |= coupon_rewards
         if len(coupons) == 1 and len(rewards) == 1:
             status = order._apply_program_reward(rewards, coupons)
-            if 'error' in status:
-                raise ValidationError(status['error'])
+            if "error" in status:
+                raise ValidationError(status["error"])

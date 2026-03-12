@@ -12,7 +12,7 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
     @classmethod
     def setUpClass(cls):
@@ -20,26 +20,26 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
 
         cls.website = cls.env.company.website_id
         if not cls.website:
-            cls.website = cls.env.ref('website.default_website')
+            cls.website = cls.env.ref("website.default_website")
             cls.website.company_id = cls.env.company
 
-    @mute_logger('odoo.http')
+    @mute_logger("odoo.http")
     def test_expired_reward_validation(self):
         """Ensure payments don't process if any applied reward is no longer valid."""
         program = self.program_gift_card
 
         program.date_to = date.today() + timedelta(days=1)  # set program to expire after tomorrow
 
-        self.env['loyalty.generate.wizard'].with_context(active_id=program.id).create({
-            'coupon_qty': 1,
-            'points_granted': 100,
+        self.env["loyalty.generate.wizard"].with_context(active_id=program.id).create({
+            "coupon_qty": 1,
+            "points_granted": 100,
         }).generate_coupons()
 
         order = self._create_so(
             partner_id=self.portal_partner.id,
             website_id=self.website.id,
             message_partner_ids=self.portal_partner.ids,
-            order_line=[Command.create({'product_id': self.service_product.id, 'tax_ids': None})],
+            order_line=[Command.create({"product_id": self.service_product.id, "tax_ids": None})],
         )
         self._apply_promo_code(order, program.coupon_ids.code)
 
@@ -49,38 +49,38 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
                 JsonRpcException, msg="Payment shouldn't succeed with expired reward still applied"
             ):
                 self.make_jsonrpc_request(
-                    self._build_url(f'/shop/payment/transaction/{order.id}'),
+                    self._build_url(f"/shop/payment/transaction/{order.id}"),
                     {
-                        'order_id': order.id,
-                        'access_token': None,
-                        'amount': order.amount_total,
-                        'provider_id': self.provider.id,
-                        'payment_method_id': self.payment_method.id,
-                        'flow': 'direct',
-                        'token_id': None,
-                        'tokenization_requested': False,
-                        'landing_route': order.get_portal_url(),
+                        "order_id": order.id,
+                        "access_token": None,
+                        "amount": order.amount_total,
+                        "provider_id": self.provider.id,
+                        "payment_method_id": self.payment_method.id,
+                        "flow": "direct",
+                        "token_id": None,
+                        "tokenization_requested": False,
+                        "landing_route": order.get_portal_url(),
                     },
                 )
 
             # Update rewards & retry transaction
             order._update_programs_and_rewards()
             tx_response = self.make_jsonrpc_request(
-                self._build_url(f'/shop/payment/transaction/{order.id}'),
+                self._build_url(f"/shop/payment/transaction/{order.id}"),
                 {
-                    'order_id': order.id,
-                    'access_token': None,
-                    'amount': order.amount_total,
-                    'provider_id': self.provider.id,
-                    'payment_method_id': self.payment_method.id,
-                    'flow': 'direct',
-                    'token_id': None,
-                    'tokenization_requested': False,
-                    'landing_route': order.get_portal_url(),
+                    "order_id": order.id,
+                    "access_token": None,
+                    "amount": order.amount_total,
+                    "provider_id": self.provider.id,
+                    "payment_method_id": self.payment_method.id,
+                    "flow": "direct",
+                    "token_id": None,
+                    "tokenization_requested": False,
+                    "landing_route": order.get_portal_url(),
                 },
             )
             self.assertEqual(
-                tx_response['amount'],
+                tx_response["amount"],
                 self.service_product.list_price,
                 "Payment should succeed after removing expired reward",
             )

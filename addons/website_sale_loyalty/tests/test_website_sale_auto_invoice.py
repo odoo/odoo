@@ -7,22 +7,23 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
     def test_automatic_invoice_on_zero_amount(self):
         # Set automatic invoice
-        self.env['ir.config_parameter'].sudo().set_bool('sale.automatic_invoice', True)
+        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
         Controller = WebsiteSale()
 
         # Create a discount code
         program = (
-            self.env['loyalty.program']
+            self
+            .env["loyalty.program"]
             .sudo()
             .create({
-                'name': '100discount',
-                'program_type': 'promo_code',
-                'rule_ids': [Command.create({'code': "100code", 'minimum_amount': 0})],
-                'reward_ids': [Command.create({'discount': 100})],
+                "name": "100discount",
+                "program_type": "promo_code",
+                "rule_ids": [Command.create({"code": "100code", "minimum_amount": 0})],
+                "reward_ids": [Command.create({"discount": 100})],
             })
         )
 

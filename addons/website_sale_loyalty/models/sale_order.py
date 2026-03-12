@@ -10,7 +10,7 @@ from odoo.http import request
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     # List of disabled rewards for automatic claim
     disabled_auto_rewards = fields.Many2many(
@@ -22,10 +22,10 @@ class SaleOrder(models.Model):
         # Replace `sale_ok` leaf with `ecommerce_ok` if order is linked to a website
         if self.website_id:
             for idx, leaf in enumerate(res):
-                if leaf[0] != 'sale_ok':
+                if leaf[0] != "sale_ok":
                     continue
-                res[idx] = ('ecommerce_ok', '=', True)
-                return Domain.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+                res[idx] = ("ecommerce_ok", "=", True)
+                return Domain.AND([res, [("website_id", "in", (self.website_id.id, False))]])
         return res
 
     def _get_trigger_domain(self):
@@ -33,12 +33,12 @@ class SaleOrder(models.Model):
         # Replace `sale_ok` leaf with `ecommerce_ok` if order is linked to a website
         if self.website_id:
             for idx, leaf in enumerate(res):
-                if leaf[0] != 'program_id.sale_ok':
+                if leaf[0] != "program_id.sale_ok":
                     continue
-                res[idx] = ('program_id.ecommerce_ok', '=', True)
+                res[idx] = ("program_id.ecommerce_ok", "=", True)
                 return Domain.AND([
                     res,
-                    [('program_id.website_id', 'in', (self.website_id.id, False))],
+                    [("program_id.website_id", "in", (self.website_id.id, False))],
                 ])
         return res
 
@@ -49,11 +49,11 @@ class SaleOrder(models.Model):
         if not request:
             return False
 
-        pending_coupon_code = request.session.get('pending_coupon_code')
+        pending_coupon_code = request.session.get("pending_coupon_code")
         if pending_coupon_code:
             status = self._try_apply_code(pending_coupon_code)
-            if 'error' not in status:  # Returns an array if everything went right
-                request.session.pop('pending_coupon_code')
+            if "error" not in status:  # Returns an array if everything went right
+                request.session.pop("pending_coupon_code")
                 if len(status) == 1:
                     coupon, rewards = next(iter(status.items()))
                     if len(rewards) == 1 and not rewards.multi_product:
@@ -84,7 +84,7 @@ class SaleOrder(models.Model):
             if (
                 len(coupon.program_id.reward_ids) != 1
                 or coupon.program_id.is_nominative
-                or (rewards.reward_type == 'product' and rewards.multi_product)
+                or (rewards.reward_type == "product" and rewards.multi_product)
                 or rewards in self.disabled_auto_rewards
                 or rewards in self.order_line.reward_id
             ):
@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
 
             try:
                 res = self._apply_program_reward(rewards, coupon)
-                if 'error' not in res:
+                if "error" not in res:
                     claimed_reward_count += 1
             except UserError:
                 pass
@@ -122,32 +122,32 @@ class SaleOrder(models.Model):
         """
         super()._compute_website_order_line()
         for order in self:
-            grouped_order_lines = defaultdict(lambda: self.env['sale.order.line'])
+            grouped_order_lines = defaultdict(lambda: self.env["sale.order.line"])
             for line in order.order_line:
                 if line.reward_id and line.coupon_id:
                     grouped_order_lines[
                         line.reward_id, line.coupon_id, line.reward_identifier_code
                     ] |= line
-            new_lines = self.env['sale.order.line']
+            new_lines = self.env["sale.order.line"]
             for lines in grouped_order_lines.values():
-                if lines.reward_id.reward_type != 'discount':
+                if lines.reward_id.reward_type != "discount":
                     continue
-                new_lines += self.env['sale.order.line'].new({
-                    'product_id': lines[0].product_id.id,
-                    'tax_ids': False,
-                    'price_unit': sum(lines.mapped('price_unit')),
-                    'price_subtotal': sum(lines.mapped('price_subtotal')),
-                    'price_total': sum(lines.mapped('price_total')),
-                    'discount': 0.0,
-                    'name': lines[0].name_short
-                    if lines.reward_id.reward_type != 'product'
+                new_lines += self.env["sale.order.line"].new({
+                    "product_id": lines[0].product_id.id,
+                    "tax_ids": False,
+                    "price_unit": sum(lines.mapped("price_unit")),
+                    "price_subtotal": sum(lines.mapped("price_subtotal")),
+                    "price_total": sum(lines.mapped("price_total")),
+                    "discount": 0.0,
+                    "name": lines[0].name_short
+                    if lines.reward_id.reward_type != "product"
                     else lines[0].name,
-                    'product_uom_qty': 1,
-                    'product_uom_id': lines[0].product_uom_id.id,
-                    'order_id': order.id,
-                    'is_reward_line': True,
-                    'coupon_id': lines.coupon_id,
-                    'reward_id': lines.reward_id,
+                    "product_uom_qty": 1,
+                    "product_uom_id": lines[0].product_uom_id.id,
+                    "order_id": order.id,
+                    "is_reward_line": True,
+                    "coupon_id": lines.coupon_id,
+                    "reward_id": lines.reward_id,
                 })
             if new_lines:
                 order.website_order_line += new_lines
@@ -156,20 +156,20 @@ class SaleOrder(models.Model):
         super()._compute_cart_info()
         for order in self:
             reward_lines = order.website_order_line.filtered(lambda line: line.is_reward_line)
-            order.cart_quantity -= int(sum(reward_lines.mapped('product_uom_qty')))
+            order.cart_quantity -= int(sum(reward_lines.mapped("product_uom_qty")))
 
     def get_promo_code_error(self, delete=True):
-        error = request.session.get('error_promo_code')
+        error = request.session.get("error_promo_code")
         if error and delete:
-            request.session.pop('error_promo_code')
+            request.session.pop("error_promo_code")
         return error
 
     def get_promo_code_success_message(self, delete=True):
-        if not request.session.get('successful_code'):
+        if not request.session.get("successful_code"):
             return False
-        code = request.session.get('successful_code')
+        code = request.session.get("successful_code")
         if delete:
-            request.session.pop('successful_code')
+            request.session.pop("successful_code")
         return code
 
     def _set_delivery_method(self, *args, **kwargs):
@@ -185,7 +185,7 @@ class SaleOrder(models.Model):
             quantity <= 0
             and order_line.coupon_id
             and order_line.reward_id
-            and order_line.reward_id.reward_type == 'discount'
+            and order_line.reward_id.reward_type == "discount"
         ):
             # When a reward line is deleted we remove it from the auto claimable rewards
             order_line = order_line.with_context(website_sale_loyalty_delete=True)
@@ -197,7 +197,7 @@ class SaleOrder(models.Model):
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         if request:  # In case the rewards application modifies the cart quantity
-            request.session['website_sale_cart_quantity'] = self.cart_quantity
+            request.session["website_sale_cart_quantity"] = self.cart_quantity
 
     def _get_non_delivery_lines(self):
         """Override of `website_sale` to exclude delivery reward lines."""
@@ -205,24 +205,24 @@ class SaleOrder(models.Model):
 
     def _get_free_shipping_lines(self):
         self.ensure_one()
-        return self.order_line.filtered(lambda line: line.reward_id.reward_type == 'shipping')
+        return self.order_line.filtered(lambda line: line.reward_id.reward_type == "shipping")
 
     def _allow_nominative_programs(self):
-        if not request or not hasattr(request, 'website'):
+        if not request or not hasattr(request, "website"):
             return super()._allow_nominative_programs()
         return not request.website.is_public_user() and super()._allow_nominative_programs()
 
     @api.autovacuum
     def _gc_abandoned_coupons(self, *_args, **_kwargs):
         """Remove coupons from abandonned ecommerce order."""
-        ICP = self.env['ir.config_parameter']
-        validity = ICP.get_int('website_sale_coupon.abandonned_coupon_validity') or 4
+        ICP = self.env["ir.config_parameter"]
+        validity = ICP.get_int("website_sale_coupon.abandonned_coupon_validity") or 4
         validity = fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=validity))
-        so_to_reset = self.env['sale.order'].search([
-            ('state', '=', 'draft'),
-            ('write_date', '<', validity),
-            ('website_id', '!=', False),
-            ('applied_coupon_ids', '!=', False),
+        so_to_reset = self.env["sale.order"].search([
+            ("state", "=", "draft"),
+            ("write_date", "<", validity),
+            ("website_id", "!=", False),
+            ("applied_coupon_ids", "!=", False),
         ])
         so_to_reset.applied_coupon_ids = False
         for so in so_to_reset:
@@ -231,14 +231,14 @@ class SaleOrder(models.Model):
     def _get_claimable_and_showable_rewards(self):
         self.ensure_one()
         res = self._get_claimable_rewards()
-        loyality_cards = self.env['loyalty.card'].search([
-            ('partner_id', '=', self.partner_id.id),
-            ('program_id', 'any', self._get_program_domain()),
-            '|',
-            ('program_id.trigger', '=', 'with_code'),
-            '&',
-            ('program_id.trigger', '=', 'auto'),
-            ('program_id.applies_on', '=', 'future'),
+        loyality_cards = self.env["loyalty.card"].search([
+            ("partner_id", "=", self.partner_id.id),
+            ("program_id", "any", self._get_program_domain()),
+            "|",
+            ("program_id.trigger", "=", "with_code"),
+            "&",
+            ("program_id.trigger", "=", "auto"),
+            ("program_id.applies_on", "=", "future"),
         ])
         total_is_zero = self.currency_id.is_zero(self.amount_total)
         global_discount_reward = self._get_applied_global_discount()
@@ -251,7 +251,7 @@ class SaleOrder(models.Model):
                     and self._best_global_discount_already_applied(global_discount_reward, reward)
                 ):
                     continue
-                if reward.reward_type == 'discount' and total_is_zero:
+                if reward.reward_type == "discount" and total_is_zero:
                     continue
                 if coupon.expiration_date and coupon.expiration_date < fields.Date.today():
                     continue

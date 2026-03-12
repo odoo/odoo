@@ -6,53 +6,53 @@ from odoo.tests import tagged
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestLoyaltyhistory(TestSaleCouponCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner_a = cls.env['res.partner'].create({'name': 'Jean Jacques'})
-        cls.loyalty_program = cls.env['loyalty.program'].create({
-            'name': 'Full Discount',
-            'program_type': 'loyalty',
-            'trigger': 'auto',
-            'applies_on': 'both',
-            'rule_ids': [
+        cls.partner_a = cls.env["res.partner"].create({"name": "Jean Jacques"})
+        cls.loyalty_program = cls.env["loyalty.program"].create({
+            "name": "Full Discount",
+            "program_type": "loyalty",
+            "trigger": "auto",
+            "applies_on": "both",
+            "rule_ids": [
                 Command.create({
-                    'reward_point_mode': 'unit',
-                    'reward_point_amount': 1,
-                    'product_ids': [cls.product_A.id],
+                    "reward_point_mode": "unit",
+                    "reward_point_amount": 1,
+                    "product_ids": [cls.product_A.id],
                 })
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
-                    'required_points': 1,
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
                 }),
                 Command.create({
-                    'active': False,
-                    'reward_type': 'product',
-                    'reward_product_id': cls.product_B.id,
-                    'required_points': 2,
+                    "active": False,
+                    "reward_type": "product",
+                    "reward_product_id": cls.product_B.id,
+                    "required_points": 2,
                 }),
             ],
         })
-        cls.loyalty_card = cls.env['loyalty.card'].create({
-            'program_id': cls.loyalty_program.id,
-            'partner_id': cls.partner_a.id,
-            'points': 2,
+        cls.loyalty_card = cls.env["loyalty.card"].create({
+            "program_id": cls.loyalty_program.id,
+            "partner_id": cls.partner_a.id,
+            "points": 2,
         })
 
     def test_add_loyalty_history_line_with_reward(self):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': 'Ordinary Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "Ordinary Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -73,7 +73,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
     def test_add_loyalty_history_line_without_reward(self):
         order = self._create_so(
             partner_id=self.partner_a.id,
-            order_line=[Command.create({'product_id': self.product_A.id, 'tax_ids': False})],
+            order_line=[Command.create({"product_id": self.product_A.id, "tax_ids": False})],
         )
         order.action_confirm()
         order._update_programs_and_rewards()
@@ -90,7 +90,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
     def test_delete_loyalty_history_line_on_cancel(self):
         order = self._create_so(
             partner_id=self.partner_a.id,
-            order_line=[Command.create({'product_id': self.product_A.id, 'tax_ids': False})],
+            order_line=[Command.create({"product_id": self.product_A.id, "tax_ids": False})],
         )
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
@@ -109,12 +109,12 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         self.loyalty_program.with_context(active_test=False).reward_ids.active = True
         order = self._create_so(
             partner_id=self.partner_a.id,
-            order_line=[Command.create({'product_id': self.product_A.id, 'tax_ids': False})],
+            order_line=[Command.create({"product_id": self.product_A.id, "tax_ids": False})],
         )
         for reward in self.loyalty_program.reward_ids:
             order._apply_program_reward(reward, self.loyalty_card)
-        self.assertEqual(len(order.order_line.filtered('reward_id')), 2)
-        self.assertEqual(order.order_line.mapped('points_cost'), [0, 1, 2])
+        self.assertEqual(len(order.order_line.filtered("reward_id")), 2)
+        self.assertEqual(order.order_line.mapped("points_cost"), [0, 1, 2])
 
         order.action_confirm()
         loyalty_history = self.loyalty_card.history_ids

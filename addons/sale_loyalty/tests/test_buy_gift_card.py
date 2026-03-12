@@ -6,7 +6,7 @@ from odoo.tests.common import tagged
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('-at_install', 'post_install')
+@tagged("-at_install", "post_install")
 class TestBuyGiftCard(TestSaleCouponCommon):
     def test_buying_gift_card(self):
         self.immediate_promotion_program.active = False
@@ -16,18 +16,18 @@ class TestBuyGiftCard(TestSaleCouponCommon):
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': 'Ordinary Product A',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_A.id,
+                        "name": "Ordinary Product A",
+                        "product_uom_qty": 1.0,
                     },
                 ),
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_gift_card.id,
-                        'name': 'Gift Card Product',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_gift_card.id,
+                        "name": "Gift Card Product",
+                        "product_uom_qty": 1.0,
                     },
                 ),
             ]
@@ -47,16 +47,16 @@ class TestBuyGiftCard(TestSaleCouponCommon):
         """Ensure that sending gift card emails have a sender.
         Either the order's salesman if available, otherwise the order's company.
         """
-        mail_template = self.env['mail.template'].create({
-            'name': "Gift Card Mail",
-            'model_id': self.env.ref('loyalty.model_loyalty_card').id,
-            'auto_delete': False,
+        mail_template = self.env["mail.template"].create({
+            "name": "Gift Card Mail",
+            "model_id": self.env.ref("loyalty.model_loyalty_card").id,
+            "auto_delete": False,
         })
         self.program_gift_card.communication_plan_ids = [
-            Command.create({'trigger': 'create', 'mail_template_id': mail_template.id})
+            Command.create({"trigger": "create", "mail_template_id": mail_template.id})
         ]
         order = self._create_so(
-            order_line=[Command.create({'product_id': self.product_gift_card.id})]
+            order_line=[Command.create({"product_id": self.product_gift_card.id})]
         )
         salesman = order.user_id.partner_id.ensure_one()
         salesman.email = "sales@company.co"
@@ -65,16 +65,16 @@ class TestBuyGiftCard(TestSaleCouponCommon):
         order._update_programs_and_rewards()
 
         # Create an order without salesman to test company-based fallback
-        orders = order + order.copy({'user_id': None})
+        orders = order + order.copy({"user_id": None})
 
         # Clear out the mailbox before sending mail
-        self.env['mail.mail'].search([]).sudo().unlink()
+        self.env["mail.mail"].search([]).sudo().unlink()
 
         # Confirm order as Public User to trigger loyalty mail
-        public_user = self.env.ref('base.public_user')
+        public_user = self.env.ref("base.public_user")
         orders.with_user(public_user).with_company(order.company_id).sudo().action_confirm()
 
-        mails = self.env['mail.mail'].search([])
+        mails = self.env["mail.mail"].search([])
         self.assertEqual(len(mails), 2)
         salesman_mail = mails.filtered(lambda m: m.author_id == salesman).ensure_one()
         company_mail = mails.filtered(lambda m: m.author_id == company).ensure_one()

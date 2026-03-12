@@ -9,29 +9,29 @@ from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
-@tagged('-at_install', 'post_install')
+@tagged("-at_install", "post_install")
 class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         cls.global_program = cls.p1
-        cls.coupon_program = cls.env['loyalty.program'].create({
-            'name': 'One Free Product',
-            'program_type': 'coupons',
-            'rule_ids': [(0, 0, {'minimum_qty': 2})],
-            'reward_ids': [
-                (0, 0, {'reward_type': 'product', 'reward_product_id': cls.largeCabinet.id})
+        cls.coupon_program = cls.env["loyalty.program"].create({
+            "name": "One Free Product",
+            "program_type": "coupons",
+            "rule_ids": [(0, 0, {"minimum_qty": 2})],
+            "reward_ids": [
+                (0, 0, {"reward_type": "product", "reward_product_id": cls.largeCabinet.id})
             ],
         })
-        cls.env['loyalty.generate.wizard'].with_context(active_id=cls.coupon_program.id).create({
-            'coupon_qty': 1,
-            'points_granted': 1,
+        cls.env["loyalty.generate.wizard"].with_context(active_id=cls.coupon_program.id).create({
+            "coupon_qty": 1,
+            "points_granted": 1,
         }).generate_coupons()
         cls.coupon = cls.coupon_program.coupon_ids[0]
 
         installed_modules = set(
-            cls.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+            cls.env["ir.module.module"].search([("state", "=", "installed")]).mapped("name")
         )
         for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
@@ -45,7 +45,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
         self.WebsiteSaleCartController = Cart()
 
     def test_01_activate_coupon_with_existing_program(self):
-        self.env['product.pricelist.item'].search([]).unlink()
+        self.env["product.pricelist.item"].search([]).unlink()
 
         with self.mock_request() as request:
             self.WebsiteSaleCartController.add_to_cart(
@@ -65,7 +65,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             )
 
             self.WebsiteSaleController.activate_coupon(self.coupon.code)
-            promo_code = request.session.get('pending_coupon_code')
+            promo_code = request.session.get("pending_coupon_code")
             self.assertFalse(
                 promo_code, "The promo code should be removed from the pending coupon dict"
             )
@@ -82,7 +82,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             )
 
     def test_02_pending_coupon_with_existing_program(self):
-        self.env['product.pricelist.item'].search([]).unlink()
+        self.env["product.pricelist.item"].search([]).unlink()
 
         with self.mock_request() as request:
             self.WebsiteSaleCartController.add_to_cart(
@@ -104,7 +104,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             self.assertEqual(order.amount_total, 288, "The order total should equal 288: 320 - 10%")
 
             self.WebsiteSaleController.activate_coupon(self.coupon.code)
-            promo_code = request.session.get('pending_coupon_code')
+            promo_code = request.session.get("pending_coupon_code")
             self.assertEqual(order.amount_tax, 0)
             self.assertEqual(order.cart_quantity, 1)
             self.assertEqual(
@@ -125,7 +125,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 product_id=self.largeCabinet.id,
                 quantity=1,
             )
-            promo_code = request.session.get('pending_coupon_code')
+            promo_code = request.session.get("pending_coupon_code")
             self.assertFalse(
                 promo_code,
                 "The promo code should be removed from the pending coupon dict as it should have"

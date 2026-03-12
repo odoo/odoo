@@ -6,14 +6,14 @@ from odoo.tests import tagged
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('-at_install', 'post_install')
+@tagged("-at_install", "post_install")
 class TestPayWithGiftCard(TestSaleCouponCommon):
     def test_paying_with_single_gift_card_over(self):
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 100}).generate_coupons()
         gift_card = self.program_gift_card.coupon_ids[0]
-        order = self._create_so(order_line=[Command.create({'product_id': self.product_A.id})])
+        order = self._create_so(order_line=[Command.create({"product_id": self.product_A.id})])
         before_gift_card_payment = order.amount_total
         self.assertNotEqual(before_gift_card_payment, 0)
         self._apply_promo_code(order, gift_card.code)
@@ -21,16 +21,16 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertEqual(before_gift_card_payment - order.amount_total, 100 - gift_card.points)
 
     def test_paying_with_single_gift_card_under(self):
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 100}).generate_coupons()
         gift_card = self.program_gift_card.coupon_ids[0]
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'name': 'Ordinary Product b',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_B.id,
+                    "name": "Ordinary Product b",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -41,12 +41,12 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertEqual(before_gift_card_payment - order.amount_total, 100 - gift_card.points)
 
     def test_paying_with_multiple_gift_card(self):
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 2, 'points_granted': 100}).generate_coupons()
+        ).create({"coupon_qty": 2, "points_granted": 100}).generate_coupons()
         gift_card_1, gift_card_2 = self.program_gift_card.coupon_ids
         order = self._create_so(
-            order_line=[Command.create({'product_id': self.product_A.id, 'product_uom_qty': 20.0})]
+            order_line=[Command.create({"product_id": self.product_A.id, "product_uom_qty": 20.0})]
         )
         before_gift_card_payment = order.amount_total
         self._apply_promo_code(order, gift_card_1.code)
@@ -55,35 +55,35 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
 
     def test_paying_with_gift_card_and_discount(self):
         """Test that discounts take precedence on payment rewards."""
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 1, 'points_granted': 50}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 50}).generate_coupons()
         gift_card_1 = self.program_gift_card.coupon_ids
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_C.id,
-                    'name': 'Ordinary Product C',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_C.id,
+                    "name": "Ordinary Product C",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
-        self.env['loyalty.program'].create({
-            'name': 'Code for 10% on orders',
-            'trigger': 'with_code',
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'rule_ids': [(0, 0, {'mode': 'with_code', 'code': 'test_10pc'})],
-            'reward_ids': [
+        self.env["loyalty.program"].create({
+            "name": "Code for 10% on orders",
+            "trigger": "with_code",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "rule_ids": [(0, 0, {"mode": "with_code", "code": "test_10pc"})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount_mode': 'percent',
-                        'discount': 10,
-                        'discount_applicability': 'order',
-                        'required_points': 1,
+                        "reward_type": "discount",
+                        "discount_mode": "percent",
+                        "discount": 10,
+                        "discount_applicability": "order",
+                        "required_points": 1,
                     },
                 )
             ],
@@ -100,35 +100,35 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         """Test that a payment program making the order total 0 still allows the user to claim
         discounts.
         """
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 100}).generate_coupons()
         gift_card_1 = self.program_gift_card.coupon_ids
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_C.id,
-                    'name': 'Ordinary Product C',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_C.id,
+                    "name": "Ordinary Product C",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
-        self.env['loyalty.program'].create({
-            'name': 'Code for 10% on orders',
-            'trigger': 'with_code',
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'rule_ids': [(0, 0, {'mode': 'with_code', 'code': 'test_10pc'})],
-            'reward_ids': [
+        self.env["loyalty.program"].create({
+            "name": "Code for 10% on orders",
+            "trigger": "with_code",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "rule_ids": [(0, 0, {"mode": "with_code", "code": "test_10pc"})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount_mode': 'percent',
-                        'discount': 10,
-                        'discount_applicability': 'order',
-                        'required_points': 1,
+                        "reward_type": "discount",
+                        "discount_mode": "percent",
+                        "discount": 10,
+                        "discount_applicability": "order",
+                        "required_points": 1,
                     },
                 )
             ],
@@ -142,25 +142,25 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, 0)  # 100 - 10% - 90
 
     def test_gift_card_product_has_no_taxes_on_creation(self):
-        gift_card_program = self.env['loyalty.program'].create({
-            'name': 'Gift Cards',
-            'applies_on': 'future',
-            'program_type': 'gift_card',
-            'trigger': 'auto',
-            'rule_ids': [
+        gift_card_program = self.env["loyalty.program"].create({
+            "name": "Gift Cards",
+            "applies_on": "future",
+            "program_type": "gift_card",
+            "trigger": "auto",
+            "rule_ids": [
                 Command.create({
-                    'product_ids': self.product_gift_card,
-                    'reward_point_amount': 1,
-                    'reward_point_mode': 'money',
-                    'reward_point_split': True,
+                    "product_ids": self.product_gift_card,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "money",
+                    "reward_point_split": True,
                 })
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 1,
-                    'discount_mode': 'per_point',
-                    'discount_applicability': 'order',
+                    "reward_type": "discount",
+                    "discount": 1,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
                 })
             ],
         })
@@ -170,9 +170,9 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'product_uom_qty': 1.0,
-                    'price_unit': 200.0,
+                    "product_id": self.product_B.id,
+                    "product_uom_qty": 1.0,
+                    "price_unit": 200.0,
                 })
             ]
         )
@@ -180,9 +180,9 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         before_gift_card_payment = order.amount_total
         self.assertNotEqual(before_gift_card_payment, 0)
 
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 100}).generate_coupons()
         gift_card = self.program_gift_card.coupon_ids[0]
 
         # TODO check amount total of gift_card_line
@@ -224,25 +224,25 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
 
     def test_paying_with_gift_card_fixed_tax(self):
         """Test payment of sale order with fixed tax using gift card."""
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.program_gift_card.id
-        ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 100}).generate_coupons()
         gift_card = self.program_gift_card.coupon_ids[0]
 
-        tax_10_fixed = self.env['account.tax'].create({
-            'name': "10$ Fixed tax",
-            'amount_type': 'fixed',
-            'amount': 10,
+        tax_10_fixed = self.env["account.tax"].create({
+            "name": "10$ Fixed tax",
+            "amount_type": "fixed",
+            "amount": 10,
         })
-        self.product_A.write({'list_price': 90})
+        self.product_A.write({"list_price": 90})
         self.product_A.taxes_id = tax_10_fixed
 
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': "Ordinary Product A",
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "Ordinary Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )

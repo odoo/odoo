@@ -11,7 +11,7 @@ from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoyaltyDelivery
 
 
-@tagged('post_install', '-at_install')
+@tagged("post_install", "-at_install")
 class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
@@ -19,132 +19,132 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         cls.Controller = WebsiteSaleLoyaltyDelivery()
 
         # Disable mail logic
-        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+        cls.env = cls.env["base"].with_context(**DISABLED_MAIL_CONTEXT).env
         # Disable existing pricelists
-        cls.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
+        cls.env["product.pricelist"].with_context(active_test=False).search([]).unlink()
         # Disable existing reward programs
-        cls.env['loyalty.program'].search([]).active = False
+        cls.env["loyalty.program"].search([]).active = False
         # Remove taxes completely during the following tests.
         cls.env.companies.account_sale_tax_id = False
 
-        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin = cls.env.ref("base.user_admin")
         cls.partner_admin = cls.user_admin.partner_id
         cls.partner_admin.write(cls.dummy_partner_address_values)
 
-        cls.website2 = cls.env['website'].create({'name': 'website 2'})
+        cls.website2 = cls.env["website"].create({"name": "website 2"})
 
-        cls.product_plumbus = cls.env['product.product'].create({
-            'name': "Plumbus",
-            'list_price': 100.0,
-            'type': 'consu',
-            'website_published': True,
+        cls.product_plumbus = cls.env["product.product"].create({
+            "name": "Plumbus",
+            "list_price": 100.0,
+            "type": "consu",
+            "website_published": True,
         })
 
-        cls.product_gift_card = cls.env['product.product'].create({
-            'name': 'TEST - Gift Card',
-            'list_price': 50,
-            'type': 'service',
-            'is_published': True,
+        cls.product_gift_card = cls.env["product.product"].create({
+            "name": "TEST - Gift Card",
+            "list_price": 50,
+            "type": "service",
+            "is_published": True,
         })
 
-        gift_card_program = cls.env['loyalty.program'].create({
-            'name': 'Gift Cards',
-            'program_type': 'gift_card',
-            'applies_on': 'future',
-            'trigger': 'auto',
-            'rule_ids': [
+        gift_card_program = cls.env["loyalty.program"].create({
+            "name": "Gift Cards",
+            "program_type": "gift_card",
+            "applies_on": "future",
+            "trigger": "auto",
+            "rule_ids": [
                 Command.create({
-                    'reward_point_amount': 1,
-                    'reward_point_mode': 'money',
-                    'reward_point_split': True,
-                    'product_ids': cls.product_gift_card.ids,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "money",
+                    "reward_point_split": True,
+                    "product_ids": cls.product_gift_card.ids,
                 })
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount_mode': 'per_point',
-                    'discount': 1,
-                    'discount_applicability': 'order',
-                    'required_points': 1,
-                    'description': 'PAY WITH GIFT CARD',
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                    "description": "PAY WITH GIFT CARD",
                 })
             ],
         })
 
         # Create a gift card to be used
-        cls.gift_card = cls.env['loyalty.card'].create({
-            'program_id': gift_card_program.id,
-            'points': 50000,
-            'code': '123456',
+        cls.gift_card = cls.env["loyalty.card"].create({
+            "program_id": gift_card_program.id,
+            "points": 50000,
+            "code": "123456",
         })
 
         # Create a 50% discount on order code
-        cls.promo_discount_code = cls.env['loyalty.program'].create({
-            'name': "50% discount code",
-            'program_type': 'promo_code',
-            'trigger': 'with_code',
-            'applies_on': 'current',
-            'rule_ids': [Command.create({'code': "test-50pc"})],
-            'reward_ids': [
+        cls.promo_discount_code = cls.env["loyalty.program"].create({
+            "name": "50% discount code",
+            "program_type": "promo_code",
+            "trigger": "with_code",
+            "applies_on": "current",
+            "rule_ids": [Command.create({"code": "test-50pc"})],
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 50.0,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
+                    "reward_type": "discount",
+                    "discount": 50.0,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
                 })
             ],
         })
 
-        ewallet_program = cls.env['loyalty.program'].create({
-            'name': "eWallet",
-            'program_type': 'ewallet',
-            'applies_on': 'future',
-            'trigger': 'auto',
-            'reward_ids': [
+        ewallet_program = cls.env["loyalty.program"].create({
+            "name": "eWallet",
+            "program_type": "ewallet",
+            "applies_on": "future",
+            "trigger": "auto",
+            "reward_ids": [
                 Command.create({
-                    'description': "Pay with eWallet",
-                    'reward_type': 'discount',
-                    'discount_mode': 'per_point',
-                    'discount': 1,
+                    "description": "Pay with eWallet",
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
                 })
             ],
         })
 
-        cls.ewallet = cls.env['loyalty.card'].create({
-            'program_id': ewallet_program.id,
-            'partner_id': cls.partner_admin.id,
-            'points': 1000000,
+        cls.ewallet = cls.env["loyalty.card"].create({
+            "program_id": ewallet_program.id,
+            "partner_id": cls.partner_admin.id,
+            "points": 1000000,
         })
 
-        delivery_product1, delivery_product2 = cls.env['product.product'].create([
-            {'name': "Delivery 1", 'invoice_policy': 'order', 'type': 'service'},
-            {'name': "Delivery 2", 'invoice_policy': 'order', 'type': 'service'},
+        delivery_product1, delivery_product2 = cls.env["product.product"].create([
+            {"name": "Delivery 1", "invoice_policy": "order", "type": "service"},
+            {"name": "Delivery 2", "invoice_policy": "order", "type": "service"},
         ])
 
-        cls.normal_delivery, cls.normal_delivery2 = cls.env['delivery.carrier'].create([
+        cls.normal_delivery, cls.normal_delivery2 = cls.env["delivery.carrier"].create([
             {
-                'name': 'delivery1',
-                'fixed_price': 5,
-                'delivery_type': 'fixed',
-                'website_published': True,
-                'product_id': delivery_product1.id,
+                "name": "delivery1",
+                "fixed_price": 5,
+                "delivery_type": "fixed",
+                "website_published": True,
+                "product_id": delivery_product1.id,
             },
             {
-                'name': 'delivery2',
-                'fixed_price': 10,
-                'delivery_type': 'fixed',
-                'website_published': True,
-                'product_id': delivery_product2.id,
+                "name": "delivery2",
+                "fixed_price": 10,
+                "delivery_type": "fixed",
+                "website_published": True,
+                "product_id": delivery_product2.id,
             },
         ])
 
     def create_program_with_code(self, code, website_id):
-        return self.env['loyalty.program'].create({
-            'name': "Discount delivery",
-            'program_type': 'promo_code',
-            'website_id': website_id.id,
-            'rule_ids': [Command.create({'code': code, 'minimum_amount': 0})],
+        return self.env["loyalty.program"].create({
+            "name": "Discount delivery",
+            "program_type": "promo_code",
+            "website_id": website_id.id,
+            "rule_ids": [Command.create({"code": code, "minimum_amount": 0})],
         })
 
     def test_shop_sale_gift_card_keep_delivery(self):
@@ -153,26 +153,26 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         self.partner_admin.property_delivery_carrier_id = self.normal_delivery
         self.start_tour(
             self.product_plumbus.website_url,
-            'website_sale_loyalty.delivery_with_gift_card',
-            login='admin',
+            "website_sale_loyalty.delivery_with_gift_card",
+            login="admin",
         )
 
     def test_shipping_discount(self):
         """Check display of shipping discount promotion on checkout, combined with another reward
         (eWallet).
         """
-        self.env['loyalty.program'].create({
-            'name': "Buy 3, get up to $6 discount on shipping!",
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'trigger': 'auto',
-            'rule_ids': [Command.create({'minimum_qty': 3.0})],
-            'reward_ids': [Command.create({'reward_type': 'shipping', 'discount_max_amount': 6.0})],
+        self.env["loyalty.program"].create({
+            "name": "Buy 3, get up to $6 discount on shipping!",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "trigger": "auto",
+            "rule_ids": [Command.create({"minimum_qty": 3.0})],
+            "reward_ids": [Command.create({"reward_type": "shipping", "discount_max_amount": 6.0})],
         })
         self.start_tour(
             self.product_plumbus.website_url,
-            'website_sale_loyalty.check_shipping_discount',
-            login='admin',
+            "website_sale_loyalty.check_shipping_discount",
+            login="admin",
         )
 
     def test_update_shipping_after_discount(self):
@@ -180,10 +180,10 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         recalculated.
         """
         self.free_delivery.action_archive()
-        self.normal_delivery.write({'free_over': True, 'amount': 75.0})
+        self.normal_delivery.write({"free_over": True, "amount": 75.0})
         self.start_tour(
             self.product_plumbus.website_url,
-            'website_sale_loyalty.update_shipping_after_discount',
+            "website_sale_loyalty.update_shipping_after_discount",
             login=self.user_admin.login,
         )
 
@@ -193,14 +193,15 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         """
         # Create a discount code
         program = (
-            self.env['loyalty.program']
+            self
+            .env["loyalty.program"]
             .sudo()
             .create({
-                'name': 'Free Shipping',
-                'program_type': 'promo_code',
-                'rule_ids': [Command.create({'code': "FREE", 'minimum_amount': 0})],
-                'reward_ids': [
-                    Command.create({'reward_type': 'shipping', 'discount_max_amount': 6.0})
+                "name": "Free Shipping",
+                "program_type": "promo_code",
+                "rule_ids": [Command.create({"code": "FREE", "minimum_amount": 0})],
+                "reward_ids": [
+                    Command.create({"reward_type": "shipping", "discount_max_amount": 6.0})
                 ],
             })
         )
@@ -211,21 +212,22 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
 
         with self.mock_request(sale_order_id=self.cart.id):
             result = self.Controller.shop_set_delivery_method(self.normal_delivery2.id)
-        self.assertEqual(result['delivery_discount_minor_amount'], -600)
+        self.assertEqual(result["delivery_discount_minor_amount"], -600)
 
     def test_express_checkout_does_not_count_delivery_discount_in_payment_values(self):
         """Test that the amount to pay does not include the free delivery amount in express
         checkout.
         """
         program = (
-            self.env['loyalty.program']
+            self
+            .env["loyalty.program"]
             .sudo()
             .create({
-                'name': 'Discount delivery',
-                'program_type': 'promo_code',
-                'rule_ids': [Command.create({'code': "FREE", 'minimum_amount': 0})],
-                'reward_ids': [
-                    Command.create({'reward_type': 'shipping', 'discount_max_amount': 2.0})
+                "name": "Discount delivery",
+                "program_type": "promo_code",
+                "rule_ids": [Command.create({"code": "FREE", "minimum_amount": 0})],
+                "reward_ids": [
+                    Command.create({"reward_type": "shipping", "discount_max_amount": 2.0})
                 ],
             })
         )
@@ -238,7 +240,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         with self.mock_request(sale_order_id=self.cart.id):
             payment_values = Cart()._get_express_shop_payment_values(self.cart)
 
-        self.assertEqual(payment_values['minor_amount'], amount_without_delivery)
+        self.assertEqual(payment_values["minor_amount"], amount_without_delivery)
 
     def test_prevent_unarchive_when_conflicting_active_program_exists_on_same_website(self):
         """Unarchiving a program should fail if another active program already has the same

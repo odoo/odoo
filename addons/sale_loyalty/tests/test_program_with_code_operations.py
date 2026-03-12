@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on a coupon program on which we should apply the
     # reward when the code is correct or remove the reward automatically when the reward is not
@@ -16,19 +16,19 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.discount_with_multi_rewards = cls.env['loyalty.program'].create({
-            'name': 'Loyalty program with multiple discount rewards',
-            'program_type': 'coupons',
-            'reward_ids': [
+        cls.discount_with_multi_rewards = cls.env["loyalty.program"].create({
+            "name": "Loyalty program with multiple discount rewards",
+            "program_type": "coupons",
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount_mode': 'percent',
-                    'discount': 20,
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 20,
                 }),
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount_mode': 'percent',
-                    'discount': 5,
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 5,
                 }),
             ],
         })
@@ -41,12 +41,12 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # instead of ''. In this case, it will generate the coupon for every partner. Thus, we
         # should ensure that if you leave the domain untouched, it generates a coupon for each
         # partner as hinted on the screen ('Match all records (X records)').
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.code_promotion_program.id
-        ).create({'mode': 'selected'}).generate_coupons()
+        ).create({"mode": "selected"}).generate_coupons()
         self.assertEqual(
             len(self.code_promotion_program.coupon_ids),
-            len(self.env['res.partner'].search([])),
+            len(self.env["res.partner"].search([])),
             "It should have generated a coupon for every partner",
         )
 
@@ -55,21 +55,21 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # automatically.
 
         self.immediate_promotion_program.active = False
-        self.code_promotion_program.reward_ids.reward_type = 'discount'
+        self.code_promotion_program.reward_ids.reward_type = "discount"
         self.code_promotion_program.reward_ids.discount = 10
 
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.code_promotion_program.id
         ).create({
-            'mode': 'selected',
-            'customer_ids': self.partner,
-            'points_granted': 1,
+            "mode": "selected",
+            "customer_ids": self.partner,
+            "points_granted": 1,
         }).generate_coupons()
         coupon = self.code_promotion_program.coupon_ids
 
         # Test the valid code on a wrong sales order
-        wrong_partner_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id
+        wrong_partner_order = self.env["sale.order"].create({
+            "partner_id": self.env["res.partner"].create({"name": "My Partner"}).id
         })
         with self.assertRaises(ValidationError):
             self._apply_promo_code(wrong_partner_order, coupon.code)
@@ -81,9 +81,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': '1 Product A',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_A.id,
+                        "name": "1 Product A",
+                        "product_uom_qty": 1.0,
                     },
                 )
             ]
@@ -92,7 +92,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 2)
 
         # Remove the product A from the sale order
-        order.write({'order_line': [(2, order.order_line[0].id, False)]})
+        order.write({"order_line": [(2, order.order_line[0].id, False)]})
         order._update_programs_and_rewards()
         self.assertEqual(len(order.order_line.ids), 0)
 
@@ -104,27 +104,27 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # - go back to A, reset to draft and confirm
 
         self.immediate_promotion_program.active = False
-        self.code_promotion_program.applies_on = 'future'
-        self.code_promotion_program.reward_ids.reward_type = 'discount'
+        self.code_promotion_program.applies_on = "future"
+        self.code_promotion_program.reward_ids.reward_type = "discount"
         self.code_promotion_program.reward_ids.discount = 10
 
-        self.env['loyalty.generate.wizard'].with_context(
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.code_promotion_program.id
-        ).create({'coupon_qty': 1, 'points_granted': 1}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 1}).generate_coupons()
         coupon = self.code_promotion_program.coupon_ids
 
         sale_order_a = self._create_so(order_line=[])
         sale_order_b = self._create_so(order_line=[])
 
         sale_order_a.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': '1 Product A',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_A.id,
+                        "name": "1 Product A",
+                        "product_uom_qty": 1.0,
                     },
                 )
             ]
@@ -135,14 +135,14 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         sale_order_a._action_cancel()
 
         sale_order_b.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': '1 Product A',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_A.id,
+                        "name": "1 Product A",
+                        "product_uom_qty": 1.0,
                     },
                 )
             ]
@@ -161,24 +161,24 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # Test case: Generate a coupon (10% discount) and apply it on an order with a specific
         # pricelist (10% discount).
 
-        self.code_promotion_program_with_discount.applies_on = 'future'
-        self.env['loyalty.generate.wizard'].with_context(
+        self.code_promotion_program_with_discount.applies_on = "future"
+        self.env["loyalty.generate.wizard"].with_context(
             active_id=self.code_promotion_program_with_discount.id
-        ).create({'coupon_qty': 1, 'points_granted': 1}).generate_coupons()
+        ).create({"coupon_qty": 1, "points_granted": 1}).generate_coupons()
         coupon = self.code_promotion_program_with_discount.coupon_ids
 
-        first_pricelist = self.env['product.pricelist'].create({
-            'name': 'First pricelist',
-            'item_ids': [
+        first_pricelist = self.env["product.pricelist"].create({
+            "name": "First pricelist",
+            "item_ids": [
                 (
                     0,
                     0,
                     {
-                        'compute_price': 'percentage',
-                        'base': 'list_price',
-                        'percent_price': 10,
-                        'applied_on': '3_global',
-                        'name': 'First discount',
+                        "compute_price": "percentage",
+                        "base": "list_price",
+                        "percent_price": 10,
+                        "applied_on": "3_global",
+                        "name": "First discount",
                     },
                 )
             ],
@@ -188,9 +188,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             pricelist_id=first_pricelist.id,
             order_line=[
                 Command.create({
-                    'product_id': self.product_C.id,
-                    'name': '1 Product C',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_C.id,
+                    "name": "1 Product C",
+                    "product_uom_qty": 1.0,
                 })
             ],
         )
@@ -220,43 +220,43 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # => SO will then be 0$ until we recompute the order lines
 
         # 1.
-        self.immediate_promotion_program.write({'applies_on': 'future', 'trigger': 'with_code'})
+        self.immediate_promotion_program.write({"applies_on": "future", "trigger": "with_code"})
         self.immediate_promotion_program.rule_ids.write({
-            'mode': 'with_code',
-            'code': 'free_B_on_next_order',
+            "mode": "with_code",
+            "code": "free_B_on_next_order",
         })
         # 2.
-        self.p1 = self.env['loyalty.program'].create({
-            'name': 'Code for 10% on next order',
-            'program_type': 'promotion',
-            'applies_on': 'future',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {})],
-            'reward_ids': [
+        self.p1 = self.env["loyalty.program"].create({
+            "name": "Code for 10% on next order",
+            "program_type": "promotion",
+            "applies_on": "future",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 10,
-                        'discount_mode': 'percent',
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
                     },
                 )
             ],
         })
         # 3.
-        self.third_product = self.env['product.product'].create({
-            'name': 'Thrid Product',
-            'list_price': 5,
-            'sale_ok': True,
+        self.third_product = self.env["product.product"].create({
+            "name": "Thrid Product",
+            "list_price": 5,
+            "sale_ok": True,
         })
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.third_product.id,
-                    'name': '1 Third Product',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.third_product.id,
+                    "name": "1 Third Product",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -268,18 +268,18 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         )
         # 4.
         with self.assertRaises(ValidationError):
-            self._apply_promo_code(order, 'free_B_on_next_order')
+            self._apply_promo_code(order, "free_B_on_next_order")
         # 5.
         order.write({
-            'order_line': [
+            "order_line": [
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         })
-        self._apply_promo_code(order, 'free_B_on_next_order', no_reward_fail=False)
+        self._apply_promo_code(order, "free_B_on_next_order", no_reward_fail=False)
         # 6.
         self.assertEqual(
             len(order._get_reward_coupons()),
@@ -291,9 +291,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         order_bis = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'name': '1 Product B',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_B.id,
+                    "name": "1 Product B",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -311,29 +311,29 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         )
 
     def test_on_next_order_reward_promotion_program_with_requirements(self):
-        self.immediate_promotion_program.write({'applies_on': 'future', 'trigger': 'with_code'})
+        self.immediate_promotion_program.write({"applies_on": "future", "trigger": "with_code"})
         self.immediate_promotion_program.rule_ids.write({
-            'minimum_amount': 700,
-            'minimum_amount_tax_mode': 'excl',
-            'mode': 'with_code',
-            'code': 'free_B_on_next_order',
+            "minimum_amount": 700,
+            "minimum_amount_tax_mode": "excl",
+            "mode": "with_code",
+            "code": "free_B_on_next_order",
         })
         order = self._create_so(order_line=[])
         self.product_A.lst_price = 700
         order.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': '1 Product A',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_A.id,
+                        "name": "1 Product A",
+                        "product_uom_qty": 1.0,
                     },
                 )
             ]
         })
-        self._apply_promo_code(order, 'free_B_on_next_order', no_reward_fail=False)
+        self._apply_promo_code(order, "free_B_on_next_order", no_reward_fail=False)
         self.assertEqual(
             len(self.immediate_promotion_program.coupon_ids.ids),
             1,
@@ -341,14 +341,14 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         )
         order_bis = self._create_so(order_line=[])
         order_bis.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_B.id,
-                        'name': '1 Product B',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_B.id,
+                        "name": "1 Product B",
+                        "product_uom_qty": 1.0,
                     },
                 )
             ]
@@ -380,31 +380,31 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         3. Apply the loyalty program to the sale order.
         4. Verify that the generated coupon is assigned to the order's partner.
         """
-        loyalty_program = self.env['loyalty.program'].create({
-            'name': '10% Discount on Next Order',
-            'program_type': 'next_order_coupons',
-            'applies_on': 'future',
-            'trigger': 'auto',
-            'rule_ids': [Command.create({})],
-            'reward_ids': [
+        loyalty_program = self.env["loyalty.program"].create({
+            "name": "10% Discount on Next Order",
+            "program_type": "next_order_coupons",
+            "applies_on": "future",
+            "trigger": "auto",
+            "rule_ids": [Command.create({})],
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
                 })
             ],
         })
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
-        generated_coupons = order._try_apply_program(loyalty_program).get('coupon')
+        generated_coupons = order._try_apply_program(loyalty_program).get("coupon")
         self.assertTrue(generated_coupons, "A coupon should have been generated")
         self.assertEqual(
             generated_coupons.partner_id,
@@ -422,26 +422,26 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         5. Change the partner.
         6. Verify that the generated coupon was updated to this new user.
         """
-        loyalty_program = self.env['loyalty.program'].create({
-            'name': "10% Discount on Next Order",
-            'program_type': 'next_order_coupons',
-            'applies_on': 'future',
-            'trigger': 'auto',
-            'rule_ids': [Command.create({})],
-            'reward_ids': [
+        loyalty_program = self.env["loyalty.program"].create({
+            "name": "10% Discount on Next Order",
+            "program_type": "next_order_coupons",
+            "applies_on": "future",
+            "trigger": "auto",
+            "rule_ids": [Command.create({})],
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
                 })
             ],
         })
         order = self._create_so(
-            partner_id=self.env.ref('base.public_partner').id,
-            order_line=[Command.create({'product_id': self.product_A.id})],
+            partner_id=self.env.ref("base.public_partner").id,
+            order_line=[Command.create({"product_id": self.product_A.id})],
         )
-        generated_coupons = order._try_apply_program(loyalty_program).get('coupon')
+        generated_coupons = order._try_apply_program(loyalty_program).get("coupon")
         self.assertTrue(generated_coupons, "A coupon should have been generated")
         self.assertEqual(
             generated_coupons.partner_id,
@@ -470,30 +470,30 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         """
         program = self.code_promotion_program_with_discount
         program.update({
-            'rule_ids': [Command.clear()],
-            'reward_ids': [
+            "rule_ids": [Command.clear()],
+            "reward_ids": [
                 Command.create({
-                    'discount': 50,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'order',
-                    'required_points': 5,
+                    "discount": 50,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 5,
                 })
             ],
         })
         discount10, discount50 = program.reward_ids
 
-        self.env['loyalty.generate.wizard'].with_context(active_id=program.id).create({
-            'coupon_qty': 1,
-            'points_granted': 10,
+        self.env["loyalty.generate.wizard"].with_context(active_id=program.id).create({
+            "coupon_qty": 1,
+            "points_granted": 10,
         }).generate_coupons()
         coupon = program.coupon_ids
 
-        order = self._create_so(order_line=[Command.create({'product_id': self.product_C.id})])
+        order = self._create_so(order_line=[Command.create({"product_id": self.product_C.id})])
         order.action_confirm()
 
         order.order_line.product_updatable = True  # in case `sale_project` is installed
         order._apply_program_reward(discount10, coupon)
-        reward_line = order.order_line.filtered('is_reward_line')
+        reward_line = order.order_line.filtered("is_reward_line")
         self.assertEqual(order.amount_total, 90, "10% discount should be applied")
         self.assertEqual(coupon.points, 9, "10% discount reward should use 1 point")
 
@@ -512,20 +512,20 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         self.immediate_promotion_program.active = False
         # 1.
-        self.p1 = self.env['loyalty.program'].create({
-            'name': 'Promo fixed amount',
-            'trigger': 'auto',
-            'program_type': 'promotion',
-            'rule_ids': [(0, 0, {})],
-            'reward_ids': [
+        self.p1 = self.env["loyalty.program"].create({
+            "name": "Promo fixed amount",
+            "trigger": "auto",
+            "program_type": "promotion",
+            "rule_ids": [(0, 0, {})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 10,
-                        'discount_mode': 'per_point',
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "per_point",
+                        "discount_applicability": "order",
                     },
                 )
             ],
@@ -534,9 +534,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -544,12 +544,12 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self._claim_reward(order, self.p1)
         self.assertEqual(len(order.order_line), 2, "You should get a discount line")
         # 3.
-        self.p1.write({'trigger': 'with_code'})
-        self.p1.rule_ids.write({'mode': 'with_code', 'code': 'test'})
+        self.p1.write({"trigger": "with_code"})
+        self.p1.rule_ids.write({"mode": "with_code", "code": "test"})
         order._update_programs_and_rewards()
         self.assertEqual(len(order.order_line), 1, "You loose a discount line")
         # 4.
-        self._apply_promo_code(order, 'test')
+        self._apply_promo_code(order, "test")
         # But the above line should not add any reward
         self.assertEqual(len(order.order_line), 2, "You should get a discount line")
 
@@ -572,14 +572,14 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 }),
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'name': '1 Product B',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_B.id,
+                    "name": "1 Product B",
+                    "product_uom_qty": 1.0,
                 }),
             ]
         )
@@ -624,9 +624,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
@@ -675,9 +675,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )

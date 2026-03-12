@@ -13,7 +13,7 @@ from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
     # Test all the validity rules to allow a customer to have a reward.
     # The check based on the products is already done in the basic operations test
@@ -22,9 +22,9 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         # Test case: Based on the minimum purchased
 
         self.immediate_promotion_program.rule_ids.write({
-            'product_ids': False,
-            'minimum_amount': 1006,
-            'minimum_amount_tax_mode': 'excl',
+            "product_ids": False,
+            "minimum_amount": 1006,
+            "minimum_amount_tax_mode": "excl",
         })
 
         order = self._create_so(
@@ -33,18 +33,18 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': '1 Product A',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_A.id,
+                        "name": "1 Product A",
+                        "product_uom_qty": 1.0,
                     },
                 ),
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_B.id,
-                        'name': '2 Product B',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_B.id,
+                        "name": "2 Product B",
+                        "product_uom_qty": 1.0,
                     },
                 ),
             ]
@@ -57,25 +57,25 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             "The promo offer shouldn't have been applied as the purchased amount is not enough",
         )
 
-        order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        order = self.env["sale.order"].create({"partner_id": self.partner.id})
         order.write({
-            'order_line': [
+            "order_line": [
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_A.id,
-                        'name': '10 Product A',
-                        'product_uom_qty': 10.0,
+                        "product_id": self.product_A.id,
+                        "name": "10 Product A",
+                        "product_uom_qty": 10.0,
                     },
                 ),
                 (
                     0,
                     False,
                     {
-                        'product_id': self.product_B.id,
-                        'name': '2 Product B',
-                        'product_uom_qty': 1.0,
+                        "product_id": self.product_B.id,
+                        "name": "2 Product B",
+                        "product_uom_qty": 1.0,
                     },
                 ),
             ]
@@ -100,7 +100,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
 
         # 10*(100*1.15) + (5*1.15) = 10*115 + 5.75 = 1155.75
         self.immediate_promotion_program.rule_ids.minimum_amount = 1006
-        self.immediate_promotion_program.rule_ids.minimum_amount_tax_mode = 'incl'
+        self.immediate_promotion_program.rule_ids.minimum_amount_tax_mode = "incl"
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(
@@ -113,33 +113,33 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         """Test that the discount isn't applied if the min amount isn't reached for the specified
         product.
         """
-        self.env['loyalty.program'].search([]).active = False
-        program = self.env['loyalty.program'].create({
-            'name': "Discount on Product A",
-            'program_type': 'promotion',
-            'trigger': 'auto',
-            'applies_on': 'current',
-            'rule_ids': [
+        self.env["loyalty.program"].search([]).active = False
+        program = self.env["loyalty.program"].create({
+            "name": "Discount on Product A",
+            "program_type": "promotion",
+            "trigger": "auto",
+            "applies_on": "current",
+            "rule_ids": [
                 Command.create({
-                    'minimum_amount': 110,
-                    'minimum_amount_tax_mode': 'excl',
-                    'product_ids': [Command.set(self.product_A.ids)],
+                    "minimum_amount": 110,
+                    "minimum_amount_tax_mode": "excl",
+                    "product_ids": [Command.set(self.product_A.ids)],
                 })
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'specific',
-                    'discount_product_ids': [Command.set(self.product_A.ids)],
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "specific",
+                    "discount_product_ids": [Command.set(self.product_A.ids)],
                 })
             ],
         })
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.product_A.id}),
-                Command.create({'product_id': self.product_B.id, 'product_uom_qty': 40.0}),
+                Command.create({"product_id": self.product_A.id}),
+                Command.create({"product_id": self.product_B.id, "product_uom_qty": 40.0}),
             ]
         )
         self.assertEqual(len(order.order_line), 2)
@@ -155,33 +155,33 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         """Test that the discount is applied if the min amount is reached for the specified
         product.
         """
-        self.env['loyalty.program'].search([]).active = False
-        program = self.env['loyalty.program'].create({
-            'name': "Discount on Product A",
-            'program_type': 'promotion',
-            'trigger': 'auto',
-            'applies_on': 'current',
-            'rule_ids': [
+        self.env["loyalty.program"].search([]).active = False
+        program = self.env["loyalty.program"].create({
+            "name": "Discount on Product A",
+            "program_type": "promotion",
+            "trigger": "auto",
+            "applies_on": "current",
+            "rule_ids": [
                 Command.create({
-                    'minimum_amount': 110,
-                    'minimum_amount_tax_mode': 'excl',
-                    'product_ids': [Command.set(self.product_A.ids)],
+                    "minimum_amount": 110,
+                    "minimum_amount_tax_mode": "excl",
+                    "product_ids": [Command.set(self.product_A.ids)],
                 })
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'discount',
-                    'discount': 10,
-                    'discount_mode': 'percent',
-                    'discount_applicability': 'specific',
-                    'discount_product_ids': [Command.set(self.product_A.ids)],
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "specific",
+                    "discount_product_ids": [Command.set(self.product_A.ids)],
                 })
             ],
         })
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.product_A.id, 'product_uom_qty': 2.0}),
-                Command.create({'product_id': self.product_B.id, 'product_uom_qty': 20.0}),
+                Command.create({"product_id": self.product_A.id, "product_uom_qty": 2.0}),
+                Command.create({"product_id": self.product_B.id, "product_uom_qty": 20.0}),
             ]
         )
         self.assertEqual(len(order.order_line), 2)
@@ -203,23 +203,23 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         # Prevent this program from adding rewards on this test.
         self.immediate_promotion_program.active = False
 
-        program = self.env['loyalty.program'].create({
-            'name': 'Get 10% discount if buy at least 4 Product A and $320',
-            'program_type': 'coupons',
-            'applies_on': 'current',
-            'trigger': 'with_code',
-            'rule_ids': [
-                (0, 0, {'product_ids': self.product_A, 'minimum_qty': 3, 'minimum_amount': 320})
+        program = self.env["loyalty.program"].create({
+            "name": "Get 10% discount if buy at least 4 Product A and $320",
+            "program_type": "coupons",
+            "applies_on": "current",
+            "trigger": "with_code",
+            "rule_ids": [
+                (0, 0, {"product_ids": self.product_A, "minimum_qty": 3, "minimum_amount": 320})
             ],
-            'reward_ids': [
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount_mode': 'percent',
-                        'discount': 10,
-                        'discount_applicability': 'order',
+                        "reward_type": "discount",
+                        "discount_mode": "percent",
+                        "discount": 10,
+                        "discount_applicability": "order",
                     },
                 )
             ],
@@ -227,17 +227,17 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
 
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.product_A.id, 'product_uom_qty': 2.0}),
-                Command.create({'product_id': self.product_B.id, 'product_uom_qty': 4.0}),
+                Command.create({"product_id": self.product_A.id, "product_uom_qty": 2.0}),
+                Command.create({"product_id": self.product_B.id, "product_uom_qty": 4.0}),
             ]
         )
         sol1, sol2 = order.order_line
 
         # Default value for coupon generate wizard is generate by quantity and generate only one
         # coupon.
-        self.env['loyalty.generate.wizard'].with_context(active_id=program.id).create({
-            'coupon_qty': 1,
-            'points_granted': 1,
+        self.env["loyalty.generate.wizard"].with_context(active_id=program.id).create({
+            "coupon_qty": 1,
+            "points_granted": 1,
         }).generate_coupons()
         coupon = program.coupon_ids[0]
 
@@ -276,47 +276,47 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         # Prevent this program from adding rewards on this test.
         self.immediate_promotion_program.active = False
 
-        p1 = self.env['loyalty.program'].create({
-            'name': 'Get 5% discount if buy at least 2 Product',
-            'trigger': 'auto',
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'rule_ids': [(0, 0, {'reward_point_mode': 'order', 'minimum_qty': 2})],
-            'reward_ids': [
+        p1 = self.env["loyalty.program"].create({
+            "name": "Get 5% discount if buy at least 2 Product",
+            "trigger": "auto",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "rule_ids": [(0, 0, {"reward_point_mode": "order", "minimum_qty": 2})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 5,
-                        'discount_mode': 'percent',
-                        'discount_applicability': 'order',
-                        'required_points': 1,
+                        "reward_type": "discount",
+                        "discount": 5,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
                     },
                 )
             ],
         })
-        p2 = self.env['loyalty.program'].create({
-            'name': 'Get 10% discount if buy at least 4 Product',
-            'trigger': 'auto',
-            'program_type': 'promotion',
-            'applies_on': 'current',
-            'rule_ids': [(0, 0, {'reward_point_mode': 'order', 'minimum_qty': 4})],
-            'reward_ids': [
+        p2 = self.env["loyalty.program"].create({
+            "name": "Get 10% discount if buy at least 4 Product",
+            "trigger": "auto",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "rule_ids": [(0, 0, {"reward_point_mode": "order", "minimum_qty": 4})],
+            "reward_ids": [
                 (
                     0,
                     0,
                     {
-                        'reward_type': 'discount',
-                        'discount': 10,
-                        'discount_mode': 'percent',
-                        'discount_applicability': 'order',
-                        'required_points': 1,
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
                     },
                 )
             ],
         })
-        order = self._create_so(order_line=[Command.create({'product_id': self.product_A.id})])
+        order = self._create_so(order_line=[Command.create({"product_id": self.product_A.id})])
         sol = order.order_line
 
         order._update_programs_and_rewards()
@@ -330,7 +330,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, p1)
         self._claim_reward(order, p2)
-        discounts = set(order.order_line.mapped('name')) - {'Product A'}
+        discounts = set(order.order_line.mapped("name")) - {"Product A"}
         self.assertEqual(
             len(discounts), 1, "The order should contains the Product A line and a discount"
         )
@@ -338,39 +338,39 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         # "Discount Get 5% discount if buy at least 2 Product - On product with following tax: Tax
         # 15.00%"
         self.assertTrue(
-            'Discount 5% on your order' in discounts.pop(), "The discount should be a 5% discount"
+            "Discount 5% on your order" in discounts.pop(), "The discount should be a 5% discount"
         )
 
         sol.product_uom_qty = 5
         order._update_programs_and_rewards()
         self._claim_reward(order, p1)
         self._claim_reward(order, p2)
-        discounts = set(order.order_line.mapped('name')) - {'Product A'}
+        discounts = set(order.order_line.mapped("name")) - {"Product A"}
         self.assertEqual(
             len(discounts), 1, "The order should contains the Product A line and a discount"
         )
         self.assertTrue(
-            'Discount 10% on your order' in discounts.pop(), "The discount should be a 10% discount"
+            "Discount 10% on your order" in discounts.pop(), "The discount should be a 10% discount"
         )
 
-    @freeze_time('2011-11-02 09:00:21')
+    @freeze_time("2011-11-02 09:00:21")
     def test_program_rules_validity_dates(self):
         # Test date_to (no date_from)
         today = date.today()
         past_day = today - timedelta(days=2)
         future_day = today + timedelta(days=2)
-        self.immediate_promotion_program.write({'date_to': past_day})
+        self.immediate_promotion_program.write({"date_to": past_day})
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 }),
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'name': '2 Product B',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_B.id,
+                    "name": "2 Product B",
+                    "product_uom_qty": 1.0,
                 }),
             ]
         )
@@ -378,98 +378,98 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         msg = "The promo shouldn't have been applied as it is expired."
         self.assertEqual(len(order.order_line.ids), 2, msg)
 
-        self.immediate_promotion_program.write({'date_to': future_day})
+        self.immediate_promotion_program.write({"date_to": future_day})
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo should have been applied we're between the validity dates."
         self.assertEqual(len(order.order_line.ids), 3, msg)
 
         # Test date_from (no date_to)
-        self.immediate_promotion_program.write({'date_from': future_day, 'date_to': False})
+        self.immediate_promotion_program.write({"date_from": future_day, "date_to": False})
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo shouldn't have been applied as it is not active yet."
         self.assertEqual(len(order.order_line.ids), 2, msg)
 
-        self.immediate_promotion_program.write({'date_from': past_day})
+        self.immediate_promotion_program.write({"date_from": past_day})
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo should have been applied we're between the validity dates."
         self.assertEqual(len(order.order_line.ids), 3, msg)
 
         # Test date_from and date_to
-        self.immediate_promotion_program.write({'date_from': past_day, 'date_to': future_day})
+        self.immediate_promotion_program.write({"date_from": past_day, "date_to": future_day})
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo should have been applied as we're between the validity dates"
         self.assertEqual(len(order.order_line.ids), 3, msg)
 
         self.immediate_promotion_program.write({
-            'date_from': today + timedelta(days=1),
-            'date_to': future_day,
+            "date_from": today + timedelta(days=1),
+            "date_to": future_day,
         })
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo offer shouldn't have been applied as it is not active yet."
         self.assertEqual(len(order.order_line.ids), 2, msg)
 
         self.immediate_promotion_program.write({
-            'date_from': past_day,
-            'date_to': today - timedelta(days=1),
+            "date_from": past_day,
+            "date_to": today - timedelta(days=1),
         })
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo offer shouldn't have been applied as it is expired."
         self.assertEqual(len(order.order_line.ids), 2, msg)
 
-        self.immediate_promotion_program.write({'date_from': today, 'date_to': today})
+        self.immediate_promotion_program.write({"date_from": today, "date_to": today})
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo should have been applied as today is a valid starting and ending date."
         self.assertEqual(len(order.order_line.ids), 3, msg)
 
     def test_program_rules_number_of_uses(self):
         # Test case: Based on the number of allowed uses
-        self.immediate_promotion_program.write({'limit_usage': True, 'max_usage': 1})
+        self.immediate_promotion_program.write({"limit_usage": True, "max_usage": 1})
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'name': '1 Product A',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
                 })
             ]
         )
         self._auto_rewards(order, self.immediate_promotion_program)
         self.assertEqual(len(order.order_line.ids), 2, "The promo offer should have been applied")
 
-        order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id
+        order = self.env["sale.order"].create({
+            "partner_id": self.env["res.partner"].create({"name": "My Partner"}).id
         })
 
         order.write({
-            'order_line': [
+            "order_line": [
                 Command.create({
-                    'product_id': self.product_B.id,
-                    'name': '2 Product B',
-                    'product_uom_qty': 1.0,
+                    "product_id": self.product_B.id,
+                    "name": "2 Product B",
+                    "product_uom_qty": 1.0,
                 })
             ]
         })
         # Invalidate total_order_count
-        self.immediate_promotion_program.invalidate_recordset(['order_count', 'total_order_count'])
+        self.immediate_promotion_program.invalidate_recordset(["order_count", "total_order_count"])
         self._auto_rewards(order, self.immediate_promotion_program)
         msg = "The promo offer shouldn't have been applied as the number of uses is exceeded"
         self.assertEqual(len(order.order_line.ids), 1, msg)
 
     def test_program_rules_validity_date_timezones(self):
         """Test that the validity dates are checked according to the company's time zone."""
-        self.env.company.partner_id.tz = 'Europe/London'
-        self.partner.tz = 'America/Los_Angeles'
+        self.env.company.partner_id.tz = "Europe/London"
+        self.partner.tz = "America/Los_Angeles"
         midnight = Datetime.today()
         yesterday = (midnight - timedelta(days=1)).date()
         self.immediate_promotion_program.update({
-            'date_to': yesterday,
-            'limit_usage': True,
-            'max_usage': 1,
+            "date_to": yesterday,
+            "limit_usage": True,
+            "max_usage": 1,
         })
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.product_A.id}),
-                Command.create({'product_id': self.product_B.id}),
+                Command.create({"product_id": self.product_A.id}),
+                Command.create({"product_id": self.product_B.id}),
             ]
         ).with_context(tz=self.partner.tz)
 
@@ -477,7 +477,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             # Try apply reward at UTC midnight with LA time zone in context (expired)
             self._auto_rewards(order, self.immediate_promotion_program)
             self.assertFalse(
-                order.order_line.filtered('is_reward_line'),
+                order.order_line.filtered("is_reward_line"),
                 "Promo should not be applied if only valid in the customer's time zone",
             )
 
@@ -485,16 +485,16 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             # Try apply reward at London midnight (expired)
             self._auto_rewards(order, self.immediate_promotion_program)
             self.assertFalse(
-                order.order_line.filtered('is_reward_line'),
+                order.order_line.filtered("is_reward_line"),
                 "Promo should not be applied if only valid in the customer's time zone",
             )
 
-        self.partner.tz = 'Europe/Brussels'
+        self.partner.tz = "Europe/Brussels"
         with freeze_time(midnight.replace(tzinfo=ZoneInfo(self.partner.tz))):
             # Apply reward at Brussels midnight (still valid in company's time zone)
             self._auto_rewards(order, self.immediate_promotion_program)
             self.assertTrue(
-                order.order_line.filtered('is_reward_line'),
+                order.order_line.filtered("is_reward_line"),
                 "Promo should be applied if valid in the company's time zone",
             )
 
@@ -503,15 +503,15 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         today = Datetime.today()
         tomorrow = today + timedelta(days=1)
         self.immediate_promotion_program.update({
-            'date_to': today,
-            'limit_usage': True,
-            'max_usage': 1,
-            'reward_ids': [Command.set(self.program_gift_card.reward_ids.ids)],
+            "date_to": today,
+            "limit_usage": True,
+            "max_usage": 1,
+            "reward_ids": [Command.set(self.program_gift_card.reward_ids.ids)],
         })
         order = self._create_so(
             order_line=[
-                Command.create({'product_id': self.product_A.id}),
-                Command.create({'product_id': self.product_B.id}),
+                Command.create({"product_id": self.product_A.id}),
+                Command.create({"product_id": self.product_B.id}),
             ]
         )
 
@@ -520,9 +520,9 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         self.assertLess(order.amount_total, intial_amount, "A discount should be applied")
 
         tx = order.transaction_ids = self._create_transaction(
-            flow='redirect',
+            flow="redirect",
             sale_order_ids=[order.id],
-            state='pending',
+            state="pending",
             reference=order.name,
             amount=order.amount_total,
         )
@@ -537,33 +537,33 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             )
 
     def test_buy_x_get_y_free_applies_correctly_with_non_unit_uom(self):
-        buy_x_get_y = self.env['loyalty.program'].create({
-            'name': 'Buy 12 Take 6',
-            'program_type': 'buy_x_get_y',
-            'trigger': 'auto',
-            'applies_on': 'current',
-            'rule_ids': [
-                Command.create({'reward_point_mode': 'unit', 'product_ids': self.product_A.ids})
+        buy_x_get_y = self.env["loyalty.program"].create({
+            "name": "Buy 12 Take 6",
+            "program_type": "buy_x_get_y",
+            "trigger": "auto",
+            "applies_on": "current",
+            "rule_ids": [
+                Command.create({"reward_point_mode": "unit", "product_ids": self.product_A.ids})
             ],
-            'reward_ids': [
+            "reward_ids": [
                 Command.create({
-                    'reward_type': 'product',
-                    'reward_product_id': self.product_A.id,
-                    'required_points': 12,
-                    'reward_product_qty': 6,
+                    "reward_type": "product",
+                    "reward_product_id": self.product_A.id,
+                    "required_points": 12,
+                    "reward_product_qty": 6,
                 })
             ],
         })
         order = self._create_so(
             order_line=[
                 Command.create({
-                    'product_id': self.product_A.id,
-                    'product_uom_id': self.ref('uom.product_uom_dozen'),
-                    'product_uom_qty': 1,
+                    "product_id": self.product_A.id,
+                    "product_uom_id": self.ref("uom.product_uom_dozen"),
+                    "product_uom_qty": 1,
                 })
             ]
         )
         self._auto_rewards(order, buy_x_get_y)
-        reward_line = order.order_line.filtered('is_reward_line')
+        reward_line = order.order_line.filtered("is_reward_line")
         self.assertTrue(reward_line)
         self.assertEqual(reward_line.product_uom_qty, 6)
