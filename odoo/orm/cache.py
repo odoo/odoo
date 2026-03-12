@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Mapping, Collection
+from collections.abc import Mapping, Collection, MutableMapping
 from inspect import signature, Parameter
+from odoo.tools.misc import SENTINEL
 import functools
 import logging
 import signal
@@ -14,7 +15,7 @@ import time
 import typing
 
 if typing.TYPE_CHECKING:
-    from .lru import LRU
+    from odoo.tools.lru import LRU
     from collections.abc import Callable, Iterable
     from odoo.models import BaseModel
 
@@ -287,6 +288,7 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
 
 def get_cache_key_counter(bound_method: Callable, *args, **kwargs) -> tuple[LRU, tuple, ormcache_counter]:
     """ Return the cache, key and stat counter for the given call. """
+    # Used for testing only.
     model: BaseModel = bound_method.__self__  # type: ignore
     ormcache_instance: ormcache = bound_method.__cache__  # type: ignore
     cache: LRU = model.pool._Registry__caches[ormcache_instance.cache_name]  # type: ignore

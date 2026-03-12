@@ -2,7 +2,7 @@
 
 import re
 import logging
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -105,7 +105,7 @@ class ResCountry(models.CachedModel):
         return result
 
     @api.model
-    @tools.ormcache('code', cache='stable')
+    @api.ormcache('code', cache='stable')
     def _phone_code_for(self, code):
         data = self._cached_data()
         for country_code, phone_code in zip(data['code'], data['phone_code']):

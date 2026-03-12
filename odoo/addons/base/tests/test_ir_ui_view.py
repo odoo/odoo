@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import re
@@ -17,7 +16,6 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger, view_validation, safe_eval
-from odoo.tools.cache import get_cache_key_counter
 from odoo.addons.base.models import ir_ui_view
 
 _logger = logging.getLogger(__name__)
@@ -324,6 +322,7 @@ class TestViewInheritance(ViewCase):
             self.view_ids['A'].get_combined_arch()
 
     def test_view_validate_button_action_query_count(self):
+        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
         hit, miss = counter.hit, counter.miss
 
@@ -349,6 +348,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.miss, miss + 2)
 
     def test_view_validate_attrs_groups_query_count(self):
+        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
         hit, miss = counter.hit, counter.miss
 

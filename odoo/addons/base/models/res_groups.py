@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import SetDefinitions
@@ -351,7 +351,7 @@ class ResGroups(models.Model):
         self.view_group_hierarchy = self._get_view_group_hierarchy()
 
     @api.model
-    @tools.ormcache('self.env.lang', cache='groups')
+    @api.ormcache('self.env.lang', cache='groups')
     def _get_view_group_hierarchy(self):
         return {
             'groups': {
@@ -388,7 +388,7 @@ class ResGroups(models.Model):
         }
 
     @api.model
-    @tools.ormcache(cache='groups')
+    @api.ormcache(cache='groups')
     def _get_group_definitions(self):
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
         groups = self.sudo().search([], order='id')

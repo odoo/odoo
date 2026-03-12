@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.urls
@@ -6,15 +5,15 @@ from configparser import ConfigParser
 from os import pardir
 from os.path import isfile, join as opj
 
-import odoo
-from odoo import models, tools
+import odoo.addons
+from odoo import api, models
 
 
 class TransifexTranslation(models.AbstractModel):
     _name = 'transifex.translation'
     _description = "Transifex Translation"
 
-    @tools.ormcache()
+    @api.ormcache()
     def _get_transifex_projects(self):
         """ get the transifex project name for each module
 

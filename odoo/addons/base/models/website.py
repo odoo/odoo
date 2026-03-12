@@ -1,4 +1,4 @@
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from urllib.parse import urlparse
 
 
@@ -31,7 +31,7 @@ class Website(models.CachedModel):
             if not f.groups
         ]
 
-    @tools.ormcache(cache='default')
+    @api.ormcache(cache='default')
     def _cached_data(self):
         # method is overridden to use cache 'default' instead of 'stable'
         # hack: retrieve the original method to skip the ormcache wrapper

@@ -1031,7 +1031,7 @@ class IrQweb(models.AbstractModel):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('ref', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
+        api.ormcache('ref', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
     )
     def _generate_code_cached(self, ref: int):
         # The method preloads templates to put information into the transaction
@@ -1048,7 +1048,7 @@ class IrQweb(models.AbstractModel):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('ref', 'memo_key', cache='template_code'),
+        api.ormcache('ref', 'memo_key', cache='template_code'),
     )
     def _generate_code_cached_memo(self, ref: int, memo_key):
         return self._generate_code_uncached(ref)
@@ -2923,7 +2923,7 @@ class IrQweb(models.AbstractModel):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'css', 'js', 'binary', 'tuple(sorted(assets_params.items()))', 'rtl', 'autoprefix', cache='assets'),
+        api.ormcache('bundle', 'css', 'js', 'binary', 'tuple(sorted(assets_params.items()))', 'rtl', 'autoprefix', cache='assets'),
     )
     def _generate_asset_links_cache(self, bundle, css=True, js=True, binary=False, assets_params=None, rtl=False, autoprefix=False):
         return self._generate_asset_links(bundle, css, js, binary, False, assets_params, rtl, autoprefix=autoprefix)

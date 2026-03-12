@@ -323,7 +323,7 @@ class IrModel(models.Model):
         model_id = self._get_id(name) if name else False
         return self.sudo().browse(model_id)
 
-    @tools.ormcache('name', cache='stable')
+    @api.ormcache('name', cache='stable')
     def _get_id(self, name):
         self.env.cr.execute("SELECT id FROM ir_model WHERE model=%s", (name,))
         result = self.env.cr.fetchone()
@@ -902,7 +902,7 @@ class IrModelFields(models.Model):
         field_id = model_name and name and self._get_ids(model_name).get(name)
         return self.sudo().browse(field_id)
 
-    @tools.ormcache('model_name', cache='stable')
+    @api.ormcache('model_name', cache='stable')
     def _get_ids(self, model_name):
         cr = self.env.cr
         cr.execute("SELECT name, id FROM ir_model_fields WHERE model=%s", [model_name])
@@ -1335,7 +1335,7 @@ class IrModelFields(models.Model):
                 data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
 
-    @tools.ormcache(cache='stable')
+    @api.ormcache(cache='stable')
     def _all_manual_field_data(self):
         cr = self.env.cr
         # we cannot use self._fields to determine translated fields, as it has not been set up yet
@@ -1467,7 +1467,7 @@ class IrModelFields(models.Model):
         return self._get_fields_cached(model_name).get(field_name, {}).get('selection', [])
 
     @api.model
-    @tools.ormcache('model_name', 'self.env.lang', cache='stable')
+    @api.ormcache('model_name', 'self.env.lang', cache='stable')
     def _get_fields_cached(self, model_name):
         """ Return the translated information of all model field's in the context's language.
         Note that the result contains the available translations only.
@@ -2159,7 +2159,7 @@ class IrModelAccess(models.Model):
     perm_unlink = fields.Boolean(string='Delete Access')
 
     @api.model
-    @tools.ormcache(cache='stable')
+    @api.ormcache(cache='stable')
     def _get_all_access_groups(self):
         """ Return all active access permissions.
 
@@ -2193,7 +2193,7 @@ class IrModelAccess(models.Model):
     # not be really necessary as a cache key, unless the `ormcache`
     # decorator catches the exception (it does not at the moment.)
 
-    @tools.ormcache('self.env.uid', 'mode')
+    @api.ormcache('self.env.uid', 'mode')
     def _get_allowed_models(self, mode='read'):
         access_by_model = self._get_all_access_groups().get(mode)
         if not access_by_model:
@@ -2343,7 +2343,7 @@ class IrModelData(models.Model):
 
     # NEW V8 API
     @api.model
-    @tools.ormcache('xmlid')
+    @api.ormcache('xmlid')
     def _xmlid_lookup(self, xmlid: str) -> tuple[str, int]:
         """Low level xmlid lookup
         Return (res_model, res_id) or raise ValueError if not found

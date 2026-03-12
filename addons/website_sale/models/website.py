@@ -8,11 +8,11 @@ from urllib.parse import parse_qsl, urlencode, urlsplit
 from lxml import etree
 from requests import RequestException
 
-from odoo import SUPERUSER_ID, api, fields, models, tools
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import BinaryBytes, file_open, ormcache
+from odoo.tools import BinaryBytes, file_open
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo.addons.website_sale import const
@@ -562,7 +562,7 @@ class Website(models.Model):
         return res
 
     # This method is cached, must not return records! See also #8795
-    @ormcache(
+    @api.ormcache(
         "country_code", "show_visible", "current_pl_id", "website_pricelist_ids", "partner_pl_id"
     )
     def _get_pl_partner_order(
@@ -1031,19 +1031,19 @@ class Website(models.Model):
     def _get_checkout_step(self, href):
         return self.env["website.checkout.step"].sudo().browse(self._get_checkout_step_id(href))
 
-    @tools.ormcache("self.id", "href")
+    @api.ormcache("self.id", "href")
     def _get_checkout_step_id(self, href):
         self.ensure_one()
         return self.env["website.checkout.step"].sudo()._get_step_by_href(href, self).id
 
-    @tools.ormcache("self.id", "href")
+    @api.ormcache("self.id", "href")
     def _get_next_breadcrumb_step_id(self, href):
         current_step_sudo = self._get_checkout_step(href)
         return current_step_sudo._get_next_steps(
             additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
         ).id
 
-    @tools.ormcache("self.id", "href")
+    @api.ormcache("self.id", "href")
     def _get_previous_breadcrumb_step_id(self, href):
         current_step_sudo = self._get_checkout_step(href)
         return current_step_sudo._get_previous_steps(

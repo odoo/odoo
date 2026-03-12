@@ -1128,7 +1128,7 @@ actual arch.
         return (bool(self.env.context.get('active_test', True)),)
 
     @api.model
-    @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
+    @api.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
     def _get_cached_template_info(self, id_or_xmlid: int | str, *, _view: models.BaseModel | None = None):
         """Return cached template data for ``id_or_xmlid``.
 
@@ -1243,7 +1243,7 @@ actual arch.
                 view_by_id[id_or_xmlid] = info['error']
         return view_by_id
 
-    @tools.ormcache(cache='templates')
+    @api.ormcache(cache='templates')
     def _clear_preload_views_cache_if_needed(self):
         """ Invalidate the local cache when the orm cache is cleared
         """
@@ -3087,7 +3087,7 @@ class Base(models.AbstractModel):
     @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
-        tools.ormcache('self._get_view_cache_key(view_id, view_type, **options)', cache='templates'),
+        api.ormcache('self._get_view_cache_key(view_id, view_type, **options)', cache='templates'),
     )
     def _get_view_cache(self, view_id=None, view_type='form', **options):
         """ Get the view information ready to be cached

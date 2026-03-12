@@ -6,7 +6,7 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
@@ -98,7 +98,7 @@ class CrmRevealRule(models.Model):
         return action
 
     @api.model
-    @tools.ormcache()
+    @api.ormcache()
     def _get_active_rules(self):
         """
         Returns informations about the all rules.
