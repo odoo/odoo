@@ -5,9 +5,11 @@ import { animationFrame, edit } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
+    fields,
     MockServer,
     models,
     onRpc,
+    patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -18,6 +20,7 @@ import {
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
+import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
 class HrJob extends models.Model {
@@ -889,4 +892,79 @@ test("other option attributes are preserved when switching between radio and sel
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-allowed");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-placeholder");
+});
+
+test("builderList re-renders when the field type changes (custom fields)", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    patchWithCleanup(BuilderList.prototype, {
+        setup() {
+            super.setup();
+            expect.step("setup");
+        },
+    });
+    await setupWebsiteBuilder(formSelectXml);
+
+    await contains(":iframe .s_website_form_field").click();
+    expect.verifySteps(["setup", "setup"]);
+    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='one2many']").click();
+    expect.verifySteps(["setup"]);
+});
+
+test("builderList re-renders when the field type changes (existing fields)", async () => {
+    class ResCountry extends models.Model {
+        _name = "res.country";
+        name = fields.Char();
+        _records = [
+            {
+                id: 1,
+                name: "Belgium",
+            },
+        ];
+    }
+    defineModels([ResCountry]);
+    onRpc("get_authorized_fields", () => ({
+        author_id: {
+            name: "author_id",
+            relation: "res.partner",
+            string: "Author",
+            type: "many2one",
+        },
+        country_id: {
+            name: "country_id",
+            relation: "res.country",
+            string: "Country",
+            type: "many2one",
+        },
+    }));
+    patchWithCleanup(BuilderList.prototype, {
+        setup() {
+            super.setup();
+            expect.step("setup");
+        },
+    });
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                <div class="s_website_form_rows">
+                    <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
+                        <div class="row">
+                            <label class="s_website_form_label" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">Author</span>
+                            </label>
+                        <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="author_id" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+
+    await contains(":iframe .s_website_form_field").click();
+    expect.verifySteps(["setup", "setup"]);
+    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='country_id']").click();
+    expect.verifySteps(["setup"]);
 });

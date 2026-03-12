@@ -230,4 +230,13 @@ export class FormFieldOption extends BaseOptionComponent {
             ["contains", "!contains"].includes(el.dataset.visibilityComparator)
         );
     }
+    /**
+     * Dynamic key to force BuilderList to re-render when field type changes.
+     */
+    get getFieldKey() {
+        if (this.domState.elClassList.includes("s_website_form_custom")) {
+            return this.domState.elDataset.type;
+        }
+        return this.domState.fieldName;
+    }
 }

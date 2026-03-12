@@ -229,6 +229,7 @@
                 <t t-out="this.state.valueList.title" />
             </p>
             <BuilderList
+                t-key="this.getFieldKey"
                 action="'setFormCustomFieldValueList'"
                 addItemTitle="this.state.valueList.addItemTitle"
                 itemShape="{ display_name: 'text', selected: this.state.valueList.checkType }"
