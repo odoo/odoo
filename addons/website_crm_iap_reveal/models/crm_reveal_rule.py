@@ -369,9 +369,14 @@ class CrmRevealRule(models.Model):
     def _lead_vals_from_response(self, result):
         self.ensure_one()
         company_data = result['reveal_data']
-        people_data = result.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
+        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data)
 
+        if people_data := result.get('people_data'):
+            lead_vals.update({
+                'contact_name': people_data[0]['full_name'],
+                'email_from': people_data[0]['email'],
+                'function': people_data[0]['title'],
+            })
         lead_vals.update({
             'priority': self.priority,
             'reveal_ip': result['ip'],

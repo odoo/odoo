@@ -14,6 +14,7 @@
     'data': [
         'data/ir_cron_data.xml',
         'data/ir_model_data.xml',
+        'data/mail_templates.xml',
         'security/ir_rules.xml',
         'security/ir.model.access.csv',
         'views/crm_lead_views.xml',
