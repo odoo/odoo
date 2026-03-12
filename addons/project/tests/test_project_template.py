@@ -237,3 +237,19 @@ class TestProjectTemplates(TestProjectCommon):
 
         self.assertEqual(new_project.date_start, new_start, "Start date should be the one provided")
         self.assertEqual(new_project.date, new_end, "End date should be the one provided")
+
+    def test_project_template_stage_copy(self):
+        """ The stage of a project template should be copied to the new project """
+        # Ensure project stages are enabled for the current user
+        self.env.user.group_ids |= self.env.ref('project.group_project_stages')
+
+        template_stage = self.env['project.project.stage'].create({'name': 'Template Stage', 'sequence': 100})
+        self.project_template.stage_id = template_stage
+
+        # Create project from template
+        new_project = self.project_template.action_create_from_template()
+        self.assertEqual(
+            new_project.stage_id,
+            template_stage,
+            "The new project should correctly inherit the 'Template Stage' from its template.",
+        )
