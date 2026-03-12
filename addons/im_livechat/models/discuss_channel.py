@@ -685,12 +685,14 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         parts = []
         previous_message_author = None
+        # sudo - mail.message: visitors can access messages on chats they have access to
+        messages = self.sudo().chatbot_message_ids.mail_message_id or self.message_ids
         # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
-        messages = (
-            self.message_ids.sudo().filtered(lambda m: m.message_type != "notification")
-            - self.message_ids.sudo()._filter_empty()
+        filtered_messages = (
+            messages.sudo().filtered(lambda m: m.message_type != "notification")
+            - messages.sudo()._filter_empty()
         )
-        for message in messages.sorted("id"):
+        for message in filtered_messages.sorted("id"):
             # sudo - res.partner: accessing livechat username or name is allowed to visitor
             message_author = message.author_id.sudo() or message.author_guest_id
             if previous_message_author != message_author:
