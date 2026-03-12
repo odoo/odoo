@@ -96,3 +96,78 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
                     self._new_msgs[0],
                     [{'partner': partner_admin, 'type': 'inbox', 'is_read': False}]
                 )
+
+    def test_invoice_template_reply_to(self):
+        self.partner_a.email = 'partner_a@example.com'
+        self.partner_a.invoice_sending_method = 'email'
+        self.partner_b.email = 'partner_b@example.com'
+        self.partner_b.invoice_sending_method = 'email'
+        invoice_1 = self._create_invoice(post=True, partner_id=self.partner_a)
+        invoice_2 = self._create_invoice(post=True, partner_id=self.partner_b)
+        mail_template = invoice_1._get_mail_template()
+        wizard = self._create_account_move_send_wizard_single(
+            invoice_1,
+            sending_methods=['email'],
+            template_id=mail_template.id
+        )
+        wizard_multi = self._create_account_move_send_wizard_multi(
+            invoice_1 | invoice_2,
+        )
+
+        test_cases_single = [
+            ('test_reply_to@example.com', 'test_reply_to@example.com'),
+            ('{{ object.user_id.email_formatted }}', self.env.user.email_formatted),
+            (False, self.env.user.email_formatted),
+        ]
+        for input_reply_to, expected_reply_to in test_cases_single:
+            mail_template.reply_to = input_reply_to
+
+            with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+                wizard.action_send_and_print()
+                self.env.cr.flush()  # force tracking message
+
+            self.assertMailMail(
+                self.partner_a,
+                'sent',
+                author=self.env.user.partner_id,
+                email_values={
+                    'reply_to': expected_reply_to,
+                },
+                fields_values={
+                    'reply_to': expected_reply_to,
+                },
+            )
+
+        test_cases_multi = [
+            ('test_reply_to@example.com', 'test_reply_to@example.com', 'test_reply_to@example.com'),
+            ('{{ object.partner_id.email_formatted }}', self.partner_a.email_formatted, self.partner_b.email_formatted),
+            (False, self.env.user.email_formatted, self.env.user.email_formatted),
+        ]
+        for input_reply_to, expected_reply_to_a, expected_reply_to_b in test_cases_multi:
+            mail_template.reply_to = input_reply_to
+
+            with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+                wizard_multi.action_send_and_print(force_synchronous=True)
+
+            self.assertMailMail(
+                self.partner_a,
+                'sent',
+                author=self.env.user.partner_id,
+                email_values={
+                    'reply_to': expected_reply_to_a,
+                },
+                fields_values={
+                    'reply_to': expected_reply_to_a,
+                },
+            )
+            self.assertMailMail(
+                self.partner_b,
+                'sent',
+                author=self.env.user.partner_id,
+                email_values={
+                    'reply_to': expected_reply_to_b,
+                },
+                fields_values={
+                    'reply_to': expected_reply_to_b,
+                },
+            )

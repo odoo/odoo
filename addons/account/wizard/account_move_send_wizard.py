@@ -365,6 +365,8 @@ class AccountMoveSendWizard(models.TransientModel):
                 'mail_subject': self.subject,
                 'mail_partner_ids': self.mail_partner_ids.ids,
             })
+            if reply_to := self._get_default_mail_reply_to(self.move_id, self.template_id, self.lang):
+                send_settings['reply_to'] = reply_to
         if self.display_attachments_widget:
             send_settings['mail_attachments_widget'] = self.mail_attachments_widget
         return send_settings

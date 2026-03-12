@@ -90,6 +90,8 @@ class AccountMoveSend(models.AbstractModel):
                 'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
                 'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
             })
+            if reply_to := get_setting('reply_to', default_value=self._get_default_mail_reply_to(move, mail_template, mail_lang)):
+                vals['reply_to'] = reply_to
         # Add mail attachments if sending methods support them
         if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
             mail_attachments_widget = self._get_default_mail_attachments_widget(
@@ -218,6 +220,15 @@ class AccountMoveSend(models.AbstractModel):
             partner_ids = mail_template._parse_partner_to(partner_to)
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners if self.env.context.get('allow_partners_without_mail') else partners.filtered('email')
+
+    @api.model
+    def _get_default_mail_reply_to(self, move, mail_template, mail_lang):
+        return self._get_mail_default_field_value_from_template(
+            mail_template,
+            mail_lang,
+            move,
+            'reply_to',
+        )
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
@@ -659,6 +670,8 @@ class AccountMoveSend(models.AbstractModel):
             mail_template = move_data['mail_template']
             mail_lang = move_data['mail_lang']
             mail_params = self._get_mail_params(move, move_data)
+            if reply_to := move_data.get('reply_to'):
+                mail_params['reply_to'] = reply_to
             if not mail_params:
                 continue
 
