@@ -318,7 +318,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         Check that the file is correct with a foreign customer.
         """
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
+            'out_invoice', taxes=self.company_data['default_tax_sale'], partner=self.partner_b, products=self.product_a, post=True,
         )
         myinvois_document = invoice._create_myinvois_document()
 
@@ -435,7 +435,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         """ A refund note is issued when an invoice has received a credit note, and that credit note was paid to the customer. """
         # Create the original invoice, and receive the payment.
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
+            'out_invoice', partner=self.partner_b, products=self.product_a, taxes=self.company_data['default_tax_sale'], post=True,
         )
         invoice_document = invoice._create_myinvois_document()
         # Simulate that the document was sent
@@ -482,7 +482,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         """ A credit note is issued when an invoice has received a credit note, and that credit note was not paid to the customer. """
         # Create the original invoice, don't receive a payment.
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
+            'out_invoice', partner=self.partner_b, products=self.product_a, post=True, taxes=self.company_data['default_tax_sale'],
         )
         invoice_document = invoice._create_myinvois_document()
         # Simulate that the document was sent
@@ -771,8 +771,8 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         """
         Ensure that the prepaid amount is 0 and payable_amount is invoice.amount_total
         """
-        basic_invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a,
-                                          post=True)
+        basic_invoice = self.init_invoice('out_invoice', currency=self.other_currency,
+            taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True)
 
         action = basic_invoice.action_reverse()
         reversal_wizard = self.env[action['res_model']].with_context(
