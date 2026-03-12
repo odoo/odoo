@@ -258,6 +258,17 @@ class MaintenanceRequest(models.Model):
 
     def _get_default_team_id(self):
         MT = self.env['maintenance.team']
+        stage_id = self.env.context.get('default_stage_id')
+
+        if stage_id:
+            stage = self.env['maintenance.stage'].browse(stage_id)
+            if stage.maintenance_team_ids:
+                valid_teams = stage.maintenance_team_ids.filtered(
+                    lambda t: t.company_id == self.env.company or not t.company_id
+                )
+                if valid_teams:
+                    return valid_teams[0].id
+
         team = MT.search([('company_id', '=', self.env.company.id)], limit=1)
         if not team:
             team = MT.search([], limit=1)
@@ -274,7 +285,8 @@ class MaintenanceRequest(models.Model):
                                    group_expand='_read_group_equipment_id')
     user_id = fields.Many2one('res.users', string='Technician', compute='_compute_user_id', store=True, readonly=False, tracking=True)
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
-                               group_expand='_read_group_stage_ids', default=_default_stage, copy=False)
+                               compute='_compute_stage_id', store=True, readonly=False, group_expand='_read_group_stage_ids', copy=False,
+                               domain="['|', ('maintenance_team_ids', '=', False), ('maintenance_team_ids', 'in', [maintenance_team_id])]")
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
     close_date = fields.Date('Close Date', help="Date the maintenance was finished. ")
@@ -350,6 +362,8 @@ class MaintenanceRequest(models.Model):
                 request.maintenance_team_id = request.equipment_id.maintenance_team_id.id
             if request.maintenance_team_id.company_id and request.maintenance_team_id.company_id.id != request.company_id.id:
                 request.maintenance_team_id = False
+            if request.equipment_id.maintenance_team_id and request.maintenance_team_id and request.maintenance_team_id not in request.equipment_id.maintenance_team_id:
+                request.maintenance_team_id = False
 
     @api.depends('company_id', 'equipment_id')
     def _compute_user_id(self):
@@ -358,6 +372,42 @@ class MaintenanceRequest(models.Model):
                 request.user_id = request.equipment_id.technician_user_id or request.equipment_id.category_id.technician_user_id
             if request.user_id and request.company_id.id not in request.user_id.company_ids.ids:
                 request.user_id = False
+
+    @api.depends('maintenance_team_id')
+    def _compute_stage_id(self):
+        groups = self.env['maintenance.stage']._read_group(
+            domain=[],
+            groupby=['maintenance_team_ids'],
+            aggregates=['id:recordset']
+        )
+
+        team_to_stage = {}
+        all_stages = self.env['maintenance.stage']
+        unassigned_stages = self.env['maintenance.stage']
+        for team, stages in groups:
+            if team:
+                team_to_stage[team.id] = stages
+            else:
+                unassigned_stages = stages
+            all_stages |= stages
+
+        for team_id, stages in team_to_stage.items():
+            team_to_stage[team_id] = (stages | unassigned_stages).sorted('sequence')
+
+        unassigned_stages = unassigned_stages.sorted('sequence')
+        all_stages = all_stages.sorted('sequence')
+        for request in self:
+            team_id = request.maintenance_team_id.id
+            if team_id in team_to_stage:
+                valid_stages = team_to_stage.get(team_id, self.env['maintenance.stage'])
+            elif team_id:
+                valid_stages = unassigned_stages
+            else:
+                valid_stages = all_stages
+
+            if not (request.stage_id and request.stage_id in valid_stages):
+                first_stage = valid_stages[:1]
+                request.stage_id = first_stage or False
 
     @api.depends('maintenance_type')
     def _compute_recurring_maintenance(self):
@@ -423,7 +473,9 @@ class MaintenanceRequest(models.Model):
         """ Read group customization in order to display all the stages in the
             kanban view, even if they are empty
         """
-        stage_ids = stages.sudo()._search([], order=stages._order)
+        team_id = self.env.context.get('default_maintenance_team_id')
+        stage_domain = ['|', ('maintenance_team_ids', '=', False), ('maintenance_team_ids', 'in', [team_id])] if team_id else []
+        stage_ids = stages.sudo()._search(stage_domain, order=stages._order)
         return stages.browse(stage_ids)
 
 
