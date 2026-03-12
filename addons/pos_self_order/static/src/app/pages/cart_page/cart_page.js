@@ -140,6 +140,8 @@ export class CartPage extends Component {
     async proceedInfos(state) {
         this.state.fillInformations = false;
         if (state) {
+            this.selfOrder.currentOrder.mobile =
+                this.selfOrder.currentOrder.partner_id?.phone || state.phone;
             this.selfOrder.currentOrder.email =
                 this.selfOrder.currentOrder.partner_id?.email || state.email;
             await this.pay();

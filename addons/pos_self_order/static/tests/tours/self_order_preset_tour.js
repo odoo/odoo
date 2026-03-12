@@ -112,6 +112,7 @@ registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Public user"),
         CartPage.fillInput("Email", "public.user@test.com"),
+        CartPage.fillInput("Phone", "+32000111222"),
         Utils.clickBtn("Continue"),
         // Waiting for mail to be sent
         {
