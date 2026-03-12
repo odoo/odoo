@@ -6,8 +6,9 @@ from odoo import models
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _check_amount_and_confirm_order(self):
+    def _send_invoice(self):
         """Override of `sale` to archive guest contacts."""
-        confirmed_orders = super()._check_amount_and_confirm_order()
-        confirmed_orders.filtered("website_id")._archive_partner_if_no_user()
-        return confirmed_orders
+        super()._send_invoice()
+        self.sale_order_ids.filtered(
+            lambda so: so.state == "sale" and so.website_id
+        )._archive_partner_if_no_user()

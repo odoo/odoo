@@ -1032,14 +1032,30 @@ class SaleOrder(models.Model):
         self._recompute_prices()
 
     def _validate_order(self):
-        self.filtered("website_id")._archive_partner_if_no_user()
         super()._validate_order()
+        # After SO confirmation and email sending, archive customers without accounts
+        self.filtered("website_id")._archive_partner_if_no_user()
 
     def _archive_partner_if_no_user(self):
+        """Archive SO customer if it has no linked users."""
+        if (
+            not self
+            .env["ir.config_parameter"]
+            .sudo()
+            .get_bool("website_sale.automatic_archiving_of_guest_contacts", True)
+        ):
+            return
         partners_to_archive = self.env["res.partner"]
         for order in self:
-            if not (commercial_partner := order.partner_id).user_ids:
-                partners_to_archive |= commercial_partner + commercial_partner.child_ids
+            if (
+                not (customer := order.partner_id).user_ids
+                and not (commercial_partner := order.partner_id.commercial_partner_id).user_ids
+            ):
+                partners_to_archive |= (
+                    commercial_partner
+                    | commercial_partner.child_ids
+                    | customer.child_ids
+                )
 
         partners_to_archive.active = False
 
