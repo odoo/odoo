@@ -52,3 +52,22 @@ class Cart(WebsiteSaleCart):
                         notif["data"]["promotion_progress_bars"] = bars
                         break
         return result
+
+    def _cart_line_data(self, line):
+        line_data = super()._cart_line_data(line)
+        line_data["is_reward_line"] = line.is_reward_line
+        line_data["show_coupon_code"] = (
+            line.coupon_id
+            if line.order_id != line.coupon_id.order_id
+            and not line.coupon_id.program_id.is_nominative
+            else False
+        )
+
+        if line_data["show_coupon_code"]:
+            line_data["coupon_code"] = line.coupon_id.code
+            line_data["coupon_expiration_date"] = line.coupon_id.expiration_date
+
+        if line_data["is_reward_line"]:
+            line_data["reward_type"] = line.reward_id.reward_type
+
+        return line_data

@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { proxy, EventBus, markup } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -40,7 +40,7 @@ const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
  * provide relevant information when adding a product to the cart.
  */
 export class CartService {
-    static dependencies = ['dialog'];
+    static dependencies = ["dialog", "public.interactions"];
 
     /**
      * Creates an instance of the service and initializes it using the {@link setup} method.
@@ -67,8 +67,10 @@ export class CartService {
      */
     setup(_env, services) {
         this.dialog = services.dialog;
+        this.interactions = services["public.interactions"];
         this.rpc = rpc;  // To be overridable in tests.
         this.notifications = proxy(new Set());
+        this.bus = new EventBus();
 
         // Register the notification container
         registry.category('main_components').add('CartNotificationContainer',
@@ -78,9 +80,10 @@ export class CartService {
             }
         );
 
-        // Only expose `add` in the service registry.
         return {
+            bus: this.bus,
             add: (...args) => this.add(...args),
+            update: (...args) => this.update(...args),
             showWarning: (...args) => this.showWarning(...args),
         };
     }
@@ -114,6 +117,8 @@ export class CartService {
      * @param {Object} [options] - Define how to add products to the cart.
      * @param {Boolean} [options.isBuyNow=false] - Whether the product should be added immediately,
      *      bypassing optional configurations. Defaults to false.
+     * @param {Boolean} [options.shouldRedirectToCart=true] - Whether to redirect the
+     *      customer to the cart. Defaults to true.
      * @param {Boolean} [options.isConfigured=false] - Whether the product is already configured.
      *      Defaults to false.
      * @param {Boolean} [options.showQuantity=true] - Whether quantity selector should be shown
@@ -134,6 +139,7 @@ export class CartService {
         {
             isBuyNow=false,
             isConfigured=false,
+            shouldRedirectToCart=true,
             showQuantity=true,
         } = {},
     ) {
@@ -199,7 +205,7 @@ export class CartService {
                 uomId,
                 productCustomAttributeValues,
                 noVariantAttributeValues,
-                shouldRedirectToCart: isBuyNow,
+                shouldRedirectToCart: shouldRedirectToCart,
                 ...rest
             });
         }
@@ -240,9 +246,35 @@ export class CartService {
             uomId,
             productCustomAttributeValues,
             noVariantAttributeValues,
-            shouldRedirectToCart: isBuyNow,
+            shouldRedirectToCart: isBuyNow && shouldRedirectToCart,
             ...rest
         });
+    }
+
+    async update(lineId, productId = undefined, quantity, onCartPage = false) {
+        const data = await this.rpc("/shop/cart/update", {
+            line_id: lineId,
+            product_id: productId,
+            quantity: quantity,
+        });
+
+        if (onCartPage & !data.cart_quantity) {
+            return redirect("/shop/cart");
+        }
+
+        wSaleUtils.updateCartIcon(data.cart_quantity);
+        this.bus.trigger("cart_update");
+        this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
+
+        data["website_sale.quick_reorder_history"] = markup(
+            data["website_sale.quick_reorder_history"]
+        );
+
+        const reorderSideBarSelector = "#quick_reorder_sidebar";
+        this.interactions.stopInteractions(document.querySelector(reorderSideBarSelector));
+        wSaleUtils.updateQuickReorderSidebar(data);
+        this.interactions.startInteractions(document.querySelector(reorderSideBarSelector));
+        this.showWarning(data.warning);
     }
 
     /**
@@ -494,12 +526,7 @@ export class CartService {
         if (!data) {
             return 0;
         }
-        if (data.quantity && data.tracking_info?.length) {
-            wSaleUtils.dispatchTrackingEvent("add_to_cart_event", {
-                currency: data.currency,
-                items: data.tracking_info,
-            });
-        }
+        this.bus.trigger("cart_update");
         if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
@@ -507,39 +534,12 @@ export class CartService {
         if (data.cart_quantity && (
             data.cart_quantity !== browser.sessionStorage.getItem('website_sale_cart_quantity')
         )) {
-            this._updateCartIcon(data.cart_quantity);
+            wSaleUtils.updateCartIcon(data.cart_quantity);
         };
         for (const notification of data.notifications) {
             this._showCartNotification(notification);
         }
         return data.quantity;
-    }
-
-    /**
-     * Update the quantity on the cart icon in the navbar.
-     *
-     * @param {Number} cartQuantity - The number of items currently in the cart.
-     *
-     * @returns {void}
-     */
-    _updateCartIcon(cartQuantity) {
-        browser.sessionStorage.setItem('website_sale_cart_quantity', cartQuantity);
-        // Mobile and Desktop elements have to be updated.
-        const cartQuantityElements = document.querySelectorAll('.my_cart_quantity');
-        for(const cartQuantityElement of cartQuantityElements) {
-            if (cartQuantity === 0) {
-                cartQuantityElement.classList.add('d-none');
-            } else {
-                const cartIconElement = document.querySelector('li.o_wsale_my_cart');
-                cartIconElement.classList.remove('d-none');
-                cartQuantityElement.classList.remove('d-none');
-                cartQuantityElement.classList.add('o_mycart_zoom_animation');
-                setTimeout(() => {
-                    cartQuantityElement.textContent = cartQuantity;
-                    cartQuantityElement.classList.remove('o_mycart_zoom_animation');
-                }, 300);
-            }
-        }
     }
 
     /**
@@ -558,7 +558,7 @@ export class CartService {
 
 export const cartService = {
     dependencies: CartService.dependencies,
-    async: ['add'],
+    async: ["add", "update"],
     start(env, dependencies) {
         return new CartService(env, dependencies);
     },
