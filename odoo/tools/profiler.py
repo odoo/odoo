@@ -6,10 +6,10 @@ import re
 import sys
 import threading
 import time
-import tracemalloc
 from contextlib import ExitStack, nullcontext
 from datetime import datetime
 
+import psutil
 from psycopg2 import OperationalError
 
 from odoo import tools
@@ -254,6 +254,11 @@ class PeriodicCollector(_BasePeriodicCollector):
         self._last_frame_id = 0  # incremental identifier if the frame has been seen
         self._last_time = 0
 
+    def start(self):
+        self._memory_profile = self.profiler.memory_profile
+        self._process = self.profiler.process
+        super().start()
+
     def add(self, entry=None, frame=None, check_limit=True):
         """ Add an entry (dict) to this collector. """
         now = real_time()
@@ -274,45 +279,9 @@ class PeriodicCollector(_BasePeriodicCollector):
             return
         frame_locals['$__PeriodicCollectorId'] = self._last_frame_id = last_frame_id + 1
         entry = {'start': now}
+        if self._memory_profile:
+            entry = {'memory': self._process.memory_info().rss, **(entry or {})}
         super().add(entry, frame, check_limit=check_limit)
-
-
-_lock = threading.Lock()
-
-
-class MemoryCollector(_BasePeriodicCollector):
-
-    name = 'memory'
-    _store = 'others'
-    _min_interval = 0.01  # minimum interval allowed
-    _default_interval = 1
-
-    def start(self):
-        _lock.acquire()
-        tracemalloc.start()
-        super().start()
-
-    def add(self, entry=None, frame=None, check_limit=True):
-        """ Add an entry (dict) to this collector. """
-        assert entry is None
-        super().add({
-            'start': real_time(),
-            'memory': tracemalloc.take_snapshot(),
-            'stack': None,  # prevent getting the stack trace
-        }, check_limit=check_limit)
-
-    def stop(self):
-        super().stop()
-        _lock.release()
-        tracemalloc.stop()
-
-    def post_process(self):
-        for i, entry in enumerate(self._entries):
-            if entry.get("memory", False):
-                entry_statistics = entry["memory"].statistics('traceback')
-                modified_entry_statistics = [{'traceback': list(statistic.traceback._frames),
-                                            'size': statistic.size} for statistic in entry_statistics]
-                self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
 
 
 class QwebTracker:
@@ -524,6 +493,8 @@ class Profiler:
         self.time_limit = int(self.params.get("time_limit", 0))
         self.done = False
         self.exit_stack = ExitStack()
+        self.process = psutil.Process()
+        self.memory_profile = self.params.get("memory_profile", False)
         self.counter = 0
 
         if db is ...:
