@@ -86,7 +86,7 @@ class AccountJournal(models.Model):
     name_placeholder = fields.Char(compute='_compute_name_placeholder')
     code = fields.Char(
         string='Sequence Prefix',
-        size=5,
+        size=7,
         compute='_compute_code', readonly=False, store=True,
         required=True, precompute=True,
         help="Shorter name used for display. "
@@ -1010,7 +1010,7 @@ class AccountJournal(models.Model):
                 vals['default_account_id'] = default_account_id
 
         if is_import and not vals.get('code'):
-            code = vals['name'][:5]
+            code = vals['name'][:self._fields['code'].size]
             vals['code'] = code if not protected_codes or code not in protected_codes else self._get_next_journal_default_code(journal_type, company, protected_codes)
             if not vals['code']:
                 raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))

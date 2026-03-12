@@ -133,7 +133,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             {"name": "OD_BLABLU"},
         ])
 
-        self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BL"], "The journals should be set correctly")
+        self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BLAB"], "The journals should be set correctly")
 
     def test_archive_used_journal(self):
         journal = self.env['account.journal'].create({
