@@ -3509,3 +3509,16 @@ input[value*="data-oe-translation-source-sha"] {
 img.o_image_popup {
     cursor: pointer;
 }
+
+.slide:not(.carousel-instant) {
+    --transition-duration: 600ms;
+    .carousel-item {
+        transition-duration: var(--transition-duration);
+    }
+}
+
+.carousel-instant {
+    .carousel-item {
+        transition: none;
+    }
+}
