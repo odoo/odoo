@@ -127,9 +127,10 @@ class AccountMove(models.Model):
         :return: True if lines look like they're grouped, False otherwise
         """
         self.ensure_one()
+        partner_name = re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*'
         return any(
-            re.match(re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*', line.name)
-            for line in self.line_ids.filtered(lambda x: x.display_type == 'product')
+            re.match(partner_name, line.name)
+            for line in self.line_ids.filtered(lambda line: line.name and line.display_type == 'product')
         )
 
     @api.model
