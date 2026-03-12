@@ -1,0 +1,155 @@
+<templates xml:space="preserve">
+
+<t t-name="html_builder.TextEffectSelector">
+    <button t-custom-ref="root" class="btn btn-light o-select-text-effect" t-att-title="props.title" t-att-class="{ active: this.state.isActive }" t-att="{ disabled: this.state.isDisabled }" t-on-click="onClick">
+        <t t-call="html_builder.TextEffectSelectorSvg"/>
+    </button>
+</t>
+
+<t t-name="html_builder.TextEffectSelectorSvg">
+    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#1f1f1f">
+        <path d="M166.67-120.67 120-167.33l317.67-318L254-531l194-121-16.33-228 175 147L818-818.33l-85.67 211.66L880-432l-228.67-16.67-120.66 194L485-438.33 166.67-120.67Zm24.66-536L120-728l72-72 71.33 71.33-72 72Zm366.34 233 58-94.33 111 8.33-72-85 41.66-102.66-102.66 41.66-85-71.66L517-616.67l-94.33 59 108 26.67 27 107.33Zm171 303.67-71.34-72 71.34-71.33 71.33 72L728.67-120ZM575-576Z"/>
+    </svg>
+</t>
+
+<t t-name="html_builder.TextEffectPresetSelection">
+    <div class="p-2 grid gap-0 o-hb-text-effect-presets">
+        <div class="border g-col-4 position-relative"
+            style="cursor: pointer; background-color: white; color: black"
+        >
+            <BuilderButton action="'setTextEffect'" actionValue='`{"preset": "custom"}`' title.translate="Custom">
+                <div class="overflow-visible position-relative fw-bolder text-center p-1">
+                    <t t-call="html_builder.TextEffectCustomSvg"/>
+                </div>
+            </BuilderButton>
+        </div>
+        <t t-foreach="this.state.presets" t-as="preset" t-key="preset.id">
+            <div class="border g-col-4 position-relative"
+                style="cursor: pointer; background-color: white; color: black"
+                t-att-title="preset.name"
+                t-att-aria-label="preset.name"
+            >
+                <BuilderButton action="'setTextEffect'" actionValue="preset.effectJson" title="preset.name">
+                    <div class="overflow-visible position-relative fw-bolder text-center" style="scale: 0.7">
+                        <div style="font-size: xxx-large; line-height: 1em">
+                            <span data-text-effect="preset.effectJson" t-att-style="preset.effectStyle" t-out="preset.sampleText"/>
+                        </div>
+                    </div>
+                </BuilderButton>
+                <button t-if="preset.isCustom" class="o-hb-text-effect-button fa fa-trash o-hb-btn btn"
+                    t-on-click="() => this.onClickRemovePreset(preset.id)"
+                    title="Forget effect" aria-label="Forget effect"
+                />
+            </div>
+        </t>
+    </div>
+</t>
+
+<t t-name="html_builder.TextEffectOption">
+    <div class="o_text_effect_popover p-2" data-prevent-closing-overlay="true">
+        <BuilderContext t-if="this.domState.showPresets" action="'updateTextEffect'">
+            <div class="p-2 d-flex align-items-center">
+                <t t-if="this.state.showBack">
+                    <button class="fa fa-angle-left btn btn-secondary bg-transparent border-0"
+                        t-on-click="onClickClosePresets"
+                    />
+                </t>
+                <span class="cursor-pointer">Select a text effect</span>
+            </div>
+            <t t-call="html_builder.TextEffectPresetSelection"/>
+        </BuilderContext>
+        <BuilderContext t-else="" action="'updateTextEffect'">
+            <BuilderRow label.translate="Effect">
+                <button type="button" class="o-hb-btn btn btn-secondary" t-out="this.domState.presetName"
+                    title="Open presets" aria-label="Open presets"
+                    t-on-click="onClickOpenPresets"
+                />
+                <button type="button" class="o-hb-btn btn ms-auto fa fa-fw fa-trash px-2 py-2 btn-secondary"
+                    t-on-click="onClickReset"
+                    title="Remove effect" aria-label="Remove effect"/>
+            </BuilderRow>
+            <hr class="mx-2 mt-1 mb-0"/>
+            <t t-if="this.domState.hasShadowPart">
+                <BuilderRow label.translate="Shadow" actionParam="'toggleShadow'">
+                    <t t-if="this.domState.hasOutlinePart or this.domState.hasTrailPart or this.domState.hasGeometryPart">
+                        <BuilderCheckbox actionValue="'toggle'" id="'text_shadow_opt'"/>
+                    </t>
+                    <t t-else=""> </t>
+                </BuilderRow>
+                <t t-if="this.isActiveItem('text_shadow_opt') or (!this.domState.hasOutlinePart and !this.domState.hasTrailPart and !this.domState.hasGeometryPart)">
+                    <BuilderRow label.translate="Color" actionParam="'shadowColor'" level="1">
+                        <BuilderColorPicker
+                            enabledTabs="['custom', 'solid']"
+                            id="'text_shadow_color_opt'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
+                        <BuilderNumberInput actionParam="'shadowOffsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
+                        <BuilderNumberInput actionParam="'shadowOffsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Blur" level="1">
+                        <BuilderNumberInput actionParam="'shadowBlur'" unit="'px'"/>
+                    </BuilderRow>
+                </t>
+            </t>
+            <t t-if="this.domState.hasOutlinePart">
+                <BuilderRow label.translate="Outline">
+                    <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'" id="'text_outline_width_opt'"/>
+                    <BuilderColorPicker actionParam="'outlineColor'"
+                        enabledTabs="['custom', 'solid']"
+                        t-if="this.domState.hasOutline"
+                        id="'text_outline_color_opt'"/>
+                </BuilderRow>
+            </t>
+            <t t-if="this.domState.hasTrailPart">
+                <BuilderRow label.translate="Trail">
+                    <BuilderRange actionParam="'trailCount'" min="0" max="10" step="1" withNumberInput="true" id="'text_trail_count_opt'"/>
+                </BuilderRow>
+                <t t-if="this.domState.hasTrail">
+                    <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
+                        <BuilderNumberInput actionParam="'trailOffsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
+                        <BuilderNumberInput actionParam="'trailOffsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Colors" tooltip.translate="Start and end colors" level="1">
+                        <BuilderColorPicker actionParam="'trailStartColor'" enabledTabs="['custom', 'solid']"/>
+                        <BuilderColorPicker actionParam="'trailEndColor'" enabledTabs="['custom', 'solid']"/>
+                    </BuilderRow>
+                </t>
+            </t>
+            <t t-if="this.domState.hasGeometryPart">
+                <BuilderRow label.translate="Geometry"> </BuilderRow>
+                <BuilderRow label.translate="Rotate" level="1">
+                    <BuilderNumberInput actionParam="'rotate'" min="-180" max="180" unit="'deg'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Tilt" level="1">
+                    <BuilderNumberInput actionParam="'tiltX'" min="-180" max="180" unit="'deg'" prefixIcon="'oi oi-arrows-v'"/>
+                    <BuilderNumberInput actionParam="'tiltY'" min="-180" max="180" unit="'deg'" prefixIcon="'oi oi-arrows-h'"/>
+                </BuilderRow>
+                <BuilderRow t-if="this.domState.hasTilt" label.translate="Perspective" level="2">
+                    <BuilderNumberInput actionParam="'tiltPerspective'" min="0.1" max="10" step="0.1" unit="'✕'" saveUnit="''" applyWithUnit="false" prefixIcon="'oi oi-chevron-up'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Skew" level="1">
+                    <BuilderNumberInput actionParam="'skewX'" min="-50" max="50" unit="'deg'" prefixIcon="'oi oi-arrows-h'"/>
+                    <BuilderNumberInput actionParam="'skewY'" min="-50" max="50" unit="'deg'" prefixIcon="'oi oi-arrows-v'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Move" level="1">
+                    <BuilderNumberInput actionParam="'moveX'" min="-1000" max="1000" unit="'%'" prefixIcon="'oi oi-arrows-h'"/>
+                    <BuilderNumberInput actionParam="'moveY'" min="-1000" max="1000" unit="'%'" prefixIcon="'oi oi-arrows-v'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Scale" level="1">
+                    <BuilderNumberInput actionParam="'scale'" min="1" max="1000" unit="'%'" prefixIcon="'oi oi-resize'"/>
+                </BuilderRow>
+            </t>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-link" t-on-click="this.onClickSavePreset">Save as preset</button>
+            </div>
+        </BuilderContext>
+     </div>
+</t>
+
+<t t-name="html_builder.TextEffectCustomSvg">
+    <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="%231f1f1f">
+        <path d="M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z"/>
+    </svg>
+</t>
+
+</templates>
