@@ -95,6 +95,66 @@ class Speedscope:
         })
         return self
 
+    def add_memory_output(self, names, display_name=None, use_context=True, **params):
+        """
+        Add a memory-based sampled profile output.
+
+        For each pair of consecutive entries in ``names``, the diff in RSS
+        memory is computed.  Positive diffs (allocations) are attributed as a
+        heuristic to *both* the previous and the current stack trace, since the
+        allocation happened somewhere in the interval between the two samples.
+
+        :param names: list of keys previously added via :meth:`add`
+        :param display_name: tab name for this output
+        :param use_context: include execution context frames
+        """
+        entries = []
+        display_name = display_name or f'Memory {",".join(names)}'
+        for name in names:
+            raw = self.profiles_raw.get(name)
+            if not raw:
+                continue
+            entries += raw
+        entries.sort(key=lambda e: e['start'])
+
+        samples = []
+        weights = []
+        total_weight = 0
+        init_ids = self.stack_to_ids(self.init_stack_trace, None)
+
+        for i in range(len(entries) - 1):
+            current = entries[i]
+            nxt = entries[i + 1]
+            current_mem = current.get('memory')
+            nxt_mem = nxt.get('memory')
+            if current_mem is None or nxt_mem is None:
+                continue
+            diff = nxt_mem - current_mem
+            if diff <= 0:
+                continue
+            stack = current.get('stack') or []
+            context = use_context and current.get('exec_context')
+            stack_ids = self.stack_to_ids(stack, context, False, self.init_stack_trace_level)
+            full_ids = init_ids + stack_ids
+            if full_ids:
+                samples.append(full_ids)
+                weights.append(diff)
+                total_weight += diff
+
+        if not samples:
+            return self
+
+        self.profiles.append({
+            "name": display_name,
+            "type": "sampled",
+            "unit": "bytes",
+            "startValue": 0,
+            "endValue": total_weight,
+            "samples": samples,
+            "weights": weights,
+        })
+        return self
+
     def add_default(self,**params):
         if len(self.profiles_raw) > 1:
             if params['combined_profile']:

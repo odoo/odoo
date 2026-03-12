@@ -62,23 +62,12 @@ from odoo.release import nt_service_name
 from odoo.tools import OrderedSet, config, gc, osutil, profiler
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import dumpstacks, mute_logger, stripped_sys_argv
+from odoo.tools.osutil import memory_info
 
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
 GEVENT_STOP_TIMEOUT = 60
-
-
-def memory_info(process):
-    """
-    :return: the relevant memory usage according to the OS in bytes.
-    """
-    # psutil < 2.0 does not have memory_info, >= 3.0 does not have get_memory_info
-    pmem = (getattr(process, 'memory_info', None) or process.get_memory_info)()
-    # MacOSX allocates very large vms to all processes so we only monitor the rss usage.
-    if platform.system() == 'Darwin':
-        return pmem.rss
-    return pmem.vms
 
 
 def set_limit_memory_hard():
