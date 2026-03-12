@@ -397,17 +397,21 @@
                             <field name="name" class="ps-4"/>
                         </div>
                         <div class="o_kanban_workorder_date">
-                            <field name="date_start" invisible="not date_start" class="pe-2"/> - <field name="date_finished" invisible="not date_start" class="ps-2"/>
+                            <span data-tooltip="Scheduled Date">
+                                <field name="date_start" invisible="not date_start" class="pe-2"/> - <field name="date_finished" invisible="not date_start" class="ps-2"/>
+                            </span>
                         </div>
                         <footer>
-                            <div class="o_kanban_workorder_remaining">
+                            <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time">
                                 <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}"/>
                             </div>
                             <div class="d-flex ms-auto">
                                 <field name="last_working_user_id" widget="many2one_avatar_user"/>
-                                <field name="state" widget="mo_view_list_dropdown"
-                                    options="{'no_open': True, 'display': 'bubble'}"
-                                    invisible="production_state == 'draft'"/>
+                                <div data-tooltip="Status">
+                                    <field name="state" widget="mo_view_list_dropdown"
+                                        options="{'no_open': True, 'display': 'bubble'}"
+                                        invisible="production_state == 'draft'"/>
+                                </div>
                             </div>
                         </footer>
                     </t>
