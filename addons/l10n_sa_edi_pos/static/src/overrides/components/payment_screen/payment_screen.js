@@ -6,6 +6,16 @@ import { markup } from "@odoo/owl";
 
 patch(PaymentScreen.prototype, {
     //@Override
+    shouldDownloadInvoice() {
+        // For SA companies the PDF is deferred (generated on demand). Skip the
+        // automatic post-checkout download so the cashier is never presented
+        // with a proforma instead of the real invoice.
+        if (this.currentOrder?.isSACompany) {
+            return false;
+        }
+        return super.shouldDownloadInvoice();
+    },
+    //@Override
     async _finalizeValidation() {
         await super._finalizeValidation(...arguments);
         const order = this.currentOrder;
