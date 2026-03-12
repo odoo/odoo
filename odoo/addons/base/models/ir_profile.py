@@ -56,27 +56,35 @@ class IrProfile(models.Model):
         records.unlink()
         return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
-    def _compute_has_memory(self):
+    def _has_memory_traces(self):
+        """Return True if all profiles have RSS memory measurements in traces_async."""
         for profile in self:
-            if not bool(profile.others and json.loads(profile.others).get("memory")):
+            if not profile.traces_async:
+                return False
+            entries = json.loads(profile.traces_async)
+            if not entries or entries[0].get('memory') is None:
                 return False
         return True
 
-    def _generate_memory_profile(self, params):
-        memory_graph = []
-        memory_limit = params.get('memory_limit', 0)
+    def _get_memory_data(self):
+        """Return baselined RSS memory data points for the chart."""
+        points = []
+        baseline = None
         for profile in self:
-            if profile.others:
-                memory = json.loads(profile.others).get("memory", "[{}]")
-                memory_tracebacks = json.loads(memory)[:-1]
-                for entry in memory_tracebacks:
-                    memory_graph.append({
-                        "samples": [
-                            sample for sample in entry["memory_tracebacks"]
-                            if sample.get("size", False) >= memory_limit
-                        ]
-                    , "start": entry["start"]})
-        return memory_graph
+            if not profile.traces_async:
+                continue
+            for entry in json.loads(profile.traces_async):
+                mem = entry.get('memory')
+                if mem is None:
+                    continue
+                if baseline is None:
+                    baseline = mem
+                points.append({
+                    'timestamp': entry['start'],
+                    'memory': mem - baseline,
+                    'abs_memory': mem,
+                })
+        return {'points': points}
 
     def _compute_config_url(self):
         for profile in self:
@@ -93,11 +101,13 @@ class IrProfile(models.Model):
     def _default_profile_params(self):
         has_sql = any(profile.sql for profile in self)
         has_traces = any(profile.traces_async for profile in self)
+        has_memory = self._has_memory_traces()
         return {
             'combined_profile': has_sql and has_traces,
             'sql_no_gap_profile': has_sql and not has_traces,
             'sql_density_profile': False,
             'frames_profile': has_traces and not has_sql,
+            'memory_profile': has_memory,
         }
 
     def _parse_params(self, params):
@@ -109,8 +119,8 @@ class IrProfile(models.Model):
             'sql_no_gap_profile': str2bool(params.get('sql_no_gap_profile', False)),
             'sql_density_profile': str2bool(params.get('sql_density_profile', False)),
             'frames_profile': str2bool(params.get('frames_profile', False)),
+            'memory_profile': str2bool(params.get('memory_profile', False)),
             'profile_aggregation_mode': params.get('profile_aggregation_mode', 'tabs'),
-            'memory_limit': int(params.get('memory_limit', 0)),
         }
 
     def _generate_speedscope(self, params):
@@ -122,7 +132,7 @@ class IrProfile(models.Model):
         for profile in self:
             if (params['sql_no_gap_profile'] or params['sql_density_profile'] or params['combined_profile']) and profile.sql:
                 sp.add(f'sql {profile.id}', json.loads(profile.sql))
-            if (params['frames_profile'] or params['combined_profile']) and profile.traces_async:
+            if (params['frames_profile'] or params['combined_profile'] or params['memory_profile']) and profile.traces_async:
                 sp.add(f'frames {profile.id}', json.loads(profile.traces_async))
             if params['profile_aggregation_mode'] == 'tabs':
                 profile._add_outputs(sp, f'{profile.id} {profile.name}' if len(self) > 1 else '', params)
@@ -141,9 +151,11 @@ class IrProfile(models.Model):
         if params['sql_no_gap_profile']:
             sp.add_output(sql, hide_gaps=True, display_name=f'Sql (no gap) {suffix}', **params)
         if params['sql_density_profile']:
-            sp.add_output(sql , continuous=False, complete=False, display_name=f'Sql (density) {suffix}',**params)
+            sp.add_output(sql, continuous=False, complete=False, display_name=f'Sql (density) {suffix}', **params)
         if params['frames_profile']:
-            sp.add_output(frames, display_name=f'Frames {suffix}',**params)
+            sp.add_output(frames, display_name=f'Frames {suffix}', **params)
+        if params['memory_profile']:
+            sp.add_memory_output(frames, display_name=f'Memory {suffix}', **params)
 
     @api.depends('speedscope')
     def _compute_speedscope_url(self):
