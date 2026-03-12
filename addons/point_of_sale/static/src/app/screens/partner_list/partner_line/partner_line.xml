@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.PartnerLine">
         <t t-if="ui.isSmall">
-            <div class="partner-info d-flex flex-column p-1 border-bottom" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
+            <div class="partner-info d-flex flex-column p-1 border-bottom" role="button" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
                 t-on-click="() => this.props.onClickPartner(props.partner)">
                 <div class="d-flex justify-content-between align-items-center p-1">
                     <div>
@@ -40,7 +40,7 @@
             </div>
         </t>
         <t t-else="">
-            <tr class="partner-line partner-info" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
+            <tr class="partner-line partner-info" role="button" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
                 t-on-click="() => this.props.onClickPartner(props.partner)">
                 <td class="text-break w-25">
                     <b t-esc="props.partner.name or ''" />
