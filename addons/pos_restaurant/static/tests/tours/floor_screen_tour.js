@@ -9,6 +9,7 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/produc
 import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
@@ -54,6 +55,13 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             Utils.elementDoesNotExist(
                 ".floor-selector .button-floor:contains('Main Floor (copy)')"
             ),
+
+            // add new floor
+            FloorScreen.clickAddFloor(),
+            Dialog.is(),
+            Dialog.isButtonDisabled("Apply"),
+            TextInputPopup.inputText("Test Floor"),
+            Dialog.confirm(),
 
             // test add table
             FloorScreen.clickFloor("Main Floor"),
