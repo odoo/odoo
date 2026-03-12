@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="website_sale.CartSummary" t-inherit-mode="extension">
+        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/span" position="after">
+            <t t-call="website_sale_loyalty.usedGiftCard" line="line"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="website_sale.CartSummaryProductPrice" t-inherit-mode="extension">
+        <span position="attributes">
+            <attribute name="t-attf-class">o_reward_{{line.reward_type}}</attribute>
+        </span>
+    </t>
+</templates>

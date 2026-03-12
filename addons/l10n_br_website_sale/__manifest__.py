@@ -7,9 +7,11 @@
         'l10n_br',
         'website_sale',
     ],
-    'data': [
-        'views/templates.xml',
-    ],
+    'assets': {
+        'web.assets_frontend': [
+            'l10n_br_website_sale/static/src/js/**/*',
+        ],
+    },
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
