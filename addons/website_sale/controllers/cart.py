@@ -247,21 +247,27 @@ class Cart(PaymentPortal):
         route="/shop/cart/quick_add", type="jsonrpc", auth="user", methods=["POST"], website=True
     )
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
+        order_sudo = request.cart or request.website._create_cart()
+        old_cart_quantity = order_sudo.cart_quantity
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        order_sudo = request.cart
-        values.update(self._get_updated_cart_page_values(order_sudo))
-        # If the cart was empty, no cart summary was rendered on the page. However, we just
-        # added a product, so render it now.
-        values["website_sale.shorter_cart_summary"] = self.env.website._render_template(
-            "website_sale.shorter_cart_summary",
-            {
-                "website_sale_order": order_sudo,
-                "show_shorter_cart_summary": True,
-                **self._get_express_shop_payment_values(order_sudo),
-                **self.env.website._get_checkout_step_values("/shop/cart"),
-            },
-        )
+        IrUiView = self.env["ir.ui.view"]
+        values.update({
+            **self._get_updated_cart_page_values(order_sudo),
+            "old_cart_quantity": old_cart_quantity,
+        })
+        if not old_cart_quantity:
+            # If the cart was empty, no cart summary was rendered on the page. However, we just
+            # added a product, so render it now.
+            values["website_sale.shorter_cart_summary"] = IrUiView._render_template(
+                "website_sale.shorter_cart_summary",
+                {
+                    "website_sale_order": order_sudo,
+                    "show_shorter_cart_summary": True,
+                    **self._get_express_shop_payment_values(order_sudo),
+                    **self.env.website._get_checkout_step_values("/shop/cart"),
+                },
+            )
         # Products already in the cart should not appear in quick reorder suggestions.
         # We just added one, so refresh the quick reorder view.
         values["website_sale.quick_reorder_history"] = self.env.website._render_template(
@@ -343,25 +349,12 @@ class Cart(PaymentPortal):
         :param sale.order order_sudo: The current cart order.
         :rtype: dict
         """
-        IrUiView = self.env["ir.ui.view"]
-
         return {
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
             "amount": order_sudo.amount_total,
             "minor_amount": payment_utils.to_minor_currency_units(
                 order_sudo.amount_total, order_sudo.currency_id
-            ),
-            "website_sale.cart_lines": IrUiView._render_template(
-                "website_sale.cart_lines",
-                {
-                    "website_sale_order": order_sudo,
-                    "date": fields.Date.today(),
-                    "suggested_products": order_sudo._cart_accessories(),
-                },
-            ),
-            "website_sale.total": IrUiView._render_template(
-                "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
             ),
         }
 
@@ -557,3 +550,129 @@ class Cart(PaymentPortal):
             infos["uom_name"] = line.product_uom_id.name
 
         return infos
+
+    @route(route="/shop/cart/lines", type="jsonrpc", auth="public", website=True)
+    def cart_lines(self):
+        order_sudo = request.cart
+
+        is_quantity_view_active = request.env["website"].is_view_active(
+            "website_sale.product_quantity"
+        )
+        is_wishlist_view_active = request.env["website"].is_view_active(
+            "website_sale.wishlist_cart_lines"
+        )
+        is_base_uom_feature_enabled = request.env["res.groups"]._is_feature_enabled(
+            "product.group_show_uom_price"
+        )
+        is_accessories_view_active = request.env["website"].is_view_active(
+            "website_sale.suggested_products_list"
+        )
+
+        values = {
+            "currency_id": order_sudo.currency_id.id,
+            "cart_lines": [],
+            "is_quantity_view_active": is_quantity_view_active,
+            "is_wishlist_view_active": is_wishlist_view_active,
+            "is_uom_feature_enabled": is_base_uom_feature_enabled,
+            "is_accessories_view_active": is_accessories_view_active,
+            "accessories": self._cart_accessories() if is_accessories_view_active else [],
+        }
+
+        for line in order_sudo.website_order_line:
+            values["cart_lines"].append(self._cart_line_data(line))
+
+        return values
+
+    def _cart_line_data(self, line):
+        line_data = {
+            "id": line.id,
+            "product_id": line.product_id.id,
+            "name_short": line.name_short,
+            "header_name": line._get_line_header(),
+            "uom_name": line.product_uom_id.name,
+            "displayed_quantity": line._get_displayed_quantity(),
+            "displayed_unit_price": line._get_displayed_unit_price(),
+            "product_price": line._get_cart_display_price(),
+            "base_unit_price": line.product_id.base_unit_price,
+            "product_uom_qty": line.product_uom_qty,
+            "product_base_unit_price": (
+                line.product_id._get_base_unit_price(
+                    line._get_cart_display_price() / line.product_uom_qty
+                )
+            ),
+            "website_url": line.product_id.website_url,
+            "is_combo": line.product_type == "combo",
+            "is_sellable": line._is_sellable(),
+            "product_type": line.product_type,
+            "image_uri": (
+                image_data_uri(line.product_id.image_128) if line.product_id.image_128 else False
+            ),
+            "combination_name": line._get_combination_name(),
+            "has_multiple_uoms": line.product_id._has_multiple_uoms(),
+            "should_show_strikethrough_price": line._should_show_strikethrough_price(),
+            "description_lines": list(line.get_description_following_lines()),
+            "alert_message": line._join_alert_messages(),
+            "alert_level": line._get_max_alert_level(),
+            "max_quantity": line._get_max_line_qty(),
+        }
+
+        if line.product_type == "combo":
+            line_data["combo_item_lines"] = []
+            for combo_item in line.linked_line_ids.filtered("combo_item_id"):
+                combo_item_dict = {
+                    "id": combo_item.id,
+                    "website_url": combo_item.product_id.website_url,
+                    "is_sellable": combo_item._is_sellable(),
+                    "website_published": combo_item.product_id.website_published,
+                    "displayed_quantity": combo_item._get_displayed_quantity(),
+                    "name_short": combo_item.name_short,
+                    "description_lines": list(combo_item.get_description_following_lines()),
+                }
+
+                line_data["combo_item_lines"].append(combo_item_dict)
+
+        return line_data
+
+    @route(route="/shop/cart/totals", type="jsonrpc", auth="public", website=True, readonly=True)
+    def cart_totals(self):
+        order_sudo = request.cart
+
+        return {
+            "currency_id": order_sudo.currency_id.id,
+            "has_carrier": bool(order_sudo.carrier_id),
+            "has_deliverable_products": order_sudo._has_deliverable_products(),
+            "amount_delivery": order_sudo.amount_delivery,
+            "amount_untaxed": order_sudo.amount_untaxed,
+            "tax_subtotals": (
+                order_sudo.tax_totals["subtotals"]
+                if order_sudo.tax_totals and order_sudo.tax_totals["subtotals"]
+                else False
+            ),
+            "amount_total": order_sudo.amount_total,
+            "tax_included": (
+                order_sudo.website_id.show_line_subtotals_tax_selection == "tax_included"
+            ),
+        }
+
+    def _cart_accessories(self):
+        order_sudo = request.cart
+        accessories = order_sudo._cart_accessories()
+
+        return {
+            "lines": [
+                {
+                    "id": accessory.id,
+                    "product_tmpl_id": accessory.product_tmpl_id.id,
+                    "type": accessory.type,
+                    "display_name": accessory.with_context(display_default_code=False).display_name,
+                    "website_url": accessory.website_url,
+                    "website_published": accessory.website_published,
+                    "image_uri": (
+                        image_data_uri(accessory.image_128) if accessory.image_128 else False
+                    ),
+                    "description_sale": accessory.description_sale,
+                    "combination_info": accessory._get_combination_info_variant(),
+                }
+                for accessory in accessories
+            ]
+        }

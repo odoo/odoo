@@ -36,32 +36,33 @@ registry.category("web_tour.tours").add("website_sale.update_cart", {
         }),
         {
             content: "add suggested",
-            trigger: '.js_cart_lines:has(a:contains("Storage Box")) button:contains("Add to cart")',
+            trigger: '#suggested_products div:has(a:contains("Storage Box")) button:contains("Add to cart")',
             run: "click",
-            expectUnloadPage: true,
         },
         {
             trigger: '#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")',
         },
         {
             content: "remove Storage Box",
-            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) button:has(i.oi-minus)',
+            trigger:
+                '#cart_products div.o_cart_product:contains("Storage Box") button[name="remove_quantity"]',
             run: "click",
         },
         {
             trigger:
-                '#wrap:not(:has(#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
+                '#wrap:not(:has(#suggested_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
         },
         {
             content: "add one more",
             trigger:
-                '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Conference Chair")) button:has(i.oi-plus)',
+                '#cart_products div.o_cart_product:contains("Conference Chair") button[name="add_quantity"]',
             run: "click",
         },
-        {
-            trigger:
-                '#cart_products div:has(div>a>h6:contains("Conference Chair")) input.js_quantity:value(2)',
-        },
+        ...tourUtils.assertCartContains({
+            productName: "Conference Chair",
+            combinationName: "Steel",
+            quantity: 2,
+        }),
         {
             content: "set one",
             trigger: "#cart_products input.js_quantity",
