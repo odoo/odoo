@@ -351,7 +351,7 @@ class KsefApiService:
             response = self._make_request('POST', endpoint, json=query_criteria, params=params)
             return response.json()
         except KSeFRateLimitError as e:
-            return {'error': {'retry_after': e.retry_after, 'message': e.message}}
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
 
     def get_invoice_by_ksef_number(self, ksef_number):
         endpoint = f"{self.api_url}/invoices/ksef/{ksef_number}"
@@ -359,4 +359,4 @@ class KsefApiService:
             response = self._make_request('GET', endpoint)
             return {'xml_content': response.content}
         except KSeFRateLimitError as e:
-            return {'error': {'retry_after': e.retry_after, 'message': e.message}}
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
