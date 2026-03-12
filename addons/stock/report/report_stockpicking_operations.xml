@@ -7,7 +7,7 @@
                 <div class="article o_report_layout_standard">
                     <t t-foreach="docs" t-as="o">
                         <t t-set="address" t-value="None"/>
-                        <div class="page o_report_stockpicking_operations">
+                        <div class="page">
                             <div class="row justify-content-between">
                                 <div class="col-4">
                                     <h3 t-field="o.picking_type_id.code"></h3>
@@ -104,7 +104,7 @@
                                 then we then loop over indvidual move lines and print a breakdown of them
                                 4. If a move contains only one move line, the move is summarized in the heading only
                             -->
-                            <table class="table table-sm o_main_table" t-if="o.move_line_ids and o.move_ids.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)" style="table-layout: fixed; width: 100%">
+                            <table class="table o_main_table" t-if="o.move_line_ids and o.move_ids.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)" style="table-layout: fixed; width: 100%">
                                 <t t-set="picking_has_barcode" t-value="any(move_line.product_id and move_line.product_id.barcode for move_line in o.move_line_ids)"/>
                                 <t t-set="picking_has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
                                 <t t-set="barcode_col_exists" t-value="picking_has_barcode or picking_has_serial_number"/>
