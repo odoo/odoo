@@ -120,10 +120,12 @@ class TestHolidaysOvertime(TransactionCase):
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
             self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
 
-            overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
-            self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+            overtime_leave_data = self.leave_type_no_alloc.with_company(self.company).with_context(employee_id=self.employee.id).get_allocation_data_request()
+            self.assertEqual(overtime_leave_data[0][0], "Extra Hours")
+            self.assertEqual(overtime_leave_data[0][1]['virtual_remaining_leaves'], 8.0)
+            self.assertEqual(overtime_leave_data[0][1]['max_leaves'], 8.0)
             # `employee_company` must be present to avoid traceback when opening the Time Off Type
-            self.assertTrue(overtime_leave_data[self.employee][0][1].get('employee_company'))
+            self.assertTrue(overtime_leave_data[0][1].get('employee_company'))
 
     def test_leave_adjust_overtime(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
