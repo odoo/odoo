@@ -402,6 +402,9 @@ class TestEventSale(TestEventSaleCommon):
             editor.action_make_registration()
 
     def test_ticket_price_with_currency_conversion(self):
+        """ Test that the price of the ticket and the `sale_price_total` are
+        correctly converted when using another currency.
+        """
         def _prepare_currency(self, currency_name):
             currency = self.env['res.currency'].with_context(active_test=False).search(
                 [('name', '=', currency_name)]
@@ -409,8 +412,9 @@ class TestEventSale(TestEventSaleCommon):
             currency.action_unarchive()
             return currency
 
-        currency_VEF = _prepare_currency(self, 'VEF')
         currency_USD = _prepare_currency(self, 'USD')
+        currency_VEF = _prepare_currency(self, 'VEF')
+        currency_VEF.rate_ids.rate = 5.0
 
         company_test = self.env['res.company'].create({
             'name': 'TestCompany',
@@ -419,6 +423,7 @@ class TestEventSale(TestEventSaleCommon):
         })
         self.env.user.company_ids += company_test
         self.env.user.company_id = company_test
+        currency_VEF.rate_ids.company_id = company_test
 
         pricelist_USD = self.env['product.pricelist'].create({
             'name': 'pricelist_USD',
@@ -462,10 +467,26 @@ class TestEventSale(TestEventSaleCommon):
         so.pricelist_id = pricelist_VEF
         so.action_update_prices()
 
+        # Asserting using a fixed value to make sure the conversion is correctly applied
+        # with a value other than 1.0 for the conversion rate between USD and VEF.
+        self.assertEqual(
+            so.amount_total,
+            5000.0,  # 1000 * 5.0 (conversion rate between USD and VEF)
+        )
+
         self.assertAlmostEqual(
             so.amount_total,
             currency_USD._convert(
                 event_ticket.price, currency_VEF, self.env.user.company_id, so.date_order
+            ),
+            delta=1,
+        )
+
+        so.action_confirm()
+        self.assertAlmostEqual(
+            event.sale_price_subtotal,
+            currency_VEF._convert(
+                so.amount_total, currency_USD, self.env.user.company_id, so.date_order
             ),
             delta=1,
         )
