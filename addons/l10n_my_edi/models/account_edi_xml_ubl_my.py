@@ -436,6 +436,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         amount_paid = vals[f'total_paid_amount{currency_suffix}']
         if amount_paid:
+            myinvois_document = vals["myinvois_document"]
+            if myinvois_document._is_consolidated_invoice():
+                amount_paid = 0
             # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
             amount_paid = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else amount_paid
             document_node['cac:PrepaidPayment'] = {
