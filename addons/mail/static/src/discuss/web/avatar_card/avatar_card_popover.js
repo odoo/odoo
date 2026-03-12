@@ -70,6 +70,9 @@ export class AvatarCardPopover extends Component {
         if (this.props.model === "res.users") {
             return this.store["res.users"].get(this.props.id);
         }
+        if (this.props.model === "res.partner") {
+            return this.partner?.main_user_id;
+        }
         return undefined;
     }
 

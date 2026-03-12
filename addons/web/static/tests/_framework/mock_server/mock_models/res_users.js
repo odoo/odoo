@@ -20,6 +20,7 @@ export class ResUsers extends ServerModel {
             login: "public",
             partner_id: serverState.publicPartnerId,
             password: "public",
+            share: true,
         },
         {
             id: serverState.odoobotUid,

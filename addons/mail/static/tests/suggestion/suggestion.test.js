@@ -265,7 +265,7 @@ test("[text composer] Do not fetch if search more specific and fetch had no resu
     await openFormView("res.partner", serverState.partnerId);
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
+    await contains(".o-mail-Composer-suggestion", { count: 2 }); // Mitchell Admin, Hermit
     await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))");
     await expect.waitForSteps(["get_mention_suggestions"]);
     await insertText(".o-mail-Composer-input", "x");
@@ -293,7 +293,7 @@ test("Do not fetch if search more specific and fetch had no result", async () =>
     };
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await htmlInsertText(editor, "@");
-    await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
+    await contains(".o-mail-Composer-suggestion", { count: 2 }); // Mitchell Admin, Hermit
     await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))");
     await expect.waitForSteps(["get_mention_suggestions"]);
     await htmlInsertText(editor, "x");
@@ -889,7 +889,7 @@ test("[text composer] Current user is last suggested partner", async () => {
     await openFormView("res.partner", serverState.partnerId);
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", { count: 5 });
+    await contains(".o-mail-Composer-suggestion", { count: 4 }); // Mitchell Admin, Hermit, Person A, Person B
     await contains(".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))", {
         before: [".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))"],
     });
@@ -926,7 +926,7 @@ test("Current user is last suggested partner", async () => {
     };
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await htmlInsertText(editor, "@");
-    await contains(".o-mail-Composer-suggestion", { count: 5 });
+    await contains(".o-mail-Composer-suggestion", { count: 4 }); // Mitchell Admin, Hermit, Person A, Person B
     await contains(".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))", {
         before: [".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))"],
     });

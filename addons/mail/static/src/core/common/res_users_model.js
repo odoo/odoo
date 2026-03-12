@@ -2,6 +2,8 @@ import { createElementWithContent } from "@web/core/utils/html";
 import { fields, Record } from "@mail/model/export";
 import { getOuterHtml } from "@mail/utils/common/html";
 
+import { imageUrl } from "@web/core/utils/urls";
+
 export class ResUsers extends Record {
     static _name = "res.users";
     static _inherits = { "res.partner": "partner_id" };
@@ -20,6 +22,13 @@ export class ResUsers extends Record {
     share;
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = fields.Html(undefined);
+
+    get avatarUrl() {
+        if (this.partner_id) {
+            return this.partner_id.avatarUrl;
+        }
+        return imageUrl("res.users", this.id, "avatar_128", { unique: this.write_date });
+    }
 
     /**
      * Get the signature with its typical layout when inserted in html

@@ -676,8 +676,8 @@ test("Mentions in composer should still work when using pager", async () => {
     await click("button:text('Log note')");
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
-    // all records in DB: Mitchell Admin | Hermit | Public user except OdooBot
-    await contains(".o-mail-Composer-suggestion", { count: 3 });
+    // all active records in DB with a name: Mitchell Admin | Hermit
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
 });
 
 test("form views in dialogs do not have chatter", async () => {

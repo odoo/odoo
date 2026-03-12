@@ -6,7 +6,4 @@ declare module "models" {
         livechatLookingForHelpCategory: DiscussAppCategory;
         livechats: DiscussChannel[];
     }
-    export interface DiscussAppCategory {
-        livechat_channel_id: LivechatChannel;
-    }
 }

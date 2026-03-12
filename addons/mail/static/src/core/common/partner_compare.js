@@ -11,7 +11,7 @@ export const partnerCompareRegistry = registry.category("mail.partner_compare");
 
 partnerCompareRegistry.add(
     "mail.archived-last-except-odoobot",
-    (p1, p2) => {
+    function archivedLastExceptOdoobot(p1, p2) {
         const p1active = p1.active || p1.eq(p1.store.odoobot);
         const p2active = p2.active || p2.eq(p2.store.odoobot);
         if (!p1active && p2active) {
@@ -26,7 +26,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.self-last",
-    (p1, p2, { store }) => {
+    function selfLast(p1, p2, { store }) {
         const isSelf1 = p1.eq(store.self);
         const isSelf2 = p2.eq(store.self);
         if (isSelf1 && !isSelf2) {
@@ -41,7 +41,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.internal-users",
-    (p1, p2) => {
+    function internalUsers(p1, p2) {
         const isAInternalUser = p1.main_user_id?.share === false;
         const isBInternalUser = p2.main_user_id?.share === false;
         if (isAInternalUser && !isBInternalUser) {
@@ -56,7 +56,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.followers",
-    (p1, p2, { thread }) => {
+    function followers(p1, p2, { thread }) {
         if (thread) {
             const followerList = [...thread.followers];
             if (thread.selfFollower) {
@@ -77,7 +77,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.name",
-    (p1, p2, { searchTerm }) => {
+    function name(p1, p2, { searchTerm }) {
         const cleanedName1 = cleanTerm(p1.name);
         const cleanedName2 = cleanTerm(p2.name);
         if (cleanedName1.startsWith(searchTerm) && !cleanedName2.startsWith(searchTerm)) {
@@ -98,7 +98,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.email",
-    (p1, p2, { searchTerm }) => {
+    function email(p1, p2, { searchTerm }) {
         const cleanedEmail1 = cleanTerm(p1.email);
         const cleanedEmail2 = cleanTerm(p2.email);
         if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail1.startsWith(searchTerm)) {

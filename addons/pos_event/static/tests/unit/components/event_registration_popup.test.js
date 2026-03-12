@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { EventRegistrationPopup } from "@pos_event/app/components/popup/event_registration_popup/event_registration_popup";
 import { mountPosDialog, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
@@ -47,7 +48,7 @@ test("confirm payload", async () => {
 
 test("autofill first ticket with customer data", async () => {
     const store = await setupPosEnv();
-    const partner = store.models["res.partner"].get(18);
+    const partner = store.models["res.partner"].get(serverState.partnerId);
     partner.email = "john@example.com";
     partner.phone = "+1234567890";
     partner.parent_name = "Don";
@@ -69,7 +70,7 @@ test("autofill first ticket with customer data", async () => {
     const [first, second] = comp.state.byRegistration.map((r) => r.questions);
 
     expect(Object.values(first)).toEqual([
-        "Public user",
+        "Mitchell Admin",
         "john@example.com",
         "+1234567890",
         "",

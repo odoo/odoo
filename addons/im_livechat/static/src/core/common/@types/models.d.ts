@@ -41,6 +41,7 @@ declare module "models" {
         livechat_looking_for_help_since_dt: import("luxon").DateTime;
         livechat_status: "in_progress"|"need_help"|undefined;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
+        storeAsPinnedLivechats: Store;
         unpinOnThreadSwitch: boolean;
     }
     export interface LivechatChannel {

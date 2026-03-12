@@ -23,7 +23,6 @@ declare module "models" {
     export interface Store {
         channels: ReturnType<Store['makeCachedFetchData']>;
         fetchSsearchConversationsSequential: () => Promise<any>;
-        has_unpinned_channels: boolean;
         searchConversations: (searchValue: string) => Promise<void>;
     }
 }

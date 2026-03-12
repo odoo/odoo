@@ -8,10 +8,11 @@ declare module "models" {
     export interface Store {
         goToOldestUnreadLivechatThread: () => boolean;
         has_access_livechat: boolean;
-        show_livechat_category: boolean;
         livechatChannels: ReturnType<Store['makeCachedFetchData']>;
         livechatSelfExpertises: ReturnType<Store['makeCachedFetchData']>;
         livechatStatusButtons: Readonly<object[]>;
+        pinnedLivechats: DiscussChannel[];
+        show_livechat_category: boolean;
     }
     export interface Thread {
         hasFetchedLivechatSessionData: boolean;

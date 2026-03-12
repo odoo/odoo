@@ -37,7 +37,7 @@ export class ResPartner extends ServerModel {
         },
         {
             id: serverState.publicPartnerId,
-            active: true,
+            active: false,
             is_public: true,
             name: serverState.publicPartnerName,
         },
