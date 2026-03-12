@@ -252,7 +252,7 @@ class ProductProduct(models.Model):
     def _with_valuation_context(self):
         self_with_context = self
         valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
-        self_with_context = self.with_context(location=valued_locations.ids)
+        self_with_context = self.with_context(location=valued_locations.ids, strict=True)
         # In FIFO, the stack in on stock.move and their value is already computed base on the owner
         if self.cost_method != 'fifo':
             self_with_context = self_with_context.with_context(
