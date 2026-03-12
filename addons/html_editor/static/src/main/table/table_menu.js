@@ -71,6 +71,16 @@ export class TableMenu extends Component {
         onWillUpdateProps((newProps) => {
             this.updatePosition(newProps);
         });
+        if (this.props.document.defaultView.frameElement) {
+            useExternalListener(this.props.document, "scroll", () => {
+                this.updatePosition(this.props);
+            });
+            useExternalListener(this.props.document, "pointerdown", (ev) => {
+                if (!this.overlayEl.contains(ev.target)) {
+                    this.props.close();
+                }
+            });
+        }
     }
 
     get hasCustomTableSize() {
@@ -120,22 +130,35 @@ export class TableMenu extends Component {
         if (!this.overlayEl || !target) {
             return;
         }
+        let frameRect = { top: 0, left: 0 };
+        let frameElement;
+        try {
+            frameElement = this.props.document.defaultView.frameElement;
+        } catch {
+            // We don't access the frameElement if we don't have access to it.
+            // (i.e. iframe origin or sandbox restriction)
+        }
+        if (frameElement) {
+            frameRect = frameElement.getBoundingClientRect();
+        }
         const targetRect = target.getBoundingClientRect();
         const container = this.overlayEl.parentElement;
         const containerRect = container.getBoundingClientRect();
+        const top = frameRect.top + targetRect.top - containerRect.top;
+        const left = frameRect.left + targetRect.left - containerRect.left;
         if (type === "column") {
             Object.assign(this.overlayEl.style, {
-                top: `${targetRect.top - containerRect.top - this.overlayEl.offsetHeight}px`,
-                left: `${targetRect.left - containerRect.left}px`,
+                top: `${top - this.overlayEl.offsetHeight}px`,
+                left: `${left}px`,
                 width: `${targetRect.width}px`,
             });
         } else {
             const isLTR = direction === "ltr";
             const inlineStartOffset = isLTR
-                ? targetRect.left - containerRect.left
-                : containerRect.right - targetRect.right;
+                ? left
+                : containerRect.right - (frameRect.left + targetRect.right);
             Object.assign(this.overlayEl.style, {
-                top: `${targetRect.top - containerRect.top}px`,
+                top: `${top}px`,
                 insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
                 height: `${targetRect.height}px`,
             });
