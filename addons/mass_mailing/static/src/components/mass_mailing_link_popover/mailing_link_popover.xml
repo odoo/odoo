@@ -10,7 +10,7 @@
                     <span t-att-title="state.noTracking.description"><t t-out="state.noTracking.label"/></span>
                     <CheckBox
                         value="state.noTracking.isChecked"
-                        onChange="toggleDisableLinkTracking.bind(this)"/>
+                        onChange.bind="toggleDisableLinkTracking"/>
                 </div>
             </t>
         </xpath>

@@ -1,4 +1,4 @@
-import lxml.html
+from lxml import html
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests import tagged
@@ -7,12 +7,14 @@ from odoo.tests import tagged
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRenderMixin(MassMailCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.env['mailing.mailing'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailRenderMixin, cls).setUpClass()
+
+        cls.mailing_1 = cls.env['mailing.mailing'].create({
             'subject': 'First Mailing',
         })
-        self.env['mailing.mailing'].create({
+        cls.env['mailing.mailing'].create({
             'subject': 'Second Mailing',
         })
 
@@ -31,33 +33,30 @@ class TestMailRenderMixin(MassMailCommon):
             </div>
         """
         link_tracker_vals = {
-            'mass_mailing_id': 1,
-            'utm_reference': 'mailing.mailing,1',
-            'source_id': 2,
-            'medium_id': 4,
+            'mass_mailing_id': self.mailing_1.id,
+            'utm_reference': f'mailing.mailing,{self.mailing_1.id}',
+            'source_id': self.env.ref('utm.utm_source_mailing').id,
+            'medium_id': self.env.ref('utm.utm_medium_email').id,
         }
 
         # Execute
-        result_html_tracked = self.env["mailing.mailing"]._shorten_links(html_links_tracked, link_tracker_vals)
-        result_html_untracked = self.env["mailing.mailing"]._shorten_links(html_links_not_tracked, link_tracker_vals)
+        result_html_tracked = self.env["mail.render.mixin"]._shorten_links(html_links_tracked, link_tracker_vals)
+        result_html_untracked = self.env["mail.render.mixin"]._shorten_links(html_links_not_tracked, link_tracker_vals)
 
-        root_tracked = lxml.html.fromstring(result_html_tracked)
-        root_untracked = lxml.html.fromstring(result_html_untracked)
+        root_tracked = html.fromstring(result_html_tracked)
+        root_untracked = html.fromstring(result_html_untracked)
         tracked_links = root_tracked.xpath("//a")
         untracked_links = root_untracked.xpath("//a")
 
         # Assert
-        self._assert_all_tracked(tracked_links)
-        self._assert_all_untracked(untracked_links)
+        self._assert_all_link_tracking(tracked_links, untracked_links)
 
-    def _assert_all_tracked(self, links):
-        for link in links:
+    def _assert_all_link_tracking(self, tracked_links, untracked_links):
+        untracked_link_1_href = untracked_links[0].get("href")
+        untracked_link_2_href = untracked_links[1].get("href")
+        self.assertNotIn('/r/', untracked_link_1_href)
+        self.assertNotIn('/r/', untracked_link_2_href)
+        self.assertEqual('https://example.com/page1', untracked_link_1_href)
+        self.assertEqual('https://example.com/page2', untracked_link_2_href)
+        for link in tracked_links:
             self.assertIn('/r/', link.get("href"))
-
-    def _assert_all_untracked(self, links):
-        link_1_href = links[0].get("href")
-        link_2_href = links[1].get("href")
-        self.assertNotIn('/r/', link_1_href)
-        self.assertNotIn('/r/', link_2_href)
-        self.assertEqual('https://example.com/page1', link_1_href)
-        self.assertEqual('https://example.com/page2', link_2_href)

@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
  *
  * @constant {string[]}
  */
-export const NON_TRACKABLE_URLS = ["/unsubscribe_from_list", "/view", "/cards"];
+const NON_TRACKABLE_URLS = ["/unsubscribe_from_list", "/view", "/cards"];
 
 export class MassMailingLinkPopover extends LinkPopover {
     static template = "mass_mailing.MailingLinkPopover";
@@ -16,16 +16,16 @@ export class MassMailingLinkPopover extends LinkPopover {
     setup() {
         super.setup();
         this.linkElement = this.props.linkElement;
-        this.noTrackingStatus = this.linkElement.dataset.noTracking || "0";
+        this.noTrackingStatus = this.linkElement.dataset.noTracking || false;
         this.state.noTracking = {
             label: "Disable Link Tracking",
             description: _t("Send the orignal url instead of wraping it into a tracking url"),
-            isChecked: this.noTrackingStatus == "1",
+            isChecked: this.noTrackingStatus == true,
         };
     }
 
     toggleDisableLinkTracking() {
-        this.noTrackingStatus = this.noTrackingStatus == "1" ? "0" : "1";
+        this.noTrackingStatus = this.noTrackingStatus == true ? false : true;
         this.state.noTracking.isChecked = !this.state.noTracking.isChecked;
     }
 
@@ -47,7 +47,7 @@ export class MassMailingLinkPopover extends LinkPopover {
             this.state.linkTarget,
             this.state.attachmentId,
             relValue,
-            this.noTrackingStatus
+            this.noTrackingStatus ? "1" : "0"
         );
     }
 }

@@ -18,9 +18,9 @@ export class MassMailingLinkPlugin extends LinkPlugin {
     getProps(originalArgs) {
         const { linkElement, applyCallback } = originalArgs;
         const applyCallbackExtended = (...args) => {
-            const [url, label, classes, linkTarget, attachmentId, relValue, notrackingVal] = args;
+            const [url, label, classes, linkTarget, attachmentId, relValue, noTrackingVal] = args;
             applyCallback(url, label, classes, linkTarget, attachmentId, relValue);
-            linkElement.setAttribute("data-no-tracking", notrackingVal);
+            linkElement.setAttribute("data-no-tracking", noTrackingVal);
         };
         return super.getProps({
             ...originalArgs,
