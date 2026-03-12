@@ -5,11 +5,21 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//span[@name='address_name']" position="before">
+                <field name="l10n_ph_entity_type" string="Entity type" invisible="'PH' not in fiscal_country_codes" required="'PH' in fiscal_country_codes"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning"
+                        role="alert"
+                        invisible="l10n_ph_entity_type != 'individual' or (first_name and middle_name and last_name) or 'PH' not in fiscal_country_codes">
+                    First name, middle name, or last name is missing for individual entity. Accounting Reports may be affected.
+                </div>
+            </xpath>
             <xpath expr="//div[@id='vat_div']" position="after">
                 <field name="branch_code" invisible="'PH' not in fiscal_country_codes"/>
-                <field name="first_name" invisible="'PH' not in fiscal_country_codes"/>
-                <field name="middle_name" invisible="'PH' not in fiscal_country_codes"/>
-                <field name="last_name" invisible="'PH' not in fiscal_country_codes"/>
+                <field name="first_name" invisible="'PH' not in fiscal_country_codes or l10n_ph_entity_type == 'corporation'"/>
+                <field name="middle_name" invisible="'PH' not in fiscal_country_codes or l10n_ph_entity_type == 'corporation'"/>
+                <field name="last_name" invisible="'PH' not in fiscal_country_codes or l10n_ph_entity_type == 'corporation'"/>
             </xpath>
         </field>
     </record>
