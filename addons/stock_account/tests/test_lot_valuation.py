@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest import skip
+
+from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
-from odoo import Command
+from odoo import Command, fields
 
 
 @skip('Temporary to fast merge new valuation')
@@ -321,6 +324,51 @@ class TestLotValuation(TestStockValuationCommon):
         layers = lot4.stock_valuation_layer_ids
         self.assertEqual(len(layers), 1)
         self.assertEqual(layers.unit_cost, 7)
+
+    def test_lot_qty_in_nested_internal_location(self):
+        """Lot/product valuation should include nested valued internal locations."""
+        shelf1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'company_id': self.company.id,
+        })
+
+        self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1], location_dest_id=shelf1.id)
+        self._make_out_move(self.product, 4, lot_ids=[self.lot1], location_id=shelf1.id)
+
+        self.assertEqual(self.product._with_valuation_context().qty_available, 6)
+        self.assertEqual(self.product.total_value, 30)
+        self.assertEqual(self.lot1.product_qty, 6)
+        self.assertEqual(self.lot1.total_value, 30)
+
+    def test_lot_qty_at_date_in_nested_internal_location(self):
+        """Historical lot/product valuation should keep nested internal locations."""
+        shelf1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+            'company_id': self.company.id,
+        })
+        date_in = fields.Datetime.now() - timedelta(days=2)
+        date_out = fields.Datetime.now() - timedelta(days=1)
+        after_in = fields.Datetime.to_string(date_in + timedelta(seconds=1))
+        after_out = fields.Datetime.to_string(date_out + timedelta(seconds=1))
+
+        with freeze_time(date_in):
+            self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1], location_dest_id=shelf1.id)
+        with freeze_time(date_out):
+            self._make_out_move(self.product, 4, lot_ids=[self.lot1], location_id=shelf1.id)
+
+        self.assertEqual(self.product._with_valuation_context().with_context(to_date=after_in).qty_available, 10)
+        self.assertEqual(self.product.with_context(to_date=after_in).total_value, 50)
+        self.assertEqual(self.lot1.with_context(to_date=after_in).product_qty, 10)
+        self.assertEqual(self.lot1.with_context(to_date=after_in).total_value, 50)
+
+        self.assertEqual(self.product._with_valuation_context().with_context(to_date=after_out).qty_available, 6)
+        self.assertEqual(self.product.with_context(to_date=after_out).total_value, 30)
+        self.assertEqual(self.lot1.with_context(to_date=after_out).product_qty, 6)
+        self.assertEqual(self.lot1.with_context(to_date=after_out).total_value, 30)
 
     def test_change_standard_price(self):
         """ Changing product's standard price will reevaluate all lots """
