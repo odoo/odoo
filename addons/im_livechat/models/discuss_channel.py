@@ -175,8 +175,10 @@ class DiscussChannel(models.Model):
             :1
         ].script_step_id.chatbot_script_id.operator_partner_id
         last_msg_from_chatbot = False
+        # sudo - mail.message: visitors can access messages on chats they have access to
+        messages = self.sudo().chatbot_message_ids.mail_message_id or self.message_ids
         # sudo - mail.message: getting empty messages to exclude them is allowed.
-        for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
+        for message in (messages - messages.sudo()._filter_empty()).sorted("id"):
             if message.author_id == chatbot_op and not last_msg_from_chatbot:
                 parts.append(Markup("<br/>"))
             if not tools.is_html_empty(message.body):
