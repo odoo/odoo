@@ -5,3 +5,4 @@ from . import website
 from . import website_blog
 from . import website_snippet_filter
 from . import res_partner
+from . import website_visitor

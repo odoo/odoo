@@ -250,21 +250,23 @@ class WebsiteSnippetFilter(models.Model):
                 ._read_group(
                     [
                         ("visitor_id", "=", visitor.id),
-                        ("product_id", "!=", False),
-                        ("product_id.website_published", "=", True),
-                        ("product_id", "not in", excluded_products),
+                        ("res_model", "=", "product.product"),
+                        ("res_id", "!=", False),
+                        ("res_id", "not in", excluded_products),
                     ],
-                    ["product_id"],
+                    ["res_id"],
                     limit=limit,
                     order="visit_datetime:max DESC, id:max DESC",
                 )
             )
+            products = self.env["product.product"].browse(
+                [data[0] for data in tracked_products]
+            ).filtered(lambda p: p.website_published)
+
             if self.env.context.get("hide_variants"):
-                product_ids = [
-                    product.product_tmpl_id.product_variant_id.id for [product] in tracked_products
-                ]
+                product_ids = products.mapped("product_tmpl_id.product_variant_id.id")
             else:
-                product_ids = [product.id for [product] in tracked_products]
+                product_ids = products.ids
             if product_ids:
                 domain = Domain(domain) & Domain("id", "in", product_ids)
                 filtered_ids = set(self.env["product.product"]._search(domain, limit=limit))

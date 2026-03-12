@@ -23,6 +23,8 @@ class WebsiteTrack(models.Model):
     page_id = fields.Many2one('website.page', index=True, ondelete='cascade', readonly=True)
     url = fields.Text('Url', index=True)
     visit_datetime = fields.Datetime('Visit Date', default=fields.Datetime.now, required=True, readonly=True)
+    res_model = fields.Char(string="Model Name")
+    res_id = fields.Many2oneReference(model_field='res_model', string="Name")
 
 
 class WebsiteVisitor(models.Model):
@@ -119,23 +121,77 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
-        results = self.env['website.track']._read_group(
-            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id'], ['__count'])
-        mapped_data = {}
-        for visitor, page, count in results:
-            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            visitor_info['visitor_page_count'] += count
-            visitor_info['page_count'] += 1
-            if page:
-                visitor_info['page_ids'].add(page.id)
-            mapped_data[visitor.id] = visitor_info
+        self._compute_visitor_statistics(
+            rel_field='page_ids',
+            track_field='page_id',
+            count_field='visitor_page_count',
+            unique_count_field='page_count',
+            group_by_track=True,
+            extra_domain=[
+                ('url', '!=', False),
+            ]
+        )
 
+    def _compute_visitor_statistics(self, rel_field, count_field, track_field='res_id', rel_model=None, unique_count_field=None, extra_domain=None, group_by_track=False):
+        """
+        Compute visitor statistics from `website.track`.
+
+        Handles two modes:
+        - Simple aggregation (products/blogs): uses array_agg
+        - Grouped aggregation (pages): groups by track_field
+
+        :param rel_field: M2M field to store related record IDs
+        :param track_field: Field on `website.track` (e.g. 'page_id')
+        :param count_field: Field to store total visit count
+        :param rel_model: Optional filter on res_model
+        :param unique_count_field: Field to store unique record count
+        :param extra_domain: Additional domain filters
+        :param group_by_track: Enable grouping (required for pages)
+        """
+        rel_field_def = self._fields.get(rel_field)
+        if not rel_field_def or rel_field_def.type != 'many2many':
+            raise ValueError(f"Field {rel_field} must be a many2many field")
+
+        # Build base domain
+        domain = [('visitor_id', 'in', self.ids)]
+        if rel_model:
+            domain.append(('res_model', '=', rel_model))
+        if extra_domain:
+            domain += extra_domain
+
+        Track = self.env['website.track']
+        mapped_data = {}
+        # CASE 1: Group by track_field to get accurate visit counts per page.
+        if group_by_track:
+            results = Track._read_group(
+                domain, ['visitor_id', track_field], ['__count']
+            )
+            for visitor, track_record, count in results:
+                stats = mapped_data.setdefault(visitor.id, {'ids': set(), 'count': 0})
+                stats['count'] += count
+                if track_record:
+                    stats['ids'].add(track_record.id)
+        # CASE 2: Simple aggregation using array_agg when grouping is not
+        #         needed (e.g. products/blogs).
+        else:
+            results = Track._read_group(
+                domain, ['visitor_id'], [f'{track_field}:array_agg', '__count']
+            )
+            mapped_data = {
+                visitor.id: {
+                    'ids': ids or [],
+                    'count': count or 0,
+                }
+                for visitor, ids, count in results
+            }
+
+        # Assign computed values
         for visitor in self:
-            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            # sudo - website.visitor: access to page_ids is restricted to group_website_designer
-            visitor.sudo().page_ids = [(6, 0, visitor_info['page_ids'])]
-            visitor.visitor_page_count = visitor_info['visitor_page_count']
-            visitor.page_count = visitor_info['page_count']
+            stats = mapped_data.get(visitor.id, {'ids': [], 'count': 0})
+            visitor[rel_field] = [(6, 0, stats['ids'])]
+            visitor[count_field] = stats['count']
+            if unique_count_field:
+                visitor[unique_count_field] = len(stats['ids'])
 
     def _search_page_ids(self, operator, value):
         return [('website_track_ids.page_id.name', operator, value)]
@@ -270,6 +326,32 @@ class WebsiteVisitor(models.Model):
                 cols.append(SQL(", %s", SQL.identifier(fname)))
                 vals.append(SQL(", %s", val))
         return SQL().join(cols), SQL().join(vals)
+
+    def visitor_view_action_button(self):
+        """Return an action to display tracking records for this visitor.
+
+        Reads model name and title from context, and opens a list/graph view
+        of `website.track` filtered by the current visitor and model.
+
+        :return: action dict to open tracking views
+        """
+        self.ensure_one()
+        context = self.env.context
+        if not context.get('model_name'):
+            raise UserError(_("Model information is required to view visitor tracking details."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': context.get('title', _('Views History')),
+            'res_model': 'website.track',
+            'view_mode': 'list,graph',
+            'views': [
+                (self.env.ref("website.website_visitor_track_view_base_list").id, 'list'),
+            ],
+            'domain': [
+                ('visitor_id', '=', self.id),
+                ('res_model', '=', context.get('model_name')),
+            ],
+        }
 
     def _merge_visitor(self, target):
         """ Merge an anonymous visitor data to a partner visitor then unlink

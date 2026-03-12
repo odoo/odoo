@@ -20,6 +20,20 @@ class WebsiteVisitor(models.Model):
         search="_search_event_registered_ids",
         groups="event.group_event_registration_desk")
 
+    visitor_event_count = fields.Integer(
+        string="Event Views",
+        compute='_compute_event_statistics',
+    )
+    event_ids = fields.Many2many(
+        comodel_name='event.event',
+        string="Events",
+        compute='_compute_event_statistics',
+    )
+
+    @api.depends("website_track_ids")
+    def _compute_event_statistics(self):
+        self._compute_visitor_statistics(rel_field='event_ids', rel_model='event.event', count_field='visitor_event_count')
+
     @api.depends('partner_id', 'event_registration_ids.name')
     def _compute_display_name(self):
         """ If there is an event registration for an anonymous visitor, use that

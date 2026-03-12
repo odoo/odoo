@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
+
+    <!-- Website visitor track views base -->
+    <record id="website_visitor_track_view_base_list" model="ir.ui.view">
+        <field name="name">website.track.view.base.list</field>
+        <field name="model">website.track</field>
+        <field name="arch" type="xml">
+            <list string="Visitor Views History" create="0" sample="1" delete="0">
+                <field name="visitor_id"/>
+                <field name="res_id"/>
+                <field name="visit_datetime"/>
+            </list>
+        </field>
+    </record>
+
     <!--page history-->
     <record id="website_visitor_page_view_tree" model="ir.ui.view">
         <field name="name">website.track.view.list</field>
         <field name="model">website.track</field>
         <field name="arch" type="xml">
-            <list string="Visitor Page Views History" create="0">
+            <list string="Visitor Page Views History" create="0" delete="0">
                 <field name="visitor_id"/>
                 <field name="page_id"/>
+                <field name="res_id" optional="hide"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
             </list>
@@ -278,9 +293,10 @@
         <field name="name">website.track.view.list</field>
         <field name="model">website.track</field>
         <field name="arch" type="xml">
-            <list string="Visitor Views History" create="0" edit="0" sample="1">
+            <list string="Visitor Views History" create="0" edit="0" sample="1" delete="0">
                 <field name="visitor_id"/>
                 <field name="page_id"/>
+                <field name="res_id" optional="hide"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
             </list>
