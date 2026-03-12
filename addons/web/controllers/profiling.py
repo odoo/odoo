@@ -6,6 +6,7 @@ import json
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, Response, route, content_disposition
 
+SPEEDSCOPE_CDN = "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/"
 
 class Profiling(Controller):
 
@@ -31,7 +32,21 @@ class Profiling(Controller):
         if not profiles:
             raise request.not_found()
         params = kwargs or profiles._default_profile_params()
-        speedscope_result = profiles._generate_speedscope(profiles._parse_params(params))
+        parsed_params = profiles._parse_params(params)
+
+        # Memory profile: render the memory visualization template
+        if parsed_params.get('memory_profile') and action not in ('speedscope_download_json', 'speedscope_download_html'):
+            speedscope_result = profiles._generate_speedscope(parsed_params)
+            icp = request.env['ir.config_parameter']
+            memory_data = profiles._get_memory_data()
+            context = {
+                'speedscope_base64': base64.b64encode(speedscope_result).decode('utf-8'),
+                'memory_data': base64.b64encode(json.dumps(memory_data).encode()).decode(),
+                'cdn': icp.sudo().get_str('speedscope_cdn') or SPEEDSCOPE_CDN,
+            }
+            return request.render('web.view_memory', context)
+
+        speedscope_result = profiles._generate_speedscope(parsed_params)
         if action == 'speedscope_download_json':
             headers = [
                 ('Content-Type', 'application/json'),
@@ -44,7 +59,7 @@ class Profiling(Controller):
             'profiles': profiles,
             'speedscope_base64': base64.b64encode(speedscope_result).decode('utf-8'),
             'url_root': request.httprequest.url_root,
-            'cdn': icp.sudo().get_str('speedscope_cdn') or "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/"
+            'cdn': icp.sudo().get_str('speedscope_cdn') or SPEEDSCOPE_CDN
         }
         response = request.render('web.view_speedscope_index', context)
         if action == 'speedscope_download_html':
@@ -61,15 +76,6 @@ class Profiling(Controller):
         profiles = request.env['ir.profile'].browse(int(p) for p in profile_str.split(',')).exists()
         if not profiles:
             raise request.not_found()
-
-        if action == 'memory_open':
-            memory_profile = profiles._generate_memory_profile(profiles._parse_params(kwargs))
-            encoded_memory_profile = json.dumps(memory_profile).encode('utf_8')
-            context = {
-                'profile': profiles,
-                'memory_graph': base64.b64encode(encoded_memory_profile).decode('utf-8'),
-                }
-            return request.render('web.view_memory', context)
 
         context = {
             'default_params': profiles._default_profile_params(),
