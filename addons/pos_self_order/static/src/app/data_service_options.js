@@ -20,6 +20,10 @@ patch(DataServiceOptions.prototype, {
                 key: "id",
                 condition: (record) => false,
             },
+            "res.partner": {
+                key: "id",
+                condition: (record) => false,
+            },
         };
     },
 });
