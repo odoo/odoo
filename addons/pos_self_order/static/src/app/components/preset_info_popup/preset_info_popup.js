@@ -10,16 +10,20 @@ export class PresetInfoPopup extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        const partner = this.selfOrder.currentOrder.partner_id;
+        const companyStateId = this.selfOrder.config.company_id.country_id.state_ids[0]?.id;
+        const companyCountryId = this.selfOrder.config.company_id.country_id.id;
+
         this.state = useState({
             selectedSlot: null,
-            selectedPartnerId: null,
-            name: "",
-            phone: "",
-            street: "",
-            countryId: this.selfOrder.config.company_id.country_id.id,
-            stateId: this.selfOrder.config.company_id.country_id.state_ids[0]?.id || null,
-            city: "",
-            zip: "",
+            selectedPartnerId: partner?.id || null,
+            name: partner?.name || "",
+            phone: partner?.phone || "",
+            street: partner?.street || "",
+            countryId: partner?.country_id?.id || companyCountryId || null,
+            stateId: partner?.state_id?.id || companyStateId || null,
+            city: partner?.city || "",
+            zip: partner?.zip || "",
         });
 
         onWillStart(async () => {
@@ -40,7 +44,27 @@ export class PresetInfoPopup extends Component {
                 state_id: this.state.stateId,
                 zip: this.state.zip,
             });
-            const partner = this.selfOrder.models.loadData(result);
+
+            const partnerId = result?.["res.partner"]?.[0]?.id;
+            if (!partnerId) {
+                return;
+            }
+
+            const partner = this.selfOrder.models.loadData({
+                "res.partner": [
+                    {
+                        id: partnerId,
+                        name: this.state.name,
+                        phone: this.state.phone,
+                        street: this.state.street,
+                        city: this.state.city,
+                        country_id: this.state.countryId,
+                        state_id: this.state.stateId,
+                        zip: this.state.zip,
+                    },
+                ],
+            });
+
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner["res.partner"][0].name}`;
             this.selfOrder.currentOrder.partner_id = partner["res.partner"][0];
         } else {
@@ -56,17 +80,10 @@ export class PresetInfoPopup extends Component {
         this.props.callback(true);
     }
 
-    selectExistingPartner(event) {
-        const partner = this.selfOrder.models["res.partner"].get(event.target.value);
-        this.state.name = partner?.name || "";
-        this.state.phone = partner?.phone || "";
-        this.state.street = partner?.street || "";
-        this.state.city = partner?.city || "";
-        this.state.countryId = partner?.country_id?.id || null;
-        this.state.stateId = partner?.state_id?.id || null;
-        this.state.zip = partner?.zip || "";
-    }
+    // TODO: remove in master
+    selectExistingPartner(event) {}
 
+    // TODO: remove in master
     get existingPartners() {
         return this.selfOrder.models["res.partner"].getAll();
     }
