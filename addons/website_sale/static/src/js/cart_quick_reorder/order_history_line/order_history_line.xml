@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_sale.OrderHistoryLine">
+        <div t-attf-class="o_wsale_quick_reorder_line d-flex flex-column flex-sm-row justify-content-between gap-3 {{this.props.line.is_combo ? 'align-items-start' :  ''}}">
+            <div t-attf-class="d-flex gap-2 {{this.props.line.is_combo ? 'align-items-start' : 'align-items-center'}}">
+                <div class="o_cart_product_image">
+                    <img
+                        t-att-src="(
+                            this.props.line.image_uri
+                            || `/web/image/product.product/${this.props.line.product_id}/image_128`
+                        )"
+                        class="img border rounded"
+                        t-att-alt="this.props.line.name_short"
+                    />
+                </div>
+                <div class="d-flex flex-column align-items-start justify-content-center flex-grow-1 h-100">
+                    <div>
+                        <h6
+                            t-out="this.props.line.name_short"
+                            t-attf-class="small {{this.props.line.is_combo ? 'mb-2' : 'mb-0'}}"
+                        />
+                        <ul t-if="this.props.line.is_combo" class="list-group">
+                            <t
+                                t-foreach="this.props.line.combo_item_lines"
+                                t-as="comboItemLine"
+                                t-key="comboItemLine.id"
+                            >
+                                <t t-call="website_sale.CartComboItemLine"/>
+                            </t>
+                        </ul>
+                    </div>
+                    <small
+                        t-if="this.props.line.has_multiple_uoms"
+                        t-out="this.props.line.product_uom_name"
+                        class="badge mt-1 bg-light"
+                    />
+                </div>
+            </div>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <small
+                    t-out="this.env.formatPrice(this.props.line.combination_info_variant.price * this.state.quantity)"
+                    class="o_wsale_quick_reorder_product_price"
+                    style="white-space: nowrap;"
+                />
+                <input
+                    type="text"
+                    class="o_wsale_quick_reorder_qty_input form-control text-center"
+                    t-att-value="this.parseInt(this.state.quantity)"
+                    t-on-input="(event) => this.updateQuantity(event.target.value)"
+                    t-on-keydown="(event) => event.key === 'Enter' and this.doReorder()"
+                    t-custom-ref="qtyInput"
+                />
+                <button
+                    type="button"
+                    title="Press 'Enter' to add to cart"
+                    class="o_wsale_quick_reorder_product_button btn btn-outline-primary"
+                    t-on-click="() => this.doReorder()"
+                    t-att-disabled="this.state.quantity &lt;= 0"
+                >
+                    <i class="fa fa-cart-plus"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>
