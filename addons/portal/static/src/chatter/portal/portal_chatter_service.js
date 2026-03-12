@@ -1,7 +1,6 @@
 import { PortalChatter } from "@portal/chatter/portal/portal_chatter";
 import { App } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
@@ -54,16 +53,15 @@ export class PortalChatterService {
             hash: chatterEl.getAttribute("data-hash"),
             pid: parseInt(chatterEl.getAttribute("data-pid")),
         });
-        const data = await rpc(
+        await this.store.fetchStoreData(
             "/portal/chatter_init",
             {
-                thread_model: props.resModel,
+                access_params: thread.rpcParams,
                 thread_id: props.resId,
-                ...thread.rpcParams,
+                thread_model: props.resModel,
             },
-            { silent: true }
+            { readonly: false }
         );
-        this.store.insert(data);
         odoo.portalChatterReady.resolve(true);
     }
 }
