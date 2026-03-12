@@ -5,8 +5,11 @@
 Some functions related to the os and os.path module
 """
 import os
+import platform
 import re
 import zipfile
+
+system_name = platform.system()
 
 
 WINDOWS_RESERVED = re.compile(r'''
@@ -71,6 +74,17 @@ def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ign
                     real_fpath = os.path.realpath(fpath)
                     if os.path.isfile(real_fpath) and os.path.commonpath([dir_root_path, real_fpath]) == dir_root_path:
                         zipf.write(real_fpath, fpath[len_prefix:])
+
+
+def memory_info(process):
+    """
+    :return: the relevant memory usage according to the OS in bytes.
+    """
+    pmem = process.memory_info()
+    # MacOSX allocates very large vms to all processes so we only monitor the rss usage.
+    if system_name == 'Darwin':
+        return pmem.rss
+    return pmem.vms
 
 
 if os.name != 'nt':
