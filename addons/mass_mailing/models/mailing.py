@@ -601,7 +601,7 @@ class MailingMailing(models.Model):
 
     def action_use_template(self):
         if mass_mailing_copy := self._create_mailing_from_template(self):
-            res_context = dict(**self.env.context, default_is_template=0, default_favorite=0)
+            res_context = {**self.env.context, 'default_is_template': 0, 'default_favorite': 0}
             return {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
@@ -613,9 +613,7 @@ class MailingMailing(models.Model):
 
     def _create_mailing_from_template(self, mass_mailing_template):
         mass_mailing_template.ensure_one()
-        if mass_mailing := mass_mailing_template.copy():
-            mass_mailing.favorite = False
-            mass_mailing.is_template = False
+        if mass_mailing := mass_mailing_template.copy(default={"favorite": False, "is_template": False}):
             return mass_mailing
         return False
 
@@ -778,77 +776,64 @@ class MailingMailing(models.Model):
             trace_domain &= Domain('mass_mailing_id', '=', self.id)
             return self.env['link.tracker.click'].search_fetch(domain=trace_domain, field_names=['id']).mapped('id')
 
-        def _update_context_for_filter(context, filter):
-            if filter == 'reply':
-                context.update({'search_default_filter_replied': False})
-                context["search_default_group_reply_date"] = True
+        def _get_context_for_filter():
+            if view_filter == 'reply':
+                return dict(search_default_filter_replied=False, search_default_group_reply_date=True)
             elif view_filter == 'bounce':
-                context.update({'search_default_filter_bounced': False})
+                return dict(search_default_filter_bounced=False)
             elif view_filter == 'clicked':
-                context["search_default_groupby_email"] = True
-                context["graph_mode"] = "pie"
-                context["stacked"] = False
+                return dict(search_default_groupby_email=True, stacked=False, graph_mode='pie')
             elif view_filter == 'open':
-                context.update({'search_default_filter_opened': False})
-                context["search_default_group_open_date"] = True
+                return dict(search_default_filter_opened=False, search_default_group_open_date=True)
             elif view_filter == 'delivered':
-                context.update({'search_default_filter_delivered': False})
+                return dict(search_default_filter_delivered=False)
             elif view_filter == 'sent':
-                context.update({'search_default_filter_sent': False})
+                return dict(search_default_filter_sent=False)
 
-            return context
+            return {}
 
-        model_name = self.env['ir.model']._get('mailing.trace').display_name
-        res_model = 'mailing.trace'
-        domain = None
-        view_mode = 'graph'
+        model_name = self.env['ir.model']._get('mailing.trace' if view_filter != 'clicked' else 'link.tracker.click').display_name
+        res_model = 'mailing.trace' if view_filter != 'clicked' else 'link.tracker.click'
+        view_mode = f'{"" if view_filter != "clicked" else "list,"}graph'
         helper_header = None
         helper_message = None
-        ctx = dict(self.env.context, create=False)
-        ctx["graph_mode"] = "line"
-        ctx["stacked"] = True
+        ctx = {
+            **self.env.context,
+            'create': False,
+            'graph_mode': 'line',
+            'stacked': True,
+            **_get_context_for_filter()
+        }
         if view_filter == 'reply':
             trace_ids = _fetch_trace_ids(Domain('trace_status', '=', 'reply'))
-            ctx = _update_context_for_filter(ctx, 'reply')
             helper_header = _("No %s replied to your mailing yet!", model_name)
             helper_message = _("To track how many replies this mailing gets, make sure "
                                "its reply-to address belongs to this database.")
         elif view_filter == 'bounce':
             trace_ids = _fetch_trace_ids(Domain('trace_status', '=', 'bounce'))
-            ctx = _update_context_for_filter(ctx, 'bounce')
             helper_header = _("No %s address bounced yet!", model_name)
             helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
                                "server issues, ...). Check each record to see what went wrong.")
         elif view_filter == 'clicked':
-            res_model = 'link.tracker.click'
-            model_name = self.env['ir.model']._get('link.tracker.click').display_name
             trace_ids = _fetch_trace_ids(Domain('links_click_ids', '!=', False))
-            link_tracker_ids = _fetch_link_tracker_ids(Domain('mailing_trace_id', 'in', trace_ids))
-            ctx = _update_context_for_filter(ctx, 'clicked')
-            domain = [('id', 'in', link_tracker_ids)]
-            view_mode = "list,graph"
+            trace_ids = _fetch_link_tracker_ids(Domain('mailing_trace_id', 'in', trace_ids))
             helper_header = _("No %s clicked your mailing yet!", model_name)
             helper_message = _(
                 "Come back once your mailing has been sent to track who clicked on the embedded links.")
         elif view_filter == 'open':
             trace_ids = _fetch_trace_ids(Domain('trace_status', 'in', ('open', 'reply')))
-            ctx = _update_context_for_filter(ctx, 'open')
             helper_header = _("No %s opened your mailing yet!", model_name)
             helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
             trace_ids = _fetch_trace_ids(Domain('trace_status', 'in', ('sent', 'open', 'reply')))
-            ctx = _update_context_for_filter(ctx, 'delivered')
             helper_header = _("No %s received your mailing yet!", model_name)
             helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
             trace_ids = _fetch_trace_ids(Domain('sent_datetime', '!=', False))
-            ctx = _update_context_for_filter(ctx, 'sent')
         else:
             trace_ids = []
 
-        if not domain:
-            domain = [('id', 'in', trace_ids)]
-
+        domain = [('id', 'in', trace_ids)]
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
@@ -860,7 +845,7 @@ class MailingMailing(models.Model):
         if helper_header and helper_message:
             action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
-            )
+            ),
         return action
 
     def action_import_mailing_contacts(self):
