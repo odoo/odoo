@@ -175,6 +175,7 @@ export class Builder extends Component {
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
                 cleanEmptyStructuralContainers: false,
                 isEditableRTL: false,
+                publicAttachments: true,
             },
             this.env.services
         );

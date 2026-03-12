@@ -47,6 +47,7 @@ export class LinkPopover extends Component {
         allowCustomStyle: { type: Boolean, optional: true },
         allowTargetBlank: { type: Boolean, optional: true },
         allowStripDomain: { type: Boolean, optional: true },
+        publicAttachments: { type: Boolean, optional: true },
         formatColor: { type: Function, optional: true },
     };
     static defaultProps = {
@@ -619,8 +620,8 @@ export class LinkPopover extends Component {
 
     async uploadFile() {
         const { upload, getURL } = this.uploadService;
-        const { resModel, resId } = this.props.recordInfo;
-        const [attachment] = await upload({ resModel, resId, accessToken: true });
+        const uploadParams = this.props.publicAttachments ? {} : { ...this.props.recordInfo };
+        const [attachment] = await upload({ ...uploadParams }, { accessToken: true });
         if (!attachment) {
             // No file selected or upload failed
             return;
