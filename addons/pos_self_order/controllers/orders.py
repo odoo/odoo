@@ -61,7 +61,6 @@ class PosSelfOrderController(http.Controller):
     def _generate_return_values(self, order, config_id):
         return {
             'pos.order': order.read(order._load_pos_data_fields(config_id.id), load=False),
-            'res.partner': order.partner_id.read(order.partner_id._load_pos_data_fields(config_id.id), load=False),
             'pos.order.line': order.lines.read(order._load_pos_data_fields(config_id.id), load=False),
             'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
             'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(order.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
@@ -78,7 +77,7 @@ class PosSelfOrderController(http.Controller):
 
         if existing_partner and existing_partner.exists():
             return {
-                'res.partner': existing_partner.read(existing_partner._load_pos_data_fields(pos_config.id), load=False),
+                'res.partner': existing_partner.read(['id'], load=False),
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -95,7 +94,7 @@ class PosSelfOrderController(http.Controller):
         })
 
         return {
-            'res.partner': partner_sudo.read(partner_sudo._load_pos_data_fields(pos_config.id), load=False),
+            'res.partner': partner_sudo.read(['id'], load=False),
         }
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
