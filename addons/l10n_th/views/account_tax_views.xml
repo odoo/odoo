@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_tree_inherit_l10n_th" model="ir.ui.view">
+            <field name="name">account.tax.list.inherit.l10n_th</field>
+            <field name="inherit_id" ref="account.view_tax_tree"/>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="l10n_th_income_tax_type" optional="hide" invisible="country_code != 'TH' or not is_withholding_tax_on_payment or type_tax_use != 'purchase'"/>
+                    <field name="l10n_th_income_tax_type_others" optional="hide" invisible="country_code != 'TH' or not is_withholding_tax_on_payment or type_tax_use != 'purchase' or l10n_th_income_tax_type != 'others'"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_tax_form_inherit_l10n_th" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.l10n_th</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="is_withholding_tax_on_payment" position="after">
+                    <field name="l10n_th_income_tax_type" invisible="not is_withholding_tax_on_payment or type_tax_use != 'purchase' or country_code != 'TH'" required="country_code == 'TH' and is_withholding_tax_on_payment and type_tax_use == 'purchase'"/>
+                    <field name="l10n_th_income_tax_type_others" invisible="not is_withholding_tax_on_payment or type_tax_use != 'purchase' or country_code != 'TH' or l10n_th_income_tax_type != 'others'" required="l10n_th_income_tax_type == 'others'" placeholder="e.g. Services"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

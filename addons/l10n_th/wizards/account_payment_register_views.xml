@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form_inherit_l10n_th" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit.l10n_th</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <group name="group2" position="inside">
+                <field name="l10n_th_wth_condition" invisible="not should_withhold_tax or country_code != 'TH'"/>
+            </group>
+        </field>
+    </record>
+</odoo>
