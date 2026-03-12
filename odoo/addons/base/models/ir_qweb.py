@@ -659,6 +659,7 @@ class IrQweb(models.AbstractModel):
         return (template_functions, def_name)
 
     def __compile(self, template):
+        assert isinstance(self, IrQweb)
         ref = None
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
