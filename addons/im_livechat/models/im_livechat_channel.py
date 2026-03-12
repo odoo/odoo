@@ -25,7 +25,7 @@ class Im_LivechatChannel(models.Model):
     _name = 'im_livechat.channel'
     _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
-    _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
+    _rating_satisfaction_days = 30  # include only last 30 days to compute satisfaction
 
     def _default_user_ids(self):
         return [(6, 0, [self.env.uid])]
@@ -69,7 +69,7 @@ class Im_LivechatChannel(models.Model):
         "Agents Connected", compute="_compute_available_operator_ids"
     )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
-    nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
+    nbr_channel = fields.Integer('Number of conversations in the past 30 days', compute='_compute_nbr_channel', store=False, readonly=True)
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Agents', default=_default_user_ids)
@@ -238,14 +238,17 @@ class Im_LivechatChannel(models.Model):
         for record in self:
             record.web_page = "%s/im_livechat/support/%i" % (record.get_base_url(), record.id) if record.id else False
 
-    @api.depends('channel_ids')
+    @api.depends("channel_ids.create_date")
     def _compute_nbr_channel(self):
-        data = self.env['discuss.channel']._read_group([
-            ('livechat_channel_id', 'in', self.ids),
-        ], ['livechat_channel_id'], ['__count'])
-        channel_count = {livechat_channel.id: count for livechat_channel, count in data}
+        count_by_channel = dict(
+            self.env["discuss.channel"]._read_group(
+                [("livechat_channel_id", "in", self.ids), ("create_date", ">", "today -29d")],
+                ["livechat_channel_id"],
+                ["__count"],
+            ),
+        )
         for record in self:
-            record.nbr_channel = channel_count.get(record.id, 0)
+            record.nbr_channel = count_by_channel.get(record, 0)
 
     # --------------------------
     # Action Methods
@@ -275,7 +278,10 @@ class Im_LivechatChannel(models.Model):
         )
         action["context"] = {
             "search_default_parent_res_name": self.name,
-            "search_default_fiter_session_rated": "1"
+            "search_default_filter_session_rating_happy": "1",
+            "search_default_filter_session_rating_neutral": "1",
+            "search_default_fiter_session_rating_unhappy": "1",
+            "search_default_filter_session_date": "custom_rated_on_last_30_days",
         }
         return action
 

@@ -49,18 +49,18 @@
                             <main class="pe-4 py-2 ps-4 col" t-att-class="{'o-livechat-ChannelKanban-highlighted': record.available_operator_ids.raw_value.length > 0}">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <field name="name" class="fs-4" style="word-wrap: break-word;"/>
-                                        <p class="fst-italic fs-5"><field name="nbr_channel"/> Sessions</p>
+                                        <field name="name" class="fw-bold fs-4" style="word-wrap: break-word;"/>
+                                        <p class="text-muted"><field name="ongoing_session_count"/> Ongoing Conversations</p>
                                     </div>
                                     <div class="pe-1">
-                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-primary">Leave</button>
-                                        <button t-else="" name="action_join" type="object" class="btn btn-secondary" groups="im_livechat.im_livechat_group_user">Join</button>
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-secondary shadow-sm"><i class="fa fa-sign-out o-me-1_5" role="img"/>Leave</button>
+                                        <button t-else="" name="action_join" type="object" class="btn btn-primary" groups="im_livechat.im_livechat_group_user"><i class="fa fa-sign-in o-me-1_5" role="img"/>Join</button>
                                     </div>
                                 </div>
                                 <footer class="pt-0">
                                     <field name="available_operator_ids" widget="many2many_avatar_user" readonly="True"/>
-                                    <a t-if="record.rating_count.raw_value > 0" name="action_view_rating" class="ms-auto fs-6" type="object" tabindex="10">
-                                        <i class="fa fa-smile-o text-success" title="Percentage of happy ratings" role="img" aria-label="Happy face"/> <field name="rating_percentage_satisfaction"/>%
+                                    <a t-if="record.rating_count.raw_value > 0" name="action_view_rating" class="ms-auto fs-6" type="object" tabindex="10" title="Percentage of positive ratings in the last 30 days">
+                                        <i class="fa fa-smile-o text-success" role="img" aria-label="Happy face"/> <field name="rating_percentage_satisfaction"/>%
                                     </a>
                                 </footer>
                             </main>
@@ -87,7 +87,7 @@
                                 invisible="chatbot_script_count == 0" groups="im_livechat.im_livechat_group_manager">
                                 <field string="Chatbots" name="chatbot_script_count" widget="statinfo"/>
                             </button>
-                            <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
+                            <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" title="Number of conversations and percentage of positive ratings in the last 30 days" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
                                 <div>
                                     <div class="o_stat_info flex-row-reverse align-items-baseline gap-1 me-1">
                                         <span class="o_stat_value"><field name="nbr_channel"/></span>

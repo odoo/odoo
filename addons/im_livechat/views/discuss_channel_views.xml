@@ -204,6 +204,7 @@
             <field name="view_mode">kanban,list,pivot,graph,form</field>
             <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
             <field name="context">{
+                'search_default_filter_session_date': 'custom_rated_on_last_30_days',
                 'search_default_livechat_channel_id': [active_id],
                 'default_livechat_channel_id': active_id,
             }</field>
