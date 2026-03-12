@@ -128,7 +128,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return any(
-            re.match(re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*', line.name)
+            re.match(re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*', line.name or '')
             for line in self.line_ids.filtered(lambda x: x.display_type == 'product')
         )
 
