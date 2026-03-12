@@ -57,8 +57,8 @@
                                             class="combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0 rounded-4 shadow-sm overflow-hidden border-2 text-start"
                                             t-att-class="{'border-primary': itemSelected, 'border-transparent': !itemSelected, 'opacity-50': isOutOfStock }">
                                         <div class="o_self_product_image w-25 w-sm-100 ratio ratio-1x1 flex-shrink-0 ms-2 ms-sm-0">
-                                            <img class="d-md-none  object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
-                                            <img class="d-none d-md-block object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="d-md-none  object-fit-cover rounded-4 pe-none" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="d-none d-md-block object-fit-cover pe-none" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                         </div>
                                         <span t-if="extraPrice" class="d-none d-md-block badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
                                         + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
