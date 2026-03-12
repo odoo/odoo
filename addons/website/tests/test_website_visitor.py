@@ -239,6 +239,38 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
             self.assertEqual(track_res.status_code, 200)
         return res
 
+    def test_visitor_statistics(self):
+        visitors = self.env['website.visitor'].create([
+            {'access_token': 'a' * 32},
+            {'access_token': 'b' * 32},
+        ])
+        self.env['website.track'].create([
+            {'visitor_id': visitors[0].id, 'page_id': self.tracked_page.id, 'url': self.tracked_page.url},
+            {'visitor_id': visitors[0].id, 'page_id': self.tracked_page.id, 'url': self.tracked_page.url},
+            {'visitor_id': visitors[0].id, 'page_id': self.tracked_page_2.id, 'url': self.tracked_page_2.url},
+            {'visitor_id': visitors[1].id, 'url': '/untracked-url'},
+        ])
+
+        statistics = visitors._get_visitor_statistics('page_id')
+        self.assertEqual(
+            sorted(statistics[visitors[0].id]['ids']),
+            sorted((self.tracked_page + self.tracked_page_2).ids),
+            "Each visited page is listed once",
+        )
+        self.assertEqual(statistics[visitors[0].id]['count'], 3, "Every visit is counted")
+        self.assertEqual(
+            statistics[visitors[1].id], {'ids': [], 'count': 0},
+            "A visitor without page view has no statistics",
+        )
+
+        statistics = visitors._get_visitor_statistics(
+            'page_id', record_domain=[('id', '=', self.tracked_page_2.id)],
+        )
+        self.assertEqual(
+            statistics[visitors[0].id]['ids'], self.tracked_page_2.ids,
+            "`record_domain` restricts the visited records",
+        )
+
     def test_tracking_interaction(self):
         existing_visitors = self.env['website.visitor'].search([])
         existing_tracks = self.env['website.track'].search([])

@@ -166,7 +166,9 @@ class BlogPost(models.Model):
         'website.cover_properties.mixin',
         'website.searchable.mixin',
         'website.structured_data.mixin',
+        'website.trackable.mixin',
     ]
+    _website_track_field = 'blog_post_id'
     _order = 'id DESC'
     _mail_post_access = 'read'
 

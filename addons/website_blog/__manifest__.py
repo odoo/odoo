@@ -21,6 +21,7 @@
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
         'views/snippets/s_dynamic_snippet_blog_posts_preview_data.xml',
+        'views/website_blog_visitor_views.xml',
         'views/website_pages_views.xml',
         'views/blog_post_add.xml',
         'security/website_blog_security.xml',

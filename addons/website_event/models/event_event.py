@@ -28,7 +28,9 @@ class EventEvent(models.Model):
         'website.searchable.mixin',
         'website.page_visibility_options.mixin',
         'website.structured_data.mixin',
+        'website.trackable.mixin',
     ]
+    _website_track_field = 'event_id'
 
     def _default_cover_properties(self):
         res = super()._default_cover_properties()

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models
@@ -136,6 +137,30 @@ class WebsiteVisitor(models.Model):
             visitor.sudo().page_ids = [(6, 0, visitor_info['page_ids'])]
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
+
+    def _get_visitor_statistics(self, track_field, record_domain=None):
+        """
+        Return the records visited by each visitor, along with their number of
+        visits, for one of the relations of `website.track`.
+
+        :param track_field: the `website.track` field holding the visited record.
+        :param record_domain: an optional domain on the visited records.
+        :return: a defaultdict {visitor id: {'ids': [visited record ids],
+                                             'count': number of visits}}
+        """
+        domain = Domain([('visitor_id', 'in', self.ids), (track_field, '!=', False)])
+        if record_domain:
+            domain &= Domain(track_field, 'any', record_domain)
+
+        results = self.env['website.track']._read_group(
+            domain=domain,
+            groupby=['visitor_id'],
+            aggregates=[f'{track_field}:array_agg_distinct', '__count'],
+        )
+        return defaultdict(lambda: {'ids': [], 'count': 0}, {
+            visitor.id: {'ids': record_ids, 'count': count}
+            for visitor, record_ids, count in results
+        })
 
     def _search_page_ids(self, operator, value):
         return [('website_track_ids.page_id.name', operator, value)]

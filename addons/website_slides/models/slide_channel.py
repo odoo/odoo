@@ -32,7 +32,9 @@ class SlideChannel(models.Model):
         'website.published.multi.mixin',
         'website.searchable.mixin',
         'website.structured_data.mixin',
+        'website.trackable.mixin',
     ]
+    _website_track_field = 'slide_channel_id'
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
 
