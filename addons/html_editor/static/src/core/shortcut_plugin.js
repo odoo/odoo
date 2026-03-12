@@ -58,6 +58,7 @@ export class ShortCutPlugin extends Plugin {
     }
 
     destroy() {
+        super.destroy();
         this.removeEditorCommandPalette();
     }
 

@@ -233,6 +233,14 @@ export class SelectionPlugin extends Plugin {
             }
         });
         this.preservedCursors = [];
+        // Calling the native `focus` method of the editable element, even with
+        // `preventScroll: true`, would reset the selection at the start of the
+        // editable. This would, in turn, trigger a selectionchange event and,
+        // down the line, a scroll to the position of the selection, so to the
+        // top of the document. Calling focusEditable instead will restore the
+        // correct editable selection and prevent scrolling when not needed.
+        this.editableOriginalFocus = this.editable.focus;
+        this.editable.focus = () => this.focusEditable();
     }
 
     selectAll() {
@@ -1097,7 +1105,8 @@ export class SelectionPlugin extends Plugin {
         }
 
         // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
-        this.editable.focus({ preventScroll: true });
+        // Use the copy of the original focus but prevent scrolling.
+        this.editableOriginalFocus.call(this.editable, { preventScroll: true });
 
         if (!documentSelectionIsInEditable) {
             // Selection is outside the editor — restore it.
