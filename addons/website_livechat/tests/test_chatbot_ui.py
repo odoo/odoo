@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import Command, tests
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon as TestWebsiteLivechatCommon
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.tools import html2plaintext
 
 
 @tests.tagged('post_install', '-at_install')
@@ -77,10 +80,10 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             ("I help lost visitors find their way.", operator, False),
             ("How can I help you?", operator, self.step_dispatch_operator),
             ("I want to speak with an operator", False, False),
-            ("I will transfer you to a human", operator, False),
+            ("I will transfer you to a human.", operator, False),
+            # Wrap with div to keep html2plaintext output consistent for comparison.
             (
-                'invited <a href="#" data-oe-model="res.partner" data-oe-id="'
-                f'{operator_member.partner_id.id}">@Operator Michel</a> to the channel',
+                f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{operator_member.partner_id.id}">@Operator Michel</a> to the channel</div>',
                 self.chatbot_script.operator_partner_id,
                 False,
             ),
@@ -109,6 +112,13 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
                         ('mail_message_id', '=', conversation_message.id)
                     ], limit=1).user_script_answer_id
                 )
+        # History should only include messages after the conversation restart.
+        history = livechat_discuss_channel._get_channel_history()
+        visitor_partner = conversation_messages.author_id.filtered(lambda p: p != operator)
+        expected_history = Markup("").join(
+            Markup("%s: %s<br/>") % (operator.name if operator else visitor_partner.name or livechat_discuss_channel.anonymous_name, html2plaintext(body)) for body, operator, _ in expected_messages[-6:]
+        )
+        self.assertEqual(history, expected_history)
 
     def test_complete_chatbot_flow_ui(self):
         tests.new_test_user(self.env, login="portal_user", groups="base.group_portal")
