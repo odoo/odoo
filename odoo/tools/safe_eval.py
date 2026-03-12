@@ -969,7 +969,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('OrderedDict.*')
     safe_whitelist.add_function('_functools.reduce')
     # Monkey patches
-    safe_whitelist.add_instance('odoo._monkeypatches.zoneinfo.ZoneInfo')
+    safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
     safe_whitelist.add_function('odoo._monkeypatches.*')
     # Core
     safe_whitelist.add_class('odoo.addons.*')  # TODO: Restrict addons
