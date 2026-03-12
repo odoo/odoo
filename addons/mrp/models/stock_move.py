@@ -291,10 +291,9 @@ class StockMove(models.Model):
                 updated_product_move._action_confirm()
                 move_to_unlink.unlink()
                 self = other_move + updated_product_move
+        moves_to_update = False
         if self.env.context.get('force_manual_consumption') and 'quantity' in vals:
             moves_to_update = self.filtered(lambda move: move.product_uom_qty != vals['quantity'])
-            if moves_to_update:
-                moves_to_update.write({'manual_consumption': True, 'picked': True})
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
@@ -302,6 +301,8 @@ class StockMove(models.Model):
             super().write({'move_line_ids': move_line_vals})
         old_demand = {move.id: move.product_uom_qty for move in self}
         res = super().write(vals)
+        if moves_to_update:
+            moves_to_update.write({'manual_consumption': True, 'picked': True})
         if 'product_uom_qty' in vals and not self.env.context.get('no_procurement', False):
             # when updating consumed qty need to update related pickings
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
