@@ -13,7 +13,7 @@ export class EmptyMailingPlugin extends Plugin {
     ];
 
     setup() {
-        this.addDomListener(this.editable, "click", this.onMailWrapperClick);
+        this.addDomListener(this.editable, "click", this.onMailWrapperClick.bind(this));
     }
 
     onMailWrapperClick(ev) {
