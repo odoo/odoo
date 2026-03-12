@@ -987,6 +987,7 @@ class IrQweb(models.AbstractModel):
         return self._generate_code_uncached(ref)
 
     def _generate_code_uncached(self, template: int | str | etree._Element):
+        assert isinstance(self, IrQweb)
         ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
 
         code, options, def_name = self._generate_code(template)
