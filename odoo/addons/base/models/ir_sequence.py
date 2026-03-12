@@ -370,7 +370,7 @@ class IrSequenceDate_Range(models.Model):
         for seq in seqs:
             main_seq = seq.sequence_id
             if main_seq.implementation == 'standard':
-                _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, seq.number_next_actual or 1)
+                _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, seq.number_next or 1)
         return seqs
 
     @api.ondelete(at_uninstall=True)
