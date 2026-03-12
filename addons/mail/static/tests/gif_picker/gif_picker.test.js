@@ -109,6 +109,10 @@ test("Composer GIF button should open the GIF picker", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
     await contains(".o-discuss-GifPicker");
+    await click(".o-mail-Discuss-header"); // ensure the picker reopens correctly
+    await contains(".o-discuss-GifPicker", { count: 0 });
+    await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker");
 });
 
 test("Not loading of GIF categories when feature is not available", async () => {
