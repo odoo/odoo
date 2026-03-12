@@ -283,7 +283,7 @@ class TestHrAttendanceOvertime(HttpCase):
     def test_overtime_far_timezones(self):
         (self.jpn_employee | self.honolulu_employee).ruleset_id = self.ruleset
         # attendance from 10 to 21(japan time)
-        self.env['hr.attendance'].create([
+        _, att = self.env['hr.attendance'].create([
             {
                 'employee_id': self.jpn_employee.id,
                 'check_in': datetime(2021, 1, 4, 1, 0),
@@ -295,6 +295,7 @@ class TestHrAttendanceOvertime(HttpCase):
                 'check_out': datetime(2021, 1, 4, 12, 0),
             }
         ])
+        self.assertEqual(att.linked_overtime_ids.date, date(2021, 1, 4))
 
         # attendance from 7 to 18 (honolulu time)
         self.env['hr.attendance'].create([

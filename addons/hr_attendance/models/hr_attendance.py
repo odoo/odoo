@@ -279,7 +279,7 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = []
         for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items():
-            tz = ZoneInfo(employee._get_tz())
+            tz = ZoneInfo(employee.sudo()._get_tz())
             local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
             local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
             date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
