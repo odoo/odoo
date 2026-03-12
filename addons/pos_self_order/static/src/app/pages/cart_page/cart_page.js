@@ -146,7 +146,9 @@ export class CartPage extends Component {
             }
 
             const email = this.selfOrder.currentOrder.partner_id?.email || infos.email;
+            const mobile = this.selfOrder.currentOrder.mobile || infos.phone;
             this.selfOrder.currentOrder.email = email;
+            this.selfOrder.currentOrder.mobile = mobile;
         }
 
         if (
