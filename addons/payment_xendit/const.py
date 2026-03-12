@@ -5,7 +5,9 @@ SUPPORTED_CURRENCIES = [
     'IDR',
     'MYR',
     'PHP',
+    'SGD',
     'THB',
+    'USD',
     'VND',
 ]
 
@@ -15,7 +17,9 @@ CURRENCY_DECIMALS = {
     'IDR': 0,
     'MYR': 0,
     'PHP': 0,
+    'SGD': 0,
     'THB': 0,
+    'USD': 0,
     'VND': 0,
 }
 
@@ -37,11 +41,15 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # VN
     'appota',
     'zalopay',
-    'vnptwallet'
+    'vnptwallet',
+    # SG
+    'paynow',
 
     # Brand payment methods.
     'visa',
     'mastercard',
+    'jcb',
+    'amex',
 }
 
 # FPX is an online payment method in Malaysia that allows customers to make payments directly from their bank accounts.
@@ -103,6 +111,7 @@ PAYMENT_METHODS_MAPPING = {
     'krungthai_bank': 'DD_KTB_MB',
     'bangkok_bank': 'DD_BBL_MB',
     'touch_n_go': 'TOUCHNGO',
+    'paynow': 'SGQR',
     **{method: 'fpx' for method in FPX_METHODS}
 }
 
