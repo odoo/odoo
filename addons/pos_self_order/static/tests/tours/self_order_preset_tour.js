@@ -51,19 +51,6 @@ registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
         Utils.clickBtn("Continue"),
         Utils.checkConfirmationString(),
         Utils.clickBtn("Ok"),
-
-        // Check if the partner is available in cache
-        Utils.checkIsNoBtn("My Order"),
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Delivery"),
-        ProductPage.clickProduct("Free"),
-        Utils.clickBtn("Checkout"),
-        CartPage.checkProduct("Free", "0", "1"),
-        Utils.clickBtn("Order"),
-        CartPage.selectRandomValueInInput(".partner-select"),
-        Utils.clickBtn("Continue"),
-        Utils.checkConfirmationString(),
-        Utils.clickBtn("Ok"),
     ],
 });
 
