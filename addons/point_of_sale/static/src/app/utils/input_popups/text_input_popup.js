@@ -25,7 +25,9 @@ export class TextInputPopup extends AbstractAwaitablePopup {
     }
     _onWindowKeyup(event) {
         if (event.key === this.props.confirmKey) {
-            this.confirm();
+            if (this.state.inputValue.trim()) {
+                this.confirm();
+            }
         } else {
             super._onWindowKeyup(...arguments);
         }
