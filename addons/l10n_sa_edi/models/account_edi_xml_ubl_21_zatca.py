@@ -352,8 +352,13 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             '_text': self.format_float(vals['total_allowance_currency'], vals['currency_dp']),
             'currencyID': vals['currency_name'],
         }
+
+        # Retrieve the rounding amount
+        payable_rounding_amount = vals['cash_rounding_base_amount_currency']
+
+        payable_amount = vals['tax_inclusive_amount_currency'] - prepaid_amount + payable_rounding_amount
         monetary_total_node['cbc:PrepaidAmount']['_text'] = self.format_float(prepaid_amount, vals['currency_dp'])
-        monetary_total_node['cbc:PayableAmount']['_text'] = self.format_float(vals['tax_inclusive_amount_currency'] - prepaid_amount, vals['currency_dp'])
+        monetary_total_node['cbc:PayableAmount']['_text'] = self.format_float(payable_amount, vals['currency_dp'])
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates for document allowance charge nodes
