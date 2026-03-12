@@ -793,9 +793,9 @@ class ProductTemplate(models.Model):
         'Customer Lead Time', default=0, company_dependent=True,
         help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.")
     tracking = fields.Selection([
-        ('serial', 'By Unique Serial Number'),
+        ('none', 'By Quantity'),
         ('lot', 'By Lots'),
-        ('none', 'By Quantity')],
+        ('serial', 'By Unique Serial Number')],
         string="Tracking",
         compute='_compute_tracking', inverse='_set_tracking', store=True, readonly=False, precompute=True,
         help="Ensure the traceability of a storable product in your warehouse.")
