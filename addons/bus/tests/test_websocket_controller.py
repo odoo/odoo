@@ -66,7 +66,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 'is_first_poll': False,
             })
 
-    def test_do_not_rotate_session_when_peeking_notifications(self):
+    def test_do_not_rotate_session(self):
         self.authenticate('admin', 'admin')
         self.url_open('/odoo')
         original_session = self.opener.cookies['session_id']
@@ -81,3 +81,9 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertEqual(self.opener.cookies['session_id'], original_session)
         self.url_open("/odoo")
         self.assertNotEqual(self.opener.cookies['session_id'], original_session)
+        original_session = self.opener.cookies['session_id']
+        original_session_obj = root.session_store.get(original_session)
+        original_session_obj['create_time'] -= SESSION_ROTATION_INTERVAL
+        root.session_store.save(original_session_obj)
+        self.make_jsonrpc_request('/websocket/on_closed')
+        self.assertEqual(self.opener.cookies['session_id'], original_session)

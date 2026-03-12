@@ -313,6 +313,7 @@ SESSION_ROTATION_INTERVAL = 60 * 60 * 3
 
 # URL paths for which automatic session rotation is disabled.
 SESSION_ROTATION_EXCLUDED_PATHS = (
+    '/websocket/on_closed',
     '/websocket/peek_notifications',
     '/websocket/update_bus_presence',
 )
