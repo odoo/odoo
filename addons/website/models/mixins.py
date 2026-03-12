@@ -143,6 +143,29 @@ class WebsiteSeoMetadata(models.AbstractModel):
         return translations.get(field_name, {}).get(lang_code) or ''
 
 
+class WebsiteTrackableMixin(models.AbstractModel):
+    """ Mixin for the models whose page views are stored on `website.track`.
+
+    The module tracking a model adds a relation to it on `website.track` and
+    names that relation in `_website_track_field`.
+    """
+    _name = 'website.trackable.mixin'
+
+    _description = 'Website Trackable Mixin'
+
+    _website_track_field = None  # `website.track` relation storing the visits
+
+    def _get_extra_tracking_values(self, **kwargs):
+        extra_tracking_values = {}
+        if (
+            self._website_track_field
+            and kwargs.get('res_model') == self._name
+            and (res_id := kwargs.get('res_id'))
+        ):
+            extra_tracking_values[self._website_track_field] = res_id
+        return extra_tracking_values
+
+
 class WebsiteCover_PropertiesMixin(models.AbstractModel):
     _name = 'website.cover_properties.mixin'
 
@@ -263,9 +286,6 @@ class WebsiteLocatedMixin(models.AbstractModel):
         for record in self:
             if record.website_url != '#':
                 record.website_absolute_url = url_join(record.get_base_url(), record.website_url)
-
-    def _get_extra_tracking_values(self, **kwargs):
-        return {}
 
 
 class WebsiteStructuredDataMixin(models.AbstractModel):

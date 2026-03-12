@@ -24,27 +24,11 @@ class WebsiteVisitor(models.Model):
 
     @api.depends("website_track_ids")
     def _compute_product_statistics(self):
-        results = self.env["website.track"]._read_group(
-            [
-                ("visitor_id", "in", self.ids),
-                ("product_id", "!=", False),
-                (
-                    "product_id",
-                    "any",
-                    self.env["product.product"]._check_company_domain(self.env.companies),
-                ),
-            ],
-            ["visitor_id"],
-            ["product_id:array_agg", "__count"],
+        mapped_data = self._get_visitor_statistics(
+            "product_id",
+            record_domain=self.env["product.product"]._check_company_domain(self.env.companies),
         )
-        mapped_data = {
-            visitor.id: {"product_count": count, "product_ids": product_ids}
-            for visitor, product_ids, count in results
-        }
-
         for visitor in self:
-            visitor_info = mapped_data.get(visitor.id, {"product_ids": [], "product_count": 0})
-
-            visitor.product_ids = [(6, 0, visitor_info["product_ids"])]
-            visitor.visitor_product_count = visitor_info["product_count"]
-            visitor.product_count = len(visitor_info["product_ids"])
+            visitor.product_ids = mapped_data[visitor.id]["ids"]
+            visitor.visitor_product_count = mapped_data[visitor.id]["count"]
+            visitor.product_count = len(mapped_data[visitor.id]["ids"])

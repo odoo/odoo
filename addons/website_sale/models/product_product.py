@@ -10,7 +10,8 @@ from odoo.http import request
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _inherit = ["product.product", "website.structured_data.mixin"]
+    _inherit = ["product.product", "website.structured_data.mixin", "website.trackable.mixin"]
+    _website_track_field = "product_id"
     _mail_post_access = "read"
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
@@ -293,12 +294,6 @@ class ProductProduct(models.Model):
         if self.env.context.get("website_id"):
             return self._get_available_uoms()[:1] or self.uom_id
         return super()._get_main_uom()
-
-    def _get_extra_tracking_values(self, **kwargs):
-        extra_tracking_values = {}
-        if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
-            extra_tracking_values["product_id"] = res_id
-        return extra_tracking_values
 
     def _is_donation(self):
         """Return whether this product is the donation product used by the donation snippet."""
