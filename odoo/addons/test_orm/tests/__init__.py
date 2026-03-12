@@ -11,8 +11,8 @@ from . import (
     test_company_checks,
     test_config_settings,
     test_convert,
-    test_create,
     test_convert_env,
+    test_create,
     test_domain,
     test_domain_expression,
     test_fields,
@@ -22,7 +22,6 @@ from . import (
     test_ir_rules,
     test_json_field,
     test_many2many,
-    test_guess_mimetypes,
     test_models,
     test_modules_db,
     test_one2many,
@@ -42,6 +41,6 @@ from . import (
     test_sort,
     test_timeit,
     test_transactions,
-    # test_uninstall  # Cannot be handled by the runbot. Makes Odoo loop forever when done during an installation.
+    # test_uninstall,
     test_views,
 )

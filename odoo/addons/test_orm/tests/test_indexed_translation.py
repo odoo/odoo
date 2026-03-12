@@ -15,7 +15,7 @@ class TestIndexedTranslation(TransactionExpressionCase):
         cls.env['res.lang']._activate_lang('fr_FR')
 
     def test_search_ilike(self):
-        record_en = self.env['test_orm.indexed_translation'].with_context(lang='en_US').create({})
+        record_en = self.env['test_indexed_translation.indexed_translation'].with_context(lang='en_US').create({})
         record_fr = record_en.with_context(lang='fr_FR')
         record_en.name = '<div class="my_class">hello</div>\n<div/>'
         record_fr.name = '<div class="my_class">%bonjour\\</div>\a<div/>'
@@ -45,21 +45,21 @@ class TestIndexedTranslation(TransactionExpressionCase):
 
         # check what the queries look like
         with self.assertQueries(["""
-            SELECT "test_orm_indexed_translation"."id"
-            FROM "test_orm_indexed_translation"
-            WHERE (jsonb_path_query_array("test_orm_indexed_translation"."name", '$.*')::text ILIKE %s
-            AND "test_orm_indexed_translation"."name"->>%s ILIKE %s)
-            ORDER BY "test_orm_indexed_translation"."id"
+            SELECT "test_indexed_translation_indexed_translation"."id"
+            FROM "test_indexed_translation_indexed_translation"
+            WHERE (jsonb_path_query_array("test_indexed_translation_indexed_translation"."name", '$.*')::text ILIKE %s
+            AND "test_indexed_translation_indexed_translation"."name"->>%s ILIKE %s)
+            ORDER BY "test_indexed_translation_indexed_translation"."id"
         """, """
-            SELECT "test_orm_indexed_translation"."id"
-            FROM "test_orm_indexed_translation"
-            WHERE (jsonb_path_query_array("test_orm_indexed_translation"."name", '$.*')::text ILIKE %s
-            AND COALESCE("test_orm_indexed_translation"."name"->>%s, "test_orm_indexed_translation"."name"->>%s) ILIKE %s)
-            ORDER BY "test_orm_indexed_translation"."id"
+            SELECT "test_indexed_translation_indexed_translation"."id"
+            FROM "test_indexed_translation_indexed_translation"
+            WHERE (jsonb_path_query_array("test_indexed_translation_indexed_translation"."name", '$.*')::text ILIKE %s
+            AND COALESCE("test_indexed_translation_indexed_translation"."name"->>%s, "test_indexed_translation_indexed_translation"."name"->>%s) ILIKE %s)
+            ORDER BY "test_indexed_translation_indexed_translation"."id"
         """, """
-            SELECT "test_orm_indexed_translation"."id"
-            FROM "test_orm_indexed_translation"
-            ORDER BY "test_orm_indexed_translation"."id"
+            SELECT "test_indexed_translation_indexed_translation"."id"
+            FROM "test_indexed_translation_indexed_translation"
+            ORDER BY "test_indexed_translation_indexed_translation"."id"
         """]):
             record_en.search([('name', 'ilike', 'foo')])
             record_fr.search([('name', 'ilike', 'foo')])
@@ -69,7 +69,7 @@ class TestIndexedTranslation(TransactionExpressionCase):
     def test_search_special_characters(self):
         name_en = f'{SPECIAL_CHARACTERS}_en'
         name_fr = f'{SPECIAL_CHARACTERS}_fr'
-        record_en = self.env['test_orm.indexed_translation'].with_context(lang='en_US').create({})
+        record_en = self.env['test_indexed_translation.indexed_translation'].with_context(lang='en_US').create({})
         record_fr = record_en.with_context(lang='fr_FR')
         record_en.name = name_en
         record_fr.name = name_fr

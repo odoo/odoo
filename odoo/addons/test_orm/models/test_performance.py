@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 
 
-class Test_PerformanceBase(models.Model):
+class TestPerformanceBase(models.Model):
     _name = 'test_performance.base'
     _description = 'Test Performance Base'
 
@@ -46,7 +46,7 @@ class Test_PerformanceBase(models.Model):
             record.total = sum(line.value for line in record.line_ids)
 
 
-class Test_PerformanceLine(models.Model):
+class TestPerformanceLine(models.Model):
     _name = 'test_performance.line'
     _description = 'Test Performance Line'
 
@@ -56,14 +56,14 @@ class Test_PerformanceLine(models.Model):
     _line_uniq = models.UniqueIndex('(base_id, value)', "base_id and value should be unique")
 
 
-class Test_PerformanceTag(models.Model):
+class TestPerformanceTag(models.Model):
     _name = 'test_performance.tag'
     _description = 'Test Performance Tag'
 
     name = fields.Char()
 
 
-class Test_PerformanceBacon(models.Model):
+class TestPerformanceBacon(models.Model):
     _name = 'test_performance.bacon'
     _description = 'Test Performance Bacon'
 
@@ -71,14 +71,14 @@ class Test_PerformanceBacon(models.Model):
         'test_performance.eggs', company_dependent=True, string='Eggs')
 
 
-class Test_PerformanceEggs(models.Model):
+class TestPerformanceEggs(models.Model):
     _name = 'test_performance.eggs'
     _description = 'Test Performance Eggs'
 
     name = fields.Char()
 
 
-class Test_PerformanceMozzarella(models.Model):
+class TestPerformanceMozzarella(models.Model):
     _name = 'test_performance.mozzarella'
     _description = 'Test Performance Mozzarella'
 
@@ -92,7 +92,7 @@ class Test_PerformanceMozzarella(models.Model):
             record.value_plus_one = record.value + 1
 
 
-class Test_PerformanceSimpleMinded(models.Model):
+class TestPerformanceSimpleMinded(models.Model):
     _name = 'test_performance.simple.minded'
     _description = 'test_performance.simple.minded'
 
