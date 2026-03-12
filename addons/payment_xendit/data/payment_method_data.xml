@@ -280,6 +280,16 @@
         <field name="supported_currency_ids" eval="[Command.set([ref('base.IDR')])]"/>
     </record>
 
+    <record id="payment_method_paynow" model="payment.method">
+        <field name="name">PayNow</field>
+        <field name="code">paynow</field>
+        <field name="provider_id" ref="payment.payment_provider_xendit"/>
+        <field name="image" type="bytes" file="payment/static/img/paynow.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.sg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD')])]"/>
+    </record>
+
     <record id="payment_method_promptpay" model="payment.method">
         <field name="name">Prompt Pay</field>
         <field name="code">promptpay</field>
