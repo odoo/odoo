@@ -49,6 +49,25 @@ export class ShortCutPlugin extends Plugin {
         if (!hotkeyService) {
             throw new Error("ShorcutPlugin needs hotkey service to properly work");
         }
+
+        // We override the command palette shortcut to open a palette with an
+        // onClose callback to focus the editor and keep the selection without
+        // scrolling. We also pass the editable as the area option for this
+        // hotkey override, so it only applies when calling the command palette
+        // from the editor.
+        this.removeEditorCommandPalette = this.services.hotkey.add(
+            "control+k",
+            () => {
+                this.services.command.openMainPalette({}, () => {
+                    this.dependencies.selection.focusEditable();
+                });
+            },
+            {
+                bypassEditableProtection: true,
+                global: true,
+                area: () => this.editable,
+            }
+        );
         if (document !== this.document) {
             hotkeyService.registerIframe({ contentWindow: this.window });
         }
@@ -65,6 +84,11 @@ export class ShortCutPlugin extends Plugin {
                 }
             );
         }
+    }
+
+    destroy() {
+        super.destroy();
+        this.removeEditorCommandPalette();
     }
 
     addShortcut(hotkey, action, { isAvailable, global }) {
