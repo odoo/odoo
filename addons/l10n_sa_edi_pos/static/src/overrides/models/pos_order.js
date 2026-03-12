@@ -12,6 +12,10 @@ patch(PosOrder.prototype, {
         }
     },
 
+    isSACompany() {
+        return this.company.country_id?.code === "SA";
+    },
+
     isInvoiceMandatoryForSA() {
         // Zatca enforces invoice, but for settlement due, invoices are not needed
         // Only applicable if enterprise:pos_settle_due module is installed
