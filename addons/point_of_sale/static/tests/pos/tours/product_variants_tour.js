@@ -10,16 +10,19 @@ function check_variant_price(product, choices, price) {
         steps.push(...ProductConfiguratorPopup.pickRadio(choice));
     }
     steps.push(
-        Dialog.confirm(),
+        Dialog.proceed({ title: product, button: "add" }),
         ...ProductScreen.totalAmountIs(price),
         ...ProductScreen.clickNumpad("⌫"),
-        ...ProductScreen.clickNumpad("⌫")
+        ...ProductScreen.clickNumpad("⌫"),
+        {
+            content: "Ensure the leftpane is empty after remove product",
+            trigger: `.leftpane > div:first:empty`,
+        }
     );
     return steps.flat();
 }
 
 registry.category("web_tour.tours").add("test_integration_dynamic_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -32,7 +35,6 @@ registry.category("web_tour.tours").add("test_integration_dynamic_variant_price"
 });
 
 registry.category("web_tour.tours").add("test_integration_always_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -44,7 +46,6 @@ registry.category("web_tour.tours").add("test_integration_always_variant_price",
 });
 
 registry.category("web_tour.tours").add("test_integration_never_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -56,7 +57,6 @@ registry.category("web_tour.tours").add("test_integration_never_variant_price", 
 });
 
 registry.category("web_tour.tours").add("test_integration_dynamic_always_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -72,7 +72,6 @@ registry.category("web_tour.tours").add("test_integration_dynamic_always_variant
 });
 
 registry.category("web_tour.tours").add("test_integration_dynamic_never_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -88,7 +87,6 @@ registry.category("web_tour.tours").add("test_integration_dynamic_never_variant_
 });
 
 registry.category("web_tour.tours").add("test_integration_always_never_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -102,7 +100,6 @@ registry.category("web_tour.tours").add("test_integration_always_never_variant_p
 });
 
 registry.category("web_tour.tours").add("test_integration_dynamic_always_never_variant_price", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
