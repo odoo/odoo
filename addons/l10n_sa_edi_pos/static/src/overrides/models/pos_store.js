@@ -12,4 +12,14 @@ patch(PosStore.prototype, {
         }
         return result;
     },
+
+    getSyncAllOrdersContext() {
+        const context = super.getSyncAllOrdersContext(...arguments);
+        // For SA companies, defer PDF generation to avoid blocking checkout on wkhtmltopdf.
+        // ZATCA EDI (clearance/reporting) is still processed synchronously on the server.
+        if (this.company.country_id?.code === "SA") {
+            context.generate_pdf = false;
+        }
+        return context;
+    },
 });
