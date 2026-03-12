@@ -20,4 +20,5 @@
         'views/settings.xml',
     ],
     'images': ['static/description/banner.png'],
+    'pre_init_hook': 'pre_init_hook',
 }

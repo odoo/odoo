@@ -18,4 +18,5 @@
     ],
     'images': ['static/description/banner.gif'],
     'demo': ['data/account_budget_demo.xml'],
+    'pre_init_hook': 'pre_init_hook',
 }

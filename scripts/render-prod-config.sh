@@ -66,5 +66,5 @@ limit_memory_soft = 2147483648
 log_level = info
 EOF
 
-chmod 600 "$CONFIG_OUTPUT"
+chmod 644 "$CONFIG_OUTPUT"
 echo "[render-prod-config] wrote $CONFIG_OUTPUT"

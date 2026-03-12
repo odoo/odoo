@@ -13,6 +13,7 @@
     "data": [
         "views/accountant_branding.xml",
     ],
+    "pre_init_hook": "pre_init_hook",
     "application": False,
     "installable": True,
     "auto_install": False,

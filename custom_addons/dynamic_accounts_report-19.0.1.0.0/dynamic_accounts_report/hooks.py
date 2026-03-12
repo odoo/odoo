@@ -1,8 +1,17 @@
-from . import wizard
-from . import models
-from . import report
-
 from odoo.exceptions import UserError
+
+
+ACCOUNTING_STACK_A = [
+    "accountant",
+    "accounting_pdf_reports",
+    "om_account_accountant",
+    "om_account_asset",
+    "om_account_budget",
+    "om_account_daily_reports",
+    "om_account_followup",
+    "om_fiscal_year",
+    "om_recurring_payments",
+]
 
 
 def _ensure_exclusive_modules(env_or_cr, module_name, conflicting_modules, family_label):
@@ -29,15 +38,5 @@ def _ensure_exclusive_modules(env_or_cr, module_name, conflicting_modules, famil
     )
 
 
-def _pre_init_clean_m2m_models(env):
-    env.cr.execute("""DROP TABLE IF EXISTS account_journal_account_report_partner_ledger_rel""")
-    _ensure_exclusive_modules(
-        env,
-        "accounting_pdf_reports",
-        [
-            "base_account_budget",
-            "base_accounting_kit",
-            "dynamic_accounts_report",
-        ],
-        "accounting stack",
-    )
+def pre_init_hook(env):
+    _ensure_exclusive_modules(env, "dynamic_accounts_report", ACCOUNTING_STACK_A, "accounting stack")

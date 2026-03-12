@@ -25,4 +25,5 @@
     ],
     'live_test_url': 'https://www.youtube.com/watch?v=PEh-an8iCO0',
     'images': ['static/description/banner.gif'],
+    'pre_init_hook': 'pre_init_hook',
 }

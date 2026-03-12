@@ -7,9 +7,6 @@ PREFIX="${1:-custom_addons}"
 SEPARATOR=""
 
 find "$CUSTOM_ADDONS_DIR" -mindepth 1 -maxdepth 1 -type d | sort | while read -r bundle_dir; do
-    if [ -f "$bundle_dir/__manifest__.py" ]; then
-        continue
-    fi
     manifest_files="$(find "$bundle_dir" -mindepth 2 -maxdepth 2 -type f -name '__manifest__.py' | sort)"
     if [ -z "$manifest_files" ]; then
         continue

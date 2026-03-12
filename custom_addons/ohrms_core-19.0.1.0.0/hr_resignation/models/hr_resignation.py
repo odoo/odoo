@@ -218,29 +218,41 @@ class HrResignation(models.Model):
                         days=contract.notice_days))
 
                 # Changing state of the employee if resigning today
-                if (resignation.expected_revealing_date <= fields.Date.today()
-                        and resignation.employee_id.active):
-                    resignation.employee_id.active = False
-                    # Changing fields in the employee table
-                    # with respect to resignation
-                    resignation.employee_id.resign_date = (
-                        resignation.expected_revealing_date)
-                    if resignation.resignation_type == 'resigned':
-                        resignation.employee_id.resigned = True
-                        departure_reason_id = self.env[
-                            'hr.departure.reason'].search(
-                            [('name', '=', 'Resigned')])
-                    else:
-                        resignation.employee_id.fired = True
-                        departure_reason_id = self.env[
-                            'hr.departure.reason'].search(
-                            [('name', '=', 'Fired')])
-
-                    resignation.employee_id.departure_reason_id = departure_reason_id
-                    resignation.employee_id.departure_date = resignation.approved_revealing_date
-                    # Removing and deactivating user
-                    if resignation.employee_id.user_id:
-                        resignation.employee_id.user_id.active = False
-                        resignation.employee_id.user_id = None
+                resignation._update_employee_deactivation()
             else:
                 raise ValidationError(_('Please Enter Valid Dates.'))
+
+    @api.model
+    def update_employee_status(self):
+        """ Cron job to check if any approved resignation's revealing date is today or passed. """
+        approved_resignation = self.search([('state', '=', 'approved')])
+        for resignation in approved_resignation:
+            resignation._update_employee_deactivation()
+
+    def _update_employee_deactivation(self):
+        """ Internal method to handle employee deactivation when resignation date is reached. """
+        self.ensure_one()
+        if (self.expected_revealing_date <= fields.Date.today()
+                and self.employee_id.active):
+            self.employee_id.active = False
+            # Changing fields in the employee table
+            # with respect to resignation
+            self.employee_id.resign_date = (
+                self.expected_revealing_date)
+            if self.resignation_type == 'resigned':
+                self.employee_id.resigned = True
+                departure_reason_id = self.env[
+                    'hr.departure.reason'].search(
+                    [('name', '=', 'Resigned')])
+            else:
+                self.employee_id.fired = True
+                departure_reason_id = self.env[
+                    'hr.departure.reason'].search(
+                    [('name', '=', 'Fired')])
+
+            self.employee_id.departure_reason_id = departure_reason_id
+            self.employee_id.departure_date = self.approved_revealing_date
+            # Removing and deactivating user
+            if self.employee_id.user_id:
+                self.employee_id.user_id.active = False
+                self.employee_id.user_id = None

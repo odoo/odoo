@@ -73,6 +73,7 @@
         ],
     },
     'images': ['static/description/banner.gif'],
+    'pre_init_hook': 'pre_init_hook',
     'license': 'LGPL-3',
     'installable': True,
     'auto_install': False,

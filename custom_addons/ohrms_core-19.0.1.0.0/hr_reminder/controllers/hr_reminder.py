@@ -27,7 +27,7 @@ from odoo.http import request
 
 class Reminders(http.Controller):
 
-    @http.route('/hr_reminder/all_reminder', type='json', auth="public")
+    @http.route('/hr_reminder/all_reminder', type='jsonrpc', auth="public")
     def all_reminder(self):
         """Returns the records of the all reminders in the
         model HR Reminder."""

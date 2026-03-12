@@ -29,4 +29,5 @@
             'om_account_asset/static/src/scss/account_asset.scss',
         ],
     },
+    'pre_init_hook': 'pre_init_hook',
 }

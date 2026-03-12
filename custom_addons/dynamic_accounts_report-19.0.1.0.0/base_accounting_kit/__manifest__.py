@@ -115,6 +115,7 @@
             'base_accounting_kit/static/src/xml/bank_reconcile_widget.xml',
         ]
     },
+    'pre_init_hook': 'pre_init_hook',
     'license': 'LGPL-3',
     'images': ['static/description/banner.gif'],
     'installable': True,

@@ -38,7 +38,7 @@
         'views/reconciliation.xml',
         'views/account_journal.xml',
     ],
+    'pre_init_hook': 'pre_init_hook',
     'application': True,
     'images': ['static/description/banner.gif'],
 }
-

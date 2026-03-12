@@ -77,7 +77,7 @@ CONFIG_FIND_CMD = find . \
 .PHONY: help doctor deps-install clean clean-all \
 	odoo-lnav build up up-cpu up-gpu down logs status \
 	probe certbot certbot-renew \
-	db-init db-check \
+	db-init db-check db-list db-manager \
 	stop ports-clean \
 	refresh-safe \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
@@ -168,6 +168,8 @@ help:
 	@echo "Database:"
 	@echo "  make db-init        # Initialize Odoo schema in DB ($(DB))"
 	@echo "  make db-check       # Check if base module exists in DB"
+	@echo "  make db-list        # List reachable PostgreSQL databases and tags"
+	@echo "  make db-manager     # Open the interactive database manager"
 	@echo ""
 	@echo "Containers:"
 	@echo "  make build          # Build Docker images"
@@ -712,6 +714,12 @@ db-init:
 
 db-check:
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "SELECT name, state FROM ir_module_module WHERE name='base';" || true
+
+db-list:
+	@./scripts/db-manager.sh list || true
+
+db-manager:
+	@./scripts/db-manager.sh
 
 odoo-tui:
 	@$(MAKE) prod-config

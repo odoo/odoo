@@ -40,6 +40,7 @@ BUTTON_TARGETS = {
     "btn-cowork": "up-cowork",
     "btn-dev": "up-dev",
     "btn-project": "up-project",
+    "btn-db-list": "db-list",
     "btn-refresh-safe": "refresh-safe",
     "btn-stop": "stop",
     "btn-smoke": "smoke",
@@ -72,12 +73,22 @@ class EndpointRow:
 
 
 @dataclass
+class DatabaseRow:
+    name: str
+    backend: str
+    owner: str
+    size: str
+    tags: str
+
+
+@dataclass
 class Snapshot:
     mode: str
     summary: str
     files: str
     services: list[ServiceRow]
     endpoints: list[EndpointRow]
+    databases: list[DatabaseRow]
     runtime_log: list[str]
 
 
@@ -107,7 +118,11 @@ def merged_env() -> dict[str, str]:
     return env
 
 
-def run_command(args: list[str], timeout: int = 10) -> tuple[int, str, str]:
+def run_command(
+    args: list[str],
+    timeout: int = 10,
+    env_values: dict[str, str] | None = None,
+) -> tuple[int, str, str]:
     try:
         completed = subprocess.run(
             args,
@@ -115,7 +130,7 @@ def run_command(args: list[str], timeout: int = 10) -> tuple[int, str, str]:
             capture_output=True,
             text=True,
             timeout=timeout,
-            env=os.environ.copy(),
+            env=env_values or os.environ.copy(),
         )
         return completed.returncode, completed.stdout.strip(), completed.stderr.strip()
     except subprocess.TimeoutExpired as exc:
@@ -253,6 +268,90 @@ def collect_runtime_log(mode: str, lines: int) -> list[str]:
     return log_lines[-max(lines, 1) :]
 
 
+def database_tags(name: str, env: dict[str, str]) -> str:
+    tagged: list[str] = []
+    if name == env.get("PROD_DB_NAME", "kodoo"):
+        tagged.append("prod")
+    if name == env.get("DEV_HOST_DB", "kodoo"):
+        tagged.append("dev-host")
+    if name == env.get("DEV_HOST_TEST_DB", "ktest"):
+        tagged.append("ktest")
+    if name == env.get("DEV_PROJECT_DB", "ktest"):
+        tagged.append("project")
+    return ", ".join(tagged) or "-"
+
+
+def collect_database_rows(service_map: dict[str, ServiceRow], env: dict[str, str]) -> list[DatabaseRow]:
+    db_user = env.get("PROD_DB_USER") or env.get("PG_LOCAL_USER") or "kodoo"
+    query = (
+        "SELECT datname, pg_get_userbyid(datdba), "
+        "pg_size_pretty(pg_database_size(datname)) "
+        "FROM pg_database WHERE datistemplate = false ORDER BY datname;"
+    )
+    if service_map["db"].state == "running":
+        code, stdout, stderr = run_command(
+            [
+                "docker",
+                "exec",
+                "-i",
+                CONTAINERS["db"],
+                "psql",
+                "-U",
+                db_user,
+                "-d",
+                "postgres",
+                "-At",
+                "-F",
+                "|",
+                "-c",
+                query,
+            ],
+            timeout=8,
+        )
+        backend = "docker"
+    else:
+        local_env = os.environ.copy()
+        db_password = env.get("PG_LOCAL_PASSWORD") or env.get("PROD_DB_PASSWORD") or ""
+        if db_password:
+            local_env["PGPASSWORD"] = db_password
+        code, stdout, stderr = run_command(
+            [
+                "psql",
+                "-h",
+                env.get("PG_LOCAL_HOST", "127.0.0.1"),
+                "-p",
+                env.get("PG_LOCAL_PORT", "5432"),
+                "-U",
+                env.get("PG_LOCAL_USER", db_user),
+                "-d",
+                "postgres",
+                "-At",
+                "-F",
+                "|",
+                "-c",
+                query,
+            ],
+            timeout=8,
+            env_values=local_env,
+        )
+        backend = "local"
+    if code != 0:
+        detail = stderr or "database backend unavailable"
+        return [DatabaseRow("-", backend, "-", "-", detail)]
+    rows: list[DatabaseRow] = []
+    for raw_line in stdout.splitlines():
+        if not raw_line:
+            continue
+        parts = raw_line.split("|", 2)
+        name = parts[0]
+        owner = parts[1] if len(parts) > 1 else "-"
+        size = parts[2] if len(parts) > 2 else "-"
+        rows.append(DatabaseRow(name, backend, owner or "-", size or "-", database_tags(name, env)))
+    if rows:
+        return rows
+    return [DatabaseRow("-", backend, "-", "-", "no databases found")]
+
+
 def build_snapshot(env: dict[str, str]) -> Snapshot:
     service_map = {name: inspect_container(container) for name, container in CONTAINERS.items()}
     services = [
@@ -321,11 +420,13 @@ def build_snapshot(env: dict[str, str]) -> Snapshot:
             f"dev-host pid: {'yes' if pid_running(DEV_HOST_PID_FILE) else 'no'}",
             f"project pid: {'yes' if pid_running(DEV_PROJECT_PID_FILE) else 'no'}",
             f"log lines: {env.get('TUI_LOG_LINES', '20')}",
-            "Actions: h home | c cowork | d dev | p project | u refresh-safe | x stop | s smoke | t troubleshoot",
+            "DB manager: make db-manager",
+            "Actions: h home | c cowork | d dev | p project | b db-list | u refresh-safe | x stop | s smoke | t troubleshoot",
         ]
     )
+    databases = collect_database_rows(service_map, env)
     runtime_log = collect_runtime_log(mode, int(env.get("TUI_LOG_LINES", "20")))
-    return Snapshot(mode, summary, files, services, endpoints, runtime_log)
+    return Snapshot(mode, summary, files, services, endpoints, databases, runtime_log)
 
 
 class KodooTUI(App[None]):
@@ -346,6 +447,7 @@ class KodooTUI(App[None]):
 
     #overview,
     #tables,
+    #databases-row,
     #logs {
         height: 1fr;
         padding: 0 1 1 1;
@@ -380,6 +482,7 @@ class KodooTUI(App[None]):
         ("c", "run_target('up-cowork')", "Cowork"),
         ("d", "run_target('up-dev')", "Dev"),
         ("p", "run_target('up-project')", "Project"),
+        ("b", "run_target('db-list')", "DB List"),
         ("u", "run_target('refresh-safe')", "Safe Refresh"),
         ("x", "run_target('stop')", "Stop"),
         ("s", "run_target('smoke')", "Smoke"),
@@ -402,6 +505,7 @@ class KodooTUI(App[None]):
             yield Button("Up Cowork", id="btn-cowork", variant="success")
             yield Button("Up Dev", id="btn-dev", variant="default")
             yield Button("Up Project", id="btn-project", variant="default")
+            yield Button("DB List", id="btn-db-list", variant="default")
             yield Button("Safe Refresh", id="btn-refresh-safe", variant="warning")
             yield Button("Stop", id="btn-stop", variant="error")
             yield Button("Smoke", id="btn-smoke", variant="warning")
@@ -412,6 +516,8 @@ class KodooTUI(App[None]):
         with Horizontal(id="tables"):
             yield DataTable(id="services", classes="panel")
             yield DataTable(id="endpoints", classes="panel")
+        with Horizontal(id="databases-row"):
+            yield DataTable(id="databases", classes="panel")
         with Horizontal(id="logs"):
             yield RichLog(id="activity", classes="panel", wrap=True, highlight=False, markup=False)
             yield Log(id="runtime-log", classes="panel")
@@ -424,8 +530,10 @@ class KodooTUI(App[None]):
         services.add_columns("Service", "State", "Health", "Published")
         endpoints = self.query_one("#endpoints", DataTable)
         endpoints.add_columns("Probe", "URL", "Status", "Detail")
+        databases = self.query_one("#databases", DataTable)
+        databases.add_columns("Database", "Backend", "Owner", "Size", "Tags")
         self.log_activity("TUI ready.")
-        self.log_activity("Use the buttons or h/c/d/p/u/x/s/t.")
+        self.log_activity("Use the buttons or h/c/d/p/b/u/x/s/t.")
         self.set_interval(self.refresh_seconds, self.schedule_refresh)
         self.schedule_refresh()
 
@@ -510,6 +618,10 @@ class KodooTUI(App[None]):
         endpoints_table.clear()
         for row in snapshot.endpoints:
             endpoints_table.add_row(row.name, row.url, row.status, row.detail)
+        databases_table = self.query_one("#databases", DataTable)
+        databases_table.clear()
+        for row in snapshot.databases:
+            databases_table.add_row(row.name, row.backend, row.owner, row.size, row.tags)
         runtime_log = self.query_one("#runtime-log", Log)
         runtime_log.clear()
         lines = snapshot.runtime_log or ["No runtime logs available."]
