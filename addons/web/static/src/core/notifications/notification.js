@@ -16,7 +16,10 @@ export class Notification extends Component {
             optional: true,
             validate: (t) => ["warning", "danger", "success", "info"].includes(t),
         },
-        title: { type: [String, Boolean, { toString: Function }], optional: true },
+        title: {
+            type: [String, Boolean, { type: Object, shape: { toString: Function } }],
+            optional: true,
+        },
         className: { type: String, optional: true },
         buttons: {
             type: Array,

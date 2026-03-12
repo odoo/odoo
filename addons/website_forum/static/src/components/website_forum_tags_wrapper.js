@@ -12,7 +12,7 @@ export class WebsiteForumTagsWrapper extends Component {
     };
     static props = {
         defaulValue: { optional: true, type: Array },
-        isReadOnly: { optional: true, Type: Boolean },
+        isReadOnly: { optional: true, type: Boolean },
     };
 
     setup() {

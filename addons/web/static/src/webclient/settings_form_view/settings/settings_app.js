@@ -7,7 +7,7 @@ export class SettingsApp extends Component {
         string: String,
         imgurl: String,
         key: String,
-        selectedTab: { type: String, optional: 1 },
+        selectedTab: { type: String, optional: true },
         slots: Object,
     };
     setup() {

@@ -11,7 +11,7 @@ export class BaseBadgesField extends Component {
         placeholder: { type: String, optional: true },
         options: { type: Array },
         string: { type: String },
-        value: [String, Number, Boolean, typeof null],
+        value: [String, Number, Boolean, { value: null }],
         onChange: { type: Function },
         canDeselect: { type: Boolean, optional: true },
     };

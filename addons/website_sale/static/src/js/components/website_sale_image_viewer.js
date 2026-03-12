@@ -11,7 +11,7 @@ export class ProductImageViewer extends Dialog {
     static template = "website_sale.ProductImageViewer";
     static props = {
         ...Dialog.props,
-        images: { type: NodeList, required: true },
+        images: { type: NodeList },
         selectedImageIdx: { type: Number, optional: true },
         imageRatio: { type: String, optional: true },
         imageRatioMobile: { type: String, optional: true },

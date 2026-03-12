@@ -10,7 +10,7 @@ export class SettingsPage extends Component {
     static props = {
         modules: Array,
         anchors: Array,
-        initialTab: { type: String, optional: 1 },
+        initialTab: { type: String, optional: true },
         slots: Object,
     };
     setup() {

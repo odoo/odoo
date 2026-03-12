@@ -59,7 +59,7 @@ export class Dropdown extends Component {
         items: {
             optional: true,
             type: Array,
-            elements: {
+            element: {
                 type: Object,
                 shape: {
                     label: String,

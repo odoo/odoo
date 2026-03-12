@@ -18,8 +18,11 @@ export class NumberPopup extends Component {
             type: Array,
             optional: true,
             element: {
-                name: String,
-                symbol: String,
+                type: Object,
+                shape: {
+                    name: String,
+                    symbol: String,
+                },
             },
         },
         startingType: { type: String, optional: true },

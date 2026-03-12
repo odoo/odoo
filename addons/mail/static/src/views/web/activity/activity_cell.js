@@ -18,7 +18,7 @@ export class ActivityCell extends Component {
     static props = {
         activityIds: {
             type: Array,
-            elements: Number,
+            element: Number,
         },
         attachmentsInfo: {
             optional: true,

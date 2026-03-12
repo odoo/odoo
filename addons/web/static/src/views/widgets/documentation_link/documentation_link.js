@@ -9,11 +9,11 @@ export class DocumentationLink extends Component {
     static template = "web.DocumentationLink";
     static props = {
         ...standardWidgetProps,
-        record: { type: Object, optional: 1 }, // The record is not needed in this widget
+        record: { type: Object, optional: true }, // The record is not needed in this widget
         path: { type: String },
-        label: { type: String, optional: 1 },
-        icon: { type: String, optional: 1 },
-        alertLink: { type: Boolean, optional: 1 },
+        label: { type: String, optional: true },
+        icon: { type: String, optional: true },
+        alertLink: { type: Boolean, optional: true },
     };
 
     get url() {
@@ -32,7 +32,7 @@ export class DocumentationLink extends Component {
 
     get classes() {
         let classes = "o_doc_link me-2";
-        if (this.props.alertLink){
+        if (this.props.alertLink) {
             classes += " alert-link";
         }
         return classes;

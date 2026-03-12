@@ -10,7 +10,7 @@ export class StatusBarButtons extends Component {
         DropdownItem,
     };
     static props = {
-        slots: { type: Object, optional: 1 },
+        slots: { type: Object, optional: true },
     };
 
     get visibleSlotNames() {

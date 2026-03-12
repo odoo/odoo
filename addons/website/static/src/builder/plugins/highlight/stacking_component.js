@@ -26,7 +26,7 @@ export class StackingComponent extends Component {
         </t>
     `;
     static props = {
-        stackState: { type: Object, required: true },
+        stackState: { type: Object },
         class: { type: String, optional: true },
         style: { type: String, optional: true },
         close: { type: Function, optional: true },

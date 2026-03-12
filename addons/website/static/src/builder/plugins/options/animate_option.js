@@ -12,11 +12,14 @@ export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
     static dependencies = ["animateOption"];
     static props = {
-        dropdownClass: { type: String, optional: true, default: "o-hb-select-dropdown" },
+        dropdownClass: { type: String, optional: true },
         requireAnimation: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
-    static defaultProps = { requireAnimation: false };
+    static defaultProps = {
+        dropdownClass: "o-hb-select-dropdown",
+        requireAnimation: false,
+    };
 
     setup() {
         super.setup();

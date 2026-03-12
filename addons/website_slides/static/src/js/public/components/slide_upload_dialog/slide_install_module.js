@@ -8,9 +8,12 @@ export class SlideInstallModule extends Component {
     static components = {};
     static props = {
         moduleData: {
-            name: String,
-            id: Number,
-            default_slide_category: { type: String, optional: true },
+            type: Object,
+            shape: {
+                name: String,
+                id: Number,
+                default_slide_category: { type: String, optional: true },
+            },
         },
     };
     static template = "website_slides.SlideInstallModule";

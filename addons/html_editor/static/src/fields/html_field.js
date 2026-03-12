@@ -54,7 +54,7 @@ export class HtmlField extends Component {
         ...standardFieldProps,
         isCollaborative: { type: Boolean, optional: true },
         collaborativeTrigger: { type: String, optional: true },
-        dynamicField: { type: Boolean, optional: true, default: false },
+        dynamicField: { type: Boolean, optional: true },
         dynamicFieldReferenceModel: { type: String, optional: true },
         migrateHTML: { type: Boolean, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },

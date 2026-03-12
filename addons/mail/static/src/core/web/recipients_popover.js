@@ -11,8 +11,8 @@ import { Component, onWillStart } from "@odoo/owl";
 export class RecipientsPopover extends Component {
     static template = "mail.RecipientsPopover";
     static props = {
-        id: { type: Number, required: true },
-        close: { type: Function, required: true },
+        id: { type: Number },
+        close: { type: Function },
         viewProfileBtnOverride: { type: Function },
     };
 

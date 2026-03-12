@@ -7,7 +7,10 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
     static template = "account.ProductLabelSectionAndNoteField";
     static props = {
         ...super.props,
-        show_label_warning: { type: Boolean, optional: true, default: false },
+        show_label_warning: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        show_label_warning: false,
     };
 
     static descriptionColumn = "name";

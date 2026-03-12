@@ -16,28 +16,31 @@ export class MapContainer extends Component {
             element: {
                 type: Object,
                 values: {
-                    id: String,
-                    name: String,
-                    openingHours: {
-                        type: Object,
-                        values: {
-                            type: Array,
-                            element: String,
-                            optional: true,
+                    type: Object,
+                    shape: {
+                        id: String,
+                        name: String,
+                        openingHours: {
+                            type: Object,
+                            values: {
+                                type: Array,
+                                element: String,
+                                optional: true,
+                            },
                         },
+                        street: String,
+                        city: String,
+                        zip_code: String,
+                        state: { type: String, optional: true },
+                        country_code: String,
+                        additional_data: { type: Object, optional: true },
+                        latitude: String,
+                        longitude: String,
                     },
-                    street: String,
-                    city: String,
-                    zip_code: String,
-                    state: { type: String, optional: true},
-                    country_code: String,
-                    additional_data: { type: Object, optional: true},
-                    latitude: String,
-                    longitude: String,
-                }
+                },
             },
         },
-        selectedLocationId: [String, {value: false}],
+        selectedLocationId: [String, { value: false }],
         setSelectedLocation: Function,
         validateSelection: Function,
     };

@@ -10,20 +10,20 @@ export class Setting extends Component {
         DocumentationLink,
     };
     static props = {
-        id: { type: String, optional: 1 },
-        info: { type: String, optional: 1 },
-        title: { type: String, optional: 1 },
-        fieldId: { type: String, optional: 1 },
-        help: { type: String, optional: 1 },
-        fieldName: { type: String, optional: 1 },
-        fieldInfo: { type: Object, optional: 1 },
-        class: { type: String, optional: 1 },
-        record: { type: Object, optional: 1 },
-        documentation: { type: String, optional: 1 },
-        string: { type: String, optional: 1 },
+        id: { type: String, optional: true },
+        info: { type: String, optional: true },
+        title: { type: String, optional: true },
+        fieldId: { type: String, optional: true },
+        help: { type: String, optional: true },
+        fieldName: { type: String, optional: true },
+        fieldInfo: { type: Object, optional: true },
+        class: { type: String, optional: true },
+        record: { type: Object, optional: true },
+        documentation: { type: String, optional: true },
+        string: { type: String, optional: true },
         addLabel: { type: Boolean },
-        companyDependent: { type: Boolean, optional: 1 },
-        slots: { type: Object, optional: 1 },
+        companyDependent: { type: Boolean, optional: true },
+        slots: { type: Object, optional: true },
     };
 
     setup() {
