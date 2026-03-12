@@ -502,6 +502,19 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         return self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
 
+    def _add_invoice_extra_line_vals(self, line, vals):
+        # Order Line Reference
+        if hasattr(line, 'x_studio_peppol_order_line_reference_id') and line.x_studio_peppol_order_line_reference_id:
+            vals['order_line_reference_id'] = line.x_studio_peppol_order_line_reference_id
+
+        # Buyers Item Identification (goes inside cac:Item)
+        if hasattr(line, 'x_studio_peppol_buyers_item_id') and line.x_studio_peppol_buyers_item_id:
+            if 'item_vals' not in vals:
+                vals['item_vals'] = {}
+            vals['item_vals']['buyers_item_identification_id'] = line.x_studio_peppol_buyers_item_id
+
+        return vals
+
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line node.
         It provides information about the document line.
@@ -522,7 +535,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
             period_vals.update({'start_date': line.deferred_start_date})
             period_vals.update({'end_date': line.deferred_end_date})
-        return {
+
+        return self._add_invoice_extra_line_vals(line, {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
             'id': line_id + 1,
@@ -534,7 +548,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
             'invoice_period_vals_list': [period_vals] if period_vals else []
-        }
+        })
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
         """ Method used to fill the cac:{Legal,Requested}MonetaryTotal node"""
@@ -616,6 +630,45 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _enumerate_invoice_lines(self, invoice, start=0):
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
         return enumerate(invoice_lines, start=start)
+
+    def _add_invoice_extra_vals(self, invoice, vals):
+        if hasattr(invoice, 'x_studio_peppol_tax_point_date') and invoice.x_studio_peppol_tax_point_date:
+            vals['vals']['tax_point_date'] = invoice.x_studio_peppol_tax_point_date
+
+        if hasattr(invoice, 'x_studio_peppol_contract_document_reference_id') and invoice.x_studio_peppol_contract_document_reference_id:
+            vals['vals']['contract_document_reference_id'] = invoice.x_studio_peppol_contract_document_reference_id
+
+        if hasattr(invoice, 'x_studio_peppol_despatch_document_reference_id') and invoice.x_studio_peppol_despatch_document_reference_id:
+            vals['vals']['despatch_document_reference_id'] = invoice.x_studio_peppol_despatch_document_reference_id
+
+        if hasattr(invoice, 'x_studio_peppol_accounting_cost') and invoice.x_studio_peppol_accounting_cost:
+            vals['vals']['accounting_cost'] = invoice.x_studio_peppol_accounting_cost
+
+        # Project Reference (only for invoices, not credit notes)
+        if vals['document_type'] == 'invoice':
+            if hasattr(invoice, 'x_studio_peppol_project_reference_id') and invoice.x_studio_peppol_project_reference_id:
+                vals['vals']['project_reference_id'] = invoice.x_studio_peppol_project_reference_id
+
+        # Order Reference - Override native value if PEPPOL field exists
+        if hasattr(invoice, 'x_studio_peppol_order_reference_id') and invoice.x_studio_peppol_order_reference_id:
+            vals['vals']['order_reference'] = invoice.x_studio_peppol_order_reference_id
+
+        # Invoice Period dates
+        invoice_period_vals = {}
+
+        if hasattr(invoice, 'x_studio_peppol_invoice_period_start_date') and invoice.x_studio_peppol_invoice_period_start_date:
+            invoice_period_vals['start_date'] = invoice.x_studio_peppol_invoice_period_start_date
+
+        if hasattr(invoice, 'x_studio_peppol_invoice_period_end_date') and invoice.x_studio_peppol_invoice_period_end_date:
+            invoice_period_vals['end_date'] = invoice.x_studio_peppol_invoice_period_end_date
+
+        # Only add invoice period if we have at least one date
+        if invoice_period_vals:
+            if 'invoice_period_vals_list' not in vals['vals']:
+                vals['vals']['invoice_period_vals_list'] = []
+            vals['vals']['invoice_period_vals_list'].append(invoice_period_vals)
+
+        return vals
 
     def _export_invoice_vals(self, invoice):
         def grouping_key_generator(base_line, tax_values):
@@ -790,7 +843,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             vals['main_template'] = 'account_edi_ubl_cii.ubl_20_Invoice'
             vals['vals']['document_type_code'] = 380
 
-        return vals
+        return self._add_invoice_extra_vals(invoice, vals)
 
     def _get_note_vals_list(self, invoice):
         return [{'note': html2plaintext(invoice.narration)}] if invoice.narration else []
