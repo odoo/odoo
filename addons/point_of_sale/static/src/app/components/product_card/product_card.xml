@@ -4,10 +4,11 @@
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
             role="button"
-            t-attf-class="{{this.props.class}} {{this.props.color ? `o_colorlist_item_color_transparent_${this.props.color}` : ''}} product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ this.props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ this.props.available ? '' : 'opacity-50' }}"
+            t-attf-class="{{this.props.class}} {{this.props.color ? `o_colorlist_item_color_transparent_${this.props.color}` : ''}} product-sortable product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ this.props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ this.props.available ? '' : 'opacity-50' }}"
             t-on-keypress="(event) => event.code === 'Space' ? this.props.onClick(event) : ()=>{}"
             t-on-click.stop="this.props.onClick"
             t-att-data-product-id="this.props.productId"
+            t-att-data-pos_sequence="this.props.product.pos_sequence"
             t-attf-aria-labelledby="article_product_{{this.props.productId}}">
             <div t-if="this.props.imageUrl" class="product-img ratio ratio-4x3 rounded-top rounded-3">
                 <img class="w-100 object-fit-cover bg-200 pe-none" t-att-src="this.props.imageUrl" t-att-alt="this.props.name" draggable="false"/>
@@ -33,3 +34,4 @@
         </article>
     </t>
 </templates>
+

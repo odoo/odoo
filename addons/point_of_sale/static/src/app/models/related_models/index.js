@@ -279,6 +279,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          **/
         toRaw() {
             this.length; // Ensure reactivity when the record map of this model is updated
+            this.lastUpdateDate; // Ensure reactivity when the record fields of this model is updated
             return toRaw(this);
         }
 
@@ -549,6 +550,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 this[STORE_SYMBOL].remove(record);
                 this[STORE_SYMBOL].add(record);
             }
+
+            this.lastUpdateDate = Date.now();
 
             aggregatedUpdates.fireEventAndDirty({
                 silentModels: opts.silent ? [record.model.name] : [],

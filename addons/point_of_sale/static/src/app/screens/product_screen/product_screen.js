@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useState } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -6,6 +6,7 @@ import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { user } from "@web/core/user";
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
@@ -29,6 +30,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
+import { useSortable } from "@web/core/utils/sortable_owl";
 
 const { DateTime } = luxon;
 
@@ -125,13 +127,79 @@ export class ProductScreen extends Component {
             },
             () => [this.currentOrder, this.currentOrder.totalQuantity]
         );
+
+        this.canReorderProducts = false;
+        Promise.resolve(user.checkAccessRight("product.template", "write")).then((hasAccess) => {
+            this.canReorderProducts = hasAccess;
+        });
+
+        useSortable({
+            ref: useRef("productsRoot"),
+            elements: ".product-sortable",
+            cursor: "move",
+            tolerance: 10,
+            connectGroups: false,
+            enable: () => this.canReorderProducts,
+            preventDrag: (element) => isNaN(Number(element.dataset.productId)),
+            onDragStart: () => {
+                this.longPressHandlers.onMouseUp();
+                this.longPressHandlers.onTouchEnd();
+            },
+            onDrop: async (params) => this._sortDrop(params),
+        });
     }
 
-    onMouseDown(event, product) {
-        this.longPressHandlers.onMouseDown(event, product);
+    async _sortDrop({ element, previous, next }) {
+        const elementId = Number(element.dataset.productId);
+        if (isNaN(elementId)) {
+            return;
+        }
+        let currentSeq = 0;
+        while (previous) {
+            if (previous.dataset.pos_sequence) {
+                currentSeq = Number(previous.dataset.pos_sequence) + 1;
+                break;
+            }
+            previous = previous.previousElementSibling;
+        }
+        if (!currentSeq) {
+            currentSeq = 1;
+        }
+
+        const sequenceById = { [elementId]: currentSeq };
+
+        while (next) {
+            if (next == element) {
+                next = next.nextElementSibling;
+            }
+            const nextSeq = Number(next.dataset.pos_sequence);
+            if (nextSeq > currentSeq) {
+                break;
+            }
+            currentSeq += 1;
+            const nextId = Number(next.dataset.productId);
+            if (!isNaN(nextId)) {
+                sequenceById[nextId] = currentSeq;
+            }
+            next = next.nextElementSibling;
+        }
+
+        // Force a rerender on the screen
+        for (const [id, seq] of Object.entries(sequenceById)) {
+            const record = this.pos.models["product.template"].get(Number(id));
+            record?.update({ pos_sequence: seq });
+        }
+        await this.pos.data.call("product.template", "set_pos_sequence", [sequenceById]);
     }
 
-    onTouchStart(product) {
+    onPointerDown(event, product) {
+        if (isNaN(Number(product.id))) {
+            return;
+        }
+        if (event.pointerType == "mouse") {
+            this.longPressHandlers.onMouseDown(event, product);
+            return;
+        }
         this.longPressHandlers.onTouchStart(product);
     }
 

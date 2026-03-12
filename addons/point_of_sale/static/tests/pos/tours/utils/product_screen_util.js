@@ -1017,8 +1017,8 @@ export function longPressProduct(productName) {
             content: `Long pressing product "${productName}"...`,
             trigger: `.product-list .product-name:contains("${productName}")`,
             run: async (el) => {
-                const mouseDown = new MouseEvent("mousedown", { bubbles: true });
-                const mouseUp = new MouseEvent("mouseup", { bubbles: true });
+                const mouseDown = new MouseEvent("pointerdown", { bubbles: true });
+                const mouseUp = new MouseEvent("pointerup", { bubbles: true });
                 el.anchor.dispatchEvent(mouseDown);
                 await new Promise((resolve) => setTimeout(resolve, LONG_PRESS_DURATION + 50));
                 el.anchor.dispatchEvent(mouseUp);

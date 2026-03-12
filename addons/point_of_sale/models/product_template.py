@@ -49,6 +49,13 @@ class ProductTemplate(models.Model):
         copy=False,
     )
 
+    @api.model
+    def set_pos_sequence(self, sequence_by_id):
+        for tmpl_id, sequence in sequence_by_id.items():
+            product_tmpl = self.browse(int(tmpl_id))
+            if product_tmpl.exists():
+                product_tmpl.pos_sequence = sequence
+
     def write(self, vals):
         # Clear empty public description content to avoid side-effects on product page
         # when there is no content to display anyway.

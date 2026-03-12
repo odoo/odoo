@@ -32,8 +32,10 @@ export const setupPosEnv = async () => {
     store.setCashier(store.user);
     patchWithCleanup(user, {
         // Needed for the allowProductCreation method
+        // and for product reorder in the frontend
         checkAccessRight: (model, operation) =>
-            operation === "create" && model === "product.product",
+            (operation === "create" && model === "product.product") ||
+            (operation === "write" && model === "product.template"),
     });
     return store;
 };

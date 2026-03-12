@@ -26,7 +26,7 @@
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
                     <CategorySelector t-if="this.pos.productToDisplayByCateg.length > 0 and (!this.ui.isSmall || !this.pos.scanning)" />
                     <BarcodeVideoScanner t-if="this.pos.scanning" t-props="this.barcodeVideoScannerProps" />
-                    <div t-elif="this.pos.productToDisplayByCateg.length > 0" class="overflow-y-auto" t-on-scroll="this.onScroll">
+                    <div t-elif="this.pos.productToDisplayByCateg.length > 0" t-ref="productsRoot" class="overflow-y-auto" t-on-scroll="this.onScroll">
                         <div t-foreach="this.pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 py-2">
                             <ProductCard
                                 t-foreach="productCateg[1]" t-as="product" t-key="product.id"
@@ -38,10 +38,8 @@
                                 color="product.color || product.pos_categ_ids?.at(-1)?.color"
                                 imageUrl="this.pos.config.show_product_images and this.getProductImage(product)"
                                 onClick.bind="() => this.addProductToOrder(product)"
-                                t-on-mousedown="(event) => this.onMouseDown(event, product)"
-                                t-on-mouseup="this.longPressHandlers.onMouseUp"
-                                t-on-touchstart="(event) => this.onTouchStart(product)"
-                                t-on-touchend="this.longPressHandlers.onTouchEnd"
+                                t-on-pointerdown="(event) => this.onPointerDown(event, product)"
+                                t-on-pointerup="longPressHandlers.onMouseUp"
                                 productCartQty="this.state.quantityByProductTmplId[product.id]" />
                         </div>
                     </div>
