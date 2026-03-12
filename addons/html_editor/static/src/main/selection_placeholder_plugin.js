@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { fillEmpty } from "@html_editor/utils/dom";
 import {
     allowsParagraphRelatedElements,
     isEmpty,
@@ -127,7 +126,6 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 if (!sibling || isSelectionBlocker(sibling)) {
                     // Create the placeholder.
                     const placeholder = this.dependencies.baseContainer.createBaseContainer();
-                    fillEmpty(placeholder);
                     placeholder.setAttribute(PLACEHOLDER_ATTRIBUTE, "");
                     // Position the placeholder.
                     const siblings = side === "before" ? [sibling, blocker] : [blocker, sibling];

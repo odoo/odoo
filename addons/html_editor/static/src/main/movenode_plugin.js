@@ -478,8 +478,6 @@ export class MoveNodePlugin extends Plugin {
                     previousParent.remove();
                 } else {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    const br = document.createElement("br");
-                    baseContainer.append(br);
                     previousParent.append(baseContainer);
                 }
             }

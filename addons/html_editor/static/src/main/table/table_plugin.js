@@ -1,12 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-    removeStyle,
-} from "@html_editor/utils/dom";
+import { removeClass, removeStyle } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -390,7 +385,6 @@ export class TablePlugin extends Plugin {
 
     createTable({ rows = 2, cols = 2 } = {}) {
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        fillShrunkPhrasingParent(baseContainer);
         const baseContainerHtml = baseContainer.outerHTML;
         const tdsHtml = new Array(cols).fill(`<td>${baseContainerHtml}</td>`).join("");
         const trsHtml = new Array(rows).fill(`<tr>${tdsHtml}</tr>`).join("");
@@ -461,7 +455,6 @@ export class TablePlugin extends Plugin {
                 }
                 const newCell = this.document.createElement(cell.tagName);
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                fillEmpty(baseContainer);
                 newCell.append(baseContainer);
                 if (rows[rowIndex].contains(cell)) {
                     cell[position](newCell);
@@ -538,7 +531,6 @@ export class TablePlugin extends Plugin {
                 } else {
                     const td = this.document.createElement("td");
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    fillEmpty(baseContainer);
                     td.append(baseContainer);
                     newRow.append(td);
                 }
@@ -608,7 +600,6 @@ export class TablePlugin extends Plugin {
             if (td && td.colSpan > minColSpanToRemove) {
                 td.colSpan -= minColSpanToRemove;
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.appendChild(this.document.createElement("br"));
                 td.replaceChildren(baseContainer);
             } else if (td) {
                 td.remove();
@@ -656,7 +647,6 @@ export class TablePlugin extends Plugin {
                 cell.removeAttribute("rowspan");
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.appendChild(this.document.createElement("br"));
             cell.replaceChildren(baseContainer);
         });
         for (let i = 0; i < minRowSpanToRemove; i++) {
@@ -895,7 +885,6 @@ export class TablePlugin extends Plugin {
         const index = cells.findIndex((td) => td === cell);
         table.querySelectorAll(`tr :is(td, th):nth-of-type(${index + 1})`).forEach((td) => {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            fillEmpty(baseContainer);
             td.replaceChildren(baseContainer);
         });
     }
@@ -905,7 +894,6 @@ export class TablePlugin extends Plugin {
     clearRowContent(row) {
         row.querySelectorAll("td, th").forEach((td) => {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            fillEmpty(baseContainer);
             td.replaceChildren(baseContainer);
         });
     }
@@ -926,7 +914,6 @@ export class TablePlugin extends Plugin {
             return;
         }
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        baseContainer.appendChild(this.document.createElement("br"));
         table.before(baseContainer);
         table.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
@@ -986,7 +973,6 @@ export class TablePlugin extends Plugin {
                     if (nextTr) {
                         const newTd = this.document.createElement("td");
                         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                        fillEmpty(baseContainer);
                         newTd.append(baseContainer);
                         const targetTd = nextTr.childNodes[colIndex];
                         if (targetTd) {
@@ -1005,7 +991,6 @@ export class TablePlugin extends Plugin {
                         newCell.classList.add("o_table_header");
                     }
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    fillEmpty(baseContainer);
                     newCell.append(baseContainer);
                     cell.after(newCell);
                 }
@@ -1075,7 +1060,6 @@ export class TablePlugin extends Plugin {
 
         for (const td of selectedTds) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.appendChild(this.document.createElement("br"));
             td.replaceChildren(baseContainer);
         }
         this.dependencies.selection.setCursorStart(firstCell.firstChild);

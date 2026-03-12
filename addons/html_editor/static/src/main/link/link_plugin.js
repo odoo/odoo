@@ -584,7 +584,7 @@ export class LinkPlugin extends Plugin {
                             const baseContainer =
                                 this.dependencies.baseContainer.createBaseContainer();
                             link.before(baseContainer);
-                            baseContainer.append(link);
+                            baseContainer.replaceChildren(link);
                         }
                     } else {
                         const content = this.dependencies.selection.extractContent(selection);

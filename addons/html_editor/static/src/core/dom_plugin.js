@@ -151,21 +151,19 @@ export class DomPlugin extends Plugin {
     ) {
         // Helpers to manipulate preserving selection.
         const wrapInBlock = (node, cursors) => {
-            const block = isPhrasingContent(node)
-                ? createBaseContainer(baseContainerNodeName, node.ownerDocument)
-                : node.ownerDocument.createElement("DIV");
+            const nextSibling = node.nextSibling;
+            const parent = node.parentElement;
+            let block;
+            if (isPhrasingContent(node)) {
+                block = createBaseContainer(baseContainerNodeName, node.ownerDocument, [node]);
+            } else {
+                block = node.ownerDocument.createElement("DIV");
+                node.remove();
+                block.append(node);
+            }
             cursors.update(callbacksForCursorUpdate.append(block, node));
             cursors.update(callbacksForCursorUpdate.before(node, block));
-            if (node.nextSibling) {
-                const sibling = node.nextSibling;
-                node.remove();
-                sibling.before(block);
-            } else {
-                const parent = node.parentElement;
-                node.remove();
-                parent.append(block);
-            }
-            block.append(node);
+            nextSibling ? nextSibling.before(block) : parent.append(block);
             return block;
         };
         const appendToCurrentBlock = (currentBlock, node, cursors) => {
@@ -731,9 +729,9 @@ export class DomPlugin extends Plugin {
                 newCandidate.classList.add(extraClass);
             }
             if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer(
-                    newCandidate.nodeName
-                );
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                    nodeName: newCandidate.nodeName,
+                });
                 this.copyAttributes(newCandidate, baseContainer);
                 newCandidate = baseContainer;
             }
@@ -771,7 +769,7 @@ export class DomPlugin extends Plugin {
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
-                newCandidate.append(...childNodes(block));
+                newCandidate.replaceChildren(...childNodes(block));
                 block.append(newCandidate);
                 cursors.remapNode(block, newCandidate);
                 newCandidate = createNewCandidate();

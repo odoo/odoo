@@ -129,8 +129,9 @@ export class SyntaxHighlightingPlugin extends Plugin {
                     this.dependencies.history.stageSelection();
                     const component = target.closest(`[data-embedded='${name}']`);
                     const embeddedProps = getEmbeddedProps(component);
-                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    baseContainer.textContent = embeddedProps.value;
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                        children: [this.document.createTextNode(embeddedProps.value)],
+                    });
                     component.replaceWith(baseContainer);
                     newlinesToLineBreaks(baseContainer);
                     this.dependencies.selection.setCursorStart(baseContainer);

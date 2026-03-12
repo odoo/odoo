@@ -31,9 +31,13 @@ export const baseContainerGlobalSelector = `:is(${SUPPORTED_BASE_CONTAINER_NAMES
  *                   For iframes, preferably use the iframe document.
  *                   Fallbacks to the window document if possible and unspecified.
  *                   Has to be specified otherwise.
+ * @param {Node[]} [children] Optional children to append inside the container.
+ *                   If provided, the children are appended to the container.
+ *                   If not provided or empty, a trailing <br> is inserted to keep
+ *                   container editable when empty.
  * @returns {HTMLElement}
  */
-export function createBaseContainer(nodeName, document) {
+export function createBaseContainer(nodeName, document, children) {
     if (!document && window) {
         document = window.document;
     }
@@ -41,6 +45,11 @@ export function createBaseContainer(nodeName, document) {
     const el = document.createElement(nodeName);
     if (nodeName !== "P") {
         el.className = BASE_CONTAINER_CLASS;
+    }
+    if (children?.length) {
+        el.append(...children);
+    } else {
+        el.appendChild(document.createElement("br"));
     }
     return el;
 }

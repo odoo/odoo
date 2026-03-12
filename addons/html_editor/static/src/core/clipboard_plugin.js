@@ -6,7 +6,7 @@ import {
 } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { unwrapContents, splitTextNode, fillEmpty } from "../utils/dom";
+import { unwrapContents, splitTextNode } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
@@ -355,11 +355,12 @@ export class ClipboardPlugin extends Plugin {
                     ) {
                         // Do something only if blockBefore is not a DIV (which is the no-margin option)
                         // replace blockBefore by a DIV.
-                        const div = this.dependencies.baseContainer.createBaseContainer("DIV");
+                        const div = this.dependencies.baseContainer.createBaseContainer({
+                            nodeName: "DIV",
+                            children: [...childNodes(blockBefore)],
+                        });
                         const cursors = this.dependencies.selection.preserveSelection();
-                        blockBefore.before(div);
-                        div.replaceChildren(...childNodes(blockBefore));
-                        blockBefore.remove();
+                        blockBefore.replaceWith(div);
                         cursors.remapNode(blockBefore, div).restore();
                     }
                 }
@@ -483,13 +484,13 @@ export class ClipboardPlugin extends Plugin {
                         if (whiteSpace && !["normal", "nowrap"].includes(whiteSpace)) {
                             node.innerHTML = node.innerHTML.replace(/\n/g, "<br>");
                         }
-                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                            children: [...node.childNodes],
+                        });
                         const dir = node.getAttribute("dir");
                         if (dir) {
                             baseContainer.setAttribute("dir", dir);
                         }
-                        baseContainer.append(...node.childNodes);
-
                         node.replaceWith(baseContainer);
                         childrenNodes = childNodes(baseContainer);
                     } else {
@@ -508,7 +509,6 @@ export class ClipboardPlugin extends Plugin {
                 // Insert base container into empty TD.
                 if (isEmptyBlock(node)) {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    fillEmpty(baseContainer);
                     node.replaceChildren(baseContainer);
                 }
 

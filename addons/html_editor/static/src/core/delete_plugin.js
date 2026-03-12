@@ -556,7 +556,6 @@ export class DeletePlugin extends Plugin {
             ) {
                 // @todo: not sure we want this when allowInlineAtRoot is true
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.appendChild(this.document.createElement("br"));
                 block.appendChild(baseContainer);
             } else {
                 block.appendChild(this.document.createElement("br"));

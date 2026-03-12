@@ -464,7 +464,6 @@ export class ToggleBlockPlugin extends Plugin {
                     toggle.after(...children(content));
                 }
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.appendChild(this.document.createElement("br"));
                 toggle.replaceWith(baseContainer);
                 this.dependencies.selection.setCursorStart(baseContainer);
                 return true;
@@ -593,7 +592,6 @@ export class ToggleBlockPlugin extends Plugin {
             `${toggleSelector} [data-embedded-editable]:empty`
         )) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.appendChild(this.document.createElement("br"));
             emptyToggleNode.replaceChildren(baseContainer);
         }
     }

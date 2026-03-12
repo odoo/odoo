@@ -440,10 +440,11 @@ export class FontPlugin extends Plugin {
             });
             const isPreBlock = beforeElement.nodeName === "PRE";
             const baseContainer = isPreBlock
-                ? this.dependencies.baseContainer.createBaseContainer()
+                ? this.dependencies.baseContainer.createBaseContainer({
+                      children: [...afterElement.childNodes],
+                  })
                 : afterElement;
             if (isPreBlock) {
-                baseContainer.replaceChildren(...afterElement.childNodes);
                 afterElement.replaceWith(baseContainer);
             } else {
                 beforeElement.remove();
@@ -536,12 +537,13 @@ export class FontPlugin extends Plugin {
                 headingTags.includes(newElement.tagName) &&
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                    children: [...newElement.childNodes],
+                });
                 const dir = newElement.getAttribute("dir");
                 if (dir) {
                     baseContainer.setAttribute("dir", dir);
                 }
-                baseContainer.replaceChildren(...newElement.childNodes);
                 newElement.replaceWith(baseContainer);
                 this.dependencies.selection.setCursorStart(baseContainer);
             }
@@ -569,10 +571,10 @@ export class FontPlugin extends Plugin {
         if (this.dependencies.delete.isUnremovable(closestHandledElement)) {
             return;
         }
-        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        baseContainer.append(...closestHandledElement.childNodes);
-        closestHandledElement.after(baseContainer);
-        closestHandledElement.remove();
+        const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+            children: [...closestHandledElement.childNodes],
+        });
+        closestHandledElement.replaceWith(baseContainer);
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
     }

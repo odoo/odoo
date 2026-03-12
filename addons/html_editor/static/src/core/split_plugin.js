@@ -445,7 +445,7 @@ export class SplitPlugin extends Plugin {
                     // of the BR.
                     block = this.dependencies.baseContainer.createBaseContainer();
                     childrenToInsert[0]?.before(block);
-                    block.append(...childrenToInsert);
+                    block.replaceChildren(...childrenToInsert);
                     cursors.restore();
                 } else {
                     // If we can't insert a base container here, there's nothing

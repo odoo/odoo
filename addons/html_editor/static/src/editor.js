@@ -1,6 +1,6 @@
 import { MAIN_PLUGINS, TOUCH_EXCLUDED_PLUGINS } from "./plugin_sets";
 import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
-import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
+import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, warnOfNamingConvention, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
@@ -137,7 +137,6 @@ export class Editor {
                     this.config.baseContainers[0],
                     this.document
                 );
-                fillShrunkPhrasingParent(baseContainer);
                 editable.replaceChildren(baseContainer);
             }
         }

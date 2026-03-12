@@ -197,10 +197,10 @@ export class CaptionPlugin extends Plugin {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 if (figure.parentElement.nodeName === "A") {
                     figure.parentElement.before(baseContainer);
-                    baseContainer.append(figure.parentElement);
+                    baseContainer.replaceChildren(figure.parentElement);
                 } else {
                     figure.before(baseContainer);
-                    baseContainer.append(figure);
+                    baseContainer.replaceChildren(figure);
                 }
             }
             unwrapContents(figure);

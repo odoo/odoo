@@ -27,7 +27,6 @@ export class EmptyMailingPlugin extends Plugin {
                 .getSnippetByName("snippet_structure", "s_text_block")
                 .content.cloneNode(true);
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
             const container = textSnippet.querySelector(".container");
             container.replaceChildren(baseContainer);
             wrapperTd.replaceChildren(textSnippet);

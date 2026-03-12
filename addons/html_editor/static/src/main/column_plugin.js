@@ -220,7 +220,6 @@ export class ColumnPlugin extends Plugin {
 
     createEmptyParagraph() {
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        baseContainer.append(this.document.createElement("br"));
         return baseContainer;
     }
 
@@ -245,7 +244,6 @@ export class ColumnPlugin extends Plugin {
                 const column = this.document.createElement("div");
                 column.classList.add(`col-${columnSize}`, "o-contenteditable-true");
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.append(this.document.createElement("br"));
                 column.append(baseContainer);
                 lastColumn.after(column);
                 lastColumn = column;

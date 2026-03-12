@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
+import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
@@ -175,12 +175,12 @@ export class BannerPlugin extends Plugin {
             baseContainer = this.document.createElement(blockEl.nodeName);
             baseContainer.append(...blockEl.childNodes);
         } else if (blockEl.nodeName === "LI") {
-            baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(...blockEl.childNodes);
+            baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                children: [...blockEl.childNodes],
+            });
             fillShrunkPhrasingParent(blockEl);
         } else {
             baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            fillShrunkPhrasingParent(baseContainer);
         }
         const baseContainerHtml = baseContainer.outerHTML;
         const bannerElement = parseHTML(
@@ -217,7 +217,6 @@ export class BannerPlugin extends Plugin {
         }
         const bannerElement = closestElement(editorBannerContent, ".o_editor_banner");
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        fillEmpty(baseContainer);
         bannerElement.replaceWith(baseContainer);
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
