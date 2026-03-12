@@ -282,8 +282,8 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
 }
 export function applyTextHighlight(highlightEl, highlightID) {
     const svgs = makeHighlightSvgs(highlightEl, highlightID);
-    for (const svg of svgs) {
-        highlightEl.appendChild(svg);
+    for (const svg of svgs.toReversed()) {
+        highlightEl.insertBefore(svg, highlightEl.lastElementChild);
         adaptHighlightPosition(highlightEl, svg);
     }
 }
