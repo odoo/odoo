@@ -117,6 +117,8 @@ AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
+AVERAGE_NUMBER_OF_FIELDS = 2 # the best estimation is the average number of needed fields.
+
 
 # hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
 NO_ACCESS = '.'
@@ -3756,12 +3758,15 @@ class BaseModel(metaclass=MetaModel):
             instance) for ``self`` in cache.
         """
         # determine which fields can be prefetched
+        big_recordset_prefetch_fields = None if len(self) <= PREFETCH_MAX * AVERAGE_NUMBER_OF_FIELDS else self.env.cr.cache.set_default('big_recordset_prefetch_fields', set())
         if self.env.context.get('prefetch_fields', True) and field.prefetch:
             fnames = [
                 name
                 for name, f in self._fields.items()
                 # select fields with the same prefetch group
                 if f.prefetch == field.prefetch
+                # if needed_fields is set, restrict to the allowed names
+                if big_recordset_prefetch_fields is None or name in big_recordset_prefetch_fields
                 # discard fields with groups that the user may not access
                 if self._has_field_access(f, 'read')
             ]
@@ -3769,6 +3774,8 @@ class BaseModel(metaclass=MetaModel):
                 fnames.append(field.name)
         else:
             fnames = [field.name]
+        if big_recordset_prefetch_fields is not None:
+            big_recordset_prefetch_fields.update(fnames)
         self.fetch(fnames)
 
     @api.private
