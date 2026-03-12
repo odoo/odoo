@@ -281,3 +281,19 @@ class TestProjectTemplates(TestProjectCommon):
         self.assertTrue(task_template.is_template)
         self.assertEqual(task_template.role_ids, self.task_template_inside_template.role_ids)
         self.assertFalse(task_template.user_ids)
+
+    def test_project_template_stage_copy(self):
+        """ The stage of a project template should be copied to the new project """
+        # Ensure project stages are enabled for the current user
+        self.env.user.group_ids |= self.env.ref('project.group_project_stages')
+
+        template_stage = self.env['project.project.stage'].create({'name': 'Template Stage', 'sequence': 100})
+        self.project_template.stage_id = template_stage
+
+        # Create project from template
+        new_project = self.project_template.action_create_from_template()
+        self.assertEqual(
+            new_project.stage_id,
+            template_stage,
+            "The new project should correctly inherit the 'Template Stage' from its template.",
+        )
