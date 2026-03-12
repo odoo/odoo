@@ -307,6 +307,42 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
             }
         )
 
+    def test_portal_post_child_contact(self):
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Portal Contact',
+            'parent_id': self.user_portal.partner_id.id,
+            'email': 'child.portal@test.example.com',
+        })
+        user_child_portal = mail_new_test_user(
+            self.env, login='user_child_portal',
+            partner_id=child_partner.id,
+            groups='base.group_portal',
+        )
+        self.authenticate(user_child_portal.login, user_child_portal.login)
+        post_url = f"{self.lead_portal.get_base_url()}/mail/chatter_post"
+        res = self.opener.post(
+            url=post_url,
+            json={
+                'params': {
+                    'csrf_token': http.Request.csrf_token(self),
+                    'message': 'Test',
+                    'res_model': self.lead_portal._name,
+                    'res_id': self.lead_portal.id,
+                    'pid': user_child_portal.partner_id.id,
+                },
+            },
+        )
+        res.raise_for_status()
+        self.assertNotIn("error", res.json())
+        message = self.lead_portal.message_ids[0]
+        self.assertMessageFields(
+            message, {
+                'author_id': child_partner,
+                'body': '<p>Test</p>',
+                'message_type': 'comment',
+            }
+        )
+
     def test_route_portal_my_opportunities_as_portal(self):
         """Test that the portal user can access its own opportunities even if
         does not have access to the 'activity_date_deadline' field (needed

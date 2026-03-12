@@ -351,6 +351,6 @@ class CrmLead(models.Model):
         # controllers and UI
         if operation == 'create' and res_ids and (not model_name or model_name == 'crm.lead'):
             leads = self.browse(res_ids).with_prefetch(self._prefetch_ids)  # force prefetch, lost otherwise with rebrowsing
-            if all(lead.partner_assigned_id == self.env.user.partner_id for lead in leads):
+            if all(lead.partner_assigned_id == self.env.user.commercial_partner_id for lead in leads):
                 return 'read'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
