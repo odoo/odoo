@@ -1496,10 +1496,9 @@ test("Image should not be inserted in a formatted empty node", async () => {
     Partner._records = [
         {
             id: 1,
-            txt: `<div class="o-paragraph"><strong>test</strong></div>
-                    <div class="o-paragraph">
-                        <strong data-oe-zws-empty-inline="">\u200b</strong><br />
-                    </div>`,
+            txt: `<div class="o-paragraph">
+                    <strong>a</strong>
+                  </div>`,
         },
     ];
 
@@ -1513,9 +1512,11 @@ test("Image should not be inserted in a formatted empty node", async () => {
             </form>`,
     });
     setSelection({
-        anchorNode: queryOne("div.o-paragraph strong[data-oe-zws-empty-inline]"),
-        anchorOffset: 0,
+        anchorNode: queryOne("div.o-paragraph strong"),
+        anchorOffset: 1,
     });
+    await press("Backspace");
+    await animationFrame();
     await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");

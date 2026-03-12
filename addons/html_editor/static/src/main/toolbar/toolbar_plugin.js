@@ -162,6 +162,7 @@ export class ToolbarPlugin extends Plugin {
         on_selection_leave_handlers: () => this.closeToolbar(),
         on_selection_enter_handlers: () => this.updateToolbar(),
         on_step_added_handlers: () => this.updateToolbar(),
+        on_format_requested_handlers: () => this.updateToolbar(),
         user_commands: {
             id: "expandToolbar",
             run: () => {

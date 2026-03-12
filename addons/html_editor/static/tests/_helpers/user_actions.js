@@ -288,7 +288,7 @@ export function setFontSizeClassName(className) {
 }
 export function setFontFamily(fontFamily) {
     return (editor) => {
-        editor.shared.format.formatSelection("fontFamily", {
+        editor.shared.format.requestFormat("fontFamily", {
             applyStyle: fontFamily !== false,
             formatProps: {
                 name: fontFamily + "_name",

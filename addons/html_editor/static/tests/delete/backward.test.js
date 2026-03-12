@@ -133,12 +133,13 @@ describe("Selection collapsed", () => {
                 stepFunction: deleteBackward,
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
-                    '<div><p>ab</p><br><i data-oe-zws-empty-inline="">[]\u200B</i></div>' +
+                    "<div><p>ab</p><br><br>[]</div>" +
                     '<p data-selection-placeholder=""><br></p>',
                 contentAfter: "<div><p>ab</p><br><br>[]</div>",
             });
         });
 
+        // Same.
         test("should keep inline block (2)", async () => {
             await testEditor({
                 contentBefore: '<div><p>uv</p><br><span class="style">w[]</span></div>',
@@ -175,7 +176,7 @@ describe("Selection collapsed", () => {
                     await insertText(editor, "x");
                     undo(editor);
                 },
-                contentAfterEdit: '<p>ab<b data-oe-zws-empty-inline="">[]\u200B</b>de</p>',
+                contentAfterEdit: "<p>ab[]de</p>",
                 contentAfter: "<p>ab[]de</p>",
             });
         });
@@ -576,24 +577,6 @@ describe("Selection collapsed", () => {
                 contentBefore: `<p>a<a class="btn" href="http://test.test/">[]</a></p>`,
                 stepFunction: deleteBackward,
                 contentAfter: `<p>a[]</p>`,
-            });
-        });
-
-        test("should delete empty styled paragraph(s) and move cursor to previous styled inline (1)", async () => {
-            await testEditor({
-                contentBefore: `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
-                stepFunction: deleteBackward,
-                contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
-                contentAfter: `<p>[]<br></p>`,
-            });
-        });
-
-        test("should delete empty styled paragraph(s) and move cursor to previous styled inline (2)", async () => {
-            await testEditor({
-                contentBefore: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
-                stepFunction: deleteBackward,
-                contentAfterEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
-                contentAfter: `<p><strong>abc</strong></p><p><br></p><p>[]<br></p>`,
             });
         });
     });
@@ -1702,6 +1685,9 @@ describe("Selection collapsed", () => {
 
 describe("Selection not collapsed", () => {
     test("ZWS : should keep inline block (1)", async () => {
+        // why data-oe-zws-empty-inline my cursor is alreay within it....
+        // and if i move my cursor the span should be removed!
+        // To remove?
         await testEditor({
             contentBefore: '<div><p>ab <span class="style">[c]</span> d</p></div>',
             stepFunction: async (editor) => {

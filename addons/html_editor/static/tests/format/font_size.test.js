@@ -4,7 +4,6 @@ import { unformat } from "../_helpers/format";
 import { setFontSize, setFontSizeClassName, tripleClick } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 import { press } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
@@ -35,14 +34,6 @@ test("should change the font size of a whole heading after a triple click", asyn
         },
         contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
     });
-});
-
-test("should get ready to type with a different font size", async () => {
-    const { editor } = await setupEditor('<p class="p">ab[]cd</p>');
-    execCommand(editor, "formatFontSize", { size: "36px" });
-    await animationFrame();
-    expect(".p span").toHaveStyle({ "font-size": "36px" });
-    expect(".p span").toHaveAttribute("data-oe-zws-empty-inline", "");
 });
 
 test("should change the font-size for a character in an inline that has a font-size", async () => {
