@@ -120,6 +120,14 @@ export function isChildTable(child) {
     };
 }
 
+export function clickAddFloor() {
+    return {
+        content: "click add floor",
+        trigger: `.floor-selector button i[aria-label="Add Floor"]`,
+        run: "click",
+    };
+}
+
 import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
 import { patch } from "@web/core/utils/patch";
 import * as hoot from "@odoo/hoot-dom";
