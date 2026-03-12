@@ -56,9 +56,9 @@ except ImportError:
 from odoo import api, sql_db
 from odoo.http.server import HTTPSocket
 from odoo.modules.registry import Registry
+from odoo.orm.cache import log_ormcache_stats
 from odoo.release import nt_service_name
 from odoo.tools import OrderedSet, config, gc, osutil, profiler
-from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import dumpstacks, mute_logger, stripped_sys_argv
 
 _logger = logging.getLogger(__name__)

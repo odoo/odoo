@@ -4,7 +4,7 @@ from lxml import etree
 from odoo import api, fields, models
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
-from odoo.tools import float_is_zero, float_round, frozendict, html2plaintext, ormcache
+from odoo.tools import float_is_zero, float_round, frozendict, html2plaintext
 
 
 VALID_TAX_CODES = {
@@ -281,7 +281,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             }
 
     @api.model
-    @ormcache('move.id')
+    @api.ormcache('move.id')
     def _get_move_tax_data(self, move):
         scopes = set()
         tax_exigibility_on_invoice = False

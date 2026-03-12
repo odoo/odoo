@@ -14,7 +14,6 @@ from odoo.tests import tagged, common
 from odoo.tests.common import BaseCase, HttpCase, TransactionCase
 from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
-from odoo.tools.cache import get_cache_key_counter
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -34,6 +33,7 @@ class TestOrmCache(TransactionCase):
         XMLID = 'base.group_no_one'
 
         # retrieve the cache, its key and stat counter
+        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
         cache, key, counter = get_cache_key_counter(IMD._xmlid_lookup, XMLID)
         hit = counter.hit
         miss = counter.miss

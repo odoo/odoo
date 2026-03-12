@@ -613,7 +613,7 @@ class IrHttp(models.AbstractModel):
     # ------------------------------------------------------------
 
     @api.model
-    @tools.ormcache('path', 'query_args', cache='routing.rewrites')
+    @api.ormcache('path', 'query_args', cache='routing.rewrites')
     def url_rewrite(self, path, query_args=None):
         new_url = False
         router = root.get_db_router(request.db).bind('')

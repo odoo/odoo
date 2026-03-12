@@ -30,7 +30,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, tools
+from odoo import api, models
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied
 from odoo.http import Response, request
@@ -448,7 +448,7 @@ class IrHttp(models.AbstractModel):
         from odoo.http.routing_map import _generate_routing_rules  # noqa: PLC0415
         return _generate_routing_rules(modules, False, converters)
 
-    @tools.ormcache('key', cache='routing')
+    @api.ormcache('key', cache='routing')
     def routing_map(self, key=None):
         _logger.info("Generating routing map for key %s", key)
         registry = Registry(threading.current_thread().dbname)
@@ -500,7 +500,7 @@ class IrHttp(models.AbstractModel):
         return translations_per_module, lang_params
 
     @api.model
-    @tools.ormcache('frozenset(modules)', 'lang')
+    @api.ormcache('frozenset(modules)', 'lang')
     def _get_web_translations_hash(self, modules, lang):
         translations, lang_params = self._get_translations_for_webclient(modules, lang)
         translation_cache = {

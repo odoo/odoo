@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 
 class MailMessageSubtype(models.Model):
@@ -43,7 +43,7 @@ class MailMessageSubtype(models.Model):
     track_recipients = fields.Boolean('Track Recipients',
                                       help="Whether to display all the recipients or only the important ones.")
 
-    @tools.ormcache('model_name')
+    @api.ormcache('model_name')
     def _get_auto_subscription_subtypes(self, model_name):
         """ Return data related to auto subscription based on subtype matching.
         Here model_name indicates child model (like a task) on which we want to
@@ -90,7 +90,7 @@ class MailMessageSubtype(models.Model):
         subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
         return self.browse(subtype_ids), self.browse(internal_ids), self.browse(external_ids)
 
-    @tools.ormcache('self.env.uid', 'self.env.su', 'model_name')
+    @api.ormcache('self.env.uid', 'self.env.su', 'model_name')
     def _default_subtypes(self, model_name):
         domain = [('default', '=', True),
                   '|', ('res_model', '=', model_name), ('res_model', '=', False)]

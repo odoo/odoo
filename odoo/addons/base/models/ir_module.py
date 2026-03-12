@@ -912,7 +912,7 @@ class IrModuleModule(models.Model):
         model_id = self._get_id(name) if name else False
         return self.browse(model_id).sudo()
 
-    @tools.ormcache('name', cache='stable')
+    @api.ormcache('name', cache='stable')
     def _get_id(self, name):
         self.flush_model(['name'])
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
@@ -920,7 +920,7 @@ class IrModuleModule(models.Model):
         return result and result[0]
 
     @api.model
-    @tools.ormcache(cache='stable')
+    @api.ormcache(cache='stable')
     def _installed(self):
         """ Return the set of installed modules as a dictionary {name: id} """
         return {

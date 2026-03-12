@@ -46,7 +46,7 @@ from odoo.exceptions import AccessError, LockError, MissingError, ValidationErro
 from odoo.tools import (
     clean_context, format_list,
     frozendict, get_lang, OrderedSet,
-    ormcache, partition, split_every, unique,
+    partition, split_every, unique,
     SQL, sql, groupby,
 )
 from odoo.tools.constants import PREFETCH_MAX
@@ -2433,7 +2433,7 @@ class BaseModel(metaclass=MetaModel):
                 value=value,
             ))
 
-    @ormcache()
+    @api.ormcache()
     def _table_has_rows(self) -> bool:
         """ Return whether the model's table has rows. This method should only
             be used when updating the database schema (:meth:`~._auto_init`).

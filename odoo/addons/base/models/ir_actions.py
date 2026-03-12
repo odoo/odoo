@@ -163,7 +163,7 @@ class IrActionsActions(models.Model):
                 result[action_type] = actions
         return result
 
-    @tools.ormcache('model_name', 'self.env.lang')
+    @api.ormcache('model_name', 'self.env.lang')
     def _get_bindings(self, model_name):
         cr = self.env.cr
 
@@ -350,7 +350,7 @@ class IrActionsAct_Window(models.Model):
         return existing
 
     @api.model
-    @tools.ormcache()
+    @api.ormcache()
     def _existing(self):
         self.env.cr.execute("SELECT id FROM %s" % self._table)
         return {row[0] for row in self.env.cr.fetchall()}

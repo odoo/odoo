@@ -810,7 +810,7 @@ class Transaction:
 
     def invalidate_ormcache(self, cache_name: str = 'default') -> None:
         """ Clear the caches associated to methods decorated with
-        ``tools.ormcache`` if cache is in `cache_name` subset. """
+        ``api.ormcache`` if cache is in `cache_name` subset. """
         self.registry._clear_cache(cache_name)
 
     @deprecated("Since 20.0, renamed to invalidate_access_cache")

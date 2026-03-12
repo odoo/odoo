@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools import ormcache
 
 CACHE_INVALIDATE_FIELDS = ("lock_timeout", "lock_timeout_mfa", "lock_timeout_inactivity", "lock_timeout_inactivity_mfa")
 
@@ -189,7 +188,7 @@ class ResGroups(models.Model):
             self.env.transaction.invalidate_ormcache()
         return super().unlink()
 
-    @ormcache("self._ids")
+    @api.ormcache("self._ids")
     def _get_lock_timeouts(self):
         """
         Compute the session and inactivity timeout settings for the user.

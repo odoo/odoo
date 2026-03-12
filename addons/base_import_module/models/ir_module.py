@@ -19,7 +19,7 @@ from odoo.fields import Domain
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
 from odoo.tools import BinaryBytes, SQL, convert_file
-from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
+from odoo.tools import file_open, file_path, file_open_temporary_directory
 from odoo.tools.misc import OrderedSet, topological_sort
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
 
@@ -47,7 +47,7 @@ class IrModuleModule(models.Model):
     )
 
     @api.model
-    @ormcache(cache='stable')
+    @api.ormcache(cache='stable')
     def _get_imported_module_names(self):
         return OrderedSet(self.sudo().search_fetch([('imported', '=', True), ('state', '=', 'installed')], ['name']).mapped('name'))
 
@@ -476,7 +476,7 @@ class IrModuleModule(models.Model):
             raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
 
     @api.model
-    @ormcache('payload')
+    @api.ormcache('payload')
     def _call_apps(self, payload):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         import requests  # noqa: PLC0415
@@ -488,7 +488,7 @@ class IrModuleModule(models.Model):
             )
 
     @api.model
-    @ormcache()
+    @api.ormcache()
     def _get_industry_categories_from_apps(self):
         import requests  # noqa: PLC0415
         try:
@@ -605,7 +605,7 @@ class IrModuleModule(models.Model):
         return super().search_panel_select_range(field_name, **kwargs)
 
     @api.model
-    @ormcache('module', 'lang', cache='stable')
+    @api.ormcache('module', 'lang', cache='stable')
     def _get_imported_module_translations_for_webclient(self, module, lang):
         if not lang:
             lang = self.env.context.get("lang") or 'en_US'
