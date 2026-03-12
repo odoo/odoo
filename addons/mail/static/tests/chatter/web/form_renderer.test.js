@@ -263,6 +263,6 @@ test("read more/less should appear only once for the signature", async () => {
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "Example Body");
     await click("[name='open-full-composer']");
-    await contains(".o-mail-Message-body", { text: "Example Body", count: 1 });
+    await contains(".o-mail-Message-body:has(:text('Example Body'))");
     expect(".o-mail-Message .o-signature-container button.o-mail-ellipsis").toHaveCount(1);
 });
