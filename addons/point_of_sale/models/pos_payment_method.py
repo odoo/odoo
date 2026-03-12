@@ -211,6 +211,12 @@ class PosPaymentMethod(models.Model):
                 if error_msg:
                     raise ValidationError(error_msg)
 
+    @api.constrains('config_ids')
+    def _check_company_config(self):
+        for payment in self:
+            if self.env['pos.config'].search_count([('id', 'in', payment.config_ids.ids), ('company_id', '!=', payment.company_id.id)]):
+                raise ValidationError(_("The points of sale for the payment method %s must belong to its company.", payment.name))
+
     @api.depends('payment_method_type', 'journal_id')
     def _compute_qr(self):
         for pm in self:

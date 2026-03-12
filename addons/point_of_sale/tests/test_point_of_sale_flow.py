@@ -1161,6 +1161,28 @@ class TestPointOfSaleFlow(CommonPosTest):
         sub_pos_config.current_session_id.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
+    def test_pos_branch_payment_method_config(self):
+        """ This test checks that we don't set a config on a payment
+        method that have different companies.
+        """
+        branch = self.env['res.company'].create({
+            'name': 'Sub Company',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
+        })
+        self.env.cr.precommit.run()
+        self.env.user.group_ids += self.env.ref('point_of_sale.group_pos_manager')
+        bank_payment_method = self.bank_payment_method.copy()
+        sub_pos_config = self.env['pos.config'].with_company(branch).create({
+            'name': 'Main',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_journal_id': self.company_data['default_journal_sale'].id,
+        })
+
+        with self.assertRaises(ValidationError, msg="The points of sale for the payment method Bank must belong to its company."):
+            bank_payment_method.write({"config_ids": sub_pos_config.ids})
+
     def test_order_unexisting_lots(self):
         self.ten_dollars_with_10_incl.product_variant_id.write({
             'tracking': 'lot',
