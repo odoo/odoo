@@ -140,6 +140,7 @@ OWL_TRANSLATED_ATTRS = {
     "placeholder",
     "title",
 }
+OWL_TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in OWL_TRANSLATED_ATTRS})
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
@@ -1114,7 +1115,12 @@ def _extract_translatable_qweb_terms(element, callback):
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
                 if (not is_component and attr in OWL_TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
-                    _push(callback, el.attrib[attr], el.sourceline)
+                    if attr.startswith("t-attf-") and attr in OWL_TRANSLATED_ATTRS:
+                        val = []
+                        translate_format_string_expression(el.attrib[attr], val.append)
+                        _push(callback, val[0], el.sourceline)
+                    else:
+                        _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
