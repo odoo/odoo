@@ -818,6 +818,42 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             attributes={"listID": "CLASS"},
         )
 
+    def test_14_prepaid_amount_on_debit_credit_refund_notes(self):
+        """
+        Ensure that the prepaid amount is 0 and payable_amount is invoice.amount_total
+        """
+        basic_invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a,
+                                          post=True)
+
+        action = basic_invoice.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=basic_invoice.ids,
+            active_model='account.move',
+            default_journal_id=basic_invoice.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+        myinvois_document = credit_note._create_myinvois_document()
+
+        file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+
+        # Check that the prepaid amount is 0
+        self._assert_node_values(
+            root,
+            'cac:PrepaidPayment/cbc:PaidAmount',
+            '0.00',
+        )
+
+        # Check that the payable amount is the total amount of the invoice
+        self._assert_node_values(
+            root,
+            'cac:LegalMonetaryTotal/cbc:PayableAmount',
+            '2200.00',
+        )
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
