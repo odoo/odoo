@@ -94,9 +94,6 @@ export class DiscussSidebarChannel extends Component {
             "o-unread o-fw-600":
                 this.channel.self_member_id?.message_unread_counter > 0 &&
                 !this.channel.self_member_id?.mute_until_dt,
-            "opacity-75 opacity-100-hover":
-                this.channel.self_member_id?.message_unread_counter === 0 ||
-                this.channel.self_member_id?.mute_until_dt,
         };
     }
 

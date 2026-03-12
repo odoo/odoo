@@ -57,8 +57,12 @@
         outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, mix($o-view-background-color, $o-action, 50%)) !important;
     }
 
+    &:not(:hover):not(.o-unread):not(.o-active) .o-mail-DiscussSidebar-itemName {
+        opacity: 75%;
+    }
+
     &.o-active, &:hover {
-        .o-mail-DiscussSidebarChannel-itemName {
+        .o-mail-DiscussSidebar-itemName {
             filter: brightness(1.1);
         }
     }

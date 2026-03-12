@@ -34,9 +34,8 @@
                 'o-unread': this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt,
                 'opacity-50': this.channel.self_member_id?.mute_until_dt,
             }">
-                <span class="text-truncate" t-out="this.channel.displayName" t-att-class="{
-                    'o-fw-600': this.channel.self_member_id?.message_unread_counter > 0,
-                    'opacity-75 opacity-100-hover': !(this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt),
+                <span class="o-mail-DiscussSidebar-itemName text-truncate" t-out="this.channel.displayName" t-att-class="{
+                    'o-fw-600': this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt,
                 }" t-att-style="this.store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>
                 <span class="flex-grow-1"/>
                 <t t-if="!this.store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
