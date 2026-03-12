@@ -642,7 +642,7 @@ export async function resizeEventToTime(eventId, dateTime) {
  * @param {string} date
  * @returns {Promise<void>}
  */
-export async function resizeEventToDate(eventId, date) {
+export async function resizeEventToDate(eventId, date, fromStart=false) {
     const eventEl = findEvent(eventId);
     const slot = findAllDaySlot(date);
 
@@ -652,7 +652,7 @@ export async function resizeEventToDate(eventId, date) {
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst(".fc-event-resizer-end", { root: eventEl });
+    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", { root: eventEl });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
 
     instantScrollTo(slot);

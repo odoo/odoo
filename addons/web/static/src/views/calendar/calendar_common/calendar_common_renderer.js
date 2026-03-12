@@ -409,17 +409,28 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDrop(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
-            info.revert();
-            throw e;
-        });
+        let forceAllDay = false;
+        // allDay should change if the event was dropped in an "allday" section
+        // from a regular section or conversely. This ensures `allDay` fullcalendar events
+        // that are not all_day in odoo keep their value when simply moved around.
+        if (info.oldEvent.allDay !== info.event.allDay) {
+            forceAllDay = true;
+        }
+        this.props.model
+            .updateRecord(this.fcEventToRecord(info.event, forceAllDay))
+            .catch((e) => {
+                info.revert();
+                throw e;
+            });
     }
     onEventResize(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
-            info.revert();
-            throw e;
-        });
+        this.props.model
+            .updateRecord(this.fcEventToRecord(info.event))
+            .catch((e) => {
+                info.revert();
+                throw e;
+            });
     }
     async onEventScheduled(info) {
         const original = info.event;
@@ -428,33 +439,53 @@ export class CalendarCommonRenderer extends Component {
         await this.props.model.scheduleEvent(resId, date);
         original.remove();
     }
-    fcEventToRecord(event) {
-        const { id, allDay, date, start, end } = event;
+    /**
+     * 
+     * @param {object} event fullcalendar event
+     * @param {boolean} forceAllDay if true, set the all_day to the value of allDay, otherwise keep the original record value
+     * @returns {object} odoo record values
+     */
+    fcEventToRecord(event, forceAllDay = false) {
+        const { id, date, start, end } = event;
         const res = {
             start: luxon.DateTime.fromJSDate(date || start),
-            isAllDay: allDay,
+            isAllDay: event.allDay,
         };
         if (end) {
             res.end = luxon.DateTime.fromJSDate(end);
-            if (["week", "month"].includes(this.props.model.scale) && allDay) {
-                res.end = res.end.minus({ days: 1 });
-            }
         }
-        if (id) {
-            const existingRecord = this.props.model.records[id];
-            if (this.props.model.scale === "month") {
+        const existingRecord = this.props.model.records[id];
+        if (existingRecord) {
+            res.id = existingRecord.id;
+            res.isAllDay = forceAllDay ? event.allDay : existingRecord.isAllDay;
+        }
+        // allday fullcalendar events are start-inclusive but end-exclusive for the date (`[start, end[`)
+        // whereas odoo is normally inclusive for both (`[start, end]`)
+        // This means fullcalendar [2000-01-01, 2000-01-02[ is actually equivalent to odoo [2000-01-01, 2000-01-01]
+        if (["week", "month"].includes(this.props.model.scale)) {
+            // case where the event is only visually "allday"
+            if (existingRecord && !res.isAllDay && event.allDay) {
                 res.start = res.start?.set({
                     hour: existingRecord.start.hour,
                     minute: existingRecord.start.minute,
                 });
-                if (existingRecord.end) {
-                    res.end = res.end?.set({
+                if (res.end && existingRecord.end) {
+                    // exact opposite of the recordToEvent logic, for consistency
+                    // original value -> fullcalendar value -> save value
+                    // [X, 2000-01-01 16:00] -> [X, 2000-01-02[ -> [X, 2000-01-01 16:00]
+                    // [X, 2000-01-02 00:00] -> [X, 2000-01-02[ -> [X, 2000-01-02 00:00]
+                    // [X, 2000-01-02 00:01] -> [X, 2000-01-03[ -> [X, 2000-01-02 00:01]
+                    if (existingRecord.end.toMillis() !== existingRecord.end.startOf("day").toMillis()) {
+                        res.end = res.end.minus({ days: 1 });
+                    }
+                    res.end = res.end.set({
                         hour: existingRecord.end.hour,
                         minute: existingRecord.end.minute,
                     });
                 }
+            } else if (res.isAllDay && res.end) {
+                res.end = res.end.minus({ days: 1 });
             }
-            res.id = existingRecord.id;
         }
         return res;
     }

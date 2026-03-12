@@ -12,8 +12,8 @@ export class CalendarWithRecurrenceCommonRenderer extends CalendarCommonRenderer
         this.props.editRecord({ ...record, id: record.rawRecord.id });
     }
 
-    fcEventToRecord(event) {
-        const record = super.fcEventToRecord(event);
+    fcEventToRecord() {
+        const record = super.fcEventToRecord(...arguments);
         if (record.id) {
             record.id = this.props.model.records[record.id].rawRecord.id;
         }

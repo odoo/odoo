@@ -4538,27 +4538,42 @@ test(`attempt to create multiples events and the same day and check the ordering
 });
 
 test.tags("desktop");
-test(`Resizing Pill of Multiple Days(Allday)`, async () => {
-    onRpc("web_save", ({ args }) => {
-        expect.step("web_save");
-        expect(args[1]).toEqual({
+test(`Resizing Pill of Multiple Days on month mode`, async () => {
+    mockDate("2016-12-12 08:00:00");
+
+    // midnight to midnight, in the timezone of the user
+    const midnightStart = luxon.DateTime.local(2016, 12, 13, 0, 0, 0).setZone("utc");
+    const midnightStop = luxon.DateTime.local(2016, 12, 14, 0, 0, 0).setZone("utc");
+
+    Event._records = [
+        {
+            id: 1,
             is_all_day: true,
-            name: "foobar",
+            name: "All-day midnight",
             start: "2016-12-13 00:00:00",
             start_date: false,
             stop: "2016-12-14 00:00:00",
             stop_date: false,
-        });
-    });
-
-    onRpc("write", ({ args }) => {
-        expect.step("write");
-        expect(args[1]).toEqual({
-            is_all_day: true,
-            start: "2016-12-13",
-            stop: "2016-12-16",
-        });
-    });
+        },
+        {
+            id: 2,
+            name: "Datetime midnight",
+            is_all_day: false,
+            start: midnightStart.toFormat("yyyy-MM-dd HH:mm:ss"),
+            start_date: false,
+            stop: midnightStop.toFormat("yyyy-MM-dd HH:mm:ss"),
+            stop_date: false,
+        },
+        {
+            id: 3,
+            name: "Datetime specific time",
+            is_all_day: false,
+            start: "2016-12-13 20:30:20",
+            start_date: false,
+            stop: "2016-12-15 12:18:30",
+            stop_date: false,
+        },
+    ];
 
     await mountView({
         resModel: "event",
@@ -4566,16 +4581,64 @@ test(`Resizing Pill of Multiple Days(Allday)`, async () => {
         arch: `<calendar event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
     });
 
-    await selectDateRange("2016-12-13", "2016-12-14");
-    await contains(`.modal .o_field_widget[name="name"] input`).edit("foobar", { confirm: false });
-    await contains(`.modal .o_form_button_save`).click();
-    expect.verifySteps(["web_save"]);
+    // extend event left and right, expect that it will start and end on those dates
+    await resizeEventToDate(1, "2016-12-12", true);
+    await resizeEventToDate(1, "2016-12-16", false);
+    let eventEl = queryFirst('.o_event[data-event-id="1"]');
+    expect(eventEl).toHaveText("All-day midnight");
+    let { is_all_day, start, stop } = MockServer.env["event"].read(1)[0];
+    expect(is_all_day).toEqual(true);
+    expect(start).toEqual("2016-12-12");
+    expect(stop).toEqual("2016-12-16");
+    eventEl = queryFirst('.o_event[data-event-id="1"]');
+    expect(eventEl.closest("[data-date]").dataset.date).toBe("2016-12-12");
+    const { width: eventElFullWeekWidth } = queryRect(eventEl);
+    // resize down to 1 day, should remain allday
+    await resizeEventToDate(1, "2016-12-12", false);
+    ({ is_all_day, start, stop } = MockServer.env["event"].read(1)[0]);
+    expect(is_all_day).toEqual(true);
+    expect(start).toEqual("2016-12-12");
+    expect(stop).toEqual("2016-12-12");
 
-    await resizeEventToDate(8, "2016-12-16");
-    const event = queryFirst`.o_event[data-event-id="8"]`;
-    expect(event).toHaveText("foobar");
-    expect(event.closest(".fc-daygrid-day")).not.toBeEmpty();
-    expect.verifySteps(["write"]);
+    // extend event left and right, expect that it will end on the day following the end and not become allday
+    await resizeEventToDate(2, "2016-12-12", true);
+    await resizeEventToDate(2, "2016-12-16", false);
+    eventEl = queryFirst('.o_event[data-event-id="2"]');
+    expect(eventEl).toHaveText("Datetime midnight");
+    ({ is_all_day, start, stop } = MockServer.env["event"].read(2)[0]);
+    expect(is_all_day).toEqual(false);
+    expect(start).toEqual(midnightStart.minus({ days: 1 }).toFormat("yyyy-MM-dd HH:mm:ss"));
+    // as it ends at midnight in the UI, it effectively shows up as ending on the 13th rather than 14th
+    // hence from the UI the event actually gets extended from the 13th to the 16th (in reality 14th 00:00 to 17th 00:00)
+    expect(stop).toEqual(midnightStop.plus({ days: 3 }).toFormat("yyyy-MM-dd HH:mm:ss"));
+    eventEl = queryFirst('.o_event[data-event-id="2"]');
+    expect(eventEl.closest("[data-date]").dataset.date).toBe("2016-12-12");
+    expect(queryRect(eventEl).width).toBe(eventElFullWeekWidth);
+    // resize down to 1 day, expect to remain exactly 24-hours long and still not allday
+    await resizeEventToDate(2, "2016-12-12", false);
+    ({ is_all_day, start, stop } = MockServer.env["event"].read(2)[0]);
+    expect(is_all_day).toEqual(false);
+    expect(start).toEqual(midnightStart.minus({ days: 1 }).toFormat("yyyy-MM-dd HH:mm:ss"));
+    expect(stop).toEqual(midnightStart.toFormat("yyyy-MM-dd HH:mm:ss"));
+
+    // extend event left and right, expect that it will start and end on those dates keeping its existing start and stop time
+    await resizeEventToDate(3, "2016-12-12", true);
+    await resizeEventToDate(3, "2016-12-16", false);
+    eventEl = queryFirst('.o_event[data-event-id="3"]');
+    expect(eventEl).toHaveText("Datetime specific time");
+    ({ is_all_day, start, stop } = MockServer.env["event"].read(3)[0]);
+    expect(is_all_day).toEqual(false);
+    expect(start).toEqual("2016-12-12 20:30:00");
+    expect(stop).toEqual("2016-12-16 12:18:00");
+    eventEl = queryFirst('.o_event[data-event-id="3"]');
+    expect(eventEl.closest("[data-date]").dataset.date).toBe("2016-12-12");
+    expect(queryRect(eventEl).width).toBe(eventElFullWeekWidth);
+    // resize down to 1 day, expect the end time will be set the same day
+    await resizeEventToDate(3, "2016-12-12", false);
+    ({ is_all_day, start, stop } = MockServer.env["event"].read(3)[0]);
+    expect(is_all_day).toEqual(false);
+    expect(start).toEqual("2016-12-12 20:30:00");
+    expect(stop).toEqual("2016-12-12 12:18:00");
 });
 
 test.tags("desktop");
