@@ -47,6 +47,7 @@ export class LinkPopover extends Component {
         allowCustomStyle: { type: Boolean, optional: true },
         allowTargetBlank: { type: Boolean, optional: true },
         allowStripDomain: { type: Boolean, optional: true },
+        publicAttachments: { type: Boolean, optional: true },
         formatColor: { type: Function, optional: true },
     };
     static defaultProps = {
