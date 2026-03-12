@@ -3,14 +3,6 @@
 ,,,,,,,,,"tax","invoice","1(T)","sa_account_201017",,,,,,,,,,,
 ,,,,,,,,,"base","refund","1(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund","1(T)","sa_account_201017",,,,,,,,,,,
-"sa_ph_pe_hs_tax_15","15% PH PE HS","sale","15.0","percent","Private Healthcare / Private Education / First house sales to citizens","15%","sa_tax_group_taxes_vat",,"base","invoice","2(B)",,,"المبيعات الخاضعة للنسبة الأساسية %15",l10n_sa_account_fiscal_position_ksa,,,,,,,
-,,,,,,,,,"tax","invoice",,"sa_account_201017",,,,,,,,,,,
-,,,,,,,,,"base","refund","2(B)",,,,,,,,,,,,
-,,,,,,,,,"tax","refund",,"sa_account_201017",,,,,,,,,,,
-"sa_local_sales_tax_0","0%","sale","0.0","percent","Not Subject to VAT","0%","sa_tax_group_taxes_vat",,"base","invoice","3(B)",,,"غير خاضعة لضريبة القيمة المضافة.","l10n_sa_account_fiscal_position_ksa,l10n_sa_account_fiscal_position_gcc",,,,,,,,,"Not Subject to VAT."
-,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
-,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
-,,,,,,,,,"tax","refund",,,,,,,,,,,,,
 "sa_international_transport_passengers_tax_0","0% ITP","sale","0.0","percent","The International transport of Passengers","0%","sa_tax_group_taxes_vat",,"base","invoice","3(B)",,,"المواصلات الدولية للركاب.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"The International transport of Passengers."
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
 ,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
@@ -19,7 +11,7 @@
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
 ,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
-"sa_qualifying_transport_tax_0","0% QT","sale","0.0","percent","Supply of a qualifying means of transport","0%","sa_tax_group_taxes_vat",,"base","invoice","3(B)",,,"التزويد بوسائل نقل مؤهلة.",l10n_sa_account_fiscal_position_ksa,,,,,,,,,"Supply of a qualifying means of transport."
+"sa_qualifying_transport_tax_0","0% QT","sale","0.0","percent","Supply of a qualifying means of transport","0%","sa_tax_group_taxes_vat",,"base","invoice","3(B)",,,"التزويد بوسائل نقل مؤهلة.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"Supply of a qualifying means of transport."
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
 ,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
@@ -35,15 +27,15 @@
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
 ,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
-"sa_private_education_tax_0","0% PE","sale","0.0","percent","Private education to citizen","0%","sa_tax_group_taxes_vat",,"base","invoice","3(B)",,,"تعليم خاص للمواطن.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"Private education to citizen."
+"sa_private_education_tax_0","0% PE","sale","0.0","percent","Private education to citizen","0%","sa_tax_group_taxes_vat",,"base","invoice","2(B)",,,"تعليم خاص للمواطن.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"Private education to citizen."
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
-,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
+,,,,,,,,,"base","refund","2(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
-"sa_private_healthcare_tax_0","0% PH","sale","0.0","percent","Private healthcare to citizen","0%","sa_tax_group_taxes_vat",,"base","invoice","3(B)",,,"رعاية صحية خاصة للمواطن.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"Private healthcare to citizen."
+"sa_private_healthcare_tax_0","0% PH","sale","0.0","percent","Private healthcare to citizen","0%","sa_tax_group_taxes_vat",,"base","invoice","2(B)",,,"رعاية صحية خاصة للمواطن.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"Private healthcare to citizen."
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
-,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
+,,,,,,,,,"base","refund","2(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
-"sa_international_transport_goods_tax_0","0% IT G","sale","0.0","percent","The International transport of Goods","0%","sa_tax_group_taxes_vat","consu","base","invoice","3(B)",,,"الشحن الدولي للبضائع.",l10n_sa_account_fiscal_position_ksa,,,,,,,,,"The International transport of Goods."
+"sa_international_transport_goods_tax_0","0% IT G","sale","0.0","percent","The International transport of Goods","0%","sa_tax_group_taxes_vat","consu","base","invoice","3(B)",,,"الشحن الدولي للبضائع.",l10n_sa_account_fiscal_position_ksa,,"False",,,,,,,"The International transport of Goods."
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
 ,,,,,,,,,"base","refund","3(B)",,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
@@ -66,6 +58,10 @@
 "sa_exempt_real_estate_tax_0","0% EXT RE","sale","0.0","percent","Exempt - Real estate transaction mentioned in Article 30 of the VAT Regulations","Exempt","sa_tax_group_taxes_vat",,"base","invoice","5(B)",,,"المعاملات العقارية المذكورة في القانون 30 في لوائح ضريبة القيمة المضافة","l10n_sa_account_fiscal_position_ksa,l10n_sa_account_fiscal_position_gcc",,"False",,,,,,,"Real estate transaction mentioned in Article 30 of the VAT Regulations."
 ,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
 ,,,,,,,,,"base","refund","5(B)",,,,,,,,,,,,
+,,,,,,,,,"tax","refund",,,,,,,,,,,,,
+"sa_local_sales_tax_0","0%","sale","0.0","percent","Not Subject to VAT","0%","sa_tax_group_taxes_vat",,"base","invoice",,,,"غير خاضعة لضريبة القيمة المضافة.","l10n_sa_account_fiscal_position_ksa,l10n_sa_account_fiscal_position_gcc",,"False",,,,,,,"Not Subject to VAT."
+,,,,,,,,,"tax","invoice",,,,,,,,,,,,,
+,,,,,,,,,"base","refund",,,,,,,,,,,,,
 ,,,,,,,,,"tax","refund",,,,,,,,,,,,,
 "sa_purchase_tax_15","15%","purchase","15.0","percent",,"15%","sa_tax_group_taxes_vat",,"base","invoice","7(B)",,,"المشتريات الخاضعة للنسبة الأساسية %15",l10n_sa_account_fiscal_position_ksa,,,,,,,
 ,,,,,,,,,"tax","invoice","7(T)","sa_account_104041",,,,,,,,,,,
