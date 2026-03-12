@@ -41,16 +41,17 @@ export class OptionsContainer extends BaseOptionComponent {
 
         this.callOperation = useOperation();
 
+        this.options = [];
         this.hasGroup = {};
         onWillStart(async () => {
-            await this.updateAccessGroup(this.props.options);
+            this.options = await this.filterAccessGroup(this.props.options);
         });
         onWillUpdateProps(async (nextProps) => {
-            await this.updateAccessGroup(nextProps.options);
+            this.options = await this.filterAccessGroup(nextProps.options);
         });
     }
 
-    async updateAccessGroup(options) {
+    async filterAccessGroup(options) {
         const proms = [];
         const groups = [...new Set(options.flatMap((o) => o.groups || []))];
         for (const group of groups) {
@@ -61,6 +62,7 @@ export class OptionsContainer extends BaseOptionComponent {
             );
         }
         await Promise.all(proms);
+        return options.filter((option) => this.hasAccess(option.groups));
     }
 
     hasAccess(groups) {
@@ -72,7 +74,7 @@ export class OptionsContainer extends BaseOptionComponent {
 
     get title() {
         let title;
-        for (const option of this.props.options) {
+        for (const option of this.options) {
             title = option.title || title;
         }
         const titleExtraInfo = this.props.containerTitle.getTitleExtraInfo

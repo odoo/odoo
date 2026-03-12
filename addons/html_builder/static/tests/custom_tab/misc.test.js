@@ -16,7 +16,7 @@ import { Plugin } from "@html_editor/plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -241,6 +241,55 @@ test("last container with options is unfolded regardless of containers without o
     await contains(":iframe .test-options-child").click();
     expect(".options-container-header i.fa-caret-right").toHaveCount(0);
     expect(".options-container-header i.fa-caret-down").toHaveCount(1);
+});
+
+test("options restricted to groups excluding current user do not make an empty folded group appear", async () => {
+    onRpc("res.users", "has_group", ({ args: [_, group] }) => {
+        if (group === "another_group") {
+            return false;
+        }
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderRow label="'Row 1'">A</BuilderRow>`;
+            static groups = ["another_group"];
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-child";
+            static template = xml`<BuilderRow label="'Row 2'">A</BuilderRow>`;
+        }
+    );
+    await setupHTMLBuilder(
+        `<section class="test-options-target" data-name="Target">
+            <div class="test-options-child" data-name="Child">
+                Text
+            </div>
+        </section>`
+    );
+    await contains(":iframe .test-options-child").click();
+    expect(".options-container-header:contains(Target)").toHaveCount(0);
+    expect(".options-container-header i.fa-caret-down").toHaveCount(1);
+});
+
+test("option with groups restriction not available to user", async () => {
+    onRpc("res.users", "has_group", ({ args: [_, group] }) => {
+        if (group === "another_group") {
+            return false;
+        }
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-target";
+            static template = xml`<BuilderRow label="'Row'">Test</BuilderRow>`;
+            static groups = ["another_group"];
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-target">Hello</div>`);
+    await contains(":iframe .test-target").click();
+    expect(".options-container").toHaveCount(0);
 });
 
 test("option that matches several elements", async () => {
