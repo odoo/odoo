@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "check loyalty points",
-            trigger: '.oe_website_sale_gift_card strong[name="o_loyalty_points"]:contains("372.03")',
+            trigger: 'strong[name="o_loyalty_points"]:contains("372.03")',
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         ...wsTourUtils.addToCart({ productName: "Taxed Product", expectUnloadPage: true }),
         wsTourUtils.goToCart({ quantity: 3 }),
         {
-            trigger: ".oe_currency_value:contains(/74.00/):not(div[name='o_cart_total'])",
+            trigger: "h6[name='website_sale_cart_line_price']:contains(-74.00)",
         },
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
@@ -70,7 +70,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "check reduction amount got recomputed when changing qty",
-            trigger: '.oe_currency_value:contains("- 106.00")',
+            trigger: "h6[name='website_sale_cart_line_price']:contains(-106.00)",
         },
         {
             content: "add more Small Cabinet into cart",
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "remove one cabinet from cart",
-            trigger: '#cart_products input.js_quantity[value="4"]',
+            trigger: '#cart_products input.js_quantity:value(4)',
             run: "edit 3 && click body",
         },
         {

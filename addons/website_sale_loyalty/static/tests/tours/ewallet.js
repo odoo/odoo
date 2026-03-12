@@ -9,14 +9,13 @@ registry.category("web_tour.tours").add("website_sale_loyalty.ewallet", {
         {
             trigger: 'button[name="o_loyalty_claim"]:contains("Use")',
             async run(helpers) {
-                const rewards = document.querySelectorAll('form[name="claim_reward"]');
+                const rewards = document.querySelectorAll('td[name="o_loyalty_reward"]');
                 if (rewards.length === 1) {
                     await helpers.click();
                 } else {
                     console.error(`Expected 1 claimable reward, got: ${rewards.length}`);
                 }
             },
-            expectUnloadPage: true,
         },
         {
             content: "Checkout",

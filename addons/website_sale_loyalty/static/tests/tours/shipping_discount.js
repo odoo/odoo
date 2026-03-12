@@ -21,15 +21,14 @@ registry.category("web_tour.tours").add("website_sale_loyalty.check_shipping_dis
         ...assertRewardAmounts({ shipping: "- 6.00" }),
         {
             content: "pay with eWallet",
-            trigger: "form[name=claim_reward] button[name='o_loyalty_claim']:contains('Use')",
+            trigger: "button[name='o_loyalty_claim']:contains('Use')",
             run: "click",
-            expectUnloadPage: true,
         },
-        ...assertRewardAmounts({ discount: "- 304.00" }),
+        ...assertRewardAmounts({ discount: "-304.00" }),
         wsTourUtils.waitForInteractionToLoad(),
         wsTourUtils.selectDeliveryCarrier("delivery1"),
         ...wsTourUtils.assertCartAmounts({ delivery: "5.00" }),
-        ...assertRewardAmounts({ discount: "- 300.00", shipping: "- 5.00" }),
+        ...assertRewardAmounts({ discount: "-300.00", shipping: "-5.00" }),
         {
             content: "confirm delivery method",
             trigger: ".o_total_card a[name=website_sale_main_button]",
