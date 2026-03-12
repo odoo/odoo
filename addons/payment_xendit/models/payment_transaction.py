@@ -40,7 +40,8 @@ class PaymentTransaction(models.Model):
         rounded_amount = float_round(self.amount, rounding, rounding_method='DOWN')
         return {
             'rounded_amount': rounded_amount,
-            'access_token': payment_utils.generate_access_token(self.reference)
+            'access_token': payment_utils.generate_access_token(self.reference),
+            'currency': self.currency_id.name,
         }
 
     def _get_specific_rendering_values(self, processing_values):
