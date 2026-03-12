@@ -44,21 +44,15 @@ class StockWarehouse(models.Model):
 
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:
-            manufacture_route = warehouse.manufacture_pull_id.route_id
-            warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids
+            warehouse.manufacture_to_resupply = bool(self.env['stock.rule'].search_count([
+                ('action', '=', 'manufacture'),
+                ('warehouse_id', '=', warehouse.id),
+                ('route_id.warehouse_selectable', '=', True),
+                ('route_id.warehouse_ids', 'in', warehouse.id),
+            ], limit=1))
 
     def _inverse_manufacture_to_resupply(self):
-        for warehouse in self:
-            manufacture_route = warehouse.manufacture_pull_id.route_id
-            if not manufacture_route:
-                manufacture_route = self.env['stock.rule'].search([
-                    ('action', '=', 'manufacture'), ('warehouse_id', '=', warehouse.id)]).route_id
-            if not manufacture_route:
-                continue
-            if warehouse.manufacture_to_resupply:
-                manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
-            else:
-                manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
+        pass
 
     def _create_or_update_route(self):
         manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
