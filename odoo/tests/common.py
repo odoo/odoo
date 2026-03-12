@@ -1788,6 +1788,9 @@ which leads to stray network requests and inconsistencies."""
 
 @lru_cache(1)
 def _find_executable():
+    browser_bin_path = os.environ.get('ODOO_BROWSER_BIN')  # used for testing specific Chrome builds
+    if browser_bin_path and os.path.exists(browser_bin_path):
+        return browser_bin_path
     system = platform.system()
     if system == 'Linux':
         for bin_ in ['google-chrome', 'chromium', 'chromium-browser', 'google-chrome-stable']:
