@@ -227,7 +227,7 @@ test("url should not use the record last updated date when the field is related"
         new File(
             [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
             "fake_file.png",
-            { type: "png" }
+            { type: "image/png" }
         ),
         "related"
     );
@@ -324,7 +324,7 @@ test("ImageField preview is updated when an image is uploaded", async () => {
     const imageFile = new File(
         [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
         "fake_file.png",
-        { type: "png" }
+        { type: "image/png" }
     );
     await mountView({
         type: "form",
@@ -385,7 +385,7 @@ test("clicking save manually after uploading new image should change the unique 
         new File(
             [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
             "fake_file.png",
-            { type: "png" }
+            { type: "image/png" }
         )
     );
     expect("div[name=document] img").toHaveAttribute(
@@ -410,7 +410,7 @@ test("clicking save manually after uploading new image should change the unique 
         new File(
             [Uint8Array.from([...atob(PRODUCT_IMAGE)].map((c) => c.charCodeAt(0)))],
             "fake_file2.gif",
-            { type: "gif" }
+            { type: "image/gif" }
         )
     );
     expect("div[name=document] img").toHaveAttribute(
@@ -703,7 +703,7 @@ test("ImageField is reset when changing record", async () => {
         `,
     });
 
-    const imageFile = new File([imageData], "fake_file.png", { type: "png" });
+    const imageFile = new File([imageData], "fake_file.png", { type: "image/png" });
     expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
@@ -862,7 +862,7 @@ test("convert image to webp", async () => {
         `,
     });
 
-    const imageFile = new File([imageData], "fake_file.jpeg", { type: "jpeg" });
+    const imageFile = new File([imageData], "fake_file.jpeg", { type: "image/jpeg" });
     expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
