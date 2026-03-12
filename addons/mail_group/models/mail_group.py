@@ -451,7 +451,7 @@ class MailGroup(models.Model):
                     'mailto': f'{self.alias_email}',
                     'group_url': f'{base_url}/groups/{self.env["ir.http"]._slug(self)}',
                     'unsub_label': f'{base_url}/groups?unsubscribe',
-                    'unsub_url':  unsubscribe_url,
+                    'unsub_url':  f'{base_url}/groups?unsubscribe',
                 }
                 footer = self.env['ir.qweb']._render('mail_group.mail_group_footer', template_values, minimal_qcontext=True)
                 member_body = append_content_to_html(body, footer, plaintext=False)
