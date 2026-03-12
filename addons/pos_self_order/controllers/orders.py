@@ -39,7 +39,6 @@ class PosSelfOrderController(http.Controller):
 
         return {
             'pos.order': self.env['pos.order']._load_pos_self_data_read(order, config),
-            'res.partner': self.env['res.partner']._load_pos_self_data_read(order.partner_id, config),
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
@@ -55,7 +54,7 @@ class PosSelfOrderController(http.Controller):
 
         if existing_partner and existing_partner.exists():
             return {
-                'res.partner': self.env['res.partner']._load_pos_self_data_read(existing_partner, pos_config),
+                'res.partner': existing_partner.read(['id'], load=False),
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -73,7 +72,7 @@ class PosSelfOrderController(http.Controller):
         })
 
         return {
-            'res.partner': self.env['res.partner']._load_pos_self_data_read(partner_sudo, pos_config),
+            'res.partner': partner_sudo.read(['id'], load=False),
         }
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
