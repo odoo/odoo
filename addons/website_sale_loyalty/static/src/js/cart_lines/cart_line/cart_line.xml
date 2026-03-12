@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-inherit="website_sale.CartLine" t-inherit-mode="extension">
+        <div name='o_wsale_cart_line_button_container' position="before">
+            <t t-call="website_sale_loyalty.usedGiftCard" line="this.props.line"/>
+        </div>
+    </t>
+
+    <t t-inherit="website_sale.CartLinesQuantity" t-inherit-mode="extension">
+        <t t-set="showQuantitySelector" position="attributes">
+            <attribute name="t-value" separator=" || " add="!this.props.line.reward_type == 'product'"/>
+        </t>
+    </t>
+
+    <t t-inherit="website_sale.CartProductPrice" t-inherit-mode="extension">
+        <span position="attributes">
+            <attribute name="t-attf-class">o_reward_{{this.props.line.reward_type}}</attribute>
+        </span>
+    </t>
+
+    <t t-name="website_sale_loyalty.usedGiftCard">
+        <div
+            t-if="line.is_reward_line and line.show_coupon_code"
+            class="d-md-block mb-2 small text-muted"
+        >
+            <span>
+                Code: <t t-out="line.coupon_code.slice(-4).padStart(14, '⋆')"/>
+            </span>
+            <t t-if="line.coupon_expiration_date">
+                <br/>
+                <span>
+                    Expired Date:
+                    <t t-out="this.formatDate(line.coupon_expiration_date)"/>
+                </span>
+            </t>
+        </div>
+    </t>
+</templates>
