@@ -33,3 +33,9 @@ class RedsysCommon(PaymentCommon):
             "Ds_MerchantParameters": cls.encoded_merchant_parameter,
             "Ds_Signature": "upzUj96lLgOEUP5lvaj7lz0Se4MXmc5_GoJ32ACqZ3A=",
         }
+        cls.provider_ref = "test_identifier_123"
+        cls.token_merchant_data = {
+            **cls.merchant_parameters,
+            "Ds_Merchant_Identifier": cls.provider_ref,
+            "Ds_Card_Number": "454881******0003",
+        }

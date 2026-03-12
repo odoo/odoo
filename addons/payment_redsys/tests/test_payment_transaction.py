@@ -29,6 +29,26 @@ class TestPaymentTransaction(RedsysCommon):
         self.assertEqual(merchant_parameters["DS_MERCHANT_PAYMETHODS"], "C")  # credit card
         self.assertTrue("DS_MERCHANT_EMV3DS" in merchant_parameters)
 
+    def test_no_item_missing_from_merchant_parameters_for_tokenization(self):
+        """Test that all important items are present in the merchant parameters when the transaction
+        is tokenized."""
+        tx = self._create_transaction("redirect", tokenize=True)
+        payload = tx._redsys_prepare_merchant_parameters()
+        self.assertEqual(payload["DS_MERCHANT_COF_INI"], "S")
+        self.assertEqual(payload["DS_MERCHANT_COF_TYPE"], "R")
+        self.assertEqual(payload["DS_MERCHANT_IDENTIFIER"], "REQUIRED")
+
+    def test_no_item_missing_from_merchant_parameters_for_token_payments(self):
+        """Test that all important items are present in the merchant parameters when payment by
+        token."""
+        token = self._create_token(provider_ref=self.provider_ref)
+        tx = self._create_transaction("redirect", token_id=token.id)
+        payload = tx._redsys_prepare_merchant_parameters()
+        self.assertEqual(payload["DS_MERCHANT_COF_TYPE"], "R")
+        self.assertEqual(payload["DS_MERCHANT_DIRECTPAYMENT"], "true")
+        self.assertEqual(payload["DS_MERCHANT_EXCEP_SCA"], "MIT")
+        self.assertEqual(payload["DS_MERCHANT_IDENTIFIER"], tx.token_id.provider_ref)
+
     def test_search_by_reference_returns_tx(self):
         """Test that the transaction is returned from the payment data."""
         tx = self._create_transaction("redirect")
@@ -59,3 +79,10 @@ class TestPaymentTransaction(RedsysCommon):
         tx = self._create_transaction("redirect")
         tx._apply_updates(self.merchant_parameters)
         self.assertEqual(tx.state, "done")
+
+    def test_extract_token_values_maps_fields_correctly(self):
+        """Test that the token values are extracted correctly from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        token_values = tx._extract_token_values(self.token_merchant_data)
+        self.assertEqual(token_values["provider_ref"], "test_identifier_123")
+        self.assertEqual(token_values["payment_details"], "0003")
