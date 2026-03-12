@@ -268,6 +268,24 @@ export class MoveNodePlugin extends Plugin {
 
         this.moveWidget = this.document.createElement("div");
         this.moveWidget.className = "oe-sidewidget-move oi oi-draggable";
+        const formSheet = this.widgetContainer.closest(".o_form_sheet");
+        // Calculate moveWidget's left pos in advance to avoid layout trashing
+        let moveWidgetLeftPos = anchorX - WIDGET_CONTAINER_WIDTH;
+        if (formSheet) {
+            const formSheetRect = formSheet.getBoundingClientRect();
+            if (formSheetRect.left > moveWidgetLeftPos) {
+                this.moveWidget.classList.toggle("oe_movewidget_border", true);
+                // Set moveWidget postion with respect to form sheet border
+                const MOVE_WIDGET_OFFSET_FROM_SHEET_BORDER = 5.5;
+                moveWidgetLeftPos = formSheetRect.left - MOVE_WIDGET_OFFSET_FROM_SHEET_BORDER;
+                // Set ::after element width same as offset so the border
+                // perfectly bridges the gap between the widget and the sheet border.
+                this.moveWidget.style.setProperty(
+                    "--after-element-width",
+                    `${MOVE_WIDGET_OFFSET_FROM_SHEET_BORDER}px`
+                );
+            }
+        }
         this.widgetContainer.append(this.moveWidget);
 
         let moveWidgetOffsetTop = 0;
@@ -279,7 +297,7 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.width = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
-        this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
+        this.moveWidget.style.left = `${moveWidgetLeftPos - containerRect.x}px`;
 
         this.services.tooltip.add(this.moveWidget, {
             template: xml`
