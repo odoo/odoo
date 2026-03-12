@@ -10,6 +10,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
@@ -32,7 +33,13 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickTable("3"),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
+            FloorScreen.clickEditPlan(),
             FloorScreen.selectedFloorIs("Second Floor"),
+            FloorScreen.addFloor(),
+            Dialog.is("New Floor"),
+            Dialog.footerBtnIsDisabled("Apply"),
+            TextInputPopup.inputText("Test Floor"),
+            Dialog.confirm(),
         ].flat(),
 });
 

@@ -285,7 +285,7 @@ export function clickEditPlan() {
 }
 
 export function addFloor(floorName) {
-    return [
+    const steps = [
         {
             trigger: ".o_fp_edit_toolbar .toolbar-floor-selector",
             run: "click",
@@ -294,13 +294,18 @@ export function addFloor(floorName) {
             trigger: ".toolbar-floor-selector-item:contains('Add Floor')",
             run: "click",
         },
-        {
-            trigger: ".modal-body textarea",
-            run: `edit ${floorName}`,
-        },
-        {
-            trigger: ".modal-footer button.btn-primary",
-            run: "click",
-        },
     ];
+    if (floorName) {
+        steps.push(
+            {
+                trigger: ".modal-body textarea",
+                run: `edit ${floorName}`,
+            },
+            {
+                trigger: ".modal-footer button.btn-primary",
+                run: "click",
+            }
+        );
+    }
+    return steps;
 }
