@@ -33,6 +33,9 @@ class TestACL(TransactionCaseWithUserDemo):
         field = model._fields[field_name]
         self.patch(field, 'groups', groups)
         self.env.transaction.clear()
+        # because of monkey patching, we clear everything including caches
+        self.env.transaction.invalidate_ormcache('stable')
+        self.env.transaction.invalidate_ormcache('groups')
         self.env.transaction.invalidate_ormcache('templates')
 
     def test_field_visibility_restriction(self):

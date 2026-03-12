@@ -67,6 +67,7 @@ from odoo.http.session import (
     session_store,
 )
 from odoo.http.session import Session as OdooHttpSession
+from odoo.orm.environments import CacheLayer
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
@@ -187,6 +188,12 @@ def flushing_cursor(cr: Cursor):
     # simluate cr.commit()
     state_stack, closing = cr.transaction._state_stack__, cr._closing
     try:
+        # Since we simulate an empty stack, make sure the parent layer is set as
+        # the cache on the registry. This ensures that existing caches are not
+        # affected by updating parent layers.
+        registry_caches = cr.transaction.registry.registry_caches__
+        for name in registry_caches:
+            registry_caches[name] = (registry_caches[name][0], cr.transaction.ormcaches__[name].parent)
         cr._closing = True  # do a quick clean
         cr.transaction._state_stack__ = []  # replace the stack
         with cr.transaction.committing():
@@ -1049,7 +1056,7 @@ class BaseCase(case.TestCase):
     def drop_ormcaches(cls) -> None:
         """ Remove all data in ORM caches without signaling, just like in a new Registry. """
         _logger.debug("Clearing all ORM caches")
-        for lru in cls.registry._Registry__caches.values():
+        for _seq, lru in cls.registry.registry_caches__.values():
             lru.clear()
 
     @classmethod
@@ -1289,20 +1296,26 @@ class TransactionCase(BaseCase):
                     return
                 _logger.info('Simulating signal changes during tests')
                 cls.registry.registry_sequence += 1
-                for key, seq in cls.registry.cache_sequences.items():
-                    cls.registry.cache_sequences[key] = seq + 1
+                for key, (seq, data) in cls.registry.registry_caches__.items():
+                    cls.registry.registry_caches__[key] = (seq + 1, {})
             elif names:
                 _logger.debug('Simulating signal changes during tests')
                 for name in names:
-                    cls.registry.cache_sequences[name] += 1
+                    cls.registry.registry_caches__[name] = (cls.registry.registry_caches__[name][0] + 1, {})
 
         def get_sequences(cr):
-            return cls.registry.registry_sequence, cls.registry.cache_sequences.copy()
+            return cls.registry.registry_sequence, {name: val[0] for name, val in cls.registry.registry_caches__.items()}
 
-        def reset_registry(registry, *, registry_sequence):
+        def reset_registry(registry, *, registry_sequence, caches):
             registry.registry_sequence = registry_sequence
+            registry.registry_caches__ = caches
 
-        cls.addClassCleanup(reset_registry, cls.registry, registry_sequence=cls.registry.registry_sequence)
+        cls.addClassCleanup(
+            reset_registry, cls.registry,
+            registry_sequence=cls.registry.registry_sequence,
+            caches=cls.registry.registry_caches__.copy(),
+        )
+
         cls.startClassPatcher(patch.object(cls.registry, '_signal_changes', signal_changes))
         cls.startClassPatcher(patch.object(cls.registry, 'get_sequences', get_sequences))
         cls.addClassCleanup(cls.drop_ormcaches)
@@ -1347,6 +1360,17 @@ class TransactionCase(BaseCase):
     def setUp(self):
         super().setUp()
 
+        def reset_registry(registry, *, registry_sequence, caches):
+            registry.registry_sequence = registry_sequence
+            registry.registry_caches__ = caches
+
+        self.addCleanup(
+            # for flushing cursor
+            reset_registry, self.registry,
+            registry_sequence=self.registry.registry_sequence,
+            caches=self.registry.registry_caches__.copy(),
+        )
+
         def _check_registry_lock():
             if _registry_test_lock.count == 0:
                 _logger.warning('The registry test lock is still released at the end of %s', self.canonical_tag)
@@ -1379,6 +1403,16 @@ class TransactionCase(BaseCase):
             self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
         self.addCleanup(self.savepoint.rollback)
+
+        # To keep tests isolated, add a CacheLayer.
+        # - L1: cursor cache
+        # - L2: savepoint cache
+        # - L3: this isolation layer
+        # flushing_cursor() may push data from the current to the parent layer
+        # (from L3 to L2) and we need L1 to be unaffected by tests.
+        transaction = self.env.transaction
+        for name, layer in transaction.ormcaches__.items():
+            transaction.ormcaches__[name] = CacheLayer(layer)
 
     @classmethod
     @contextmanager

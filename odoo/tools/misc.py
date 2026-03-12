@@ -1926,11 +1926,6 @@ def get_flag(country_code: str) -> str:
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
 
 
-def format_frame(frame) -> str:
-    code = frame.f_code
-    return f'{code.co_name} {code.co_filename}:{frame.f_lineno}'
-
-
 def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:
     """ Convert a named printf-style format string with its arguments to an
     equivalent positional format string with its arguments.

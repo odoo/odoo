@@ -320,7 +320,8 @@ class TestHasGroup(TransactionCase):
         def check_cache(filled, message=None):
             get_group = self.registry['res.users']._get_group_ids
             key = get_group.__cache__.key(self.test_user)
-            cache = self.registry._Registry__caches['default']
+            assert get_group.__cache__.cache_name == 'default'
+            cache = self.env.transaction.ormcaches__['default']
             self.assertEqual(bool(cache.get(key)), filled, message)
 
         self.env.transaction.invalidate_ormcache()

@@ -65,14 +65,17 @@ class TestDisableSnippetsAssets(TransactionCase):
             'mega_menu_content': MEGA_MENU_OUTDATED,
         })
         self.mega_menu.flush_recordset()
-        self.addCleanup(self.drop_ormcaches)
+        transaction = self.env.transaction
 
-        cache_invalidated = self.env.registry.cache_invalidated
+        transaction.invalidate_ormcache('assets')
+        cache = transaction.ormcaches__['assets']
         self.Website._disable_unused_snippets_assets()
-        self.assertIn('assets', cache_invalidated, 'Assets cache should have been invalidated when updating ir_assets')
-        cache_invalidated.clear()
+        self.assertIsNot(transaction.ormcaches__['assets'], cache, 'Assets cache should have been invalidated when updating ir_assets')
+
+        transaction.invalidate_ormcache('assets')
+        cache = transaction.ormcaches__['assets']
         self.Website._disable_unused_snippets_assets()
-        self.assertNotIn('assets', cache_invalidated, 'No update on ir_assets expected, no invalidation should be triggered')
+        self.assertIs(transaction.ormcaches__['assets'], cache, 'No update on ir_assets expected, no invalidation should be triggered')
 
         s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
         s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')

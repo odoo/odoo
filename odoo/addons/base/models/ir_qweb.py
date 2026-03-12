@@ -3113,10 +3113,10 @@ def render(template_name, values, load, **options):
     """
     class MockPool:
         db_name = None
-        _Registry__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
-        _Registry__caches_groups = {}
-        for cache_name, cache in _Registry__caches.items():
-            _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)
+        registry_caches__ = {
+            cache_name: (0, LRU(cache_size))
+            for cache_name, cache_size in _REGISTRY_CACHES.items()
+        }
 
     class MockIrQWeb(IrQweb):
         _register = False               # not visible in real registry
