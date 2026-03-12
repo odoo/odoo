@@ -109,6 +109,10 @@ test("Composer GIF button should open the GIF picker (discuss app)", async () =>
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
     await contains(".o-discuss-GifPicker");
+    await click(".o-mail-DiscussContent-header"); // ensure the picker reopens correctly
+    await contains(".o-discuss-GifPicker", { count: 0 });
+    await click("button[title='Add GIFs']");
+    await contains(".o-discuss-GifPicker");
 });
 
 test("Composer GIF button should open the GIF picker (chat window)", async () => {
