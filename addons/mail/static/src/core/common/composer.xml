@@ -2,20 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Composer">
-    <t t-set="isChatterComposer" t-value="extended and !this.props.composer.message"/>
+    <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
     <t t-set="partitionedActions" t-value="this.composerActions.partition"/>
-    <t t-set="compact" t-value="this.props.mode === 'compact'"/>
-    <t t-set="normal" t-value="this.props.mode === 'normal'"/>
-    <t t-set="extended" t-value="this.props.mode === 'extended'"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
     <div t-custom-ref="root">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
                 t-att-class="{
-                    'pb-2': extended and !this.props.composer.message,
-                    'o-extended': extended,
+                    'pb-2': this.extended and !this.props.composer.message,
+                    'o-extended': this.extended,
                     'o-isUiSmall': this.ui.isSmall,
-                    'ps-2 pe-4 pb-2': normal and !this.env.inDiscussApp and !this.env.inMeetingView,
-                    'ps-0 pe-3 pb-2': normal and this.env.inMeetingView,
+                    'ps-2 pe-4 pb-2': this.normal and !this.env.inDiscussApp and !this.env.inMeetingView,
+                    'ps-0 pe-3 pb-2': this.normal and this.env.inMeetingView,
                     'o-hasSelfAvatar': this.showComposerAvatar,
                     'o-focused': this.props.composer.isFocused,
                     'o-editing': this.props.composer.message,
@@ -49,16 +46,16 @@
                     </button>
                 </span>
             </div>
-            <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or this.props.composer.message }">
+            <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : this.extended or this.props.composer.message }">
                 <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border o-rounded-bubble"
                     t-att-class="{
                         'o-iosPwa': this.isIosPwa,
-                        'align-self-stretch' : extended,
+                        'align-self-stretch' : this.extended,
                         'w-100': this.props.composer.message,
                     }"
                     t-custom-ref="input-container"
                 >
-                    <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
+                    <div t-if="!this.extended" t-attf-class="{{ actionsContainerClass }}">
                         <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="this.store.discussDropdownMenuClass(this)">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
@@ -112,7 +109,7 @@
                     t-if="this.props.composer.attachments.length > 0"
                     attachments="this.props.composer.attachments"
                     unlinkAttachment.bind="(...args) => this.attachmentUploader.unlink(...args)"/>
-                <div t-if="!extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activePicker and this.ui.isSmall }" t-custom-ref="picker-container">
+                <div t-if="!this.extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activePicker and this.ui.isSmall }" t-custom-ref="picker-container">
                     <div t-if="partitionedActions.pickers.length > 1 and this.composerActions.activePicker and this.ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
                         <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-out="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
                             'active': pickerAction.picker.isOpen
@@ -140,8 +137,8 @@
 <t t-name="mail.Composer.sendButton">
     <button class="o-mail-Composer-send btn"
         t-att-class="{
-            'btn-primary btn-sm': extended,
-            'btn-link rounded-circle p-0': !extended,
+            'btn-primary btn-sm': this.extended,
+            'btn-link rounded-circle p-0': !this.extended,
             'me-2': this.env.inDiscussApp,
             'border-start-0': this.env.inDiscussApp and !this.props.composer.message,
             'border-0': this.props.composer.message,

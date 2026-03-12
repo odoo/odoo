@@ -388,6 +388,18 @@ export class Composer extends Component {
         }
     }
 
+    get compact() {
+        return this.props.mode === "compact";
+    }
+
+    get normal() {
+        return this.props.mode === "normal";
+    }
+
+    get extended() {
+        return this.props.mode === "extended";
+    }
+
     get CANCEL_OR_SAVE_EDIT_TEXT() {
         const tags = {
             open_samp: markup`<samp>`,

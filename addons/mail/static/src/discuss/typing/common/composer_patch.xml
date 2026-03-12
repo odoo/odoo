@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-Composer-coreHeader')]" position="before">
-            <div t-if="this.thread?.channel and !compact and !this.env.inMeetingView" class="o-discuss-Typing d-flex position-absolute top-0 w-100 bg-100 pe-none o-pt-0_5 pe-2 z-1">
+            <div t-if="this.thread?.channel and !this.compact and !this.env.inMeetingView" class="o-discuss-Typing d-flex position-absolute top-0 w-100 bg-100 pe-none o-pt-0_5 pe-2 z-1">
                 <Typing t-if="this.thread.channel.hasOtherMembersTyping" channel="this.thread.channel" size="'medium'"/>
             </div>
         </xpath>

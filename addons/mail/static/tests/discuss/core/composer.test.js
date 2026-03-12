@@ -8,12 +8,15 @@ import {
     insertText,
     onRpcBefore,
     openDiscuss,
+    openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Composer } from "@mail/core/common/composer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -120,4 +123,25 @@ test("html composer: send a message in a channel", async () => {
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
     await contains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
+});
+
+test("Show self-avatar in composer of Discuss App", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-avatar");
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    await contains(
+        `img.o-mail-Composer-avatar[data-src='${getOrigin()}/web/image/res.partner/${
+            serverState.partnerId
+        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}']`
+    );
+    // but not in chat window
+    await openFormView("res.partner", serverState.partnerId);
+    await contains(".o-mail-Chatter");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow .o-mail-Composer");
+    await contains(".o-mail-ChatWindow .o-mail-Composer-avatar", { count: 0 });
 });
