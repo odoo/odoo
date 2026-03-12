@@ -1282,7 +1282,7 @@ class AccountEdiUBL(models.AbstractModel):
         suffix = '_currency' if in_foreign_currency else ''
         tax_details = base_line['tax_details']
 
-        gross_total_excluded = tax_details[f'gross_total_excluded{suffix}']
+        gross_total_excluded = currency.round(tax_details[f'raw_gross_total_excluded{suffix}'])
         for allowance_charge_node in line_node['cac:AllowanceCharge']:
             sign = 1 if allowance_charge_node['cbc:ChargeIndicator']['_text'] == 'true' else -1
             gross_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
@@ -2114,27 +2114,28 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_legal_monetary_total_payable_rounding_amount_node_from_cash_rounding(self, vals, in_foreign_currency=True):
+        # DEPRECATED: TO BE REMOVED
+        pass
+
+    def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals):
         AccountTax = self.env['account.tax']
         base_lines = vals['base_lines']
+        currency = vals['currency_id']
         node = vals['legal_monetary_total_node']
-        suffix = '_currency' if in_foreign_currency else ''
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        tax_inclusive_amount = node['cbc:TaxInclusiveAmount']['_text']
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
             base_lines=base_lines,
-            grouping_function=lambda base_line, tax_data: self._ubl_is_cash_rounding_base_line(base_line),
+            grouping_function=lambda base_line, tax_data: True,
         )
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        payable_rounding_amount = None
-        for grouping_key, values in values_per_grouping_key.items():
-            if not grouping_key:
-                continue
+        expected_tax_inclusive_amount = sum(
+             values['base_amount_currency'] + values['tax_amount_currency']
+             for values in values_per_grouping_key.values()
+        )
 
-            if payable_rounding_amount is None:
-                payable_rounding_amount = 0.0
-            payable_rounding_amount += values[f'total_excluded{suffix}']
-
-        if payable_rounding_amount is None:
+        payable_rounding_amount = expected_tax_inclusive_amount - tax_inclusive_amount
+        if currency.is_zero(payable_rounding_amount):
             node['cbc:PayableRoundingAmount'] = {
                 '_text': None,
                 'currencyID': None,
@@ -2144,9 +2145,6 @@ class AccountEdiUBL(models.AbstractModel):
                 '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             }
-
-    def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals):
-        vals['legal_monetary_total_node']['cbc:PayableRoundingAmount'] = None
 
     def _ubl_add_legal_monetary_total_node(self, vals):
         node = vals['document_node']['cac:LegalMonetaryTotal'] = {}
