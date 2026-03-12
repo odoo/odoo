@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import functools
-import inspect
 import logging
 import os
 import threading
@@ -33,13 +32,13 @@ from odoo.tools import (
 )
 from odoo.tools.func import locked, reset_cached_properties
 from odoo.tools.lru import LRU
-from odoo.tools.misc import Collector, format_frame
+from odoo.tools.misc import Collector
 
 from .utils import SUPERUSER_ID
 from . import model_classes
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator
+    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
@@ -280,7 +279,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             self._assertion_report = None
         self._ordinary_tables: set[str] | None = None  # cached names of regular tables
         self._constraint_queue: dict[typing.Any, Callable[[BaseCursor], None]] = {}  # queue of functions to call on finalization of constraints
-        self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # update context during loading modules
         self.loaded_xmlids: set[str] = set()           # loaded xmlids for IrModelData._process_end()
@@ -319,15 +317,13 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.not_null_fields: set[Field] = set()
 
         # Inter-process signaling:
-        # The `orm_signaling_... sequence` indicates that the corresponding
-        # cache must be invalidated. The 'registry' sequence indicates that this
-        # registry must be rebuilt.
+        # The `orm_signaling_...` sequence indicates that the corresponding
+        # cache is invalid if the sequence is different. The 'registry' sequence
+        # applies to the whole registry which must be rebuilt.
         self.registry_sequence: int = -1
-        self.cache_sequences: dict[str, int] = {}
+        self.registry_caches__: dict[str, tuple[int, MutableMapping]] = {}
+        self.registry_cache_lock = threading.RLock()
         self._template_code__ = LRU(_REGISTRY_CACHES['templates'])  # memo for code templates
-
-        # Flags indicating invalidation of the registry or the cache.
-        self._invalidation_flags = threading.local()
 
         from odoo.modules import db  # noqa: PLC0415
         with closing(self.cursor()) as cr:
@@ -412,7 +408,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         from . import models  # noqa: PLC0415
 
         # clear cache to ensure consistency, but do not signal it
-        for cache in self.__caches.values():
+        assert not self.ready, "Cannot load() when registry is ready"
+        for _seq, cache in self.registry_caches__.values():
             cache.clear()
 
         reset_cached_properties(self)
@@ -439,18 +436,26 @@ class Registry(Mapping[str, type["BaseModel"]]):
         from .environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, {})
         env.invalidate_all()
-        if self.ready:
-            env.transaction.will_change_registry()
+        transaction = env.transaction
 
         # Uninstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
         if self.ready:
+            transaction.will_change_registry()
             for model in env.values():
                 model._unregister_hook()
-
-        # clear cache to ensure consistency, but do not signal it
-        for cache in self.__caches.values():
-            cache.clear()
+            # clear cache to ensure consistency, we are in self.ready, so it
+            # will signal the change anyways because the registry changes
+            transaction.invalidate_ormcache('stable')
+        else:
+            # loading the registry, or running at_install tests
+            # clear cache to ensure consistency, but do not signal it
+            transaction.invalidate_ormcache('stable')
+            for name, layer in transaction.ormcaches__.items():
+                while hasattr(layer, 'parent'):
+                    layer = layer.parent
+                transaction._registry_caches__[name] = (transaction._registry_caches__[name][0], layer)
+            _logger.debug("skip signaling for previous invalidations")
 
         reset_cached_properties(self)
 
@@ -996,20 +1001,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
-    def _clear_cache(self, cache_name: str = 'default') -> None:
-        """ Implementation of Transaction.invalidate_ormcache """
-        assert '.' not in cache_name
-        for cache in _CACHES_BY_KEY[cache_name]:
-            self.__caches[cache].clear()
-        self.cache_invalidated.add(cache_name)
-
-        # log information about invalidation_cause
-        if _logger.isEnabledFor(logging.DEBUG):
-            # could be interresting to log in info but this will need to minimize invalidation first,
-            # mainly in some setupclass and crons
-            caller_info = format_frame(inspect.currentframe().f_back)  # type: ignore
-            _logger.debug('Invalidating %s model cache from %s', cache_name, caller_info)
-
     def is_an_ordinary_table(self, model: BaseModel) -> bool:
         """ Return whether the given model has an ordinary table. """
         if self._ordinary_tables is None:
@@ -1027,18 +1018,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         return model._table in self._ordinary_tables
 
-    @property
-    def cache_invalidated(self) -> set[str]:
-        """ Determine whether the current thread has modified the cache. """
-        try:
-            return self._invalidation_flags.cache
-        except AttributeError:
-            names = self._invalidation_flags.cache = set()
-            return names
-
     def setup_signaling(self) -> None:
         """ Setup the inter-process signaling on this registry. """
-        assert self.registry_sequence < 0 and not self.cache_sequences, "Setup signaling already performed"
+        assert self.registry_sequence < 0 and not self.registry_caches__, "Setup signaling already performed"
         with self.cursor() as cr:
             # The `orm_signaling_registry` sequence indicates when the registry
             # must be reloaded.
@@ -1062,9 +1044,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             self.registry_sequence = db_registry_sequence
-            self.cache_sequences = {
-                name: db_cache_sequences.get(name) or 0
-                for name in _REGISTRY_CACHES
+            self.registry_caches__ = {
+                name: (db_cache_sequences.get(name) or 0, LRU(cache_size))
+                for name, cache_size in _REGISTRY_CACHES.items()
             }
 
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] %s",

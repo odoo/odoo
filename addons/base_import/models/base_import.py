@@ -1526,12 +1526,6 @@ class Base_ImportImport(models.TransientModel):
         finally:
             # rollback if not already closed
             import_savepoint.close(rollback=True)
-            if dryrun:
-                # cancel all changes done to the ormcache
-                # clear main caches only, these should already be invalidated while
-                # importing data and will be cleared when resetting changes
-                for cache_name in ('default', 'groups', 'stable'):
-                    self.env.transaction.invalidate_ormcache(cache_name)
         if dryrun:
             _logger.info('Previous import was a dry/test run, changes were reset')
 

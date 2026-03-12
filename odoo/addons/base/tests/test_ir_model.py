@@ -636,8 +636,8 @@ class TestCustomFields(TestCommonCustomFields):
                 'store': True,
             })
 
-        # same with a related field, it only takes 8 extra queries
-        with self.assertQueryCount(query_count + 8):
+        # same with a related field, it only takes 10 extra queries
+        with self.assertQueryCount(query_count + 10):
             self.env.transaction.invalidate_ormcache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,

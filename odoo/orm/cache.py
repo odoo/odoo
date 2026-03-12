@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Mapping, Collection, MutableMapping
+from collections.abc import Mapping, Collection
 from inspect import signature, Parameter
-from odoo.tools.misc import SENTINEL
 import functools
 import logging
 import signal
@@ -15,9 +14,9 @@ import time
 import typing
 
 if typing.TYPE_CHECKING:
-    from odoo.tools.lru import LRU
     from collections.abc import Callable, Iterable
     from odoo.models import BaseModel
+    from .environments import CacheLayer
 
 unsafe_eval = eval
 
@@ -90,7 +89,7 @@ class ormcache:
 
     def add_value(self, *args, cache_value=None, **kwargs) -> None:
         model: BaseModel = args[0]
-        d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
+        d = model.env.transaction.ormcaches__[self.cache_name]
         key = self.key(*args, **kwargs)
         d[key] = cache_value
 
@@ -109,7 +108,7 @@ class ormcache:
 
     def lookup(self, *args, **kwargs):
         model: BaseModel = args[0]
-        d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
+        d = model.env.transaction.ormcaches__[self.cache_name]
         key = self.key(*args, **kwargs)
         counter = _COUNTERS[model.pool.db_name, self.method]
 
@@ -189,7 +188,7 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                 _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
                 db_cache_stats = cache_stats[dbname]
                 db_cache_usage = cache_usage[dbname]
-                for cache_name, cache in registry._Registry__caches.items():
+                for cache_name, (_seq, cache) in registry.registry_caches__.items():
                     cache_total_size = 0
                     for cache_key, cache_value in cache.snapshot.items():
                         method = cache_key[1]
@@ -284,14 +283,17 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
         show_size = True
         threading.Thread(target=_log_ormcache_stats,
                          name="odoo.signal.log_ormcache_stats_with_size").start()
+    elif sig is True:  # for debugging / manual call
+        show_size = True
+        _log_ormcache_stats()
 
 
-def get_cache_key_counter(bound_method: Callable, *args, **kwargs) -> tuple[LRU, tuple, ormcache_counter]:
+def get_cache_key_counter(bound_method: Callable, *args, **kwargs) -> tuple[CacheLayer, tuple, ormcache_counter]:
     """ Return the cache, key and stat counter for the given call. """
     # Used for testing only.
     model: BaseModel = bound_method.__self__  # type: ignore
     ormcache_instance: ormcache = bound_method.__cache__  # type: ignore
-    cache: LRU = model.pool._Registry__caches[ormcache_instance.cache_name]  # type: ignore
+    cache = model.env.transaction.ormcaches__[ormcache_instance.cache_name]
     key = ormcache_instance.key(model, *args, **kwargs)
     counter = _COUNTERS[model.pool.db_name, ormcache_instance.method]
     return cache, key, counter

@@ -1956,10 +1956,10 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.drop_ormcaches()
+        self.env.transaction.invalidate_ormcache('assets')
 
     def cache_keys(self):
-        keys = list(self.env.registry._Registry__caches['assets'])
+        keys = list(self.env.transaction.ormcaches__['assets'])
 
         asset_keys = [key for key in keys if key[0] == 'ir.asset' and '_get_asset_paths' in str(key[1])]  # ignore topological sort entry
         qweb_keys = [key for key in keys if key[0] == 'ir.qweb']
