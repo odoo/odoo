@@ -206,6 +206,10 @@ class ResPartner(models.Model):
                 return min(formats_by_country, key=lambda e: formats_info[e].get('sequence', 100))  # we use a sequence of 100 by default
         return False
 
+    def _get_ubl_cii_edi_format(self):
+        self.ensure_one()
+        return self.invoice_edi_format or self._get_suggested_ubl_cii_edi_format()
+
     def _get_suggested_peppol_edi_format(self):
         self.ensure_one()
         suggested_format = self.commercial_partner_id._get_suggested_ubl_cii_edi_format()

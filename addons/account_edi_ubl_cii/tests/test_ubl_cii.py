@@ -657,6 +657,38 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 (invoices[:2]).ubl_cii_xml_id.mapped('name'),
             )
 
+    def test_export_xml(self):
+        partners = self.env['res.partner'].create([{
+            'name': 'Partner',
+            'country_id': country_id,
+            'invoice_edi_format': edi_format,
+        } for edi_format, country_id in [
+            ('ubl_bis3', self.env.ref('base.hu').id),
+            (False, self.env.ref('base.hu').id),  # HU has no default format
+            (False, self.env.ref('base.nl').id),  # NL should have 'nlcius' as suggested format
+        ]])
+        invoices = [self._create_invoice(partner_id=partner.id, post=True, invoice_line_ids=[
+            self._prepare_invoice_line(product_id=self.product_a.id, price_unit=100)])
+            for partner in partners]
+        print_items = invoices[1].get_extra_print_items()
+        self.assertEqual(print_items, [])
+        print_items = invoices[0].get_extra_print_items()
+        self.assertEqual(
+            print_items[0]['url'],
+            f'/account/download_invoice_documents/{invoices[0].id}/ubl?allow_fallback=true',
+        )
+
+        xml_content = invoices[0]._get_invoice_legal_documents('ubl', allow_fallback=True)[0]
+        xml_etree = self.get_xml_tree_from_string(xml_content['content'].decode()[39:])
+
+        self.assertEqual(
+            xml_etree.find('{*}CustomizationID').text,
+            'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
+        )
+        formats = [move.commercial_partner_id.with_company(move.company_id)
+                    ._get_ubl_cii_edi_format() for move in invoices]
+        self.assertListEqual(formats, ['ubl_bis3', False, 'nlcius'])
+
     def test_payment_means_code_in_facturx_xml(self):
         partner_bank = self.env['res.partner.bank'].create({
                 'account_number': 'BE15001559627230',
