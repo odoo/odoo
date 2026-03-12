@@ -608,7 +608,7 @@ class MailingMailing(models.Model):
                 'res_model': 'mailing.mailing',
                 'res_id': mass_mailing_copy.id,
                 'context': res_context,
-                }
+            }
         return False
 
     def _create_mailing_from_template(self, mass_mailing_template):
@@ -631,7 +631,7 @@ class MailingMailing(models.Model):
 
     def action_duplicate_template(self):
         self.ensure_one()
-        if mass_mailing_copy := self.create_mailing_copy():
+        if mass_mailing_copy := self._create_mailing_copy():
             form_view_ref = self.env.ref('mass_mailing.mailing_templates_view_form', False).id
             return {
                 'type': 'ir.actions.act_window',
@@ -643,12 +643,8 @@ class MailingMailing(models.Model):
             }
         return False
 
-    def create_mailing_copy(self):
-        if mass_mailing_copy := self.copy():
-            mass_mailing_copy.subject += " - Copy"
-            if self.is_template:
-                mass_mailing_copy.favorite = True
-            return mass_mailing_copy
+    def _create_mailing_copy(self):
+        return self.copy(default={"subject": f"{self.subject} - Copy", "favorite": self.is_template})
 
     def action_preview(self):
         self.ensure_one()

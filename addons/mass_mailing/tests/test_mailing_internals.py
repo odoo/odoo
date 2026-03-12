@@ -863,15 +863,10 @@ class TestMassMailingActions(MassMailCommon):
                 "email": mark_email,
             }
         ])
-        link_1 = self.env["link.tracker"].create({
-            "url": "https://example.com/1",
-        })
-        link_2 = self.env["link.tracker"].create({
-            "url": "https://example.com/2",
-        })
-        link_3 = self.env["link.tracker"].create({
-            "url": "https://example.com/3",
-        })
+
+        link_1, link_2, link_3 = self.env["link.tracker"].create([
+            {"url": f"https://example.com/{i}"} for i in range(1, 4)
+        ])
         click_1 = self.env["link.tracker.click"].create({
             "link_id": link_1.id,
             "mailing_trace_id": traces[0].id,

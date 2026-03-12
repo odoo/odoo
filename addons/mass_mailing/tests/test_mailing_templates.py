@@ -22,14 +22,14 @@ class TestMailingTemplates(MassMailCommon):
         # Execute
         res_action = mailing_template.action_use_template()
         created_mailing_id = res_action['res_id']
+        created_mailing = self.env['mailing.mailing'].browse(created_mailing_id)
 
         # Assert
         self.assertEqual("attribute value", res_action['context']['some_attribute'])
         self.assertEqual(False, res_action['context']['default_is_template'])
         self.assertEqual(False, res_action['context']['default_favorite'])
-        self.assertEqual(2, self.env['mailing.mailing'].search_count([]))
-        self.assertEqual(False, self.env['mailing.mailing'].search([('id', '=', created_mailing_id)]).favorite)
-        self.assertEqual(False, self.env['mailing.mailing'].search([('id', '=', created_mailing_id)]).is_template)
+        self.assertEqual(False, created_mailing.favorite)
+        self.assertEqual(False, created_mailing.is_template)
 
     def test_template_duplicate(self):
         # Prepare
