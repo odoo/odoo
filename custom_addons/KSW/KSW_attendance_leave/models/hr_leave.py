@@ -272,6 +272,7 @@ class HrLeave(models.Model):
     def _get_daily_work_hours(self, employee, check_in_date=None):
         """Get daily work hours from resource.calendar.group.line
         via: employee -> resource_calendar_id -> (m2m) resource.calendar.group -> line_ids.
+        Break hours are deducted from the total.
         """
         calendar = employee.resource_calendar_id
         if not calendar:
@@ -291,13 +292,45 @@ class HrLeave(models.Model):
             )
             if not all_lines:
                 return 8.0
+            # Also get break lines for deduction
+            break_lines = calendar_groups.mapped('line_ids').filtered(
+                lambda l: l.day_period == 'break'
+            )
             total_weekly_hours = sum(l.hour_to - l.hour_from for l in all_lines)
+            total_weekly_breaks = sum(l.hour_to - l.hour_from for l in break_lines)
             work_days_count = len(set(all_lines.mapped('dayofweek')))
             if work_days_count:
-                return total_weekly_hours / work_days_count
+                return (total_weekly_hours - total_weekly_breaks) / work_days_count
             return 8.0
 
-        return sum(l.hour_to - l.hour_from for l in lines)
+        # Get break lines for the same day to deduct
+        break_hours = self._get_break_hours_for_calendar(calendar, target_date=check_in_date)
+
+        return sum(l.hour_to - l.hour_from for l in lines) - break_hours
+
+    def _get_break_hours_for_calendar(self, calendar, target_date=None):
+        """Return total break hours from resource.calendar.group.line
+        for the given calendar and date."""
+        if not calendar:
+            return 0.0
+
+        calendar_groups = calendar.calendar_group_ids
+        if not calendar_groups:
+            return 0.0
+
+        break_lines = calendar_groups.mapped('line_ids').filtered(
+            lambda l: l.day_period == 'break'
+        )
+
+        if target_date:
+            break_lines = break_lines.filtered(
+                lambda l: (not l.start_date or l.start_date <= target_date)
+                          and (not l.end_date or l.end_date >= target_date)
+            )
+            day_of_week = str(target_date.weekday())
+            break_lines = break_lines.filtered(lambda l: l.dayofweek == day_of_week)
+
+        return sum(l.hour_to - l.hour_from for l in break_lines)
 
     # ──────────────────────────────────────────────────────────────────
     # Override _get_hour_from_to to use resource.calendar.group.line
@@ -457,8 +490,8 @@ class HrLeave(models.Model):
                     'first_approver_id': current_employee.id,
                 })
 
-            # Mark attendance records as covered
-            leave.x_attendance_ids.write({'x_is_covered': True})
+            # x_is_covered is a computed field that depends on x_leave_ids.state
+            # It recomputes automatically when the leave state changes to 'validate'
 
             # Validate (create resource leave, calendar event, etc.)
             leave._validate_leave_request()
@@ -765,7 +798,7 @@ class HrLeave(models.Model):
         if attendance_leaves:
             refuser_name = self.env.user.name or 'System'
             for leave in attendance_leaves:
-                leave.x_attendance_ids.write({'x_is_covered': False})
+                # x_is_covered recomputes automatically when leave state changes to 'refuse'
                 details_html = leave._build_attendance_details_html(show_accepted=True)
                 employee_name = leave.employee_id.name or ''
                 leave_type_name = leave.holiday_status_id.display_name or ''
@@ -813,7 +846,6 @@ class HrLeave(models.Model):
         return True
 
     def action_draft(self):
-        """Unmark attendance records when leave is reset to draft."""
-        for leave in self.filtered('x_attendance_ids'):
-            leave.x_attendance_ids.write({'x_is_covered': False})
+        """Reset leave to draft state."""
+        # x_is_covered recomputes automatically when leave state changes
         return super().action_draft()

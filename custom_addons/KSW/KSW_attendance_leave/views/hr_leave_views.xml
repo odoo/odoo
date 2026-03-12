@@ -45,36 +45,5 @@
         </field>
     </record>
 
-    <!-- Extend hr.attendance list to show coverage status -->
-    <record id="hr_attendance_view_list_inherit_coverage" model="ir.ui.view">
-        <field name="name">hr.attendance.list.inherit.coverage</field>
-        <field name="model">hr.attendance</field>
-        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//list" position="inside">
-                <field name="x_is_covered" string="Covered"
-                       widget="boolean_toggle" readonly="1"
-                       optional="show"/>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Extend hr.attendance form to show related leaves -->
-    <record id="hr_attendance_view_form_inherit_leaves" model="ir.ui.view">
-        <field name="name">hr.attendance.form.inherit.leaves</field>
-        <field name="model">hr.attendance</field>
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <group string="Related Time Off"
-                       invisible="not x_leave_ids">
-                    <field name="x_leave_ids" widget="one2many_list"
-                           readonly="1"/>
-                    <field name="x_is_covered" readonly="1"
-                           widget="boolean_toggle"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
 
 </odoo>

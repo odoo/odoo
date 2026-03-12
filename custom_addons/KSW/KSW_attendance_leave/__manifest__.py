@@ -23,6 +23,7 @@ Connecting attendance records with leave management to be a list to choose from
 
         # Views
         'views/hr_leave_views.xml',
+        'views/hr_attendance_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
