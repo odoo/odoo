@@ -9,6 +9,7 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/produc
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
@@ -147,6 +148,15 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
             FloorScreen.selectedFloorIs("Second Floor"),
+
+            // add new floor
+            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.clickAddFloor(),
+            Dialog.is("New Floor"),
+            Dialog.isButtonDisabled("Apply"),
+            TextInputPopup.inputText("Test Floor"),
+            Dialog.confirm(),
+            FloorScreen.clickSaveEditButton(),
 
             // Check the linking of tables
             FloorScreen.clickFloor("Main Floor"),
