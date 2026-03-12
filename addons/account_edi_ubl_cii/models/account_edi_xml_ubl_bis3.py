@@ -258,9 +258,22 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals):
         # EXTENDS account.edi.xml.ubl
         super()._ubl_add_legal_monetary_total_payable_rounding_amount_node(vals)
-
-        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
-        self._ubl_add_legal_monetary_total_payable_rounding_amount_node_from_cash_rounding(vals)
+        tax_withholding_amount = vals['_ubl_values'].get('tax_withholding_amount')
+        node = vals['legal_monetary_total_node']
+        payable_rounding_amount = node['cbc:PayableRoundingAmount']['_text']
+        if tax_withholding_amount and payable_rounding_amount is not None:
+            currency = vals['currency_id']
+            payable_rounding_amount += tax_withholding_amount
+            if currency.is_zero(payable_rounding_amount):
+                node['cbc:PayableRoundingAmount'] = {
+                    '_text': None,
+                    'currencyID': None,
+                }
+            else:
+                node['cbc:PayableRoundingAmount'] = {
+                    '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
+                    'currencyID': currency.name,
+                }
 
     def _ubl_add_legal_monetary_total_prepaid_payable_amount_node(self, vals, in_foreign_currency=True):
         # EXTENDS account.edi.xml.ubl
