@@ -1346,8 +1346,8 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _key_assign_picking(self):
         self.ensure_one()
         keys = (self.group_id, self.location_id, self.location_dest_id, self.picking_type_id)
-        if self.move_orig_ids.picking_id and not self.group_id:
-            keys += (self.move_orig_ids.picking_id, )
+        if self.partner_id and not self.group_id:
+            keys += (self.partner_id, )
         return keys
 
     def _search_picking_for_assignation_domain(self):
@@ -1358,12 +1358,12 @@ Please change the quantity done or the rounding precision of your unit of measur
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
+        if self.partner_id and not self.group_id:
+            domain += [('partner_id', '=', self.partner_id.id)]
         return domain
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
-        if not self.group_id:
-            return self.env['stock.picking']
         domain = self._search_picking_for_assignation_domain()
         picking = self.env['stock.picking'].search(domain, limit=1)
         return picking
@@ -2077,7 +2077,12 @@ Please change the quantity done or the rounding precision of your unit of measur
                 .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0.0, precision_rounding=q.product_uom_id.rounding) > 0).mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+                error_msg = _(
+                    'You cannot move the same package content more than once in the same transfer'
+                    ' or split the same package into two location.'
+                )
+                package_msg = _("\nPackage: %s", result_package.name)
+                raise UserError(error_msg + package_msg)
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
