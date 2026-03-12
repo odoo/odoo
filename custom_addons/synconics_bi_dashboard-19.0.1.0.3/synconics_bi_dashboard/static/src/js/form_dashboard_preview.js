@@ -80,10 +80,8 @@ export class FormDashboardPreviewComponent extends Component {
             this.props.record.data.kpi_date_filter_field_id.id,
           kpi_date_filter_option: this.props.record.data.kpi_date_filter_option,
           kpi_include_periods: this.props.record.data.kpi_include_periods,
-          kpi_same_period_period_previous_years:
-            this.props.record.data.kpi_same_period_period_previous_years,
-          previous_period_comparison:
-            this.props.record.data.previous_period_comparison,
+          kpi_same_period_previous_years:
+            this.props.record.data.kpi_same_period_previous_years,
           previous_period_duration:
             this.props.record.data.previous_period_duration,
           previous_period_type: this.props.record.data.previous_period_type,

@@ -72,7 +72,7 @@ class SalaryAdvance(models.Model):
                               ('approve', 'Approved'),
                               ('cancel', 'Cancelled'),
                               ('reject', 'Rejected')], string='Status',
-                             default='draft', track_visibility='onchange',
+                             default='draft', tracking=True,
                              help='State of the salary advance.')
     debit_id = fields.Many2one('account.account', string='Debit Account',
                                help='Debit account of the salary advance.')

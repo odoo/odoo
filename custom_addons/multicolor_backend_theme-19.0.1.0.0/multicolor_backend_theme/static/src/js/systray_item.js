@@ -60,7 +60,7 @@ patch(NavBar.prototype, {
                 layout: 'hex',
                 flat: false,
                 enableAlpha: false,
-                color: self.selected_theme.property,
+                color: self.selected_theme[property],
                 onSubmit: function(ev) {
                     let elId = $(ev.el).attr('id');
                     $('#' + elId).css('background-color', '#' + ev.hex);

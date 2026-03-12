@@ -12,6 +12,8 @@
   - [deploy/odoo/kodoo.prod.local.conf](/home/actpm/workfolder/odoo/deploy/odoo/kodoo.prod.local.conf)
 - Warning cleanup:
   - Added missing license key in [custom_addons/knowledge/__manifest__.py](/home/actpm/workfolder/odoo/custom_addons/knowledge/__manifest__.py)
+- Reliable install harness for noisy test DBs:
+  - On the non-production database `ktest_report_xlsx`, `lock_timeout` was set to `0` and all rows in `ir_cron` were deactivated during install checks. This eliminated false-negative `ir_cron` lock/serialization failures caused by the always-on main server touching the same test database.
 
 ## Readiness status
 
@@ -20,11 +22,11 @@
 | `report_xlsx` | Ready | Install verified in Docker/Python 3.12 on alternate port/database. |
 | `hide_menu_user` | Ready | Install verified in Docker/Python 3.12 on alternate port/database. |
 | `ai_sql` | Ready with optional runtime dependency | Install verified after removing hard `openai` install block and making the controller degrade gracefully when `openai` is absent. |
-| `auto_database_backup` | Patched, serial rerun pending | Catalog fixed and optional Python backends made lazy. Parallel install hit `SerializationFailure` on `ir_cron`, which is environmental, not a module parse/load failure. |
+| `auto_database_backup` | Ready with optional backend libraries | Install verified in Docker/Python 3.12 on the prepared non-production database. Optional Python backends remain lazy and now fail with user-facing guidance only when their storage backend is used. |
 | `base_account_budget` | Pending family validation | Discovery fixed; validated indirectly as part of the `base_accounting_kit` family path. |
-| `base_accounting_kit` | Patched, validation running | Removed hard `qifparse` blocker; QIF import now asks for the package only when used. Install run is in progress. |
-| `dynamic_accounts_report` | Pending after accounting kit | Depends on `base_accounting_kit`; same `qifparse` operational patch applied to its bundled copy. |
-| `hr_payroll_community` | Validation running | Discovery fixed; fresh install is in progress. |
+| `base_accounting_kit` | Ready with optional QIF dependency | Install verified in Docker/Python 3.12. Removed hard `qifparse` blocker; QIF import now asks for the package only when used. |
+| `dynamic_accounts_report` | Ready | Install verified in Docker/Python 3.12 on top of the validated accounting kit. Added missing ACL rows for four report models. |
+| `hr_payroll_community` | Ready | Install verified in Docker/Python 3.12 on alternate database. |
 | `hr_payroll_account_community` | Pending after payroll base | Depends on `hr_payroll_community`. |
 | `hr_employee_transfer` | Pending | Awaits Open HRMS family validation. |
 | `hr_employee_updation` | Pending | Awaits Open HRMS family validation. |
@@ -33,16 +35,16 @@
 | `hr_reminder` | Pending | Awaits Open HRMS family validation. |
 | `hr_resignation` | Pending | Awaits Open HRMS family validation. |
 | `hr_reward_warning` | Pending | Awaits Open HRMS family validation. |
-| `hrms_dashboard` | Patched, pending install | Removed hard `pandas` requirement and replaced the two pandas aggregations with pure Python aggregation. |
+| `hrms_dashboard` | Ready with follow-up warning cleanup | Install verified in Docker/Python 3.12 on top of `ktest_hr_payroll_community`. Removed hard `pandas` requirement, replaced the two pandas aggregations with pure Python aggregation, and switched dashboard chart loading from CDN to local Odoo assets. |
 | `oh_employee_creation_from_user` | Pending | Awaits Open HRMS family validation. |
 | `oh_employee_documents_expiry` | Pending | Awaits Open HRMS family validation. |
 | `ohrms_loan` | Pending | Awaits Open HRMS family validation. |
 | `ohrms_loan_accounting` | Pending | Awaits Open HRMS family validation. |
 | `ohrms_salary_advance` | Pending | Awaits Open HRMS family validation. |
-| `ohrms_core` | Patched, pending install | Hard `pandas` manifest blocker removed; depends on the rest of the Open HRMS stack. |
-| `multicolor_backend_theme` | Patched, serial rerun pending | Discovery fixed. Parallel install twice hit `SerializationFailure` on `ir_cron`, pointing to concurrent install noise rather than theme code incompatibility. |
-| `powered_by_odoo_remove` | Pending rerun | Discovery fixed; needs a clean serial rerun for final verdict. |
-| `synconics_bi_dashboard` | Patched, pending install | Removed hard `imgkit` manifest blocker and added a user-facing error only when image export is invoked without the package. |
+| `ohrms_core` | Ready with legacy-field warnings | Install verified in Docker/Python 3.12 on top of the validated Open HRMS dependency chain. Hard `pandas` manifest blocker removed; several legacy field parameters still emit non-fatal Odoo 19 warnings and are being normalized incrementally. |
+| `multicolor_backend_theme` | Ready | Install verified in Docker/Python 3.12 on the prepared non-production database. Added Owl-safe systray inheritance, fixed the color picker property lookup, and migrated the login theme route flow to `jsonrpc`. |
+| `powered_by_odoo_remove` | Ready | Install verified in Docker/Python 3.12. XPath expressions updated to `hasclass(...)` for safer Odoo 19 view inheritance. |
+| `synconics_bi_dashboard` | Ready with optional export backends | Install verified in Docker/Python 3.12 on the prepared non-production database. `imgkit` and `xlsxwriter` paths now degrade gracefully instead of blocking module load. |
 | `industry_real_estate` | Blocked by missing dependencies | Requires `crm_enterprise`, `project_sale_subscription`, and `website_studio`, which are not present in the current addon catalog. |
 | `l10n_br_base` | Blocked by incompatible version | Odoo 19 marks it incompatible automatically because the addon is from the 14.0 series. |
 | `l10n_br_fiscal` | Blocked by incompatible version | Odoo 19 marks it incompatible automatically because the addon is from the 14.0 series. |
@@ -59,11 +61,39 @@
   - Clear `UserError` messages when optional backend libraries are missing.
 - [custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/models/hr_employee.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/models/hr_employee.py)
   - Replaced pandas aggregations with Python `defaultdict` sums.
+- [custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/__manifest__.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/__manifest__.py)
+- [custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/static/src/js/dashboard.js](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/static/src/js/dashboard.js)
+  - Replaced CDN `Chart.js` loading with the local Odoo asset and removed the stray `d3` dependency from percentage math.
+- [custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/report/broadfactor.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/hrms_dashboard/report/broadfactor.py)
+  - Added the missing abstract-report description to silence Odoo 19 model warnings.
+- [custom_addons/ohrms_core-19.0.1.0.0/hr_resignation/models/hr_resignation.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/hr_resignation/models/hr_resignation.py)
+- [custom_addons/ohrms_core-19.0.1.0.0/hr_reward_warning/models/hr_announcement.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/hr_reward_warning/models/hr_announcement.py)
+- [custom_addons/ohrms_core-19.0.1.0.0/ohrms_salary_advance/models/salary_advance.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/ohrms_salary_advance/models/salary_advance.py)
+- [custom_addons/ohrms_core-19.0.1.0.0/ohrms_loan_accounting/models/hr_loan.py](/home/actpm/workfolder/odoo/custom_addons/ohrms_core-19.0.1.0.0/ohrms_loan_accounting/models/hr_loan.py)
+  - Replaced legacy `track_visibility` usage with Odoo 19 `tracking=True`; `hr_resignation` also now stores `notice_period` to avoid mixed compute-field behavior.
 - [custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/models/dashboard_chart.py](/home/actpm/workfolder/odoo/custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/models/dashboard_chart.py)
   - `imgkit` import is optional; export now raises a clear validation error if the package is absent.
+- [custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/wizard/mail_compose_message.py](/home/actpm/workfolder/odoo/custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/wizard/mail_compose_message.py)
+- [custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/static/src/js/form_dashboard_preview.js](/home/actpm/workfolder/odoo/custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/static/src/js/form_dashboard_preview.js)
+- [custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/static/src/js/dashboard_form_view.js](/home/actpm/workfolder/odoo/custom_addons/synconics_bi_dashboard-19.0.1.0.3/synconics_bi_dashboard/static/src/js/dashboard_form_view.js)
+  - Added graceful fallback for image-export-dependent email flows, corrected preview payload field names, and guarded the form compiler against missing class attributes.
+- [custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/static/src/xml/systray_ext.xml](/home/actpm/workfolder/odoo/custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/static/src/xml/systray_ext.xml)
+- [custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/static/src/js/systray_item.js](/home/actpm/workfolder/odoo/custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/static/src/js/systray_item.js)
+- [custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/controllers/theme_config.py](/home/actpm/workfolder/odoo/custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/controllers/theme_config.py)
+- [custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/static/src/js/login_page.js](/home/actpm/workfolder/odoo/custom_addons/multicolor_backend_theme-19.0.1.0.0/multicolor_backend_theme/static/src/js/login_page.js)
+  - Added `owl="1"` and resilient systray XPath targeting, fixed the color-picker property lookup, and migrated the login theme endpoint flow to `jsonrpc`.
 - [custom_addons/base_accounting_kit-19.0.2.2.0/base_accounting_kit/wizard/import_bank_statement.py](/home/actpm/workfolder/odoo/custom_addons/base_accounting_kit-19.0.2.2.0/base_accounting_kit/wizard/import_bank_statement.py)
 - [custom_addons/dynamic_accounts_report-19.0.1.0.0/base_accounting_kit/wizard/import_bank_statement.py](/home/actpm/workfolder/odoo/custom_addons/dynamic_accounts_report-19.0.1.0.0/base_accounting_kit/wizard/import_bank_statement.py)
   - QIF import now requests `qifparse` only when needed.
+- [custom_addons/base_accounting_kit-19.0.2.2.0/base_accounting_kit/models/account_asset_category.py](/home/actpm/workfolder/odoo/custom_addons/base_accounting_kit-19.0.2.2.0/base_accounting_kit/models/account_asset_category.py)
+- [custom_addons/dynamic_accounts_report-19.0.1.0.0/base_accounting_kit/models/account_asset_category.py](/home/actpm/workfolder/odoo/custom_addons/dynamic_accounts_report-19.0.1.0.0/base_accounting_kit/models/account_asset_category.py)
+  - Removed invalid `hide=True` field parameter that generated Odoo 19 warnings.
+- [custom_addons/dynamic_accounts_report-19.0.1.0.0/dynamic_accounts_report/security/ir.model.access.csv](/home/actpm/workfolder/odoo/custom_addons/dynamic_accounts_report-19.0.1.0.0/dynamic_accounts_report/security/ir.model.access.csv)
+  - Added missing access rows for aged payable, aged receivable, bank book, and tax report models.
+- [custom_addons/powered_by_odoo_remove-saas-19.1.1.0/powered_by_odoo_remove/views/login_layout.xml](/home/actpm/workfolder/odoo/custom_addons/powered_by_odoo_remove-saas-19.1.1.0/powered_by_odoo_remove/views/login_layout.xml)
+- [custom_addons/powered_by_odoo_remove-saas-19.1.1.0/powered_by_odoo_remove/views/portal_record_sidebar.xml](/home/actpm/workfolder/odoo/custom_addons/powered_by_odoo_remove-saas-19.1.1.0/powered_by_odoo_remove/views/portal_record_sidebar.xml)
+- [custom_addons/powered_by_odoo_remove-saas-19.1.1.0/powered_by_odoo_remove/views/brand_promotion.xml](/home/actpm/workfolder/odoo/custom_addons/powered_by_odoo_remove-saas-19.1.1.0/powered_by_odoo_remove/views/brand_promotion.xml)
+  - Replaced fragile `@class` XPath filters with `hasclass(...)` for Odoo 19 compatibility.
 
 ## Duplicate technical modules detected
 

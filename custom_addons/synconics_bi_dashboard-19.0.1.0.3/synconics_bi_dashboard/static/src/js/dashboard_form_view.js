@@ -19,10 +19,12 @@ export class BiDashboardFormViewCompiler extends FormCompiler {
         }
       }
 
-      const newClasses = classes.replace(
-        '{{ __comp__.uiService.size < 5 ? "flex-column" : "flex-nowrap h-100" }}',
-        "flex-column",
-      );
+      const newClasses = classes
+        ? classes.replace(
+            '{{ __comp__.uiService.size < 5 ? "flex-column" : "flex-nowrap h-100" }}',
+            "flex-column",
+          )
+        : "flex-column";
       res.setAttribute("t-attf-class", `${newClasses}`);
     }
 

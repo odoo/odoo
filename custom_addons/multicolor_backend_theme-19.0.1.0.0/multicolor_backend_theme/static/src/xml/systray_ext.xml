@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <!--    Systray view-->
-    <t t-inherit="web.NavBar" t-inherit-mode="extension">
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
         <!-- <xpath expr="//div[@class='o_menu_systray d-flex flex-shrink-0 ms-auto']//t[@t-foreach='systrayItems']" position="before"> -->
-        <xpath expr="//div[@class='o_menu_systray d-flex flex-shrink-0 ms-auto bg-inherit']//t[@t-foreach='systrayItems']" position="before">
+        <xpath expr="//div[hasclass('o_menu_systray')]//t[@t-foreach='systrayItems']" position="before">
         <!-- <xpath expr="//div[contains(@class, 'o_menu_systray')]" position="inside"> -->
             <Dropdown state="dropdown">
                 <t t-log="'insidethe dropdown'"/>

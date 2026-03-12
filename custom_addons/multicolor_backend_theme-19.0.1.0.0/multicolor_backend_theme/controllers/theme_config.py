@@ -27,7 +27,7 @@ class LoginPage(http.Controller):
     """Controller for the login page. This controller provides methods for
     retrieving the active theme's main color, view font color, and theme font
     color and updating the theme of the login page."""
-    @http.route('/active_theme', auth='public', type='json')
+    @http.route('/active_theme', auth='public', type='jsonrpc')
     def find_active_theme(self):
         """find the active theme for updating theme of login page"""
         active_theme = request.env['theme.config'].sudo().search([

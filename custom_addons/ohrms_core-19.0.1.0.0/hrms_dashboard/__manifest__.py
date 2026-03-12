@@ -44,9 +44,9 @@
     'assets': {
         'web.assets_backend': [
             'hrms_dashboard/static/src/css/dashboard.css',
+            'web/static/lib/Chart/Chart.js',
             'hrms_dashboard/static/src/js/dashboard.js',
             'hrms_dashboard/static/src/xml/dashboard.xml',
-            'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js',
         ],
     },
     'images': ["static/description/banner.jpg"],

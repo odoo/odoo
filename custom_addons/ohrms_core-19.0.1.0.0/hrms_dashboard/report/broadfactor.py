@@ -54,6 +54,7 @@ class EmployeeBroadFactor(models.Model):
 
 class ReportOverdue(models.AbstractModel):
     _name = 'report.hrms_dashboard.report_broadfactor'
+    _description = 'HRMS Dashboard Broadfactor Report'
 
     @api.model
     def get_report_values(self, docids=None, data=None):

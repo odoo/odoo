@@ -1,7 +1,6 @@
 import io
 import csv
 import base64
-import xlsxwriter
 import logging
 
 from math import gcd
@@ -22,6 +21,16 @@ except ImportError:
     imgkit = None
 
 _logger = logging.getLogger(__name__)
+
+
+def _get_xlsxwriter():
+    try:
+        import xlsxwriter
+    except ImportError as exc:
+        raise ValidationError(
+            _("Install the Python package 'xlsxwriter' to export dashboard data to Excel.")
+        ) from exc
+    return xlsxwriter
 
 
 class UTCDatetime:
@@ -1033,7 +1042,7 @@ class DashboardChart(models.Model):
         if isinstance(data, dict) and data.get("type") == "error":
             return {"error": True}
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output)
+        workbook = _get_xlsxwriter().Workbook(output)
         worksheet = workbook.add_worksheet(name)
 
         blocks_per_row, col_gap, row_gap = 3, 3, 3

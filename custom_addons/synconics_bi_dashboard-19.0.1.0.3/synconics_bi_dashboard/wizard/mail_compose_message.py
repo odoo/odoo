@@ -1,5 +1,10 @@
+import logging
+
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from markupsafe import Markup
+
+_logger = logging.getLogger(__name__)
 
 
 class MailComposeMessage(models.TransientModel):
@@ -21,6 +26,18 @@ class MailComposeMessage(models.TransientModel):
     dashboard_id = fields.Many2one("dashboard.dashboard", string="Dashboard")
     dashboard_mail_id = fields.Many2one("dashboard.mail", string="Dashboard Mail")
     chart_ids = fields.Many2many("dashboard.chart", string="Charts")
+
+    def _safe_chart_html_to_image(self, chart):
+        try:
+            return chart.html_to_image()
+        except ValidationError as exc:
+            _logger.warning(
+                "Unable to export dashboard card '%s' (%s) as image: %s",
+                chart.display_name,
+                chart.chart_type,
+                exc,
+            )
+            return False
 
     @api.onchange("dashboard_id")
     def onchange_dashboard_id(self):
@@ -74,7 +91,7 @@ class MailComposeMessage(models.TransientModel):
             if chart.chart_type == "to_do" and chart.todo_layout != "activity":
                 continue
             if chart.chart_type in ["kpi", "tile", "to_do", "list"]:
-                image = chart.html_to_image()
+                image = self._safe_chart_html_to_image(chart)
                 chart_dict = {"chart_id": chart.id, "name": chart.name, "image": image}
             else:
                 chart_data = chart.get_chart_data(chart.chart_type, chart.name)
@@ -113,7 +130,7 @@ class MailComposeMessage(models.TransientModel):
             if chart.chart_type == "to_do" and chart.todo_layout != "activity":
                 continue
             if chart.chart_type in ["kpi", "tile", "to_do", "list"]:
-                image = chart.html_to_image()
+                image = self._safe_chart_html_to_image(chart)
                 chart_dict = {"chart_id": chart.id, "name": chart.name, "image": image}
             else:
                 chart_data = chart.get_chart_data(chart.chart_type, chart.name)

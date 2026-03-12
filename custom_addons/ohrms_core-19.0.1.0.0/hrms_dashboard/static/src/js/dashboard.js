@@ -219,7 +219,8 @@ export class HrDashboard extends Component{
                                 label: function (context) {
                                     const label = context.label || '';
                                     const value = context.raw || 0;
-                                    const percentage = (value / d3.sum(pieData.map(d => d.leave)) * 100).toFixed(2);
+                                    const totalLeaves = pieData.reduce((sum, item) => sum + item.leave, 0);
+                                    const percentage = (value / totalLeaves * 100).toFixed(2);
                                     return `${label}: ${value} (${percentage}%)`;
                                 }
                             }

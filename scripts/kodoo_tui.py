@@ -40,6 +40,7 @@ BUTTON_TARGETS = {
     "btn-cowork": "up-cowork",
     "btn-dev": "up-dev",
     "btn-project": "up-project",
+    "btn-refresh-safe": "refresh-safe",
     "btn-stop": "stop",
     "btn-smoke": "smoke",
     "btn-troubleshoot": "troubleshoot",
@@ -320,7 +321,7 @@ def build_snapshot(env: dict[str, str]) -> Snapshot:
             f"dev-host pid: {'yes' if pid_running(DEV_HOST_PID_FILE) else 'no'}",
             f"project pid: {'yes' if pid_running(DEV_PROJECT_PID_FILE) else 'no'}",
             f"log lines: {env.get('TUI_LOG_LINES', '20')}",
-            "Actions: h home | c cowork | d dev | p project | x stop | s smoke | t troubleshoot",
+            "Actions: h home | c cowork | d dev | p project | u refresh-safe | x stop | s smoke | t troubleshoot",
         ]
     )
     runtime_log = collect_runtime_log(mode, int(env.get("TUI_LOG_LINES", "20")))
@@ -379,6 +380,7 @@ class KodooTUI(App[None]):
         ("c", "run_target('up-cowork')", "Cowork"),
         ("d", "run_target('up-dev')", "Dev"),
         ("p", "run_target('up-project')", "Project"),
+        ("u", "run_target('refresh-safe')", "Safe Refresh"),
         ("x", "run_target('stop')", "Stop"),
         ("s", "run_target('smoke')", "Smoke"),
         ("t", "run_target('troubleshoot')", "Troubleshoot"),
@@ -400,6 +402,7 @@ class KodooTUI(App[None]):
             yield Button("Up Cowork", id="btn-cowork", variant="success")
             yield Button("Up Dev", id="btn-dev", variant="default")
             yield Button("Up Project", id="btn-project", variant="default")
+            yield Button("Safe Refresh", id="btn-refresh-safe", variant="warning")
             yield Button("Stop", id="btn-stop", variant="error")
             yield Button("Smoke", id="btn-smoke", variant="warning")
             yield Button("Troubleshoot", id="btn-troubleshoot")
@@ -422,7 +425,7 @@ class KodooTUI(App[None]):
         endpoints = self.query_one("#endpoints", DataTable)
         endpoints.add_columns("Probe", "URL", "Status", "Detail")
         self.log_activity("TUI ready.")
-        self.log_activity("Use the buttons or h/c/d/p/x/s/t.")
+        self.log_activity("Use the buttons or h/c/d/p/u/x/s/t.")
         self.set_interval(self.refresh_seconds, self.schedule_refresh)
         self.schedule_refresh()
 

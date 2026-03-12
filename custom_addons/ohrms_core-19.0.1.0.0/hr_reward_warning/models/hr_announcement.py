@@ -39,7 +39,7 @@ class HrAnnouncement(models.Model):
                    ('approved', 'Approved'), ('rejected', 'Refused'),
                    ('expired', 'Expired')],
         string='Status', default='draft', help="State of announcement.",
-        track_visibility='always')
+        tracking=True)
     requested_date = fields.Date(string='Requested Date',
                                  default=fields.Datetime.now().
                                  strftime('%Y-%m-%d'),

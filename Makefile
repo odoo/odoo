@@ -79,6 +79,7 @@ CONFIG_FIND_CMD = find . \
 	probe certbot certbot-renew \
 	db-init db-check \
 	stop ports-clean \
+	refresh-safe \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
 	dev-host-config \
 	up-home down-home logs-home smoke-home troubleshoot-home \
@@ -158,6 +159,7 @@ help:
 	@echo "  make clean          # Remove python cache and logs"
 	@echo "  make clean-all      # Deep clean: caches, logs, node_modules, and build artifacts"
 	@echo "  make prod-config    # Generate $(PROD_CONFIG) from local secrets"
+	@echo "  make refresh-safe   # Regenerate active configs and reload only the Odoo process"
 
 	@echo "  make dev-host-config # Generate $(DEV_HOST_CONFIG) from local secrets"
 	@echo "  make dev-project-config # Generate $(DEV_PROJECT_CONFIG) from local secrets"
@@ -490,6 +492,9 @@ odoo-lnav:
 build:
 	@$(MAKE) prod-config
 	@$(COMPOSE) build
+
+refresh-safe:
+	@./scripts/refresh-safe.sh
 
 stop:
 	@echo "Stopping all compose modes..."

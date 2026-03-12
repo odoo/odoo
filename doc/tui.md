@@ -34,6 +34,7 @@ make tui-live
 - `c`: run `make up-cowork`
 - `d`: run `make up-dev`
 - `p`: run `make up-project`
+- `u`: run `make refresh-safe`
 - `x`: run `make stop`
 - `s`: run `make smoke`
 - `t`: run `make troubleshoot`

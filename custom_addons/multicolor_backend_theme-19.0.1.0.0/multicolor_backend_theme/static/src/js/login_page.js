@@ -6,7 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 publicWidget.registry.loginPage = publicWidget.Widget.extend({
     selector: '.oe_login_buttons',
     async start() {
-        var data = await rpc('/active_theme')
+        var data = await rpc('/active_theme', {})
         if (data) {
             this.$('.cybro-login-btn').css({
                     'background-color': data.theme_main_color,
