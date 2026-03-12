@@ -1,7 +1,8 @@
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
-from odoo.addons.website_forum.tests.common import TestForumCommon
+from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
 
 
 class TestForumPost(TestForumCommon):
@@ -38,3 +39,53 @@ class TestForumPost(TestForumCommon):
         forum_posts.write({'tag_ids': forum_tags.ids})
         self.assertEqual(forum_posts[0]._get_related_posts(), forum_posts[1:6])
         self.assertEqual(forum_posts[-1]._get_related_posts(), forum_posts[:5])
+
+    def test_prevent_multiple_answers_questions_mode(self):
+        Post = self.env['forum.post']
+        self.forum.mode = 'questions'
+        self.user_employee.karma = KARMA['ans']
+
+        Post.with_user(self.user_employee).create({
+            'name': "A0",
+            'forum_id': self.forum.id,
+            'parent_id': self.post.id,
+        })
+        with self.assertRaises(UserError):
+            Post.with_user(self.user_employee).create({
+                'name': "A1",
+                'forum_id': self.forum.id,
+                'parent_id': self.post.id,
+            })
+
+        # Try create a post and then change the parent
+        answer = Post.with_user(self.user_employee).create({
+            'name': "A1",
+            'forum_id': self.forum.id,
+        })
+        with self.assertRaises(UserError):
+            answer.parent_id = self.post
+
+    def test_prevent_update_flagged_post(self):
+        Post = self.env['forum.post']
+        self.post.state = 'flagged'
+        self.user_employee.karma = KARMA['ans']
+
+        # Cannot update flagged post
+        with self.assertRaises(UserError):
+            self.post.with_user(self.user_employee).write({'content': 'Test update'})
+
+        # Cannot post answer on flagged post
+        with self.assertRaises(UserError):
+            Post.with_user(self.user_employee).create({
+                'name': "A0",
+                'forum_id': self.forum.id,
+                'parent_id': self.post.id,
+            })
+
+        # Try create a post and then change the parent
+        answer = Post.with_user(self.user_employee).create({
+            'name': "A0",
+            'forum_id': self.forum.id,
+        })
+        with self.assertRaises(UserError):
+            answer.parent_id = self.post

@@ -43,6 +43,7 @@ class TestForumPerformance(UtilPerf):
                 'name': f'Forum Post Test Tag {i}',
             } for i in range(20)
         ])
+        self.forum.mode = 'discussions'
         answers = self.env['forum.post'].create([
             {
                 'content': "You",

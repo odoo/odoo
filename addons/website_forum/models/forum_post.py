@@ -307,6 +307,19 @@ class ForumPost(models.Model):
     # CRUD
     # ----------------------------------------------------------------------
 
+    def _ensure_parent_can_accept_post(self):
+        # Method to call after an operation to ensure that the parent
+        # successfully accepts the post according flag and mode.
+        for post in self:
+            if not post.parent_id:
+                continue
+            # parent-based check
+            if post.parent_id.state == 'flagged':
+                raise UserError(_('Posting answer on a [Flagged] question is not possible.'))
+            if post.forum_id.mode == 'questions' and \
+                post.create_uid in (post.parent_id.child_ids - post).create_uid:
+                raise UserError(_('You can post only one answer.'))
+
     @api.model_create_multi
     def create(self, vals_list):
         defaults_to_check = self.default_get(['content', 'forum_id'])
@@ -317,6 +330,8 @@ class ForumPost(models.Model):
                 vals['content'] = self._update_content(content, forum_id)
 
         posts = super(ForumPost, self.with_context(mail_create_nolog=True)).create(vals_list)
+
+        posts._ensure_parent_can_accept_post()
 
         for post in posts:
             # deleted or closed questions
@@ -357,6 +372,8 @@ class ForumPost(models.Model):
             tag_ids = set(self.new({'tag_ids': vals['tag_ids']}).tag_ids.ids)
 
         for post in self:
+            if post.state == 'flagged' and not post.can_moderate:
+                raise AccessError(_('%d karma required to update a flagged post.', post.forum_id.karma_moderate))
             if 'state' in vals:
                 if vals['state'] in ['active', 'close']:
                     if not post.can_close:
@@ -386,6 +403,8 @@ class ForumPost(models.Model):
                 raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
 
         res = super().write(vals)
+
+        self._ensure_parent_can_accept_post()
 
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:

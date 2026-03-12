@@ -92,7 +92,6 @@ class TestPostInternals(TestForumCommon):
         questions_post = Post.create({
             'name': 'My First Post',
             'forum_id': forum_questions.id,
-            'parent_id': self.post.id,
         })
         _answer = Post.create({
             'name': 'This is an answer',
