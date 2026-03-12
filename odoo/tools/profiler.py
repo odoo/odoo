@@ -4,12 +4,12 @@ from contextlib import nullcontext, ExitStack
 from datetime import datetime
 import json
 import logging
-import sys
-import time
-import threading
 import re
-import tracemalloc
+import sys
+import threading
+import time
 
+import psutil
 from psycopg2 import OperationalError
 
 from odoo import tools
@@ -250,6 +250,11 @@ class PeriodicCollector(_BasePeriodicCollector):
 
     name = 'traces_async'
 
+    def start(self):
+        self._memory_profile = self.profiler.memory_profile
+        self._process = self.profiler.process
+        super().start()
+
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
         if self.last_frame:
@@ -270,43 +275,9 @@ class PeriodicCollector(_BasePeriodicCollector):
             # maybe modify the last entry to add a last seen?
             return
         self.last_frame = frame
+        if self._memory_profile:
+            entry = {'memory': self._process.memory_info().rss, **(entry or {})}
         super().add(entry=entry, frame=frame)
-
-
-_lock = threading.Lock()
-
-
-class MemoryCollector(_BasePeriodicCollector):
-
-    name = 'memory'
-    _store = 'others'
-    _min_interval = 0.01  # minimum interval allowed
-    _default_interval = 1
-
-    def start(self):
-        _lock.acquire()
-        tracemalloc.start()
-        super().start()
-
-    def add(self, entry=None, frame=None):
-        """ Add an entry (dict) to this collector. """
-        self._entries.append({
-            'start': real_time(),
-            'memory': tracemalloc.take_snapshot(),
-        })
-
-    def stop(self):
-        super().stop()
-        _lock.release()
-        tracemalloc.stop()
-
-    def post_process(self):
-        for i, entry in enumerate(self._entries):
-            if entry.get("memory", False):
-                entry_statistics = entry["memory"].statistics('traceback')
-                modified_entry_statistics = [{'traceback': list(statistic.traceback._frames),
-                                            'size': statistic.size} for statistic in entry_statistics]
-                self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
 
 
 class SyncCollector(Collector):
@@ -570,6 +541,8 @@ class Profiler:
         self.time_limit = int(self.params.get("time_limit", 0))
         self.done = False
         self.exit_stack = ExitStack()
+        self.process = psutil.Process()
+        self.memory_profile = self.params.get("memory_profile", False)
         self.counter = 0
 
         if db is ...:

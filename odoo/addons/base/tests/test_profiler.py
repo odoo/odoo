@@ -709,5 +709,24 @@ class TestSyncRecorder(BaseCase):
 @tagged('-standard', 'profiling_memory')
 class TestMemoryProfiler(HttpCase):
     def test_memory_profiler(self):
-        with Profiler(collectors=['memory'], db=None):
+        """Memory measurements are now embedded in each traces_async entry."""
+        with Profiler(collectors=['traces_async'], db=None) as p:
             self.env['base.module.update'].create({}).update_module()
+
+        entries = p.collectors[0].entries
+        self.assertTrue(entries, "Expected profiling entries")
+        # Each entry should carry a 'memory' key with a non-negative integer
+        for entry in entries:
+            if entry.get('stack'):  # skip the empty closing entry
+                self.assertIn('memory', entry)
+                self.assertIsInstance(entry['memory'], int)
+                self.assertGreaterEqual(entry['memory'], 0)
+
+        # Verify the speedscope memory output can be constructed from these entries
+        sp = Speedscope(init_stack_trace=[])
+        sp.add('frames', entries)
+        sp.add_memory_output(['frames'], display_name='Memory')
+        result = sp.make()
+        # If any positive memory diffs were found, a sampled memory profile is present
+        memory_profiles = [prof for prof in result['profiles'] if prof.get('type') == 'sampled']
+        self.assertTrue(memory_profiles, "Expected at least one sampled memory profile")
