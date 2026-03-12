@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # The currencies supported by Xendit, in ISO 4217 format.
-SUPPORTED_CURRENCIES = ["IDR", "MYR", "PHP", "THB", "VND"]
+SUPPORTED_CURRENCIES = ["IDR", "MYR", "PHP", "SGD", "THB", "USD", "VND"]
 
 # To correctly allow lowest decimal place rounding
 # https://docs.xendit.co/payment-link/payment-channels
-CURRENCY_DECIMALS = {"IDR": 0, "MYR": 0, "PHP": 0, "THB": 0, "VND": 0}
+CURRENCY_DECIMALS = {"IDR": 0, "MYR": 0, "PHP": 0, "SGD": 0, "THB": 0, "USD": 0, "VND": 0}
 
 # The codes of the payment methods to activate when Xendit is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
@@ -25,10 +25,14 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # VN
     "appota",
     "zalopay",
-    "vnptwallet"
+    "vnptwallet",
+    # SG
+    "paynow",
     # Brand payment methods.
     "visa",
     "mastercard",
+    "jcb",
+    "amex",
 }
 
 # FPX is an online payment method in Malaysia that allows customers to make payments directly from
@@ -91,6 +95,7 @@ PAYMENT_METHODS_MAPPING = {
     "krungthai_bank": "DD_KTB_MB",
     "bangkok_bank": "DD_BBL_MB",
     "touch_n_go": "TOUCHNGO",
+    "paynow": "SGQR",
     **{method: "fpx" for method in FPX_METHODS},
 }
 
