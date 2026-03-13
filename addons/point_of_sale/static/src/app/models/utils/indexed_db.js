@@ -1,16 +1,20 @@
 import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const BATCH_SIZE = 500; // Can be adjusted based on performance testing
 const TRANSACTION_TIMEOUT = 5000; // 5 seconds timeout for transactions
 
 export default class IndexedDB {
-    constructor(dbName, dbVersion, dbStores, whenReady) {
+    constructor(dbName, dbVersion, dbStores, whenReady, dialog) {
         this.db = null;
         this.dbName = dbName;
         this.dbVersion = dbVersion;
         this.dbStores = dbStores;
         this.dbInstance = null;
         this.activeTransactions = new Set();
+        this.dialog = dialog;
+        this._isReconnecting = false;
+        this._reloadDialogShown = false;
         this.databaseEventListener(whenReady);
     }
 
@@ -29,12 +33,22 @@ export default class IndexedDB {
         this.dbInstance = indexedDB;
         const dbInstance = indexedDB.open(this.dbName, this.dbVersion);
         dbInstance.onerror = (event) => {
-            console.debug("Database error: " + event.target.errorCode);
+            const err = event.target.error;
+            console.debug("Database error:", err);
+            // Known iOS/Safari WebKit bug: the IDB server process was killed by the OS.
+            // No reconnect will succeed — only a page reload restores the daemon.
+            if (
+                err?.name === "UnknownError" &&
+                err.message.includes("Connection to Indexed Database server lost")
+            ) {
+                this._showReloadDialog();
+            }
         };
         dbInstance.onsuccess = (event) => {
             this.db = event.target.result;
             console.info(`IndexedDB ${this.dbVersion} Ready`);
-            whenReady();
+            whenReady?.();
+            this._setupVisibilityProbe();
         };
         dbInstance.onupgradeneeded = (event) => {
             for (const [id, storeName] of this.dbStores) {
@@ -150,8 +164,64 @@ export default class IndexedDB {
             return transaction;
         } catch (e) {
             console.info("DATABASE is not ready yet", e);
+            if (e.name === "InvalidStateError") {
+                this.db = null;
+                this._attemptReconnect();
+            }
             return false;
         }
+    }
+
+    _attemptReconnect() {
+        if (this._isReconnecting) {
+            return;
+        }
+        this._isReconnecting = true;
+        setTimeout(() => {
+            if (this.db) {
+                try {
+                    this.db.close();
+                } catch {
+                    // already closed
+                }
+                this.db = null;
+            }
+            this.databaseEventListener();
+            this._isReconnecting = false;
+        }, 3000);
+    }
+
+    _setupVisibilityProbe() {
+        if (this._visibilityProbeAttached) {
+            return;
+        }
+        this._visibilityProbeAttached = true;
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState !== "visible" || !this.db) {
+                return;
+            }
+            try {
+                this.db.transaction([this.dbStores[0][1]], "readonly").abort();
+            } catch {
+                this.db = null;
+                this._attemptReconnect();
+            }
+        });
+    }
+
+    _showReloadDialog() {
+        if (!this.dialog || this._reloadDialogShown) {
+            return;
+        }
+        this._reloadDialogShown = true;
+        this.dialog.add(AlertDialog, {
+            title: _t("Database Connection Lost"),
+            body: _t(
+                "The connection to the local database was lost. Reloading the page will restore it and prevent any loss of unsaved orders."
+            ),
+            confirmLabel: _t("Reload"),
+            confirm: () => window.location.reload(),
+        });
     }
 
     reset() {
