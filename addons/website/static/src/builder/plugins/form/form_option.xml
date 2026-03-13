@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.s_website_form_form_option">
-    <FormModelWarningBanner models="state.models" activeForm="state.activeForm"/>
+    <FormModelWarningBanner models="this.state.models" activeForm="this.state.activeForm"/>
     <BuilderRow t-if="!this.modelCantChange and this.state.models"
             label.translate="Action" preview="false">
         <BuilderSelect>
@@ -52,7 +52,7 @@
         <t t-foreach="this.state.formInfo.fields" t-as="field" t-key="field.name">
             <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
                 <BuilderMany2One
-                    t-if="state.showSearchableDropdown"
+                    t-if="this.state.shouldShowDropdown[field.name]"
                     action="'addActionField'"
                     actionParam="{ isSelect: true, fieldName: field.name, fieldType: field.type }"
                     model="field.relation"
@@ -62,7 +62,7 @@
                 <BuilderButton
                     t-if="field.createAction"
                     className="`fa fa-fw fa-plus ${
-                        !state.showSearchableDropdown &amp;&amp; field.required
+                        !this.state.shouldShowDropdown[field.name] &amp;&amp; field.required
                             ? 'w-100 btn-success'
                             : ''
                         }`"
@@ -459,11 +459,7 @@
 </t>
 
 <t t-name="website.FormModelWarningBanner">
-    <t t-if="state.showWarning">
-        <div class="alert alert-info mb-1">
-            <t t-out="state.message"/>
-        </div>
-    </t>
+    <div t-if="state.showWarning" class="alert alert-info mb-1" t-out="state.message"/>
 </t>
 
 <t t-name="website.s_website_form_submit_option">

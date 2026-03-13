@@ -1014,6 +1014,7 @@ export class PromptSaveRedirectAction extends BuilderAction {
     static dependencies = ["savePlugin"];
     setup() {
         this.canTimeout = false;
+        this.preview = false;
     }
     apply({ params: { createAction, dialogTitle, dialogDescription } }) {
         const redirectToAction = (action) => {
