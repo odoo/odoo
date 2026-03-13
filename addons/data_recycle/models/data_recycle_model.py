@@ -218,3 +218,21 @@ class Data_RecycleModel(models.Model):
         if self.recycle_mode == 'manual':
             return self.open_records()
         return
+
+    def refresh_recycle_records(self):
+        """
+        Refresh recycled records and reopen the Data Recycle view.
+        Preserves the selected search panel filter by passing
+        `recycle_model_id` into the action context.
+        """
+        self.search([])._recycle_records(batch_commits=True)
+        recycle_model_id = self.env.context.get('recycle_model_id')
+        action = self.env["ir.actions.actions"]._for_xml_id("data_recycle.action_data_recycle_record")
+        context = action.get('context', {})
+        if isinstance(context, str):
+            context = ast.literal_eval(context)
+        if recycle_model_id:
+            context['searchpanel_default_recycle_model_id'] = recycle_model_id
+        action['context'] = context
+        action['target'] = 'main'
+        return action
