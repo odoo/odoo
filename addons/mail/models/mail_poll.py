@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.web.models.models import lazymapping
 
 
 class MailPoll(models.Model):
@@ -49,7 +48,7 @@ class MailPoll(models.Model):
     def _end_and_notify(self):
         thread_by_message = self.start_message_id._record_by_message()
         thread_by_poll = {poll: thread_by_message[poll.start_message_id] for poll in self}
-        stores = lazymapping(lambda p: Store(**thread_by_poll[p]._store_target()))
+        stores = Store.Stores()
         self.poll_end_dt = fields.Datetime.now()
         for poll in self:
             poll.end_message_id = thread_by_poll[poll].message_post(
@@ -57,9 +56,8 @@ class MailPoll(models.Model):
                 message_type="comment",
                 subtype_xmlid="mail.mt_comment",
             )
-            stores[poll].add(poll, "_store_poll_fields")
-        for store in stores.values():
-            store.bus_send()
+            stores[thread_by_poll[poll]._store_target()].add(poll, "_store_poll_fields")
+        stores.bus_send()
 
     @api.model
     def _end_expired_polls(self):
@@ -70,14 +68,13 @@ class MailPoll(models.Model):
     @api.ondelete(at_uninstall=False)
     def _poll_on_delete(self):
         thread_by_message = (self.start_message_id | self.end_message_id)._record_by_message()
-        stores = lazymapping(lambda m: Store(**thread_by_message[m]._store_target()))
+        stores = Store.Stores()
         for message in self.start_message_id | self.end_message_id:
-            stores[message].add(
+            stores[thread_by_message[message]._store_target()].add(
                 message,
                 lambda res: (
                     res.many("started_poll_ids", [], mode="DELETE"),
                     res.many("ended_poll_ids", [], mode="DELETE"),
                 ),
             )
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()

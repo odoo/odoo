@@ -5215,7 +5215,7 @@ class MailThread(models.AbstractModel):
         return res
 
     def _store_target(self):
-        return {"bus_channel": self, "bus_subchannel": "thread"}
+        return (self, "thread")
 
     # ------------------------------------------------------
     # CONTROLLERS SECURITY HELPERS

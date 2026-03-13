@@ -8,7 +8,6 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.web.models.models import lazymapping
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
@@ -102,11 +101,10 @@ class DiscussChannelMember(models.Model):
             [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
         )
         members.unpin_dt = fields.Datetime.now()
-        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        stores = Store.Stores()
         for member, store in members._get_member_store_list(stores):
             store.add(member.channel_id, {"close_chat_window": True})
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -313,7 +311,7 @@ class DiscussChannelMember(models.Model):
             channel: self.filtered(lambda m: m.channel_id == channel) for channel in self.channel_id
         }
         res = super().unlink()
-        stores = lazymapping(lambda channel: Store(bus_channel=channel))
+        stores = Store.Stores()
         for channel, members in name_members_by_channel.items():
             # sudo - discuss.channel: updating channel names according to members is allowed,
             # even after the member left the channel.
@@ -326,8 +324,7 @@ class DiscussChannelMember(models.Model):
             )
         for channel, members in members_by_channel.items():
             stores[channel].delete(members).add(channel, ["member_count"])
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         return res
 
     def _bus_channels(self):
@@ -361,7 +358,7 @@ class DiscussChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _get_member_store_list(self, stores):
+    def _get_member_store_list(self, stores: Store.Stores):
         """Returns the list of (member, store) combinations.
         This is necessary because members are currently linked to partners,
         which can have multiple users."""

@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 
-from odoo.addons.web.models.models import lazymapping
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.misc import limited_field_access_token
 
@@ -29,12 +28,11 @@ class DiscussCategory(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_sync_to_channel(self):
-        stores = lazymapping(lambda channel: Store(bus_channel=channel))
+        stores = Store.Stores()
         for category in self:
             for channel in category.channel_ids:
                 stores[channel].delete(category)
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
 
     def _get_bus_channel_access_token(self):
         """Return a scoped limited access token that indicates the current category

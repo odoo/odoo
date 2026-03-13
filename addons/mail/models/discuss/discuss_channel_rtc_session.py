@@ -10,7 +10,6 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.addons.mail.tools import discuss, jwt
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.web.models.models import lazymapping
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class DiscussChannelRtcSession(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        stores = Store.Stores()
         rtc_sessions = super().create(vals_list)
         for rtc_session in rtc_sessions:
             stores[rtc_session.channel_id].add(
@@ -60,12 +59,11 @@ class DiscussChannelRtcSession(models.Model):
                 },
             )
             stores[channel].add(message, ["call_history_ids"])
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         return rtc_sessions
 
     def unlink(self):
-        stores = lazymapping(lambda channel: Store(bus_channel=channel))
+        stores = Store.Stores()
         call_ended_channels = self.channel_id.filtered(lambda c: not (c.rtc_session_ids - self))
         for channel in call_ended_channels:
             # If there is no member left in the RTC call, all invitations are cancelled.
@@ -93,8 +91,7 @@ class DiscussChannelRtcSession(models.Model):
         for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
             stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         return super().unlink()
 
     def _bus_channels(self):

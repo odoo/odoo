@@ -11,7 +11,6 @@ from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
-from odoo.addons.web.models.models import lazymapping
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, format_list, email_normalize, html_escape
@@ -579,7 +578,7 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
-        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        stores = Store.Stores()
         for member, store in new_members._get_member_store_list(stores):
             store.add(member.channel_id, "_store_channel_fields").add(
                 member,
@@ -588,8 +587,7 @@ class DiscussChannel(models.Model):
                     res.attr("unpin_dt"),
                 ),
             )
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
@@ -655,7 +653,7 @@ class DiscussChannel(models.Model):
         post_joined_message=True,
         inviting_partner=None,
     ):
-        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        stores = Store.Stores()
         inviting_partner = inviting_partner or self.env["res.partner"]
         partners = partners or self.env["res.partner"]
         if users:
@@ -684,7 +682,7 @@ class DiscussChannel(models.Model):
             else:
                 new_members = self.env["discuss.channel.member"].create(members_to_create)
             all_new_members += new_members
-            joined_stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+            joined_stores = Store.Stores()
             for member, joined_store in new_members._get_member_store_list(joined_stores):
                 joined_store.add(member.channel_id, "_store_channel_fields")
                 joined_store.add(member, ["unpin_dt"])
@@ -713,8 +711,7 @@ class DiscussChannel(models.Model):
                 # create channel from form view, and then join from discuss without refreshing the page.
                 stores[bus_channel].add(channel, ["member_count"])
                 stores[bus_channel].add(existing_members, "_store_member_fields")
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         if invite_to_rtc_call:
             for channel in self:
                 current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
@@ -1247,7 +1244,7 @@ class DiscussChannel(models.Model):
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
     def _store_target(self):
-        return {"bus_channel": self, "bus_subchannel": None}
+        return (self, None)
 
     def _store_rtc_update_fields(self, res: Store.FieldList, *, added=None, removed=None):
         if added:

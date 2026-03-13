@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from odoo import api, models, fields
 from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.web.models.models import lazymapping
 
 
 class DiscussChannelMember(models.Model):
@@ -53,7 +52,7 @@ class DiscussChannelMember(models.Model):
                 member.sudo().livechat_member_type = "visitor"
                 continue
             member.sudo().livechat_member_type = "agent"
-        stores = lazymapping(lambda channel: Store(bus_channel=channel))
+        stores = Store.Stores()
         for history in members.livechat_member_history_ids:
             # sudo - visitor can access the channel member history of an accessible channel
             stores[history.channel_id].add(
@@ -66,8 +65,7 @@ class DiscussChannelMember(models.Model):
                     sudo=True,
                 ),
             )
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         return members
 
     @api.depends("livechat_member_history_ids.livechat_member_type")
@@ -157,11 +155,10 @@ class DiscussChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.channel_id.livechat_end_dt = fields.Datetime.now()
-        stores = lazymapping(lambda bus_channel: Store(bus_channel=bus_channel))
+        stores = Store.Stores()
         for member, store in sessions_to_be_unpinned._get_member_store_list(stores):
             store.add(member.channel_id, {"close_chat_window": True})
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         sessions_to_be_unpinned.unpin_dt = fields.Datetime.now()
 
     def _store_member_fields(self, res: Store.FieldList):

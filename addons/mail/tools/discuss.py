@@ -359,6 +359,26 @@ class Store:
             return frozenset(Store._deep_freeze(i) for i in obj)
         return obj
 
+    class Stores(dict):
+        """Lazy mapping to manage a list of Store indexed by bus target.
+        Store methods are forwarded to all contained Store instances."""
+
+        def __missing__(self, target):
+            bus_channel, bus_subchannel = target if isinstance(target, tuple) else (target, None)
+            return self.setdefault(target, Store(bus_channel, bus_subchannel))
+
+        def __getattr__(self, name):
+            if name not in {"add", "bus_send", "delete"}:
+                raise AttributeError(f"'Stores' object has no attribute '{name}'")
+
+            def stores_forward(*args, **kwargs):
+                for store in self.values():
+                    assert isinstance(store, Store)
+                    # getattr: only allowed methods of Store are forwarded
+                    getattr(store, name)(*args, **kwargs)
+
+            return stores_forward
+
     class Target:
         """Target of the current store. Useful when information have to be added contextually
         depending on who is going to receive it."""

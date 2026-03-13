@@ -24,7 +24,7 @@ class BusSyncMixin(models.AbstractModel):
         """
 
     def write(self, vals):
-        stores = lazymapping(lambda param: Store(bus_channel=param[0], bus_subchannel=param[1]))
+        stores = Store.Stores()
         manager_by_bus_target = lazymapping(
             lambda bus_target: Store.FieldListManager(stores, self, bus_target),
         )
@@ -45,6 +45,5 @@ class BusSyncMixin(models.AbstractModel):
                 if field_list:
                     record._store_sync_extra_fields(field_list)
                     store.add(record, field_list)
-        for store in stores.values():
-            store.bus_send()
+        stores.bus_send()
         return result
