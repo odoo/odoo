@@ -13,6 +13,8 @@ from . import gov_template_service
 from . import gov_ai_template
 from . import gov_dotacao_wizard
 from . import gov_processo
+from . import gov_processo_planilha_item
+from . import gov_processo_planilha_job
 from . import gov_processo_parametro
 from . import gov_processo_fase_wizard
 from . import gov_relatorio_wizard
@@ -27,3 +29,4 @@ from . import gov_processo_wizard
 from . import gov_siafi_service
 from . import gov_siafi_wizard
 from . import gov_execucao_wizard
+from . import gov_xlsx_worker_service

@@ -59,6 +59,13 @@
                         invisible="state == 'assinado'"
                     />
                     <button
+                        name="action_enqueue_xlsx_worker"
+                        string="📊 Gerar XLSX"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'assinado'"
+                    />
+                    <button
                         name="action_regenerar_checklist_manual"
                         string="🧾 Regenerar Checklist"
                         type="object"
@@ -212,7 +219,28 @@
                         <page string="Pesquisa de Preços (Excel)">
                             <div class="alert alert-info mb-2" role="alert">
                                 A etapa de DFD registra necessidade e quantitativos. Valores podem ficar para a pesquisa de preços.
-                                Use o editor HTML nativo do Odoo para montar tabelas e editar como planilha.
+                                O worker XLSX utiliza as variáveis estruturadas do processo para gerar a planilha final com fórmulas dinâmicas.
+                            </div>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_open_process_planilha_items"
+                                    string="Abrir Itens Estruturados"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <button
+                                    name="action_enqueue_xlsx_worker"
+                                    string="Enfileirar Worker XLSX"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_open_xlsx_jobs"
+                                    string="Abrir Jobs XLSX"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
                             </div>
                             <group string="Planilha de Pesquisa (Editor Nativo)">
                                 <field
@@ -232,6 +260,29 @@
                                 />
                                 <field name="pesquisa_precos_planilha_filename" invisible="1"/>
                             </group>
+                            <group string="Histórico do Worker">
+                                <field name="xlsx_job_count" readonly="1"/>
+                            </group>
+                            <field name="xlsx_job_ids" readonly="1" nolabel="1">
+                                <list create="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="profile"/>
+                                    <field
+                                        name="state"
+                                        widget="badge"
+                                        decoration-success="state == 'done'"
+                                        decoration-warning="state == 'pending'"
+                                        decoration-info="state == 'running'"
+                                        decoration-danger="state == 'error'"
+                                    />
+                                    <field name="row_count" optional="show"/>
+                                    <field name="lot_count" optional="show"/>
+                                    <field name="requested_by" optional="show"/>
+                                    <field name="create_date" optional="show"/>
+                                    <field name="file_name" optional="hide" column_invisible="True"/>
+                                    <field name="file_data" widget="binary" filename="file_name" optional="show"/>
+                                </list>
+                            </field>
                         </page>
 
                         <page string="Variáveis do Modelo">

@@ -170,6 +170,15 @@ class GovProcessoDoc(models.Model):
         compute="_compute_template_parameters",
         store=False,
     )
+    xlsx_job_ids = fields.One2many(
+        "gov.processo.planilha.job",
+        "doc_id",
+        string="Jobs de Planilha",
+    )
+    xlsx_job_count = fields.Integer(
+        string="Jobs XLSX",
+        compute="_compute_xlsx_job_count",
+    )
 
     @api.depends("versao_ids")
     def _compute_versao_count(self):
@@ -180,6 +189,11 @@ class GovProcessoDoc(models.Model):
     def _compute_clone_count(self):
         for rec in self:
             rec.clone_count = len(rec.clone_ids)
+
+    @api.depends("xlsx_job_ids")
+    def _compute_xlsx_job_count(self):
+        for rec in self:
+            rec.xlsx_job_count = len(rec.xlsx_job_ids)
 
     @api.depends(
         "ai_template_id",
@@ -802,6 +816,45 @@ class GovProcessoDoc(models.Model):
                 "title": "Template aplicado",
                 "message": f"Modelo: {template.name}",
                 "type": "success",
+            },
+        }
+
+    def action_enqueue_xlsx_worker(self):
+        self.ensure_one()
+        if self.state == "assinado":
+            raise UserError("Documento assinado não pode receber nova planilha.")
+        if not self.processo_id:
+            raise UserError("Documento sem processo vinculado.")
+
+        self.processo_id.sync_planilha_structured_parameters()
+        job = self.env["gov.processo.planilha.job"].create_from_doc(self)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Worker XLSX enfileirado",
+                "message": f"Job criado: {job.name}",
+                "type": "success",
+            },
+        }
+
+    def action_open_process_planilha_items(self):
+        self.ensure_one()
+        if not self.processo_id:
+            raise UserError("Documento sem processo vinculado.")
+        return self.processo_id.action_open_planilha_items()
+
+    def action_open_xlsx_jobs(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Jobs XLSX — {self.name}",
+            "res_model": "gov.processo.planilha.job",
+            "view_mode": "list,form",
+            "domain": [("doc_id", "=", self.id)],
+            "context": {
+                "default_doc_id": self.id,
+                "default_processo_id": self.processo_id.id,
             },
         }
 

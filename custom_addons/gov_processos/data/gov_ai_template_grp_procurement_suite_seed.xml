@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="template_etp_grp_latex_compras_faseado" model="gov.ai.template">
+        <field name="name">ETP GRP Faseado - Compras (LaTeX Estruturado)</field>
+        <field name="doc_type">etp</field>
+        <field name="process_type">compras_servicos</field>
+        <field name="process_scope">compras</field>
+        <field name="fase">1</field>
+        <field name="versao_normativa">Lei 14.133/2021 · ETP GRP estruturado para compras</field>
+        <field name="output_format">latex</field>
+        <field name="active">True</field>
+        <field name="guidance_text"><![CDATA[
+Modelo ETP baseado no processo de referencia da pasta PROCESSO_MODELO.
+Use texto corrido para analises e LaTeX livre apenas nos blocos tabulares/listas.
+As variaveis podem ser preenchidas ao longo das fases abertas.
+        ]]></field>
+        <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "etp_numero", "type": "string", "label": "Numero do ETP", "fase": 1},
+    {"key": "processo_numero_externo", "type": "string", "label": "Numero do processo", "fase": 1},
+    {"key": "modalidade_planejada", "type": "string", "label": "Modalidade planejada", "fase": 1},
+    {"key": "objeto_etp", "type": "text", "label": "Objeto do ETP", "fase": 1},
+    {"key": "unidade_requisitante_extenso", "type": "string", "label": "Unidade requisitante", "fase": 1},
+    {"key": "servidor_responsavel_etp", "type": "string", "label": "Servidor responsavel", "fase": 1},
+    {"key": "data_elaboracao_etp", "type": "string", "label": "Data/local do ETP", "fase": 1},
+    {"key": "problema_contratacao_texto", "type": "text", "label": "Descricao do problema a resolver", "fase": 1},
+    {"key": "metodologia_quantitativos_texto", "type": "text", "label": "Metodologia dos quantitativos", "fase": 1},
+    {"key": "metodologia_valor_texto", "type": "text", "label": "Metodologia do valor estimado", "fase": 2},
+    {"key": "declaracao_viabilidade_resumo", "type": "text", "label": "Conclusao de viabilidade", "fase": 2}
+  ],
+  "optional": [
+    {"key": "dfd_referencia", "type": "string", "label": "Referencia do DFD", "fase": 1},
+    {"key": "populacao_referencia", "type": "string", "label": "Populacao de referencia", "fase": 1},
+    {"key": "area_total_referencia", "type": "string", "label": "Area total ou capacidade de referencia", "fase": 1},
+    {"key": "vinculo_planejamento_texto", "type": "text", "label": "Vinculacao ao planejamento institucional", "fase": 1},
+    {"key": "solucao_escolhida_resumo", "type": "text", "label": "Justificativa da solucao escolhida", "fase": 1},
+    {"key": "valor_estimado_global_etp", "type": "string", "label": "Valor estimado global", "fase": 2},
+    {"key": "configuracao_licitatoria_texto", "type": "text", "label": "Modalidade, criterio e regime", "fase": 2},
+    {"key": "contratacao_terceiros_texto", "type": "text", "label": "Impossibilidade de suprimento interno", "fase": 1}
+  ],
+  "additional_fields": [
+    {"key": "memoria_calculo_latex", "type": "latex", "render_mode": "latex", "label": "Formulas e memoria de calculo", "description": "Use blocos matematicos ou equacoes em LaTeX.", "fase": 1},
+    {"key": "areas_referencia_rows", "type": "latex", "render_mode": "latex", "label": "Linhas da tabela de areas/capacidades", "description": "Formato: Tipo & Medida & Percentual & Observacao \\\\.", "fase": 1},
+    {"key": "quantitativos_item_rows", "type": "latex", "render_mode": "latex", "label": "Linhas da longtable de quantitativos", "description": "Formato: Cl. & Descricao & Unid. & Qtde/mes & Qtde anual & Preco ref. \\\\.", "fase": 1},
+    {"key": "alternativas_solucao_rows", "type": "latex", "render_mode": "latex", "label": "Matriz de alternativas", "description": "Formato: Alternativa & Vantagens & Desvantagens \\\\.", "fase": 1},
+    {"key": "lotes_planejados_rows", "type": "latex", "render_mode": "latex", "label": "Resumo de lotes planejados", "description": "Formato: Lote & Descricao & Classe & Valor \\\\.", "fase": 2},
+    {"key": "correlatas_rows", "type": "latex", "render_mode": "latex", "label": "Contratacoes correlatas", "description": "Formato: Contratacao & Natureza da relacao & Status \\\\.", "fase": 2},
+    {"key": "kpi_rows", "type": "latex", "render_mode": "latex", "label": "Indicadores de desempenho", "description": "Formato: Indicador & Formula & Meta & Periodicidade \\\\.", "fase": 2},
+    {"key": "riscos_rows", "type": "latex", "render_mode": "latex", "label": "Matriz de riscos", "description": "Formato: Risco & Probab. & Impacto & Nivel & Mitigacao \\\\.", "fase": 2},
+    {"key": "adequacao_organizacional_itens", "type": "latex", "render_mode": "latex", "label": "Providencias organizacionais", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "sustentabilidade_itens", "type": "latex", "render_mode": "latex", "label": "Criticas de sustentabilidade", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "habilitacao_minima_itens", "type": "latex", "render_mode": "latex", "label": "Requisitos minimos de habilitacao", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "fundamentos_viabilidade_itens", "type": "latex", "render_mode": "latex", "label": "Fundamentos da viabilidade", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "xlsx_item_rows_json", "type": "json", "label": "Itens estruturados da planilha XLSX", "description": "Lista JSON para a planilha de itens.", "fase": 1},
+    {"key": "xlsx_lot_rows_json", "type": "json", "label": "Resumo de lotes da planilha XLSX", "description": "Lista JSON opcional para a planilha de lotes.", "fase": 2},
+    {"key": "xlsx_schedule_rows_json", "type": "json", "label": "Cronograma estruturado da planilha XLSX", "description": "Lista JSON opcional com jan..dez por lote.", "fase": 2}
+  ]
+}
+        ]]></field>
+        <field name="option_catalog_json"><![CDATA[
+{
+  "campos_latex_livre": {
+    "quantitativos_item_rows": "A & Item exemplo & Un & 10 & 120 & 25,50 \\\\",
+    "alternativas_solucao_rows": "Ata de Registro de Precos & Flexibilidade operacional & Exige planejamento robusto \\\\",
+    "lotes_planejados_rows": "01 & Grupo de itens & A & 100.000,00 \\\\",
+    "riscos_rows": "R1 & Risco identificado & Alta & Alto & Mitigacao planejada \\\\"
+  }
+}
+        ]]></field>
+        <field name="prompt_system"><![CDATA[
+Preencha um ETP em LaTeX no padrao GRP.
+Use apenas os dados do processo e preserve a estrutura do modelo.
+Retorne apenas o LaTeX final.
+        ]]></field>
+        <field name="prompt_user_tpl"><![CDATA[
+Monte o ETP a partir das variaveis conhecidas.
+- ETP: {{etp_numero}}
+- Processo: {{processo_numero_externo}}
+- Objeto: {{objeto_etp}}
+- Problema: {{problema_contratacao_texto}}
+- Valor estimado: {{valor_estimado_global_etp}}
+- Solucao escolhida: {{solucao_escolhida_resumo}}
+        ]]></field>
+        <field name="latex_template"><![CDATA[
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[top=2.8cm,bottom=2.8cm,left=3cm,right=2.5cm]{geometry}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\newtcolorbox{legalbox}[1][]{
+  enhanced,breakable,colback=green!4,colframe=green!50!black,boxrule=0.8pt,arc=4pt,title=#1}
+\newcommand{\assinatura}[3]{\begin{center}\rule{7cm}{0.5pt}\\ \textbf{#1}\\ \small #2\\ \small #3\end{center}}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}
+\renewcommand{\arraystretch}{1.3}
+\begin{document}
+\begin{titlepage}
+\centering
+{\Large\bfseries ESTUDO TECNICO PRELIMINAR --- ETP\par}
+\vspace{0.4cm}
+{\large\bfseries {{objeto_etp}}\par}
+\vspace{1cm}
+\begin{tabular}{>{\bfseries}p{4.8cm}p{9cm}}
+Numero do ETP: & {{etp_numero}} \\
+DFD vinculado: & {{dfd_referencia}} \\
+Processo: & {{processo_numero_externo}} \\
+Modalidade: & {{modalidade_planejada}} \\
+Unidade requisitante: & {{unidade_requisitante_extenso}} \\
+Responsavel: & {{servidor_responsavel_etp}} \\
+Data: & {{data_elaboracao_etp}} \\
+\end{tabular}
+\vfill
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Descricao da Necessidade da Contratacao}
+\begin{legalbox}[Base Legal]
+O ETP deve demonstrar o problema a ser resolvido, a necessidade da contratacao e a melhor solucao.
+\end{legalbox}
+{{problema_contratacao_texto}}
+
+\subsection{Unidade Demandante}
+{{unidade_requisitante_extenso}}
+
+\subsection{Vinculacao ao Planejamento}
+{{vinculo_planejamento_texto}}
+
+\section{Estimativa das Quantidades a Contratar}
+\begin{legalbox}[Base Legal]
+O ETP deve conter memoria de calculo e fundamentos para os quantitativos estimados.
+\end{legalbox}
+{{metodologia_quantitativos_texto}}
+
+\subsection{Memoria de Calculo}
+{{memoria_calculo_latex}}
+
+\subsection{Parametros de Referencia}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{4.5cm}p{2.5cm}p{2.5cm}p{4.5cm}}
+\toprule
+\textbf{Tipo} & \textbf{Medida} & \textbf{\%} & \textbf{Observacao} \\
+\midrule
+{{areas_referencia_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Quantitativos por Item}
+\begin{longtable}{p{0.9cm}p{5.2cm}p{1.2cm}p{2cm}p{2cm}p{2.2cm}}
+\toprule
+\textbf{Cl.} & \textbf{Descricao} & \textbf{Un.} & \textbf{Qtde./mes} & \textbf{Qtde. anual} & \textbf{Preco ref.} \\
+\midrule
+{{quantitativos_item_rows}}
+\bottomrule
+\end{longtable}
+
+\section{Levantamento de Mercado e Justificativa da Solucao}
+{{solucao_escolhida_resumo}}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{3.8cm}p{4.6cm}p{5.2cm}}
+\toprule
+\textbf{Alternativa} & \textbf{Vantagens} & \textbf{Desvantagens / Inviabilidade} \\
+\midrule
+{{alternativas_solucao_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Estimativa do Valor da Contratacao}
+{{metodologia_valor_texto}}
+
+\section{Justificativa para o Parcelamento ou Nao da Solucao}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{1.5cm}p{6cm}p{2.2cm}p{3cm}}
+\toprule
+\textbf{Lote} & \textbf{Descricao} & \textbf{Classe} & \textbf{Valor} \\
+\midrule
+{{lotes_planejados_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Contratacoes Correlatas e Interdependentes}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{5cm}p{4.2cm}p{4cm}}
+\toprule
+\textbf{Contratacao} & \textbf{Natureza da relacao} & \textbf{Status} \\
+\midrule
+{{correlatas_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Resultados Pretendidos}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{4.2cm}p{3.8cm}p{2.3cm}p{2.3cm}}
+\toprule
+\textbf{Indicador} & \textbf{Formula} & \textbf{Meta} & \textbf{Periodicidade} \\
+\midrule
+{{kpi_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Providencias para Adequacao do Ambiente Organizacional}
+\begin{itemize}
+{{adequacao_organizacional_itens}}
+\end{itemize}
+
+\section{Contratacao por Terceiros}
+{{contratacao_terceiros_texto}}
+
+\section{Analise de Riscos da Contratacao}
+\begin{longtable}{p{3.8cm}p{1.4cm}p{1.4cm}p{1.6cm}p{5cm}}
+\toprule
+\textbf{Risco} & \textbf{Probab.} & \textbf{Impacto} & \textbf{Nivel} & \textbf{Mitigacao} \\
+\midrule
+{{riscos_rows}}
+\bottomrule
+\end{longtable}
+
+\section{Sustentabilidade e Desenvolvimento Nacional}
+\begin{itemize}
+{{sustentabilidade_itens}}
+\end{itemize}
+
+\section{Modalidade, Tipo de Licitacao e Regime de Execucao}
+{{configuracao_licitatoria_texto}}
+
+\section{Requisitos de Habilitacao}
+\begin{itemize}
+{{habilitacao_minima_itens}}
+\end{itemize}
+
+\section{Declaracao de Viabilidade da Contratacao}
+{{declaracao_viabilidade_resumo}}
+\begin{itemize}
+{{fundamentos_viabilidade_itens}}
+\end{itemize}
+
+\vspace{1.2cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{ {{servidor_responsavel_etp}} }{Responsavel pela elaboracao do ETP}{ {{unidade_requisitante_extenso}} }
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Autoridade competente]}{Aprovacao}{ {{unidade_requisitante_extenso}} }
+\end{minipage}
+\end{document}
+        ]]></field>
+    </record>
+
+    <record id="template_tr_grp_latex_compras_faseado" model="gov.ai.template">
+        <field name="name">TR GRP Faseado - Compras (LaTeX Estruturado)</field>
+        <field name="doc_type">tr</field>
+        <field name="process_type">compras_servicos</field>
+        <field name="process_scope">compras</field>
+        <field name="fase">2</field>
+        <field name="versao_normativa">Lei 14.133/2021 · Termo de Referencia GRP estruturado</field>
+        <field name="output_format">latex</field>
+        <field name="active">True</field>
+        <field name="guidance_text"><![CDATA[
+Modelo TR baseado no processo de referencia da pasta PROCESSO_MODELO.
+As tabelas de itens e sancoes ficam em campos LaTeX livres.
+O dataset JSON da planilha pode ser reaproveitado neste documento.
+        ]]></field>
+        <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "tr_numero", "type": "string", "label": "Numero do TR", "fase": 2},
+    {"key": "etp_referencia_tr", "type": "string", "label": "Referencia do ETP", "fase": 2},
+    {"key": "dfd_referencia_tr", "type": "string", "label": "Referencia do DFD", "fase": 2},
+    {"key": "processo_numero_tr", "type": "string", "label": "Numero do processo", "fase": 2},
+    {"key": "exercicio_tr", "type": "string", "label": "Exercicio", "fase": 2},
+    {"key": "objeto_tr_resumo", "type": "text", "label": "Objeto do TR", "fase": 2},
+    {"key": "instrumento_contratual_texto", "type": "text", "label": "Instrumento contratual", "fase": 2},
+    {"key": "forma_fornecimento_texto", "type": "text", "label": "Forma de fornecimento", "fase": 2},
+    {"key": "recebimento_texto", "type": "text", "label": "Regras de recebimento", "fase": 4},
+    {"key": "pagamento_texto_tr", "type": "text", "label": "Regras de pagamento", "fase": 4},
+    {"key": "adequacao_orcamentaria_texto_tr", "type": "text", "label": "Adequacao orcamentaria", "fase": 2}
+  ],
+  "optional": [
+    {"key": "orgao_emitente_tr", "type": "string", "label": "Orgao emitente", "fase": 2},
+    {"key": "unidade_emitente_tr", "type": "string", "label": "Unidade emitente", "fase": 2},
+    {"key": "valor_estimado_global_tr", "type": "string", "label": "Valor estimado global", "fase": 2},
+    {"key": "vigencia_arp_texto_tr", "type": "text", "label": "Vigencia da ARP", "fase": 4},
+    {"key": "reajuste_revisao_texto", "type": "text", "label": "Reajuste e revisao", "fase": 4},
+    {"key": "data_aprovacao_tr", "type": "string", "label": "Data/local de aprovacao", "fase": 4}
+  ],
+  "additional_fields": [
+    {"key": "itens_especificacao_rows", "type": "latex", "render_mode": "latex", "label": "Linhas da especificacao dos itens", "description": "Formato: It. & Descricao & Un. & Qtde./mes & Qtde. anual & Preco ref. & Especificacao \\\\.", "fase": 2},
+    {"key": "requisitos_tecnicos_itens", "type": "latex", "render_mode": "latex", "label": "Requisitos tecnicos", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "requisitos_logisticos_itens", "type": "latex", "render_mode": "latex", "label": "Requisitos logisticos", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "requisitos_sustentabilidade_itens", "type": "latex", "render_mode": "latex", "label": "Requisitos de sustentabilidade", "description": "Use linhas \\item.", "fase": 2},
+    {"key": "parametros_arp_rows", "type": "latex", "render_mode": "latex", "label": "Parametros da ARP", "description": "Formato: Campo & Conteudo \\\\.", "fase": 4},
+    {"key": "prazos_entrega_rows", "type": "latex", "render_mode": "latex", "label": "Tabela de prazos e entregas", "description": "Formato: Lote & Prazo & Local & Observacao \\\\.", "fase": 4},
+    {"key": "recebimento_regras_itens", "type": "latex", "render_mode": "latex", "label": "Regras de recebimento", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "gestao_contrato_itens", "type": "latex", "render_mode": "latex", "label": "Gestao do contrato", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "habilitacao_tecnica_itens_tr", "type": "latex", "render_mode": "latex", "label": "Habilitacao tecnica", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "criterios_julgamento_itens_tr", "type": "latex", "render_mode": "latex", "label": "Criterios de selecao", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "obrigacoes_fornecedor_itens", "type": "latex", "render_mode": "latex", "label": "Obrigacoes do fornecedor", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "obrigacoes_municipio_itens", "type": "latex", "render_mode": "latex", "label": "Obrigacoes do municipio", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "sancoes_rows_tr", "type": "latex", "render_mode": "latex", "label": "Tabela de sancoes", "description": "Formato: Infracao & Sancao & Parametro \\\\.", "fase": 4},
+    {"key": "resumo_lotes_rows_tr", "type": "latex", "render_mode": "latex", "label": "Resumo do valor por lote", "description": "Formato: Lote & Descricao & Valor & Percentual \\\\.", "fase": 2},
+    {"key": "xlsx_item_rows_json", "type": "json", "label": "Itens estruturados da planilha XLSX", "description": "Lista JSON reaproveitada pela planilha.", "fase": 2},
+    {"key": "xlsx_lot_rows_json", "type": "json", "label": "Resumo de lotes da planilha XLSX", "description": "Lista JSON opcional de lotes.", "fase": 2},
+    {"key": "xlsx_schedule_rows_json", "type": "json", "label": "Cronograma estruturado da planilha XLSX", "description": "Lista JSON opcional com jan..dez por lote.", "fase": 4}
+  ]
+}
+        ]]></field>
+        <field name="option_catalog_json"><![CDATA[
+{
+  "campos_latex_livre": {
+    "itens_especificacao_rows": "01 & Item exemplo & Un & 10 & 120 & 25,50 & Especificacao minima \\\\",
+    "parametros_arp_rows": "Vigencia & 12 meses \\\\",
+    "sancoes_rows_tr": "Atraso na entrega & Multa moratoria & 0,5\\% ao dia \\\\"
+  }
+}
+        ]]></field>
+        <field name="prompt_system"><![CDATA[
+Preencha um Termo de Referencia em LaTeX no padrao GRP.
+Preserve a estrutura e use apenas os dados disponiveis.
+        ]]></field>
+        <field name="prompt_user_tpl"><![CDATA[
+Monte o TR com base nas variaveis do processo.
+- TR: {{tr_numero}}
+- Processo: {{processo_numero_tr}}
+- Objeto: {{objeto_tr_resumo}}
+- Valor global: {{valor_estimado_global_tr}}
+        ]]></field>
+        <field name="latex_template"><![CDATA[
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[top=2.8cm,bottom=2.8cm,left=3cm,right=2.5cm]{geometry}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{booktabs,longtable,array,pdflscape}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\newcommand{\assinatura}[3]{\begin{center}\rule{7cm}{0.5pt}\\ \textbf{#1}\\ \small #2\\ \small #3\end{center}}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}
+\renewcommand{\arraystretch}{1.3}
+\begin{document}
+\begin{center}
+{\Large\bfseries TERMO DE REFERENCIA --- TR\par}
+\vspace{0.3cm}
+{\large\bfseries {{objeto_tr_resumo}}\par}
+\end{center}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{>{\bfseries}p{4.8cm}p{9cm}}
+Numero do TR: & {{tr_numero}} \\
+ETP vinculado: & {{etp_referencia_tr}} \\
+DFD vinculado: & {{dfd_referencia_tr}} \\
+Processo: & {{processo_numero_tr}} \\
+Exercicio: & {{exercicio_tr}} \\
+Valor estimado: & {{valor_estimado_global_tr}} \\
+\end{tabular}
+\end{table}
+
+\tableofcontents
+\clearpage
+
+\section{Objeto}
+{{objeto_tr_resumo}}
+
+\section{Descricao dos Lotes e Itens}
+\begin{landscape}
+\begin{longtable}{p{0.7cm}p{4.8cm}p{0.9cm}p{1.5cm}p{1.8cm}p{2.1cm}p{6cm}}
+\toprule
+\textbf{It.} & \textbf{Descricao} & \textbf{Un.} & \textbf{Qtde./mes} & \textbf{Qtde. anual} & \textbf{Preco ref.} & \textbf{Especificacao minima} \\
+\midrule
+{{itens_especificacao_rows}}
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\section{Requisitos da Contratacao}
+\subsection{Requisitos Tecnicos}
+\begin{itemize}
+{{requisitos_tecnicos_itens}}
+\end{itemize}
+
+\subsection{Requisitos Logisticos}
+\begin{itemize}
+{{requisitos_logisticos_itens}}
+\end{itemize}
+
+\subsection{Requisitos de Sustentabilidade}
+\begin{itemize}
+{{requisitos_sustentabilidade_itens}}
+\end{itemize}
+
+\section{Modelo de Execucao do Objeto}
+{{instrumento_contratual_texto}}
+{{forma_fornecimento_texto}}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{4.8cm}p{9cm}}
+\toprule
+\textbf{Parametro} & \textbf{Conteudo} \\
+\midrule
+{{parametros_arp_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{1.2cm}p{3cm}p{3cm}p{6cm}}
+\toprule
+\textbf{Lote} & \textbf{Prazo} & \textbf{Local} & \textbf{Observacao} \\
+\midrule
+{{prazos_entrega_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Recebimento e Aceitacao}
+{{recebimento_texto}}
+\begin{itemize}
+{{recebimento_regras_itens}}
+\end{itemize}
+
+\section{Modelo de Gestao do Contrato e da ARP}
+{{vigencia_arp_texto_tr}}
+\begin{itemize}
+{{gestao_contrato_itens}}
+\end{itemize}
+
+\section{Criterios de Medicao e Pagamento}
+{{pagamento_texto_tr}}
+
+\section{Habilitacao}
+\begin{itemize}
+{{habilitacao_tecnica_itens_tr}}
+\end{itemize}
+
+\section{Criterios de Selecao do Fornecedor e Julgamento}
+\begin{itemize}
+{{criterios_julgamento_itens_tr}}
+\end{itemize}
+
+\section{Obrigacoes do Fornecedor Registrado}
+\begin{itemize}
+{{obrigacoes_fornecedor_itens}}
+\end{itemize}
+
+\section{Obrigacoes do Municipio}
+\begin{itemize}
+{{obrigacoes_municipio_itens}}
+\end{itemize}
+
+\section{Sancoes Administrativas}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{4.5cm}p{2cm}p{7cm}}
+\toprule
+\textbf{Infracao} & \textbf{Sancao} & \textbf{Parametro} \\
+\midrule
+{{sancoes_rows_tr}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Reajuste e Revisao de Precos}
+{{reajuste_revisao_texto}}
+
+\section{Estimativa de Precos de Referencia}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{1.2cm}p{6cm}p{3cm}p{2.5cm}}
+\toprule
+\textbf{Lote} & \textbf{Descricao} & \textbf{Valor} & \textbf{\% do total} \\
+\midrule
+{{resumo_lotes_rows_tr}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Adequacao Orcamentaria}
+{{adequacao_orcamentaria_texto_tr}}
+
+\section{Disposicoes Finais}
+{{data_aprovacao_tr}}
+
+\vspace{1.2cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Responsavel pelo TR]}{Elaboracao}{ {{unidade_emitente_tr}} }
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Autoridade competente]}{Aprovacao}{ {{orgao_emitente_tr}} }
+\end{minipage}
+\end{document}
+        ]]></field>
+    </record>
+
+    <record id="template_edital_grp_latex_compras_faseado" model="gov.ai.template">
+        <field name="name">Edital GRP Faseado - Pregao Eletronico (LaTeX Estruturado)</field>
+        <field name="doc_type">edital</field>
+        <field name="process_type">compras_servicos</field>
+        <field name="process_scope">compras</field>
+        <field name="fase">3</field>
+        <field name="versao_normativa">Lei 14.133/2021 · Edital GRP estruturado para PE/SRP</field>
+        <field name="output_format">latex</field>
+        <field name="active">True</field>
+        <field name="guidance_text"><![CDATA[
+Modelo Edital baseado no processo de referencia da pasta PROCESSO_MODELO.
+Use variaveis de sessao, participacao, habilitacao e anexos.
+Os anexos tabulares ficam em campos LaTeX livres.
+        ]]></field>
+        <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "edital_numero", "type": "string", "label": "Numero do edital", "fase": 3},
+    {"key": "tr_referencia_edital", "type": "string", "label": "Referencia do TR", "fase": 3},
+    {"key": "etp_referencia_edital", "type": "string", "label": "Referencia do ETP", "fase": 3},
+    {"key": "processo_numero_edital", "type": "string", "label": "Numero do processo", "fase": 3},
+    {"key": "data_abertura_edital", "type": "string", "label": "Data da abertura", "fase": 3},
+    {"key": "hora_abertura_edital", "type": "string", "label": "Hora da abertura", "fase": 3},
+    {"key": "sistema_eletronico_edital", "type": "string", "label": "Sistema eletronico", "fase": 3},
+    {"key": "objeto_edital_texto", "type": "text", "label": "Objeto do edital", "fase": 3},
+    {"key": "pregoeiro_nome", "type": "string", "label": "Nome do pregoeiro", "fase": 3},
+    {"key": "autoridade_competente_nome_edital", "type": "string", "label": "Nome da autoridade competente", "fase": 4}
+  ],
+  "optional": [
+    {"key": "url_sistema_edital", "type": "string", "label": "URL do sistema", "fase": 3},
+    {"key": "url_edital_publicacao", "type": "string", "label": "URL para retirada do edital", "fase": 3},
+    {"key": "prazo_esclarecimentos_edital", "type": "string", "label": "Prazo para esclarecimentos", "fase": 3},
+    {"key": "prazo_impugnacoes_edital", "type": "string", "label": "Prazo para impugnacoes", "fase": 3},
+    {"key": "parecer_juridico_numero", "type": "string", "label": "Numero do parecer juridico", "fase": 4},
+    {"key": "validade_proposta_dias", "type": "string", "label": "Validade da proposta", "fase": 3},
+    {"key": "vigencia_arp_edital", "type": "string", "label": "Vigencia da ARP", "fase": 4}
+  ],
+  "additional_fields": [
+    {"key": "lotes_edital_rows", "type": "latex", "render_mode": "latex", "label": "Resumo de lotes do edital", "description": "Formato: Lote & Descricao & Classe & Valor \\\\.", "fase": 3},
+    {"key": "participacao_admitida_itens", "type": "latex", "render_mode": "latex", "label": "Participantes admitidos", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "vedacoes_itens", "type": "latex", "render_mode": "latex", "label": "Vedacoes a participacao", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "beneficios_me_epp_itens", "type": "latex", "render_mode": "latex", "label": "Beneficios para ME/EPP", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "credenciamento_itens", "type": "latex", "render_mode": "latex", "label": "Credenciamento no sistema", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "proposta_requisitos_itens", "type": "latex", "render_mode": "latex", "label": "Requisitos da proposta", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "julgamento_desclassificacao_itens", "type": "latex", "render_mode": "latex", "label": "Criterios de julgamento/desclassificacao", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "habilitacao_juridica_itens", "type": "latex", "render_mode": "latex", "label": "Habilitacao juridica", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "habilitacao_fiscal_itens", "type": "latex", "render_mode": "latex", "label": "Habilitacao fiscal e trabalhista", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "habilitacao_tecnica_itens_edital", "type": "latex", "render_mode": "latex", "label": "Habilitacao tecnica", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "habilitacao_economica_itens", "type": "latex", "render_mode": "latex", "label": "Habilitacao economico-financeira", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "recursos_itens", "type": "latex", "render_mode": "latex", "label": "Fluxo recursal", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "arp_regras_itens", "type": "latex", "render_mode": "latex", "label": "Regras da ARP", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "condicoes_fornecimento_itens", "type": "latex", "render_mode": "latex", "label": "Condicoes de fornecimento", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "pagamento_edital_itens", "type": "latex", "render_mode": "latex", "label": "Regras de pagamento", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "sancoes_edital_rows", "type": "latex", "render_mode": "latex", "label": "Tabela de sancoes do edital", "description": "Formato: Infracao & Sancao & Parametro \\\\.", "fase": 4},
+    {"key": "impugnacoes_itens", "type": "latex", "render_mode": "latex", "label": "Impugnacoes e esclarecimentos", "description": "Use linhas \\item.", "fase": 3},
+    {"key": "disposicoes_gerais_itens", "type": "latex", "render_mode": "latex", "label": "Disposicoes gerais", "description": "Use linhas \\item.", "fase": 4},
+    {"key": "anexos_rows", "type": "latex", "render_mode": "latex", "label": "Tabela de anexos", "description": "Formato: Anexo & Descricao & Referencia \\\\.", "fase": 4},
+    {"key": "anexo_proposta_rows", "type": "latex", "render_mode": "latex", "label": "Linhas do modelo de proposta", "description": "Formato: It. & Descricao & Un. & Qtde. & Marca/Fab. & Preco unit. & Preco total \\\\.", "fase": 4},
+    {"key": "xlsx_lot_rows_json", "type": "json", "label": "Resumo de lotes para o worker XLSX", "description": "Lista JSON opcional de lotes.", "fase": 3}
+  ]
+}
+        ]]></field>
+        <field name="option_catalog_json"><![CDATA[
+{
+  "campos_latex_livre": {
+    "lotes_edital_rows": "01 & Lote exemplo & A & 100.000,00 \\\\",
+    "anexos_rows": "I & Termo de Referencia & {{tr_referencia_edital}} \\\\",
+    "anexo_proposta_rows": "01 & Item exemplo & Un & 10 & Marca X & 25,50 & 255,00 \\\\"
+  }
+}
+        ]]></field>
+        <field name="prompt_system"><![CDATA[
+Preencha um Edital de Pregao Eletronico em LaTeX no padrao GRP.
+Mantenha a estrutura e use apenas dados comprovados.
+        ]]></field>
+        <field name="prompt_user_tpl"><![CDATA[
+Monte o edital a partir das variaveis conhecidas.
+- Edital: {{edital_numero}}
+- Processo: {{processo_numero_edital}}
+- Sessao: {{data_abertura_edital}} as {{hora_abertura_edital}}
+- Sistema: {{sistema_eletronico_edital}}
+        ]]></field>
+        <field name="latex_template"><![CDATA[
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[top=2.8cm,bottom=2.8cm,left=3cm,right=2.5cm]{geometry}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{booktabs,array,tabularx,longtable}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\newcommand{\assinatura}[3]{\begin{center}\rule{7cm}{0.5pt}\\ \textbf{#1}\\ \small #2\\ \small #3\end{center}}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}
+\renewcommand{\arraystretch}{1.3}
+\begin{document}
+\begin{center}
+{\Large\bfseries EDITAL DE PREGAO ELETRONICO\par}
+\vspace{0.3cm}
+{\large\bfseries {{edital_numero}}\par}
+\end{center}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{>{\bfseries}p{4.8cm}p{9cm}}
+TR vinculado: & {{tr_referencia_edital}} \\
+ETP vinculado: & {{etp_referencia_edital}} \\
+Processo: & {{processo_numero_edital}} \\
+Data de abertura: & {{data_abertura_edital}} \\
+Horario: & {{hora_abertura_edital}} \\
+Sistema: & {{sistema_eletronico_edital}} \\
+\end{tabular}
+\end{table}
+
+\tableofcontents
+\clearpage
+
+\section{Objeto}
+{{objeto_edital_texto}}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{1.2cm}p{6cm}p{2.2cm}p{3cm}}
+\toprule
+\textbf{Lote} & \textbf{Descricao} & \textbf{Classe} & \textbf{Valor} \\
+\midrule
+{{lotes_edital_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Data, Hora e Local da Sessao Publica}
+\begin{table}[h!]
+\centering
+\begin{tabular}{>{\bfseries}p{4.8cm}p{9cm}}
+Data: & {{data_abertura_edital}} \\
+Horario: & {{hora_abertura_edital}} \\
+Sistema: & {{sistema_eletronico_edital}} \\
+URL do sistema: & {{url_sistema_edital}} \\
+Retirada do edital: & {{url_edital_publicacao}} \\
+Esclarecimentos: & {{prazo_esclarecimentos_edital}} \\
+Impugnacoes: & {{prazo_impugnacoes_edital}} \\
+\end{tabular}
+\end{table}
+
+\section{Condicoes de Participacao}
+\subsection{Participantes Admitidos}
+\begin{itemize}
+{{participacao_admitida_itens}}
+\end{itemize}
+
+\subsection{Vedacoes}
+\begin{itemize}
+{{vedacoes_itens}}
+\end{itemize}
+
+\subsection{Beneficios para ME/EPP}
+\begin{itemize}
+{{beneficios_me_epp_itens}}
+\end{itemize}
+
+\section{Credenciamento e Acesso ao Sistema Eletronico}
+\begin{itemize}
+{{credenciamento_itens}}
+\end{itemize}
+
+\section{Proposta de Precos}
+\begin{itemize}
+{{proposta_requisitos_itens}}
+\end{itemize}
+
+\section{Procedimento do Pregao}
+\begin{itemize}
+{{julgamento_desclassificacao_itens}}
+\end{itemize}
+
+\section{Habilitacao}
+\subsection{Juridica}
+\begin{itemize}
+{{habilitacao_juridica_itens}}
+\end{itemize}
+
+\subsection{Fiscal, Social e Trabalhista}
+\begin{itemize}
+{{habilitacao_fiscal_itens}}
+\end{itemize}
+
+\subsection{Tecnica}
+\begin{itemize}
+{{habilitacao_tecnica_itens_edital}}
+\end{itemize}
+
+\subsection{Economico-Financeira}
+\begin{itemize}
+{{habilitacao_economica_itens}}
+\end{itemize}
+
+\section{Recursos}
+\begin{itemize}
+{{recursos_itens}}
+\end{itemize}
+
+\section{Ata de Registro de Precos}
+\begin{itemize}
+{{arp_regras_itens}}
+\end{itemize}
+
+\section{Condicoes de Fornecimento}
+\begin{itemize}
+{{condicoes_fornecimento_itens}}
+\end{itemize}
+
+\section{Pagamento}
+\begin{itemize}
+{{pagamento_edital_itens}}
+\end{itemize}
+
+\section{Sancoes Administrativas}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{5cm}p{2cm}p{6.5cm}}
+\toprule
+\textbf{Infracao} & \textbf{Sancao} & \textbf{Parametro} \\
+\midrule
+{{sancoes_edital_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Impugnacoes e Pedidos de Esclarecimento}
+\begin{itemize}
+{{impugnacoes_itens}}
+\end{itemize}
+
+\section{Disposicoes Gerais}
+\begin{itemize}
+{{disposicoes_gerais_itens}}
+\end{itemize}
+
+\clearpage
+\section*{Relacao de Anexos}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{1.5cm}p{9cm}p{3cm}}
+\toprule
+\textbf{Anexo} & \textbf{Descricao} & \textbf{Referencia} \\
+\midrule
+{{anexos_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\section*{Anexo II --- Modelo de Proposta de Precos}
+\begin{table}[h!]
+\centering
+\begin{tabular}{p{0.7cm}p{5cm}p{0.9cm}p{1.1cm}p{2cm}p{2cm}p{2.5cm}}
+\toprule
+\textbf{It.} & \textbf{Descricao} & \textbf{Un.} & \textbf{Qtde.} & \textbf{Marca/Fab.} & \textbf{Preco unit.} & \textbf{Preco total} \\
+\midrule
+{{anexo_proposta_rows}}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{1cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{ {{pregoeiro_nome}} }{Pregoeiro(a)}{Comissao de contratacao}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{ {{autoridade_competente_nome_edital}} }{Autoridade competente}{Processo licitatorio}
+\end{minipage}
+\end{document}
+        ]]></field>
+    </record>
+</odoo>

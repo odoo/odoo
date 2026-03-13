@@ -68,7 +68,10 @@ Preserve integralmente a estrutura visual do documento.
     {"key": "exigencias_tecnicas_itens", "type": "latex", "render_mode": "latex", "label": "Exigencias tecnicas minimas", "description": "Use linhas \\item com os requisitos tecnicos.", "fase": 1},
     {"key": "estimativa_grupo_rows", "type": "latex", "render_mode": "latex", "label": "Linhas da tabela de estimativa por grupo", "description": "Use linhas de tabela no formato Grupo & Descricao & Valor & Percentual \\\\.", "fase": 2},
     {"key": "cronograma_processo_rows", "type": "latex", "render_mode": "latex", "label": "Linhas do cronograma do processo", "description": "Use linhas de tabela no formato # & Etapa & Responsavel & Prazo & Status \\\\.", "fase": 1},
-    {"key": "despacho_encaminhamento_texto", "type": "text", "label": "Complemento do despacho de encaminhamento", "description": "Texto complementar opcional ao despacho padrao da autoridade competente.", "fase": 4}
+    {"key": "despacho_encaminhamento_texto", "type": "text", "label": "Complemento do despacho de encaminhamento", "description": "Texto complementar opcional ao despacho padrao da autoridade competente.", "fase": 4},
+    {"key": "xlsx_item_rows_json", "type": "json", "label": "Itens estruturados da planilha XLSX", "description": "Lista JSON com lot_code, item_number, class_abc, lot_description, description, unit, monthly_quantity, annual_quantity, unit_price e specification.", "fase": 0},
+    {"key": "xlsx_lot_rows_json", "type": "json", "label": "Resumo de lotes da planilha XLSX", "description": "Lista JSON opcional com lot_code, description, class_abc, expected_value e notes.", "fase": 1},
+    {"key": "xlsx_schedule_rows_json", "type": "json", "label": "Cronograma estruturado da planilha XLSX", "description": "Lista JSON opcional com um objeto por lote e colunas jan..dez.", "fase": 1}
   ]
 }
         ]]></field>
@@ -81,7 +84,8 @@ Preserve integralmente a estrutura visual do documento.
     "grupos_abc_rows": "A & Grupo critico & Exemplos de itens \\\\",
     "exigencias_tecnicas_itens": "\\item Requisito tecnico minimo",
     "estimativa_grupo_rows": "A & Grupo critico & 100.000,00 & 50\\% \\\\",
-    "cronograma_processo_rows": "1 & Elaboracao do DFD & Unidade demandante & 10/03/2026 & Em curso \\\\"
+    "cronograma_processo_rows": "1 & Elaboracao do DFD & Unidade demandante & 10/03/2026 & Em curso \\\\",
+    "xlsx_item_rows_json": "[{\"lot_code\":\"1\",\"item_number\":\"1\",\"class_abc\":\"A\",\"lot_description\":\"Lote critico\",\"description\":\"Item exemplo\",\"unit\":\"Un\",\"monthly_quantity\":10,\"annual_quantity\":120,\"unit_price\":25.5,\"specification\":\"Requisito minimo\"}]"
   }
 }
         ]]></field>

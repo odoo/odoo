@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_planilha_job_list" model="ir.ui.view">
+        <field name="name">gov.processo.planilha.job.list</field>
+        <field name="model">gov.processo.planilha.job</field>
+        <field name="arch" type="xml">
+            <list string="Jobs de Planilha XLSX" create="false" delete="false">
+                <field name="name"/>
+                <field name="processo_id"/>
+                <field name="doc_id" optional="show"/>
+                <field name="profile"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'pending'"
+                    decoration-info="state == 'running'"
+                    decoration-danger="state == 'error'"
+                />
+                <field name="row_count" optional="show"/>
+                <field name="lot_count" optional="show"/>
+                <field name="requested_by" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="file_name" optional="hide" column_invisible="True"/>
+                <field name="file_data" widget="binary" filename="file_name" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_planilha_job_form" model="ir.ui.view">
+        <field name="name">gov.processo.planilha.job.form</field>
+        <field name="model">gov.processo.planilha.job</field>
+        <field name="arch" type="xml">
+            <form string="Job de Planilha XLSX">
+                <header>
+                    <button
+                        name="action_process_now"
+                        string="Processar Agora"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state not in ('pending', 'error')"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="pending,running,done,error"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Identificação">
+                            <field name="name" readonly="1"/>
+                            <field name="processo_id" readonly="1"/>
+                            <field name="doc_id" readonly="1"/>
+                            <field name="profile" readonly="1"/>
+                            <field name="requested_by" readonly="1"/>
+                        </group>
+                        <group string="Controle">
+                            <field name="started_at" readonly="1"/>
+                            <field name="finished_at" readonly="1"/>
+                            <field name="row_count" readonly="1"/>
+                            <field name="lot_count" readonly="1"/>
+                            <field name="sha256" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Arquivo Gerado">
+                        <field name="file_data" widget="binary" filename="file_name" readonly="1"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+
+                    <group string="Erro" invisible="not error_message">
+                        <field name="error_message" nolabel="1" readonly="1"/>
+                    </group>
+
+                    <group string="Payload">
+                        <field name="payload_json" widget="ace" options="{'mode': 'json'}" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

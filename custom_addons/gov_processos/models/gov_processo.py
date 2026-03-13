@@ -1,3 +1,4 @@
+import json
 from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
 
@@ -190,9 +191,18 @@ class GovProcesso(models.Model):
         "processo_id",
         string="Variáveis do Processo",
     )
+    planilha_item_ids = fields.One2many(
+        "gov.processo.planilha.item",
+        "processo_id",
+        string="Itens Estruturados da Planilha",
+    )
     parameter_count = fields.Integer(
         string="Variáveis",
         compute="_compute_parameter_count",
+    )
+    planilha_item_count = fields.Integer(
+        string="Itens XLSX",
+        compute="_compute_planilha_item_count",
     )
     currency_id = fields.Many2one(
         "res.currency",
@@ -267,6 +277,11 @@ class GovProcesso(models.Model):
     def _compute_parameter_count(self):
         for rec in self:
             rec.parameter_count = len(rec.parameter_ids)
+
+    @api.depends("planilha_item_ids")
+    def _compute_planilha_item_count(self):
+        for rec in self:
+            rec.planilha_item_count = len(rec.planilha_item_ids)
 
     @api.depends("doc_ids.versao_ids")
     def _compute_versao_total_count(self):
@@ -474,6 +489,33 @@ class GovProcesso(models.Model):
             },
         }
 
+    def action_open_planilha_items(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Itens Estruturados XLSX — {self.name}",
+            "res_model": "gov.processo.planilha.item",
+            "view_mode": "list,form",
+            "domain": [("processo_id", "=", self.id)],
+            "context": {
+                "default_processo_id": self.id,
+                "default_fase": self.fase_atual or 0,
+            },
+        }
+
+    def action_sync_planilha_structured_parameters(self):
+        self.ensure_one()
+        self.sync_planilha_structured_parameters()
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Planilha sincronizada",
+                "message": "Os datasets estruturados do XLSX foram atualizados.",
+                "type": "success",
+            },
+        }
+
     def action_open_modelos_recomendados(self):
         self.ensure_one()
         template_ids = self.recommended_template_ids.ids
@@ -502,6 +544,148 @@ class GovProcesso(models.Model):
             key, value = parameter.to_render_pair()
             context[key] = value
         return context
+
+    def _serialize_planilha_item_rows(self):
+        self.ensure_one()
+        records = self.planilha_item_ids.sorted(
+            key=lambda rec: (
+                0 if (rec.lot_code or "").isdigit() else 1,
+                int(rec.lot_code or 0) if (rec.lot_code or "").isdigit() else (rec.lot_code or ""),
+                rec.item_number or 0,
+                rec.sequence or 0,
+                rec.id,
+            )
+        )
+        return [record.to_xlsx_payload_dict() for record in records]
+
+    def _serialize_planilha_lot_rows(self):
+        self.ensure_one()
+        grouped = {}
+        ordered_codes = []
+        for item in self._serialize_planilha_item_rows():
+            lot_code = item["lot_code"]
+            if lot_code not in grouped:
+                grouped[lot_code] = {
+                    "lot_code": lot_code,
+                    "description": item.get("lot_description") or item.get("description") or "",
+                    "class_abc": item.get("class_abc") or "",
+                    "expected_value": 0.0,
+                    "notes": "",
+                }
+                ordered_codes.append(lot_code)
+            grouped[lot_code]["expected_value"] += (item.get("annual_quantity") or 0.0) * (
+                item.get("unit_price") or 0.0
+            )
+            if not grouped[lot_code]["description"]:
+                grouped[lot_code]["description"] = item.get("description") or ""
+            if not grouped[lot_code]["class_abc"]:
+                grouped[lot_code]["class_abc"] = item.get("class_abc") or ""
+        return [grouped[lot_code] for lot_code in ordered_codes]
+
+    def _build_default_schedule_for_lot(self, lot_row):
+        month_values = {
+            month_key: ""
+            for month_key in (
+                "jan",
+                "fev",
+                "mar",
+                "abr",
+                "mai",
+                "jun",
+                "jul",
+                "ago",
+                "set",
+                "out",
+                "nov",
+                "dez",
+            )
+        }
+        class_abc = (lot_row.get("class_abc") or "").upper()
+        if class_abc == "A":
+            selected_months = ("jan", "abr", "jul", "out")
+            label = "OF 30-45 d"
+        elif class_abc == "B":
+            selected_months = ("fev", "jun", "set")
+            label = "OF 45-60 d"
+        else:
+            selected_months = ("mar", "ago", "nov")
+            label = "OF 60-90 d"
+        for month_key in selected_months:
+            month_values[month_key] = label
+        return month_values
+
+    def _serialize_planilha_schedule_rows(self):
+        self.ensure_one()
+        rows = []
+        for lot_row in self._serialize_planilha_lot_rows():
+            rows.append(
+                {
+                    "lot_code": lot_row["lot_code"],
+                    "description": lot_row["description"],
+                    **self._build_default_schedule_for_lot(lot_row),
+                }
+            )
+        return rows
+
+    def sync_planilha_structured_parameters(self):
+        Parameter = self.env["gov.processo.parametro"]
+        metadata_by_key = {
+            "xlsx_item_rows_json": {
+                "name": "[Auto] Itens estruturados da planilha XLSX",
+                "description": (
+                    "Gerado automaticamente a partir da grade amigavel de itens do processo."
+                ),
+                "fase": 0,
+                "sequence": 980,
+            },
+            "xlsx_lot_rows_json": {
+                "name": "[Auto] Resumo de lotes da planilha XLSX",
+                "description": (
+                    "Gerado automaticamente a partir dos itens estruturados do processo."
+                ),
+                "fase": 1,
+                "sequence": 990,
+            },
+            "xlsx_schedule_rows_json": {
+                "name": "[Auto] Cronograma estruturado da planilha XLSX",
+                "description": (
+                    "Gerado automaticamente a partir da classificacao ABC dos lotes."
+                ),
+                "fase": 1,
+                "sequence": 1000,
+            },
+        }
+
+        for processo in self:
+            payloads = {
+                "xlsx_item_rows_json": processo._serialize_planilha_item_rows(),
+                "xlsx_lot_rows_json": processo._serialize_planilha_lot_rows(),
+                "xlsx_schedule_rows_json": processo._serialize_planilha_schedule_rows(),
+            }
+            existing_by_key = {rec.key: rec for rec in processo.parameter_ids}
+            for key, payload in payloads.items():
+                current = existing_by_key.get(key)
+                value_text = json.dumps(payload, ensure_ascii=False, indent=2) if payload else ""
+                metadata = metadata_by_key[key]
+                values = {
+                    "processo_id": processo.id,
+                    "key": key,
+                    "name": metadata["name"],
+                    "description": metadata["description"],
+                    "fase": metadata["fase"],
+                    "doc_type": "dfd",
+                    "section": "additional_fields",
+                    "required": False,
+                    "value_type": "json",
+                    "render_mode": "text",
+                    "sequence": metadata["sequence"],
+                    "value_text": value_text,
+                }
+                if current:
+                    current.with_context(skip_phase_lock=True).write(values)
+                elif value_text:
+                    Parameter.with_context(skip_phase_lock=True).create(values)
+        return True
 
     def _get_manual_checklist_blocks(self, mode="agu_estrito"):
         self.ensure_one()

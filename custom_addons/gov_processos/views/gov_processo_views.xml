@@ -166,6 +166,9 @@
                         <button class="oe_stat_button" name="action_open_parametros" type="object" icon="fa-code-fork">
                             <field name="parameter_count" widget="statinfo" string="Variáveis"/>
                         </button>
+                        <button class="oe_stat_button" name="action_open_planilha_items" type="object" icon="fa-table">
+                            <field name="planilha_item_count" widget="statinfo" string="Itens XLSX"/>
+                        </button>
                     </div>
 
                     <div class="o_field_widget mb-3">
@@ -241,6 +244,49 @@
                                     />
                                     <field name="is_filled" widget="boolean_toggle" optional="show"/>
                                     <field name="value_text"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="planilha_xlsx" string="Itens Estruturados XLSX">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Preencha os itens da futura planilha em formato amigavel. O sistema sincroniza
+                                automaticamente os datasets JSON usados pelo worker XLSX.
+                            </div>
+                            <div class="mb-3 d-flex gap-2">
+                                <button
+                                    name="action_open_planilha_items"
+                                    string="Abrir Lista Completa"
+                                    type="object"
+                                    class="btn-primary"
+                                />
+                                <button
+                                    name="action_sync_planilha_structured_parameters"
+                                    string="Sincronizar Datasets XLSX"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field name="planilha_item_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="fase"/>
+                                    <field name="lot_code"/>
+                                    <field name="item_number"/>
+                                    <field name="class_abc"/>
+                                    <field name="lot_description" optional="show"/>
+                                    <field name="description"/>
+                                    <field name="unit"/>
+                                    <field name="monthly_quantity"/>
+                                    <field name="annual_quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="annual_total" optional="show"/>
+                                    <field
+                                        name="status"
+                                        widget="badge"
+                                        decoration-success="status == 'aberta'"
+                                        decoration-warning="status == 'pendente'"
+                                        decoration-danger="status == 'fechada'"
+                                    />
                                 </list>
                             </field>
                         </page>
