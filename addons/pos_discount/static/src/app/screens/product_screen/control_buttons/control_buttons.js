@@ -7,6 +7,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 patch(ControlButtons.prototype, {
     async clickDiscount() {
         this.dialog.add(NumberPopup, {
+<<<<<<< b7c9c140eb04222626fa92e926e86b2fea213476
             title: _t("Discount"),
             startingValue: String(this.pos.config.discount_pc || 0),
             startingType: "percent",
@@ -32,6 +33,25 @@ patch(ControlButtons.prototype, {
                     return `${value} %`;
                 }
                 return value;
+||||||| 88df50bc96448dfaff28bd37e970ffd18bf8d554
+            title: _t("Discount Percentage"),
+            startingValue: this.pos.config.discount_pc,
+            getPayload: (num) => {
+                const percent = Math.max(
+                    0,
+                    Math.min(100, this.env.utils.parseValidFloat(num.toString()))
+                );
+                this.applyDiscount(percent);
+=======
+            title: _t("Discount Percentage"),
+            startingValue: this.env.utils.formatCurrency(this.pos.config.discount_pc, false),
+            getPayload: (num) => {
+                const percent = Math.max(
+                    0,
+                    Math.min(100, this.env.utils.parseValidFloat(num.toString()))
+                );
+                this.applyDiscount(percent);
+>>>>>>> d2c66a5e5be9300ff6de02dcaa2bb7a85c8b28dc
             },
         });
     },
