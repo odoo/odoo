@@ -11214,9 +11214,11 @@ test(`form view with edit='0' but create='1', existing record`, async () => {
         resId: 1,
     });
     expect(`.o_form_readonly`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo] span`).toHaveText("yop");
 
     await contains(`.o_form_button_create`).click();
     expect(`.o_form_editable`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("My little Foo Value");
 });
 
 test(`form view with edit='0' but create='1', new record`, async () => {
@@ -11226,6 +11228,7 @@ test(`form view with edit='0' but create='1', new record`, async () => {
         arch: `<form edit="0"><field name="foo"/></form>`,
     });
     expect(`.o_form_editable`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("My little Foo Value");
 });
 
 test(`save a form view with an invisible required field`, async () => {

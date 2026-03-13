@@ -23,9 +23,6 @@ export const formView = {
 
         return {
             ...genericProps,
-            readonly:
-                genericProps.readonly ||
-                (archInfo.activeActions?.edit === false && genericProps.resId !== false),
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: genericProps.buttonTemplate || view.buttonTemplate,

@@ -150,6 +150,7 @@ export class FormController extends Component {
     static defaultProps = {
         preventCreate: false,
         preventEdit: false,
+        readonly: false,
         updateActionState: () => {},
     };
 
@@ -373,7 +374,7 @@ export class FormController extends Component {
                 fields: this.props.fields,
                 activeFields: {}, // will be generated after loading sub views (see willStart)
                 isMonoRecord: true,
-                mode: this.props.readonly ? "readonly" : "edit",
+                mode: !this.props.readonly && this.canEdit ? "edit" : "readonly",
                 context: this.props.context,
             },
             state: this.props.state?.modelState,
