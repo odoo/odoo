@@ -19,6 +19,7 @@ class CrmStage(models.Model):
     """
     _name = 'crm.stage'
     _description = "CRM Stage"
+    _explanation = "Represents a step in the sales pipeline (e.g., New, Qualified, Proposition, Won). Used to organize and track the progress of crm.lead records."
     _rec_name = 'name'
     _order = "sequence, name, id"
 

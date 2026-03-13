@@ -21,6 +21,7 @@ except ImportError:
 class ResCurrency(models.CachedModel):
     _name = 'res.currency'
     _description = "Currency"
+    _explanation = "Represents a monetary unit. Odoo uses this to handle multi-currency transactions, exchange rates, and financial reporting."
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
     # invalidate cache for get_all_currencies

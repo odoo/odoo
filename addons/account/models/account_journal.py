@@ -35,6 +35,7 @@ class AccountJournalGroup(models.Model):
 class AccountJournal(models.Model):
     _name = 'account.journal'
     _description = "Journal"
+    _explanation = "Groups financial transactions. Every accounting entry must be posted in a specific journal. Controls default accounts and transaction sequencing."
     _order = 'sequence, type, code'
     _inherit = ['portal.mixin',
                 'mail.alias.mixin.optional',

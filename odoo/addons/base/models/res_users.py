@@ -170,6 +170,7 @@ class ResUsers(models.Model):
     """
     _name = 'res.users'
     _description = 'User'
+    _explanation = "Represents a person who has access to the system. Users have login credentials, assigned groups for security permissions, and are linked to a partner record for contact information."
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
     _allow_sudo_commands = False

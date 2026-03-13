@@ -2,6 +2,7 @@
 <odoo>
     <record id="action_contacts" model="ir.actions.act_window">
         <field name="name">Contacts</field>
+        <field name="explanation">Opens the global Contacts directory. Use this as a general fallback for finding individuals or companies if a more specific action (like Customers or Vendors) is not requested.</field>
         <field name="path">contacts</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">list,kanban,form,activity</field>

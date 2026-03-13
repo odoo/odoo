@@ -58,6 +58,7 @@ def company_default_for(fname, target_model, target_fname):
 class ResCompany(models.CachedModel):
     _name = 'res.company'
     _description = 'Company'
+    _explanation = "Represents a legal entity within the Odoo database. Odoo supports multi-company environments where each company has its own settings, chart of accounts, and business data."
     _order = 'sequence, name'
     _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True

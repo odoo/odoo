@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product"
+    _explanation = "The abstract base representation of a product. It defines the generic properties (name, category, price) that apply to all its variants. If a product has no variations (like size/color), this acts as the main product record."
     _order = "is_favorite desc, name"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of

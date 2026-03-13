@@ -14,6 +14,7 @@ class ResPartner(models.Model):
        to restrict usage of automatic email templates. """
     _name = 'res.partner'
     _inherit = ['mail.thread.blacklist', 'res.partner', 'mail.activity.mixin']
+    _explanation = "Adds communication and activity management to contacts. It enables the chatter (message history), email blacklisting, and the ability to schedule activities."
     _mail_flat_thread = False
     _mail_post_access = 'read'
 

@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 class StockQuant(models.Model):
     _name = 'stock.quant'
     _description = 'Quant'
+    _explanation = "The actual, current inventory on hand. A quant tracks how much of a specific product is currently sitting in a specific location (down to the lot/serial number or package)."
     _rec_name = 'product_id'
     _rec_names_search = ['location_id', 'lot_id', 'package_id', 'owner_id']
 

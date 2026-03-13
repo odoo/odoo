@@ -22,6 +22,7 @@ _lt = LazyTranslate(__name__)
 class ProjectProject(models.Model):
     _name = 'project.project'
     _description = "Project"
+    _explanation = "A top-level container used to organize and track a group of related project.tasks. Provides a high-level overview of progress, budget, and time spent on a specific initiative or client."
     _inherit = [
         'portal.mixin',
         'mail.alias.mixin',

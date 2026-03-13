@@ -84,6 +84,7 @@ PLS_UPDATE_BATCH_STEP = 5000
 class CrmLead(models.Model):
     _name = 'crm.lead'
     _description = "Lead"
+    _explanation = "Represents a potential sales opportunity or lead. Use this to track interactions, estimated revenue, and the progress of a potential sale through different stages of your sales pipeline."
     _order = "priority desc, id desc"
     _inherit = [
                 'mail.thread.subject.suggested',

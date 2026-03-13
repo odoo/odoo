@@ -15,6 +15,7 @@ class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'account_number'
     _description = 'Bank Account'
+    _explanation = "Represents a bank account owned by a partner (customer, vendor, or company). It stores the account number (IBAN), bank details, and owner information."
     _order = 'sequence, id'
 
     active = fields.Boolean(default=True)

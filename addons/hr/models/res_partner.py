@@ -7,6 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+    _explanation = "In the HR context, partners also represent employees."
 
     employee_ids = fields.One2many(
         'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",

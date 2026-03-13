@@ -14,6 +14,7 @@ from odoo.tools.misc import unique
 class ProductProduct(models.Model):
     _name = 'product.product'
     _description = "Product Variant"
+    _explanation = "A specific variant of a product.template (e.g., T-Shirt in size Large and color Red). This is the actual item that is bought, sold, and tracked in inventory."
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'

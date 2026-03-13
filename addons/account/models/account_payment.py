@@ -8,6 +8,7 @@ class AccountPayment(models.Model):
     _name = 'account.payment'
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Payment"
+    _explanation = "Represents incoming (customer) or outgoing (vendor) payments. It handles the actual transfer of money and is used to reconcile open invoices or bills."
     _order = "date desc, name desc"
     _check_company_auto = True
 

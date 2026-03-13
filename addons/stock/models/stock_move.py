@@ -17,6 +17,7 @@ PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 class StockMove(models.Model):
     _name = 'stock.move'
     _description = "Stock Move"
+    _explanation = "Represents a request or a completed action to move a specific quantity of a product from a source location to a destination location. These are the lines that make up a stock.picking."
     _order = 'sequence, id'
     _rec_name = 'reference'
 

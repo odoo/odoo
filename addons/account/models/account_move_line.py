@@ -25,6 +25,7 @@ class AccountMoveLine(models.Model):
         "mail.track.mixin",
     ]
     _description = "Journal Item"
+    _explanation = "An individual line item within an account.move. Used to detail specific debits, credits, taxes, and products on invoices and journal entries."
     _order = "date desc, move_name desc, id"
     _check_company_auto = True
     _rec_names_search = ['name', 'move_id', 'product_id']

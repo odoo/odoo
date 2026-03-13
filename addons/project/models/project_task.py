@@ -90,6 +90,7 @@ CLOSED_STATES = {
 class ProjectTask(models.Model):
     _name = 'project.task'
     _description = "Task"
+    _explanation = "A specific piece of work to be completed within a project. Tasks can be assigned to employees, tracked through stages (e.g., In Progress, Done), and have logged timesheets."
     _date_name = "date_assign"
     _inherit = [
         'portal.mixin',

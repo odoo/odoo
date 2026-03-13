@@ -31,6 +31,7 @@ NO_FLAG_COUNTRIES = [
 class ResCountry(models.CachedModel):
     _name = 'res.country'
     _description = 'Country'
+    _explanation = "Represents a nation or territory. Used for addressing, tax rules (fiscal positions), and localization settings."
     _order = 'name, id'
     _rec_names_search = ['name', 'code']
     _cached_data_fields = ('code', 'currency_id', 'phone_code')
@@ -192,6 +193,7 @@ class ResCountryGroup(models.Model):
 class ResCountryState(models.Model):
     _name = 'res.country.state'
     _description = "Country state"
+    _explanation = "Represents a sub-division of a country, such as a state, province, or region."
     _order = 'code, id'
     _rec_names_search = ['name', 'code']
 

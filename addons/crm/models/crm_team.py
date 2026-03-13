@@ -20,6 +20,7 @@ class CrmTeam(models.Model):
     _name = 'crm.team'
     _inherit = ['mail.alias.mixin', 'crm.team']
     _description = 'Sales Team'
+    _explanation = "Represents a group of salespeople. It handles the assignment of leads/opportunities and can have its own pipeline stages and goals."
 
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")

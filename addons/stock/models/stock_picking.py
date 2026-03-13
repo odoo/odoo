@@ -18,6 +18,7 @@ from odoo.tools.misc import clean_context
 class StockPickingType(models.Model):
     _name = 'stock.picking.type'
     _description = "Picking Type"
+    _explanation = "Defines the type of stock operation (e.g., Receipts, Deliveries, Internal Transfers) and contains configuration for how these operations should behave in the warehouse."
     _order = 'is_favorite desc, sequence, id'
     _rec_names_search = ['name', 'warehouse_id.name']
     _check_company_auto = True
@@ -531,6 +532,7 @@ class StockPicking(models.Model):
     _name = 'stock.picking'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
+    _explanation = "Represents a physical movement of goods, such as receiving a shipment, sending out a delivery, or moving stock internally within a warehouse. Contains multiple stock.move lines."
     _order = "priority desc, scheduled_date asc, id desc"
     _priority_field = 'priority'
 

@@ -7,6 +7,7 @@ class DiscussCallHistory(models.Model):
     _name = "discuss.call.history"
     _order = "start_dt DESC, id DESC"
     _description = "Keep the call history"
+    _explanation = "Stores the history of internal discuss calls (audio/video), tracking the start time, end time, duration, and the associated channel."
 
     channel_id = fields.Many2one("discuss.channel", index=True, required=True, ondelete="cascade")
     duration_hour = fields.Float(compute="_compute_duration_hour")

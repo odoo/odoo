@@ -32,6 +32,7 @@ SALE_ORDER_STATE = [
 
 class SaleOrder(models.Model):
     _name = "sale.order"
+    _explanation = "Represents a customer quotation that can be converted into a sales order. Used to manage pricing, product quantities, and status"
     _inherit = [
         "account.document.import.mixin",
         "mail.activity.mixin",

@@ -1004,6 +1004,7 @@
         <!-- Lead Menu -->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
+            <field name="explanation">Opens the pipeline view for CRM Leads and Opportunities. Use this when the user wants to see sales prospects, track deal stages, or analyze their sales pipeline.</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">list,kanban,graph,pivot,form,activity</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
