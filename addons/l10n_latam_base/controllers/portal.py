@@ -22,7 +22,7 @@ class L10nLatamBasePortalAccount(PortalAccount):
                         ('country_id', '=', False),
                         ('country_id.code', '=', request.env.company.country_code),
                 ]) if can_edit_vat else LatamIdentificationType,
-                'vat_label': request.env._("Identification Number"),
+                'vat_label': request.env.company.country_id.vat_label or request.env._("Identification Number"),
                 'is_latam_country': True,
                 'display_b2b_fields': True,
             })
