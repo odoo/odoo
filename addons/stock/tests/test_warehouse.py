@@ -447,6 +447,59 @@ class TestWarehouse(TestStockCommon):
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
 
+    def test_resupply_warehouse_pull_additionnal(self):
+        """ Resupply a warehouse in pull/push rules
+        - trigger a chain via a manual reordering rule
+        - Add an additional product in the first picking
+        This test ensure this product is correctly pushed to the next picking of the chain and not a
+        new one
+        warehouse.
+        """
+        warehouse_wa = self.env['stock.warehouse'].create({
+            'name': 'Stock Wavre.',
+            'code': 'WV',
+        })
+
+        warehouse_namur = self.env['stock.warehouse'].create({
+            'name': 'Stock Namur',
+            'code': 'WN',
+            'resupply_wh_ids': [Command.set([warehouse_wa.id])],
+        })
+        route = warehouse_namur.resupply_route_ids
+        route.rule_ids.action = 'pull_push'
+
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Reordering rule Namur',
+            'warehouse_id': warehouse_namur.id,
+            'location_id': warehouse_namur.lot_stock_id.id,
+            'product_id': self.productA.id,
+            'product_min_qty': 1.0,
+            'product_max_qty': 4.0,
+            'trigger': 'manual',
+            'route_id': route.id,
+        })
+
+        # Add 1 quant in each distribution warehouse.
+        self.env['stock.quant']._update_available_quantity(self.productA, warehouse_wa.lot_stock_id, 10.0)
+
+        rr.action_replenish()
+
+        ship, pick = self.env['stock.move'].search([('product_id', '=', self.productA.id)])
+        self.assertTrue((ship | pick).reference_ids)
+
+        # add a new product in the pick
+        picking = pick.picking_id
+        picking.move_ids = [Command.create({
+            'product_id': self.productB.id,
+            'product_uom_qty': 4.0,
+            'product_uom': self.productB.uom_id.id,
+            'location_id': pick.location_id.id,
+            'location_dest_id': pick.location_dest_id.id,
+        })]
+        self.assertTrue(picking.move_ids[1].reference_ids)
+        picking.move_ids.quantity = 4
+        picking.button_validate()
+
     def test_add_resupply_warehouse_one_by_one(self):
         """ Checks that selecting a warehouse as a resupply warehouse one after another correctly sets the routes as well.
         """
@@ -525,7 +578,7 @@ class TestWarehouse(TestStockCommon):
         })
         orderpoint.action_replenish()
         # Check that the orderpoint generated the source move from the furthest location.
-        move = self.env['stock.move'].search([('location_id', '=', warehouse_A.lot_stock_id.id), ('origin', '=', orderpoint.name)])
+        move = self.env['stock.move'].search([('location_id', '=', warehouse_A.lot_stock_id.id), ('origin', 'like', 'Replenishment %')])
         self.assertTrue(move, 'No move created from WH_A/Stock')
 
         # Validate each intermediate transfers towards resupply of WH_B/Stock

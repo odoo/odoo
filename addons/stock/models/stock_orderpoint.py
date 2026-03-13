@@ -711,6 +711,10 @@ class StockWarehouseOrderpoint(models.Model):
             This is appropriate for batch jobs only.
         """
         self = self.with_company(company_id)
+        default_ref = self.env['stock.reference'].create({
+            'name': self.env._('Replenishment %s') % fields.Datetime.to_string(fields.Datetime.today())
+        })
+        delete_default_ref = True
 
         for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
@@ -728,6 +732,8 @@ class StockWarehouseOrderpoint(models.Model):
                             origins = self.env['stock.reference'].browse(origins)
                             origin = '%s - %s' % (orderpoint.display_name, ','.join(origins.mapped('name')))
                         else:
+                            orderpoint = orderpoint.with_context(origins={**orderpoint.env.context.get('origins', {}), orderpoint.id: default_ref.id})
+                            delete_default_ref = False
                             origin = orderpoint.name
                         if orderpoint.product_uom.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
@@ -784,6 +790,8 @@ class StockWarehouseOrderpoint(models.Model):
                     finally:
                         cr.close()
                     _logger.info("A batch of %d orderpoints is processed and committed", len(orderpoints_batch_ids))
+                if delete_default_ref:
+                    default_ref.sudo().unlink()
 
         return {}
 
