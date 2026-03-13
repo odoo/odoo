@@ -875,3 +875,27 @@ registry.category("web_tour.tours").add("test_transfer_order_to_booked_table", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_quantity_correctly_displayed_after_transfer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.OrderButtonCategoryQty("Drinks", "1"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.OrderButtonCategoryQty("Drinks", "1"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.OrderButtonNotContain("Drinks"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.OrderButtonCategoryQty("Drinks", "1"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.OrderButtonNotContain("Drinks"),
+        ].flat(),
+});
