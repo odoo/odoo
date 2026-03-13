@@ -12,6 +12,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 
@@ -306,7 +307,10 @@ export class MassMailingIframe extends Component {
         } else {
             iframeBundles = ["mass_mailing.assets_inside_basic_editor_iframe"];
         }
-        return loadIframeBundles(this.iframeRef.el, iframeBundles);
+        return Promise.all([
+            loadIframeBundles(this.iframeRef.el, iframeBundles),
+            loadGoogleFonts(this.iframeRef.el.contentDocument),
+        ]);
     }
 
     renderHeadContent() {

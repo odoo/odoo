@@ -13,7 +13,6 @@ import { registry } from "@web/core/registry";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
-import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
