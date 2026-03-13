@@ -336,3 +336,14 @@ class TestSafeEvalRuntime(TransactionCase):
         # Note that without the assert protection, we get a `RecursionError`,
         # because after transformer, the code becomes:
         # `_save_eval_call = lambda callee, *args, **kwargs: _save_eval_call(callee, *args, **kwargs)`
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_prevent_bare_except(self):
+        expr = """
+            try:
+                UnsafeClass()
+            except:
+                pass
+        """
+        with self.assertRaises(SyntaxError):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')

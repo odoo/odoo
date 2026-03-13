@@ -644,6 +644,20 @@ class _SafeTransformer(ast.NodeTransformer):
 
         return [node, assign]
 
+    def visit_Try(self, node):
+        """ Ensure no bare except is used """
+        self.generic_visit(node)
+
+        for handler in node.handlers:
+            if not handler.type:
+                _logger_runtime.warning(
+                    'Use blind except (`except Exception:`) instead of bare except'
+                )
+                if unsafe_policy() >= UnsafePolicy.RAISE:
+                    raise SyntaxError('You cannot use bare except, use `except Exception:`')
+
+        return node
+
 
 encoder_ctx = contextvars.ContextVar('encoder_ctx')
 
