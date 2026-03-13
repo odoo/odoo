@@ -84,38 +84,38 @@
     </BuilderContext>
 </t>
 <t t-name="website.s_image_gallery_slideshow">
-    <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;" aria-roledescription="carousel">
+    <div t-attf-id="#{this.id}" t-attf-class="carousel slide #{this.colorContrast || ''}" t-att-data-bs-ride="this.ride" t-attf-data-bs-interval="#{this.interval}" style="margin: 0 12px;" aria-roledescription="carousel">
         <!-- Controls and indicators are set before the content so that they
              are focused in priority when navigating the page with tab. -->
         <div class="o_carousel_controllers">
-            <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" t-attf-aria-controls="#{id}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
+            <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" t-attf-aria-controls="#{this.id}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
                 <span class="carousel-control-prev-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Previous slide</span>
             </button>
             <div class="carousel-indicators s_image_gallery_indicators_bars" role="tablist">
-                <t t-foreach="images" t-as="image" t-key="image_index">
+                <t t-foreach="this.images" t-as="image" t-key="image_index">
                     <button type="button"
                             class="o_not_editable d-flex overflow-hidden"
                             t-att-class="{ active: image_index == this.index }"
-                            t-attf-data-bs-target="##{id}"
+                            t-attf-data-bs-target="##{this.id}"
                             t-att-data-bs-slide-to="image_index"
                             role="tab"
-                            t-attf-aria-controls="{{id}}_{{image_index}}"
-                            t-att-aria-selected="image_index === index ? 'true' : 'false'">
-                        <span class="visually-hidden" t-out="this.getIndicatorLabel(image_index + 1, images.length)"/>
+                            t-attf-aria-controls="{{this.id}}_{{image_index}}"
+                            t-att-aria-selected="image_index === this.index ? 'true' : 'false'">
+                        <span class="visually-hidden" t-out="this.getIndicatorLabel(image_index + 1, this.images.length)"/>
                         <img class="object-fit-cover w-100 h-100" t-att-src="image.getAttribute('src')" aria-hidden="true"/>
                     </button>
                 </t>
             </div>
-            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" t-attf-aria-controls="#{id}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
+            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" t-attf-aria-controls="#{this.id}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
                 <span class="carousel-control-next-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Next slide</span>
             </button>
         </div>
-        <div class="carousel-inner" t-attf-id="#{id}_inner" t-att-aria-live="ride === 'false' ? 'polite' : 'off'">
-            <t t-foreach="images" t-as="image" t-key="image_index">
-                <div t-attf-id="{{id}}_{{image_index}}" t-attf-class="carousel-item #{image_index == index and 'active' or ''}" role="tabpanel" aria-roledescription="slide">
-                    <t t-if="!copyAttributes">
+        <div class="carousel-inner" t-attf-id="#{this.id}_inner" t-att-aria-live="this.ride === 'false' ? 'polite' : 'off'">
+            <t t-foreach="this.images" t-as="image" t-key="image_index">
+                <div t-attf-id="{{this.id}}_{{image_index}}" t-attf-class="carousel-item #{image_index == this.index and 'active' or ''}" role="tabpanel" aria-roledescription="slide">
+                    <t t-if="!this.copyAttributes">
                         <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
                     </t>
                     <t t-else="">
