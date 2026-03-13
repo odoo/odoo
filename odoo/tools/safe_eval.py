@@ -1083,4 +1083,5 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_class('werkzeug.exceptions.Unauthorized')
     safe_whitelist.add_instance('werkzeug.datastructures.file_storage.FileStorage')
     safe_whitelist.add_instance('werkzeug.local.LocalProxy')
+    safe_whitelist.add_function('werkzeug.datastructures.headers.Headers.get')
     safe_whitelist.add_function('werkzeug.datastructures.structures.TypeConversionDict.*')
