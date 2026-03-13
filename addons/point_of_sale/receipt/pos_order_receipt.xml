@@ -120,19 +120,34 @@
                 <span name="served_by">Served by:</span> <span class="cashier-name" t-out="extra_data['cashier_name']" />
             </div>
             <div class="w-100 text-center" t-if="partner" name="partner_info">
-                <div t-out="partner['name']" />
-                <div t-if="partner['address']" t-out="partner['address']" />
                 <div t-if="partner['vat']">
                     <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
                 </div>
-                <div t-if="partner['phone']">
-                    Tel: <t t-out="partner['phone']" />
+            </div>
+            <t t-if="preset">
+                <hr style="border: none; border-top: 3px dashed black;"/>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 0;"><strong t-out="preset.get('name')" style="font-size: 1.2em;"/></td>
+                        <td style="padding: 0; text-align: end;"><strong t-out="extra_data['preset_datetime']" style="font-size: 1.2em;"/></td>
+                    </tr>
+                </table>
+                <div style="text-align: start;">
+                    <t t-if="preset.get('identification') != 'none'">
+                        <span t-out="(partner and partner.get('name')) or order['floating_order_name']"/>
+                        <t t-if="partner">
+                            <div t-if="partner.get('street')"><span t-out="partner['street']"/></div>
+                            <div t-if="partner.get('city') or partner.get('zip')">
+                                <span t-out="partner.get('zip', '')"/>&#160;<span t-out="partner.get('city', '')"/>
+                            </div>
+                        </t>
+                        <div t-if="order['mobile']"><span t-out="order['mobile']"/></div>
+                        <div t-elif="(partner and partner.get('phone'))"><span t-out="(partner and partner.get('phone'))"/></div>
+                    </t>
                 </div>
-            </div>
-            <div class="w-100 text-center" t-if="preset">
-                <span t-out="preset['name']" />
-                <span t-if="extra_data['preset_datetime']">: <t t-out="extra_data['preset_datetime']" /></span>
-            </div>
+                <hr style="border: none; border-top: 3px dashed black;"/>
+                <br/>
+            </t>
             <div class="w-100 text-center" t-if="order['tracking_number'] and conditions['module_pos_restaurant']" name="tracking-number">
                 <span class="text-insane" t-out="order['tracking_number']" />
             </div>

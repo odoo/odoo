@@ -57,8 +57,11 @@
                                             <td class="align-middle">
                                                 <t t-if="order.presetTime">
                                                     <div t-if="order.isFutureDate" class="fw-bolder" t-out="order.presetDate" />
-                                                    <div t-attf-class="fs-6 badge rounded {{ this.getPresetTimeColor(order) }}" t-out="order.presetTime"/>
+                                                    <div t-attf-class="fw-bolder fs-6 {{ !order.finalized ? 'badge rounded ' + this.getPresetTimeColor(order) : '' }}" t-out="order.presetTime"/>
                                                 </t>
+                                            </td>
+                                            <td class="align-middle">
+                                                <ProgressBar t-if="order.preset_id?.use_timing" currentValue="this.getCurrentTimePreset(order)" maxValue="this.getMaxTimePreset(order)" addressNeeded="order.preset_id?.identification === 'address'"/>
                                             </td>
                                             <td t-if="this.showCardholderName()">
                                                 <div><t t-out="this.getCardholderName(order)"></t></div>
@@ -81,7 +84,12 @@
                                                     <t t-out="status"></t>
                                                 </div>
                                             </td>
-                                            <td class="text-end delete-column" name="delete-column">
+                                            <td class="align-middle text-end" name="info-column">
+                                                <button t-on-click.stop="() => this._onInfoOrder(order)" class="btn btn-link p-0 lh-1 text-info">
+                                                    <i class="fa fa-info-circle fa-lg align-middle" aria-hidden="true"/>
+                                                </button>
+                                            </td>
+                                            <td class="align-middle text-end delete-column" name="delete-column">
                                                 <button t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>

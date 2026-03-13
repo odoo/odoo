@@ -6,9 +6,9 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-body p-4">
-                            <div class="btn-group-vertical w-100 pb-4">
+                            <div class="btn-group-vertical gap-2 w-100 pb-4">
                                 <t t-foreach="this.languages" t-as="lang" t-key="lang.id" >
-                                    <button class="btn btn-lg btn-light d-flex align-items-center gap-3" t-on-click="() => this.onClickLanguage(lang)">
+                                    <button class="btn btn-lg btn-light d-flex align-items-center gap-3 rounded-4" t-on-click="() => this.onClickLanguage(lang)">
                                         <img class="rounded-2" t-attf-src="{{lang.flag_image_url}}" />
                                         <t t-out="lang.display_name" />
                                     </button>

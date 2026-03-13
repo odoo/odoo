@@ -88,4 +88,26 @@ export class OrderDetailsDialog extends Component {
             },
         ];
     }
+
+    getCustomerFields() {
+        const partner = this.order.partner_id;
+        let address = "";
+        let name = this.order.floatingOrderName;
+        let email = this.order.email;
+        let phone = this.order.mobile;
+        if (partner) {
+            address = [partner.street, partner.zip && partner.city, partner.country_id?.name]
+                .filter(Boolean)
+                .join(", ");
+            name = partner.name || name;
+            email ||= partner.email;
+            phone ||= partner.phone;
+        }
+        return [
+            { id: "name", label: _t("Name"), value: name, condition: !!name },
+            { id: "email", label: _t("Email"), value: email, condition: !!email },
+            { id: "phone", label: _t("Phone"), value: phone, condition: !!phone },
+            { id: "address", label: _t("Address"), value: address, condition: !!address },
+        ];
+    }
 }

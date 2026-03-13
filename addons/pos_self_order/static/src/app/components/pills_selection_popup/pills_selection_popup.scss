@@ -21,6 +21,21 @@
     /* Chrome, Safari and Opera */
 }
 
+@keyframes pills-slide-up {
+    from {
+        transform: translateY(100%);
+    }
+}
+
+/* On mobile (< 576px): override default right-slide animation with a bottom-slide */
+@media (max-width: 575px) {
+    @media (prefers-reduced-motion: no-preference) {
+        .self_order_pills_selection_popup_dialog {
+            animation: pills-slide-up 0.3s ease !important;
+        }
+    }
+}
+
 /* On small screens (576px - 767px) */
 @media (min-width: 576px) and (max-width: 767px) {
     .self_order_pills_selection_popup_dialog {

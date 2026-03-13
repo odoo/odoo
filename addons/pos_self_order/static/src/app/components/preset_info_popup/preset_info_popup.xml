@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.PresetInfoPopup">
         <Dialog header="false"
-            contentClass="'h-50 w-100 m-0 position-absolute self_order_pills_selection_popup_dialog'"
+            contentClass="'w-100 m-0 position-absolute self_order_pills_selection_popup_dialog preset_info_popup_dialog'"
             bodyClass="'p-4 pb-3 m-0'"
             title="this.props.title">
             <div class="select_popup_preset_info w-100 d-flex flex-column h-100 overflow-hidden">
@@ -12,6 +12,7 @@
                 </div>
                 <div class="d-flex flex-column gap-3 overflow-y-auto overflow-x-hidden flex-grow-1">
                     <input t-if="this.preset.needsName || this.preset.needsPartner"
+                        t-ref="autofocus"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Name"
@@ -35,7 +36,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <input type="text"
+                            <input type="tel"
                                 class="form-control form-control-lg"
                                 placeholder="Phone"
                                 t-custom-model="state.phoneLocal" />

@@ -2,7 +2,7 @@ import { useState } from "@web/owl2/utils";
 import { Component, onWillStart } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isValidPhone } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
@@ -16,6 +16,7 @@ export class PresetInfoPopup extends Component {
 
     setup() {
         this.selfOrder = useService("self_order");
+        useAutofocus({ mobile: true });
 
         const partner = this.selfOrder.currentOrder.partner_id;
         const companyStateId = this.selfOrder.config.company_id.country_id.state_ids[0]?.id;
@@ -72,12 +73,9 @@ export class PresetInfoPopup extends Component {
             result["res.partner"][0] = partnerData;
             this.selfOrder.data.synchronizeServerDataInIndexedDB(result);
             const connectedData = this.selfOrder.models.connectNewData(result);
-            const partner = connectedData["res.partner"][0];
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner.name}`;
-            this.selfOrder.currentOrder.partner_id = partner;
-        } else {
-            this.selfOrder.currentOrder.floating_order_name = this.state.name;
+            this.selfOrder.currentOrder.partner_id = connectedData["res.partner"][0];
         }
+        this.selfOrder.currentOrder.floating_order_name = this.state.name;
         this.props.getPayload({ ...this.state, phone: this.getFullPhone() });
         this.props.close();
     }

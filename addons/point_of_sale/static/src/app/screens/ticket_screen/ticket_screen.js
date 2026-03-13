@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -8,11 +8,12 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
+import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -29,6 +30,7 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { TipCell } from "@point_of_sale/app/screens/ticket_screen/tip_cell/tip_cell";
+import { ProgressBar } from "@point_of_sale/app/screens/ticket_screen/progress_bar/progress_bar";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 const { DateTime } = luxon;
@@ -48,6 +50,7 @@ export class TicketScreen extends Component {
         BackButton,
         BarcodeVideoScanner,
         TipCell,
+        ProgressBar,
     };
     static props = {
         reuseSavedUIState: { type: Boolean, optional: true },
@@ -84,7 +87,26 @@ export class TicketScreen extends Component {
         });
         Object.assign(this.state, this.props.stateOverride || {});
 
-        onMounted(this.onMounted);
+        this.orderTimers = useState({});
+
+        useLayoutEffect(
+            () => this.updateOrderTimers(),
+            () => [
+                this.state.filter,
+                this.state.page,
+                this.state.search,
+                this.state.selectedPreset,
+                this.state.nbrByPage,
+            ]
+        );
+
+        onMounted(() => {
+            this._timersInterval = setInterval(this.updateOrderTimers.bind(this), 60_000);
+            this.onMounted();
+        });
+
+        onWillUnmount(() => clearInterval(this._timersInterval));
+
         onWillStart(() => {
             if (!this.pos.loadingOrderState) {
                 this.pos.loadingOrderState = true;
@@ -108,6 +130,26 @@ export class TicketScreen extends Component {
             // Show updated list of synced orders when going back to the screen.
             this.onFilterSelected(this.state.filter);
         });
+    }
+    clearOrderTimers() {
+        for (const key in this.orderTimers) {
+            delete this.orderTimers[key];
+        }
+    }
+    updateOrderTimers() {
+        this.clearOrderTimers();
+        const displayedOrders = this.getFilteredOrderList();
+        for (const order of displayedOrders) {
+            if (order.preset_time) {
+                if (order.preset_time > DateTime.now()) {
+                    this.orderTimers[order.uuid] = Math.ceil(
+                        order.preset_time.diff(DateTime.now(), "minutes").minutes
+                    );
+                } else {
+                    this.orderTimers[order.uuid] = 0;
+                }
+            }
+        }
     }
     async onClickPageNbr() {
         const nbr = await makeAwaitable(this.dialog, NumberPopup, {
@@ -140,12 +182,14 @@ export class TicketScreen extends Component {
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
-        this.pos.screenState.ticketSCreen.totalCount = 0;
-        this.pos.screenState.ticketSCreen.offsetByDomain = {};
+        this.pos.screenState.ticketScreen.totalCount = 0;
+        this.pos.screenState.ticketScreen.offsetByDomain = {};
 
         if (this.state.filter == "SYNCED") {
             await this._fetchSyncedOrders();
         }
+
+        this.updateOrderTimers();
     }
     getNumpadButtons() {
         return getButtons(
@@ -202,6 +246,13 @@ export class TicketScreen extends Component {
         if (!order.finalized) {
             this.setOrder(order);
         }
+    }
+
+    _onInfoOrder(order) {
+        this.dialog.add(OrderDetailsDialog, {
+            order,
+            editPayment: () => this.pos.editPayment(order),
+        });
     }
     async onClickReprintAll(order) {
         const printingChanges = order.uiState?.lastPrints;
@@ -500,13 +551,31 @@ export class TicketScreen extends Component {
                 }
             });
 
+        if (this.state.selectedPreset?.use_timing) {
+            const sortedByTimer = orders.sort((a, b) => {
+                const timerA = this.orderTimers[a.uuid] ?? 0;
+                const timerB = this.orderTimers[b.uuid] ?? 0;
+                const finishedA = timerA <= 0;
+                const finishedB = timerB <= 0;
+                if (finishedA !== finishedB) {
+                    return finishedA ? 1 : -1;
+                }
+                return timerA - timerB;
+            });
+            this.pos.screenState.ticketScreen.totalCount = sortedByTimer.length;
+            return sortedByTimer.slice(
+                (this.state.page - 1) * this.state.nbrByPage,
+                this.state.page * this.state.nbrByPage
+            );
+        }
+
         if (this.state.filter === "SYNCED") {
             return sortOrders(orders).slice(
                 (this.state.page - 1) * this.state.nbrByPage,
                 this.state.page * this.state.nbrByPage
             );
         } else {
-            this.pos.screenState.ticketSCreen.totalCount = orders.length;
+            this.pos.screenState.ticketScreen.totalCount = orders.length;
             return sortOrders(orders, true).slice(
                 (this.state.page - 1) * this.state.nbrByPage,
                 this.state.page * this.state.nbrByPage
@@ -589,16 +658,16 @@ export class TicketScreen extends Component {
         };
     }
     getNbrPages() {
-        return Math.ceil(this.pos.screenState.ticketSCreen.totalCount / this.state.nbrByPage);
+        return Math.ceil(this.pos.screenState.ticketScreen.totalCount / this.state.nbrByPage);
     }
     getPageNumber() {
-        if (!this.pos.screenState.ticketSCreen.totalCount) {
+        if (!this.pos.screenState.ticketScreen.totalCount) {
             return `0/0`;
         } else {
             return `${(this.state.page - 1) * this.state.nbrByPage + 1}-${Math.min(
                 this.state.page * this.state.nbrByPage,
-                this.pos.screenState.ticketSCreen.totalCount
-            )} / ${this.pos.screenState.ticketSCreen.totalCount}`;
+                this.pos.screenState.ticketScreen.totalCount
+            )} / ${this.pos.screenState.ticketScreen.totalCount}`;
         }
     }
     getHasItemsToRefund() {
@@ -855,7 +924,7 @@ export class TicketScreen extends Component {
      * order is not fetched anymore, instead, we use info from cache.
      */
     async _fetchSyncedOrders() {
-        const screenState = this.pos.screenState.ticketSCreen;
+        const screenState = this.pos.screenState.ticketScreen;
         const domain = this._computeSyncedOrdersDomain();
         const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
         const config_id = this.pos.config.id;
@@ -905,20 +974,20 @@ export class TicketScreen extends Component {
         const presetTime = order.preset_time;
         if (!slot) {
             if (presetTime < DateTime.now()) {
-                return "bg-danger text-white";
+                return "text-bg-danger";
             } else {
-                return "bg-light text-emphasis";
+                return "text-bg-light text-emphasis";
             }
         }
         if (
             slot.datetime <= presetTime &&
             presetTime < slot.datetime.plus({ minutes: order.preset_id.interval_time })
         ) {
-            return "bg-warning text-white";
+            return "text-bg-warning";
         } else if (presetTime < slot.datetime) {
-            return "bg-danger text-white";
+            return "text-bg-danger";
         } else {
-            return "bg-light text-emphasis";
+            return "text-bg-light text-emphasis";
         }
     }
 
@@ -970,6 +1039,14 @@ export class TicketScreen extends Component {
         }
 
         await Promise.all(promises);
+    }
+
+    getCurrentTimePreset(order) {
+        return this.orderTimers[order.uuid] ?? 0;
+    }
+
+    getMaxTimePreset(order) {
+        return order.preset_id?.interval_time;
     }
 }
 

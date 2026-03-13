@@ -11,7 +11,7 @@
                         <span t-elif="preset.get('identification') == 'name' or (not preset and service_mode != 'table')">Pickup At Counter</span>
                         <span t-else="">Delivery</span>
                     </div>
-                    <div t-if="order['tracking_number'] and config['self_ordering_mode'] != 'nothing'" class="tracking-number text-center text-bold" style="font-size: 100px; line-height: 130px;" t-out="order['tracking_number']" />
+                    <div t-if="order['tracking_number'] and config['self_ordering_mode'] != 'nothing'" class="tracking-number text-center text-bold" style="font-size: 75px; line-height: 130px;" t-out="order['tracking_number']" />
                     <div t-if="order['table_stand_number']" class="table-tracker text-center">
                         Table Tracker:
                         <span class="pt-3" t-out="order['table_stand_number']" />

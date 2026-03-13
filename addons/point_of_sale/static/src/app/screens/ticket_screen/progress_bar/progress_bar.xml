@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProgressBar">
+        <t t-if="props.addressNeeded">
+            <div class="text-center pb-2"><i class="fa fa-motorcycle fa-lg"/></div>
+        </t>
+        <t t-else="">
+            <div class="text-center pb-2"><i class="fa fa-shopping-bag fa-lg"/></div>
+        </t>
+        <div class="progress pos-progress-bar">
+            <div class="progress-bar" t-att-style="'width: ' + this.barWidth + '%'"/>
+        </div>
+        <div t-if="props.currentValue > 0" class="text-center">
+            <span class="text-primary fw-bolder"><t t-out="this.remainingTime()"/></span>
+        </div>
+    </t>
+</templates>
