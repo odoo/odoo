@@ -7,7 +7,7 @@ setupInteractionWhiteList("website.media_video");
 
 const videoTemplate = `
     <div style="background-color: white;" data-need-cookies-approval>
-        <div class="media_iframe_video" data-oe-expression="//www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0" contenteditable="false">
+        <div class="media_iframe_video" data-oe-expression="//www.youtube.com/embed/nbso3NVz3p8?rel=0&amp;autoplay=0" contenteditable="false">
             <div class="css_editable_mode_display">&nbsp;</div>
             <div class="media_iframe_video_size">&nbsp;</div>
             <iframe original="true" allowfullscreen="" aria-label="Media video" src="about:blank"></iframe>
