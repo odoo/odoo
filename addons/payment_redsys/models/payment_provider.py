@@ -5,7 +5,14 @@ import hashlib
 import hmac
 
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.ciphers import Cipher, modes
+
+try:
+    # cryptography 43.0.0 (debian trixie and up)
+    from cryptography.hazmat.decrepit.ciphers.algorithms import TripleDES
+except ImportError:
+    # cryptography 42.0.8 and below
+    from cryptography.hazmat.primitives.ciphers.algorithms import TripleDES
 
 from odoo import fields, models
 
@@ -68,7 +75,7 @@ class PaymentProvider(models.Model):
         # 2. Derive the signature key by 3DES-encrypting the transaction (Ds_Merchant_Order).
         encoded_order = reference.encode().ljust(16, b'\x00')
         cipher = Cipher(
-            algorithms.TripleDES(decoded_key), modes.CBC(b'\x00' * 8), backend=default_backend()
+            TripleDES(decoded_key), modes.CBC(b'\x00' * 8), backend=default_backend()
         )
         derived_key = cipher.encryptor().update(encoded_order) + cipher.encryptor().finalize()
         # 3. Create HMAC-SHA256 using the derived key and merchant parameters.
