@@ -24,6 +24,13 @@ class Base(models.AbstractModel):
     # ORM
     # ------------------------------------------------------------
 
+    def _flush(self):
+        if mail_store := self.env.context.get("mail_store"):
+            for field in self._fields.values():
+                if ids := self.env._field_dirty.get(field):
+                    mail_store.mark_field_as_written(field.model_name, ids, field.name)
+        return super()._flush()
+
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'
         return (

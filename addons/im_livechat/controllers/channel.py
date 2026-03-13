@@ -4,13 +4,14 @@ from markupsafe import Markup
 from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo.fields import Command
-from odoo.http import request, route
+from odoo.http import request
 
 from odoo.addons.mail.controllers.discuss.channel import ChannelController
+from odoo.addons.mail.tools.discuss import mail_route
 
 
 class LivechatChannelController(ChannelController):
-    @route("/im_livechat/session/update_note", auth="user", methods=["POST"], type="jsonrpc")
+    @mail_route("/im_livechat/session/update_note", auth="user", methods=["POST"], type="jsonrpc")
     def livechat_session_update_note(self, channel_id, note):
         """Internal users having the rights to read the session can update its note."""
         if self.env.user.share:
@@ -22,7 +23,7 @@ class LivechatChannelController(ChannelController):
         # Markup: note sanitized when written on the field
         channel.sudo().livechat_note = Markup(note)
 
-    @route("/im_livechat/session/update_status", auth="user", methods=["POST"], type="jsonrpc")
+    @mail_route("/im_livechat/session/update_status", auth="user", methods=["POST"], type="jsonrpc")
     def livechat_session_update_status(self, channel_id, livechat_status):
         """Internal users having the rights to read the session can update its status."""
         if self.env.user.share:
@@ -33,7 +34,7 @@ class LivechatChannelController(ChannelController):
         # sudo: discuss.channel - internal users having the rights to read the session can update its status
         channel.sudo().livechat_status = livechat_status
 
-    @route(
+    @mail_route(
         "/im_livechat/conversation/write_expertises", auth="user", methods=["POST"], type="jsonrpc"
     )
     def livechat_conversation_write_expertises(self, channel_id, orm_commands):
@@ -49,7 +50,7 @@ class LivechatChannelController(ChannelController):
             # sudo: discuss.channel - live chat users can update the expertises of any live chat.
             channel.sudo().livechat_expertise_ids = orm_commands
 
-    @route(
+    @mail_route(
         "/im_livechat/conversation/create_and_link_expertise",
         auth="user",
         methods=["POST"],
