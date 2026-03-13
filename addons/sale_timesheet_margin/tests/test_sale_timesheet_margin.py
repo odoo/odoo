@@ -107,3 +107,43 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
         })
         self.env.flush_all()
         self.assertEqual(sale_order.order_line.purchase_price, 3)
+
+    def test_compute_purchase_price_new_line_after_so_confirm(self):
+        """Test that purchase_price is computed correctly when adding a new line
+        with cost to an already confirmed sale order.
+
+        Scenario:
+        1. Create SO with product with cost (standard_price=30)
+        2. Confirm SO
+        3. Add new line with same product
+        4. Verify the new line's purchase_price is computed from product cost
+        """
+
+        product_with_cost = self.env['product.product'].create({
+            'name': 'Service Product - With Cost',
+            'list_price': 100.0,
+            'detailed_type': 'service',
+            'service_policy': 'ordered_prepaid',
+            'service_tracking': 'no',
+            'standard_price': 30.0,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_b.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_with_cost.id,
+                    'product_uom_qty': 5.0,
+                })
+            ],
+        })
+        initial_line = sale_order.order_line
+        self.assertEqual(initial_line.purchase_price, 30.0)
+        sale_order.action_confirm()
+        new_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_with_cost.id,
+            'product_uom_qty': 10.0,
+        })
+        self.assertEqual(new_line.purchase_price, 30.0)
+        self.assertEqual(initial_line.purchase_price, 30.0)
+        self.assertEqual(len(sale_order.order_line), 2)

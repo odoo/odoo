@@ -13,7 +13,8 @@ class SaleOrderLine(models.Model):
         service_non_timesheet_sols = self.filtered(
             lambda sol: not sol.is_expense and sol.is_service and
             sol.product_id.service_policy in ['ordered_prepaid', 'delivered_manual', 'delivered_milestones'] and
-            sol.state == 'sale'
+            sol.state == 'sale' and
+            (sol.timesheet_ids or not sol.product_id.standard_price)
         )
         timesheet_sols = self.filtered(
             lambda sol: sol.qty_delivered_method == 'timesheet' and not sol.product_id.standard_price
