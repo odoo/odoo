@@ -162,6 +162,22 @@ function clearAttributeValueParams(searchParams) {
     ));
 }
 
+/**
+ * Dispatch the GA4 `add_to_cart_event`
+ *
+ * @param {Object} data
+ * @param {string} data.currency
+ * @param {Object[]} data.tracking_info
+ * @return {void}
+ */
+function dispatchAddToCartEvent(data) {
+    document.querySelector(".oe_website_sale")?.dispatchEvent(
+        new CustomEvent("add_to_cart_event", {
+            detail: { currency: data.currency, items: data.tracking_info },
+        })
+    );
+}
+
 export default {
     updateCartNavBar: updateCartNavBar,
     showWarning: showWarning,
@@ -170,4 +186,5 @@ export default {
     unslug: unslug,
     getAttributeValueParams: getAttributeValueParams,
     clearAttributeValueParams: clearAttributeValueParams,
+    dispatchAddToCartEvent: dispatchAddToCartEvent,
 };

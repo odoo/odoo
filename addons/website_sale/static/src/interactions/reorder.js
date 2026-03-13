@@ -3,6 +3,7 @@ import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
 import { Interaction } from '@web/public/interaction';
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 export class SaleOrderPortalReorder extends Interaction {
     static selector = '#sale_order_sidebar_button';
@@ -36,26 +37,13 @@ export class SaleOrderPortalReorder extends Interaction {
             // since `website_sale_cart_quantity` updates only via the cart service.
             browser.sessionStorage.setItem('website_sale_cart_quantity', values.cart_quantity);
 
-            this._trackProducts(values.tracking_info);
+            wSaleUtils.dispatchAddToCartEvent(values);
             redirect('/shop/cart');
         } catch (error) {
             console.error("Error during reordering:", error);
         }
     }
 
-    /**
-     * Track the products added to the cart.
-     *
-     * @private
-     * @param {Object[]} trackingInfo - A list of product tracking information.
-     *
-     * @returns {void}
-     */
-    _trackProducts(trackingInfo) {
-        document.querySelector('.oe_website_sale').dispatchEvent(
-            new CustomEvent('add_to_cart_event', {'detail': trackingInfo})
-        );
-    }
 }
 
 registry

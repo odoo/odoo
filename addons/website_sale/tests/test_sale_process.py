@@ -128,8 +128,17 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         )
         self.start_tour("/shop/cart", "website_sale.complete_flow_2", login="admin")
 
+    def _create_test_cart(self, product):
+        """Create a cart with one product for GA tour tests."""
+        return self.env["sale.order"].create({
+            "partner_id": self.env.ref("base.partner_admin").id,
+            "website_id": self.env.ref("website.default_website").id,
+            "order_line": [
+                Command.create({"product_id": product.product_variant_id.id, "product_uom_qty": 2})
+            ],
+        })
+
     def test_05_google_analytics_tracking(self):
-        # Data for google_analytics_view_item
         attribute = self.env["product.attribute"].create({
             "name": "Color",
             "sequence": 10,
@@ -149,13 +158,36 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         self.env.ref('website.default_website').write({"google_analytics_key": "G-XXXXXXXXXXX"})
         self.start_tour("/shop?search=Colored T-Shirt", "website_sale.google_analytics_view_item")
         # Data for google_analytics_add_to_cart
-        self.env["product.template"].create({
+        product = self.env["product.template"].create({
             "name": "Basic Shirt",
             "standard_price": 500,
+            "list_price": 750,
             "type": "consu",
             "website_published": True,
         })
+        self.env["delivery.carrier"].create({
+            "name": "Test Delivery",
+            "product_id": self.env.ref("delivery.product_product_delivery").id,
+            "website_published": True,
+        })
         self.start_tour("/shop?search=Basic Shirt", "website_sale.google_analytics_add_to_cart")
+        self.start_tour("/shop?search=Basic Shirt", "website_sale.google_analytics_select_item")
+
+        self._create_test_cart(product)
+        self.start_tour("/shop/cart", "website_sale.google_analytics_view_cart", login="admin")
+
+        self._create_test_cart(product)
+        self.start_tour("/shop/cart", "website_sale.google_analytics_begin_checkout", login="admin")
+
+        self._create_test_cart(product)
+        self.start_tour(
+            "/shop/cart", "website_sale.google_analytics_remove_from_cart", login="admin"
+        )
+
+        self._create_test_cart(product)
+        self.start_tour(
+            "/shop/cart", "website_sale.google_analytics_add_shipping_info", login="admin"
+        )
 
     def test_06_public_user_shop_repair(self):
         """Public user purchasing repair service products in website shop."""

@@ -128,6 +128,7 @@ class WebsiteSnippetFilter(models.Model):
             records = records.product_tmpl_id[:product_limit]
         res_products = super()._filter_records_to_values(records, **options)
         if (self.model_name or options.get("res_model")) == "product.product":
+            website = self.env["website"].get_current_website()
             for res_product in res_products:
                 product = res_product.get("_record")
                 if not options.get("is_sample"):
@@ -146,6 +147,9 @@ class WebsiteSnippetFilter(models.Model):
                     else:
                         res_product.update(product._get_combination_info())
                     res_product["hide_variants"] = hide_variants
+
+                    if website.google_analytics_key:
+                        res_product.get("product_tracking_info", {})["item_list_name"] = self.name
 
                     if records.env.context.get("add2cart_rerender"):
                         res_product["_add2cart_rerender"] = True

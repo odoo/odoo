@@ -38,11 +38,17 @@ class ProductWishlist(Controller):
     @route("/shop/wishlist", type="http", auth="public", website=True, readonly=True, sitemap=False)
     def shop_wishlist(self, **_kw):
         wishes = self.env["product.wishlist"].current()
-
-        return request.render(
-            "website_sale.product_wishlist",
-            {"wishes": wishes.with_context(display_default_code=False)},
-        )
+        values = {"wishes": wishes.with_context(display_default_code=False)}
+        website = request.website
+        if website.google_analytics_key and wishes:
+            products = wishes.product_id.product_tmpl_id
+            products_prices = products._get_sales_prices(
+                request.pricelist, request.fiscal_position, website
+            )
+            values["product_tracking_infos"] = products._get_google_analytics_list_data_batch(
+                products_prices, website, "Wishlist"
+            )
+        return request.render("website_sale.product_wishlist", values)
 
     @route("/shop/wishlist/remove/<int:wish_id>", type="jsonrpc", auth="public", website=True)
     def remove_from_wishlist(self, wish_id, **_kw):

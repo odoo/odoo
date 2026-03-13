@@ -641,9 +641,14 @@ export class ProductPage extends Interaction {
         if ('product_tracking_info' in combination) {
             const product = document.querySelector('#product_detail');
             // Trigger an event to track variant changes in Google Analytics.
-            product.dispatchEvent(new CustomEvent(
-                'view_item_event', { 'detail': combination['product_tracking_info'] }
-            ));
+            product.dataset.productTrackingInfo = JSON.stringify(combination["product_tracking_info"]);
+            product.dataset.productGaCurrency = combination["currency_name"];
+            product.dispatchEvent(new CustomEvent("view_item_event", {
+                detail: {
+                    trackingInfo: combination["product_tracking_info"],
+                    currency: combination["currency_name"],
+                },
+            }));
         }
         const addToCart = parent.querySelector('#add_to_cart_wrap');
         const contactUsButton = parent.closest('#product_details')

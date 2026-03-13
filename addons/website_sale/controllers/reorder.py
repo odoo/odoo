@@ -85,4 +85,5 @@ class CustomerPortal(sale_portal.CustomerPortal):
             order_sudo.shop_warning = "\n".join(warnings_to_aggregate)
 
         values["cart_quantity"] = order_sudo.cart_quantity
+        values["currency"] = order_sudo.currency_id.name
         return values

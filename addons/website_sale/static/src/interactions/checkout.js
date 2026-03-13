@@ -220,6 +220,11 @@ export class Checkout extends Interaction {
         const result = await this.waitFor(this._setDeliveryMethod(radio.dataset.dmId));
         this._updateAmountBadge(radio, result);
         this._updateCartSummaries(result);
+        if (result.shipping_tracking_info) {
+            this.el.dispatchEvent(
+                new CustomEvent("add_shipping_info_event", { detail: result.shipping_tracking_info, bubbles: true }),
+            );
+        }
     }
 
     /**
