@@ -1059,7 +1059,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 field_name, value_type, old_value, new_value = tracking_values_info
                 additional_info = {}
             # retrieve optional field info, used notably for dummy tracking or properties
-            field_info = additional_info.get('field_info')
+            field_info = additional_info.setdefault('field_info', {})
+            if additional_info.get('currency'):
+                field_info['currency_id'] = additional_info['currency'].id
 
             # for property fields, value_type is a tuple for the embed property value
             if value_type == 'properties':
@@ -1127,7 +1129,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.assertEqual(tracking.new_value_char, (new_value and new_value.display_name) or '')
         elif value_type == 'monetary':
             currency = (additional_info or {})['currency']
-            self.assertEqual(tracking.currency_id, currency)
+            self.assertEqual(tracking.field_info['currency_id'], currency.id)
             self.assertEqual(tracking.old_value_float, old_value)
             self.assertEqual(tracking.new_value_float, new_value)
         else:

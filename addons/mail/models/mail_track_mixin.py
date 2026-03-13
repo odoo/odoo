@@ -452,6 +452,7 @@ class MailTrackMixin(models.AbstractModel):
             field = self.env['ir.model.fields'].sudo().browse(field_id)
         else:
             field = self.env['ir.model.fields']._get(self._name, col_name)
+        field_info = {}
 
         # field information (to be popped, kept for post processing)
         values = {
@@ -462,11 +463,9 @@ class MailTrackMixin(models.AbstractModel):
             'new_value': new_value,
         }
         if not field:
-            values['field_info'] = {
-                'desc': col_info['string'],
-                'name': col_name,
-                'type': col_info['type'],
-            }
+            field_info['desc'] = col_info['string']
+            field_info['name'] = col_name
+            field_info['type'] = col_info['type']
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
@@ -477,8 +476,8 @@ class MailTrackMixin(models.AbstractModel):
             currency_id = col_info.get('currency_id')
             if not currency_id:
                 currency_id = self[col_info['currency_field']].id
+            field_info['currency_id'] = currency_id
             values.update({
-                'currency_id': currency_id,
                 'old_value_float': initial_value,
                 'new_value_float': new_value
             })
@@ -556,6 +555,9 @@ class MailTrackMixin(models.AbstractModel):
         else:
             raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
 
+        if field_info:  # do not store '{}' if void, just keep void
+            values['field_info'] = field_info
+
         return values
 
     def _create_mail_tracking_values_property(
@@ -605,7 +607,9 @@ class MailTrackMixin(models.AbstractModel):
         fields_sequence_map = dict(
             {
                 tracking.field_info['name']: tracking.field_info.get('sequence', 100)
-                for tracking in tracking_values.filtered('field_info')
+                for tracking in tracking_values.filtered(
+                    lambda t: t.field_info and 'name' in t.field_info
+                )  # could contain only currency_id info
             },
             **model_sequence_info,
         )
@@ -633,7 +637,7 @@ class MailTrackMixin(models.AbstractModel):
                 'id': tracking.id,
                 'fieldInfo': {
                     'changedField': col_info['string'],
-                    'currencyId': tracking.currency_id.id,
+                    'currencyId': (tracking.field_info or {}).get('currency_id', False),
                     'floatPrecision': col_info.get('digits'),
                     'fieldType': col_info['type'],
                     'isPropertyField': tracking.field_id.ttype == 'properties',

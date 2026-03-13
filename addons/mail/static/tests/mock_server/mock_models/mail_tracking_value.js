@@ -84,7 +84,7 @@ export class MailTrackingValue extends models.ServerModel {
                 if (!currencyField && "currency_id" in record._fields) {
                     currencyField = "currency_id";
                 }
-                values[`currency_id`] = record[0][currencyField];
+                values["field_info"] = {"currency_id": record[0][currencyField]};
                 break;
             }
             case "selection":
@@ -123,7 +123,7 @@ export class MailTrackingValue extends models.ServerModel {
                 id: tracking.id,
                 fieldInfo: {
                     changedField: capitalize(irField.ttype),
-                    currencyId: tracking.currency_id,
+                    currencyId: tracking.field_info.currency_id,
                     fieldType: irField.ttype,
                     floatPrecision: this.env[irField.model]._fields[irField.name].digits,
                 },

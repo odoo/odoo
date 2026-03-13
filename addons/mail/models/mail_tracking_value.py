@@ -25,9 +25,6 @@ class MailTrackingValue(models.Model):
     new_value_text = fields.Text('New Value Text', readonly=True)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=True)
 
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True, ondelete='set null',
-        help="Used to display the currency when tracking monetary values")
-
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
     def _filter_has_field_access(self, env):

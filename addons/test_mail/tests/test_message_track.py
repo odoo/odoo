@@ -187,14 +187,14 @@ class TestTrackingAPI(TestTrackingCommon):
         for msg in self._new_msgs:
             sorted_trackings = msg.tracking_value_ids.sorted(lambda t: (t.old_value_char or '', t.old_value_integer or 0))
             default_vals = {fname: False for fname in (
-                'currency_id', 'field_id', 'field_info', 'new_value_char', 'new_value_float',
+                'field_id', 'field_info', 'new_value_char', 'new_value_float',
                 'new_value_integer', 'old_value_char', 'old_value_float', 'old_value_integer',
             )}
             self.assertRecordValues(sorted_trackings, [
                 {
                     **default_vals,
-                    'currency_id': self.env.ref('base.USD').id,
                     'field_info': {
+                        'currency_id': self.env.ref('base.USD').id,
                         'desc': 'False Field Monetary',
                         'name': 'false_field_monetary',
                         'type': 'monetary',
