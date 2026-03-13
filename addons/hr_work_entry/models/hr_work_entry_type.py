@@ -55,7 +55,8 @@ class HrWorkEntryType(models.Model):
             ('country_id', 'in', self.country_id.ids + [False]),
         ]).grouped('code')
         for code, similar_work_entry_types in similar_work_entry_types_by_code.items():
-            if len(similar_work_entry_types) == 1:
-                continue
-            if len(similar_work_entry_types) > 2 or (similar_work_entry_types.country_id and len(similar_work_entry_types.country_id.code) != 2):
-                UserError(_("The same code cannot be associated to multiple work entry types for the same company (%s)", code))
+            nb_countries = len(similar_work_entry_types.mapped('country_id.code'))
+            if any(not we_type.country_id for we_type in similar_work_entry_types):
+                nb_countries += 1
+            if len(similar_work_entry_types) > nb_countries:
+                raise UserError(_("The same code cannot be associated to multiple work entry types for the same country (%s)", code))
