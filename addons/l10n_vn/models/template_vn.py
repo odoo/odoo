@@ -37,7 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'chart5111',
                 'deferred_expense_account_id': 'chart2421',
                 'deferred_revenue_account_id': 'chart33871',
-                'account_production_wip_account_id': 'chart154',
+                'account_production_wip_account_id': 'chart1541',
                 'default_cash_difference_income_account_id': 'chart711',
                 'default_cash_difference_expense_account_id': 'chart811',
                 'tax_calculation_rounding_method': 'round_per_line',
