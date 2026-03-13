@@ -1694,10 +1694,12 @@ class ChromeBrowser:
             return None
         if DISABLE_TIMEOUTS:
             timeout = None
+        else:
+            timeout *= self.throttling_factor
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
-            return f.result(timeout=timeout * self.throttling_factor)
+            return f.result(timeout=timeout)
         except concurrent.futures.TimeoutError:
             raise TimeoutError(f'{method}({params or ""})')
 
@@ -1893,7 +1895,8 @@ which leads to stray network requests and inconsistencies."""
         self._websocket_request('Network.deleteCookies', params=params)
 
     def _wait_ready(self, ready_code=None, timeout=60):
-        timeout *= self.throttling_factor
+        if timeout:
+            timeout *= self.throttling_factor
         ready_code = ready_code or "document.readyState === 'complete'"
         self._logger.info('Evaluate ready code "%s"', ready_code)
         start_time = time.time()
@@ -1919,7 +1922,8 @@ which leads to stray network requests and inconsistencies."""
         return False
 
     def _wait_code_ok(self, code, timeout, error_checker=None):
-        timeout *= self.throttling_factor
+        if timeout:
+            timeout *= self.throttling_factor
         self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
