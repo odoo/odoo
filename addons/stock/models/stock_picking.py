@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-import math
 from ast import literal_eval
 from datetime import date, timedelta, UTC
 from collections import defaultdict
@@ -39,6 +38,11 @@ class StockPickingType(models.Model):
         'stock.location', 'Destination Location', compute='_compute_default_location_dest_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
+    allocated_location_id = fields.Many2one(
+        'stock.location', 'Location for allocation', check_company=True,
+        domain="[('usage', '=', 'internal')]",
+        help="Allow to define the location where allocated products should be sent."
+    )
     code = fields.Selection([
         ('incoming', 'Receipt'),
         ('outgoing', 'Delivery'),
@@ -2204,6 +2208,9 @@ class StockPicking(models.Model):
         action['context'] = self.env.context
         action['domain'] = [('picking_id', 'in', self.ids)]
         return action
+
+    def action_view_allocation_report(self):
+        return self.env["ir.actions.actions"]._for_xml_id("stock.allocation_report_action")
 
     def action_view_reception_report(self):
         return self.env["ir.actions.actions"]._for_xml_id("stock.stock_reception_action")

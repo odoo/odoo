@@ -1445,6 +1445,81 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 1)
         self.assertEqual(lines[0]['move_out']['id'], move_pick.id)
 
+    def test_allocation_report_mixed_uom(self):
+        """ Ensure allocation works no matter the UoM used by the in and out moves."""
+        uom_units_id = self.ref('uom.product_uom_unit')
+        uom_pack_6_id = self.ref('uom.product_uom_pack_6')
+        uom_dozen_id = self.ref('uom.product_uom_dozen')
+        report = self.env['stock.allocation.report']
+
+        # Create a receipt for 12 units of product (using Pack of 6 as UoM).
+        receipts = self.env['stock.picking'].create([{
+            'name': "TEST/IN/01",
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.picking_type_in.default_location_src_id.id,
+            'location_dest_id': self.picking_type_in.default_location_dest_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'location_id': self.picking_type_in.default_location_src_id.id,
+                'location_dest_id': self.picking_type_in.default_location_dest_id.id,
+                'uom_id': uom_pack_6_id,
+                'product_uom_qty': 2,
+            })],
+        }, {
+            'name': "TEST/IN/02",
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.picking_type_in.default_location_src_id.id,
+            'location_dest_id': self.picking_type_in.default_location_dest_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'location_id': self.picking_type_in.default_location_src_id.id,
+                'location_dest_id': self.picking_type_in.default_location_dest_id.id,
+                'uom_id': uom_units_id,
+                'product_uom_qty': 6,
+            }), Command.create({
+                'product_id': self.product.id,
+                'location_id': self.picking_type_in.default_location_src_id.id,
+                'location_dest_id': self.picking_type_in.default_location_dest_id.id,
+                'uom_id': uom_pack_6_id,
+                'product_uom_qty': 1,
+
+            })],
+        }])
+        receipts.action_confirm()
+
+        # Create a delivery for 24 units of product (using dozen as UoM).
+        delivery_1 = self.env['stock.picking'].create({
+            'name': "TEST/OUT/01",
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.picking_type_out.default_location_src_id.id,
+            'location_dest_id': self.picking_type_out.default_location_dest_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'location_id': self.picking_type_out.default_location_src_id.id,
+                'location_dest_id': self.picking_type_out.default_location_dest_id.id,
+                'uom_id': uom_dozen_id,
+                'product_uom_qty': 2,
+            })],
+        })
+        delivery_1.action_confirm()
+
+        self.assertRecordValues(delivery_1.move_ids, [
+            {'uom_id': uom_dozen_id, 'packaging_uom_id': uom_dozen_id, 'product_uom_qty': 2, 'product_qty': 24, 'state': 'confirmed', 'move_orig_ids': []},
+        ])
+        # Test result after assign, it should be the same no matter the UoM used by receipt's moves.
+        for receipt in receipts:
+            # Assign the all incoming 12 units to the delivery_1.
+            report.action_assign(receipt.move_ids.ids, delivery_1.move_ids.ids, 12)
+            self.assertRecordValues(delivery_1.move_ids, [
+                {'uom_id': uom_dozen_id, 'packaging_uom_id': uom_dozen_id, 'product_uom_qty': 1, 'product_qty': 12, 'state': 'confirmed', 'move_orig_ids': []},
+                {'uom_id': uom_dozen_id, 'packaging_uom_id': uom_dozen_id, 'product_uom_qty': 1, 'product_qty': 12, 'state': 'waiting', 'move_orig_ids': receipt.move_ids.ids},
+            ])
+            # Unassign.
+            report.action_unassign(receipt.move_ids.ids, delivery_1.move_ids.ids, 12)
+            self.assertRecordValues(delivery_1.move_ids, [
+                {'uom_id': uom_dozen_id, 'packaging_uom_id': uom_dozen_id, 'product_uom_qty': 2, 'product_qty': 24, 'state': 'confirmed', 'move_orig_ids': []},
+            ])
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
