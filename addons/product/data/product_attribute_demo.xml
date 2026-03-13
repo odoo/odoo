@@ -2,10 +2,6 @@
 <odoo noupdate="1">
 
     <!-- Brand -->
-    <record id="pa_brand" model="product.attribute">
-        <field name="name">Brand</field>
-        <field name="sequence">10</field>
-    </record>
     <record id="pav_brand_adidas" model="product.attribute.value">
         <field name="name">Adidas</field>
         <field name="attribute_id" ref="product.pa_brand"/>
@@ -168,12 +164,6 @@
     </record>
 
     <!-- Size -->
-    <record id="pa_size" model="product.attribute">
-        <field name="name">Size</field>
-        <field name="sequence">20</field>
-        <field name="display_type">pills</field>
-        <field name="create_variant">always</field>
-    </record>
     <record id="pav_size_xs" model="product.attribute.value">
         <field name="name">XS</field>
         <field name="sequence">0</field>
@@ -225,11 +215,6 @@
     </record>
 
     <!-- Colors -->
-    <record id="pa_color" model="product.attribute">
-        <field name="name">Color</field>
-        <field name="display_type">color</field>
-        <field name="sequence">30</field>
-    </record>
     <record id="pav_color_white" model="product.attribute.value">
         <field name="name">White</field>
         <field name="html_color">#FAFAFA</field>

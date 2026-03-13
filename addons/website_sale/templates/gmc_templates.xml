@@ -37,6 +37,13 @@
                             t-if="'product_weight' in item"
                             t-out="item['product_weight']"
                         />
+                        <t t-foreach="item['gmc_direct_attributes']" t-as="direct_attr">
+                            <t t-translation="off">
+                                &lt;g:<t t-out="direct_attr[0]"/>&gt;
+                                    <t t-out="direct_attr[1]"/>
+                                &lt;/g:<t t-out="direct_attr[0]"/>&gt;
+                            </t>
+                        </t>
                         <t t-foreach="item['custom_label']" t-as="tag_label">
                             <t t-translation="off">
                                 &lt;g:<t t-out="tag_label[0]"/>&gt;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="pa_brand" model="product.attribute">
+        <field name="name">Brand</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="pa_size" model="product.attribute">
+        <field name="name">Size</field>
+        <field name="sequence">20</field>
+        <field name="display_type">pills</field>
+        <field name="create_variant">always</field>
+    </record>
+
+    <record id="pa_color" model="product.attribute">
+        <field name="name">Color</field>
+        <field name="display_type">color</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="pa_material" model="product.attribute">
+        <field name="name">Material</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="pa_pattern" model="product.attribute">
+        <field name="name">Pattern</field>
+        <field name="sequence">50</field>
+    </record>
+
+</odoo>

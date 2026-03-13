@@ -27,6 +27,11 @@ class ProductAttribute(models.Model):
         string="Show Thumbnails",
         help="Use product variant images instead of the attribute values displays.",
     )
+    external_identifier = fields.Char(
+        string="External Identifier",
+        help="External Identifier will ensure a precise matching between your attributes "
+        "and attributes in SEO and other external platforms.",
+    )
 
     @api.onchange("create_variant", "display_type")
     def _onchange_disable_preview_variants(self):

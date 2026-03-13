@@ -635,7 +635,8 @@ class ProductProduct(models.Model):
 
         # create missing attribute
         pa_records = {}  # attribute_name => Record<'product.attribute'>
-        attribute_names = PA.search(Domain('name', 'in', list(attribute_to_values))).mapped('name')
+        for pa in PA.search(Domain('name', 'in', list(attribute_to_values))):
+            pa_records.setdefault(pa.name, pa)
         missing_pa = [
             {
                 'name': attribute_name,
@@ -643,7 +644,7 @@ class ProductProduct(models.Model):
                 'display_type': 'radio',
             }
             for attribute_name in attribute_to_values
-            if attribute_name not in attribute_names
+            if attribute_name not in pa_records
         ]
         if missing_pa:
             for pa in PA.create(missing_pa):
