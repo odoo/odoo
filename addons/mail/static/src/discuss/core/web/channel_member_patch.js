@@ -18,7 +18,7 @@ patch(ChannelMember.prototype, {
     get attClass() {
         return { ...super.attClass, "o-active": this.state.isAvatarCardOpen };
     },
-    get isClickable(){
+    get isClickable() {
         return this.member.partner_id;
     },
     onClickAvatar(ev) {
@@ -28,8 +28,7 @@ patch(ChannelMember.prototype, {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
                 id: this.member.partner_id.id,
-                channelMember: this.member,
-                model: "res.partner"
+                model: "res.partner",
             });
             this.state.isAvatarCardOpen = true;
         }

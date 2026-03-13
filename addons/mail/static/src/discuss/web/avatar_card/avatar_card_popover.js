@@ -7,7 +7,6 @@ import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
-import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { user } from "@web/core/user";
 
@@ -16,7 +15,6 @@ export class AvatarCardPopover extends Component {
     static components = { ActionList, Dropdown, DropdownItem, ImStatus };
     static props = {
         id: { type: Number, required: true },
-        channelMember: { type: Object, optional: true },
         close: { type: Function, required: true },
         model: {
             type: String,
@@ -37,9 +35,6 @@ export class AvatarCardPopover extends Component {
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,
-        });
-        this.chanelMemberActions = useChannelMemberActions({
-            member: () => this.props.channelMember,
         });
         useDynamicInterval(
             (...args) => this.onChangeTz(...args),
@@ -63,9 +58,6 @@ export class AvatarCardPopover extends Component {
         return this.props.model;
     }
 
-    get canOpenSettingMenu() {
-        return this.props.channelMember && this.chanelMemberActions.actions.length;
-    }
     get user() {
         if (this.props.model === "res.users") {
             return this.store["res.users"].get(this.props.id);
