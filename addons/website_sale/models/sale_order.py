@@ -155,6 +155,8 @@ class SaleOrder(models.Model):
                 # It'll be assigned on confirmation (see action_confirm)
                 continue
             if not order.user_id:
+                if order.env.context.get('skip_team_recompute'):
+                    order.skip_team_recompute = True
                 order.user_id = (
                     order.website_id.salesperson_id
                     or order.partner_id.user_id.id
@@ -252,7 +254,9 @@ class SaleOrder(models.Model):
             carts = carts.with_user(SUPERUSER_ID)
         # Assign the salesman to carts on confirmation, as SUPERUSER to send the
         # 'You have been assigned to SOOOO' with OdooBot (and not public/logged in user).
-        carts.with_context(force_user_recomputation=True)._compute_user_id()
+        carts.with_context(
+            force_user_recomputation=True, skip_team_recompute=True
+        )._compute_user_id()
         return super().action_confirm()
 
     def _send_payment_succeeded_for_order_mail(self):

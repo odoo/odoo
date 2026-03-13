@@ -325,6 +325,7 @@ class SaleOrder(models.Model):
         compute='_compute_has_active_pricelist')
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
+    skip_team_recompute = fields.Boolean(store=False, default=False)
 
     _date_order_id_idx = models.Index("(date_order desc, id desc)")
 
@@ -490,6 +491,9 @@ class SaleOrder(models.Model):
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:
+            if order.skip_team_recompute and order.team_id:
+                order.skip_team_recompute = False
+                continue
             default_team_id = order._default_team_id()
             user_id = order.user_id.id
             company_id = order.company_id.id
