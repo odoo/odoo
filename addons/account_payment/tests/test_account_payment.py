@@ -145,6 +145,29 @@ class TestAccountPayment(AccountPaymentCommon):
 
         self.assertEqual(author_id, self.user.partner_id.id)
 
+    def test_pending_tx_does_not_cancel_payment(self):
+        """When a token charge results in a 'pending' transaction (e.g SEPA),
+        the payment must stay in draft, and be posted once the tx becomes 'done'"""
+        payment_token = self._create_token()
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'amount': 100.0,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'journal_id': self.provider.journal_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'payment_token_id': payment_token.id,
+            'write_off_line_vals': [],
+        })
+
+        with patch.object(self.env.registry['payment.transaction'], '_send_payment_request',
+                          lambda self: self._set_pending()):
+            payment.action_post()
+
+        self.assertEqual(payment.payment_transaction_id.state, 'pending')
+        self.assertEqual(payment.state, 'in_process')
+
     def test_action_post_calls_send_payment_request_only_once(self):
         payment_token = self._create_token()
         payment_without_token = self.env['account.payment'].create({
