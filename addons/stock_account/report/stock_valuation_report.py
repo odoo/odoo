@@ -48,7 +48,6 @@ class StockValuationReport(models.AbstractModel):
             'value': 0,
             'lines_by_account_id': defaultdict(lambda: {
                 'value': 0,
-                'accounts': [],
             }),
         }
         ending_stock = {
@@ -56,7 +55,6 @@ class StockValuationReport(models.AbstractModel):
             'value': 0,
             'lines_by_account_id': defaultdict(lambda: {
                 'value': 0,
-                'accounts': [],
             }),
         }
 

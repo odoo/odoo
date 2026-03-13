@@ -24,6 +24,11 @@ export class StockValuationReportLine extends Component {
     }
 
     // Getters -----------------------------------------------------------------
+    get accounts() {
+        if (! this.hasSublines) { return []; }
+        return this.props.sublines.map(line => parseInt(line.account_id));
+    }
+
     get credit() {
         if (this.props.line?.credit) {
             return this.env.formatMonetary(this.props.line.credit);
@@ -74,7 +79,7 @@ export class StockValuationReportLine extends Component {
 
     // On Click Methods --------------------------------------------------------
     onClick() {
-        this.props.onClickMethod && this.props.onClickMethod(this.props.line);
+        this.props.onClickMethod && this.props.onClickMethod(this.accounts);
     }
 
     onClickToggle() {
