@@ -1,7 +1,7 @@
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero, float_repr, find_xml_value
+from odoo.tools import float_compare, float_is_zero, float_repr, find_xml_value
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.zeep import Client
@@ -712,10 +712,13 @@ class AccountEdiCommon(models.AbstractModel):
         # discount
         discount = 0
         amount_fixed_taxes = sum(d['tax_amount'] * billed_qty for d in fixed_taxes_list)
+        currency = invoice_line.currency_id or self.env.company.currency_id
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            currency = invoice_line.currency_id or self.env.company.currency_id
             inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / currency.round(billed_qty * price_unit))
             discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
+        elif not float_is_zero(billed_qty, currency.decimal_places) and price_subtotal is not None:
+            # Unit price is 0, so no discount could be inferred.
+            price_unit += (price_subtotal - amount_fixed_taxes) / currency.round(billed_qty)
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200
@@ -723,7 +726,7 @@ class AccountEdiCommon(models.AbstractModel):
         #   * unit price = 1, qty = 0, but price_subtotal = -200
         # for instance, when filling a down payment as an invoice line. The equation in the docstring is not
         # respected, and the result will not be correct, so we just follow the simple rule below:
-        if net_price_unit is not None and price_subtotal != net_price_unit * (billed_qty / basis_qty) - allow_charge_amount:
+        if net_price_unit is not None and float_compare(price_subtotal, net_price_unit * (billed_qty / basis_qty) - allow_charge_amount, currency.decimal_places):
             if net_price_unit == 0 and billed_qty == 0:
                 quantity = 1
                 price_unit = price_subtotal

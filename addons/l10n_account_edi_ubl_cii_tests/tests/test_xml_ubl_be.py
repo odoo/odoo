@@ -1340,3 +1340,13 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             list_line_subtotals=[1000, 1000, 1000], currency_id=self.currency_data['currency'].id, list_line_price_unit=[1000, 100, 10],
             list_line_discount=[0, 0, 0], list_line_taxes=[tax_21, tax_21, tax_21], list_line_quantity=[1, 10, 100], move_type='out_invoice',
         )
+
+    def test_import_unit_price_zero_but_charges(self):
+        """ Tests invoice lines with unit price set to zero but with allowance charges
+        """
+        subfolder = "tests/test_files/from_odoo"
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder, filename='bis3_out_invoice_unit_price_zero_but_charges.xml', amount_total=18.15, amount_tax=3.15,
+            list_line_subtotals=[10, 5], currency_id=self.currency_data['currency'].id, list_line_price_unit=[10, 5], list_line_discount=[0, 0],
+            list_line_quantity=[1, 1],
+        )
