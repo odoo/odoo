@@ -46,6 +46,14 @@ class QuotationDocument(models.Model):
         default=False,
     )
 
+    def _access_domain(self, operation):
+        # this override gets the record rules only from the current model and
+        # ignores record rules on ir.attachment (inherits)
+        domain = super()._access_domain(operation)
+        if domain.is_false():
+            return domain
+        return self.env['ir.rule']._compute_domain(self._name, operation, include_inherits=False)
+
     # === CONSTRAINT METHODS ===#
 
     @api.constrains("raw")

@@ -31,6 +31,12 @@ class MailMail(models.Model):
     _order = 'id desc'
     _rec_name = 'subject'
 
+    def _access_domain(self, operation):
+        domain = super()._access_domain(operation)
+        if domain.is_false():
+            return domain
+        return self.env['ir.rule']._compute_domain(self._name, operation, include_inherits=False)
+
     @api.model
     def default_get(self, fields):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
