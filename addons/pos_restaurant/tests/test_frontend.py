@@ -564,3 +564,7 @@ class TestFrontend(TestFrontendCommon):
     def test_transfer_order_to_booked_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_transfer_order_to_booked_table', login="pos_user")
+
+    def test_quantity_correctly_displayed_after_transfer(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_quantity_correctly_displayed_after_transfer', login="pos_user")
