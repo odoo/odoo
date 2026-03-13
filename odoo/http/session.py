@@ -38,6 +38,7 @@ optional config parameter `sessions.max_inactivity_seconds`.
 """
 
 SESSION_ROTATION_EXCLUDED_PATHS = (
+    '/websocket/on_closed',
     '/websocket/peek_notifications',
     '/websocket/update_bus_presence',
 )  # Naughty list, don't add more routes in it.
