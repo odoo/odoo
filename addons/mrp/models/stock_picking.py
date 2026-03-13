@@ -56,6 +56,7 @@ class StockPickingType(models.Model):
     generated_mrp_lot_label_to_print = fields.Selection(
         [('pdf', 'PDF'), ('zpl', 'ZPL')],
         "Generated Lot/SN Label to Print", default='pdf')
+    wo_properties_definition = fields.PropertiesDefinition('Workorder Properties')
 
     @api.depends('code')
     def _compute_use_create_lots(self):

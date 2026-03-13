@@ -150,6 +150,8 @@ class MrpWorkorder(models.Model):
     has_planning_issues = fields.Boolean('Has planning issues', store=False, compute='_compute_has_planning_issues', search='_search_has_planning_issues')
     production_reference_ids = fields.Many2many(related="production_id.reference_ids", string="References", readonly=True)
     decoration_dates = fields.Char(compute='_compute_decoration_dates')  # technical: used in views only
+    picking_type_id = fields.Many2one(related='production_id.picking_type_id')
+    properties = fields.Properties('Properties', definition='picking_type_id.wo_properties_definition', copy=True)
 
     @api.depends('qty_ready')
     def _compute_state(self):
