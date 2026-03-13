@@ -251,5 +251,5 @@ class CalendarAlarm_Manager(models.AbstractModel):
             ('group_ids', 'in', self.env.ref('base.group_user').ids),
         ])
         for user in users:
-            notif = self.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).get_next_notif()
+            notif = self.with_user(user).with_context(allowed_company_ids=user.sudo().company_ids.ids).get_next_notif()
             user._bus_send("calendar.alarm", notif)
