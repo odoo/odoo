@@ -86,30 +86,12 @@ export function checkFloatingOrderCount(expectedCount) {
         {
             isActive: ["mobile"],
             content: `check there are ${expectedCount} floating order`,
-            trigger: ".modal-dialog .list-container-items .btn",
-            run: () => {
-                const btns = document.querySelectorAll(".modal-dialog .list-container-items .btn");
-                if (btns.length !== expectedCount) {
-                    throw new Error(
-                        `Expected ${expectedCount} floating order buttons, found ${btns.length}`
-                    );
-                }
-            },
+            trigger: `.modal-dialog .list-container-items:has(.btn:count(${expectedCount}))`,
         },
         {
             isActive: ["desktop"],
             content: `check there are ${expectedCount} floating order`,
-            trigger: ".list-container-items",
-            run: () => {
-                const btns = document.querySelectorAll(
-                    ".list-container-items .floating-order-container .btn"
-                );
-                if (btns.length !== expectedCount) {
-                    throw new Error(
-                        `Expected ${expectedCount} floating order buttons, found ${btns.length}`
-                    );
-                }
-            },
+            trigger: `.list-container-items:has(.floating-order-container:has(.btn):count(${expectedCount}))`,
         },
         {
             isActive: ["mobile"],
