@@ -2514,6 +2514,11 @@ class MrpProduction(models.Model):
             'context': dict(self.env.context, default_origin=self.name, create=False),
         }
 
+    def action_view_allocation_report(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.allocation_report_action")
+        action['context'] = dict({'default_production_ids': self.ids}, **self.env.context)
+        return action
+
     def action_view_reception_report(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_reception_action")
         # default_production_ids needs to be first default_ key so the "print" button correctly works

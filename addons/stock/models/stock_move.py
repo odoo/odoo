@@ -2223,6 +2223,9 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
 
+        # Apply allocated location if relevant.
+        moves._apply_allocation()
+
         # Break move dest link if move dest and move_dest source are not the same,
         # so that when move_dests._action_assign is called, the move lines are not created with
         # the new location, they should not be created at all.
@@ -2538,6 +2541,14 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.procure_method = rule.procure_method
             else:
                 move.procure_method = 'make_to_stock'
+
+    def _apply_allocation(self):
+        """ If the moves go to the allocated location, update their destination
+        moves so they use this location as their source. """
+        for move in self:
+            allocated_location = move.picking_type_id.allocated_location_id
+            if allocated_location and move.location_dest_id._child_of(allocated_location) and move.move_dest_ids:
+                move.move_dest_ids.location_id = move.location_dest_id
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """

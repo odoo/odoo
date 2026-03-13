@@ -298,6 +298,9 @@ class StockPickingBatch(models.Model):
         if self.state not in ('done', 'cancel'):
             return self.move_line_ids.action_put_in_pack(package_id=package_id, package_type_id=package_type_id, package_name=package_name)
 
+    def action_view_allocation_report(self):
+        return self.env["ir.actions.actions"]._for_xml_id("stock.allocation_report_action")
+
     def action_view_reception_report(self):
         action = self.picking_ids[0].action_view_reception_report()
         action['context'] = {'default_picking_ids': self.picking_ids.ids}
