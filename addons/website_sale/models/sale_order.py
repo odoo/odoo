@@ -498,7 +498,7 @@ class SaleOrder(models.Model):
                 order_line,
                 order_line.product_id.id,
                 quantity,
-                order_line.product_uom_id.id,
+                uom_id=order_line.product_uom_id.id,
                 **kwargs,
             )
         else:
@@ -522,7 +522,7 @@ class SaleOrder(models.Model):
         }
 
     # hook to be overridden
-    def _verify_updated_quantity(self, _order_line, _product_id, new_qty, _uom_id, **_kwargs):  # noqa: PLR6301
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **_kwargs):  # noqa: ARG002, PLR6301
         return new_qty, ""
 
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
@@ -554,7 +554,7 @@ class SaleOrder(models.Model):
                             item_line,
                             item_line.product_id.id,
                             quantity,
-                            item_line.product_uom_id.id,
+                            uom_id=item_line.product_uom_id.id,
                             **kwargs,
                         )
                         combo_quantity = min(combo_quantity, combo_item_quantity)
