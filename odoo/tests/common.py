@@ -30,10 +30,9 @@ import time
 import traceback
 import typing
 import unittest
-from collections import defaultdict, deque
+from collections import defaultdict
 from concurrent.futures import CancelledError, Future, InvalidStateError, wait
 from contextlib import AbstractContextManager, ExitStack, contextmanager
-from copy import deepcopy
 from datetime import datetime
 from functools import cache, partial, wraps
 from itertools import islice, zip_longest
@@ -1361,7 +1360,6 @@ class TransactionCase(BaseCase):
         self.addCleanup(self.drop_ormcaches)
 
         # flush everything in setUpClass before introducing a savepoint
-        cr = self.cr
         if self.savepoint is None:
             # create savepoint, and close it at class cleanup
             sp = self.cr.savepoint(flush=True)
@@ -1369,14 +1367,6 @@ class TransactionCase(BaseCase):
             # store savepoint on the class (to be shared across all test instances)
             self.__class__.savepoint = sp
             self.addClassCleanup(setattr, self.__class__, 'savepoint', None)
-
-        # This prevents precommit functions and data from piling up
-        # until cr.flush is called in 'assertRaises' clauses
-        def _reset(cb, funcs, data):
-            cb._funcs = funcs
-            cb.data = data
-        for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
-            self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
         self.addCleanup(self.savepoint.rollback)
 

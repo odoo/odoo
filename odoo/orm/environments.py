@@ -10,6 +10,7 @@ import typing
 from collections import defaultdict, deque
 from collections.abc import Mapping
 from contextlib import contextmanager, nullcontext
+from copy import deepcopy
 from datetime import UTC
 from pprint import pformat
 from weakref import ref as weakref
@@ -864,6 +865,8 @@ class Transaction:
         self._registry_sequence = self.registry.registry_sequence
         self._state_stack__ = [
             TransactionState(
+                cr_cache=state.cr_cache,
+                cr_callbacks=state.cr_callbacks,
                 default_env=state.default_env,
                 registry_invalidated=self._registry_invalidated,
                 registry_sequence=self._registry_sequence,
@@ -939,7 +942,21 @@ class Transaction:
     def save_state(self):
         """ Save the current state of the transaction for future restore. """
         self.flush()
+        cr_cache = cr_callbacks = None
+        if self.default_env is not None:
+            cr = self.default_env.cr
+            try:
+                cr_cache = deepcopy(cr.cache)
+            except Exception as e:
+                e.add_note("Failed to save state")
+                raise
+            cr_callbacks = [
+                (deque(callback._funcs), deepcopy(callback.data))
+                for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]
+            ]
         self._state_stack__.append(TransactionState(
+            cr_cache=cr_cache,
+            cr_callbacks=cr_callbacks,
             default_env=self.default_env,
             registry_invalidated=self._registry_invalidated,
             registry_sequence=self._registry_sequence,
@@ -957,6 +974,11 @@ class Transaction:
             state = self._state_stack__[-1]
             self.default_env = state.default_env
             registry_invalidated = state.registry_invalidated
+            if cr := self.default_env.cr:
+                cr.cache = deepcopy(state.cr_cache or {})
+                for callback, (funcs, data) in zip((cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback), state.cr_callbacks or ()):
+                    callback._funcs = deque(funcs)
+                    callback.data = deepcopy(data)
         else:
             registry_invalidated = 0
 
@@ -979,6 +1001,8 @@ class TransactionState(typing.NamedTuple):
     default_env: Environment | None
     registry_invalidated: int
     registry_sequence: int
+    cr_callbacks: list | None
+    cr_cache: dict | None
 
 
 # sentinel value for optional parameters
