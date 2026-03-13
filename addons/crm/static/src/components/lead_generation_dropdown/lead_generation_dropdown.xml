@@ -26,7 +26,9 @@
                             </div>
                             <div class="o_lead_mining_element_title d-flex flex-row align-items-center">
                                 <t t-if="element.swappedDescription">
-                                    <span t-if="element.hasAccess" class="text-muted text-wrap" t-out="`Install ${this.modulesInfo[element.moduleName].name}`"/>
+                                    <span t-if="element.hasAccess" class="text-muted text-wrap">
+                                        Install <t t-out="this.modulesInfo[element.moduleName].name" />
+                                    </span>
                                     <span t-else="" class="text-muted text-wrap">Ask your Team Leader to get access</span>
                                 </t>
                                 <span t-else="" class="text-wrap" t-out="element.description"/>

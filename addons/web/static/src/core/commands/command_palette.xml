@@ -35,12 +35,23 @@
                   t-on-close="() => this.props.closeMe()">
                   <a t-att-href="command.href" t-att-class="command.className">
                     <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
-                      <t t-set-slot="name">
-                        <span class="o_command_name text-ellipsis" t-att-title="command.name" t-out="command.text"/>
-                      </t>
-                      <t t-set-slot="focusMessage">
-                          <small t-if="!isMobileOS and command.href and state.selectedCommand === command" class="o_command_focus text-muted"><kbd><t t-if="isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd><span class="ms-1">new tab</span></small>
-                      </t>
+                        <t t-set-slot="name">
+                            <span class="o_command_name text-ellipsis" t-att-title="command.name" t-out="command.text"/>
+                        </t>
+                        <t t-set-slot="focusMessage">
+                            <small
+                                t-if="!isMobileOS and command.href and state.selectedCommand === command"
+                                class="o_command_focus text-muted"
+                            >
+                                <kbd t-translation="off">
+                                    <t t-if="isMacOS">CMD</t>
+                                    <t t-else="">CTRL</t>
+                                </kbd>
+                                <t t-translation="off"> + </t>
+                                <kbd t-translation="off">⏎</kbd>
+                                new tab
+                            </small>
+                        </t>
                     </t>
                   </a>
                 </div>

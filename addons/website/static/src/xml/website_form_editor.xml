@@ -50,10 +50,10 @@
     <t t-name="website.form_label_content">
         <span class="s_website_form_label_content" t-out="field.string"/>
         <t t-if="field.required or field.modelRequired">
-            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-out="' ' + field.formatInfo.mark"/>
+            <span class="s_website_form_mark ms-1" t-if="field.formatInfo.requiredMark" t-out="field.formatInfo.mark"/>
         </t>
         <t t-else="">
-            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-out="' ' + field.formatInfo.mark"/>
+            <span class="s_website_form_mark ms-1" t-if="field.formatInfo.optionalMark" t-out="field.formatInfo.mark"/>
         </t>
     </t>
 
