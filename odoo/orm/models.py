@@ -414,6 +414,7 @@ class BaseModel(metaclass=MetaModel):
 
     _name: str = None                   #: the model name (in dot-notation, module namespace)
     _description: str | None = None     #: the model's informal name
+    _explanation: str | None = None     #: the model's verbose explanation (what purpuse does it serve)
     _module: str | None = None          #: the model's module (in the Odoo sense)
     _custom: bool = False               #: should be True for custom models only
 

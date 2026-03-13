@@ -7,9 +7,17 @@
                 <form string="Model Description" duplicate="0">
                   <header><!-- used for override --></header>
                   <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Sales Order"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="explanation" placeholder="Provide a verbose explanation of the model's purpose..."/>
+                    </group>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="model" readonly="id"/>
                             <field name="order"/>
                             <field name="abstract" readonly="id" groups="base.group_no_one"/>
@@ -172,6 +180,7 @@
                             </field>
                         </page>
                         <page string="Notes" name="notes" groups="base.group_no_one">
+                            <separator string="Information"/>
                             <field name="info"/>
                         </page>
                         <page string="Views" name="views" groups="base.group_no_one">

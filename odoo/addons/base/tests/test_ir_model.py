@@ -372,7 +372,6 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(imi.parent_id.model, "res.partner")
         self.assertEqual(imi.parent_field_id.name, "partner_id")
 
-
 class TestCommonCustomFields(TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
@@ -718,3 +717,61 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
             self.assertIn(
                 f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
             )
+
+
+@tagged('at_install', '-post_install')
+class TestIrModelExplanation(TransactionCase):
+    def test_explanation_mro_reflection(self):
+        """ Test that _explanation is correctly aggregated across the MRO. """
+
+        class MockBaseModel:
+            _name = 'mock.mro.model'
+            _description = 'Mock'
+            _order = 'id'
+            _custom = False
+            _abstract = False
+            _transient = False
+            _fold_name = 'fold'
+            __module__ = 'odoo.addons.base.models.mock'
+            _explanation = 'Base explanation'
+            __doc__ = 'Base doc'
+
+        class MockExtensionModel(MockBaseModel):
+            __module__ = 'odoo.addons.hr.models.mock'
+            _explanation = 'Extension explanation'
+
+        # Instantiate the extension model as if the ORM built it
+        mock_model = MockExtensionModel()
+        self.env.registry['mock.mro.model'] = MockExtensionModel
+
+        try:
+            params = self.env['ir.model']._reflect_model_params(mock_model)
+
+            expected = 'Base explanation\n\nExtension explanation'
+            self.assertEqual(params['explanation'], expected)
+        finally:
+            del self.env.registry['mock.mro.model']
+
+    def test_model_explanation_reflection(self):
+        """ Test that _explanation is correctly reflected in ir.model. """
+        class MockModel:
+            _name = 'mock.model'
+            _description = 'Mock'
+            _order = 'id'
+            _custom = False
+            _abstract = False
+            _transient = False
+            _fold_name = 'fold'
+            __module__ = 'odoo.addons.base.models.mock'
+            _explanation = 'This is a mock model explanation.'
+            __doc__ = 'Base doc'
+
+        mock_model = MockModel()
+        self.env.registry['mock.model'] = MockModel
+
+        try:
+            params = self.env['ir.model']._reflect_model_params(mock_model)
+            expected = 'This is a mock model explanation.'
+            self.assertEqual(params['explanation'], expected)
+        finally:
+            del self.env.registry['mock.model']

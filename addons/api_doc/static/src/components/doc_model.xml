@@ -4,6 +4,9 @@
 <t t-name="web.DocModel">
     <div t-if="!this.state.error" class="o-doc-model position-relative d-flex flex-nowrap flex-fill flex-column p-3">
         <h2 class="w-100 mb-2 mt-2" t-out="this.state.model?.name ?? ''"></h2>
+        <p t-if="this.state.model?.doc" class="mb-3" title="Derived from _explanation attribute">
+            <strong>Explanation: </strong><span class="text-muted" t-out="this.state.model.doc"/>
+        </p>
         <DocTable data="this.state.modelData"/>
 
         <h3 class="mt-3 mb-2" id="fields">Fields</h3>

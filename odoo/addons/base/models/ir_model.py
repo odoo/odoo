@@ -3,6 +3,7 @@ import itertools
 import logging
 import random
 import re
+import textwrap
 import psycopg2
 import typing
 from ast import literal_eval
@@ -225,6 +226,7 @@ class IrModel(models.Model):
     order = fields.Char(string='Order', default='id', required=True,
                         help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"')
     info = fields.Text(string='Information')
+    explanation = fields.Text(string='Explanation', help='Verbose description of what is this model for')
     field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
                                default=_default_field_id)
     inherited_model_ids = fields.Many2many('ir.model', compute='_inherited_models', string="Inherited models",
@@ -457,9 +459,18 @@ class IrModel(models.Model):
 
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """
+        explanations = []
+        for cls in reversed(type(model).mro()):
+            # Use __dict__ to only capture explanations explicitly defined on this class.
+            explanation = cls.__dict__.get('_explanation')
+            # Only include if it matches the target model's name (ignores mixins).
+            if explanation and getattr(cls, '_name', None) == model._name:
+                explanations.append(textwrap.dedent(explanation).strip())
+
         return {
             'model': model._name,
             'name': model._description,
+            'explanation': "\n\n".join(explanations) if explanations else False,
             'order': model._order,
             'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',

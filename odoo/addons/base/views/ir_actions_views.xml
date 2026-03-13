@@ -13,8 +13,11 @@
                         <field name="name"/>
                         <field name="type"/>
                     </group>
+                    <group string="Explanation">
+                        <field name="explanation" nolabel="1"/>
+                    </group>
                 </sheet>
-                </form>
+            </form>
             </field>
         </record>
         <record id="action_view_tree" model="ir.ui.view">
@@ -104,6 +107,11 @@
                                     <field name="attachment"/>
                                 </group>
                             </page>
+                            <page name="explanation" string="Explanation">
+                                <group>
+                                    <field name="explanation" nolabel="1"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -170,6 +178,9 @@
                         </group>
                         <group name="help" string="Help">
                             <field name="help" nolabel="1" class="oe-bordered-editor"/>
+                        </group>
+                        <group name="explanation" string="Explanation">
+                            <field name="explanation" nolabel="1" class="oe-bordered-editor"/>
                         </group>
                     </sheet>
                 </form>
@@ -499,6 +510,9 @@
 env['res.partner'].create({'name': partner_name})
     </pre>
                                     </div>
+                                </page>
+                                <page string="Explanation" name="explanation">
+                                    <field name="explanation" nolabel="1" class="oe-bordered-editor"/>
                                 </page>
                                 <page string="Usage" name="usage" invisible="1"/>
                             </notebook>

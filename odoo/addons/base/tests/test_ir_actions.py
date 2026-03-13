@@ -3,16 +3,27 @@
 import json
 from datetime import date
 from unittest.mock import patch
-
 import requests
 from markupsafe import Markup
 
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+
+
+class TestActionExplanation(TransactionCase):
+
+    def test_action_explanation(self):
+        """ Test that explanation is correctly stored and retrieved for actions. """
+        action = self.env['ir.actions.act_window'].create({
+            'name': 'Test Action',
+            'res_model': 'res.partner',
+            'explanation': 'This action is used for testing explanations.',
+        })
+        self.assertEqual(action.explanation, 'This action is used for testing explanations.')
 
 
 class TestServerActionsBase(TransactionCaseWithUserDemo):
