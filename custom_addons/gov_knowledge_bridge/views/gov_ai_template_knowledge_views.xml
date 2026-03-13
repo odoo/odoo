@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_template_form_knowledge_bridge" model="ir.ui.view">
+        <field name="name">gov.ai.template.form.knowledge.bridge</field>
+        <field name="model">gov.ai.template</field>
+        <field name="inherit_id" ref="gov_processos.view_gov_ai_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[@string='Fonte e Saída']" position="inside">
+                <field name="knowledge_article_id"/>
+                <button
+                    name="action_open_knowledge_article"
+                    type="object"
+                    string="Abrir Artigo Knowledge"
+                    class="btn-secondary"
+                    invisible="not knowledge_article_id"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

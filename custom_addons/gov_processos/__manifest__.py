@@ -6,6 +6,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/gov_ai_template_seed.xml",
+        "data/gov_ai_template_grp_dfd_seed.xml",
         "data/gov_ai_template_procurement_seed.xml",
         "data/gov_ai_template_direct_seed.xml",
         "data/gov_ai_quality_policy_seed.xml",
@@ -18,6 +19,7 @@
         "views/gov_ai_quality_policy_views.xml",
         "views/gov_ai_orchestrator_views.xml",
         "views/gov_processo_doc_views.xml",
+        "views/gov_processo_parametro_views.xml",
         "views/gov_processo_dotacao_views.xml",
         "views/gov_dotacao_wizard_views.xml",
         "views/gov_processo_fase_wizard_views.xml",

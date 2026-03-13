@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_parametro_list" model="ir.ui.view">
+        <field name="name">gov.processo.parametro.list</field>
+        <field name="model">gov.processo.parametro</field>
+        <field name="arch" type="xml">
+            <list string="Variáveis do Processo" create="false" delete="false">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="key"/>
+                <field name="doc_type" optional="show"/>
+                <field name="fase"/>
+                <field name="fase_label" optional="show"/>
+                <field name="section"/>
+                <field name="required" widget="boolean_toggle" optional="show"/>
+                <field
+                    name="status"
+                    widget="badge"
+                    decoration-success="status == 'aberta'"
+                    decoration-warning="status == 'pendente'"
+                    decoration-danger="status == 'fechada'"
+                />
+                <field name="is_filled" widget="boolean_toggle" optional="show"/>
+                <field name="value_text"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_parametro_form" model="ir.ui.view">
+        <field name="name">gov.processo.parametro.form</field>
+        <field name="model">gov.processo.parametro</field>
+        <field name="arch" type="xml">
+            <form string="Variável do Processo">
+                <sheet>
+                    <div class="alert alert-warning mb-3" role="alert" invisible="can_edit">
+                        Esta variável só pode ser alterada enquanto a fase dela estiver aberta.
+                    </div>
+
+                    <group>
+                        <group string="Identificação">
+                            <field name="processo_id" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="key" readonly="1"/>
+                            <field name="doc_type" readonly="1"/>
+                            <field name="template_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                        <group string="Controle">
+                            <field name="fase" readonly="1"/>
+                            <field name="fase_label" readonly="1"/>
+                            <field name="section" readonly="1"/>
+                            <field name="required" readonly="1"/>
+                            <field
+                                name="status"
+                                widget="badge"
+                                decoration-success="status == 'aberta'"
+                                decoration-warning="status == 'pendente'"
+                                decoration-danger="status == 'fechada'"
+                            />
+                            <field name="value_type" readonly="1"/>
+                            <field name="render_mode" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Descrição">
+                        <field name="description" nolabel="1" readonly="1"/>
+                    </group>
+
+                    <group string="Valor">
+                        <field
+                            name="value_text"
+                            nolabel="1"
+                            placeholder="Preencha o valor que será injetado no template..."
+                            readonly="not can_edit"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_parametro_search" model="ir.ui.view">
+        <field name="name">gov.processo.parametro.search</field>
+        <field name="model">gov.processo.parametro</field>
+        <field name="arch" type="xml">
+            <search string="Variáveis do Processo">
+                <field name="name"/>
+                <field name="key"/>
+                <field name="doc_type"/>
+                <field name="section"/>
+                <filter name="filter_required" string="Obrigatórias" domain="[('required', '=', True)]"/>
+                <filter name="group_phase" string="Agrupar por Fase" context="{'group_by': 'fase'}"/>
+                <filter name="group_doc_type" string="Agrupar por Documento" context="{'group_by': 'doc_type'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

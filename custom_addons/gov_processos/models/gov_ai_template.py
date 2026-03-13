@@ -4,12 +4,43 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from .constants import DOC_TYPE_SELECTION, PROCESS_TYPE_SELECTION, TEMPLATE_SCOPE_SELECTION
+from .gov_template_service import GovTemplateService
 
 
 class GovAiTemplate(models.Model):
     _name = "gov.ai.template"
     _description = "Template de IA para Geração de Documentos"
     _order = "doc_type, fase, id"
+    _BUILTIN_CONTEXT_KEYS = {
+        "ug_nome",
+        "ug_cnpj",
+        "exercicio",
+        "processo_numero",
+        "processo_assunto",
+        "process_type",
+        "process_scope",
+        "origem",
+        "doc_nome",
+        "doc_tipo",
+        "area_requisitante",
+        "objeto",
+        "justificativa",
+        "quantidade",
+        "valor_estimado",
+        "data_necessidade",
+        "vinculo_ppa",
+        "responsavel_tecnico",
+        "responsavel_processo",
+        "hoje",
+        "checklist_mode",
+        "memoria_ug",
+        "template_nome",
+        "guidance_text",
+        "output_format",
+        "versao_normativa",
+        "parameters_json",
+        "option_catalog_json",
+    }
 
     name = fields.Char(string="Nome", required=True)
     process_type = fields.Selection(
@@ -556,3 +587,123 @@ class GovAiTemplate(models.Model):
     def get_option_catalog(self):
         self.ensure_one()
         return self._json_field_as_obj("option_catalog_json")
+
+    def get_parameter_entries(self):
+        self.ensure_one()
+        spec = self.get_parameter_spec()
+        entries_by_key = {}
+        sections = [
+            ("required_by_law", True),
+            ("required", True),
+            ("optional", False),
+            ("additional_fields", False),
+            ("conditional", False),
+        ]
+
+        def _coerce_phase(value):
+            try:
+                return int(value)
+            except (TypeError, ValueError):
+                return int(self.fase or 0)
+
+        for section_name, required in sections:
+            raw_items = spec.get(section_name) if isinstance(spec, dict) else []
+            if not isinstance(raw_items, list):
+                continue
+            for index, item in enumerate(raw_items, start=1):
+                if isinstance(item, str):
+                    item = {"key": item}
+                if not isinstance(item, dict):
+                    continue
+                key = (item.get("key") or "").strip()
+                if not key:
+                    continue
+                value_type = (item.get("type") or "string").strip()
+                render_mode = (item.get("render_mode") or "").strip() or (
+                    "latex" if value_type == "latex" else "text"
+                )
+                existing = entries_by_key.get(key, {})
+                entries_by_key[key] = {
+                    "key": key,
+                    "label": item.get("label")
+                    or item.get("name")
+                    or existing.get("label")
+                    or key.replace("_", " ").strip().capitalize(),
+                    "description": item.get("description") or existing.get("description") or "",
+                    "type": value_type or existing.get("type") or "string",
+                    "render_mode": render_mode or existing.get("render_mode") or "text",
+                    "section": existing.get("section")
+                    if existing
+                    and existing.get("section") == "required_by_law"
+                    else ("required_by_law" if required else section_name),
+                    "required": bool(required or existing.get("required")),
+                    "phase": min(existing.get("phase", 999), _coerce_phase(item.get("fase")))
+                    if existing
+                    else _coerce_phase(item.get("fase")),
+                    "doc_type": item.get("doc_type") or existing.get("doc_type") or self.doc_type,
+                    "sequence": item.get("sequence") or existing.get("sequence") or (index * 10),
+                }
+
+        placeholder_text = "\n".join(
+            part for part in [self.latex_template, self.latex_source, self.prompt_user_tpl] if part
+        )
+        for index, key in enumerate(GovTemplateService.extract_placeholders(placeholder_text), start=1):
+            if key in entries_by_key or key in self._BUILTIN_CONTEXT_KEYS:
+                continue
+            entries_by_key[key] = {
+                "key": key,
+                "label": key.replace("_", " ").strip().capitalize(),
+                "description": "",
+                "type": "string",
+                "render_mode": "text",
+                "section": "inferred",
+                "required": False,
+                "phase": int(self.fase or 0),
+                "doc_type": self.doc_type,
+                "sequence": index * 10,
+            }
+
+        return sorted(
+            entries_by_key.values(),
+            key=lambda entry: (
+                entry.get("phase", 0),
+                self.env["gov.processo.parametro"]._get_section_priority(entry.get("section")),
+                entry.get("sequence", 10),
+                entry.get("label", ""),
+            ),
+        )
+
+    def get_parameter_keys(self):
+        self.ensure_one()
+        return [entry["key"] for entry in self.get_parameter_entries()]
+
+    def sync_process_parameters(self, processo):
+        self.ensure_one()
+        processo.ensure_one()
+        Parameter = self.env["gov.processo.parametro"]
+        existing_by_key = {rec.key: rec for rec in processo.parameter_ids}
+
+        for entry in self.get_parameter_entries():
+            values = {
+                "processo_id": processo.id,
+                "key": entry["key"],
+                "name": entry["label"],
+                "description": entry["description"],
+                "fase": entry["phase"],
+                "doc_type": entry["doc_type"],
+                "section": entry["section"],
+                "required": entry["required"],
+                "value_type": entry["type"],
+                "render_mode": entry["render_mode"],
+                "sequence": entry["sequence"],
+            }
+            current = existing_by_key.get(entry["key"])
+            if current:
+                values["fase"] = min(current.fase or 0, entry["phase"])
+                values["template_ids"] = [(4, self.id)]
+                current.with_context(skip_phase_lock=True).write(values)
+            else:
+                values["template_ids"] = [(6, 0, [self.id])]
+                created = Parameter.with_context(skip_phase_lock=True).create(values)
+                existing_by_key[created.key] = created
+        return True

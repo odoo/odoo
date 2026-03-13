@@ -163,6 +163,9 @@
                         <button class="oe_stat_button" name="action_open_modelos_recomendados" type="object" icon="fa-book">
                             <field name="recommended_template_count" widget="statinfo" string="Modelos"/>
                         </button>
+                        <button class="oe_stat_button" name="action_open_parametros" type="object" icon="fa-code-fork">
+                            <field name="parameter_count" widget="statinfo" string="Variáveis"/>
+                        </button>
                     </div>
 
                     <div class="o_field_widget mb-3">
@@ -213,6 +216,34 @@
                     </div>
 
                     <notebook>
+                        <page name="parametros_template" string="Variáveis do Processo">
+                            <div class="alert alert-info mb-3" role="alert">
+                                As variáveis são acumuladas ao longo do processo e só podem ser alteradas
+                                enquanto a fase correspondente estiver aberta.
+                            </div>
+                            <div class="mb-3">
+                                <button name="action_open_parametros" string="Abrir Variáveis" type="object" class="btn-primary"/>
+                            </div>
+                            <field name="parameter_ids" readonly="1">
+                                <list create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="key"/>
+                                    <field name="doc_type" optional="show"/>
+                                    <field name="fase"/>
+                                    <field name="section"/>
+                                    <field
+                                        name="status"
+                                        widget="badge"
+                                        decoration-success="status == 'aberta'"
+                                        decoration-warning="status == 'pendente'"
+                                        decoration-danger="status == 'fechada'"
+                                    />
+                                    <field name="is_filled" widget="boolean_toggle" optional="show"/>
+                                    <field name="value_text"/>
+                                </list>
+                            </field>
+                        </page>
                         <page name="tramitacao" string="Tramitação">
                             <div class="mb-3">
                                 <button name="action_tramitar" string="Tramitar" type="object" class="btn-primary"/>

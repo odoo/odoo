@@ -185,6 +185,15 @@ class GovProcesso(models.Model):
         string="Dotações",
         compute="_compute_dotacao_count",
     )
+    parameter_ids = fields.One2many(
+        "gov.processo.parametro",
+        "processo_id",
+        string="Variáveis do Processo",
+    )
+    parameter_count = fields.Integer(
+        string="Variáveis",
+        compute="_compute_parameter_count",
+    )
     currency_id = fields.Many2one(
         "res.currency",
         default=lambda self: self.env.company.currency_id,
@@ -253,6 +262,11 @@ class GovProcesso(models.Model):
     def _compute_dotacao_count(self):
         for rec in self:
             rec.dotacao_count = len(rec.dotacao_ids)
+
+    @api.depends("parameter_ids")
+    def _compute_parameter_count(self):
+        for rec in self:
+            rec.parameter_count = len(rec.parameter_ids)
 
     @api.depends("doc_ids.versao_ids")
     def _compute_versao_total_count(self):
@@ -447,6 +461,19 @@ class GovProcesso(models.Model):
             "domain": [("doc_id", "in", doc_ids)],
         }
 
+    def action_open_parametros(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Variáveis do Processo — {self.name}",
+            "res_model": "gov.processo.parametro",
+            "view_mode": "list,form",
+            "domain": [("processo_id", "=", self.id)],
+            "context": {
+                "default_processo_id": self.id,
+            },
+        }
+
     def action_open_modelos_recomendados(self):
         self.ensure_one()
         template_ids = self.recommended_template_ids.ids
@@ -461,6 +488,20 @@ class GovProcesso(models.Model):
                 "default_process_scope": self.process_scope or "compras",
             },
         }
+
+    def get_template_parameter_context(self, template=None):
+        self.ensure_one()
+        parameters = self.parameter_ids
+        if template:
+            template.ensure_one()
+            keys = set(template.get_parameter_keys())
+            if keys:
+                parameters = parameters.filtered(lambda rec: rec.key in keys)
+        context = {}
+        for parameter in parameters:
+            key, value = parameter.to_render_pair()
+            context[key] = value
+        return context
 
     def _get_manual_checklist_blocks(self, mode="agu_estrito"):
         self.ensure_one()

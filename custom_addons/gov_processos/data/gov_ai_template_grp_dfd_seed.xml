@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="template_dfd_grp_latex_compras_faseado" model="gov.ai.template">
+        <field name="name">DFD GRP Faseado - Compras (LaTeX Estruturado)</field>
+        <field name="doc_type">dfd</field>
+        <field name="process_type">compras_servicos</field>
+        <field name="process_scope">compras</field>
+        <field name="fase">0</field>
+        <field name="versao_normativa">Lei 14.133/2021 · IN SEGES/MGI 58/2022 · Modelo GRP faseado</field>
+        <field name="output_format">latex</field>
+        <field name="active">True</field>
+        <field name="guidance_text"><![CDATA[
+Modelo DFD visual em LaTeX para a suite GOV.
+Preencha apenas os pontos realmente conhecidos e sincronize as variaveis do processo.
+Campos com fase 0 pertencem a Demanda; fase 1 a Instrucao; fase 2 a Planejamento; fase 4 a Contratacao.
+Nao invente dados ausentes. Quando um campo em tabela/lista exigir estrutura, use LaTeX simples:
+- linhas de tabela: "A & Descricao & Valor \\\\"
+- itens: "\item Texto"
+Preserve integralmente a estrutura visual do documento.
+        ]]></field>
+        <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "dfd_numero", "type": "string", "label": "Numero do DFD", "fase": 0},
+    {"key": "identificacao_processo", "type": "string", "label": "Numero do processo SEI/E-DOC", "fase": 0},
+    {"key": "exercicio_documento", "type": "string", "label": "Exercicio orcamentario", "fase": 0},
+    {"key": "prioridade_demanda", "type": "string", "label": "Prioridade da demanda", "fase": 0},
+    {"key": "orgao_nome", "type": "string", "label": "Orgao", "fase": 0},
+    {"key": "unidade_nome", "type": "string", "label": "Unidade demandante", "fase": 0},
+    {"key": "area_requisitante_extenso", "type": "string", "label": "Area requisitante", "fase": 0},
+    {"key": "responsavel_nome", "type": "string", "label": "Responsavel pela demanda", "fase": 0},
+    {"key": "responsavel_cargo", "type": "string", "label": "Cargo do responsavel", "fase": 0},
+    {"key": "superior_hierarquico_cargo", "type": "string", "label": "Cargo do superior hierarquico", "fase": 0},
+    {"key": "objeto_titulo", "type": "string", "label": "Titulo do objeto", "fase": 0},
+    {"key": "objeto_descricao_detalhada", "type": "text", "label": "Descricao detalhada do objeto", "fase": 0},
+    {"key": "contextualizacao_necessidade", "type": "text", "label": "Contextualizacao da necessidade", "fase": 0},
+    {"key": "situacao_atual_texto", "type": "text", "label": "Situacao atual e diagnostico", "fase": 0},
+    {"key": "data_limite_fornecimento", "type": "string", "label": "Data-limite para inicio do fornecimento", "fase": 0}
+  ],
+  "optional": [
+    {"key": "etp_referencia", "type": "string", "label": "Referencia do ETP", "fase": 1},
+    {"key": "data_emissao", "type": "string", "label": "Data de emissao", "fase": 0},
+    {"key": "local_documento", "type": "string", "label": "Local do documento", "fase": 0},
+    {"key": "cnpj_orgao", "type": "string", "label": "CNPJ do orgao", "fase": 0},
+    {"key": "responsavel_matricula", "type": "string", "label": "Matricula do responsavel", "fase": 0},
+    {"key": "responsavel_contato", "type": "string", "label": "Contato institucional", "fase": 0},
+    {"key": "superior_nome", "type": "string", "label": "Nome do superior hierarquico", "fase": 0},
+    {"key": "objeto_subtitulo", "type": "string", "label": "Subtitulo do objeto", "fase": 0},
+    {"key": "valor_estimado_extenso", "type": "string", "label": "Valor estimado por extenso", "fase": 2},
+    {"key": "valor_estimado_num", "type": "string", "label": "Valor estimado numerico", "fase": 2},
+    {"key": "codigo_pca", "type": "string", "label": "Codigo do PCA", "fase": 2},
+    {"key": "plano_setorial_referencia", "type": "string", "label": "Plano setorial ou estrategico", "fase": 2},
+    {"key": "programa_orcamentario", "type": "string", "label": "Programa orcamentario", "fase": 2},
+    {"key": "acao_orcamentaria", "type": "string", "label": "Acao orcamentaria", "fase": 2},
+    {"key": "elemento_despesa", "type": "string", "label": "Elemento de despesa", "fase": 2},
+    {"key": "fonte_recurso", "type": "string", "label": "Fonte de recurso", "fase": 2},
+    {"key": "dotacao_orcamentaria", "type": "string", "label": "Dotacao orcamentaria", "fase": 2},
+    {"key": "unidade_orcamentaria", "type": "string", "label": "Unidade orcamentaria", "fase": 2},
+    {"key": "programa_trabalho_codigo", "type": "string", "label": "Programa de trabalho", "fase": 2},
+    {"key": "loa_numero_ano", "type": "string", "label": "Lei orcamentaria de referencia", "fase": 2},
+    {"key": "dotacao_disponivel_texto", "type": "string", "label": "Dotacao disponivel", "fase": 2},
+    {"key": "autoridade_competente_nome", "type": "string", "label": "Nome da autoridade competente", "fase": 4}
+  ],
+  "additional_fields": [
+    {"key": "obrigacao_legal_itens", "type": "latex", "render_mode": "latex", "label": "Itens de base legal", "description": "Use linhas \\item para as normas aplicaveis.", "fase": 0},
+    {"key": "diagnostico_riscos_itens", "type": "latex", "render_mode": "latex", "label": "Riscos e impactos da ausencia da contratacao", "description": "Use linhas \\item para os riscos do diagnostico.", "fase": 0},
+    {"key": "grupos_abc_rows", "type": "latex", "render_mode": "latex", "label": "Linhas da tabela de grupos ABC", "description": "Use linhas de tabela no formato Grupo & Descricao & Exemplos \\\\.", "fase": 1},
+    {"key": "exigencias_tecnicas_itens", "type": "latex", "render_mode": "latex", "label": "Exigencias tecnicas minimas", "description": "Use linhas \\item com os requisitos tecnicos.", "fase": 1},
+    {"key": "estimativa_grupo_rows", "type": "latex", "render_mode": "latex", "label": "Linhas da tabela de estimativa por grupo", "description": "Use linhas de tabela no formato Grupo & Descricao & Valor & Percentual \\\\.", "fase": 2},
+    {"key": "cronograma_processo_rows", "type": "latex", "render_mode": "latex", "label": "Linhas do cronograma do processo", "description": "Use linhas de tabela no formato # & Etapa & Responsavel & Prazo & Status \\\\.", "fase": 1},
+    {"key": "despacho_encaminhamento_texto", "type": "text", "label": "Complemento do despacho de encaminhamento", "description": "Texto complementar opcional ao despacho padrao da autoridade competente.", "fase": 4}
+  ]
+}
+        ]]></field>
+        <field name="option_catalog_json"><![CDATA[
+{
+  "prioridade_demanda": ["ALTA", "MEDIA", "BAIXA"],
+  "campos_latex_livre": {
+    "obrigacao_legal_itens": "\\item Norma ou fundamento aplicavel",
+    "diagnostico_riscos_itens": "\\item Risco, impacto e consequencia",
+    "grupos_abc_rows": "A & Grupo critico & Exemplos de itens \\\\",
+    "exigencias_tecnicas_itens": "\\item Requisito tecnico minimo",
+    "estimativa_grupo_rows": "A & Grupo critico & 100.000,00 & 50\\% \\\\",
+    "cronograma_processo_rows": "1 & Elaboracao do DFD & Unidade demandante & 10/03/2026 & Em curso \\\\"
+  }
+}
+        ]]></field>
+        <field name="prompt_system"><![CDATA[
+Voce e um especialista em contratacoes publicas brasileiras e deve preencher um DFD no formato LaTeX.
+Preserve a estrutura visual do modelo GRP, incluindo capa, tabelas, caixas coloridas, secoes e assinaturas.
+Nao invente fatos nem complete variaveis ausentes com conteudo ficticio.
+Retorne apenas o LaTeX final.
+        ]]></field>
+        <field name="prompt_user_tpl"><![CDATA[
+Preencha o modelo DFD GRP em LaTeX usando somente os dados conhecidos.
+Mantenha a estrutura do template e preencha apenas as variaveis disponiveis.
+
+Dados principais:
+- DFD: {{dfd_numero}}
+- Processo: {{identificacao_processo}}
+- Exercicio: {{exercicio_documento}}
+- Prioridade: {{prioridade_demanda}}
+- Orgao: {{orgao_nome}}
+- Unidade: {{unidade_nome}}
+- Area requisitante: {{area_requisitante_extenso}}
+- Responsavel: {{responsavel_nome}} / {{responsavel_cargo}}
+- Objeto: {{objeto_titulo}}
+- Descricao do objeto: {{objeto_descricao_detalhada}}
+- Contextualizacao: {{contextualizacao_necessidade}}
+- Situacao atual: {{situacao_atual_texto}}
+- Valor estimado: {{valor_estimado_extenso}}
+
+Orientacoes:
+{{guidance_text}}
+        ]]></field>
+        <field name="latex_template"><![CDATA[
+\documentclass[12pt,a4paper]{article}
+
+% -- Codificacao e idioma -----------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% -- Layout -------------------------------------------------------------------
+\usepackage[top=2.8cm,bottom=2.8cm,left=3.0cm,right=2.5cm,headheight=16pt]{geometry}
+
+% -- Cores --------------------------------------------------------------------
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{alertbg}{HTML}{FFF8E1}
+\definecolor{alertbdr}{HTML}{E59C0A}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+
+% -- Cabecalho / rodape -------------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{navy}\textbf{DFD} --- Formalizacao de Demanda}
+\fancyhead[R]{\footnotesize\color{navy}Lei n.\textsuperscript{o} 14.133/2021}
+\fancyfoot[C]{\footnotesize\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{medblue}\leaders\hrule height 0.5pt\hfill}}
+
+% -- Caixas coloridas ---------------------------------------------------------
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{alertbox}[1][Atencao]{enhanced,breakable,
+  colback=alertbg,colframe=alertbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{navy},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=alertbdr!25,colframe=alertbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Requisito]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informacao]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{conclusabox}{enhanced,
+  colback=navy!8,colframe=navy,boxrule=1pt,arc=5pt,
+  left=12pt,right=12pt,top=8pt,bottom=8pt}
+
+% -- Titulos ------------------------------------------------------------------
+\usepackage{titlesec}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}[\color{navy}\titlerule]
+\titlespacing{\section}{0pt}{20pt}{8pt}
+\titleformat{\subsection}{\color{medblue}\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing{\subsection}{0pt}{14pt}{5pt}
+
+% -- Tabelas ------------------------------------------------------------------
+\usepackage{booktabs,array,tabularx,longtable,multirow,colortbl}
+\renewcommand{\arraystretch}{1.45}
+
+% -- Utilitarios --------------------------------------------------------------
+\usepackage{float,graphicx,enumitem,setspace,amsmath}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,pdfborder={0 0 0}]{hyperref}
+\usepackage{chngcntr}
+\counterwithout{footnote}{section}
+
+% -- Macro: linha de assinatura -----------------------------------------------
+\newcommand{\assinatura}[3]{%
+  \begin{center}
+    \vspace{0.2cm}
+    \rule{7cm}{0.5pt}\\[3pt]
+    \textbf{#1}\\
+    \small #2\\
+    \small Matricula: \underline{\hspace{2.5cm}}\\
+    \small #3
+  \end{center}}
+
+% ============================================================================
+% -- VARIAVEIS DO TEMPLATE ----------------------------------------------------
+% ============================================================================
+
+\newcommand{\dfdNum}{{dfd_numero}}
+\newcommand{\etpRef}{{etp_referencia}}
+\newcommand{\procNum}{{identificacao_processo}}
+\newcommand{\exercicio}{{exercicio_documento}}
+\newcommand{\prioridade}{{prioridade_demanda}}
+\newcommand{\dataEmissao}{{data_emissao}}
+\newcommand{\dataLimite}{{data_limite_fornecimento}}
+\newcommand{\localDocumento}{{local_documento}}
+
+\newcommand{\orgao}{{orgao_nome}}
+\newcommand{\unidade}{{unidade_nome}}
+\newcommand{\areaReq}{{area_requisitante_extenso}}
+\newcommand{\cnpjOrgao}{{cnpj_orgao}}
+
+\newcommand{\respNome}{{responsavel_nome}}
+\newcommand{\respCargo}{{responsavel_cargo}}
+\newcommand{\respMatricula}{{responsavel_matricula}}
+\newcommand{\respContato}{{responsavel_contato}}
+\newcommand{\superiorHierarquico}{{superior_hierarquico_cargo}}
+\newcommand{\superiorNome}{{superior_nome}}
+
+\newcommand{\objetoTitulo}{{objeto_titulo}}
+\newcommand{\objetoSubtitulo}{{objeto_subtitulo}}
+\newcommand{\objetoDescricao}{{objeto_descricao_detalhada}}
+
+\newcommand{\valorEstimado}{{valor_estimado_extenso}}
+\newcommand{\valorEstimadoNum}{{valor_estimado_num}}
+\newcommand{\codigoPCA}{{codigo_pca}}
+\newcommand{\dotacaoOrcamentaria}{{dotacao_orcamentaria}}
+\newcommand{\fonteRecurso}{{fonte_recurso}}
+\newcommand{\planoSetorialReferencia}{{plano_setorial_referencia}}
+\newcommand{\programaOrcamentario}{{programa_orcamentario}}
+\newcommand{\acaoOrcamentaria}{{acao_orcamentaria}}
+\newcommand{\elementoDespesa}{{elemento_despesa}}
+\newcommand{\unidadeOrcamentaria}{{unidade_orcamentaria}}
+\newcommand{\programaTrabalhoCodigo}{{programa_trabalho_codigo}}
+\newcommand{\loaNumeroAno}{{loa_numero_ano}}
+\newcommand{\dotacaoDisponivelTexto}{{dotacao_disponivel_texto}}
+\newcommand{\autoridadeCompetenteNome}{{autoridade_competente_nome}}
+
+\begin{document}
+
+% ============================================================================
+% CAPA
+% ============================================================================
+\begin{titlepage}
+  \pagecolor{navy}\color{white}
+  \setlength{\parindent}{0pt}
+  \centering\vspace*{1cm}
+
+  {\small\bfseries\color{ltblue} \orgao}\\[2pt]
+  {\small\color{ltblue!70} \unidade}\\[0.4cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.6cm]
+
+  {\fontsize{11}{14}\selectfont\bfseries\color{ltblue!80}
+    DOCUMENTO DE FORMALIZACAO DE DEMANDA --- DFD}\\[0.4cm]
+
+  {\fontsize{22}{28}\selectfont\bfseries
+    \objetoTitulo}\\[0.25cm]
+
+  {\fontsize{13}{16}\selectfont\color{ltblue!80}
+    \objetoSubtitulo}\\[0.6cm]
+
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[1cm]
+
+  \begin{tabular}{@{}r@{\hspace{8pt}}p{0.56\linewidth}@{}}
+    \color{ltblue!70}\small\bfseries N.\textsuperscript{o} do DFD: &
+      \small \dfdNum \\[4pt]
+    \color{ltblue!70}\small\bfseries ETP vinculado: &
+      \small \etpRef \\[4pt]
+    \color{ltblue!70}\small\bfseries Processo: &
+      \small \procNum \\[4pt]
+    \color{ltblue!70}\small\bfseries Area Demandante: &
+      \small \areaReq \\[4pt]
+    \color{ltblue!70}\small\bfseries Responsavel: &
+      \small \respNome \\[4pt]
+    \color{ltblue!70}\small\bfseries Exercicio: &
+      \small \exercicio \\[4pt]
+    \color{ltblue!70}\small\bfseries Base Legal: &
+      \small Art.\,12, VII; Art.\,18 e Art.\,40, Lei n.\textsuperscript{o} 14.133/2021; IN SEGES/MGI n.\textsuperscript{o} 58/2022 \\[4pt]
+    \color{ltblue!70}\small\bfseries Prioridade: &
+      \small \textbf{\prioridade} \\[4pt]
+  \end{tabular}
+
+  \vfill
+  \textcolor{ltblue!40}{\rule{0.85\linewidth}{0.4pt}}\\[0.3cm]
+  {\tiny\color{ltblue!50}
+    Documento elaborado em conformidade com o art.\,12, VII, da Lei n.\textsuperscript{o}
+    14.133/2021 e com a Instrucao Normativa SEGES/MGI n.\textsuperscript{o} 58, de 8 de
+    agosto de 2022.}
+\end{titlepage}
+\nopagecolor
+\setlength{\parindent}{1.2cm}
+
+\begin{table}[H]
+\centering
+\caption*{\textbf{\color{navy}FICHA DE IDENTIFICACAO DO DOCUMENTO DE FORMALIZACAO DE DEMANDA}}
+\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados do Documento}} \\
+\midrule
+N.\textsuperscript{o} do DFD:          & \dfdNum \\
+\rowcolor{rowalt}
+ETP vinculado:                         & \etpRef \\
+N.\textsuperscript{o} do Processo:     & \procNum \\
+\rowcolor{rowalt}
+Unidade Demandante:                    & \unidade \\
+Area Responsavel:                      & \areaReq \\
+\rowcolor{rowalt}
+Objeto da Demanda:                     & \objetoDescricao \\
+Exercicio Orcamentario:                & \exercicio \\
+\rowcolor{rowalt}
+Valor Estimado:                        & \valorEstimado \\
+Prioridade:                            & \textbf{\prioridade} \\
+\rowcolor{rowalt}
+Vinculacao ao PCA:                     & Item \codigoPCA \\
+Data de elaboracao:                    & \localDocumento, \dataEmissao \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.4cm}
+\tableofcontents
+\clearpage
+
+\section{Identificacao da Area Demandante}
+
+\begin{legalbox}[Base Legal --- Art.\,12, VII e Art.\,18, \textit{caput}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O processo de contratacao deve ser iniciado com \textbf{formalizacao da demanda} pela
+area requisitante, em conformidade com o planejamento estrategico e o Plano de
+Contratacoes Anual (PCA), permitindo a instrucao do processo com o Estudo Tecnico
+Preliminar (ETP) subsequente.
+\end{legalbox}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados da Unidade Demandante}} \\
+\midrule
+Orgao:                  & \orgao \\
+\rowcolor{rowalt}
+Secretaria / Unidade:   & \unidade \\
+Area Tecnica:           & \areaReq \\
+\rowcolor{rowalt}
+Responsavel pela Demanda: & \respNome, \respCargo, \respMatricula \\
+Telefone / E-mail:      & \respContato \\
+\rowcolor{rowalt}
+Superior Hierarquico:   & \superiorHierarquico \\
+CNPJ do Orgao:          & \cnpjOrgao \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Descricao e Justificativa da Necessidade}
+
+\begin{legalbox}[Base Legal --- Art.\,18, I; IN SEGES/MGI n.\textsuperscript{o} 58/2022, Art.\,4.\textsuperscript{o}]
+\small
+A formalizacao da demanda deve conter a \textbf{descricao sucinta e clara do objeto},
+a justificativa da necessidade e a sua vinculacao ao interesse publico, ao
+planejamento estrategico da unidade e ao PCA do exercicio.
+\end{legalbox}
+
+\subsection{Objeto da Demanda}
+
+\objetoDescricao
+
+\subsection{Justificativa da Necessidade}
+
+\subsubsection{Contextualizacao}
+
+{{contextualizacao_necessidade}}
+
+\subsubsection{Obrigacao Legal e Tecnica}
+
+\begin{itemize}
+{{obrigacao_legal_itens}}
+\end{itemize}
+
+\subsubsection{Situacao Atual --- Diagnostico}
+
+{{situacao_atual_texto}}
+
+\begin{enumerate}
+{{diagnostico_riscos_itens}}
+\end{enumerate}
+
+\begin{warnbox}[Urgencia da Demanda]
+\small
+A contratacao tem carater de \textbf{\prioridade}. O prazo maximo para inicio do fornecimento ou atendimento da necessidade e \textbf{\dataLimite}. A estimativa preliminar atualmente registrada e de \textbf{\valorEstimado}.
+\end{warnbox}
+
+\subsection{Vinculacao ao Planejamento Institucional}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Vinculacao Estrategica}} \\
+\midrule
+Plano setorial / estrategico:   & \planoSetorialReferencia \\
+\rowcolor{rowalt}
+PCA \exercicio:                 & Item \codigoPCA --- \objetoTitulo \\
+Programa Orcamentario:          & \programaOrcamentario \\
+\rowcolor{rowalt}
+Acao Orcamentaria:              & \acaoOrcamentaria \\
+Elemento de Despesa:            & \elementoDespesa \\
+\rowcolor{rowalt}
+Fonte de Recurso:               & \fonteRecurso \\
+Lei Orcamentaria Anual:         & \loaNumeroAno --- Dotacao n.\textsuperscript{o} \dotacaoOrcamentaria \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Especificacao Preliminar do Objeto}
+
+\begin{legalbox}[Base Legal --- Art.\,18, II e Art.\,40, I, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+A DFD deve conter a \textbf{especificacao preliminar do objeto}, em nivel suficiente
+para orientar a elaboracao do ETP e do Termo de Referencia subsequentes, sem constituir
+especificacao tecnica definitiva.
+\end{legalbox}
+
+\subsection{Descricao Resumida dos Grupos de Itens}
+
+\begin{table}[H]
+\centering
+\caption{Grupos de itens da demanda por classificacao ABC}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{1.4cm} p{5.0cm} p{6.8cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Grupo} &
+  \color{white}\textbf{Descricao} &
+  \color{white}\textbf{Exemplos de Itens} \\
+  \toprule
+{{grupos_abc_rows}}
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Exigencias Tecnicas Minimas}
+
+\begin{itemize}
+{{exigencias_tecnicas_itens}}
+\end{itemize}
+
+\section{Estimativa Preliminar de Quantidades e Valor}
+
+\begin{legalbox}[Base Legal --- Art.\,18, II; Art.\,23, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+A estimativa de quantidades e valor apresentada nesta DFD tem carater \textbf{preliminar},
+destinando-se a orientar o planejamento orcamentario e o inicio da instrucao do processo.
+A estimativa definitiva constara do ETP e sera detalhada no Termo de Referencia.
+\end{legalbox}
+
+\subsection{Estimativa de Valor Global}
+
+\begin{table}[H]
+\centering
+\caption{Estimativa preliminar de valor por grupo de itens}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{1.4cm} p{5.8cm} >{\centering\arraybackslash}p{2.8cm} >{\centering\arraybackslash}p{2.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Grupo} &
+  \color{white}\textbf{Descricao} &
+  \color{white}\textbf{Valor Est. (R\$)} &
+  \color{white}\textbf{\% do Total} \\
+  \toprule
+{{estimativa_grupo_rows}}
+  \rowcolor{ltblue}
+  \multicolumn{2}{c}{\textbf{TOTAL GERAL}}             & \textbf{\valorEstimadoNum} & \textbf{100\%} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\section{Estimativa de Data para Inicio da Contratacao}
+
+\begin{legalbox}[Base Legal --- Art.\,12, VII; Art.\,18, \textit{caput}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O PCA deve conter as \textbf{datas previstas} para o inicio dos processos de
+contratacao, permitindo o planejamento da capacidade operacional do setor de compras.
+\end{legalbox}
+
+\begin{table}[H]
+\centering
+\caption{Cronograma preliminar do processo de contratacao}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{0.6cm} p{6.0cm} >{\centering\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{2.2cm} p{2.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{\#} & \color{white}\textbf{Etapa do Processo} & \color{white}\textbf{Resp.} & \color{white}\textbf{Prazo Prev.} & \color{white}\textbf{Status} \\
+  \toprule
+{{cronograma_processo_rows}}
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{warnbox}[Data-Limite para Inicio do Fornecimento]
+\small
+O \textbf{prazo maximo para inicio do fornecimento} e \dataLimite. O processo licitatorio deve ser iniciado com antecedencia minima de \textbf{90 dias} em relacao a essa data.
+\end{warnbox}
+
+\section{Indicacao dos Recursos Orcamentarios}
+
+\begin{table}[H]
+\centering
+\caption{Indicacao orcamentaria da despesa}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados Orcamentarios}} \\
+\midrule
+Unidade Orcamentaria:   & \unidadeOrcamentaria \\
+\rowcolor{rowalt}
+Programa de Trabalho:   & \programaTrabalhoCodigo \\
+Acao Orcamentaria:      & \acaoOrcamentaria \\
+\rowcolor{rowalt}
+Fonte de Recurso:       & \fonteRecurso \\
+Dotacao Disponivel:     & \dotacaoDisponivelTexto \\
+\rowcolor{rowalt}
+LOA de Referencia:      & \loaNumeroAno \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Declaracao da Area Demandante}
+
+\begin{conclusabox}
+\begin{center}
+  \textbf{\color{navy}\large DECLARACAO DA AREA DEMANDANTE}
+\end{center}
+\medskip
+Declaro, para os devidos fins, que:
+
+\begin{enumerate}
+  \item A presente demanda e \textbf{real, licita e prioritaria}, oriunda de necessidade continuada.
+  \item A contratacao guarda compatibilidade com o planejamento institucional e com a instrucao do processo.
+  \item As especificacoes preliminares constantes deste DFD foram definidas com base em criterios \textbf{tecnicos objetivos}.
+  \item Estou \textbf{ciente} de que eventuais inconsistencias nas informacoes aqui prestadas poderao acarretar responsabilizacao.
+\end{enumerate}
+\end{conclusabox}
+
+\vspace{1.5cm}
+
+\begin{minipage}{0.47\linewidth}
+\assinatura{\respNome}{\respCargo}{\unidade}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{\superiorNome}{\superiorHierarquico}{Aprovacao Hierarquica}
+\end{minipage}
+
+\vspace{1cm}
+\noindent\hfill{\small \localDocumento, \dataEmissao}
+
+\vspace{1.5cm}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{p{13.5cm}}
+  \rowcolor{navy!10}
+  \multicolumn{1}{c}{\textbf{\color{navy}DESPACHO DE ENCAMINHAMENTO --- AUTORIDADE COMPETENTE}} \\
+  \midrule
+  \vspace{0.1cm}
+  \textbf{Ao Setor de Compras / CPL:} \\[4pt]
+  Autorizo o prosseguimento do processo administrativo para a contratacao em epigrafe, determinando a elaboracao do Estudo Tecnico Preliminar e do Termo de Referencia.\\[4pt]
+  {{despacho_encaminhamento_texto}}
+  \\[4pt]
+  \localDocumento, \underline{\hspace{1.5cm}} de \underline{\hspace{2.5cm}} de \exercicio. \\[0.8cm]
+  \hfill\rule{7cm}{0.5pt}\hspace{1cm} \\
+  \hfill\textbf{\autoridadeCompetenteNome} \\
+  \hfill\small \superiorHierarquico \\
+  \vspace{0.1cm}
+\end{tabular}
+\end{table}
+
+\end{document}
+        ]]></field>
+    </record>
+</odoo>

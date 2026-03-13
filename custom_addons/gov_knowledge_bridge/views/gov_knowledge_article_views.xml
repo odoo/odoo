@@ -12,6 +12,9 @@
                 <button class="oe_stat_button" name="action_open_gov_documentos" type="object" icon="fa-file" invisible="not processo_doc_ids">
                     <field name="processo_doc_count" widget="statinfo" string="Docs GOV"/>
                 </button>
+                <button class="oe_stat_button" name="action_open_gov_templates" type="object" icon="fa-book" invisible="not gov_template_ids">
+                    <field name="gov_template_count" widget="statinfo" string="Modelos GOV"/>
+                </button>
             </xpath>
 
             <xpath expr="//notebook" position="inside">
@@ -31,11 +34,34 @@
                             class="btn-secondary"
                             invisible="not processo_doc_ids"
                         />
+                        <button
+                            name="action_open_gov_templates"
+                            type="object"
+                            string="Abrir Modelos"
+                            class="btn-secondary"
+                            invisible="not gov_template_ids"
+                        />
+                        <button
+                            name="action_import_gov_template"
+                            type="object"
+                            string="Importar Modelo GOV"
+                            class="btn-primary"
+                        />
                     </div>
                     <group>
                         <field name="processo_ids" widget="many2many_tags"/>
                         <field name="processo_doc_ids" widget="many2many_tags"/>
                     </group>
+                    <field name="gov_template_ids" nolabel="1">
+                        <list create="false" delete="false">
+                            <field name="name"/>
+                            <field name="doc_type"/>
+                            <field name="fase"/>
+                            <field name="process_type" optional="show"/>
+                            <field name="process_scope" optional="show"/>
+                            <field name="active" widget="boolean_toggle" optional="show"/>
+                        </list>
+                    </field>
                 </page>
             </xpath>
         </field>

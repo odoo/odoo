@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_knowledge_template_import_wizard_form" model="ir.ui.view">
+        <field name="name">gov.knowledge.template.import.wizard.form</field>
+        <field name="model">gov.knowledge.template.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar Modelo GOV do Knowledge">
+                <sheet>
+                    <div class="alert alert-info mb-3" role="alert">
+                        Use este wizard para transformar um upload novo ou o conteúdo do artigo
+                        em um modelo GOV reutilizável com placeholders dinâmicos.
+                    </div>
+
+                    <group>
+                        <group string="Origem">
+                            <field name="article_id"/>
+                            <field name="template_id"/>
+                            <field name="source_mode"/>
+                            <field name="upload_file" filename="upload_filename" invisible="source_mode != 'upload'"/>
+                            <field name="upload_filename" invisible="1"/>
+                        </group>
+                        <group string="Modelo">
+                            <field name="name"/>
+                            <field name="doc_type"/>
+                            <field name="fase"/>
+                            <field name="process_type"/>
+                            <field name="process_scope"/>
+                            <field name="output_format"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Referência">
+                            <field name="source_document"/>
+                            <field name="versao_normativa"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Orientações">
+                            <field name="guidance_text" nolabel="1"/>
+                        </page>
+                        <page string="Parâmetros">
+                            <field
+                                name="parameter_spec_json"
+                                nolabel="1"
+                                placeholder='Se deixar em branco, o sistema infere as variáveis com base em {{placeholders}} encontrados no modelo.'
+                            />
+                        </page>
+                        <page string="Opções">
+                            <field name="option_catalog_json" nolabel="1"/>
+                        </page>
+                        <page string="Prompts">
+                            <field name="prompt_system" nolabel="1"/>
+                            <field name="prompt_user_tpl" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_import" string="Importar Modelo" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

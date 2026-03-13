@@ -9,9 +9,11 @@ from . import gov_ai_quality_policy
 from . import gov_ai_run
 from . import gov_dashboard
 from . import gov_latex_service
+from . import gov_template_service
 from . import gov_ai_template
 from . import gov_dotacao_wizard
 from . import gov_processo
+from . import gov_processo_parametro
 from . import gov_processo_fase_wizard
 from . import gov_relatorio_wizard
 from . import gov_processo_doc

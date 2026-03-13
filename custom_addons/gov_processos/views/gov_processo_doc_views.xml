@@ -45,6 +45,20 @@
                         invisible="state == 'assinado'"
                     />
                     <button
+                        name="action_sync_template_parameters"
+                        string="🔄 Sincronizar Variáveis"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'assinado'"
+                    />
+                    <button
+                        name="action_apply_template_latex"
+                        string="🧩 Aplicar Modelo"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'assinado'"
+                    />
+                    <button
                         name="action_regenerar_checklist_manual"
                         string="🧾 Regenerar Checklist"
                         type="object"
@@ -220,9 +234,52 @@
                             </group>
                         </page>
 
+                        <page string="Variáveis do Modelo">
+                            <div class="alert alert-info mb-2" role="alert">
+                                Estas variáveis são compartilhadas no nível do processo e ficam bloqueadas
+                                assim que a fase correspondente é encerrada.
+                            </div>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_sync_template_parameters"
+                                    string="Sincronizar Variáveis"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_open_template_parameters"
+                                    string="Abrir Lista Completa"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <group>
+                                <field name="template_parameter_count" readonly="1"/>
+                            </group>
+                            <field name="template_parameter_ids" readonly="1" nolabel="1">
+                                <list create="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="key"/>
+                                    <field name="doc_type" optional="show"/>
+                                    <field name="fase"/>
+                                    <field name="section"/>
+                                    <field
+                                        name="status"
+                                        widget="badge"
+                                        decoration-success="status == 'aberta'"
+                                        decoration-warning="status == 'pendente'"
+                                        decoration-danger="status == 'fechada'"
+                                    />
+                                    <field name="is_filled" widget="boolean_toggle" optional="show"/>
+                                    <field name="value_text"/>
+                                </list>
+                            </field>
+                        </page>
+
                         <page string="Fonte LaTeX">
                             <div class="alert alert-info mb-2" role="alert">
-                                Cole ou edite o código LaTeX aqui e use o botão "Gerar PDF".
+                                Cole ou edite o código LaTeX aqui, ou aplique o modelo dinâmico a partir das variáveis sincronizadas.
                             </div>
                             <div class="mb-2 d-flex gap-2">
                                 <button
@@ -237,6 +294,20 @@
                                     string="📄 Gerar PDF"
                                     type="object"
                                     class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_sync_template_parameters"
+                                    string="🔄 Sincronizar Variáveis"
+                                    type="object"
+                                    class="btn-secondary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_apply_template_latex"
+                                    string="🧩 Aplicar Modelo"
+                                    type="object"
+                                    class="btn-secondary"
                                     invisible="state == 'assinado'"
                                 />
                                 <button
@@ -373,4 +444,3 @@
         <field name="context">{'default_processo_id': active_id}</field>
     </record>
 </odoo>
-

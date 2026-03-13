@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import html
+import json
 import re
 
 from markupsafe import Markup, escape
@@ -11,6 +12,7 @@ from odoo.exceptions import UserError, ValidationError
 from .constants import DOC_TYPE_SELECTION, PROCESS_SCOPE_SELECTION, PROCESS_TYPE_SELECTION
 from .gov_ai_doc_service import GovAiDocService
 from .gov_latex_service import GovHtmlPdfService, GovLatexService
+from .gov_template_service import GovTemplateService
 
 CHECKLIST_MODE_SELECTION = [
     ("agu_estrito", "AGU Estrito"),
@@ -157,6 +159,17 @@ class GovProcessoDoc(models.Model):
         compute="_compute_versao_count",
         string="Versões",
     )
+    template_parameter_ids = fields.Many2many(
+        "gov.processo.parametro",
+        string="Variáveis do Modelo",
+        compute="_compute_template_parameters",
+        store=False,
+    )
+    template_parameter_count = fields.Integer(
+        string="Qtd. Variáveis do Modelo",
+        compute="_compute_template_parameters",
+        store=False,
+    )
 
     @api.depends("versao_ids")
     def _compute_versao_count(self):
@@ -167,6 +180,31 @@ class GovProcessoDoc(models.Model):
     def _compute_clone_count(self):
         for rec in self:
             rec.clone_count = len(rec.clone_ids)
+
+    @api.depends(
+        "ai_template_id",
+        "doc_type",
+        "processo_id",
+        "processo_id.parameter_ids",
+        "processo_id.parameter_ids.value_text",
+    )
+    def _compute_template_parameters(self):
+        for rec in self:
+            template = rec.ai_template_id or rec._get_default_ai_template()
+            if not rec.processo_id or not template:
+                rec.template_parameter_ids = self.env["gov.processo.parametro"]
+                rec.template_parameter_count = 0
+                continue
+            keys = set(template.get_parameter_keys())
+            parameters = rec.processo_id.parameter_ids.filtered(lambda item: item.key in keys)
+            rec.template_parameter_ids = parameters
+            rec.template_parameter_count = len(parameters)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._sync_template_parameters_from_current_template()
+        return records
 
     @api.constrains(
         "state",
@@ -183,6 +221,7 @@ class GovProcessoDoc(models.Model):
 
     def write(self, vals):
         vals = dict(vals)
+        sync_template_parameters = bool({"ai_template_id", "doc_type", "processo_id"} & set(vals))
         skip_versao_snapshot = self.env.context.get("skip_versao_snapshot")
         campos_conteudo = {
             "content_html",
@@ -239,6 +278,8 @@ class GovProcessoDoc(models.Model):
 
         if vals.get("state") == "assinado":
             self._check_tr_avancar_fase()
+        if sync_template_parameters:
+            self._sync_template_parameters_from_current_template()
         return result
 
     def _check_tr_avancar_fase(self):
@@ -417,6 +458,15 @@ class GovProcessoDoc(models.Model):
             return ["all", "servicos", "servicos_continuados"]
         return ["all", scope]
 
+    def _sync_template_parameters_from_current_template(self):
+        for rec in self:
+            if not rec.processo_id:
+                continue
+            template = rec.ai_template_id or rec._get_default_ai_template()
+            if template:
+                template.sync_process_parameters(rec.processo_id)
+        return True
+
     def _get_default_ai_template(self):
         self.ensure_one()
         if not self.process_type:
@@ -448,7 +498,7 @@ class GovProcessoDoc(models.Model):
         doc_type_label = dict(self._fields["doc_type"].selection).get(self.doc_type, self.doc_type)
         scope_label = dict(PROCESS_SCOPE_SELECTION).get(self.process_scope, self.process_scope)
         type_label = dict(PROCESS_TYPE_SELECTION).get(self.process_type, self.process_type)
-        return {
+        context = {
             "ug_nome": company.name or "",
             "ug_cnpj": getattr(company, "cnpj_ug", "") or "",
             "exercicio": getattr(company, "exercicio_fiscal", fields.Date.today().year),
@@ -472,7 +522,23 @@ class GovProcessoDoc(models.Model):
             "checklist_mode": dict(CHECKLIST_MODE_SELECTION).get(self.checklist_mode, self.checklist_mode or ""),
             "memoria_ug": memory_block or "",
             "template_nome": template.name if template else "",
+            "guidance_text": template.guidance_text if template else "",
+            "output_format": template.output_format if template else "",
+            "versao_normativa": template.versao_normativa if template else "",
+            "parameters_json": json.dumps(
+                template.get_parameter_spec() if template else {},
+                ensure_ascii=False,
+                indent=2,
+            ),
+            "option_catalog_json": json.dumps(
+                template.get_option_catalog() if template else {},
+                ensure_ascii=False,
+                indent=2,
+            ),
         }
+        if processo:
+            context.update(processo.get_template_parameter_context(template=template))
+        return context
 
     def _build_fallback_ai_config(self):
         return self.env["gov.ai.provider.config"].new(
@@ -646,12 +712,110 @@ class GovProcessoDoc(models.Model):
             },
         }
 
+    def action_sync_template_parameters(self):
+        self.ensure_one()
+        template = self.ai_template_id or self._get_default_ai_template()
+        if not template:
+            raise UserError("Nenhum template encontrado para sincronizar as variáveis.")
+
+        previous_keys = set(self.processo_id.parameter_ids.mapped("key"))
+        template.sync_process_parameters(self.processo_id)
+        new_keys = set(self.processo_id.parameter_ids.mapped("key")) - previous_keys
+
+        if not self.ai_template_id:
+            self.write({"ai_template_id": template.id})
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Variáveis sincronizadas",
+                "message": (
+                    f"Template: {template.name}. "
+                    f"Novas variáveis: {len(new_keys)}."
+                ),
+                "type": "success",
+            },
+        }
+
+    def action_open_template_parameters(self):
+        self.ensure_one()
+        template = self.ai_template_id or self._get_default_ai_template()
+        if not template:
+            raise UserError("Nenhum template encontrado para este documento.")
+
+        template.sync_process_parameters(self.processo_id)
+        keys = template.get_parameter_keys()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Variáveis do Modelo — {self.name}",
+            "res_model": "gov.processo.parametro",
+            "view_mode": "list,form",
+            "domain": [
+                ("processo_id", "=", self.processo_id.id),
+                ("key", "in", keys or [""]),
+            ],
+            "context": {
+                "default_processo_id": self.processo_id.id,
+            },
+        }
+
+    def action_apply_template_latex(self):
+        self.ensure_one()
+        if self.state == "assinado":
+            raise UserError("Documento assinado não pode receber novo template.")
+
+        template = self.ai_template_id or self._get_default_ai_template()
+        if not template:
+            raise UserError("Nenhum template encontrado para aplicar ao documento.")
+
+        template_source = template.latex_template or template.latex_source
+        if not template_source:
+            raise UserError("O template selecionado não possui conteúdo LaTeX cadastrado.")
+
+        template.sync_process_parameters(self.processo_id)
+        context = self._build_ai_context(template, memory_block="")
+        rendered = GovAiDocService.render_placeholders(template_source, context)
+        if not rendered.strip():
+            raise UserError("O resultado do template ficou vazio após aplicar as variáveis.")
+
+        vals = {
+            "latex_source": rendered,
+            "ai_generated": False,
+            "change_reason": f"Template LaTeX aplicado manualmente: {template.name}",
+        }
+        if not self.ai_template_id:
+            vals["ai_template_id"] = template.id
+        self.write(vals)
+        self.message_post(
+            body=Markup(
+                "🧩 <b>Template LaTeX aplicado.</b> "
+                f"Modelo: <b>{template.name}</b>."
+            ),
+            message_type="comment",
+            subtype_xmlid="mail.mt_note",
+        )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Template aplicado",
+                "message": f"Modelo: {template.name}",
+                "type": "success",
+            },
+        }
+
     def action_salvar_memoria_ia(self):
         self.ensure_one()
         if not self.processo_id or not self.processo_id.ug_id:
             raise UserError("Documento sem UG vinculada ao processo.")
         content = self.content_html or self.latex_source or ""
-        plain = self._plain_text_from_html(content)
+        if self.latex_source:
+            plain = GovTemplateService.plain_text_from_html(self.content_html or "")
+            if not plain:
+                plain = re.sub(r"\s+", " ", self.latex_source or "").strip()
+        else:
+            plain = self._plain_text_from_html(content)
         if not plain:
             raise UserError("Documento sem conteúdo textual para salvar em memória.")
 

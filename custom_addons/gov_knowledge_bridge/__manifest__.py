@@ -5,15 +5,17 @@
     "summary": "Integra Document Page com Processo e Documento da suite GOV",
     "depends": ["gov_processos", "document_page"],
     "data": [
+        "security/ir.model.access.csv",
         "data/gov_knowledge_group_bridge.xml",
         "views/gov_knowledge_processo_views.xml",
         "views/gov_knowledge_doc_views.xml",
         "views/gov_knowledge_article_views.xml",
+        "views/gov_ai_template_knowledge_views.xml",
+        "wizard/gov_knowledge_template_import_wizard_views.xml",
     ],
     "installable": True,
     "application": False,
     "author": "GRP",
     "license": "LGPL-3",
 }
-
 

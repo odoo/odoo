@@ -1,0 +1,1 @@
+from . import test_gov_knowledge_template_import

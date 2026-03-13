@@ -1,3 +1,4 @@
+import os
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -23,16 +24,17 @@ class GovAiProviderConfig(models.Model):
         AI_PROVIDER_SELECTION,
         string="Provedor IA",
         required=True,
-        default="odoo_chat",
+        default="ollama",
     )
     model_name = fields.Char(
         string="Modelo",
         required=True,
-        default="odoo_chat_local",
+        default="llama3.2:1b",
     )
     endpoint_url = fields.Char(
         string="Endpoint URL",
         help="Opcional para OpenAI/Claude/Hugging Face. Obrigatório para Ollama custom.",
+        default=lambda self: os.getenv("OLLAMA_HOST", "http://ollama:11434").rstrip("/") + "/api/generate"
     )
     api_key = fields.Char(
         string="API Key",
@@ -61,8 +63,9 @@ class GovAiProviderConfig(models.Model):
                 rec.model_name = rec.model_name or "mistralai/Mistral-7B-Instruct-v0.3"
                 rec.endpoint_url = rec.endpoint_url or "https://api-inference.huggingface.co/models"
             elif rec.provider == "ollama":
-                rec.model_name = rec.model_name or "qwen2.5:0.5b"
-                rec.endpoint_url = rec.endpoint_url or "http://127.0.0.1:11434/api/generate"
+                rec.model_name = rec.model_name or "llama3.2:1b"
+                ollama_host = os.getenv("OLLAMA_HOST", "http://ollama:11434").rstrip("/")
+                rec.endpoint_url = rec.endpoint_url or f"{ollama_host}/api/generate"
             else:
                 rec.model_name = rec.model_name or "odoo_chat_local"
                 rec.endpoint_url = False

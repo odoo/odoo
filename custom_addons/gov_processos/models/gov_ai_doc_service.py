@@ -198,14 +198,16 @@ class GovAiDocService:
 
     @classmethod
     def _generate_ollama(cls, config, system_prompt, user_prompt):
-        endpoint = (config.endpoint_url or "").strip() or "http://127.0.0.1:11434/api/generate"
+        import os
+        ollama_host = os.getenv("OLLAMA_HOST", "http://ollama:11434").rstrip("/")
+        endpoint = (config.endpoint_url or "").strip() or f"{ollama_host}/api/generate"
         prompt = (system_prompt or "").strip()
         if prompt:
             prompt += "\n\n"
         prompt += user_prompt or ""
         timeout = int(config.timeout_seconds or 120)
 
-        primary_model = (config.model_name or "qwen2.5:0.5b").strip()
+        primary_model = (config.model_name or "llama3.2:1b").strip()
         fallback_models = []
         if getattr(config, "env", None):
             fallback_raw = (
