@@ -95,6 +95,7 @@ registry.category("web_tour.tours").add("test_sync_lines_qty_update_ticket_scree
             ProductScreen.clickOrderline("Coca-Cola", "1"),
             ProductScreen.clickNumpad("3"),
             ProductScreen.selectedOrderlineHas("Coca-Cola", "3"),
+            Chrome.waitForOrdersSync(),
             Chrome.clickOrders(),
             TicketScreen.selectOrder("001"),
             Order.hasLine({
