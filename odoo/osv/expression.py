@@ -982,6 +982,15 @@ class expression(object):
             # Get the next leaf to process
             leaf, model, alias = pop()
 
+            def push_safe(new_leaf, new_model, new_alias):
+                """Prevent obvious infinite loop when pushing a new leaf to the stack."""
+                if new_leaf == leaf and new_model == model and new_alias == alias:
+                    raise ValueError(
+                        f"Unexpected infinite loop when processing leaf {leaf}"
+                        f" of model {model._name}"
+                    )
+                push(new_leaf, new_model, new_alias)
+
             # ----------------------------------------
             # SIMPLE CASE
             # 1. leaf is an operator
@@ -1022,7 +1031,7 @@ class expression(object):
                 and not (field.type in ('datetime', 'date') and len(path) > 1)  # READ_GROUP_NUMBER_GRANULARITY is not supported
                 and model.env['ir.default']._evaluate_condition_with_fallback(model._name, leaf) is False
             ):
-                push('&', model, alias)
+                push_safe('&', model, alias)
                 sql_col_is_not_null = SQL('%s.%s IS NOT NULL', SQL.identifier(alias), SQL.identifier(field.name))
                 push_result(sql_col_is_not_null)
 
@@ -1036,13 +1045,13 @@ class expression(object):
                     model._field_to_sql(alias, parent_fname, self.query),
                     SQL.identifier(parent_alias, 'id'),
                 ))
-                push(leaf, parent_model, parent_alias)
+                push_safe(leaf, parent_model, parent_alias)
 
             elif left == 'id' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, model, leaf)
                 dom = HIERARCHY_FUNCS[operator](left, ids2, model)
                 for dom_leaf in dom:
-                    push(dom_leaf, model, alias)
+                    push_safe(dom_leaf, model, alias)
 
             elif field.type == 'properties':
                 if len(path) != 2 or "." in path[1]:
@@ -1147,7 +1156,7 @@ class expression(object):
                     right = ['|', ('id', '=', False), '!', *right]
 
                 for leaf in right:
-                    push(leaf, comodel, coalias)
+                    push_safe(leaf, comodel, coalias)
 
             elif operator in ('any', 'not any') and field.store and field.type == 'one2many' and field.auto_join:
                 # use a subquery bypassing access rules and business logic
@@ -1156,7 +1165,7 @@ class expression(object):
                 sql = query.subselect(
                     comodel._field_to_sql(comodel._table, field.inverse_name, query),
                 )
-                push(('id', ANY_IN[operator], sql), model, alias)
+                push_safe(('id', ANY_IN[operator], sql), model, alias)
 
             elif operator in ('any', 'not any') and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
@@ -1164,17 +1173,17 @@ class expression(object):
             elif operator in ('any', 'not any') and field.type == 'many2one':
                 right_ids = comodel._search(right)
                 if operator == 'any':
-                    push((left, 'in', right_ids), model, alias)
+                    push_safe((left, 'in', right_ids), model, alias)
                 else:
                     for dom_leaf in ('|', (left, 'not in', right_ids), (left, '=', False)):
-                        push(dom_leaf, model, alias)
+                        push_safe(dom_leaf, model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif operator in ('any', 'not any') and field.type in ('many2many', 'one2many'):
                 domain = field.get_domain_list(model)
                 domain = AND([domain, right])
                 right_ids = comodel._search(domain)
-                push((left, ANY_IN[operator], right_ids), model, alias)
+                push_safe((left, ANY_IN[operator], right_ids), model, alias)
 
             elif not field.store:
                 # Non-stored field should provide an implementation of search.
@@ -1193,7 +1202,7 @@ class expression(object):
                     domain = field.determine_domain(model, operator, right)
 
                 for elem in domain_combine_anies(domain, model):
-                    push(elem, model, alias)
+                    push_safe(elem, model, alias)
 
             # -------------------------------------------------
             # RELATIONAL FIELDS
@@ -1207,7 +1216,7 @@ class expression(object):
                 else:
                     dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel, parent=left)
                 for dom_leaf in dom:
-                    push(dom_leaf, model, alias)
+                    push_safe(dom_leaf, model, alias)
 
             elif field.type == 'one2many':
                 domain = field.get_domain_list(model)
@@ -1254,7 +1263,7 @@ class expression(object):
                         ids1 = unwrap_inverse(recs.mapped(inverse_field.name))
                         # rewrite condition in terms of ids1
                         op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                        push(('id', op1, ids1), model, alias)
+                        push_safe(('id', op1, ids1), model, alias)
 
                 else:
                     if inverse_field.store and not (inverse_is_int and domain):
@@ -1264,7 +1273,7 @@ class expression(object):
                         query = comodel._where_calc(comodel_domain)
                         sql_inverse = comodel._field_to_sql(query.table, inverse_field.name, query)
                         sql = query.subselect(sql_inverse)
-                        push(('id', sub_op, sql), model, alias)
+                        push_safe(('id', sub_op, sql), model, alias)
                     else:
                         comodel_domain = [(inverse_field.name, '!=', False)]
                         if inverse_is_int and domain:
@@ -1274,7 +1283,7 @@ class expression(object):
                         ids1 = unwrap_inverse(recs.mapped(inverse_field.name))
                         # rewrite condition to match records with/without lines
                         op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        push(('id', op1, ids1), model, alias)
+                        push_safe(('id', op1, ids1), model, alias)
 
             elif field.type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
@@ -1356,7 +1365,7 @@ class expression(object):
                     else:
                         dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel, parent=left)
                     for dom_leaf in dom:
-                        push(dom_leaf, model, alias)
+                        push_safe(dom_leaf, model, alias)
 
                 elif (
                     isinstance(right, str)
@@ -1376,10 +1385,10 @@ class expression(object):
                     if operator in NEGATIVE_TERM_OPERATORS:
                         res_ids = comodel._search([('display_name', TERM_OPERATORS_NEGATION[operator], right)])
                         for dom_leaf in ('|', (left, 'not in', res_ids), (left, '=', False)):
-                            push(dom_leaf, model, alias)
+                            push_safe(dom_leaf, model, alias)
                     else:
                         res_ids = comodel._search([('display_name', operator, right)])
-                        push((left, 'in', res_ids), model, alias)
+                        push_safe((left, 'in', res_ids), model, alias)
 
                 else:
                     # right == [] or right == False and all other cases are handled by _condition_to_sql()
@@ -1397,11 +1406,11 @@ class expression(object):
                         "(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
                         model._name, left,
                     )
-                    push(('id', sub_op, sql), model, alias)
+                    push_safe(('id', sub_op, sql), model, alias)
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
                                   field.string, left, operator, reprlib.repr(right))
-                    push(TRUE_LEAF, model, alias)
+                    push_safe(TRUE_LEAF, model, alias)
 
             # -------------------------------------------------
             # OTHER FIELDS
@@ -1417,13 +1426,13 @@ class expression(object):
                             right += ' 23:59:59'
                         else:
                             right += ' 00:00:00'
-                        push((left, operator, right), model, alias)
+                        push_safe((left, operator, right), model, alias)
                     elif isinstance(right, date) and not isinstance(right, datetime):
                         if operator in ('>', '<='):
                             right = datetime.combine(right, time.max)
                         else:
                             right = datetime.combine(right, time.min)
-                        push((left, operator, right), model, alias)
+                        push_safe((left, operator, right), model, alias)
                     else:
                         push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
@@ -1450,7 +1459,7 @@ class expression(object):
 
                     if _right != '%':
                         # combine both generated SQL expressions (above and below) with an AND
-                        push('&', model, alias)
+                        push_safe('&', model, alias)
                         sql_column = SQL('%s.%s', SQL.identifier(alias), SQL.identifier(field.name))
                         indexed_value = self._unaccent(SQL("jsonb_path_query_array(%s, '$.*')::text", sql_column))
                         _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
