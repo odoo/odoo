@@ -147,7 +147,7 @@ export class PosData extends Reactive {
         });
 
         const result = await new Promise(
-            (resolve) => new IndexedDB(this.databaseName, false, models, resolve)
+            (resolve) => new IndexedDB(this.databaseName, false, models, resolve, this.dialog)
         );
         this.indexedDB = result.instance;
 
