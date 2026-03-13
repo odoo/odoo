@@ -14,7 +14,7 @@ from odoo.tools.intervals import Intervals
 
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
-    _inherit = ['product.catalog.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _description = 'Work Order'
     _order = 'date_start, sequence, id'
 
@@ -34,7 +34,7 @@ class MrpWorkorder(models.Model):
     sequence = fields.Integer("Sequence", default=_default_sequence)
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
-        'mrp.workcenter', 'Work Center', required=True, index=True,
+        'mrp.workcenter', 'Work Center', required=True, index=True, tracking=True,
         group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
         string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
@@ -71,7 +71,7 @@ class MrpWorkorder(models.Model):
         ('progress', 'In Progress'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')], string='Status',
-        compute='_compute_state', store=True,
+        compute='_compute_state', store=True, tracking=True,
         default='ready', copy=False, index=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
@@ -89,7 +89,7 @@ class MrpWorkorder(models.Model):
         store=True, copy=False)
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
-        readonly=False, store=True) # in minutes
+        readonly=False, store=True, tracking=True)  # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
         readonly=False, store=True, copy=False)
