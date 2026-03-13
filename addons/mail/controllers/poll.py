@@ -110,5 +110,8 @@ class PollController(ThreadController):
         )
         store = Store(**thread._store_target())
         store.add(poll_sudo.option_ids, ["number_of_votes", "vote_percentage"])
-        store.add(options_sudo, [Store.Many("vote_ids", [], mode="DELETE", value=votes_sudo)])
+        store.add(
+            options_sudo,
+            lambda res: res.many("vote_ids", [], mode="DELETE", value=votes_sudo),
+        )
         store.bus_send()

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+import copy
+
 from odoo import models
 from odoo.addons.web.models.models import lazymapping
 from odoo.addons.mail.tools.discuss import Store
@@ -23,55 +24,27 @@ class BusSyncMixin(models.AbstractModel):
         """
 
     def write(self, vals):
-        def get_field_value(record, field_description):
-            """Get the value of a field based on its description."""
-            if isinstance(field_description, Store.Attr):
-                if field_description.predicate and not field_description.predicate(record):
-                    return None
-            if isinstance(field_description, Store.Relation):
-                return field_description._get_value(record).records
-            if isinstance(field_description, Store.Attr):
-                return field_description._get_value(record)
-            return record[field_description]
-
-        def get_vals(record):
-            """Get the current values of the fields to sync."""
-            result = defaultdict(dict)
-            for bus_target, field_descriptions in fields_to_sync.items():
-                target, sub_channel = (
-                    (record[bus_target[0]], bus_target[1])
-                    if isinstance(bus_target, tuple)
-                    else (record, bus_target)
-                )
-                for bus_channel in target._bus_channels():
-                    result[bus_channel, sub_channel] = {
-                        Store.get_field_name(field_description): (
-                            get_field_value(record, field_description),
-                            field_description,
-                        )
-                        for field_description in field_descriptions
-                    }
-            return result
-
-        self._sync_field_names(fields_to_sync := defaultdict(Store.FieldList))
-        old_vals = {record: get_vals(record) for record in self}
-        result = super().write(vals)
         stores = lazymapping(lambda param: Store(bus_channel=param[0], bus_subchannel=param[1]))
+        manager_by_bus_target = lazymapping(
+            lambda bus_target: Store.FieldListManager(stores, self, bus_target),
+        )
+        self._sync_field_names(manager_by_bus_target)
+        get_vals = Store.FieldListManager.get_val_by_field_by_store_by_record
+        old_val_by_field_by_store_by_record = get_vals(manager_by_bus_target.values(), self)
+        result = super().write(vals)
+        new_val_by_field_by_store_by_record = get_vals(manager_by_bus_target.values(), self)
         for record in self:
-            for (channel, subchannel), values in get_vals(record).items():
-                diff = defaultdict(Store.FieldList)
-                for field_name, (value, field_description) in values.items():
-                    if value != old_vals[record][channel, subchannel][field_name][0]:
-                        diff[channel, subchannel].append(field_description)
-                if diff:
-                    for (channel, subchannel), diff_fields in diff.items():
-                        stores[channel, subchannel].add(
-                            record,
-                            lambda res, diff_fields=diff_fields: (
-                                res.extend(diff_fields),
-                                res.from_method("_store_sync_extra_fields"),
-                            ),
-                        )
+            for store, new_vals_by_field in new_val_by_field_by_store_by_record[record].items():
+                field_list = Store.FieldList(store, record)
+                for field, new_value in new_vals_by_field.items():
+                    if new_value != old_val_by_field_by_store_by_record[record][store][field]:
+                        # Copy to avoid sharing the same Store.Attr for multiple stores/records.
+                        # Store.Many for instance mutates self.sort to None after sorting records,
+                        # which would cause incorrect behavior if the same instance is reused.
+                        field_list.append(copy.copy(field))
+                if field_list:
+                    record._store_sync_extra_fields(field_list)
+                    store.add(record, field_list)
         for store in stores.values():
             store.bus_send()
         return result

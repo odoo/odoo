@@ -401,17 +401,17 @@ class ResUsers(models.Model):
                 res.extend(["active", "name", "tz"]),
                 res.one("main_user_id", ["partner_id"]),
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields"),
             ),
         )
         res.attr("is_admin", lambda u: u._is_admin())
         res.extend(["notification_type", "share", "signature"])
+        res.from_method("_store_im_status_fields")
 
     def _store_main_user_fields(self, res: Store.FieldList):
         res.extend(["partner_id", "share"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("partner_id")
+        res.one("partner_id", "_store_im_status_fields")
 
     def _store_bookmark_box_global_fields(self, res: Store.FieldList, bus_last_id=None):
         """ Update the bookmark box info in the given store."""

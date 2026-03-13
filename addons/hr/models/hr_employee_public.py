@@ -240,10 +240,8 @@ class HrEmployeePublic(models.Model):
             "user_id",
             lambda res: (
                 res.attr("share"),
-                res.one(
-                    "partner_id",
-                    lambda res: (res.from_method("_store_im_status_fields"), res.attr("tz")),
-                ),
+                res.one("partner_id", ["tz"]),
+                res.from_method("_store_im_status_fields"),
             ),
         )
         res.one("work_location_id", ["location_type", "name"])

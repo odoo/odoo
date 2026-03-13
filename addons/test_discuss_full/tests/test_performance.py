@@ -395,7 +395,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         partner_0 = user_0.partner_id
         return {
             "hr.employee": [
-                {"id": self.employees[0].id, "leave_date_to": False, "work_location_type": False},
+                {
+                    "id": self.employees[0].id,
+                    "leave_date_to": False,
+                    "user_id": self.users[0].id,
+                    "work_location_type": False,
+                },
             ],
             "res.partner": self._filter_partners_fields(
                 {
@@ -1928,5 +1933,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {
             "id": employee.id,
             "leave_date_to": False,
+            "user_id": employee.user_id.id,
             "work_location_type": False,
         }

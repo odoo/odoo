@@ -251,6 +251,19 @@ class TestDiscussTools(TransactionCase):
         self.assertEqual(data["res.partner"][0]["email"], "test_user_355_a@example.com")
         self.assertNotIn("email", data["res.partner"][1])
 
+    def test_390_add_no_loop(self):
+        """Test that store.add() does not loop indefinitely but it is still allowed to process
+        consecutive calls."""
+        user_a = new_test_user(self.env, "test_user_390@example.com")
+        store = Store()
+        store.add(user_a, "_store_im_status_fields")
+        data = store.get_result()
+        self.assertEqual(data["res.partner"][0]["im_status"], "offline")
+        self.env["mail.presence"]._update_presence(user_a)
+        store.add(user_a, "_store_im_status_fields")
+        data2 = store.get_result()
+        self.assertEqual(data2["res.partner"][0]["im_status"], "online")
+
     # 4xx Tests many command modes
 
     def test_450_replace_clear_existing_data(self):
