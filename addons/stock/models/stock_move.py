@@ -52,7 +52,7 @@ class StockMove(models.Model):
     description_picking = fields.Text(string="Description Of Picking", compute='_compute_description_picking', inverse='_inverse_description_picking', compute_sudo=True)
     description_picking_manual = fields.Text(readonly=True)
     product_qty = fields.Float(
-        'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
+        'Demand in Product UoM', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True, compute_sudo=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
@@ -170,6 +170,9 @@ class StockMove(models.Model):
     has_lines_without_result_package = fields.Boolean(compute="_compute_has_lines_without_result_package")
     quantity = fields.Float(
         'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
+    quantity_product_uom = fields.Float(
+        'Quantity in Product UoM', digits='Product Unit',
+        copy=False, compute='_compute_quantity_product_uom', store=True)
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_type_id.code', readonly=True)
@@ -248,6 +251,11 @@ class StockMove(models.Model):
                 # - The location dest is an out location (i.e. Customers) but the final dest is different (e.g. Inter-Company transfers)
                 location_dest = move.location_final_id
             move.location_dest_id = location_dest
+
+    @api.depends('quantity', 'uom_id')
+    def _compute_quantity_product_uom(self):
+        for move in self:
+            move.quantity_product_uom = move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
 
     def _set_location_dest_id(self):
         for ml in self.move_line_ids:
