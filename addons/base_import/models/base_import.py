@@ -1299,7 +1299,7 @@ class Base_ImportImport(models.TransientModel):
                                     _("You can not import file via URL, check with your administrator or support for the reason."),
                                     field=name, field_type=field['type']
                                 )
-                            line[index] = base64.b64encode(self._import_file_by_url(line[index], session, name, num))
+                            line[index] = base64.b64encode(self._import_file_by_url(line[index], session, name, num)).decode()
                         elif '.' in line[index]:
                             # Detect if it's a filename
                             pass
