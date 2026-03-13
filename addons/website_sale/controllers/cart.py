@@ -59,6 +59,8 @@ class Cart(PaymentPortal):
             ).unlink()
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
+            if self.env.website.google_analytics_key:
+                values["cart_tracking_info"] = order_sudo._get_order_tracking_info()
 
         values.update(self.env.website._get_checkout_step_values("/shop/cart"))
         values.update(self._cart_values(**post))
@@ -130,6 +132,7 @@ class Cart(PaymentPortal):
         )
         line_ids = {product_template_id: values["line_id"]}
         added_qty_per_line[values["line_id"]] = values["added_qty"]
+        tracking_info = values.get("tracking_info", [])
         is_combo = product.type == "combo"
         updated_line = (
             values["line_id"]
@@ -189,6 +192,7 @@ class Cart(PaymentPortal):
 
                 line_ids[product_data["product_template_id"]] = product_values["line_id"]
                 added_qty_per_line[product_values["line_id"]] = product_values["added_qty"]
+                tracking_info += product_values.get("tracking_info", [])
 
         warning = values.pop("warning", "")
         if is_combo and (changed_reason := order_sudo._check_combo_quantities(updated_line)):
@@ -229,7 +233,8 @@ class Cart(PaymentPortal):
             "cart_quantity": order_sudo.cart_quantity,
             "notifications": notifications,
             "quantity": values.pop("quantity", 0),
-            "tracking_info": self._get_tracking_information(order_sudo, line_ids.values()),
+            "tracking_info": tracking_info,
+            "currency": order_sudo.currency_id.name,
         }
 
     @route(
@@ -337,6 +342,7 @@ class Cart(PaymentPortal):
         return {
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
+            "currency": order_sudo.currency_id.name,
             "amount": order_sudo.amount_total,
             "minor_amount": payment_utils.to_minor_currency_units(
                 order_sudo.amount_total, order_sudo.currency_id
@@ -491,30 +497,6 @@ class Cart(PaymentPortal):
                 for line in lines
             ],
         }
-
-    def _get_tracking_information(self, order_sudo, line_ids):
-        """Get the tracking information about the sales order lines.
-
-        :param sale.order order: The sales order.
-        :param list[int] line_ids: The ids of the lines to track.
-        :rtype: dict
-        :return: The tracking information.
-        """
-        lines = order_sudo.order_line.filtered(lambda line: line.id in line_ids).with_context(
-            display_default_code=False
-        )
-        return [
-            {
-                "item_id": line.product_id.barcode or line.product_id.id,
-                "item_name": line.product_id.display_name,
-                "item_category": line.product_id.categ_id.name,
-                "currency": line.currency_id.name,
-                "price": line.price_reduce_taxexcl,
-                "discount": line.price_unit - line.price_reduce_taxexcl,
-                "quantity": line.product_uom_qty,
-            }
-            for line in lines
-        ]
 
     def _get_additional_cart_update_values(self, data):
         """Look for extra information in a given dictionary to be included in a `_cart_add` call.

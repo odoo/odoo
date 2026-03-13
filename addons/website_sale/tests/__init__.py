@@ -20,6 +20,7 @@ from . import (
     test_ecommerce_access,
     test_express_checkout_flows,
     test_fuzzy,
+    test_google_analytics,
     test_google_merchant_center,
     test_mail,
     test_main_controller,

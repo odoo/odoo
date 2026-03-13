@@ -141,6 +141,13 @@ export class QuickReorder extends Interaction {
             ...(isCombo && { linked_products: linkedProducts }),
         }));
 
+        if (data.tracking_info?.length) {
+            wSaleUtils.dispatchTrackingEvent("add_to_cart_event", {
+                currency: data.currency,
+                items: data.tracking_info,
+            });
+        }
+
         data['website_sale.shorter_cart_summary'] = markup(
             data['website_sale.shorter_cart_summary']
         );

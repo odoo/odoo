@@ -15,6 +15,7 @@ import { redirect } from '@web/core/utils/urls';
 import {
     CartNotificationContainer
 } from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 const { DateTime } = luxon;
 const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
@@ -493,6 +494,12 @@ export class CartService {
         if (!data) {
             return 0;
         }
+        if (data.quantity && data.tracking_info?.length) {
+            wSaleUtils.dispatchTrackingEvent("add_to_cart_event", {
+                currency: data.currency,
+                items: data.tracking_info,
+            });
+        }
         if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
@@ -504,9 +511,6 @@ export class CartService {
         };
         for (const notification of data.notifications) {
             this._showCartNotification(notification);
-        }
-        if (data.quantity) {
-            this._trackProducts(data.tracking_info);
         }
         return data.quantity;
     }
@@ -550,21 +554,6 @@ export class CartService {
         setTimeout( () => this.notifications.delete(notification), AUTOCLOSE_NOTIFICATION_DELAY );
     }
 
-    /**
-     * Track the products added to the cart.
-     *
-     * @param {Object[]} trackingInfo - A list of product tracking information.
-     *
-     * @returns {void}
-     */
-    _trackProducts(trackingInfo) {
-        const wrapperEl = document.querySelector('.oe_website_sale');
-        if (wrapperEl) {
-            wrapperEl.dispatchEvent(
-                new CustomEvent('add_to_cart_event', {'detail': trackingInfo})
-            );
-        }
-    }
 }
 
 export const cartService = {

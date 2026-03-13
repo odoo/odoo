@@ -151,6 +151,11 @@ class WebsiteSnippetFilter(models.Model):
                         res_product.update(product._get_combination_info())
                     res_product["hide_variants"] = hide_variants
 
+                    if self.env.website.google_analytics_key:
+                        res_product.get("product_tracking_info", {})["item_list_name"] = (
+                            self.with_context(lang=False).name
+                        )
+
                     if records.env.context.get("add2cart_rerender"):
                         res_product["_add2cart_rerender"] = True
                 else:

@@ -694,6 +694,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values["structured_data"] = products.with_context(
             shop_category_id=category.id if category else False
         )._render_jsonld()
+
+        if website.google_analytics_key:
+            if category:
+                item_list_name = category.with_context(lang=False).name
+            elif fuzzy_search_term or search:
+                item_list_name = "Search Results"
+            else:
+                item_list_name = "Shop"
+            # Not translated as they could be used as GA4 aggregation key
+            values["product_tracking_infos"] = products._get_google_analytics_list_data_batch(
+                products_prices, website, item_list_name
+            )
+
         values.update(self._get_additional_shop_values(values, **post))
 
         values["default_expand_filter_sections"] = nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
@@ -1730,6 +1743,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "order": order,
             "only_services": order.only_services,
             **self.env.website._get_checkout_step_values("/shop/payment"),
+            "payment_tracking_info": (
+                order._get_order_tracking_info() if self.env.website.google_analytics_key else {}
+            ),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
@@ -1844,7 +1860,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         rendering_values = {
             "order": order,
             "website_sale_order": order,
-            "order_tracking_info": self.order_2_return_dict(order),
+            "order_tracking_info": (
+                order._get_purchase_tracking_info() if self.env.website.google_analytics_key else {}
+            ),
         }
         if (
             self.env["res.users"]._get_signup_invitation_scope() == "b2c"
@@ -2031,36 +2049,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if "image" in options:
             image_data = self.env["ir.attachment"].browse(options["image"]).raw
             tag.image = image_data
-
-    def order_lines_2_google_api(self, order_lines):
-        """Transform a list of order lines into a dict for google analytics."""
-        ret = []
-        for line in order_lines.filtered(lambda line: not line.is_delivery):
-            product = line.product_id
-            ret.append({
-                "item_id": product.barcode or product.id,
-                "item_name": product.name or "-",
-                "item_category": product.categ_id.name or "-",
-                "price": line.price_unit,
-                "quantity": line.product_uom_qty,
-            })
-        return ret
-
-    def order_2_return_dict(self, order):
-        """Return the tracking_cart dict of the order for Google analytics basically defined to
-        be inherited."""
-        tracking_cart_dict = {
-            "transaction_id": order.id,
-            "affiliation": order.company_id.name,
-            "value": order.amount_total,
-            "tax": order.amount_tax,
-            "currency": order.currency_id.name,
-            "items": self.order_lines_2_google_api(order.order_line),
-        }
-        delivery_line = order.order_line.filtered("is_delivery")
-        if delivery_line:
-            tracking_cart_dict["shipping"] = delivery_line.price_unit
-        return tracking_cart_dict
 
     # --------------------------------------------------------------------------
     # Products Recently Viewed
