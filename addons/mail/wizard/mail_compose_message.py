@@ -685,6 +685,12 @@ class MailComposeMessage(models.TransientModel):
             return super(MailComposeMessage, self.with_context(prefetch_fields=False))._compute_field_value(field)
         return super()._compute_field_value(field)
 
+    @api.onchange('attachment_ids')
+    def _onchange_attachment_ids(self):
+        new_body = self.env['mail.mail']._render_attachment_links_in_body(self.body, self.attachment_ids._origin)
+        if new_body is not False:
+            self.body = new_body
+
     # ------------------------------------------------------------
     # CRUD / ORM
     # ------------------------------------------------------------
