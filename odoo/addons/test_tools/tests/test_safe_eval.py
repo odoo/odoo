@@ -331,7 +331,7 @@ class TestSafeEvalRuntime(TransactionCase):
             _save_eval_call = lambda callee, *args, **kwargs: callee(*args, **kwargs)
             UnsafeClass()
         """
-        with self.assertRaisesRegex(ValueError, '^AssertionError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeContextError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
         # Note that without the assert protection, we get a `RecursionError`,
         # because after transformer, the code becomes:

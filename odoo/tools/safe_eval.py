@@ -71,7 +71,23 @@ def unsafe_policy():
     return policy
 
 
-class UnsafeObjectError(BaseException):
+class UnsafeError(BaseException):
+    """
+    Base class for exceptions triggered by unsafe operations.
+
+    Ideally used as a high-level handler to catch exceptions related
+    to unsafe errors.
+    Since this inherits from `BaseException`, it will bypass standard
+    `except Exception:` blocks.
+    """
+
+
+class UnsafeContextError(UnsafeError):
+    """ Exception raised when the evaluation context is unsafe. """
+
+
+class UnsafeObjectError(UnsafeError):
+    """ Exception raised when an object is unsafe. """
 
     def __init__(self, obj):
         obj_path = safe_whitelist.get_full_path(obj)
@@ -462,7 +478,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     except _BUBBLEUP_EXCEPTIONS:
         raise
 
-    except (Exception, UnsafeObjectError) as e:  # noqa: BLE001
+    except (Exception, UnsafeError) as e:  # noqa: BLE001
         raise ValueError('%r while evaluating\n%r' % (e, expr))
 
     finally:
@@ -916,7 +932,7 @@ def safe_call(callee, /, *args, **kwargs):
     """ Ensure objects used for the call are safe """
     try:
         safe_checker.check((callee, args, kwargs))
-    except UnsafeObjectError as e:
+    except UnsafeError as e:
         _logger_runtime.warning(e)
         if unsafe_policy() is UnsafePolicy.RAISE:
             raise
@@ -929,11 +945,16 @@ def monitoring_call(code, instruction_offset, callee, arg0):
     """ Ensure `_save_eval_call` is not overridden """
     if callee is safe_call:
         return
+
     frame = sys._getframe(1)
     call_id = safe_transformer.CALL_ID
-    assert call_id not in frame.f_locals or frame.f_locals[call_id] is safe_call
-    assert call_id not in frame.f_globals or frame.f_globals[call_id] is safe_call
-    assert frame.f_builtins[call_id] is safe_call
+
+    if (
+        (call_id in frame.f_locals and frame.f_locals[call_id] is not safe_call) or
+        (call_id in frame.f_globals and frame.f_globals[call_id] is not safe_call) or
+        frame.f_builtins[call_id] is not safe_call
+    ):
+        raise UnsafeContextError(f'{call_id} is overridden')
 
 
 _BUILTINS[safe_transformer.CALL_ID] = safe_call
