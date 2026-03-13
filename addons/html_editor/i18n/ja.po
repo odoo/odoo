@@ -3,16 +3,16 @@
 # * html_editor
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:52+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 12:29+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "html_editor/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -42,13 +42,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "'s description from"
-msgstr ""
+msgstr "の説明 出典："
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "'s version from"
-msgstr ""
+msgstr "のバージョン 出典："
 
 #. module: html_editor
 #. odoo-javascript
@@ -223,7 +223,7 @@ msgstr "すべての画像が読み込まれました"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Alternate row colors"
-msgstr ""
+msgstr "行の交互配色"
 
 #. module: html_editor
 #. odoo-javascript
@@ -353,19 +353,7 @@ msgstr "大セクション見出し"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Bold (Ctrl + B)"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Border"
-msgstr "ふち"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Border Size"
-msgstr "枠線の太さ"
+msgstr "太字 (Ctrl + B)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -377,7 +365,7 @@ msgstr "箇条書きリスト"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/list/list_plugin.js:0
 msgid "Bulleted list (Ctrl + Shift + 8)"
-msgstr ""
+msgstr "箇条書きリスト (Ctrl + Shift + 8)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -387,26 +375,38 @@ msgstr "ボタン"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Button Primary"
 msgstr "プライマリボタン"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Button Secondary"
 msgstr "セカンダリボタン"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
 msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
+msgid "Cancel Upload"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Center align"
+msgstr "中央揃え"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "Change the placeholder or the expression for an existing field"
 msgstr ""
 
 #. module: html_editor
@@ -419,7 +419,7 @@ msgstr "チェックリスト"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/list/list_plugin.js:0
 msgid "Checklist (Ctrl + Shift + 9)"
-msgstr ""
+msgstr "チェックリスト (Ctrl + Shift + 9)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -431,7 +431,7 @@ msgstr "クリア"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Clear alternate colors"
-msgstr ""
+msgstr "交互の背景色をクリア"
 
 #. module: html_editor
 #. odoo-javascript
@@ -447,6 +447,17 @@ msgstr "もう一度クリックして変換をリセットして下さい"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.xml:0
+msgid ""
+"Click to open options\n"
+"Drag to move"
+msgstr ""
+"クリックしてオプションを開く\n"
+"ドラッグして移動"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "閉じる"
@@ -454,6 +465,7 @@ msgstr "閉じる"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/syntax_highlighting.xml:0
 msgid "Code"
 msgstr "コード"
 
@@ -473,7 +485,7 @@ msgstr "コードビュー"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
 msgid "Colors"
-msgstr ""
+msgstr "色"
 
 #. module: html_editor
 #. odoo-javascript
@@ -485,13 +497,13 @@ msgstr "列に分ける"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Comparing current description with"
-msgstr ""
+msgstr "現在の説明と比較しています"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
 msgid "Conic"
-msgstr ""
+msgstr "円錐"
 
 #. module: html_editor
 #. odoo-javascript
@@ -526,14 +538,14 @@ msgstr "列に変換"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
-msgid "Copy"
-msgstr "コピー"
+msgid "Convert to paragraph"
+msgstr "段落に変換"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "リンクをコピー"
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Copy"
+msgstr "コピー"
 
 #. module: html_editor
 #. odoo-javascript
@@ -584,7 +596,7 @@ msgstr "画像をクロップ"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Custom"
 msgstr "カスタム"
 
@@ -593,6 +605,18 @@ msgstr "カスタム"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Dailymotion"
 msgstr "Dailymotion"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "Data"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Default"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -617,7 +641,7 @@ msgstr "説明"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Diff view mode"
-msgstr ""
+msgstr "差分表示モード"
 
 #. module: html_editor
 #. odoo-javascript
@@ -628,6 +652,7 @@ msgstr "直接ダウンロード"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
@@ -666,12 +691,6 @@ msgid "Documents"
 msgstr "ドキュメント"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
-msgid "Dynamic Placeholder"
-msgstr "動的プレースホルダ"
-
-#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "ERROR: couldn't get download urls from media library."
@@ -680,6 +699,7 @@ msgstr "エラー: メディアライブラリーからURLをダウンロード�
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "編集"
 
@@ -688,6 +708,12 @@ msgstr "編集"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "リンクを編集"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+msgid "Edit field"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -765,6 +791,13 @@ msgstr "最も遠い側に伸ばす"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Facebook"
+msgstr "Facebook"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Field"
 msgstr ""
 
 #. module: html_editor
@@ -780,15 +813,9 @@ msgstr "ファイルを保存できませんでした"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Fill Color"
-msgstr "塗りつぶし"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_crop.js:0
 msgid "Flexible"
-msgstr "フレキシブル"
+msgstr "柔軟"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1030,7 +1057,7 @@ msgstr "危険バナーを挿入"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
+#: code:addons/html_editor/static/src/backend/dynamic_field/dynamic_field_plugin.js:0
 msgid "Insert a field"
 msgstr "フィールドを挿入"
 
@@ -1039,6 +1066,12 @@ msgstr "フィールドを挿入"
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "Insert a horizontal rule separator"
 msgstr "水平方向の罫線を挿入"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a monospace banner"
+msgstr "等幅フォントのバナーを挿入"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1116,7 +1149,7 @@ msgstr "左に挿入"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Insert link (Ctrl + K)"
-msgstr ""
+msgstr "リンクを挿入 (Ctrl + K)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1140,13 +1173,13 @@ msgstr "Instagram"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Italic (Ctrl + I)"
-msgstr ""
+msgstr "イタリック (Ctrl + I)"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Justify"
-msgstr ""
+msgstr "両端揃え"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1156,7 +1189,7 @@ msgstr "ラベル"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Large"
 msgstr "大"
 
@@ -1174,7 +1207,7 @@ msgstr "最終更新日"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Left align"
-msgstr ""
+msgstr "左揃え"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1185,15 +1218,15 @@ msgstr "線形"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Link"
 msgstr "リンク"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Link copied to clipboard."
-msgstr "リンクはクリップボードにコピーされました。"
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr "リンク ポップオーバー"
 
 #. module: html_editor
 #. odoo-python
@@ -1243,19 +1276,13 @@ msgstr "MM:SS"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
-msgid "Marketing Tools"
-msgstr "マーケティングツール"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_plugin.js:0
 msgid "Media"
 msgstr "メディア"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Medium"
 msgstr "中"
 
@@ -1273,13 +1300,31 @@ msgstr "ファイルが見つかりません"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Model"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Modules"
 msgstr "モジュール"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace"
+msgstr "等幅"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace Banner"
+msgstr "等幅バナー"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/powerbox/search_powerbox_plugin.js:0
 #: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "More options"
 msgstr "他のオプション"
@@ -1357,6 +1402,18 @@ msgid "No pictograms found."
 msgstr "ピクトグラムは見つかりませんでした。"
 
 #. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/controllers/main.py:0
+msgid "Non-internal users can only upload image."
+msgstr ""
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/controllers/main.py:0
+msgid "Non-internal users can't upload large files."
+msgstr ""
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Normal"
@@ -1372,7 +1429,7 @@ msgstr "段落番号リスト"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/list/list_plugin.js:0
 msgid "Numbered list (Ctrl + Shift + 7)"
-msgstr ""
+msgstr "番号付きリスト (Ctrl + Shift + 7)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1384,7 +1441,7 @@ msgstr "OK"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Oops, it looks like our AI is unreachable!"
-msgstr "AIはアクセスできないようです！"
+msgstr "おっと、AIに接続できないようです!"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1618,7 +1675,7 @@ msgstr "ターゲットサイトに送信されるリファラー情報を削除
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
 msgid "Repeating"
-msgstr ""
+msgstr "繰り返し"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1721,13 +1778,13 @@ msgstr "履歴を復元"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Revisions"
-msgstr ""
+msgstr "変更履歴"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/align/align_plugin.js:0
 msgid "Right align"
-msgstr ""
+msgstr "右揃え"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1791,6 +1848,18 @@ msgstr "メディアを選択"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button shape"
+msgstr "ボタンの形状を選択"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button size"
+msgstr "ボタンサイズを選択"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
 msgid "Select font family"
 msgstr "フォントファミリーを選択"
@@ -1851,15 +1920,9 @@ msgstr "形を設定: サムネイル"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Shape"
-msgstr "形状"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Show comparison"
-msgstr ""
+msgstr "比較を表示"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1871,7 +1934,7 @@ msgstr "最適化済画像を表示"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Showing"
-msgstr ""
+msgstr "表示中"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1882,13 +1945,12 @@ msgstr "署名"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Size"
 msgstr "サイズ"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+#: code:addons/html_editor/static/src/utils/button_style.js:0
 msgid "Small"
 msgstr "小"
 
@@ -1914,7 +1976,7 @@ msgstr "プロンプトが長すぎます。もっと短い言葉にして下さ
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Split"
-msgstr ""
+msgstr "分割"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1932,7 +1994,7 @@ msgstr "開始"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Strikethrough (Ctrl + 5)"
-msgstr ""
+msgstr "取り消し線 (Ctrl + 5)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1973,9 +2035,15 @@ msgstr "目次"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Technical name"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Tells search engines not to follow this link"
-msgstr ""
+msgstr "検索エンジンにこのリンクをクロールしないよう指示します"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1985,9 +2053,9 @@ msgstr "テキスト"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Text Color"
-msgstr "テキスト色"
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Text shown if field is empty"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -2024,6 +2092,8 @@ msgid ""
 "The image could not be deleted because it is used in the\n"
 "                following pages or views:"
 msgstr ""
+"以下のページまたはビューで使用されているため、\n"
+"                画像を削除できません:"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2071,7 +2141,7 @@ msgstr "この画像は外部画像です"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "This is the current version, nothing to compare."
-msgstr ""
+msgstr "これは現行バージョンのため、比較対象はありません。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2099,7 +2169,7 @@ msgstr "太字を切り替える"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Toggle comparison view"
-msgstr ""
+msgstr "比較表示を切り替える"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2178,13 +2248,13 @@ msgstr "他のキーワードで検索してみましょう。"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Turn into header"
-msgstr ""
+msgstr "ヘッダに変換"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Turn into row"
-msgstr ""
+msgstr "列に変換"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2220,7 +2290,7 @@ msgstr "現在の選択範囲ではリンクを作成できません。"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Underline (Ctrl + U)"
-msgstr ""
+msgstr "下線 (Ctrl + U)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2232,6 +2302,12 @@ msgstr "戻す"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Unified"
+msgstr "統合表示"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/backend/dynamic_field/field_selector_popover.xml:0
+msgid "Update"
 msgstr ""
 
 #. module: html_editor
@@ -2264,7 +2340,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Vertical"
-msgstr ""
+msgstr "垂直"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2367,15 +2443,6 @@ msgid ""
 msgstr "このサービスの最大リクエスト数に達しました。後でもう一度お試し下さい。"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
-msgid ""
-"You need to select a model before opening the dynamic placeholder selector."
-msgstr ""
-"ダイナミック・プレースホルダー・セレクタを開く前に、モデルを選択する必要があ"
-"ります。"
-
-#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "You need to specify either data or url to create an attachment."
@@ -2421,7 +2488,7 @@ msgstr "と"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "by"
-msgstr ""
+msgstr "作成者"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2451,7 +2518,7 @@ msgstr "ファイル"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "noopener"
-msgstr ""
+msgstr "noopener"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2461,15 +2528,9 @@ msgstr "又は"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "px"
-msgstr "px"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "title"
-msgstr ""
+msgstr "タイトル"
 
 #. module: html_editor
 #. odoo-javascript

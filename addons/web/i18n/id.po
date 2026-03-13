@@ -11,17 +11,17 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-10 03:26+0000\n"
+"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"PO-Revision-Date: 2026-02-14 12:22+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/web/"
-"id/>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
+"web/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +35,12 @@ msgstr ""
 #: code:addons/web/static/src/core/expression_editor/expression_editor.xml:0
 msgid "# Code editor"
 msgstr "# Code editor"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.xml:0
+msgid "# Lines"
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -56,6 +62,13 @@ msgstr "%s records"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
+msgid "%s to schedule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/l10n/dates.js:0
 msgid "'%s' is not a correct date or datetime"
 msgstr "'%s' bukan tanggal atau tanggal waktu yang benar"
@@ -64,7 +77,7 @@ msgstr "'%s' bukan tanggal atau tanggal waktu yang benar"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 msgid "'Oh snap!'"
-msgstr ""
+msgstr "'Oh snap!'"
 
 #. module: web
 #. odoo-javascript
@@ -91,13 +104,7 @@ msgid "(create)"
 msgstr "(buat)"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 msgid "(document name)"
 msgstr "(nama dokumen)"
 
@@ -477,25 +484,16 @@ msgid "<i class=\"fa fa-repeat\"/> Reset"
 msgstr "<i class=\"fa fa-repeat\"/> Reset"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
-"id=\"profile_aggregation_mode\">\n"
-"                                        <option value=\"tabs\">Separated "
-"(one per tab)</option>\n"
-"                                        <option value=\"temporal\">Temporal "
-"(experimental)</option>\n"
-"                                    </select>\n"
-"                                    <span id=\"temporal_warning\" "
-"class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> "
-"Temporal mode will merge all samples.<br/>It can lead to partially invalid "
-"result in case of concurrent profiles.<br/>Use with caution </span>"
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">$ 3,613.50</span>"
 msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
-msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
+msgid ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">1,400.00</"
+"span></span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -505,6 +503,13 @@ msgid ""
 msgstr ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">240.00</"
+"span></span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -522,8 +527,18 @@ msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">12.00</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
 msgstr "<span class=\"text-nowrap\">2,350.00</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">70.00</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -535,7 +550,7 @@ msgstr "<span class=\"text-nowrap\">Pajak 15%</span>"
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                               Rd<br/>Pleasant Hill CA 94523<br/>United "
+"                                Rd<br/>Pleasant Hill CA 94523<br/>United "
 "States</span>"
 msgstr ""
 
@@ -545,14 +560,58 @@ msgid "<span id=\"line_tax_ids\">15%</span>"
 msgstr "<span id=\"line_tax_ids\">15%</span>"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span itemprop=\"name\">Deco Addict</span>"
-msgstr "<span itemprop=\"name\">Penikmat Dekorasi</span>"
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid ""
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgid "<span itemprop=\"name\">Acme Corporation</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>\n"
+"                                        Chair floor protection<br/>\n"
+"                                        Office chairs can harm your floor: "
+"protect it\n"
+"                                    </span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>\n"
+"                                        [FURN_7777] Office Chair<br/>\n"
+"                                        Comfortable yellow chair for daily "
+"work\n"
+"                                    </span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>\n"
+"                                        [FURN_8999] Three-Seat Sofa<br/>\n"
+"                                        Three Seater Sofa with Lounger in "
+"Steel Grey Colour\n"
+"                                    </span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>$ <span class=\"oe_currency_value\">24,090.00</span></span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>20.00</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -573,7 +632,7 @@ msgstr "<span>Deskripsi</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"               <span>INV/2023/00003</span>"
+"                <span>INV/2023/00003</span>"
 msgstr ""
 
 #. module: web
@@ -600,34 +659,18 @@ msgstr "<span>Harga Satuan</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>[FURN_8220] Four Person Desk<br/>\n"
-"                                       Four person modern office "
-"workstation</span>"
-msgstr ""
-"<span>[FURN_8220] Four Person Desk<br/>\n"
-"                                       Meja Kerja Modern Untuk Empat Orang</"
+"                                    Four person modern office workstation</"
 "span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
-"<span>[FURN_8999] Three-Seat Sofa<br/>\n"
-"                                       Three Seater Sofa with Lounger in "
-"Steel Grey Colour</span>"
+"<strong class=\"text-nowrap\">\n"
+"                                                    $ <span "
+"class=\"oe_currency_value\">27,703.50</span>\n"
+"                                                </strong>"
 msgstr ""
-"<span>[FURN_8999] Sofa Tiga-Kursi<br/>\n"
-"                                       Tiga Kursi Sofa panjang dengan warna "
-"abu-baja</span>"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       22,137.50</span></"
-"strong>"
-msgstr ""
-"<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       22,137.50</span></"
-"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -635,24 +678,12 @@ msgid "<strong>Address block</strong>"
 msgstr "<strong>Blok Alamat</strong>"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "<strong>Company address block</strong>"
 msgstr "<strong>Blok alamat perusahaan</strong>"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "<strong>Company details block</strong>"
 msgstr "<strong>Blok detail perusahaan</strong>"
 
@@ -731,6 +762,9 @@ msgid ""
 "settings to allow popup windows for this page. You can also copy the link "
 "and paste it in a new tab."
 msgstr ""
+"Jendela popup telah diblokir. Anda mungkin harus mengubah pengaturan browser "
+"Anda untuk mengizinkan jendela popup untuk halaman ini. Anda juga dapat "
+"menyalink dan menempel link di tab baru."
 
 #. module: web
 #. odoo-javascript
@@ -897,6 +931,7 @@ msgstr "Tambah Foto"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
 msgstr "Tambahkan Properti"
@@ -1151,9 +1186,9 @@ msgstr "Apakah anda yakin untuk mengarsipkan rekord ini?"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
-msgid "Are you sure that you want to duplicate all the selected records?"
-msgstr "Apakah Anda yakin Anda ingin menggandakan semua rekaman terpilih?"
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+msgid "Are you sure that you want to discard the changes you made offline?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1331,16 +1366,6 @@ msgid "Back to “%s” form"
 msgstr "Kembali ke formulir “%s”"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "Background"
-msgstr "Latar Belakang"
-
-#. module: web
-#: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
-msgid "Background Image"
-msgstr "Gambar Latar"
-
-#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Background color"
@@ -1360,15 +1385,10 @@ msgstr "Lencana"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/badge_selection/badge_selection_field.js:0
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+#: code:addons/web/static/src/views/fields/badges_selection/badges_selection_field.js:0
 msgid "Badges"
 msgstr "Lencana"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/badge_selection_with_filter/badge_selection_field_with_filter.js:0
-msgid "Badges for Selection With Filter"
-msgstr "Lencana untuk Pilihhan Dengan Filter"
 
 #. module: web
 #. odoo-javascript
@@ -1398,6 +1418,12 @@ msgstr "Base"
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Become Superuser"
 msgstr "Ubah Menjadi Akun Superuser"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.xml:0
+msgid "Billable"
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -1443,16 +1469,6 @@ msgid ""
 msgstr ""
 "Boolean field dari model yang digunakan, yang mengindikasikan apakah "
 "statusnya dilipat atau tidak."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
-msgid ""
-"Bootstrap classname to customize the style of the progress bar when the "
-"maximum value is exceeded"
-msgstr ""
-"Nama kelas bootstrap untuk mengatur style dari progress bar ketika melebihi "
-"nilai maksimum"
 
 #. module: web
 #. odoo-javascript
@@ -1561,7 +1577,7 @@ msgstr "CTRL"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/phone/phone_field.xml:0
+#: code:addons/web/static/src/views/fields/phone/phone_field.js:0
 msgid "Call"
 msgstr "Panggilan"
 
@@ -1573,23 +1589,13 @@ msgstr "Dapat membuat"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
-msgid "Can edit max value"
-msgstr "Dapat mengedit value maksimum"
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
+msgid "Can't remove that search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
-msgid "Can edit value"
-msgstr "Dapat mengedit value"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
-#: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: code:addons/web/static/src/webclient/share_target/share_target_dialog.xml:0
 msgid "Cancel"
 msgstr "Batal"
@@ -1752,9 +1758,27 @@ msgstr "Hapus Semua"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/offline/offline_systray.xml:0
-msgid "Click to check connection"
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
+msgid "Clear search"
 msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.xml:0
+msgid "Click to check connection and Sync"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.xml:0
+msgid "Click to collapse all groups"
+msgstr "Klik untuk menutup semua kelompok"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.xml:0
+msgid "Click to expand all groups"
+msgstr "Klik untuk membuka semua kelompok"
 
 #. module: web
 #. odoo-javascript
@@ -1785,6 +1809,7 @@ msgstr "Clickable"
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #: code:addons/web/static/src/webclient/actions/action_install_kiosk_pwa.xml:0
+#: code:addons/web/static/src/webclient/debug/debug_items.xml:0
 msgid "Close"
 msgstr "Tutup"
 
@@ -1811,12 +1836,11 @@ msgstr "Pemilih Warna"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_color_dot/many2many_tags_color_dot_field.js:0
 msgid "Color dot tags"
-msgstr ""
+msgstr "Tag titik warna"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/badge/badge_field.js:0
-#: code:addons/web/static/src/views/fields/badge_selection/list_badge_selection_field.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Color field"
 msgstr "Warna field"
@@ -1876,12 +1900,10 @@ msgid "Company name"
 msgstr "Nama Perusahaan"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
+#: model_terms:ir.ui.view,arch_db:web.external_layout_center
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Company tagline"
 msgstr "Tagline perusahaan"
@@ -1922,10 +1944,17 @@ msgstr "Konfigurasikan tata letak dokumen Anda"
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Confirm"
 msgstr "Konfirmasi"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+#: model_terms:ir.ui.view,arch_db:web.check_identity
+msgid "Confirm access"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1952,24 +1981,12 @@ msgid "Contact Statistics"
 msgstr "Statistik Kontak"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "Contains the company address."
 msgstr "Memiliki alamat perusahaan."
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "Contains the company details."
 msgstr "Memiliki detail perusahaan."
 
@@ -2098,6 +2115,12 @@ msgid "Count Limit"
 msgstr "Batas Jumlah"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.js:0
+msgid "Count lines of code (%s billable)"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
 msgid "Country"
 msgstr "Negara"
@@ -2128,7 +2151,7 @@ msgstr "Buat %s"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "Create New"
-msgstr ""
+msgstr "Buat Baru"
 
 #. module: web
 #: model:ir.model,website_form_label:web.model_res_partner
@@ -2147,6 +2170,12 @@ msgstr "Buat dan edit..."
 #: code:addons/web/static/src/webclient/share_target/share_target_dialog.xml:0
 msgid "Create..."
 msgstr "Buat..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+msgid "Created"
+msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
@@ -2189,12 +2218,6 @@ msgstr "Mata Uang"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
 msgstr "Field mata uang"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
-msgid "Current value field"
-msgstr "Field value saat ini"
 
 #. module: web
 #. odoo-javascript
@@ -2322,7 +2345,7 @@ msgstr "Rentang Tanggal"
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Date range"
-msgstr ""
+msgstr "Rentang tanggal"
 
 #. module: web
 #. odoo-javascript
@@ -2388,6 +2411,12 @@ msgstr "Default"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+msgid "Default Icon"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Default State"
 msgstr "Status Default"
@@ -2424,6 +2453,7 @@ msgid ""
 "Defines the behavior when a tag is clicked. 'Edit color' requires a color "
 "field"
 msgstr ""
+"Mendefinisikan perilaku saat tag diklik. 'Edit warna' memerlukan field warna"
 
 #. module: web
 #. odoo-javascript
@@ -2445,7 +2475,7 @@ msgstr "Jeda kemunculan gambar yang di-zoom dengan nilai dalam milidetik"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tags_list/avatar_tag.xml:0
-#: code:addons/web/static/src/core/tags_list/badge_tag.xml:0
+#: code:addons/web/static/src/core/tags_list/badge_tag.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
@@ -2549,18 +2579,22 @@ msgstr "Nonaktifkan readonly"
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
+#: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
-#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/fields/translation_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
+#: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/view_button/view_button.js:0
 #: code:addons/web/static/src/views/view_components/multi_create_popover.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+#: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Discard"
 msgstr "Buang"
 
@@ -2575,6 +2609,18 @@ msgstr "Buang semua perubahan"
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 msgid "Discard changes"
 msgstr "Buang perubahan"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+msgid "Discard offline change"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.xml:0
+msgid "Discard offline changes"
+msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
@@ -2613,15 +2659,16 @@ msgstr "Tampilkan preset"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
-msgid "Display seconds"
-msgstr "Tampilkan detik"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Display the domain using facets"
 msgstr "Tampilkan domain menggunakan facet"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+#: code:addons/web/static/src/views/fields/badges_selection/badges_selection_field.js:0
+msgid "Displays a dropdown if the badge count is higher than this value."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2722,7 +2769,7 @@ msgstr "Jangan pergi dulu,"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_color_dot/many2many_tags_color_dot_field.js:0
 msgid "Dot color field"
-msgstr ""
+msgstr "Field titik warna"
 
 #. module: web
 #. odoo-javascript
@@ -2764,17 +2811,30 @@ msgstr "Gambar"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
+msgid "Drop here to unschedule"
+msgstr "Lepas di sini untuk membatalkan penjadwalan"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record.xml:0
 msgid "Dropdown menu"
 msgstr "Menu dropdown"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Duplicate"
 msgstr "Gandakan"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+msgid "Duplicate Records"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2818,7 +2878,6 @@ msgstr "Tanggal paling awal diterima"
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
-#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
@@ -2848,7 +2907,7 @@ msgstr "Edit Properti-Properti"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Edit color"
-msgstr ""
+msgstr "Edit warna"
 
 #. module: web
 #. odoo-javascript
@@ -2871,6 +2930,12 @@ msgstr "Edit: %s"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+msgid "Edited"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/email/email_field.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__email
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2880,7 +2945,7 @@ msgstr "Email"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_res_users_settings__embedded_actions_config_ids
 msgid "Embedded Actions Config"
-msgstr ""
+msgstr "Konfigurasi Tindakan yang Diembed"
 
 #. module: web
 #. odoo-javascript
@@ -2979,16 +3044,11 @@ msgstr "Perluas semua"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
+#: code:addons/web/static/src/views/list/export_all/export_all.xml:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "Export"
 msgstr "Ekspor"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/list/export_all/export_all.xml:0
-msgid "Export All"
-msgstr "Ekspor Semua"
 
 #. module: web
 #. odoo-javascript
@@ -3064,6 +3124,12 @@ msgstr "Gagal mengevaluasi konteks: %(context)s."
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 msgid "Failed to load emojis..."
 msgstr "Gagal memuat emoji..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+msgid "Fallback icon if co-model's field doesn't contain an icon"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3247,6 +3313,9 @@ msgid ""
 "For example, if the date is %(today)s and you enter \"+=2d\", \n"
 "            it will be updated to %(future)s."
 msgstr ""
+"Sebagai contoh, bila tanggal adalah %(today)s dan Anda memasukkan "
+"\"+=2h\", \n"
+"            akan diupdate menjadi %(future)s."
 
 #. module: web
 #. odoo-javascript
@@ -3257,6 +3326,12 @@ msgid ""
 msgstr ""
 "Sebagai contoh, bila value adalah \"1\" dan Anda memasukkan \"+=2\", akan "
 "diupdate menjadi \"3\"."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Forgot password?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3363,7 +3438,7 @@ msgstr "Dapatkan fitur ini dan lebih banyak lagi dengan Odoo Enterprise!"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.js:0
 msgid "Go to URL"
 msgstr "Pergi ke URL"
 
@@ -3422,6 +3497,12 @@ msgid "Handle"
 msgstr "Handle"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Having problems ?"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Teks header ditampilkan pada bagian atas semua lapopran."
@@ -3431,12 +3512,18 @@ msgstr "Teks header ditampilkan pada bagian atas semua lapopran."
 #: code:addons/web/static/src/model/relational_model/record.js:0
 msgid ""
 "Heads up! Your recent changes are too large to save automatically. Please "
-"click the %(upload_icon)s button now to ensure your work is saved before you "
+"click the %(uploadIcon)s button now to ensure your work is saved before you "
 "exit this tab."
 msgstr ""
-"Siap-siap! Perubahan terkini Anda terlalu besar untuk disimpan otomatis. "
-"Silakan klik tombol %(upload_icon)s sekarang untuk memastikan pekerjaan Anda "
-"disimpan sebelum Anda keluar dari tab ini."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+msgid ""
+"Heads up! Your recent changes cannot be saved automatically while you are "
+"offline. Please click the %(uploadIcon)s button now to ensure your work is "
+"saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3510,6 +3597,12 @@ msgstr "Menu Home"
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
 msgstr "Jam"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Hours"
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -3676,7 +3769,7 @@ msgstr "Disiratkan oleh"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/share_target/share_target_item.xml:0
 msgid "In Company"
-msgstr ""
+msgstr "Di Perusahaan"
 
 #. module: web
 #. odoo-javascript
@@ -3747,7 +3840,7 @@ msgstr "Bilangan Bulat"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2one/many2one.xml:0
+#: code:addons/web/static/src/views/view_components/internal_link_button.xml:0
 msgid "Internal link"
 msgstr "Link Internal"
 
@@ -3922,11 +4015,11 @@ msgstr "Sepertinya record dengan ID %s tidak dapat ditemukan. Mungkin dihapus."
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
-"Akan dihapus untuk semua orang yang menggunakan \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"Akan dihapus untuk semua orang yang menggunakan \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 
 #. module: web
 #. odoo-javascript
@@ -4249,11 +4342,6 @@ msgid "Layout"
 msgstr "Layout"
 
 #. module: web
-#: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background
-msgid "Layout Background"
-msgstr "Latar Belakang Layout"
-
-#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Leave Debug Mode"
@@ -4285,9 +4373,21 @@ msgstr "Grafik Garis"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Link copied to clipboard"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
 msgstr "Muat"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.xml:0
+msgid "Load More"
+msgstr "Muat Lebih"
 
 #. module: web
 #. odoo-javascript
@@ -4330,7 +4430,7 @@ msgstr "Memuat..."
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/loading_indicator/loading_indicator.xml:0
 msgid "Loading…"
-msgstr ""
+msgstr "Memuat…"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -4351,16 +4451,17 @@ msgstr "Log keluar"
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
+#: model_terms:ir.ui.view,arch_db:web.login
 msgid "Login"
 msgstr "Log masuk"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
+#: model_terms:ir.ui.view,arch_db:web.external_layout_center
+#: model_terms:ir.ui.view,arch_db:web.external_layout_dual
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
+#: model_terms:ir.ui.view,arch_db:web.external_layout_lines
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -4460,6 +4561,12 @@ msgstr "Cocokkan"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max tooltip"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Max value"
 msgstr "Value Maks"
 
@@ -4481,6 +4588,13 @@ msgstr "Max: %(max)s"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Maximal precision"
 msgstr "Ketepatan maksimum"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+#: code:addons/web/static/src/views/fields/badges_selection/badges_selection_field.js:0
+msgid "Maximum Visible Badges"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4566,6 +4680,18 @@ msgstr "Ketepatan minimum"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/float/float_field.js:0
+msgid "Minimum Digits"
+msgstr "Digit-Digit Minum"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Minutes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/timezone_mismatch/timezone_mismatch_field.js:0
 msgid "Mismatch title"
 msgstr "Judul tidak cocok"
@@ -4586,14 +4712,14 @@ msgstr "Dokumen Hilang"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_processor.js:0
 msgid "Missing record"
-msgstr ""
+msgstr "Rekaman hilang"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/record_selectors/multi_record_selector.js:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor_autocomplete.js:0
 msgid "Missing record (ID: %s)"
-msgstr ""
+msgstr "Rekaman hilang (ID: %s)"
 
 #. module: web
 #. odoo-python
@@ -4624,6 +4750,7 @@ msgstr "Mode"
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 #: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/webclient/debug/debug_items.xml:0
 #: model:ir.model,name:web.model_ir_model
 msgid "Model"
 msgstr "Model"
@@ -4713,6 +4840,7 @@ msgstr "Lebih Banyak Menu"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 msgid "More..."
@@ -4828,6 +4956,18 @@ msgstr "NG button"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.xml:0
+msgid "Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+msgid "Name of the co-model's field that contains the icon class."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 msgid "Name:"
 msgstr "Nama:"
@@ -4887,7 +5027,7 @@ msgstr "Baru:"
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 msgid "Next"
-msgstr "Next"
+msgstr "Berikutnya"
 
 #. module: web
 #. odoo-javascript
@@ -4974,6 +5114,12 @@ msgid "No data to display"
 msgstr "Tidak data yang bisa ditampilkan"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr "Tidak ada data untuk diekspor"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "No debug command found"
@@ -4988,8 +5134,8 @@ msgstr "Tidak ada perangkat yang ditemukan"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji matches your search"
-msgstr "Tidak ada emoji yang cocok dengan pencarian Anda"
+msgid "No emojis match your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5059,6 +5205,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/view_hook.js:0
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
 msgid "No, keep it"
 msgstr "Tidak, tetap simpan"
 
@@ -5086,7 +5233,7 @@ msgstr "Bukan merupakan %s yang valid"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid ""
 "Not possible to create monetary field because there is no currency on "
 "current model."
@@ -5096,9 +5243,22 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
+#: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
+msgid "Nothing to schedule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 msgid "Number of files"
 msgstr "Jumlah file"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Numeric"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5265,9 +5425,15 @@ msgstr "Ok"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.xml:0
+msgid "On"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "On tag click"
-msgstr ""
+msgstr "Saat mengeklik tag"
 
 #. module: web
 #. odoo-python
@@ -5275,12 +5441,6 @@ msgstr ""
 msgid ""
 "Only employees can access this database. Please contact the administrator."
 msgstr "Hanya karyawan yang bisa mengakses database. Silahkan hubungi admin."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
-msgid "Only searchable"
-msgstr "Hanya dapat dicari"
 
 #. module: web
 #. odoo-javascript
@@ -5295,21 +5455,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
-"Hanya tipe %(supported_types)syang didukung pada kategori (total sebanyak%"
-"(field_type)s yang ditemukan)"
+"Hanya tipe %(supported_types)syang didukung pada kategori (total "
+"sebanyak%(field_type)s yang ditemukan)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
-"Hanya tipe %(supported_types)syang didukung untuk disaring (total sebanyak%"
-"(field_type)s yang ditemukan)"
+"Hanya tipe %(supported_types)syang didukung untuk disaring (total "
+"sebanyak%(field_type)s yang ditemukan)"
 
 #. module: web
 #. odoo-javascript
@@ -5378,13 +5538,13 @@ msgstr "Buka developer tool"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Open form"
-msgstr ""
+msgstr "Buka formulir"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_color_dot/many2many_tags_color_dot_field.js:0
 msgid "Open form on tag click"
-msgstr ""
+msgstr "Buka form saat tag diklik"
 
 #. module: web
 #. odoo-javascript
@@ -5444,12 +5604,6 @@ msgstr "Lainnya"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
-msgid "Overflow style"
-msgstr "Overflow style"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "P button"
 msgstr "P button"
@@ -5474,13 +5628,12 @@ msgid "PDF file"
 msgstr "File PDF"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
+msgid "Page 1 / 1"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 msgid "Page <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr "Halaman <span class=\"page\"/> / <span class=\"topage\"/>"
 
@@ -5501,6 +5654,8 @@ msgid "Partner"
 msgstr "Rekanan"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Password"
 msgstr "Kata Sandi"
@@ -5782,9 +5937,22 @@ msgstr "Definisi Dasar Properti"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
+msgid "Properties Definition"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Property %s"
 msgstr "Properti %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_definition_field.js:0
+msgid "Property 1"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5889,10 +6057,15 @@ msgid ""
 "    \n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
+"Siap untuk membuat rekaman Anda hilang menjadi debu? Apakah Anda yakin? Akan "
+"hilang selamanya!\n"
+"    \n"
+"Pikir dua kali sebelum memencet tombol 'Hapus'!"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_basic.js:0
+#: code:addons/web/static/src/model/relational_model/record.js:0
 msgid "Record"
 msgstr "Catatan"
 
@@ -5964,6 +6137,12 @@ msgstr "Regenerate Assets"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+msgid "Related Icon Field"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 msgid "Relation to follow"
 msgstr "Relasi yang terkait"
@@ -6006,7 +6185,7 @@ msgstr "Hapus"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Remove Cover"
-msgstr ""
+msgstr "Hapus Sampul"
 
 #. module: web
 #. odoo-javascript
@@ -6043,7 +6222,7 @@ msgstr "Hapus user dari switcher"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 msgid "Replace current file"
-msgstr ""
+msgstr "Ganti file saat ini"
 
 #. module: web
 #. odoo-javascript
@@ -6086,6 +6265,12 @@ msgstr "Dibutuhkan:"
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Reset"
 msgstr "Reset"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/offline_action_helper.xml:0
+msgid "Reset Filters"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6241,7 +6426,7 @@ msgstr "Simpan & Buat Baru"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 msgid "Save Properties"
-msgstr ""
+msgstr "Simpan Properti"
 
 #. module: web
 #. odoo-javascript
@@ -6349,6 +6534,7 @@ msgstr "Cari user-user..."
 #: code:addons/web/static/src/core/commands/command_palette.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
@@ -6373,6 +6559,12 @@ msgstr "SearchView"
 #: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
 msgid "Secondary Color"
 msgstr "Warna Sekunder"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Seconds"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6519,9 +6711,14 @@ msgstr "Pilihan:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/email/email_field.xml:0
+#: code:addons/web/static/src/views/fields/email/email_field.js:0
 msgid "Send Email"
 msgstr "Kirim Email"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid "Separated (one per tab)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6546,7 +6743,7 @@ msgstr "Mengatur gambar sampul"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_color_dot/many2many_tags_color_dot_field.js:0
 msgid "Set a char field that colors the dot on the tag."
-msgstr ""
+msgstr "Tetapkan field char yang mewarnai titik di tag."
 
 #. module: web
 #. odoo-javascript
@@ -6557,7 +6754,6 @@ msgstr "Pilih zona waktu untuk pengguna anda"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/badge/badge_field.js:0
-#: code:addons/web/static/src/views/fields/badge_selection/list_badge_selection_field.js:0
 msgid "Set an integer field to use colors with the badge."
 msgstr "Tetapkan field integer untuk menggunakan warna-warna dengan lencana."
 
@@ -6603,8 +6799,20 @@ msgstr "Shaka"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Share"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 msgid "Share URL"
+msgstr "Bagikan URL"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Share the current view"
 msgstr ""
 
 #. module: web
@@ -6612,6 +6820,12 @@ msgstr ""
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 msgid "Shared"
 msgstr "Dibagikan"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_model.js:0
+msgid "Shared filters couldn't be applied"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6646,6 +6860,7 @@ msgstr "Tunjukkan opsi-opsi"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Show seconds"
 msgstr "Tunjukkan detik"
 
@@ -6671,13 +6886,19 @@ msgstr "Tunjukkan akhir minggu"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid "Signature"
+msgstr "Tanda Tangan"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Signed in as"
 msgstr ""
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Single date"
-msgstr ""
+msgstr "Tanggal tunggal"
 
 #. module: web
 #. odoo-javascript
@@ -6878,6 +7099,18 @@ msgstr "Symbols"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+msgid "Sync issues"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
+msgid "Syncing"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "T-Rex"
 msgstr "T-Rex"
@@ -6918,6 +7151,16 @@ msgstr "TOP arrow"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "TV"
 msgstr "TV"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__report_tables_id
+msgid "Table Design"
+msgstr "Desain Meja"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "Tables"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -6970,13 +7213,7 @@ msgstr "Taurus"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "Tax ID"
 msgstr "ID Pajak"
 
@@ -6991,6 +7228,11 @@ msgstr "Teal"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "Template:"
 msgstr "Template"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+msgid "Temporal (experimental)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7079,8 +7321,8 @@ msgstr "Id di %(field_name)s tidak boleh diduplikasi: “%(action_ids)s”"
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 "Id di %(field_name)s hanya boleh integer atau \"false\": “%(action_ids)s”"
 
@@ -7109,8 +7351,8 @@ msgstr "Field yang terpilih akan digunakan untuk pre-fill tanda tangan"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
 "File terpilih (%(size)sB) lebih besar dari ukurang file maksimum yang "
 "diizinkan (%(maxSize)sB)."
@@ -7152,6 +7394,12 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "There is no available image to be set as cover."
 msgstr "Tidak ada gambar yang bisa digunakan sebagai sampul."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/offline_action_helper.xml:0
+msgid "There is no data to display offline for the given filters"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7302,6 +7550,7 @@ msgstr "Alihkan"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
 msgstr "Toggle Panel Pencarian"
@@ -7482,13 +7731,7 @@ msgid "URL"
 msgstr "URL"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
-#: model_terms:ir.ui.view,arch_db:web.external_layout_folder
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-#: model_terms:ir.ui.view,arch_db:web.external_layout_striped
-#: model_terms:ir.ui.view,arch_db:web.external_layout_wave
+#: model_terms:ir.ui.view,arch_db:web.company_address_list
 msgid "US12345671"
 msgstr "US12345671"
 
@@ -7502,8 +7745,8 @@ msgstr "Tidak dapat mengakses kamera"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/reports/utils.js:0
 msgid ""
-"Unable to find Wkhtmltopdf on this system. The report will be shown in html.%"
-"(link)s"
+"Unable to find Wkhtmltopdf on this system. The report will be shown in html."
+"%(link)s"
 msgstr ""
 "Tidak dapat menemukan Wkhtmltopdf pada sistem ini. Laporan akan ditunjukkan "
 "di html. %(link)s"
@@ -7535,6 +7778,19 @@ msgstr "Undefined"
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 msgid "Unfold"
 msgstr "Buka"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
+msgid "Unit"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
+#: code:addons/web/static/src/views/fields/badges_selection/badges_selection_field.js:0
+msgid "Unlimited"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7601,13 +7857,12 @@ msgstr "Perbarui ke versi akan datang"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Upload New"
-msgstr ""
+msgstr "Unggah Baru"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
-#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Upload your file"
 msgstr "Unggah file Anda"
 
@@ -7679,12 +7934,17 @@ msgstr "Gunakan opsi 'Format yang ramah-pengguna) untuk mengustomisasi format."
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
 msgstr ""
+"Gunakan operator \"+=\", \"-=\" untuk mengupdate hari saat ini berdasarkan "
+"hari (%(days)s), \n"
+"            minggu (%(weeks)s), bulan (%(months)s), tahun (%(years)s), jam "
+"(%(hours)s), \n"
+"            menit (%(minutes)s) dan detik (%(seconds)s)."
 
 #. module: web
 #. odoo-javascript
@@ -7704,17 +7964,6 @@ msgstr "Gunakan filter ini secara default saat membuka tampilan ini"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
-msgid ""
-"Use to override the display value (e.g. if your progress bar is a computed "
-"percentage but you want to display the actual field value instead)."
-msgstr ""
-"Gunakan untuk mengesampingkan value tampilan (contoh Bila progress bar "
-"adalah persentase yang dihitung tapi Anda ingin menampilkan value field yang "
-"sebenarnya)."
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/color_picker/custom_color_picker/custom_color_picker.xml:0
 msgid ""
 "Use up and down arrow keys to adapt the brightness. Use left and right arrow "
@@ -7725,6 +7974,12 @@ msgstr ""
 "Gunakan kunci arah panah kiri dan kanan untuk mengadaptasikan saturation. "
 "Pencet kunci Control atau Command di saat yang sama untuk mendapatkan "
 "kendali yang lebih tepat."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/session/check_identity.xml:0
+msgid "Use your password"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7748,6 +8003,12 @@ msgstr "Pengaturan User"
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
 msgid "User Settings for Embedded Actions"
 msgstr "Pengaturan User untuk Action yang Diembed"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/debug_items.js:0
+msgid "User customization"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7831,6 +8092,7 @@ msgstr "Video"
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
+#: code:addons/web/static/src/webclient/debug/debug_items.xml:0
 #: model:ir.model,name:web.model_ir_ui_view
 msgid "View"
 msgstr "Lihat"
@@ -7917,6 +8179,18 @@ msgid "Warning for future dates"
 msgstr "Peringatan untuk tanggal-tanggal masa depan"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid "Warning: Link copied to clipboard might be too long for some browsers"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_model.js:0
+msgid "Warning: Not all shared filters applied"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid "Warnings"
@@ -7997,9 +8271,9 @@ msgstr "Widget:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/offline/offline_systray.xml:0
+#: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
 msgid "Working offline"
-msgstr ""
+msgstr "Bekerja offline"
 
 #. module: web
 #. odoo-javascript
@@ -8071,6 +8345,14 @@ msgid "Yes"
 msgstr "Ya"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
+msgid ""
+"You are about to create a copy of every selected record.\n"
+"Are you sure you want to proceed?"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "You are logged in."
 msgstr "Anda sekarang logged in."
@@ -8097,6 +8379,15 @@ msgstr "Anda dapat menginstal app dari menu browser"
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
 msgstr "Anda tidak dapat membaca definisi field tersebut."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
+msgid ""
+"You can use the link below to share the current view with its filters: \n"
+"\n"
+" %(url)s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -19246,7 +19537,7 @@ msgstr "om"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_currency_popover.xml:0
 msgid "on"
-msgstr ""
+msgstr "pada"
 
 #. module: web
 #. odoo-javascript
@@ -22316,6 +22607,7 @@ msgstr "seafood"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
+#: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 msgid "search"
 msgstr "cari"
@@ -23513,7 +23805,7 @@ msgstr "splayed"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "split"
-msgstr "pisah"
+msgstr "pisahkan"
 
 #. module: web
 #. odoo-javascript
@@ -26123,7 +26415,7 @@ msgstr "withershins"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_currency_popover.xml:0
 msgid "without currency"
-msgstr ""
+msgstr "tanpa mata uang"
 
 #. module: web
 #. odoo-javascript
@@ -26861,7 +27153,7 @@ msgstr "yen banknote"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "yet, let's create some!"
-msgstr ""
+msgstr ", ayo buat beberapa!"
 
 #. module: web
 #. odoo-javascript

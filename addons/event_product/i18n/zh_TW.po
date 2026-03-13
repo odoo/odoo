@@ -6,21 +6,22 @@
 # Wil Odoo, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 08:10+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"PO-Revision-Date: 2026-01-15 20:30+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-19/event_product/zh_Hant/>\n"
+"projects/odoo-s19-1/event_product/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: event_product
 #: model:ir.model.fields,help:event_product.field_event_event_ticket__description
@@ -28,6 +29,12 @@ msgstr ""
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
 msgstr "您要與客戶溝通的入場券的說明。"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__additional_product_ids
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__additional_product_ids
+msgid "Additional Products"
+msgstr ""
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_product_product__service_tracking
@@ -95,6 +102,11 @@ msgid "Event Tickets"
 msgstr "活動門票"
 
 #. module: event_product
+#: model:product.category,name:event_product.product_category_events
+msgid "Events"
+msgstr ""
+
+#. module: event_product
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
 msgid "Free"
 msgstr "免費"
@@ -116,26 +128,18 @@ msgid "Not Sold"
 msgstr "非供出售"
 
 #. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
-#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price
-msgid "Price"
-msgstr "價格"
-
-#. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_reduce
 #: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price_reduce
 msgid "Price Reduce"
 msgstr "降價"
 
 #. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr "減稅後價格"
-
-#. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_incl
-msgid "Price include"
-msgstr "價格包括"
+#: model:ir.model.fields,help:event_product.field_event_event_ticket__total_price
+#: model:ir.model.fields,help:event_product.field_event_type_ticket__total_price
+msgid ""
+"Price at which this ticket will be sold, which takes into account the Ticket "
+"Price and the price of every Additional Product"
+msgstr ""
 
 #. module: event_product
 #: model:ir.model,name:event_product.model_product_template
@@ -153,8 +157,8 @@ msgstr "產品款式"
 #. odoo-python
 #: code:addons/event_product/models/product_product.py:0
 msgid ""
-"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
-"(event)s\"."
+"Products linked to an event ticket must have \"%(tracking)s\" set to "
+"\"%(event)s\"."
 msgstr ""
 
 #. module: event_product
@@ -173,10 +177,46 @@ msgid "Sales Start"
 msgstr "銷售開始"
 
 #. module: event_product
+#: model:ir.model.fields,help:event_product.field_event_event_ticket__additional_product_ids
+#: model:ir.model.fields,help:event_product.field_event_type_ticket__additional_product_ids
+msgid ""
+"Select products to include with each registration. They will also show up "
+"separately on Sale Orders."
+msgstr ""
+
+#. module: event_product
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
 msgid "Sold"
 msgstr "已售出"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price
+msgid "Ticket Price"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__total_price
+msgid "Total Price"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_reduce
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__total_price_reduce
+msgid "Total Price Reduce"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_reduce_taxinc
+msgid "Total Price Reduce Tax inc"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_incl
+msgid "Total Price include"
+msgstr ""
 
 #. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form

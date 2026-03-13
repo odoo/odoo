@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-16 15:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/delivery/"
@@ -97,16 +97,14 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
 msgid ""
 "A description of the delivery method that you want to communicate to your "
-"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"customers on the Sales Order and sales confirmation email. E.g. instructions "
 "for customers to follow."
 msgstr ""
-"ग्राहकों को सेल्स ऑर्डर और कन्फ़र्मेशन ईमेल पर डिलीवरी के बारे में बताने के लिए विवरण. "
-"उदाहरण के तौर पर, ग्राहकों को पालन करने के लिए दिए जाने वाले निर्देश।"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
-msgid "Action while validating Delivery Orders"
-msgstr "डिलीवरी ऑर्डर की जांच करते समय की जाने वाली कार्रवाई"
+msgid "Action while validating Delivery Orders."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -149,9 +147,8 @@ msgstr "रकम"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
-"company currency"
+"company currency."
 msgstr ""
-"फ़्री शिपिंग का फ़ायदा पाने के लिए ऑर्डर की कुल रकम, जिसे कंपनी की मुद्रा में दिखाया गया है"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -304,6 +301,11 @@ msgid "Define a new delivery method"
 msgstr "एक नया डिलीवरी तरीका तय करें"
 
 #. module: delivery
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr "डिलीवरी की कीमत"
@@ -408,11 +410,6 @@ msgstr "डेस्टिनेशन"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
 msgstr "दिखाने का क्रम तय करें"
-
-#. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "Discard"
-msgstr "खारिज करें"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -549,10 +546,8 @@ msgstr "आईडी"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
 msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
-"value, the customer benefits from a free shipping"
+"value, the customer benefits from a free shipping."
 msgstr ""
-"अगर ऑर्डर की कुल रकम (शिपिंग को छोड़कर) इस मूल्य के बराबर या ज़्यादा है, तो ग्राहक को "
-"मुफ़्त शिपिंग का फ़ायदा मिलता है"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -1084,12 +1079,8 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have "
 "already been processed:\n"
 "\n"
+"%s"
 msgstr ""
-"आप ऐसे ऑर्डर पर शिपिंग लागत को अपडेट नहीं कर सकते हैं जिसका इनवॉइस पहले ही बन चुका है!\n"
-"\n"
-"निम्नलिखित डिलीवरी लाइनें (प्रॉडक्ट, इनवॉइस की गई मात्रा और कीमत) पहले ही प्रोसेस हो "
-"चुकी हैं:\n"
-"\n"
 
 #. module: delivery
 #. odoo-python

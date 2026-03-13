@@ -7,21 +7,22 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 08:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-07 12:16+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-19/base_vat/zh_Hant/>\n"
+"projects/odoo-s19-1/base_vat/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_vat
 #. odoo-python
@@ -39,8 +40,16 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr "17291716060（NIN）或 1729171602（VKN）"
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr ""
+"12345678 或 UA12345678（EDRPOU），1234567890（RNOPP）或 123456789012（IPN）"
 
 #. module: base_vat
 #. odoo-python
@@ -69,20 +78,12 @@ msgstr "CHE-123.456.788 TVA 或 CHE-123.456.788 MWST 或 CHE-123.456.788 IVA"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "配置設定"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr "與 VIES 伺服器連接失敗。增值稅號%s無法驗證。"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -114,6 +115,12 @@ msgstr "DE123456788 或 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr "向 VIES 服務查核增值稅號碼「%s」時，發生錯誤。"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -171,7 +178,7 @@ msgstr "如果勾選，則適用的默認財務狀況將取決於歐洲 VIES 服
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "If you are trying to input a European number, this is the expected format: "
-msgstr ""
+msgstr "若輸入的是歐洲號碼，預期的正確格式應如下： "
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -201,8 +208,8 @@ msgstr "稅務編號"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr "%(vat_label)s 的號碼 [%(wrong_vat)s] 似乎無效。%(expected_note)s"
 
 #. module: base_vat
@@ -212,8 +219,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
-"以下記錄的 %(vat_label)s 號碼 [%(wrong_vat)s] 似乎無效。記錄：%"
-"(record_label)s。%(expected_note)s"
+"以下記錄的 %(vat_label)s 號碼 [%(wrong_vat)s] 似乎無效。記錄："
+"%(record_label)s。%(expected_note)s"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -229,22 +236,10 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "VIES 伺服器無法解析增值稅號%s。"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr "增值稅驗證請求未獲處理。VIES 服務回覆以下錯誤：%s"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr "要明確表明沒有（有效）增值稅，請改用「/」（斜線）。 "
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
+msgstr ""
+"若要明確表示不需繳納增值稅，或沒有有效的增值稅項，請使用 /（斜線）、「na」或"
+"「NA」（不適用）代替。 "
 
 #. module: base_vat
 #. odoo-python

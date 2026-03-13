@@ -6,44 +6,22 @@
 # Martin Trigaux, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-15 07:20+0000\n"
+"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"PO-Revision-Date: 2026-02-28 13:45+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "payment_authorize/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
-msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
-"select\">\n"
-"                        <option value=\"checking\">Personal Checking</"
-"option>\n"
-"                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business "
-"Checking</option>\n"
-"                    </select>"
-msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
-"select\">\n"
-"                        <option value=\"checking\">Compte-chèques personnel</"
-"option>\n"
-"                        <option value=\"savings\">Compte d'épargne "
-"personnel</option>\n"
-"                        <option value=\"businessChecking\">Compte-chèques "
-"professionnel</option>\n"
-"                    </select>"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -97,6 +75,11 @@ msgstr "Nom de la banque"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Business Checking"
+msgstr "Compte courant professionnel"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
 msgstr "Code de la carte"
 
@@ -127,8 +110,8 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"Impossible de récupérer les détails de la transaction. (code d'erreur : %"
-"(error_code)s; error_details : %(error_message)s)"
+"Impossible de récupérer les détails de la transaction. (code d'erreur : "
+"%(error_code)s; error_details : %(error_message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
@@ -207,13 +190,23 @@ msgid "Payment processing failed"
 msgstr "Échec du traitement du paiement"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Checking"
+msgstr "Compte courant personnel"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Savings"
+msgstr "Compte d’épargne personnel"
+
+#. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
 "Received data with status code \"%(status)s\" and error code \"%(error)s\"."
 msgstr ""
-"Données reçues avec le code de statut \"%(status)s\" et le code d'erreur \"%"
-"(error)s\"."
+"Données reçues avec le code de statut \"%(status)s\" et le code d'erreur "
+"\"%(error)s\"."
 
 #. module: payment_authorize
 #. odoo-python
@@ -253,8 +246,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"Le statut de la transaction ne permet pas de la rembourser. (statut :%"
-"(status)s, détails : %(message)s)"
+"Le statut de la transaction ne permet pas de la rembourser. (statut :"
+"%(status)s, détails : %(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile

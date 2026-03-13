@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-27 09:02+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -38,8 +38,8 @@ msgstr ""
 "Pode ser que você precise da versão Enterprise para instalar esse módulo de "
 "dados. Visite https://www.odoo.com/pricing-plan para obter mais "
 "informações.\n"
-"Se precisar de temas de site, o download pode ser feito em https://"
-"github.com/odoo/design-themes.\n"
+"Se precisar de temas de site, o download pode ser feito em https://github."
+"com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -53,11 +53,6 @@ msgstr "Ativar"
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
 msgid "Apps"
 msgstr "Aplicativos"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Cancel"
-msgstr "Cancelar"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -118,6 +113,11 @@ msgstr ""
 "\n"
 "%(error_message)s \n"
 "\n"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__total_lines_of_code
+msgid "Extra lines of Code"
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -271,6 +271,14 @@ msgid ""
 msgstr ""
 "Observação: você só pode importar módulos de dados (arquivos .xml, arquivos "
 "i18n e ativos estáticos)"
+
+#. module: base_import_module
+#: model:ir.model.fields,help:base_import_module.field_ir_module_module__total_lines_of_code
+msgid ""
+"Number of lines of code that may be billed under an Enterprise subscription. "
+"For exact pricing details, please contact your account manager or visit odoo."
+"com/pricing."
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official

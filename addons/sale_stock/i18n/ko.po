@@ -7,16 +7,16 @@
 # Sarah Park, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-02 14:48+0000\n"
+"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"PO-Revision-Date: 2026-01-13 11:24+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "sale_stock/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -96,11 +96,6 @@ msgid "<strong>Incoterm</strong>"
 msgstr "<strong>인코텀</strong>"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
-msgid "A storable product is a product for which you manage stock."
-msgstr "저장 가능 품목이란 재고로 관리되는 품목입니다."
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be "
@@ -109,14 +104,9 @@ msgid ""
 "  - Analytic From expenses: the quantity is the quantity sum from posted "
 "expenses\n"
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
-"this sale line\n"
+"this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"품목의 환경 설정에 따라, 출고 수량은 자동으로 계산될 수 있습니다:\n"
-"  - 수동: 수량은 수동으로 설정됩니다\n"
-"  - 비용 분석: 수량은 게시된 비용의 합계입니다\n"
-"  - 작업기록: 수량은 이 판매 내역과 연결된 작업에 기록된 시간의 합입니다\n"
-"  - 재고 이동: 확정된 재고 이동에서 수량이 계산됩니다\n"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
@@ -158,17 +148,6 @@ msgid "Available in stock"
 msgstr "재고 있음"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Blue: Not Delivered/Started\n"
-"            Orange: Partially Delivered\n"
-"            Green: Fully Delivered"
-msgstr ""
-"파란색: 배송되지 않음/시작되지 않음\n"
-"            주황색: 부분 배송됨\n"
-"            녹색: 배송 완료됨"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "SO 명세 특정 경로를 적용하도록 선택하십시오."
@@ -176,7 +155,7 @@ msgstr "SO 명세 특정 경로를 적용하도록 선택하십시오."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "회사"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -217,11 +196,6 @@ msgstr "배송"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "출고"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
-msgid "Delivery Status"
-msgstr "배송 상황"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -322,11 +296,6 @@ msgid "Free Qty Today"
 msgstr "오늘 무료 수량"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
-msgid "Fully Delivered"
-msgstr "전체 배송 완료"
-
-#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
@@ -376,7 +345,7 @@ msgstr "인코텀즈 세부 정보"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "재고 경로"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -459,8 +428,8 @@ msgstr "배송 수량을 갱신하는 방법"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Move forward expected delivery dates by"
-msgstr "배송 예정일을 다음으로 이동"
+msgid "Move forward expected delivery dates by <br/>"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
@@ -479,7 +448,6 @@ msgid "Not Available"
 msgstr "사용 불가"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
 msgstr "미배송"
@@ -494,8 +462,8 @@ msgstr "향후 가용성 충분하지 않음"
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
-"products to the customer"
-msgstr "주문 확정과 고객에게 제품을 배송한 사이의 기간"
+"products"
+msgstr ""
 
 #. module: sale_stock
 #. odoo-javascript
@@ -504,7 +472,6 @@ msgid "On"
 msgstr "사용"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Partially Delivered"
 msgstr "일부 배송 완료"
@@ -518,11 +485,6 @@ msgstr "품목"
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "품목 이동 (재고 이동 상세)"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
-msgid "Qty Available Today"
-msgstr "오늘 가능한 수량"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -653,11 +615,6 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "지연을 피하기 위한 조기 배송 일정을 설정합니다."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
-msgid "Scheduled Date"
-msgstr "예정일"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr "보안 리드타임"
@@ -683,7 +640,6 @@ msgid "Shipping Status"
 msgstr "배송 상태"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Started"
 msgstr "시작"
@@ -741,8 +697,8 @@ msgid ""
 "document."
 msgstr ""
 "판매 주문의 배송 주소가<br/>\n"
-"                        <strong>\"%(old_address)s\"</strong>에서 <strong>\"%"
-"(new_address)s\"</strong>로 업데이트되었습니다.\n"
+"                        <strong>\"%(old_address)s\"</strong>에서 "
+"<strong>\"%(new_address)s\"</strong>로 업데이트되었습니다.\n"
 "                        이 문서의 파트너 정보를 업데이트해야 할 수 있습니다."
 
 #. module: sale_stock
@@ -772,11 +728,6 @@ msgid "This product is replenished on demand."
 msgstr "이 제품은 요청시 보충됩니다."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
-msgid "Track Inventory"
-msgstr "재고 추적"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "전송"
@@ -801,11 +752,6 @@ msgstr "사용자"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
 msgstr "예측 보기"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
-msgid "Virtual Available At Date"
-msgstr "날짜를 가상으로 사용 가능"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
