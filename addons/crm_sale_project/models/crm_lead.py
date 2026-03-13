@@ -42,6 +42,9 @@ class CrmLead(models.Model):
             default_lead_id=self.id,
             default_partner_id=self.partner_id.id,
             default_allow_billable=True,
+            default_reinvoiced_sale_order_id=(
+                self.order_ids[0].id if self.order_ids else False
+            ),
         )
 
     def action_create_project(self):
@@ -74,3 +77,11 @@ class CrmLead(models.Model):
                 'context': self._get_project_create_from_lead_context(),
             }
         return action
+
+    def _prepare_opportunity_quotation_context(self):
+        context = super()._prepare_opportunity_quotation_context()
+        context.update({
+            'is_sale_order': True,
+            'default_project_id': self.project_ids[-1].id if self.project_ids else False,
+        })
+        return context
