@@ -4,9 +4,9 @@ import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { renderToElement } from "@web/core/utils/render";
 import { updateCarouselIndicators } from "../carousel_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { uniqueId } from "@web/core/utils/functions";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
+import { uuid } from "@web/core/utils/strings";
 
 /**
  * @typedef { Object } ImageGalleryOptionShared
@@ -65,7 +65,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
 
     addUniqueIds(carousels) {
         for (const carousel of carousels) {
-            const id = uniqueId("slideshow_");
+            const id = `slideshow_${uuid()}`;
             carousel.id = id;
             const controllerButtons = carousel.querySelectorAll(".o_carousel_controllers button");
             for (const button of controllerButtons) {
