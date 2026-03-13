@@ -78,4 +78,5 @@ class CustomerPortal(sale_portal.CustomerPortal):
             values["tracking_info"].extend(cart_values["tracking_info"])
 
         values["cart_quantity"] = order_sudo.cart_quantity
+        values["currency"] = order_sudo.currency_id.name
         return values

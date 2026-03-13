@@ -191,6 +191,19 @@ function clearAttributeValueParams(searchParams) {
     ));
 }
 
+/**
+ * Dispatch a GA4 tracking event to the `.oe_website_sale` element.
+ *
+ * @param {string} eventName
+ * @param {Object} detail
+ * @return {void}
+ */
+function dispatchTrackingEvent(eventName, detail) {
+    document.querySelector(".oe_website_sale")?.dispatchEvent(
+        new CustomEvent(eventName, { detail })
+    );
+}
+
 export default {
     updateCartNavBar: updateCartNavBar,
     getSelectedAttributeValues: getSelectedAttributeValues,
@@ -199,4 +212,5 @@ export default {
     getAttributeValueParams: getAttributeValueParams,
     clearAttributeValueParams: clearAttributeValueParams,
     updateShopContent: updateShopContent,
+    dispatchTrackingEvent: dispatchTrackingEvent,
 };

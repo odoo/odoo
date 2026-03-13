@@ -48,6 +48,8 @@
                     t-att-aria-label="product.display_name"
                     t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
                     t-att-data-publish="product.website_published and 'on' or 'off'"
+                    t-att-data-product-tracking-info="json.dumps(data.get('product_tracking_info', {}))"
+                    t-att-data-product-ga-currency="website.currency_id.name"
                 >
                     <t
                         t-set="ribbon"

@@ -209,6 +209,24 @@ class SaleOrder(models.Model):
         lines = super()._get_no_effect_on_threshold_lines()
         return lines + self.order_line.filtered("is_donation")
 
+    def _get_order_tracking_info(self):
+        result = super()._get_order_tracking_info()
+        if coupon := self._get_applied_coupon_codes():
+            result["coupon"] = coupon
+        return result
+
+    def _get_applied_coupon_codes(self):
+        """Return applied coupon/promotion codes as a comma-separated string for GA4 tracking.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return ",".join(self.order_line.coupon_id.mapped("code"))
+
+    def _get_order_tracking_lines(self):
+        """Override to exclude loyalty reward lines from GA4 tracking."""
+        return super()._get_order_tracking_lines().filtered(lambda line: not line.is_reward_line)
+
     def _allow_nominative_programs(self):
         website = self.env.website
         if not website:

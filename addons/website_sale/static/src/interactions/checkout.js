@@ -4,6 +4,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { setElementContent } from '@web/core/utils/html';
 import { markup } from '@odoo/owl';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class Checkout extends Interaction {
     static selector = '#shop_checkout';
@@ -220,6 +221,11 @@ export class Checkout extends Interaction {
         const result = await this.waitFor(this._setDeliveryMethod(radio.dataset.dmId));
         this._updateAmountBadge(radio, result);
         this._updateCartSummaries(result);
+        if (result.shipping_tracking_info) {
+            wSaleUtils.dispatchTrackingEvent(
+                "add_shipping_info_event", result.shipping_tracking_info,
+            );
+        }
     }
 
     /**
