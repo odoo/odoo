@@ -144,7 +144,7 @@ class AccountPayment(models.Model):
         )
         super(AccountPayment, payments_tx_done).action_post()
         payments_tx_not_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state != 'done'
+            lambda p: p.payment_transaction_id.state not in ('done', 'pending', 'authorized')
         )
         payments_tx_not_done.action_cancel()
 
