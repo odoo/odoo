@@ -7,7 +7,7 @@ patch(ControlButtons.prototype, {
     async clickDiscount() {
         this.dialog.add(NumberPopup, {
             title: _t("Discount Percentage"),
-            startingValue: this.pos.config.discount_pc,
+            startingValue: this.env.utils.formatCurrency(this.pos.config.discount_pc, false),
             getPayload: (num) => {
                 const percent = Math.max(
                     0,
