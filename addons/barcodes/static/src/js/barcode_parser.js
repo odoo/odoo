@@ -289,6 +289,16 @@ export class BarcodeParser {
         ];
     }
 
+    convertProductAndTrackingIntoNumberURIGTINData(product_barcode, lot_number) {
+        const prod_barcode = product_barcode.slice(0, -1)
+        const indicator = prod_barcode[0]
+        const gs1CompanyPrefix = prod_barcode.slice(1,7)
+        const itemRef = prod_barcode.slice(7)
+        const data = [gs1CompanyPrefix, indicator+itemRef,lot_number]
+        const barcode_uri_numbers = data.join(".")
+        return barcode_uri_numbers
+    }
+
     convertURISSCCDataIntoPackage(base_code, data) {
         const [gs1CompanyPrefix, serialReference] = data;
         const extension = serialReference[0];
