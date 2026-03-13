@@ -137,16 +137,17 @@ test("many2many_tags_email expands to show all tags when focused", async () => {
 
 test("many2many_tags_email widget can load more than 40 records", async () => {
     const pyEnv = await startServer();
-    const partnerIds = [];
+    const partnerData = [];
     for (let i = 100; i < 200; i++) {
-        partnerIds.push(pyEnv["res.partner"].create({ display_name: `partner${i}` }));
+        partnerData.push({ display_name: `partner${i}`, email: `${i}@j.com` });
     }
+    const partnerIds = pyEnv["res.partner"].create(partnerData);
     const messageId = pyEnv["mail.message"].create({ partner_ids: partnerIds });
     await start();
     await openFormView("mail.message", messageId, {
         arch: `
             <form>
-            <field name='partner_ids' widget='many2many_tags' options="{'tag_limit': 0}"/>
+            <field name='partner_ids' widget='many2many_tags_email' options="{'tag_limit': 0}"/>
             </form>`,
     });
     await contains('.o_field_widget[name="partner_ids"] .badge', { count: 100 });
