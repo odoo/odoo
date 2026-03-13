@@ -46,6 +46,11 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
         {
+            content: 'Confirm Order page',
+            trigger: 'h3:contains("Confirm order")',
+            isCheck: true,
+        },
+        {
             content: 'Assert pay on site is NOT an option',
             trigger: 'body:not(:contains("Test Payment Provider"))',
             isCheck: true,
