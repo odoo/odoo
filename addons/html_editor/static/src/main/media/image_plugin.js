@@ -349,10 +349,15 @@ export class ImagePlugin extends Plugin {
     }
 
     resetImageTransformation(image) {
-        image.setAttribute(
-            "style",
-            (image.getAttribute("style") || "").replace(/[^;]*transform[\w:]*;?/g, "")
-        );
+        const stylePropertiesToRemove = [
+            "transform",
+            "transform-box",
+            "transform-origin",
+            "transform-style",
+        ];
+        for (const styleProperty of stylePropertiesToRemove) {
+            image.style.removeProperty(styleProperty);
+        }
         this.dependencies.history.addStep();
     }
 
