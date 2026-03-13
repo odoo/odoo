@@ -97,10 +97,15 @@
                     }
                 }
             }
-            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL):not(.o-hasBtnBg) {
-                color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                &:active {
-                    background-color: inherit;
+            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
+                &.o-hasBtnBg {
+                    --btn-active-bg: var(--btn-bg);
+                }
+                &:not(.o-hasBtnBg) {
+                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
+                    &:active {
+                        background-color: inherit;
+                    }
                 }
             }
         }
