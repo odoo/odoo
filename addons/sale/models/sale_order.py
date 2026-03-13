@@ -1619,7 +1619,7 @@ class SaleOrder(models.Model):
             orders_name = ", ".join(draft_orders.mapped("name"))
             raise UserError(
                 self.env._(
-                    "Cannot close %(orders_name)s: must be in status 'Sales Order'.",
+                    "Cannot close %(orders_name)s: must have a 'Sales Order' status.",
                     orders_name=orders_name,
                 )
             )

@@ -1443,7 +1443,7 @@ class MrpProduction(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if any(production.state == 'done' for production in self):
-            raise UserError(_('Cannot delete a manufacturing order in status "Done".'))
+            raise UserError(_('Cannot delete a manufacturing order with a "Done" status.'))
         not_cancel = self.filtered(lambda m: m.state != 'cancel')
         if not_cancel:
             productions_name = ', '.join([prod.display_name for prod in not_cancel])
@@ -2906,9 +2906,9 @@ class MrpProduction(models.Model):
         if additional_raw_ids or additional_byproduct_ids:
             raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         if len(set(self.mapped('state'))) > 1:
-            raise UserError(_("You can only merge manufacturing with the same status."))
+            raise UserError(_("You can only merge manufacturing orders with the same status."))
         if len(set(self.mapped('picking_type_id'))) > 1:
-            raise UserError(_('You can only merge manufacturing with the same operation type'))
+            raise UserError(_('You can only merge manufacturing orders with the same operation type.'))
         # TODO explode and check no quantity has been edited
         return True
 

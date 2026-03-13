@@ -54,9 +54,9 @@ class SnailmailLetter(models.Model):
         ('error', 'Error'),
         ('canceled', 'Cancelled')
         ], 'Status', readonly=True, copy=False, default='pending', required=True,
-        help="When a letter is created, the status is 'Pending'.\n"
-             "If the letter is correctly sent, the status changes to 'Sent',\n"
-             "If not, it will get the status 'Error' and the error message will be displayed in the field 'Error Message'.")
+        help="When a letter is created, its status is 'Pending'.\n"
+             "If the letter is correctly sent, its status changes to 'Sent'.\n"
+             "If not, it will change to an 'Error' status and the error message will be displayed in the field 'Error Message'.")
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
     info_msg = fields.Html('Information')
 

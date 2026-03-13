@@ -763,7 +763,7 @@ class HrLeave(models.Model):
             return
         for holiday in self:
             if holiday.state in ['validate1', 'validate']:
-                raise ValidationError(_("This modification is not allowed in the current status."))
+                raise ValidationError(_("You cannot change the date or employee on an approved time off request."))
 
     def _check_validity(self):
         sorted_leaves = defaultdict(lambda: self.env['hr.leave'])

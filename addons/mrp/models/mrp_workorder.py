@@ -506,7 +506,7 @@ class MrpWorkorder(models.Model):
         if 'qty_produced' in values:
             for wo in self:
                 if wo.state in ['done', 'cancel']:
-                    raise UserError(_('You cannot change the quantity produced of a work order that has status "Done" or "Cancelled".'))
+                    raise UserError(_('You cannot change the quantity produced for a "Done" or "Cancelled" work order.'))
                 elif wo.uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))
 

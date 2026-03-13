@@ -78,12 +78,12 @@ class AccountMoveSend(models.AbstractModel):
             alerts["tr_companies_missing_required_fields"] = {
                 'level': 'danger',
                 "message": _(
-                    "The following company(s) either do not have their country set as Türkiye "
+                    "The following company(s) either do not have their country set to Türkiye "
                     "or are missing at least one of these fields: Tax ID, Street, City, or State/Province",
                 ),
                 "action_text": _("View Company(s)"),
                 "action": tr_companies_missing_required_fields._get_records_action(name=_(
-                    "Check Tax ID, City, Street, State/Province, and Country or Company(s)"
+                    "Check Tax ID, City, Street, State/Province, and Country or Company(s)",
                 )),
             }
 

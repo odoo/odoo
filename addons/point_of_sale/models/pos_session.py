@@ -205,7 +205,7 @@ class PosSession(models.Model):
                 'status': 'success',
             }
         if self.state != 'opening_control' or len(self.order_ids) > 0:
-            raise UserError(_("You can only cancel a session that is in opening control status and has no orders."))
+            raise UserError(_("You can only cancel a session that is in 'Opening Control' status and has no orders."))
         self.sudo().unlink()
         return {
             'status': 'success',
