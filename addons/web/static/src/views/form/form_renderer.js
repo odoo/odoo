@@ -146,4 +146,10 @@ export class FormRenderer extends Component {
         this.state.isStatusbarStickyPinned =
             !this.env.inDialog && !this.env.isSmall && ev.target.scrollTop !== 0;
     }
+
+    async onWillChangeNotebookPage() {
+        // Hack to force _askChanges
+        await this.props.record.isDirty();
+        return true;
+    }
 }
