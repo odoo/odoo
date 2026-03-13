@@ -205,47 +205,7 @@ test("ProgressBarField: clicking progress bar focuses input when editable", asyn
     });
 });
 
-test("ProgressBarField: field is editable in kanban", async () => {
-    expect.assertions(7);
-    Partner._records[0].int_field = 99;
-
-    onRpc("web_save", ({ args }) => {
-        expect(args[1].int_field).toBe(69);
-    });
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: /* xml */ `
-                <kanban>
-                    <templates>
-                        <t t-name="card">
-                            <field name="int_field" title="ProgressBarTitle" widget="progressbar" options="{'max_value': 'float_field'}" />
-                        </t>
-                    </templates>
-                </kanban>`,
-        resId: 1,
-    });
-
-    expect(".o_progressbar_value .o_input").toHaveValue("99", {
-        message: "Initial input value should be correct",
-    });
-    expect(".o_progressbar_value span").toHaveText("100", {
-        message: "Initial max value should be correct",
-    });
-    expect(".o_progressbar_title").toHaveText("ProgressBarTitle");
-
-    await click(".o_progressbar_value .o_input");
-    await edit("69", { confirm: "enter" });
-    await animationFrame();
-
-    expect(".o_progressbar_value .o_input").toHaveValue("69");
-    expect(".o_progressbar_value span").toHaveText("100", {
-        message: "Max value is still the same be correct",
-    });
-    expect(".o_progressbar_title").toHaveText("ProgressBarTitle");
-});
-
-test("force readonly in kanban", async (assert) => {
+test("ProgressBarField: force readonly in kanban", async (assert) => {
     expect.assertions(2);
     Partner._records[0].int_field = 99;
     onRpc("web_save", () => {
@@ -266,47 +226,6 @@ test("force readonly in kanban", async (assert) => {
     });
     expect(".o_progressbar").toHaveText("99\n/\n100");
     expect(".o_progressbar_value .o_input").toHaveCount(0);
-});
-
-test("ProgressBarField: readonly and editable attrs/options in kanban", async () => {
-    expect.assertions(4);
-    Partner._records[0].int_field = 29;
-    Partner._records[0].int_field2 = 59;
-    Partner._records[0].int_field3 = 99;
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: /* xml */ `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="int_field" readonly="1" widget="progressbar" options="{'max_value': 'float_field'}" />
-                        <field name="int_field2" widget="progressbar" options="{'max_value': 'float_field'}" />
-                        <field name="int_field3" widget="progressbar" options="{'max_value': 'float_field'}" />
-                    </t>
-                </templates>
-            </kanban>`,
-        resId: 1,
-    });
-
-    expect("[name='int_field'] .o_progressbar_value .o_input").toHaveCount(0, {
-        message: "the field is readonly since readonly='1'",
-    });
-    expect("[name='int_field2'] .o_progressbar_value .o_input").toHaveCount(1, {
-        message: "the field is editable by default (no readonly attribute)",
-    });
-    expect("[name='int_field3'] .o_progressbar_value .o_input").toHaveCount(1, {
-        message: "the field is editable by default (no readonly attribute)",
-    });
-
-    await click(".o_field_progressbar[name='int_field3'] .o_progressbar_value .o_input");
-    await edit("69", { confirm: "enter" });
-    await animationFrame();
-    expect(".o_field_progressbar[name='int_field3'] .o_progressbar_value .o_input").toHaveValue(
-        "69",
-        { message: "New value should be different than initial after click" }
-    );
 });
 
 test("ProgressBarField: write float instead of int works, in locale", async () => {

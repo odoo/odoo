@@ -15,7 +15,6 @@ export class ProgressBarField extends Component {
     static props = {
         ...standardFieldProps,
         maxValueField: { type: [String, Number], optional: true },
-        isEditable: { type: Boolean, optional: true },
         title: { type: String, optional: true },
         decorations: { type: Object, optional: true },
     };
@@ -57,7 +56,7 @@ export class ProgressBarField extends Component {
     }
 
     get isEditable() {
-        return this.props.isEditable;
+        return !this.props.readonly;
     }
     get isPercentage() {
         return !this.props.maxValueField || !isNaN(this.props.maxValueField);
@@ -138,9 +137,8 @@ export const progressBarField = {
         },
     ],
     supportedTypes: ["integer", "float"],
-    extractProps: (fieldInfo, dynamicInfo) => ({
+    extractProps: (fieldInfo) => ({
         maxValueField: fieldInfo.options.max_value,
-        isEditable: !dynamicInfo.readonly,
         title: fieldInfo.attrs.title,
         decorations: fieldInfo.decorations,
     }),
