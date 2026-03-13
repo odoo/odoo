@@ -40,6 +40,8 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <kanban string="Product Images" default_order="sequence">
+                <!-- We need the hidden video_url to be able to create new `product.image` records with video_url. (see: x2many_media_viewer.js) -->
+                <field name="video_url" invisible="1"/>
                 <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
