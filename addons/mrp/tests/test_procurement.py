@@ -353,6 +353,59 @@ class TestProcurement(TestMrpCommon):
         move_dest._action_assign()
         self.assertEqual(move_dest.quantity, 10.0)
 
+    def test_mtso_with_multi_lvl_bom(self):
+        """ Tests that a Manufacturing Order use the adequate quantity of components
+        using a MTSO resupply route with a multi-level BoM.
+        """
+        route_mto = self.warehouse_1.mto_pull_id.route_id
+        route_mto.active = True
+        route_mto.rule_ids.procure_method = "mts_else_mto"
+        products = self.product_4 | self.productB | self.productC
+        products.write({
+            'route_ids': [Command.link(route_mto.id)],
+        })
+        self.env['mrp.bom'].create([{
+            'product_id': self.productB.id,
+            'product_tmpl_id': self.productB.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_4.id,
+                    'product_qty': 1,
+                }),
+            ],
+        },
+        {
+            'product_id': self.productC.id,
+            'product_tmpl_id': self.productC.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_4.id,
+                    'product_qty': 5,
+                }),
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_qty': 5,
+                }),
+            ],
+        }])
+        self.env['stock.quant']._update_available_quantity(self.product_4, self.warehouse_1.lot_stock_id, 2)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.productC.id,
+            'product_qty': 1,
+            'location_src_id': self.warehouse_1.lot_stock_id.id,
+        })
+        self.assertEqual(self.product_4.free_qty, 2)
+        mo.action_confirm()
+        child_mo_stick, child_mo_B = mo._get_children()
+        grand_child_mo_stick = child_mo_B._get_children()
+
+        self.assertEqual(self.product_4.free_qty, 0)
+        self.assertRecordValues(child_mo_B, [{'product_id': self.productB.id, 'product_uom_qty': 5}])
+        self.assertRecordValues(child_mo_stick, [{'product_id': self.product_4.id, 'product_uom_qty': 3}])
+        self.assertRecordValues(grand_child_mo_stick, [{'product_id': self.product_4.id, 'product_uom_qty': 5}])
+
     def test_mtso_with_empty_bom(self):
         """Test to ensure that a Manufacturing Order is created in 'draft' state
         via MTSO route when BoM has no components or operations.
