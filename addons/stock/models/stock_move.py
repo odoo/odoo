@@ -1566,6 +1566,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         in another move of the same picking sharing its characteristics.
         """
         # Use OrderedSet of id (instead of recordset + |= ) for performance
+        consumed_from_stock_dict = self.env.context.get('consumed_from_stock_dict', defaultdict(float))
         move_create_proc, move_to_confirm, move_waiting = OrderedSet(), OrderedSet(), OrderedSet()
         to_assign = defaultdict(OrderedSet)
         for move in self:
@@ -1591,7 +1592,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # create procurements for make to order moves
         procurement_requests = []
         move_create_proc = self.browse(move_create_proc)
-        quantities = move_create_proc._prepare_procurement_qty()
+        quantities = move_create_proc.with_context(consumed_from_stock_dict=consumed_from_stock_dict)._prepare_procurement_qty()
         for move, quantity in zip(move_create_proc, quantities):
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
@@ -1599,7 +1600,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.product_id, quantity, move.uom_id,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
-        self.env['stock.rule'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
+        self.env['stock.rule'].with_context(consumed_from_stock_dict=consumed_from_stock_dict).run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
         move_to_confirm, move_waiting = self.browse(move_to_confirm).filtered(lambda m: m.state != 'cancel'), self.browse(move_waiting).filtered(lambda m: m.state != 'cancel')
         move_to_confirm.write({'state': 'confirmed'})
@@ -1659,6 +1660,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         return (self.reference_ids and self.reference_ids[0].name) or self.origin or self.picking_id.display_name
 
     def _prepare_procurement_qty(self):
+        consumed_from_stock_dict = self.env.context.get('consumed_from_stock_dict', defaultdict(float))
         quantities = []
         mtso_products_by_locations = defaultdict(list)
         mtso_moves = set()
@@ -1683,11 +1685,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                 quantities.append(move.product_uom_qty)
                 continue
 
-            free_qty = max(forecasted_qties_by_loc[move.location_id][move.product_id.id], 0)
+            free_qty = max(forecasted_qties_by_loc[move.location_id][move.product_id.id] - consumed_from_stock_dict[move.location_id, move.product_id.id], 0)
             quantity = max(move.product_qty - free_qty, 0)
             product_uom_qty = move.product_id.uom_id._compute_quantity(quantity, move.uom_id, rounding_method='HALF-UP')
             quantities.append(product_uom_qty)
-            forecasted_qties_by_loc[move.location_id][move.product_id.id] -= min(move.product_qty, free_qty)
+            consumed_from_stock_dict[move.location_id, move.product_id.id] += min(move.product_qty, free_qty)
 
         return quantities
 
