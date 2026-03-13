@@ -80,8 +80,10 @@ export class HintPlugin extends Plugin {
         this.updateHints();
     }
 
-    triggerDebouncedUpdateHints() {
-        this.clearHints();
+    triggerDebouncedUpdateHints(selectionData = this.dependencies.selection.getSelectionData()) {
+        if (selectionData.documentSelectionIsInEditable) {
+            this.clearHints();
+        }
         this.debouncedUpdateHints();
     }
 
