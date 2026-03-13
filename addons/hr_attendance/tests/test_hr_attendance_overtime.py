@@ -161,11 +161,6 @@ class TestHrAttendanceOvertime(HttpCase):
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 4, 8, 0)
         })
-        self.env['hr.attendance'].create({
-            'employee_id': self.other_employee.id,
-            'check_in': datetime(2021, 1, 4, 8, 0),
-            'check_out': datetime(2021, 1, 4, 22, 0)
-        })
 
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
         self.assertFalse(overtime, 'No overtime record should exist for that employee')
@@ -182,6 +177,14 @@ class TestHrAttendanceOvertime(HttpCase):
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
         self.assertAlmostEqual(overtime.duration, 1)
         self.assertAlmostEqual(self.employee.total_overtime, 1)
+        # Check that expected_hours is correctly calculated
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 5, 8, 0),
+            'check_out': datetime(2021, 1, 5, 22, 0)
+        })
+        calendar = self.employee.resource_calendar_id
+        self.assertEqual(attendance.expected_hours, calendar.hours_per_day)
 
     def test_overtime_weekend(self):
         self.env['hr.attendance.overtime.rule'].create({
