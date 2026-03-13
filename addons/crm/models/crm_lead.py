@@ -1218,6 +1218,7 @@ class CrmLead(models.Model):
             'default_opportunity_id': current_opportunity_id,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
+            'calendar_include_user_events': True,
             'default_team_id': self.team_id.id,
             'default_name': self.name,
         }
