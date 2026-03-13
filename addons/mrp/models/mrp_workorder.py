@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
+from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 from odoo.tools.date_utils import sum_intervals
@@ -13,6 +14,7 @@ from odoo.tools.intervals import Intervals
 
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
+    _inherit = ['product.catalog.mixin']
     _description = 'Work Order'
     _order = 'date_start, sequence, id'
 
@@ -1027,3 +1029,57 @@ class MrpWorkorder(models.Model):
         """ This should only be called once when the MO is confirmed. """
         for workorder in self:
             workorder.cost_mode = workorder.operation_id.cost_mode or 'actual'
+
+    # -------------------------------------------------------------------------
+    # CATALOG
+    # -------------------------------------------------------------------------
+
+    def _default_order_line_values(self, child_field=False):
+        default_data = super()._default_order_line_values(child_field)
+        new_default_data = self.env['stock.move']._get_product_catalog_lines_data(parent_record=self)
+
+        return {**default_data, **new_default_data}
+
+    def _get_product_catalog_order_data(self, products, **kwargs):
+        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
+        for product in products:
+            product_catalog[product.id] |= self._get_product_price_and_data(product)
+        return product_catalog
+
+    def _get_product_price_and_data(self, product):
+        return {'price': product.standard_price}
+
+    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
+        moves = self.move_raw_ids.filtered(lambda move: move.product_id.id in product_ids)
+        return moves.grouped('product_id')
+
+    def _get_product_catalog_domain(self):
+        return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
+
+    def _update_order_line_info(self, product_id, quantity, uom, **kwargs):
+        move = self.move_raw_ids.filtered(lambda m: m.product_id.id == product_id)
+        if move:
+            if quantity != 0:
+                self._update_catalog_line_quantity(move, quantity, **kwargs)
+            else:
+                move.unlink()
+        elif quantity > 0:
+            new_line_vals = self._get_new_catalog_line_values(product_id, quantity, child_field='move_raw_ids', **kwargs)
+            self.production_id.move_raw_ids = [Command.create(new_line_vals)]
+            new_line = self.move_raw_ids.filtered(lambda mv: mv.product_id.id == product_id)[-1:]
+            self._update_catalog_line_quantity(new_line, quantity, **kwargs)
+
+        return self.env['product.product'].browse(product_id).standard_price
+
+    def _update_catalog_line_quantity(self, line, quantity, **kwargs):
+        line.product_uom_qty = quantity
+
+    def _is_display_stock_in_catalog(self):
+        return True
+
+    def _get_new_catalog_line_values(self, product_id, quantity, **kwargs):
+        values = self.production_id._get_new_catalog_line_values(product_id, quantity, **kwargs)
+        values.update({
+            'workorder_id': self.id,
+        })
+        return values

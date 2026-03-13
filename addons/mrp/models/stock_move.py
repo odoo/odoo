@@ -423,6 +423,10 @@ class StockMove(models.Model):
         mo = self.env['mrp.production'].browse(self.env.context.get('order_id'))
         return mo.with_context(child_field='move_byproduct_ids').action_add_from_catalog()
 
+    def action_add_from_catalog_wo(self):
+        workorder = self.env['mrp.workorder'].browse(self.env.context.get('order_id'))
+        return workorder.with_context(child_field='move_raw_ids').action_add_from_catalog()
+
     def _action_cancel(self):
         res = super(StockMove, self)._action_cancel()
         if not 'skip_mo_check' in self.env.context:

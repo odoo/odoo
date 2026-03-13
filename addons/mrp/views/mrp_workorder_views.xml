@@ -408,8 +408,16 @@
                         </field>
                 </page>
                 <page string="Components" name="components">
-                    <field name="move_raw_ids" readonly="1">
-                        <list>
+                    <field name="move_raw_ids" readonly="state in ['done', 'cancel']">
+                        <list editable="bottom">
+                            <control>
+                                <button
+                                    string="Add component"
+                                    name="action_add_from_catalog_wo"
+                                    type="object"
+                                    class="btn-link"
+                                    context="{'order_id': parent.id}"/>
+                            </control>
                             <field name="state" column_invisible="True"/>
                             <field name="product_id" readonly="1"/>
                             <field name="product_qty" readonly="1" string="Demand"/>
