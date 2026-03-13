@@ -684,23 +684,19 @@ class MailMessage(models.Model):
 
         return accessible - self.browse(messages_to_check)
 
-    def _check_access(self, operation):
-        res = super()._check_access(operation)
-        if not res:
-            return None
-        forbidden = res[0]
-        return forbidden, lambda: (
-            AccessError(self.env._(
+    def _make_access_error_message(self, operation, domain):
+        if not domain.is_false():
+            return AccessError(self.env._(
                 "The requested operation cannot be completed due to security restrictions. "
                 "Please contact your system administrator.\n\n"
                 "(Document type: %(type)s, Operation: %(operation)s)\n\n"
                 "Records: %(records)s, User: %(user)s",
                 type=self._description,
                 operation=operation,
-                records=forbidden.ids[:6],
+                records=self.ids[:6],
                 user=self.env.uid,
             ))
-        )
+        return super()._make_access_error_message(operation, domain)
 
     def _get_with_access(self, mode="read", **kwargs):
         if not self:

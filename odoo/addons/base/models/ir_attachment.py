@@ -519,22 +519,18 @@ class IrAttachment(models.Model):
         if values and any(self._inaccessible_comodel_records({values.get('res_model'): [values.get('res_id')]}, mode)):
             raise AccessError(_("Sorry, you are not allowed to access this document."))
 
-    def _check_access(self, operation):
-        res = super()._check_access(operation)
-        if not res:
-            return None
-        forbidden = res[0]
-        return forbidden, lambda: (
-            AccessError(self.env._(
+    def _make_access_error_message(self, operation, domain):
+        if not domain.is_false():
+            return AccessError(self.env._(
                 "Sorry, you are not allowed to access this document. "
                 "Please contact your system administrator.\n\n"
                 "(Operation: %(operation)s)\n\n"
                 "Records: %(records)s, User: %(user)s",
                 operation=operation,
-                records=forbidden[:6],
+                records=self[:6],
                 user=self.env.uid,
             ))
-        )
+        return super()._make_access_error_message(operation, domain)
 
     def _compute_res_access(self, operation: str):
         """Check access for attachments.

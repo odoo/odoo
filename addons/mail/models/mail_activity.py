@@ -248,24 +248,20 @@ class MailActivity(models.Model):
         for activity in self:
             activity[field_name] = activity.id in allowed
 
-    def _check_access(self, operation):
-        res = super()._check_access(operation)
-        if not res:
-            return None
-        forbidden = res[0]
-        forbidden.invalidate_recordset()  # avoid cache pollution
-        return forbidden, lambda: (
-            AccessError(self.env._(
+    def _make_access_error_message(self, operation, domain):
+        self.invalidate_recordset()  # avoid cache pollution
+        if not domain.is_false():
+            return AccessError(self.env._(
                 "The requested operation cannot be completed due to security restrictions. "
                 "Please contact your system administrator.\n\n"
                 "(Document type: %(type)s, Operation: %(operation)s)\n\n"
                 "Records: %(records)s, User: %(user)s",
                 type=self._description,
                 operation=operation,
-                records=forbidden.ids[:6],
+                records=self.ids[:6],
                 user=self.env.uid,
             ))
-        )
+        return super()._make_access_error_message(operation, domain)
 
     # ------------------------------------------------------
     # ORM overrides
