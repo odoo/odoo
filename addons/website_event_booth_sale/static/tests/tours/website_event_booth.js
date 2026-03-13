@@ -38,6 +38,9 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     trigger: 'button[type="submit"]',
     run: "click",
     expectUnloadPage: true,
+}, {
+    content: 'Order summary',
+    trigger: 'h4:contains("Order summary")',
 },
 ...wsTourUtils.assertCartAmounts({
     taxes: '20.00',
@@ -45,6 +48,10 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     total: '220.00',
 }),
 wsTourUtils.goToCheckout(),
+{
+    content: 'Payment',
+    trigger: '.o_wizard [name=step_name].fw-bold:contains("Payment")',
+},
 ...wsTourUtils.assertCartAmounts({
     taxes: '20.00',
     untaxed: '200.00',
