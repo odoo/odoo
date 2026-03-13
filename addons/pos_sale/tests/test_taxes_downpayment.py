@@ -101,6 +101,50 @@ class TestTaxesDownPaymentPOS(TestTaxCommonPOS, TestTaxCommonSale, TestTaxesDown
             round_globally_included_tests[0],
         ])
 
+    def test_downpayment_fixed_tax_included_rounding(self):
+        """A $500 fixed DP on a $1000 product with 20% tax included must
+        settle in POS as exactly -$500.00, not -$499.99."""
+
+        tax = self.env['account.tax'].create({
+            'name': '20% incl',
+            'amount': 20,
+            'price_include_override': 'tax_included',
+        })
+
+        def create_so():
+            product = self.env['product.product'].create({
+                'name': 'Product 1000',
+                'available_in_pos': True,
+                'lst_price': 1000.0,
+                'taxes_id': [tax.id],
+            })
+            so = self.env['sale.order'].sudo().create({
+                'partner_id': self.env['res.partner'].create({'name': 'Test Partner DP'}).id,
+                'order_line': [(0, 0, {'product_id': product.id})],
+            })
+            so.action_confirm()
+            self.main_pos_config.down_payment_product_id = self.env['product.product'].create({
+                'name': 'Down Payment',
+                'available_in_pos': True,
+            })
+            return so
+
+        # Case 1: DP created in POS, settled in POS
+        create_so()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_pos_downpayment_fixed_tax_included_rounding', login="accountman")
+
+        # Case 2: DP created in Sales, settled in POS
+        so = create_so()
+        self.env['sale.advance.payment.inv'].sudo().create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 500,
+            'sale_order_ids': so.ids,
+        }).create_invoices()
+        so.invoice_ids.action_post()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_settle_sales_downpayment_fixed_tax_included_rounding', login="accountman")
+
     def test_taxes_l10n_be_pos(self):
         tests = self._test_taxes_l10n_be()
         round_per_line_excluded_tests = [next(tests) for _i in range(19)]
