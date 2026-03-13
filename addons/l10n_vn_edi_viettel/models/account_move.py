@@ -573,7 +573,7 @@ class AccountMove(models.Model):
             )
         except UserError as e:
             self.message_post(
-                body=_('The invoice has been cancelled on sinvoice for reason: %(reason)s'
+                body=_('The invoice has been cancelled in SInvoice for reason: %(reason)s'
                        'But the cancellation in Odoo failed with error: %(error)s', reason=reason, error=e),
             )
 

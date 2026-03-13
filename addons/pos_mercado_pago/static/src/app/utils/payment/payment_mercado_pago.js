@@ -102,8 +102,8 @@ export class PaymentMercadoPago extends PaymentInterface {
         if ("error" in canceling_status) {
             const message =
                 canceling_status.status === 409
-                    ? _t("Payment has to be cancelled on terminal")
-                    : _t("Payment not found (cancelled/finished on terminal)");
+                    ? _t("Payment has to be cancelled on the terminal")
+                    : _t("Payment not found (cancelled/finished on the terminal)");
             this._showMsg(message, "info");
             return canceling_status.status !== 409;
         }
