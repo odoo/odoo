@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
 from odoo.tests import tagged, JsonRpcException
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.http.session import SESSION_ROTATION_INTERVAL
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -70,3 +73,22 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 'last': 0,
                 'is_first_poll': False,
             })
+
+    @freeze_time("2026-03-03", as_kwarg='clock')
+    def test_do_not_rotate_session(self, clock):
+        self.authenticate('admin', 'admin')
+        self.url_open('/odoo').raise_for_status()
+        original_session = self.opener.cookies['session_id']
+        clock.tick(SESSION_ROTATION_INTERVAL + 1)
+        self.make_jsonrpc_request('/websocket/peek_notifications', {
+            'channels': [],
+            'last': 0,
+            'is_first_poll': True,
+        })
+        self.make_jsonrpc_request('/websocket/on_closed')
+        self.assertEqual(self.opener.cookies['session_id'], original_session,
+            "Session rotation must not occur at the websocket routes "
+            "that are re-exposed on HTTP for convenience.")
+        self.url_open('/odoo').raise_for_status()
+        self.assertNotEqual(self.opener.cookies['session_id'], original_session,
+            "Session rotation should occur with other URLs.")
