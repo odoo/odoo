@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel.arrows">
         <div class="o_carousel_arrow_wrap align-items-center pe-none">
-            <a t-attf-href="##{unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" t-attf-aria-controls="#{unique_id}_inner" aria-label="Previous" title="Previous">
+            <a t-attf-href="##{this.unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Previous" title="Previous">
                 <span class="o_carousel_arrow oi oi-chevron-left p-3"/>
                 <span class="visually-hidden">Previous</span>
             </a>
         </div>
         <div class="o_carousel_arrow_wrap align-items-center justify-content-end pe-none">
-            <a t-attf-href="##{unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" t-attf-aria-controls="#{unique_id}_inner" aria-label="Next" title="Next">
+            <a t-attf-href="##{this.unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Next" title="Next">
                 <span class="o_carousel_arrow oi oi-chevron-right p-3"/>
                 <span class="visually-hidden">Next</span>
             </a>
@@ -35,7 +35,7 @@
             <t t-set="rowIndexGenerator" t-value="Array(this.rowPerSlide)"/>
             <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
             <div class="carousel-inner w-100 mx-auto"
-                 t-attf-id="#{unique_id}_inner"
+                 t-attf-id="#{this.unique_id}_inner"
                  aria-label="Carousel"
                  aria-live="off">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
