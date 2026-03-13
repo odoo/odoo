@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
-from pytz import timezone
+from pytz import timezone, utc
 from random import randint
 
 from odoo.http import request
@@ -74,12 +74,54 @@ class HrAttendance(models.Model):
                                            ('auto_check_out', 'Automatic Check-Out')],
                                 readonly=True,
                                 default='manual')
+    # For pivot view only !
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
 
-    @api.depends("worked_hours", "overtime_hours")
+    @api.model
+    def _get_expected_hours_calendar_dependencies(self, calendar_path):
+        """ Get the fields paths of the `expected_hours` dependencies for `resource.calendar`
+            (mainly coming from `resource.calendar.attendance` and `resource.calendar.leaves`) """
+        dependencies = [f'{calendar_path}.attendance_ids']
+        for attendance_dep in ('two_weeks_calendar', 'day_period', 'date_from', 'date_to', 'hour_from', 'hour_to', 'week_type', 'resource_id', 'display_type'):
+            dependencies.append(f'{calendar_path}.attendance_ids.{attendance_dep}')
+
+        dependencies.append(f'{calendar_path}.global_leave_ids')
+        for leave_dep in ('calendar_id', 'date_from', 'date_to', 'resource_id', 'time_type'):
+            dependencies.append(f'{calendar_path}.global_leave_ids.{leave_dep}')
+        return dependencies
+
+    @api.depends(lambda self: (
+        'employee_id',
+        'employee_id.resource_calendar_id',
+        *self._get_expected_hours_calendar_dependencies('employee_id.resource_calendar_id'),
+        'employee_id.company_id',
+        'employee_id.company_id.resource_calendar_id',
+        *self._get_expected_hours_calendar_dependencies('employee_id.company_id.resource_calendar_id')))
     def _compute_expected_hours(self):
         for attendance in self:
-            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours
+            if not (attendance.employee_id.resource_calendar_id or attendance.employee_id.company_id.resource_calendar_id):
+                attendance.expected_hours = 0
+                continue
+
+            day_start = attendance.check_in + relativedelta(hour=0, minute=0, second=0, microsecond=0)
+            day_end = day_start + relativedelta(days=1, microseconds=-1)
+            # tz info is needed by `_get_expected_attendances`, so setting the dates tz to utc
+            expected_attendances = attendance.employee_id._get_expected_attendances(day_start.astimezone(utc), day_end.astimezone(utc))
+            if not expected_attendances:
+                attendance.expected_hours = 0
+                continue
+
+            expected_hours = timedelta()
+            for attendance_start, attendance_stop, __ in expected_attendances:
+                expected_hours += attendance_stop - attendance_start
+            day_attendances_count = self.env['hr.attendance'].search_count((
+                ('employee_id', '=', attendance.employee_id.id),
+                ('check_in', '>=', day_start),
+                ('check_in', '<=', day_end),
+            ))
+            # Division by `day_attendances_count` : shitty stable fix for the pivot view so that it displays the "correct"
+            # number of `expected_hours` even when there are multiple attendances on the same day
+            attendance.expected_hours = expected_hours.total_seconds() / (3600 * day_attendances_count)
 
     def _compute_color(self):
         for attendance in self:
