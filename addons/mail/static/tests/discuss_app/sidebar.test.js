@@ -289,7 +289,7 @@ test("sidebar: basic chat rendering", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -962,7 +962,14 @@ test("Can leave channel", async () => {
 
 test("Do no channel_info after unpin", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
     listenStoreFetch("discuss.channel");
     setupChatHub({ opened: [channelId] });
     await start();
@@ -970,7 +977,7 @@ test("Do no channel_info after unpin", async () => {
     await waitStoreFetch("discuss.channel");
     await openDiscuss(channelId);
     await click("[title='Chat Actions']");
-    await click(".o-dropdown-item:contains('Advanced Settings')");
+    await click(".o-dropdown-item:contains('Hide Until New Message')");
     rpc("/mail/message/post", {
         thread_id: channelId,
         thread_model: "discuss.channel",

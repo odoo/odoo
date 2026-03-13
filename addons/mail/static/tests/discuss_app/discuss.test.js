@@ -2254,7 +2254,7 @@ test("sidebar: cannot leave channel with group_ids", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel:text(General) .oi-ellipsis-h");
-    await waitFor(".dropdown-item:text(Advanced Settings)"); // check anything else in the dropdown
+    await waitFor(".dropdown-item:text(Notification Settings)"); // check anything else in the dropdown
     await waitForNone(".dropdown-item:text(Leave Channel)");
     await click(".o-mail-DiscussSidebarChannel:text(Special) .oi-ellipsis-h");
     await waitFor(".dropdown-item:text(Leave Channel)");
@@ -2339,9 +2339,14 @@ test("Message shows up even if channel data is incomplete", async () => {
     await contains(".o-mail-Message-content:text('hello world')");
 });
 
-test("Correct breadcrumb when open discuss from chat window then see settings", async () => {
+test("Correct breadcrumb when open discuss from chat window then see settings as channel owner", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+        ],
+    });
     await start();
     await click(".o_main_navbar i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:text('General')");

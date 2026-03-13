@@ -33,7 +33,7 @@ class DiscussChannel(models.Model):
     _name = 'discuss.channel'
     _inherit = ['rating.mixin', 'discuss.channel']
 
-    channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
+    channel_type = fields.Selection(selection_add=[("livechat", "Live Chat")], ondelete={"livechat": "cascade"})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_lang_id = fields.Many2one("res.lang", string="Language", help="Lang of the visitor of the channel.")
     livechat_end_dt = fields.Datetime(
