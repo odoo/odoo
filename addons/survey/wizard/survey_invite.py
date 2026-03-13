@@ -153,21 +153,13 @@ class SurveyInvite(models.TransientModel):
                     values['body'] = template.body_html
         return super().create(vals_list)
 
-    @api.depends('template_id', 'partner_ids')
+    @api.depends('template_id')
     def _compute_subject(self):
         for invite in self:
             if invite.template_id and invite.template_id.subject:
                 invite.subject = invite.template_id.subject
             else:
                 invite.subject = _("Participate to %(survey_name)s", survey_name=invite.survey_id.display_name)
-
-    @api.depends('template_id', 'partner_ids')
-    def _compute_body(self):
-        for invite in self:
-            langs = set(invite.partner_ids.mapped('lang')) - {False}
-            if len(langs) == 1:
-                invite = invite.with_context(lang=langs.pop())
-            super(SurveyInvite, invite)._compute_body()
 
     @api.depends('template_id')
     def _compute_attachment_ids(self):
@@ -275,9 +267,6 @@ class SurveyInvite(models.TransientModel):
 
         # compute partners and emails, try to find partners for given emails
         valid_partners = self.partner_ids
-        langs = set(valid_partners.mapped('lang')) - {False}
-        if len(langs) == 1:
-            self = self.with_context(lang=langs.pop())
         valid_emails = []
         for email in emails_split.split(self.emails or ''):
             partner = False
