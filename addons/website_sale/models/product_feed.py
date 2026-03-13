@@ -247,7 +247,7 @@ class ProductFeed(models.Model):
 
         return products
 
-    def _prepare_gmc_identifier(self, product):  # noqa: PLR6301
+    def _prepare_gmc_identifier(self, product):
         """Prepare the product identifiers for Google Merchant Center.
 
         :return: The barcode of the product as GTIN
@@ -257,7 +257,7 @@ class ProductFeed(models.Model):
             return {"gtin": product.barcode, "identifier_exists": "yes"}
         return {"identifier_exists": "no"}
 
-    def _prepare_gmc_image_links(self, product, base_url):  # noqa: PLR6301
+    def _prepare_gmc_image_links(self, product, base_url):
         """Prepare the product image links for Google Merchant Center.
 
         :return: The main product image link, and the extra images. No videos.
@@ -362,16 +362,16 @@ class ProductFeed(models.Model):
 
         return {}
 
-    def _prepare_gmc_stock_info(self, product):  # noqa: PLR6301
+    def _prepare_gmc_stock_info(self, product):
         """ Prepare availability info for Google Merchant Center. """
         return {"availability": "out_of_stock" if product._is_sold_out() else "in_stock"}
 
-    def _prepare_gmc_additional_info(self, product):  # noqa: PLR6301
+    def _prepare_gmc_additional_info(self, product):
+        direct, others = product._split_standard_from_custom_attributes()
+
         additional_info = {
-            "product_detail": [
-                (attr.attribute_id.name, attr.name)
-                for attr in product.product_template_attribute_value_ids
-            ],
+            "gmc_direct_attributes": list(direct.items()),
+            "product_detail": list(others.items()),
             "is_bundle": "yes" if product.type == "combo" else "no",
             "product_type": [
                 category.replace("/", ">")  # Google uses a different format

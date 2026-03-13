@@ -5,6 +5,8 @@ from collections import OrderedDict
 from odoo import api, fields, models
 from odoo.http import request
 
+from odoo.addons.website_sale import const
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -155,6 +157,15 @@ class ProductProduct(models.Model):
             else:
                 availability = "https://schema.org/OutOfStock"
             markup_data["offers"]["availability"] = availability
+
+        direct, others = self._split_standard_from_custom_attributes()
+        markup_data.update(direct)
+        if others:
+            markup_data["additionalProperty"] = [
+                {"@type": "PropertyValue", "name": name, "value": value}
+                for name, value in others.items()
+            ]
+
         return markup_data
 
     def _get_image_1920_url(self):
@@ -363,3 +374,27 @@ class ProductProduct(models.Model):
 
                 product.stock_notification_partner_ids -= partner
                 self.env["ir.cron"]._commit_progress(1)
+
+    def _split_standard_from_custom_attributes(self):
+        """Split product attributes into directly mapped fields and the rest.
+
+        Direct fields are attributes whose external_identifier matches a known
+        identifier used across Microdata, GMC Feeds, and Tracking.
+
+        :return: A tuple of:
+            - dict of {external_identifier: value} for known direct fields
+            - dict of {attribute_name: value} for all other attributes
+        :rtype: tuple(dict, dict)
+        """
+        self.ensure_one()
+        direct = {}
+        others = {}
+        for ptav in self.product_template_attribute_value_ids:
+            external_id = ptav.attribute_id.external_identifier
+            ext_id = external_id and external_id.lower()
+            value = ptav.product_attribute_value_id.name
+            if ext_id and ext_id in const.DIRECT_MAPPED_ATTRIBUTE_IDENTIFIERS:
+                direct[ext_id] = value
+            elif external_id:
+                others[external_id] = value
+        return direct, others
