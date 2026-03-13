@@ -348,19 +348,19 @@ class Website(models.Model):
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
-    @api.depends_context('sale_order_id')
+    @api.depends_context('current_session_sale_order_id')
     def _compute_current_session_sale_order_id(self):
         if not self:
             return
         self.current_session_sale_order_id = self._get_and_cache_current_session_sale_order_id()
 
-    @api.depends_context('fiscal_position_id')
+    @api.depends_context('current_session_fiscal_position_id')
     def _compute_current_session_fiscal_position_id(self):
         if not self:
             return
         self.current_session_fiscal_position_id = self._get_and_cache_current_session_fiscal_position_id()
 
-    @api.depends_context('pricelist_id')
+    @api.depends_context('current_session_pricelist_id')
     @api.depends('current_session_sale_order_id')
     def _compute_current_session_pricelist_id(self):
         if not self:
