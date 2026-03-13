@@ -23,7 +23,18 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         return domain
 
     def _domain_work_entry_type_id(self):
+<<<<<<< fca7c4ad0ee908cf1a0ee1dd2bafa8c3c967a6f6
         domain = [('requires_allocation', '=', True)]
+||||||| 40cecf1c8ba7f359c3f49179bda1fae77e253a04
+        domain = [
+            ('company_id', 'in', self.env.companies.ids + [False]),
+            ('requires_allocation', '=', True),
+        ]
+=======
+        domain = [
+            ('requires_allocation', '=', True),
+        ]
+>>>>>>> 457ea8fa9e7f114927d05e661943ac2938f45bb8
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             return domain
         return Domain.AND([domain, [('employee_requests', '=', True)]])
