@@ -3,8 +3,13 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { _t } from "@web/core/l10n/translation";
 
 export class Input extends Component {
-    static props = ["value", "update", "placeholder?", "startEmpty?"];
+    static props = ["value", "update", "type?", "placeholder?", "startEmpty?"];
     static template = "web.TreeEditor.Input";
+
+    update(value) {
+        const newValue = this.props.type === "number" ? Number(value) : value;
+        return this.props.update(newValue);
+    }
 }
 
 export class Select extends Component {
@@ -31,8 +36,32 @@ export class Range extends Component {
     }
 }
 
+export class RelativeRange extends Component {
+    static props = ["value", "update", "relativeInput", "relativeSelect"];
+    static template = "web.TreeEditor.relativeRange";
+
+    static options = [
+        ["day", _t("day")],
+        ["week", _t("week")],
+        ["month", _t("month")],
+        ["year", _t("year")],
+    ];
+
+    update(index, newValue) {
+        const result = [...this.props.value];
+        result[index] = newValue;
+        return this.props.update(result);
+    }
+}
+
 export class InRange extends Component {
-    static props = ["value", "update", "valueTypeEditorInfo", "betweenEditorInfo"];
+    static props = [
+        "value",
+        "update",
+        "valueTypeEditorInfo",
+        "betweenEditorInfo",
+        "relativeEditorInfo",
+    ];
     static template = "web.TreeEditor.InRange";
     static options = [
         ["today", _t("Today")],
@@ -43,14 +72,17 @@ export class InRange extends Component {
         ["yearToDate", _t("Year to date")],
         ["last365Days", _t("Last 365 days")],
         ["dateRange", _t("Date range")],
+        ["relativeRange", _t("Relative range"), { debugOnly: true }],
     ];
     updateValueType(newValueType) {
         const [fieldType, currentValueType] = this.props.value;
         if (currentValueType !== newValueType) {
-            const values =
-                newValueType === "dateRange"
-                    ? this.props.betweenEditorInfo.defaultValue()
-                    : [false, false];
+            let values = [false, false];
+            if (newValueType === "dateRange") {
+                values = this.props.betweenEditorInfo.defaultValue();
+            } else if (newValueType === "relativeRange") {
+                values = this.props.relativeEditorInfo.defaultValue();
+            }
             return this.props.update([fieldType, newValueType, ...values]);
         }
     }

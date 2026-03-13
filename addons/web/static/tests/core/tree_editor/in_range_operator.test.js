@@ -80,6 +80,12 @@ test(`"in range" operator: no introduction for complex paths (generateSmartDates
         },
         {
             tree_py: and([
+                condition("m2o.dt_2", ">=", "today -5d"),
+                condition("m2o.dt_2", "<", "today"),
+            ]),
+        },
+        {
+            tree_py: and([
                 condition("m2o.date_2", ">=", DATE_START),
                 condition("m2o.date_2", "<=", DATE_END),
             ]),
@@ -169,6 +175,18 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
         },
         {
             tree_py: and([
+                condition("dt_1", ">=", pyDatetime("today")),
+                condition("dt_1", "<", pyDatetime("days = 1")),
+            ]),
+            tree: inRange("dt_1", ["datetime", "today", false, false]),
+            domain: [
+                "&",
+                ["dt_1", ">=", "2025-07-02 23:00:00"],
+                ["dt_1", "<", "2025-07-03 23:00:00"],
+            ],
+        },
+        {
+            tree_py: and([
                 condition("dt_1", ">=", pyDatetime("days = -7")),
                 condition("dt_1", "<", pyDatetime("today")),
             ]),
@@ -230,13 +248,37 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
         {
             tree_py: and([
                 condition("dt_1", ">=", pyDatetime("days = -365")),
-                condition("dt_1", "<", pyDatetime()),
+                condition("dt_1", "<", pyDatetime("today")),
             ]),
             tree: inRange("dt_1", ["datetime", "last365Days", false, false]),
             domain: [
                 "&",
                 ["dt_1", ">=", "2024-07-02 23:00:00"],
                 ["dt_1", "<", "2025-07-02 23:00:00"],
+            ],
+        },
+        {
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("days = -8")),
+                condition("dt_1", "<", pyDatetime("today")),
+            ]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", -8, "day"]),
+            domain: [
+                "&",
+                ["dt_1", ">=", "2025-06-24 23:00:00"],
+                ["dt_1", "<", "2025-07-02 23:00:00"],
+            ],
+        },
+        {
+            tree_py: and([
+                condition("dt_1", ">", pyDatetime("days = 1")),
+                condition("dt_1", "<=", pyDatetime("weeks = 8, days = 1")),
+            ]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", 8, "week"]),
+            domain: [
+                "&",
+                ["dt_1", ">", "2025-07-03 23:00:00"],
+                ["dt_1", "<=", "2025-08-28 23:00:00"],
             ],
         },
         {
@@ -342,6 +384,22 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
             ]),
             tree: inRange("date_1", ["date", "last365Days", false, false]),
             domain: ["&", ["date_1", ">=", "2024-07-03"], ["date_1", "<", "2025-07-03"]],
+        },
+        {
+            tree_py: and([
+                condition("date_1", ">=", pyDate("days = -8")),
+                condition("date_1", "<", pyDate("today")),
+            ]),
+            tree: inRange("date_1", ["date", "relativeRange", -8, "day"]),
+            domain: ["&", ["date_1", ">=", "2025-06-25"], ["date_1", "<", "2025-07-03"]],
+        },
+        {
+            tree_py: and([
+                condition("date_1", ">", pyDate("today")),
+                condition("date_1", "<=", pyDate("weeks = 8")),
+            ]),
+            tree: inRange("date_1", ["date", "relativeRange", 8, "week"]),
+            domain: ["&", ["date_1", ">", "2025-07-03"], ["date_1", "<=", "2025-08-28"]],
         },
         {
             tree_py: and(
@@ -542,6 +600,19 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
             tree_py: and([condition("dt_1", ">=", "today -365d"), condition("dt_1", "<", "today")]),
             tree: inRange("dt_1", ["datetime", "last365Days", false, false]),
             domain: ["&", ["dt_1", ">=", "today -365d"], ["dt_1", "<", "today"]],
+        },
+        {
+            tree_py: and([condition("dt_1", ">=", "today -8d"), condition("dt_1", "<", "today")]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", -8, "day"]),
+            domain: ["&", ["dt_1", ">=", "today -8d"], ["dt_1", "<", "today"]],
+        },
+        {
+            tree_py: and([
+                condition("dt_1", ">", "today +1d"),
+                condition("dt_1", "<=", "today +8w +1d"),
+            ]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", 8, "week"]),
+            domain: ["&", ["dt_1", ">", "today +1d"], ["dt_1", "<=", "today +8w +1d"]],
         },
         {
             tree_py: and(

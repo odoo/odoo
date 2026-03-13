@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TreeEditor.Input">
-        <input type="text" class="o_input" t-att-value="this.props.startEmpty ? '' : this.props.value" t-att-placeholder="this.props.placeholder" t-on-change="(ev) => this.props.update(ev.target.value)" />
+        <input  t-att-type="this.props.type ?? 'text'" class="o_input" t-att-value="this.props.startEmpty ? '' : this.props.value" t-att-placeholder="this.props.placeholder" t-on-change="(ev) => this.update(ev.target.value)" />
     </t>
 
     <t t-name="web.TreeEditor.Select">
@@ -33,20 +33,48 @@
     </t>
 
     <t t-name="web.TreeEditor.InRange">
-        <div class="d-flex flex-column gap-2">
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                <t t-set="info" t-value="this.props.valueTypeEditorInfo" />
-                <t t-set="value" t-value="this.props.value[1]" />
-                <t t-set="update" t-value="(val) => this.updateValueType(val)" />
-            </t>
-            <t t-if="this.props.value[1] === 'dateRange'">
+        <div class="d-flex">
+            <div class="d-flex flex-column gap-2">
                 <t t-call="web.TreeEditor.Editor">
                     <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                    <t t-set="info" t-value="this.props.betweenEditorInfo" />
-                    <t t-set="value" t-value="this.props.value.slice(2)" />
+                    <t t-set="info" t-value="this.props.valueTypeEditorInfo" />
+                    <t t-set="value" t-value="this.props.value[1]" />
+                    <t t-set="update" t-value="(val) => this.updateValueType(val)" />
+                </t>
+                <t t-if="this.props.value[1] === 'dateRange'">
+                    <t t-call="web.TreeEditor.Editor">
+                        <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
+                        <t t-set="info" t-value="this.props.betweenEditorInfo" />
+                        <t t-set="value" t-value="this.props.value.slice(2)" />
+                        <t t-set="update" t-value="(val) => this.updateValues(val)" />
+                    </t>
+                </t>
+            </div>
+            <t t-if="props.value[1] === 'relativeRange'">
+                <t t-call="web.TreeEditor.Editor">
+                    <t t-set="_classes" t-value="'overflow-hidden'"/>
+                    <t t-set="info" t-value="props.relativeEditorInfo" />
+                    <t t-set="value" t-value="props.value.slice(2)" />
                     <t t-set="update" t-value="(val) => this.updateValues(val)" />
                 </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.relativeRange">
+        <div class="d-flex ms-4 gap-4">
+            <div style="width: 60px;">
+                <t t-call="web.TreeEditor.Editor">
+                    <t t-set="info" t-value="this.props.relativeInput" />
+                    <t t-set="value" t-value="props.value[0]" />
+                    <t t-set="update" t-value="(val) => this.update(0, val)" />
+                </t>
+            </div>
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'overflow-hidden'"/>
+                <t t-set="info" t-value="this.props.relativeSelect" />
+                <t t-set="value" t-value="props.value[1]" />
+                <t t-set="update" t-value="(val) => this.update(1, val)" />
             </t>
         </div>
     </t>

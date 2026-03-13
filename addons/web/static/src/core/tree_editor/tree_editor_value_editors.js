@@ -13,7 +13,14 @@ import {
     DomainSelectorAutocomplete,
     DomainSelectorSingleAutocomplete,
 } from "@web/core/tree_editor/tree_editor_autocomplete";
-import { Input, InRange, List, Range, Select } from "@web/core/tree_editor/tree_editor_components";
+import {
+    Input,
+    InRange,
+    List,
+    Range,
+    RelativeRange,
+    Select,
+} from "@web/core/tree_editor/tree_editor_components";
 import { disambiguate, getResModel, isId } from "@web/core/tree_editor/utils";
 import { unique } from "@web/core/utils/arrays";
 
@@ -63,28 +70,44 @@ function placeholderForInput(displayPlaceholder) {
     }
 }
 
-const STRING_EDITOR = {
-    component: Input,
-    extractProps: ({ value, update, displayPlaceholder }) => ({
-        value,
-        update,
-        placeholder: placeholderForInput(displayPlaceholder),
-    }),
-    isSupported: (value) => typeof value === "string",
-    defaultValue: () => "",
-};
+/**
+ * Creates an editor definition for a standard HTML input.
+ * @param {"text" | "number"} [type="text"] - The type of input to generate.
+ * @returns {Object} The editor configuration object.
+ */
+function makeInputEditor(type = "text") {
+    if (!["text", "number"].includes(type)) {
+        throw new Error(`Input editor only supports 'text' and 'number' types. Received: ${type}`);
+    }
+    return {
+        component: Input,
+        extractProps: ({ value, update, displayPlaceholder }) => ({
+            value,
+            update,
+            type: type,
+            ...(type === "text" && { placeholder: placeholderForInput(displayPlaceholder) }),
+        }),
+        isSupported: (value) => typeof value === (type === "number" ? "number" : "string"),
+        defaultValue: () => (type === "number" ? 0 : ""),
+    };
+}
 
 function makeSelectEditor(options, params = {}) {
     const getOption = (value) => options.find(([v]) => v === value) || null;
     return {
         component: Select,
-        extractProps: ({ value, update, displayPlaceholder }) => ({
-            value,
-            update,
-            options,
-            addBlankOption: params.addBlankOption,
-            placeholder: placeholderForSelect(displayPlaceholder),
-        }),
+        extractProps: ({ value, update, displayPlaceholder }) => {
+            const visibleOptions = options.filter(
+                (opt) => odoo.debug || !opt[2]?.debugOnly || opt[0] === value
+            );
+            return {
+                value,
+                update,
+                options: visibleOptions,
+                addBlankOption: params.addBlankOption,
+                placeholder: placeholderForSelect(displayPlaceholder),
+            };
+        },
         isSupported: (value) => Boolean(getOption(value)),
         defaultValue: () => options[0]?.[0] ?? false,
         stringify: (value, disambiguate) => {
@@ -145,7 +168,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not like":
         case "ilike":
         case "not ilike":
-            return STRING_EDITOR;
+            return makeInputEditor("text");
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=", params);
             const { defaultValue } = getValueEditorInfo(fieldDef, "=", {
@@ -168,6 +191,22 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     !editorInfo.isSupported(value[0]) || !editorInfo.isSupported(value[1]),
             };
         }
+        case "relative": {
+            const relativeInput = makeInputEditor("number");
+            const relativeSelect = makeSelectEditor(RelativeRange.options, params);
+            return {
+                component: RelativeRange,
+                extractProps: ({ value, update }) => ({
+                    value,
+                    update,
+                    relativeInput,
+                    relativeSelect,
+                }),
+                isSupported: (value) => Array.isArray(value) && value.length === 2,
+                defaultValue: () => [-1, "day"],
+                stringify: (value) => `${value[0]} ${value[1]}`,
+            };
+        }
         case "in range": {
             return {
                 component: InRange,
@@ -176,6 +215,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     update,
                     valueTypeEditorInfo: makeSelectEditor(InRange.options, params),
                     betweenEditorInfo: getValueEditorInfo(fieldDef, "between", params),
+                    relativeEditorInfo: getValueEditorInfo(fieldDef, "relative", params),
                 }),
                 isSupported: (value) =>
                     Array.isArray(value) &&
@@ -189,7 +229,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not in": {
             switch (fieldDef.type) {
                 case "tags":
-                    return STRING_EDITOR;
+                    return makeInputEditor("text");
                 case "many2one":
                 case "many2many":
                 case "one2many":
@@ -303,7 +343,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "char":
         case "html":
         case "text":
-            return STRING_EDITOR;
+            return makeInputEditor("text");
         case "many2one": {
             if (["=", "!="].includes(operator)) {
                 return {

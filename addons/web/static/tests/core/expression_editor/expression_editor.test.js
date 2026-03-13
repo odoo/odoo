@@ -468,6 +468,7 @@ test(`"in range" operator`, async () => {
 });
 
 test(`date: "in range" operator`, async () => {
+    serverState.debug = "1";
     mockDate("2023-04-20 17:00:00", 0);
     await makeExpressionEditor({
         expression: `id`,
@@ -492,6 +493,7 @@ test(`date: "in range" operator`, async () => {
         "Year to date",
         "Last 365 days",
         "Date range",
+        "Relative range",
     ]);
 
     const dateRangeTests = [
@@ -533,6 +535,22 @@ test(`date: "in range" operator`, async () => {
         expect.verifySteps([formatExpr(expr)]);
     }
 
+    await selectValue("relativeRange");
+    expect(`${SELECTORS.valueEditor} select:first`).toHaveValue('"relativeRange"');
+    expect.verifySteps([formatExpr(`date >= ${pyDate("days = -1")} and date < ${pyDate()}`)]);
+
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit(-5, { instantly: true });
+    await contains(`${SELECTORS.valueEditor} select:last`).select('"month"');
+    expect.verifySteps([
+        formatExpr(`date >= ${pyDate("days = -5")} and date < ${pyDate()}`),
+        formatExpr(`date >= ${pyDate("months = -5")} and date < ${pyDate()}`),
+    ]);
+
+    // Important that it stays a relative range with 0 to make key nav work on number input
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit("0");
+    await animationFrame();
+    expect.verifySteps([formatExpr(`date >= ${pyDate()} and date < ${pyDate("days = 1")}`)]); // When input is 0 the expression should be the same as today smart date
+
     await selectValue("dateRange");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"dateRange"');
     expect.verifySteps([formatExpr(`date >= "2023-04-20" and date <= "2023-04-20"`)]);
@@ -546,10 +564,11 @@ test(`date: "in range" operator`, async () => {
     await selectValue("today");
     expect(getCurrentOperator()).toBe(label("in range"));
     expect(getCurrentValue()).toBe("Today");
-    expect.verifySteps([formatExpr(`date >= ${pyDate("today")} and date < ${pyDate("days = 1")}`)]);
+    expect.verifySteps([formatExpr(`date >= ${pyDate()} and date < ${pyDate("days = 1")}`)]);
 });
 
 test(`datetime: "in range" operator`, async () => {
+    serverState.debug = "1";
     mockDate("2023-04-20 17:00:00", 0);
     await makeExpressionEditor({
         expression: `id`,
@@ -576,6 +595,7 @@ test(`datetime: "in range" operator`, async () => {
         "Year to date",
         "Last 365 days",
         "Date range",
+        "Relative range",
     ]);
 
     const datetimeRangeTests = [
@@ -620,6 +640,26 @@ test(`datetime: "in range" operator`, async () => {
         expect(getCurrentValue()).toBe(label);
         expect.verifySteps([formatExpr(expr)]);
     }
+
+    await selectValue("relativeRange");
+    expect(`${SELECTORS.valueEditor} select:first`).toHaveValue('"relativeRange"');
+    expect.verifySteps([
+        formatExpr(`datetime >= ${pyDatetime("days = -1")} and datetime < ${pyDatetime()}`),
+    ]);
+
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit(-5, { instantly: true });
+    await contains(`${SELECTORS.valueEditor} select:last`).select('"month"');
+    expect.verifySteps([
+        formatExpr(`datetime >= ${pyDatetime("days = -5")} and datetime < ${pyDatetime()}`),
+        formatExpr(`datetime >= ${pyDatetime("months = -5")} and datetime < ${pyDatetime()}`),
+    ]);
+
+    // Important that it stays a relative range with 0 to make key nav work on number input
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit("0");
+    await animationFrame();
+    expect.verifySteps([
+        formatExpr(`datetime >= ${pyDatetime()} and datetime < ${pyDatetime("days = 1")}`),
+    ]);
 
     await selectValue("dateRange");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"dateRange"');
