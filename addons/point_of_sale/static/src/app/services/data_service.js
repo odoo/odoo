@@ -147,7 +147,7 @@ export class PosData {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve, this.dialog);
         });
     }
 
