@@ -62,7 +62,7 @@ implement tokenization and handle 3DS redirects.
   - The Web Drop-in SDK is migrated to version 4.7.3 and the Checkout API to version 67 to switch
     from relying on origin keys and use client keys instead. odoo/odoo#74827
 - `14.3`
-  - The previous Hosted Payment Pages API that allowed for redirect payments is replaced by a 
+  - The previous Hosted Payment Pages API that allowed for redirect payments is replaced by a
     combination of the Web Drop-in SDK (version 3.9.4) and the Checkout (version 53) and Recurring
     (version 49) APIs. odoo/odoo#141661
 

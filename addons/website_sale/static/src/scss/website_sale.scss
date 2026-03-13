@@ -1006,7 +1006,7 @@ $-product-ratios-map: (
         --o-wsale-product-image-ratio: #{$-ratio-value};
         @if($-ratio-name == 'auto') {
             & img {
-                object-fit: contain !important; 
+                object-fit: contain !important;
             }
         }
     }
@@ -1061,7 +1061,7 @@ $-product-radius-map: (
     &:has(.s_popup) {
         z-index: 2;
     }
-    
+
     @include media-breakpoint-up(lg) {
         padding-top: var(--o-wsale-product-col-details-padding-top-lg, 0px);
     }

@@ -39,7 +39,7 @@ function getComboRecords(listRecords, record) {
 
     } else if (record.data.combo_item_id?.id) {
         // if current record is combo item then we move backward util we find associated combo line
-        // Here we assume that the record we get is the last item of the combo 
+        // Here we assume that the record we get is the last item of the combo
         let index = listRecords.indexOf(record);
         while (index >= 0) {
             const r = listRecords[index];

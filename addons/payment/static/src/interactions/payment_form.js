@@ -282,7 +282,7 @@ export class PaymentForm extends Interaction {
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {}
 
     /**
-     * Update the submit button's label depending on the type of payment method ("pay now" or 
+     * Update the submit button's label depending on the type of payment method ("pay now" or
      * "pay later").
      *
      * @private

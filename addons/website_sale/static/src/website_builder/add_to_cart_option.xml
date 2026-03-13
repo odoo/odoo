@@ -17,7 +17,7 @@
             model="'product.product'"
             fields=""
             domain="[['product_tmpl_id', '=', this.getItemValueJSON('product_template_picker_opt').id]]"
-            defaultMessage.translate="Visitor's Choice" 
+            defaultMessage.translate="Visitor's Choice"
         />
     </BuilderRow>
     <BuilderRow label.translate="Action" t-if="this.domState.shouldShowActionChoice">

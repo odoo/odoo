@@ -10,7 +10,7 @@ SDK: [Xendit.js](https://docs.xendit.co/credit-cards/integrations/tokenization)
 
 This module integrates Xendit with different payment flows depending on the payment method:
 
-- For `Card` payments, it renders a self-hosted payment form with regular (non-iframe) inputs and 
+- For `Card` payments, it renders a self-hosted payment form with regular (non-iframe) inputs and
   relies on the Xendit.js SDK to create a (single-use or multiple-use) token that is used to make
   the payment. When the payment is successful, and the user opts to save the payment method, the
   token is saved in Odoo. Other communications with Xendit are performed via server-to-server API
