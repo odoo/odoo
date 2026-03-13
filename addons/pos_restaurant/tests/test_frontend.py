@@ -490,22 +490,21 @@ class TestFrontend(TestFrontendCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
 
-    # FIXME: re-enable the test, was disabled to be merged before freezing
-    # def test_course_restaurant_preparation_tour(self):
-    #     self.env['pos.printer'].create({
-    #         'name': 'Printer',
-    #         'printer_type': 'epson_epos',
-    #         'printer_ip': '0.0.0.0',
-    #         'use_type': 'preparation',
-    #         'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
-    #     })
+    def test_course_restaurant_preparation_tour(self):
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
 
-    #     self.main_pos_config.write({
-    #         'use_order_printer': True,
-    #         'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
-    #     })
-    #     self.pos_config.with_user(self.pos_user).open_ui()
-    #     self.start_pos_tour('test_course_restaurant_preparation_tour', login="pos_user")
+        self.main_pos_config.write({
+            'use_order_printer': True,
+            'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_course_restaurant_preparation_tour', login="pos_user")
 
     def test_combo_preparation_receipt(self):
         setup_product_combo_items(self)
