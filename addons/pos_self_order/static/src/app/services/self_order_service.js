@@ -439,9 +439,13 @@ export class SelfOrder extends Reactive {
     }
 
     initProducts() {
-        this.productCategories = this.config.limit_categories
-            ? this.config.iface_available_categ_ids
-            : this.models["pos.category"].getAll();
+        if (this.config.limit_categories) {
+            this.productCategories = this.config.iface_available_categ_ids;
+            this.limitedCategoryIdsSet = new Set(this.productCategories.map((c) => c.id));
+        } else {
+            this.limitedCategoryIdsSet = null;
+            this.productCategories = this.models["pos.category"].getAll();
+        }
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
         const excludedProductTemplateIds = new Set(
@@ -468,6 +472,16 @@ export class SelfOrder extends Reactive {
             });
             this.productByCategIds["0"] = productWoCat;
         }
+    }
+
+    isVisibleCategory(category) {
+        if (!category) {
+            return false;
+        }
+        if (this.limitedCategoryIdsSet) {
+            return this.limitedCategoryIdsSet.has(category.id);
+        }
+        return true;
     }
 
     initData() {

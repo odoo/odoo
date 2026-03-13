@@ -206,3 +206,24 @@ export function isShown() {
         trigger: ".o_self_product_list_page",
     };
 }
+
+export function checkProductDisplayed(productName) {
+    return {
+        content: `Check if product '${productName}' is displayed`,
+        trigger: `.o_self_product_box span:contains('${productName}')`,
+    };
+}
+
+export function checkRootCategoryDisplayed(categoryName) {
+    return {
+        content: `Check if root category '${categoryName}' is displayed`,
+        trigger: `.category_btn:contains('${categoryName}')`,
+    };
+}
+
+export function checkChildCategoryDisplayed(categoryName) {
+    return {
+        content: `Check if child category '${categoryName}' is displayed`,
+        trigger: `.child_category_btn:contains('${categoryName}')`,
+    };
+}
