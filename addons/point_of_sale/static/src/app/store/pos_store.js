@@ -645,6 +645,35 @@ export class PosStore extends Reactive {
             return order;
         }
     }
+
+    /**
+     * Some locally stored orders may have already been processed by another trusted POS.
+     * Keep orders without a server_id and orders whose server_id is still in draft on the server
+     */
+    async _getValidDraftOrders(localJsonOrders) {
+        try {
+            const ids = localJsonOrders
+                .filter((json) => json.server_id)
+                .map((json) => json.server_id);
+            const validIds = ids.length
+                ? await this.orm.call("pos.order", "get_draft_orders", [ids])
+                : [];
+
+            const validJsonOrders = [];
+            for (const order of localJsonOrders) {
+                if (!order.server_id || validIds.includes(order.server_id)) {
+                    validJsonOrders.push(order);
+                } else {
+                    this.db.remove_unpaid_order(order);
+                }
+            }
+            return validJsonOrders;
+        } catch (error) {
+            console.error("There was an error while validating draft orders", error);
+            return localJsonOrders;
+        }
+    }
+
     /**
      * Load the locally saved unpaid orders for this PoS Config.
      *
@@ -657,6 +686,7 @@ export class PosStore extends Reactive {
         var jsons = this.db.get_unpaid_orders();
         await this._loadMissingProducts(jsons);
         await this._loadMissingPartners(jsons);
+        jsons = await this._getValidDraftOrders(jsons);
         var orders = [];
 
         for (const json of jsons) {

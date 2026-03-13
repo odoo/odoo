@@ -1149,6 +1149,9 @@ class PosOrder(models.Model):
     def is_already_paid(self):
         return self.state == "paid"
 
+    def get_draft_orders(self):
+        return self.filtered(lambda order: order.state == "draft").ids
+
     @api.model
     def remove_from_ui(self, server_ids):
         """ Remove orders from the frontend PoS application
