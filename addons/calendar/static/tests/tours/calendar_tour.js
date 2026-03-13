@@ -1,17 +1,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
-const todayDate = function () {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-
-    return `${month}/${day}/${year} 10:00:00`;
-};
-
 registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -35,9 +25,13 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: "#start_0",
-            content: "Give a date to the new event",
-            run: `edit ${todayDate()}`,
+            trigger: ".o_popover .o_time_picker_input",
+            content: "Give an hour to the new event, by default, the day is today",
+            run: `edit 10:00am`,
+        },
+        {
+            trigger: ".o_popover button:contains(apply)",
+            run: "click",
         },
         {
             trigger: "#duration_0",
