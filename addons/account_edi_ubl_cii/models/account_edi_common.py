@@ -58,7 +58,7 @@ EAS_MAPPING = {
     'CH': {'9927': 'vat', '0183': None},
     'CY': {'9928': 'vat'},
     'CZ': {'9929': 'vat'},
-    'DE': {'9930': 'vat'},
+    'DE': {'9930': 'vat', '0246': 'l10n_de_widnr'},
     'DK': {'0184': 'vat', '0198': 'vat'},
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
@@ -84,6 +84,7 @@ EAS_MAPPING = {
     'MY': {'0230': None},
     # Do not add the vat for NL, since: "[NL-R-003] For suppliers in the Netherlands, the legal entity identifier
     # MUST be either a KVK or OIN number (schemeID 0106 or 0190)" in the Bis 3 rules (in PartyLegalEntity/CompanyID).
+    'NG': {'0244': 'vat'},
     'NL': {'0106': None, '0190': None},
     'NO': {'0192': 'l10n_no_bronnoysund_number'},
     'NZ': {'0088': 'company_registry'},
@@ -93,7 +94,7 @@ EAS_MAPPING = {
     'RS': {'9948': 'vat'},
     'SE': {'0007': 'company_registry', '9955': 'vat'},
     'SI': {'9949': 'vat'},
-    'SK': {'9950': 'vat'},
+    'SK': {'9950': 'vat', '0245': 'company_registry'},
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
@@ -683,7 +684,7 @@ class AccountEdiCommon(models.AbstractModel):
             }
 
         line_vals = self._retrieve_line_vals(tree, document_type, qty_factor)
-        if line_vals is None:
+        if not line_vals.get('price_subtotal'):
             return None
 
         return {
@@ -803,11 +804,8 @@ class AccountEdiCommon(models.AbstractModel):
         # line_net_subtotal (mandatory)
         price_subtotal = None
         line_total_amount_node = tree.find(xpath_dict['line_total_amount'])
-        if line_total_amount_node is None or line_total_amount_node.text is None or not line_total_amount_node.text.strip():
-            return None
-        price_subtotal = float(line_total_amount_node.text)
-        if price_subtotal == 0:
-            return None
+        if line_total_amount_node is not None and line_total_amount_node.text and line_total_amount_node.text.strip():
+            price_subtotal = float(line_total_amount_node.text)
 
         # quantity
         quantity = delivered_qty * qty_factor
@@ -828,7 +826,7 @@ class AccountEdiCommon(models.AbstractModel):
         elif price_subtotal is not None:
             price_unit = (price_subtotal + allow_charge_amount) / (delivered_qty or 1)
         else:
-            raise UserError(_("No gross price, net price nor line subtotal amount found for line in xml"))
+            price_unit = 0
 
         # discount
         discount = 0
@@ -862,6 +860,7 @@ class AccountEdiCommon(models.AbstractModel):
             'discount': discount,
             'tax_nodes': self._get_tax_nodes(tree),  # see `_retrieve_taxes`
             'charges': charges,  # see `_retrieve_line_charges`
+            'price_subtotal': price_subtotal,
         }
 
     def _import_product(self, **product_vals):

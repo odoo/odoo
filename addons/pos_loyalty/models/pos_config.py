@@ -16,7 +16,7 @@ class PosConfig(models.Model):
             '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
             '|', ('date_from', '=', False), ('date_from', '<=', today),
             '|', ('date_to', '=', False), ('date_to', '>=', today),
-            '|', ('pricelist_ids', '=', False), ('pricelist_ids', 'in', self.available_pricelist_ids.ids),
+            '|', ('pricelist_ids', '=', False), ('pricelist_ids', 'in', self._get_available_pricelists().ids),
         ]).filtered(lambda p: not p.limit_usage or p.sudo().total_order_count < p.max_usage)
 
     def _check_before_creating_new_session(self):

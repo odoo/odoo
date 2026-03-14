@@ -26,6 +26,7 @@ class PosSelfOrderController(http.Controller):
                 sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
             order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
             order['pos_reference'] = order_reference
+            order['sequence_number'] = sequence_number
             order['name'] = order_reference
 
         # Create a safe copy of the order with only the necessary fields for order creation to

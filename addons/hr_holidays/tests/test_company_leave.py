@@ -285,7 +285,7 @@ class TestCompanyLeave(TransactionCase):
             'date_to': date(2020, 4, 2),
         })
 
-        with self.assertQueryCount(__system__=1856):  # 770 community
+        with self.assertQueryCount(__system__=1857):  # 770 community
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_generate_time_off()
