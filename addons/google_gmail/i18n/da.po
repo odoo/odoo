@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_gmail
+# * google_gmail
 #
 # Translators:
 # Mads Søndergaard, 2023
@@ -9,20 +9,22 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Kira Petersen, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-03-14 08:09+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
+"google_gmail/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -120,6 +122,8 @@ msgid ""
 "You will be redirected to the Gmail login page where you will need to accept "
 "the permission."
 msgstr ""
+"Forbind din Gmail-konto via OAuth-godkendelsesprocessen.\n"
+"Du bliver omdirigeret til Gmail-login, hvor du skal acceptere tilladelsen."
 
 #. module: google_gmail
 #. odoo-python
@@ -131,27 +135,31 @@ msgid ""
 "this server. To extend its use, you should set a \"mail.default.from\" "
 "system parameter."
 msgstr ""
+"Forbind din Gmail-konto via OAuth-godkendelsesprocessen.  \n"
+"Som standard kan kun én bruger med en matchende e-mailadresse bruge denne "
+"server. Hvis flere skal kunne bruge den, skal du indstille systemparameteren "
+"\"mail.default.from\"."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "Gmail-klient-id"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Gmail-klienthemmelighed"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "Gmail-OAuth-godkendelse"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google-Gmail-mixin"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -161,7 +169,7 @@ msgstr "ID"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "Din Google-apps ID"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
@@ -187,14 +195,14 @@ msgstr "Mail server"
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "Kun administratoren kan forbinde en Gmail-mailserver."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "Konfigurér venligst dine Gmail-loginoplysninger."
 
 #. module: google_gmail
 #. odoo-python
@@ -205,6 +213,9 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"Udfyld venligst feltet 'Brugernavn' med dit Gmail-brugernavn (din e-"
+"mailadresse). Det skal være den samme konto, som blev brugt til Gmail OAuth-"
+"tokenet."
 
 #. module: google_gmail
 #. odoo-python
@@ -235,7 +246,7 @@ msgstr "Hemmelighed"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "Din Google-apps hemmelighed"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type

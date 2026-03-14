@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:38+0000\n"
-"PO-Revision-Date: 2026-02-21 17:01+0000\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-14 08:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-17/account_edi_ubl_cii/pt_BR/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -38,7 +38,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "(Des)agrupar linhas por imposto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -580,8 +580,16 @@ msgstr "BIS3 DE (XRechnung)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
+msgid "Cannot decode the origin file, try by importing it again"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
 msgid "Cannot find the origin file, try by importing it again"
 msgstr ""
+"Não é possível encontrar o arquivo original. Tente importá-lo novamente"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -785,7 +793,7 @@ msgstr "Generate Peppol format by default"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Linhas agrupadas por imposto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -970,7 +978,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The bank account couldn't be fetched: %s"
-msgstr ""
+msgstr "A conta bancária não pôde ser obtida: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1089,7 +1097,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Unknown partner"
-msgstr ""
+msgstr "Parceiro desconhecido"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1135,6 +1143,8 @@ msgstr ""
 msgid ""
 "You can only (un)group lines of an invoice not linked to a purchase order"
 msgstr ""
+"Você só pode (des)agrupar linhas de uma fatura que não estejam vinculadas a "
+"um pedido de compra."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-02-24 14:04+0000\n"
+"PO-Revision-Date: 2026-03-14 08:11+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "point_of_sale/pl/>\n"
@@ -26,9 +26,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -60,14 +60,14 @@ msgstr " - Z \"%s\" na \"%s\""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - closing"
-msgstr ""
+msgstr " - zamknięcie"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - opening"
-msgstr ""
+msgstr " - otwarcie"
 
 #. module: point_of_sale
 #. odoo-python
@@ -353,7 +353,7 @@ msgstr "<span class=\"oe_inline\"><b>Pomiń ekran podglądu</b></span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "<span invisible=\"is_total_cost_computed\">TBD</span>"
-msgstr ""
+msgstr "<span invisible=\"is_total_cost_computed\">Do ustalenia</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -419,7 +419,7 @@ msgstr "<strong>Notatka otwarcia sesji:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice:</strong>"
-msgstr ""
+msgstr "<strong>Faktura źródłowa:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -523,11 +523,13 @@ msgid ""
 "A valid product already exists for Point of Sale. Therefore, demonstration "
 "products cannot be loaded."
 msgstr ""
+"Istnieje już ważny produkt dla Punktu Sprzedaży. Dlatego nie można załadować "
+"produktów demonstracyjnych."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "ALL POS"
-msgstr ""
+msgstr "WSZYSTKIE PoS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1668,7 +1670,7 @@ msgstr "Monety/Banknoty"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__combo_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__combo_ids
 msgid "Combinations"
-msgstr ""
+msgstr "Kombinacje"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1682,40 +1684,40 @@ msgstr "Łączenie %s płatności POS z %s"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__product_template__detailed_type__combo
 #: model:ir.model.fields.selection,name:point_of_sale.selection__product_template__type__combo
 msgid "Combo"
-msgstr "Kombinacja"
+msgstr "Zestaw"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_combo
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Combo Choices"
-msgstr "Opcje Combo"
+msgstr "Opcje zestawu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr "Linie Kombinacji"
+msgstr "Pozycje zestawu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "Combo Name"
-msgstr ""
+msgstr "Nazwa zestawu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr "Nadrzędna kombinacj"
+msgstr "Nadrzędny zestaw"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/product.py:0
 #, python-format
 msgid "Combo products cannot contains variants or attributes"
-msgstr ""
+msgstr "Produkty zestawu nie mogą zawierać wariantów ani atrybutów"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "Combos"
-msgstr ""
+msgstr "Zestawy"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -1871,7 +1873,7 @@ msgstr "Kontynuuj sprzedaż"
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "Continue with limited functionalities"
-msgstr ""
+msgstr "Kontynuuj z ograniczonymi funkcjami"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2141,12 +2143,12 @@ msgstr "Klienci"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "DEMO_PRODUCT_NAME"
-msgstr ""
+msgstr "DEMO_PRODUCT_NAME"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "DEMO_REF"
-msgstr ""
+msgstr "DEMO_REF"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2257,7 +2259,7 @@ msgstr "Domyślny podalek należny"
 #. module: point_of_sale
 #: model:account.tax,name:point_of_sale.pos_taxes_0
 msgid "Default Tax for PoS"
-msgstr ""
+msgstr "Podatek domyślny dla PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2355,7 +2357,7 @@ msgstr "Nazwa Demo"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.js:0
 #, python-format
 msgid "Demo products are no longer available"
-msgstr ""
+msgstr "Produkty demo nie są już dostępne"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
@@ -3015,14 +3017,14 @@ msgstr "Nagłówek"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Hide Category Images"
-msgstr ""
+msgstr "Ukryj obrazy kategorii"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Hide Product Images"
-msgstr ""
+msgstr "Ukryj zdjęcia produktów"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
@@ -3650,7 +3652,7 @@ msgstr "Nazwa numeru partii"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #, python-format
 msgid "Lot Number"
-msgstr ""
+msgstr "Numer partii"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3757,6 +3759,9 @@ msgid ""
 "Meanwhile connection is back, Odoo Point of Sale will operate limited "
 "operations. Check your connection or continue with limited functionalities"
 msgstr ""
+"W międzyczasie połączenie zostało przywrócone, Odoo Punkt Sprzedaży będzie "
+"działać w ograniczonym zakresie. Sprawdź połączenie lub kontynuuj z "
+"ograniczonymi funkcjami."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3831,7 +3836,7 @@ msgstr "Wielu pracowników na sesję"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, python-format
 msgid "Multiple Invoiced Orders Selected"
-msgstr ""
+msgstr "Wybrano wiele zamówień z fakturą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -4044,7 +4049,7 @@ msgstr "Nie znaleziono więcej produktów dla \"%s\"."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__num_of_products
 msgid "No of Products"
-msgstr ""
+msgstr "Liczba produktów"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -4057,7 +4062,7 @@ msgstr "Nie znaleziono żadnych zamówień"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "No products available. Explore"
-msgstr ""
+msgstr "Liczba dostępnych produktów. Przeglądaj"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4171,7 +4176,7 @@ msgstr "OK"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
 msgid "Office combo"
-msgstr ""
+msgstr "Zestaw biurowy"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4315,7 +4320,7 @@ msgstr "Saldo otwarcia"
 #: code:addons/point_of_sale/static/src/app/store/cash_opening_popup/cash_opening_popup.xml:0
 #, python-format
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "Kontrola gotówki przy otwarciu"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -4891,7 +4896,7 @@ msgstr "Potwierdź dużą kwotę"
 #: code:addons/point_of_sale/models/pos_combo.py:0
 #, python-format
 msgid "Please add products in combo."
-msgstr ""
+msgstr "Dodaj produkty do zestawu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5068,14 +5073,14 @@ msgstr "Kategoria produktu PoS"
 #. module: point_of_sale
 #: model:account.tax.group,name:point_of_sale.pos_taxe_group_0
 msgid "PoS Taxes"
-msgstr ""
+msgstr "Podatki PoS"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS order %s can not be processed"
-msgstr ""
+msgstr "Kolejność PoS %s nie może być przetwarzana"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5405,7 +5410,7 @@ msgstr "Kontrola cen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo_line__combo_price
 msgid "Price Extra"
-msgstr ""
+msgstr "Cena dodatkowa"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5594,12 +5599,12 @@ msgstr "Kategoria produktu"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_combo_line
 msgid "Product Combo Items"
-msgstr ""
+msgstr "Produkty w zestawach"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_combo
 msgid "Product Combos"
-msgstr ""
+msgstr "Zestawy produktów"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5611,7 +5616,7 @@ msgstr "Informacja o produkcie"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__base_price
 msgid "Product Price"
-msgstr ""
+msgstr "Cena produktu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5668,7 +5673,7 @@ msgstr "Warianty produktu"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_combo
 msgid "Product combo choices"
-msgstr ""
+msgstr "Wybór produktów zestawu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5711,7 +5716,7 @@ msgstr "Produkty"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__combo_line_ids
 msgid "Products in Combo"
-msgstr ""
+msgstr "Produkty w zestawie"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7090,6 +7095,12 @@ msgid ""
 "attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"Zamówienie z Punktu Sprzedaży o następującym numerze referencyjnym %s "
+"zostało otrzymane przez serwer Odoo, ale faza przetwarzania zamówienia nie "
+"powiodła się.\n"
+"Dane otrzymane z Punktu Sprzedaży zostały zapisane w załącznikach.\n"
+"Skontaktuj się z działem pomocy technicznej, aby uzyskać pomoc w "
+"przywróceniu zamówienia."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7467,6 +7478,9 @@ msgid ""
 "ensure that whatever product the user chooses for a component, it will "
 "always be they same price."
 msgstr ""
+"Wartość, na podstawie której obliczana jest proporcjonalna cena komponentu. "
+"Ma to na celu zapewnienie, że niezależnie od tego, jaki produkt użytkownik "
+"wybierze jako komponent, cena zawsze będzie taka sama."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -7866,7 +7880,7 @@ msgstr "Suma"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total (Tax excluded)"
-msgstr ""
+msgstr "Suma (bez VAT)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_total_entry_encoding
@@ -8080,7 +8094,7 @@ msgstr "Cena jednostkowa"
 #: code:addons/point_of_sale/static/src/app/barcode/error_popup/barcode_error_popup.xml:0
 #, python-format
 msgid "Unknown Barcode:"
-msgstr ""
+msgstr "Nie znany kod kreskowy:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8488,6 +8502,8 @@ msgid ""
 "You have selected orderlines from multiple invoiced orders. To proceed "
 "refund, please select orderlines from the same invoiced order."
 msgstr ""
+"Wybrałeś pozycje z wielu zafakturowanych zamówień. Aby kontynuować zwrot "
+"kosztów, wybierz pozycje z tego samego zafakturowanego zamówienia."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8510,7 +8526,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/product.py:0
 #, python-format
 msgid "You must first remove this product from the %s combo"
-msgstr "Musisz najpierw usunąć produkt z kombinacji %s"
+msgstr "Musisz najpierw usunąć produkt z zestawu %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8550,7 +8566,7 @@ msgstr "Powinieneś powiązać Punkt Sprzedaży z sesją"
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "You're offline"
-msgstr ""
+msgstr "Jesteś offline"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8609,21 +8625,21 @@ msgstr "należą do innej sesji:"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_tree
 msgid "combos"
-msgstr ""
+msgstr "zestawy"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "create your own"
-msgstr ""
+msgstr "utwórz własny"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "demo data"
-msgstr ""
+msgstr "dane demo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8636,7 +8652,7 @@ msgstr "upust"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "e.g. Burger Menu"
-msgstr ""
+msgstr "np. Menu burgerów"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form

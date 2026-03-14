@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_peppol_selfbilling
+# * account_peppol_selfbilling
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-06 18:38+0000\n"
-"PO-Revision-Date: 2026-03-06 18:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-03-14 08:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/"
+"account_peppol_selfbilling/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -102,7 +106,7 @@ msgstr ""
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Enviar movimiento de cuenta"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_bank_statement_line__can_send_as_self_invoice
@@ -114,43 +118,45 @@ msgstr ""
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Diario"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_journal__is_self_billing
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Self Billing"
-msgstr ""
+msgstr "Autofacturación"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "Nota de crédito de autofactura"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr ""
+msgstr "Factura rectificativa de autofacturación: envío"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_invoice
 msgid "Self-billing invoice: Sending"
-msgstr ""
+msgstr "Factura de autofacturación: envío"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Sent to customers with the self-billing credit note in attachment"
 msgstr ""
+"Enviado a los clientes con sus facturas rectificativas de autofacturación "
+"adjuntas"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_invoice
 msgid "Sent to customers with their self-billing invoices in attachment"
-msgstr ""
+msgstr "Enviado a los clientes con sus facturas de autofacturación adjuntas"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,help:account_peppol_selfbilling.field_account_journal__is_self_billing
@@ -163,17 +169,17 @@ msgstr ""
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "Facturación UBL BIS 3.0.12"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Factura de proveedor"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr ""
+msgstr "Factura rectificativa de proveedor"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
@@ -181,6 +187,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or"
 " 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Factura rectificativa de autofacturación (ref. {"
+"{ object.name or 'n/a' }})"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -188,3 +196,5 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
+"or 'n/a' }})"

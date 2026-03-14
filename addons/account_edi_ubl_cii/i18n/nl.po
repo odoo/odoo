@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:38+0000\n"
-"PO-Revision-Date: 2026-03-07 17:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-14 08:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -39,7 +39,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "Regels (de)groeperen per btw"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -583,8 +583,17 @@ msgstr "BIS3 DE (XRechnung)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
+msgid "Cannot decode the origin file, try by importing it again"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+#, python-format
 msgid "Cannot find the origin file, try by importing it again"
 msgstr ""
+"Kan het oorspronkelijke bestand niet vinden. Probeer het opnieuw te "
+"importeren"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -789,7 +798,7 @@ msgstr "Genereer standaard Peppol-formaat"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Regels gegroepeerd per btw"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -1091,7 +1100,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Unknown partner"
-msgstr ""
+msgstr "Onbekende partner"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1129,7 +1138,7 @@ msgstr "XRechnung CIUS"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
-msgstr ""
+msgstr "Je kunt enkel regels (de)groeperen van een conceptfactuur"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

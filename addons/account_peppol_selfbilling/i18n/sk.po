@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_peppol_selfbilling
+# * account_peppol_selfbilling
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-06 18:38+0000\n"
-"PO-Revision-Date: 2026-03-06 18:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-03-14 08:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-17/"
+"account_peppol_selfbilling/sk/>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -102,7 +106,7 @@ msgstr ""
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Odoslanie účtového záznamu"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_bank_statement_line__can_send_as_self_invoice
@@ -114,43 +118,43 @@ msgstr ""
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Účtovný denník"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Vstup účtovnej knihy"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_journal__is_self_billing
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Self Billing"
-msgstr ""
+msgstr "Self Billing"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "Selfbilling dobropis"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr ""
+msgstr "Selfbilling dobropis: odosielanie"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_invoice
 msgid "Self-billing invoice: Sending"
-msgstr ""
+msgstr "Selfbilling faktúra: odosielanie"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Sent to customers with the self-billing credit note in attachment"
-msgstr ""
+msgstr "Odoslané zákazníkom s priloženým selfbilling dobropisom"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_invoice
 msgid "Sent to customers with their self-billing invoices in attachment"
-msgstr ""
+msgstr "Odoslané zákazníkom s ich selfbilling faktúrami v prílohe"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,help:account_peppol_selfbilling.field_account_journal__is_self_billing
@@ -163,17 +167,17 @@ msgstr ""
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Dodávateľský doklad"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr ""
+msgstr "Dodávateľský dobropis"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
@@ -181,6 +185,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or"
 " 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Selfbilling dobropis (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -188,3 +194,5 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Selfbilling faktúra (Ref. {{ object.name or 'n/"
+"a' }})"

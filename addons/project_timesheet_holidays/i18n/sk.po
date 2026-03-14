@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
+# * project_timesheet_holidays
 #
 # Translators:
 # Wil Odoo, 2023
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"PO-Revision-Date: 2026-03-14 08:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-17/"
+"project_timesheet_holidays/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -133,6 +136,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Predvolený projekt používaný pri automatickom generovaní výkazov pracovného "
+"času prostredníctvom žiadostí o voľno. Pre každý typ voľna môžete "
+"individuálne určiť iný projekt."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -140,6 +146,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Predvolená úloha používaná pri automatickom generovaní výkazov pracovného "
+"času prostredníctvom žiadostí o voľno. Pre každý typ voľna môžete "
+"individuálne určiť inú úlohu."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -178,7 +187,7 @@ msgstr "Typ voľných dní"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Počet typov voľných dní"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -190,7 +199,7 @@ msgstr "Pracovné výkazy"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "Zobraziť voľno"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -200,6 +209,8 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Pre úlohu, ktorá je prepojená s typom voľna, nemôžete vytvárať výkazy "
+"pracovného času. Na požiadanie o nové voľno použite aplikáciu Voľno."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -216,6 +227,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
+"Nemôžete odstrániť pracovné výkazy, ktoré sú prepojené s globálnym voľnom."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -225,6 +237,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Nemôžete vymazať pracovné výkazy, ktoré sú prepojené so žiadosťami o voľno. "
+"Žiadosť o voľno zrušte v aplikácii Voľno."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -234,3 +248,5 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Pracovné výkazy, ktoré sú prepojené so žiadosťami o voľno, nie je možné "
+"upravovať. Na úpravu žiadostí o voľno použite aplikáciu Voľno."

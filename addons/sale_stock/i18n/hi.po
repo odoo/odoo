@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-02-14 08:07+0000\n"
+"PO-Revision-Date: 2026-03-14 08:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/sale_stock/"
 "hi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -97,6 +97,12 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"प्रॉडक्ट कॉन्फ़िगरेशन के अनुसार, डिलीवर की गई मात्रा को ऑटोमैटिक तरीके से कैलकुलेट करें:\n"
+"  - मैन्युअल: मात्रा को लाइन पर मैन्युअल रूप से सेट करें\n"
+"  - एनालिटिक फ्रॉम एक्सपेंसेस: जितने खर्चे दर्ज किए गए हैं, उनकी कुल संख्या ही डिलीवरी "
+"मात्रा होगी\n"
+"  - टाइमशीट: मात्रा इस सेल लाइन से जुड़े टास्क पर दर्ज किए गए घंटों का योग है\n"
+"  - स्टॉक मूव्स: मात्रा पुष्टि की गई पिकिंग से आती है\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -113,7 +119,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible"
-msgstr ""
+msgstr "जितना जल्दी हो सके"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -184,7 +190,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr ""
+msgstr "डिलीवरी ऑर्डर"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
@@ -232,7 +238,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "अपवाद:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -261,7 +267,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "भविष्य के लिए अनुमानित स्टॉक की मात्रा"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -289,7 +295,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "प्रभावित ट्रांसफर:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -339,7 +345,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "पॉपओवर विजेट के लिए JSON डेटा"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -359,12 +365,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr ""
+msgstr "लीड का समय"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "लॉट/सीरियल"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -446,7 +452,7 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "प्रोक्युर्मन्ट ग्रुप"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -456,7 +462,7 @@ msgstr "प्रॉडक्ट"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "प्रॉडक्ट मूव्स (स्टॉक मूव लाइन)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
@@ -492,14 +498,14 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "ऑर्डर मिलने पर स्टॉक भरना (MTO)"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Reserved"
-msgstr ""
+msgstr "रिज़र्व किया गया"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -509,7 +515,7 @@ msgstr "रिटर्न"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr ""
+msgstr "रूट"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
@@ -580,7 +586,7 @@ msgstr "अनुसूचित तिथि"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "सिक्योरिटी लीड समय"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -621,12 +627,12 @@ msgstr "चाल स्टॉक"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr ""
+msgstr "स्टॉक मूव"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "स्टॉक रिप्लिनिशमेंट रिपोर्ट"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -646,7 +652,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "स्टॉक रूल रिपोर्ट"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -731,7 +737,7 @@ msgstr "वेयरहाउस"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "चेतावनी!"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
@@ -746,7 +752,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "रद्द किया गया"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -762,7 +768,7 @@ msgstr " "
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "के बजाय ऑर्डर किया गया"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
