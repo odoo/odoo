@@ -1927,7 +1927,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         cat2 = Category.create({'name': 'ACCESS', 'parent': cat1.id})
         cats = cat1 + cat2
 
-        self.env.clear()
+        self.env.transaction.clear()
 
         cat1, cat2 = cats
         self.assertEqual(cat2.name, 'ACCESS')

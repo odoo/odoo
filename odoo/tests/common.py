@@ -1200,7 +1200,6 @@ class TransactionCase(BaseCase):
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
-        # (these are not cleared in self.env.clear or envs.clear)
         def _reset(cb, funcs, data):
             cb._funcs = funcs
             cb.data = data

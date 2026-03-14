@@ -528,14 +528,14 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(partner1.child_ids, partner2)
 
         # reading partner1 should not prefetch 'vat_label' on partner2
-        self.env.clear()
+        self.env.transaction.clear()
         partner1 = partner1.with_prefetch()
         partner1.read(['vat_label'])
         self.assertIn('vat_label', partner1._cache)
         self.assertNotIn('vat_label', partner2._cache)
 
         # reading partner1 should not prefetch 'vat_label' on partner2
-        self.env.clear()
+        self.env.transaction.clear()
         partner1 = partner1.with_prefetch()
         partner1.read(['child_ids', 'vat_label'])
         self.assertIn('vat_label', partner1._cache)

@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
+from odoo.tools.func import deprecated
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
 
@@ -359,6 +360,7 @@ class Environment(Mapping[str, "BaseModel"]):
             _logger.debug('translation went wrong for "%r", skipped', source, exc_info=True)
         return source
 
+    @deprecated("Since 20.0, use transaction.clear or transaction.reset")
     def clear(self) -> None:
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.

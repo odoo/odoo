@@ -2098,7 +2098,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'lst_price': 200.0,
             'company_id': new_company.id,
         })
-        self.env.clear()
+        self.env.transaction.clear()
         data = current_session.with_company(self.env.company).filter_local_data({'product.product': [product.id]})
         self.assertIn(product.id, data['product.product'])
 

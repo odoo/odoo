@@ -182,7 +182,7 @@ class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
         order.picking_ids.button_validate()
         # flush computations and clear the cache before checking again the report
         self.env.flush_all()
-        self.env.clear()
+        self.env.transaction.clear()
 
         report = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id')
 
