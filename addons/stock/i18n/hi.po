@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 12:20+0000\n"
+"PO-Revision-Date: 2026-03-13 10:05+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "hi/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: stock
 #. odoo-python
@@ -2628,6 +2628,9 @@ msgid ""
 "        If greater than the last day of a month, then the last day of the "
 "month will be selected instead."
 msgstr ""
+"महीने का वह दिन जब वार्षिक इन्वेंट्री होनी चाहिए. अगर यह शून्य या नकारात्मक है, तो "
+"महीने का पहला दिन चुना जाएगा.\n"
+"        अगर यह महीने के अंतिम दिन से ज़्यादा है, तो महीने का अंतिम दिन चुना जाएगा।"
 
 #. module: stock
 #. odoo-javascript
@@ -4243,6 +4246,10 @@ msgid ""
 "        In case of incoming flow, validate the transfer before this date in "
 "order to have these products in stock at the date promised by the supplier"
 msgstr ""
+"आउटगोइंग फ्लो के मामले में, ग्राहक को वादे की तारीख पर डिलीवरी देने के लिए, इस तारीख से "
+"पहले ट्रांसफर को वैलिडेट करें..\n"
+"        इनकमिंग फ्लो के मामले में, सप्लायर के ज़रिए वादे की गई तारीख पर स्टॉक में प्रॉडक्ट "
+"होने के लिए, इस तारीख से पहले ट्रांसफर की पुष्टि करें"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -10024,6 +10031,11 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"इस ट्रांसफर का जगह अपडेट करने से वर्तमान में असाइन किए गए आइटम अन-रिज़र्व हो जाएंगे. नए "
+"जगह पर आइटम रिज़र्व करने का प्रयास किया जाएगा और पिछले ट्रांसफर के साथ लिंक खत्म हो "
+"जाएगा.\n"
+"\n"
+"इससे बचने के लिए, कृपया सेव करने से पहले जगह परिवर्तन को रद्द करें।"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1

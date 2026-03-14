@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:38+0000\n"
-"PO-Revision-Date: 2026-03-07 12:18+0000\n"
+"PO-Revision-Date: 2026-03-13 10:02+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/"
 "point_of_sale/fi/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -1233,7 +1233,7 @@ msgstr "Automaattinen"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__fiscal_position_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__fiscal_position_id
 msgid "Automatic Fiscal Position"
-msgstr "Automaattinen verokanta"
+msgstr "Automaattinen verokantasääntö"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
@@ -2009,8 +2009,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Valitse verokanta tilauksen yhteydessä asiakastyypin mukaan (verovapaa, "
-"paikan päällä tai take away jne.)."
+"Valitse tilauksen verokantasääntö asiakastyypin mukaan (verovapaa, paikan "
+"päällä vs. take away, jne.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2876,7 +2876,7 @@ msgstr "Oletusarvoinen saatavien tili (kassa)"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr "Oletusarvoinen verokanta"
+msgstr "Oletusarvoinen verokantasääntö"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3533,20 +3533,20 @@ msgstr "Taloudelliset tiedot"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Verokanta"
+msgstr "Verokantasääntö"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Fiscal Position not found"
-msgstr "Verokantaa ei löydy"
+msgstr "Verokantasääntöä ei löydy"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fiscal Positions"
-msgstr "Verokannat"
+msgstr "Verokantasäännöt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__fiscal_position_id
@@ -3556,9 +3556,8 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Verokantasääntöjä käytetään mukauttamaan veroja ja tilejä tietyille "
-"asiakkaille tai myyntitilauksille/-laskuille. Oletusarvo tulee "
-"asiakaskortilta."
+"Verokantasääntöjä käytetään verojen ja tilien mukauttamiseen tietyille "
+"asiakkaille tai tilauksille/laskuille. Oletusarvo tulee asiakkaalta."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_butter_croissant_product_template
@@ -7679,7 +7678,7 @@ msgstr "Tekstiviestin toimitusvirhe"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_sms
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "SMS Enabled"
-msgstr "SMS käytössä"
+msgstr "Tekstiviestit käytössä"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8081,7 +8080,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Set fiscal position"
-msgstr "Aseta verokanta"
+msgstr "Määritä verokantasääntö"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8806,8 +8805,8 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
-"Alkuperäisessä tilauksessa käytettyä verokantaa ei ole ladattu. Varmista, "
-"että se on ladattu lisäämällä se kassan määrityksiin."
+"Alkuperäisessä tilauksessa käytettyä verokantasääntöä ei ole ladattu. "
+"Varmista sen lataaminen lisäämällä se kassajärjestelmän asetuksiin."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8835,7 +8834,7 @@ msgstr "Ilmaisen määrän on oltava pienempi tai yhtä suuri kuin enimmäismä�
 #. odoo-python
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The free quantity of a combo must be greater or equal to 0."
-msgstr "Yhdistelmän ilmaisia tuotteita on oltava vähintään 0."
+msgstr "Yhdistelmän ilmaisen määrän on oltava vähintään 0."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -9232,10 +9231,10 @@ msgid ""
 " Please pay the exact amount or add a cash payment method in the point of "
 "sale configuration"
 msgstr ""
-"Tässä kassassa ei ole käytettävissä käteismaksumenetelmää vaihtorahojen "
-"käsittelyä varten.\n"
+"Tällä kassajärjestelmällä ei ole käteismaksumenetelmää vaihtorahojen "
+"käsittelemiseksi.\n"
 "\n"
-" Maksa tarkka summa tai lisää käteismaksutapa kassan asetuksiin"
+" Maksa tarkka summa tai lisää käteismaksutapa kassajärjestelmän asetuksissa"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9711,7 +9710,7 @@ msgstr "Tapahtuma"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Transaction cancelled"
-msgstr "Siirto peruttu"
+msgstr "Tapahtuma peruttu"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
@@ -9932,7 +9931,7 @@ msgstr "Käytä viivakoodeja tuotteiden, asiakaskorttien jne. skannaamiseen."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr "Käytä verokantaa saadaksesi eri veroja tilauksesta"
+msgstr "Käytä verokantasääntöjä vaihtaaksesi veroja tilauskohtaisesti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__order_seq_id
