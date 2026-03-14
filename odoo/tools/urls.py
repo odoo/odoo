@@ -1,4 +1,8 @@
+import functools
+import ipaddress
 import re
+import socket
+import typing
 import urllib.parse
 
 __all__ = ['urljoin']
@@ -8,6 +12,32 @@ def _contains_dot_segments(path: str | bytes) -> bool:
     # most servers decode url before doing dot segment resolutions
     decoded_path = urllib.parse.unquote(path, errors='strict')
     return any(seg in ('.', '..') for seg in decoded_path.split('/'))
+
+
+class InAddrAny(typing.NamedTuple):
+    any4: bool
+    any6: bool
+
+    def __bool__(self):
+        return self[0] or self[1]
+
+
+@functools.cache
+def is_inaddr_any(addr) -> InAddrAny:
+    # https://en.wikipedia.org/wiki/0.0.0.0
+    info = socket.getaddrinfo(addr, None, type=socket.SOCK_STREAM)
+    return InAddrAny(
+        any4=any(
+            ip == '0.0.0.0'
+            for family, *_, (ip, *_) in info
+            if family == socket.AF_INET
+        ),
+        any6=any(
+            int(ipaddress.IPv6Address(ip)) == 0
+            for family, *_, (ip, *_) in info
+            if family == socket.AF_INET6
+        ),
+    )
 
 
 def urljoin(base: str, extra: str) -> str:

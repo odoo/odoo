@@ -1,16 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import socket
 from importlib import metadata
 from io import StringIO
-from socket import gethostbyname
 from unittest.mock import patch
 
 from odoo.http.requestlib import Request
 from odoo.http.router import root
 from odoo.http.stream import content_disposition
 from odoo.tests import tagged
-from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user
+from odoo.tests.common import BaseCase, get_db_name, new_test_user
 from odoo.tools import DotDict, config, file_path, mute_logger, parse_version
 
 from .test_common import TestHttpBase
@@ -35,14 +35,17 @@ class TestHttpMisc(TestHttpBase):
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
         client_ip = '127.0.0.16'
-        reverseproxy_ip = gethostbyname(HOST)
+        *_, (reverseproxy_ip, *_) = socket.getaddrinfo(
+            config.http_host, config['http_port'],
+            type=socket.SOCK_STREAM,
+        )[0]
         host = 'mycompany.odoo.com'
 
         headers = {
             'Host': '',
             'X-Forwarded-For': client_ip,
             'X-Forwarded-Host': host,
-            'X-Forwarded-Proto': 'https'
+            'X-Forwarded-Proto': 'https',
         }
 
         # Don't trust client-sent forwarded headers
@@ -261,7 +264,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(res.session['uid'], None)
 
         # follow redirection
-        self.opener.cookies.set("session_id", res.session.sid, domain=HOST)
+        self.opener.cookies.set("session_id", res.session.sid, domain=config.http_host)
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)

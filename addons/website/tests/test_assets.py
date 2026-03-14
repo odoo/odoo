@@ -19,8 +19,8 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         [w.write({'domain': f'inactive-{w.id}.test'}) for w in Website.search([])]
         # Don't use HOST, hardcode it so it doesn't get changed one day and make
         # the test useless
-        domain_1 = f"http://127.0.0.1:{self.http_port()}"
-        domain_2 = f"http://localhost:{self.http_port()}"
+        domain_1 = f"http://127.0.0.1:{config['http_port']}"
+        domain_2 = f"http://localhost:{config['http_port']}"
         Website.browse(1).domain = domain_1
 
         self.authenticate('admin', 'admin')

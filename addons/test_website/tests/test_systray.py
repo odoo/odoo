@@ -1,8 +1,8 @@
 
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HOST, new_test_user, tagged
-from odoo.tools import config, mute_logger
+from odoo.tests.common import new_test_user, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCase
 

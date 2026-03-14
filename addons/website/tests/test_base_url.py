@@ -4,12 +4,13 @@ from lxml.html import document_fromstring
 
 import odoo.tests
 from odoo.exceptions import ValidationError
+from odoo.tools import config
 
 
 class TestUrlCommon(odoo.tests.HttpCase):
     def setUp(self):
-        super(TestUrlCommon, self).setUp()
-        self.domain = 'http://' + odoo.tests.HOST
+        super().setUp()
+        self.domain = f'http://{config.http_host}'
         self.website = self.env['website'].create({
             'name': 'test base url',
             'domain': self.domain,

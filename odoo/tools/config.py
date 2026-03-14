@@ -19,6 +19,7 @@ from odoo import release
 from odoo.tools.func import classproperty
 
 from . import appdirs
+from .urls import is_inaddr_any
 
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'],
@@ -1044,6 +1045,15 @@ class configmanager:
                 self.options['admin_passwd'] = updated_hash
             return True
         return False
+
+    @property
+    def http_host(self):
+        if inaddr_any := is_inaddr_any(self['http_interface']):  # 0.0.0.0 / ::
+            if inaddr_any.any4:
+                return 'localhost'
+            import socket  # noqa: PLC0415
+            return socket.gethostbyaddr('::1')
+        return self['http_interface']
 
     @property
     def http_socket_activation(self):

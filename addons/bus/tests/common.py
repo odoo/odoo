@@ -1,13 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
+import inspect
 import json
 import struct
-from threading import Event
 import unittest
+from threading import Event
 from unittest.mock import patch
-import inspect
+from urllib.parse import urlencode, urlsplit, urlunsplit
+
 from werkzeug.exceptions import BadRequest
-import contextlib
 
 try:
     import websocket
@@ -15,10 +17,16 @@ except ImportError:
     websocket = None
 
 from odoo.http import request
-from odoo.tests.common import HOST, release_test_lock, TEST_CURSOR_COOKIE_NAME, Like, _registry_test_lock
 from odoo.tests import HttpCase
+from odoo.tests.common import (
+    TEST_CURSOR_COOKIE_NAME,
+    Like,
+    _registry_test_lock,
+    release_test_lock,
+)
+
+from ..models.bus import channel_with_db, dispatch, hashable
 from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
-from ..models.bus import dispatch, hashable, channel_with_db
 
 
 class WebsocketCase(HttpCase):
@@ -28,8 +36,11 @@ class WebsocketCase(HttpCase):
         if websocket is None:
             cls._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        cls._BASE_WEBSOCKET_URL = f"ws://{HOST}:{cls.http_port()}/websocket"
-        cls._WEBSOCKET_URL = f"{cls._BASE_WEBSOCKET_URL}?version={WebsocketConnectionHandler._VERSION}"
+
+        ws_url = urlsplit(cls.base_url())._replace(scheme='ws', path='/websocket')
+        ws_query = urlencode({'version': WebsocketConnectionHandler._VERSION})
+        cls._BASE_WEBSOCKET_URL = urlunsplit(ws_url)
+        cls._WEBSOCKET_URL = urlunsplit(ws_url._replace(query=ws_query))
         websocket_allowed_patch = patch.object(WebsocketConnectionHandler, "websocket_allowed", return_value=True)
         cls.startClassPatcher(websocket_allowed_patch)
 

@@ -5,9 +5,9 @@ from unittest.mock import patch
 
 import lxml.html
 
+import odoo.tools
 from odoo.http.session import session_store
 from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
-from odoo.tests.common import HOST
 
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_COOKIE
 from odoo.addons.auth_totp.models.totp import TOTP
@@ -516,7 +516,8 @@ class TestAuthTimeoutHttp(HttpCase):
         )
 
         # 5. Assert the expiration date of the cookie
-        expires = datetime.fromtimestamp(self.opener.cookies._cookies[HOST]["/"][TRUSTED_DEVICE_COOKIE].expires)
+        host = odoo.tools.config.http_host
+        expires = datetime.fromtimestamp(self.opener.cookies._cookies[host]["/"][TRUSTED_DEVICE_COOKIE].expires)
         # Expiration date in less than 1 day
         self.assertLessEqual(expires, datetime.now() + timedelta(seconds=group.lock_timeout * 60))
         # Expiration date in more than 1 day - 1 minute

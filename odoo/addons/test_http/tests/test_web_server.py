@@ -1,21 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from os import getenv
+from unittest.mock import patch
+
 from odoo.tests import tagged
+from odoo.tools import config
+
 from . import test_static
-
-
-# Small configuration to run the tests against a web server.
-# WEB_SERVER_URL=http://localhost:80 odoo-bin -i test_http --test-tags webserver
-WEB_SERVER_URL = getenv('WEB_SERVER_URL', 'http://localhost:80')
 
 
 @tagged('webserver', '-standard', '-at_install', 'post_install')
 class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpStaticCache):
     allow_inherited_tests_method = True
+
     @classmethod
-    def base_url(cls):
-        return WEB_SERVER_URL
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.startClassPatcher(patch.dict(config.options, {
+            'proxy_mode': True,
+            'http_port': 80,
+        }))
 
     def assertDownloadGizeh(self, url, x_sendfile=None, assert_filename='gizeh.png'):
         # X-Sendfile and X-Accel-Redirect http response headers should

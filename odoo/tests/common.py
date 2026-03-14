@@ -11,6 +11,7 @@ import concurrent.futures
 import contextlib
 import difflib
 import importlib
+import ipaddress
 import inspect
 import itertools
 import json
@@ -22,6 +23,7 @@ import pprint
 import re
 import shutil
 import signal
+import socket
 import subprocess
 import sys
 import tempfile
@@ -75,6 +77,7 @@ from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logg
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, lower_logging, str2bool
+from odoo.tools.urls import is_inaddr_any
 from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml_utils import _validate_xml
 
@@ -105,9 +108,6 @@ if odoo.cli.COMMAND in ('server', 'start') and not config['test_enable']:
 else:
     _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 
-
-# The odoo library is supposed already configured.
-HOST = '127.0.0.1'
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = api.SUPERUSER_ID
 
@@ -136,6 +136,87 @@ def get_db_name():
     if len(dbnames) > 1:
         sys.exit("-d/--database/db_name has multiple database, please provide a single one")
     return dbnames[0]
+
+
+def is_local_http_host(url: str) -> bool:
+    url = urlsplit(url)
+    if url.scheme == 'file':
+        return True
+    # for when we decide to support unix domain sockets
+    # from urllib.parse import unquote
+    # if url.scheme == 'http+unix':
+    #     return unquote(url.netloc) == config.http_host
+    if url.scheme not in ('http', 'https'):
+        return False
+
+    # Simple case: url.hostname and config.http_host match, so we're
+    # guaranteed to be localhost. When we're not behind a proxy (apache/
+    # nginx) we also check the scheme (odoo-bin doesn't support https)
+    # and port, so we don't connect to another local web server.
+    if not config['proxy_mode']:
+        if url.scheme != 'http':
+            return False
+        if (url.port or 80) != config['http_port']:
+            return False
+    if url.hostname == config.http_host:
+        # For obvious performances reasons, we gotta make sure regular
+        # open_url() with base_url() fall into this case.
+        return True
+
+    # Domain case: there's no proxy (nginx/apache) and http_interface
+    # resolves to specific ip4 or ip6 addresses (not 0.0.0.0/::).
+    # => Resolve both url.hostname and http_interface, see if there is
+    #    at least one IP that matches.
+    #
+    # Proxy/InAddrAny case: there's a proxy (nginx/apache) that likely
+    # is listening on some localhost address, or http_interface resolves
+    # to 0.0.0.0 and/or :: (i.e. it is listening on all interfaces, in
+    # ipv4 or ipv6 or both). There is no standard/portable socket API to
+    # list all the ip4/ip6 adresses of all local interfaces, so we can't
+    # know for sure if url.hostname is gonna loopback or exit the server.
+    # => Resolve both url.hostname and many localhost candidates, see if
+    #    there is at least one IP that matches.
+    # Doesn't work if say both fe80::1 and fe80::2 are localhost, odoo
+    # binds [fe80::1]:8089, nginx binds [fe80::2]:80 and reverse-proxies
+    # to odoo. If we do url_open("http://[fe80::2]:80") but
+    # getaddrinfo(gethostname()) doesn't list fe80::2, then this
+    # algorithm is gonna return False "fe80::2 is not a local http host"
+    # even if it actually is. Solve this by binding the same address in
+    # nginx and odoo, and use it with url_open().
+    # Note: this function should not be subject to false positive: it
+    # never says that an URL is localhost, when it actually is external.
+
+    def getaddrips(host: str, iface: int = 0) -> list[ipaddress.IPAddress]:
+        return [
+            ipaddress.ip_address(ip)
+            for family, *_, (ip, *_)
+            in socket.getaddrinfo(
+                host=host,
+                port=None,
+                family=iface,
+                type=socket.SOCK_STREAM,
+            )
+            if family in (socket.AF_INET, socket.AF_INET6)
+        ]
+
+    url_ips = getaddrips(url.hostname)
+    host_ips = []
+    inaddr_any = is_inaddr_any(config['http_interface'])
+    if not config['proxy_mode'] and not inaddr_any:
+        host_ips.extend(getaddrips(config.http_host))
+    if config['proxy_mode'] or inaddr_any.any4:
+        ip4_lo = ipaddress.IPv4Network('127.0.0.0/8')
+        if any(ip in ip4_lo for ip in url_ips):
+            return True
+        # Additional IPv4 localhost addresses, might not list them all
+        host_ips.extend(getaddrips(socket.gethostbyaddr('127.0.0.1'), socket.AF_INET))
+        host_ips.extend(getaddrips(socket.gethostname(), socket.AF_INET))
+    if config['proxy_mode'] or inaddr_any.any6:
+        # Additional IPv6 localhost addresses, might not list them all
+        host_ips.extend(getaddrips(socket.gethostbyaddr('::1'), socket.AF_INET6))
+        host_ips.extend(getaddrips(socket.gethostname(), socket.AF_INET6))
+
+    return any(ip in host_ips for ip in url_ips)
 
 
 standalone_tests = defaultdict(list)
@@ -362,15 +443,11 @@ class BaseCase(case.TestCase):
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # allow localhost requests
-        # TODO: also check port?
-        url = urlsplit(r.url)
         timeout = kw.get('timeout')
         if timeout and timeout < 10:
-            _logger.getChild('requests').info('request %s with timeout %s increased to 10s during tests', url, timeout)
+            _logger.getChild('requests').info('request %s with timeout %s increased to 10s during tests', r.url, timeout)
             kw['timeout'] = 10
-        if url.hostname in (HOST, 'localhost'):
-            return _super_send(s, r, **kw)
-        if url.scheme == 'file':
+        if is_local_http_host(r.url):
             return _super_send(s, r, **kw)
 
         _logger.getChild('requests').info(
@@ -1510,7 +1587,7 @@ class ChromeBrowser:
             '--disable-default-apps': '',
             '--disable-device-discovery-notifications': '',
             '--no-default-browser-check': '',
-            '--remote-debugging-address': HOST,
+            '--remote-debugging-address': '127.0.0.1' if os.getenv('ODOO_RUNBOT') else 'localhost',
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
             '--no-first-run': '',
@@ -1574,7 +1651,8 @@ class ChromeBrowser:
         ``protocol``
             get the full protocol
         """
-        url = f'http://{HOST}:{self.devtools_port}/json/{command}'.rstrip('/')
+        host = '127.0.0.1' if os.getenv('ODOO_RUNBOT') else 'localhost'
+        url = f'http://{host}:{self.devtools_port}/json/{command}'.rstrip('/')
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
         tries = 0
@@ -1722,7 +1800,10 @@ class ChromeBrowser:
 
     def _handle_request_paused(self, **params):
         url = params['request']['url']
-        if url.startswith(f'http://{HOST}'):
+        host = config.http_host
+        if ':' in host:  # ipv6:
+            host = f'[{host}]'
+        if url.startswith(f'http://{host}'):
             cmd = 'Fetch.continueRequest'
             response = {}
         else:
@@ -2294,11 +2375,10 @@ class HttpCase(TransactionCase):
 
     @classmethod
     def base_url(cls):
-        return f"http://{HOST}:{cls.http_port():d}"
-
-    @classmethod
-    def http_port(cls):
-        return config['http_port']
+        host = config.http_host
+        if ':' in host:  # ipv6
+            host = f'[{host}]'
+        return f"http://{host}:{config['http_port']}"
 
     def setUp(self):
         super().setUp()
@@ -2356,7 +2436,7 @@ class HttpCase(TransactionCase):
             self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = new_key
             if browser:
                 browser.set_cookie(
-                    TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', HOST,
+                    TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', config.http_host,
                 )
             yield
 
@@ -2500,10 +2580,10 @@ class HttpCase(TransactionCase):
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
         self.opener = Opener(self)
-        self.opener.cookies.set("session_id", self.session.sid, domain=HOST)
+        self.opener.cookies.set("session_id", self.session.sid, domain=config.http_host)
         if browser:
             self._logger.info('Setting session cookie in browser')
-            browser.set_cookie('session_id', self.session.sid, '/', HOST)
+            browser.set_cookie('session_id', self.session.sid, '/', config.http_host)
 
         return self.session
 
@@ -2614,7 +2694,7 @@ class HttpCase(TransactionCase):
             browser.screencaster.start()
             if cookies:
                 for name, value in cookies.items():
-                    browser.set_cookie(name, value, '/', HOST)
+                    browser.set_cookie(name, value, '/', config.http_host)
 
             cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING')  # used by dedicated runbot builds
             cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling

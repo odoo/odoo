@@ -6,7 +6,6 @@ from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
 import odoo.http
-from odoo.tests import HOST, HttpCase
 from odoo.tools import DotDict, config, frozendict
 from odoo.tools.urls import urljoin as url_join
 
@@ -15,7 +14,7 @@ from odoo.tools.urls import urljoin as url_join
 def MockRequest(
     env, *, path='/mockrequest', routing=True, multilang=True,
     context=frozendict(), cookies=frozendict(), country_code=None, city_name=None,
-    website=None, remote_addr=HOST, environ_base=None, url_root=None,
+    website=None, remote_addr=None, environ_base=None, url_root=None,
 ):
     """Mock of the ``http.request``.
 
@@ -26,10 +25,15 @@ def MockRequest(
     """
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
     env = env(context=dict(context, lang=lang_code))
-    if HttpCase.http_port():
-        base_url = HttpCase.base_url()
-    else:
-        base_url = f"http://{HOST}:{config['http_port']}"
+
+    if remote_addr is None:
+        remote_addr = config.http_host
+
+    host = config.http_host
+    if ':' in host:  # ipv6
+        host = f'[{host}]'
+    base_url = f"http://{host}:{config['http_port']}"
+
     request = Mock(
         # request
         httprequest=Mock(

@@ -4,6 +4,7 @@ from unittest.mock import patch
 from lxml import html
 
 import odoo.tests
+from odoo.tools import config
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website import Website
@@ -20,8 +21,8 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.env.ref('base.lang_fr').active = False
 
         # ensure that _get_current_website_id will be able to match a website
-        current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
-        self.env["website"].browse(current_website_id).domain = odoo.tests.HOST
+        current_website_id = self.env["website"]._get_current_website_id(config.http_host)
+        self.env["website"].browse(current_website_id).domain = config.http_host
 
         res = self.url_open('/test_website_sitemap')  # any auth='public' route would do
         res.raise_for_status()
@@ -31,8 +32,8 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.env.ref('base.lang_fr').active = False
 
         # ensure that _get_current_website_id will be able to match a website
-        current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
-        self.env["website"].browse(current_website_id).domain = odoo.tests.HOST
+        current_website_id = self.env["website"]._get_current_website_id(config.http_host)
+        self.env["website"].browse(current_website_id).domain = config.http_host
 
         with patch.object(self.env.registry["res.users"], "_mfa_url", return_value="/web/login/totp"):
             res = self.url_open('/web/login', allow_redirects=False, data={
@@ -79,11 +80,11 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")
 
         # Public user.
-        self.opener.cookies.set("session_id", public_session.sid, domain=odoo.tests.common.HOST)
+        self.opener.cookies.set("session_id", public_session.sid, domain=config.http_host)
         result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertFalse(has_branding(result.text), "Should have no branding for public user")
 
         # Back to demo user.
-        self.opener.cookies.set("session_id", demo_session.sid, domain=odoo.tests.common.HOST)
+        self.opener.cookies.set("session_id", demo_session.sid, domain=config.http_host)
         result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")
