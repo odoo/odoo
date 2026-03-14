@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:13+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-12 16:48+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/mail/"
 "fr/>\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -489,13 +489,13 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "(Keep formatting)"
-msgstr ""
+msgstr "(Conserver la mise en forme)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "(Remove formatting)"
-msgstr ""
+msgstr "(Supprimer la mise en forme)"
 
 #. module: mail
 #. odoo-javascript
@@ -668,6 +668,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
 "title=\"to\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"à\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -1232,7 +1234,7 @@ msgstr "Activité"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité exception décoration"
+msgstr "Indicateur d’exception d’activité"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -1885,6 +1887,14 @@ msgid ""
 msgstr ""
 "Êtes-vous sûr de vouloir supprimer \"%s\" ?\n"
 "Cette action est irréversible."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid ""
+"Are you sure you want to remove %(member_name)s from the members of '%"
+"(channel_name)s'?"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
@@ -3406,7 +3416,7 @@ msgstr "Contenus"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Continue with Full Composer?"
-msgstr ""
+msgstr "Continuer avec l'éditeur complet ?"
 
 #. module: mail
 #. odoo-javascript
@@ -4356,7 +4366,6 @@ msgstr "Souhaitez-vous que les participants vous voient pendant la réunion ?"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
 msgid "Do you want to remove \"%(member_name)s\" from this channel?"
 msgstr "Souhaitez-vous supprimer \"%(member_name)s\" de ce canal ?"
@@ -4424,6 +4433,12 @@ msgstr "Document: \""
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Domain"
 msgstr "Domaine"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Don't worry, they can rejoin later or be invited back at any time."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5452,7 +5467,7 @@ msgstr "Forcer une langue"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Forever"
-msgstr ""
+msgstr "Pour toujours"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -5463,7 +5478,7 @@ msgstr "E-mail formaté"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Formatting can only be restored in Full Composer."
-msgstr ""
+msgstr "La mise en forme ne peut être restaurée que dans l'éditeur complet."
 
 #. module: mail
 #. odoo-javascript
@@ -9791,7 +9806,7 @@ msgstr "Sondage clôturé"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/poll.js:0
 msgid "Poll ends on %(date)s"
-msgstr ""
+msgstr "Le sondage se termine le %(date)s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_poll_option
@@ -14162,6 +14177,12 @@ msgid ""
 "All Activities: the synchronization user will count all the activities of "
 "this type, whatever their owner"
 msgstr ""
+"Si ce type d'activité doit être affiché dans l'API KPI Provider.\n"
+"Aucun : ne jamais afficher ce type d'activité.\n"
+"Propres activités : l'utilisateur de synchronisation ne comptera que ses "
+"propres activités de ce type.\n"
+"Toutes les activités : l'utilisateur de synchronisation comptera toutes les "
+"activités de ce type, quel que soit leur propriétaire"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -14743,7 +14764,7 @@ msgstr "par ex \"A demandé à recevoir nos prochaines newsletters\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. \"Discuss proposal\""
-msgstr "par. ex \"Proposition de discussion\""
+msgstr "par ex. \"Discuter de la proposition\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -14805,13 +14826,13 @@ msgstr "Par ex. Contact"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "e.g. Discuss Proposal"
-msgstr "par ex. Proposition de discussion"
+msgstr "par ex. Discuter de la proposition"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr "par ex. Proposition d'examen"
+msgstr "par ex. Discuter de la proposition"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form

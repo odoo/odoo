@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:37+0000\n"
-"PO-Revision-Date: 2026-03-07 12:06+0000\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-13 19:47+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/account_edi_ubl_cii/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -44,11 +44,12 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "%s should have a valid KBO/BCE number in the Company ID field"
 msgstr ""
+"%s debe tener un número KBO o BCE válido en el campo de ID de la empresa"
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "(Des)agrupar líneas por impuesto"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -194,7 +195,7 @@ msgstr "Red de registros mercantiles"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot find the origin file, try by importing it again"
-msgstr ""
+msgstr "No encontramos el archivo de origen, intenta importarlo de nuevo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -572,7 +573,7 @@ msgstr "Alemania (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__zugferd
 msgid "Germany (ZUGFeRD)"
-msgstr ""
+msgstr "Alemania (ZUGFeRD)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0204
@@ -593,7 +594,7 @@ msgstr "Grecia - NIF"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Líneas agrupadas por impuesto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9910
@@ -803,15 +804,6 @@ msgstr "Países Bajos - OIN"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9944
 msgid "Netherlands VAT"
 msgstr "Países Bajos - NIF"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid ""
-"No gross price, net price nor line subtotal amount found for line in xml"
-msgstr ""
-"No se encontró el precio bruto o neto ni el importe subtotal de línea para "
-"la línea en XML"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
@@ -1212,7 +1204,7 @@ msgstr "UBL CII necesita un motivo de exención"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Ungrouped lines from origin file"
-msgstr ""
+msgstr "Líneas desagrupadas del archivo de origen"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1233,7 +1225,7 @@ msgstr "Reino Unido - NIF"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Unknown partner"
-msgstr ""
+msgstr "Contacto desconocido"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1245,7 +1237,7 @@ msgstr "Tipo de archivo incompatible por %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Sin impuestos"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
@@ -2022,13 +2014,15 @@ msgstr "Dirección X.400 para texto de correo"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You can only (un)group lines of a draft invoice"
-msgstr ""
+msgstr "Solo puedes (des)agrupar líneas de una factura en borrador"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You can only (un)group lines of a incoming invoice (vendor bill)"
 msgstr ""
+"Solo puedes (des)agrupar líneas de una factura entrante (factura de "
+"proveedor)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2067,6 +2061,12 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid ""
+#~ "No gross price, net price nor line subtotal amount found for line in xml"
+#~ msgstr ""
+#~ "No se encontró el precio bruto o neto ni el importe subtotal de línea "
+#~ "para la línea en XML"
 
 #~ msgid ""
 #~ "The following bank account numbers got retrieved during the import : %s"
