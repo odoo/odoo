@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-03-07 14:06+0000\n"
+"PO-Revision-Date: 2026-03-11 21:13+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_recruitment_survey/da/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -57,11 +57,41 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej <t t-out=\"object.partner_id.name or 'applicant'\">"
+"[ansøgernavn]</t><br/><br/>\n"
+"        <t>\n"
+"            Du er rykket videre i rekrutteringsprocessen, og vi vil gerne "
+"bede dig om at besvare nogle spørgsmål.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t>\n"
+"                    Start den skriftlige samtale nu\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Besvar venligst interviewet for <t t-out=\"format_date"
+"(object.deadline)\">[dato for deadline]</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t>\n"
+"            Vi ønsker dig held og lykke og takker på forhånd for din "
+"deltagelse.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Gå til Rekruttering"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -69,8 +99,8 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Konsulter</span>\n"
-"                        <span class=\"o_stat_text\">Interview</span>"
+"<span class=\"o_stat_text\">Konsultér</span>\n"
+"                        <span class=\"o_stat_text\">Samtale</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -97,7 +127,7 @@ msgstr "Ansøger"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "Ansøger: samtale"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
@@ -111,13 +141,13 @@ msgid ""
 "Choose an interview form for this job position and you will be able to print/"
 "answer this interview from all applicants who apply for this job"
 msgstr ""
-"Vælg et interview skema for dette stillingsopslag og du kna udksirve/besvare "
-"denne for alle ansøgere til stillingen"
+"Vælg et ansøgningsskema til denne stilling, så du kan udskrive det og "
+"evaluere alle ansøgere, der har søgt stillingen"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
-msgstr "Vis interview skema"
+msgstr "Vis samtaleskema"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
@@ -137,11 +167,12 @@ msgstr "Uddannelse"
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
 msgstr ""
+"Fra hvilket universitet er du dimitteret, eller forventer du at dimittere?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
 msgid "Getting on with colleagues"
-msgstr "Komme overens med kolleger"
+msgstr "Kom godt ud af det med kolleger"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
@@ -156,12 +187,12 @@ msgstr "Få en god løn"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
 msgid "Having a nice office environment"
-msgstr "Have et godt kontor miljø"
+msgstr "Have et godt arbejdsmiljø"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
 msgid "Having freebies such as tea, coffee and stationery"
-msgstr "Få gratis småting så som the, kaffe, kontorartikler"
+msgstr "Få gratis småting som te, kaffe og kontorartikler"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -175,7 +206,7 @@ msgstr "ID"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
 msgid "Important"
-msgstr "Vigtig"
+msgstr "Vigtigt"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
@@ -187,19 +218,19 @@ msgstr "Samtaleskema"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Samtaleskema: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr ""
+msgstr "Samtaleundersøgelse"
 
 #. module: hr_recruitment_survey
 #: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
 #: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
-msgstr ""
+msgstr "Samtaler"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -210,12 +241,12 @@ msgstr "Stilling"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "Knowledge"
-msgstr "Viden"
+msgstr "Vidensdeling"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
 msgid "Management quality"
-msgstr "Ledelses kvalitet"
+msgstr "Lederkvalitet"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
@@ -225,12 +256,12 @@ msgstr "Ikke vigtigt"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
 msgid "Office location"
-msgstr "Kontor lokation"
+msgstr "Arbejdsplads"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "Deltag i samtalen: {{ object.survey_id.display_name }}"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -243,6 +274,8 @@ msgid ""
 "Please answer those questions to help recruitment officers to preprocess "
 "your application."
 msgstr ""
+"Besvar venligst disse spørgsmål, så personaleafdelingen kan vurdere din "
+"ansøgning bedre."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -251,12 +284,15 @@ msgid ""
 "experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"Fortæl os venligst om dig selv: Hvem du er, din uddannelse, erfaring og "
+"aktiviteter\n"
+"    – så vi bedre kan behandle din ansøgning."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr "Venligst angiv navnet på ansøgeren"
+msgstr "Angiv venligst navnet på ansøgeren."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -264,14 +300,15 @@ msgstr "Venligst angiv navnet på ansøgeren"
 msgid ""
 "Please summarize your education history: schools, location, diplomas, ..."
 msgstr ""
-"Beskriv kort din uddannelsesmæssige baggrund: skoler, placering og opnåede "
-"eksamener osv."
+"Beskriv kort din uddannelsesbaggrund, herunder skoler, placeringer og "
+"opnåede eksamener."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
+"Fortæl os lidt om dig selv: Hvilke aktiviteter er de vigtigste for dig ..."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
@@ -281,28 +318,28 @@ msgstr "Ansættelse"
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
 msgid "Recruitment Form"
-msgstr "Rekruteringsskema"
+msgstr "Rekrutteringsformular"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Svar"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr "Vis interview rapport"
+msgstr "Vis samtalerapport"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Send samtale"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send an interview"
-msgstr ""
+msgstr "Send en samtale"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -315,7 +352,7 @@ msgstr "Undersøgelse"
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr "Undersøgelse invitation guide"
+msgstr "Assistent til invitation til undersøgelsen"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
@@ -325,31 +362,31 @@ msgstr "Undersøgelsestype"
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Undersøgelse - bruger-input"
+msgstr "Undersøgelse – brugerinput"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
 msgstr ""
-"Tak for at du besvarede dette spørgeskema. Vi vil vende tilbage til dig "
-"snarest."
+"Tak for, at du har besvaret spørgeskemaet. Vi vender tilbage til dig "
+"hurtigst muligt."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
 msgid "The applicant \"%s\" has finished the survey."
-msgstr ""
+msgstr "Ansøgeren \"%s\" har afsluttet spørgeskemaet."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr ""
+msgstr "Spørgeskeamet %(survey_link)s er blevet sendt til %(partner_link)s"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
 msgid "Very important"
-msgstr "Meget vigtig"
+msgstr "Meget vigtigt"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
@@ -360,21 +397,22 @@ msgstr "Blev du henvist af en medarbejder?"
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
 msgstr ""
+"Hvilke kompetencer mener du er mest relevante for den stilling, du søger?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "Hvad er vigtigt for dig?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "Hvilket land kommer du fra?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
-msgstr "Arbejde med top-moderne teknologi"
+msgstr "Arbejde med topmoderne teknologi"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
@@ -382,6 +420,6 @@ msgid ""
 "You can create surveys used for recruitments. Design easily your interview,\n"
 "                send invitations and analyze answers."
 msgstr ""
-"Du kan oprette undersøgelser til brug ved rekruttering. Design nemt din "
-"jobsamtale,\n"
-"                send invitationer og analysér svarene."
+"Du kan oprette undersøgelser til rekrutteringsformål. Design nemt dine "
+"jobsamtaler,\n"
+"                send invitationer, og analysér svarene."

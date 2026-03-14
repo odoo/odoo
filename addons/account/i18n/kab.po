@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
@@ -7182,6 +7182,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.server,name:account.action_move_export_zip
 msgid "Export ZIP"
 msgstr ""
 
@@ -10975,6 +10976,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Nothing to export."
 msgstr ""
 
 #. module: account
@@ -15945,6 +15952,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
 "There's nothing left to pay for the selected journal items, so no payment "
@@ -18319,6 +18334,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "documents"
 msgstr ""
 
 #. module: account

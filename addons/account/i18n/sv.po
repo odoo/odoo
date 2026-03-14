@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 13:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -7561,6 +7561,7 @@ msgstr "Utgången"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.server,name:account.action_move_export_zip
 msgid "Export ZIP"
 msgstr ""
 
@@ -11523,6 +11524,12 @@ msgstr "Noter"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
 msgstr "Inget att göra"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Nothing to export."
+msgstr ""
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
@@ -16794,6 +16801,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
 "There's nothing left to pay for the selected journal items, so no payment "
@@ -19425,6 +19440,12 @@ msgstr "stäng"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "datum för"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "documents"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

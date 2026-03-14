@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:35+0000\n"
-"PO-Revision-Date: 2026-03-07 14:20+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-11 21:25+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/de/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -4147,7 +4147,7 @@ msgstr "Bank von Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Bankeinstellungen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -7846,6 +7846,7 @@ msgstr "Abgelaufen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.server,name:account.action_move_export_zip
 msgid "Export ZIP"
 msgstr "ZIP exportieren"
 
@@ -11842,6 +11843,12 @@ msgstr "Notizen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
 msgstr "Nichts zu tun"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Nothing to export."
+msgstr ""
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
@@ -16198,6 +16205,9 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Das Bankkonto Ihres Unternehmens ist nicht vertrauenswürdig. Bitten Sie "
+"einen Administrator oder jemanden mit Genehmigungsrechten, dies zu "
+"überprüfen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -16286,6 +16296,11 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Das mit dieser Rechnung verknüpfte Unternehmensbankkonto (%"
+"(account_number)s) ist nicht vertrauenswürdig. Gehen Sie zu den "
+"Bankeinstellungen, überprüfen Sie, ob es sich um Ihr Konto handelt, oder "
+"korrigieren Sie die Nummer und klicken Sie auf „Geld senden“, um es als "
+"vertrauenswürdig zu markieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -17193,6 +17208,14 @@ msgstr ""
 "Beim Versuch, das Banner in die Original-PDF-Datei einzufügen, ist ein "
 "Fehler aufgetreten.\n"
 "Bitte stellen Sie sicher, dass die Quelldatei gültig ist."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19902,6 +19925,12 @@ msgstr "schließen"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "Daten für"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "documents"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

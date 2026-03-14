@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-03-07 14:16+0000\n"
+"PO-Revision-Date: 2026-03-13 09:48+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "project/da/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -540,7 +540,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr "<span class=\"o_stat_text\">Underopgaver</span>"
+msgstr "<span class=\"o_stat_text\">Delopgaver</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -781,8 +781,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Tilføj kolonner for at organisere dine opgaver ind i <b>stadier</b> "
-"<i>f.eks. Ny - Igangværende - Færdig</i>."
+"Tilføj kolonner for at organisere dine opgaver ind i <b>stadier</b> <i>"
+"f.eks. Ny - Igangværende - Færdig</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -843,17 +843,17 @@ msgstr "Aliaskontaktsikkerhed"
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__alias_domain_id
 msgid "Alias Domain"
-msgstr "Alias domæne"
+msgstr "Aliasdomæne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias domænenavn"
+msgstr "Aliasdomænenavn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
 msgid "Alias Email"
-msgstr "Alias e-mail"
+msgstr "E-mailalias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
@@ -864,17 +864,17 @@ msgstr "Alias navn"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
 msgid "Alias Status"
-msgstr "Alias status"
+msgstr "Aliasstatus"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Alias status vurderet ud fra den seneste modtagne besked."
+msgstr "Aliasstatus vurderet ud fra den seneste modtagne besked."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Aliased model"
+msgstr "Aliasmodel"
 
 #. module: project
 #. odoo-python
@@ -2034,7 +2034,7 @@ msgstr "Redigering"
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr "E-mail alias"
+msgstr "E-mailalias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -2045,7 +2045,7 @@ msgstr "Email fra"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "E-mail skabelon"
+msgstr "E-mailskabelon"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2063,7 +2063,7 @@ msgstr "Email cc"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-mail domæne f.eks. 'example.com' i 'odoo@example.com'"
+msgstr "E-maildomæne f.eks. 'example.com' i 'odoo@example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -4534,7 +4534,7 @@ msgstr "Status tid"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Underopgaver"
+msgstr "Delopgaver"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_allocated_hours
@@ -4899,9 +4899,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"Modellen (Odoo Document Kind), som dette alias svarer til. Enhver indgående "
-"e-mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af "
-"en ny rekord af denne model (f.eks. en projektopgave)"
+"Modellen (Odoo-dokumenttype), som dette alias svarer til. Enhver indgående e-"
+"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af et "
+"nyt datasæt af denne model (f.eks. en projektopgave)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name

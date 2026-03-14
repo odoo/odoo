@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-03-07 14:14+0000\n"
+"PO-Revision-Date: 2026-03-13 09:47+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/mail/"
 "da/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -1296,13 +1296,13 @@ msgstr "Aliaskontaktsikkerhed"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Alias Domain"
-msgstr "Alias domæne"
+msgstr "Aliasdomæne"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias domænenavn"
+msgstr "Aliasdomænenavn"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_domain_action
@@ -1315,7 +1315,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
 msgid "Alias Email"
-msgstr "Alias e-mail"
+msgstr "E-mailalias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
@@ -1327,7 +1327,7 @@ msgstr "Alias navn"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr "Alias status"
+msgstr "Aliasstatus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1337,12 +1337,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Alias status vurderet ud fra den seneste modtagne besked."
+msgstr "Aliasstatus vurderet ud fra den seneste modtagne besked."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
 msgid "Aliased Model"
-msgstr "Aliased model"
+msgstr "Aliasmodel"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_action
@@ -1846,7 +1846,7 @@ msgstr "Brødtekst"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr "Kropsindholdet er det samme som skabelonen"
+msgstr "Tekstindholdet er det samme som skabelonen"
 
 #. module: mail
 #. odoo-javascript
@@ -3771,17 +3771,17 @@ msgstr "E-mailadresse"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_email
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_email
 msgid "Email Alias"
-msgstr "E-mail alias"
+msgstr "E-mailalias"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr "E-mail aliaser"
+msgstr "E-mailaliasser"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr "Email kaldenavne Mixin"
+msgstr "E-mailaliasser-mixin"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin_optional
@@ -3853,7 +3853,7 @@ msgstr "E-mail søgning"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__template_id
 msgid "Email Template"
-msgstr "E-mail skabelon"
+msgstr "E-mailskabelon"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_preview
@@ -3933,7 +3933,7 @@ msgstr "Guide til at oprette e-mail"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-mail domæne f.eks. 'example.com' i 'odoo@example.com'"
+msgstr "E-maildomæne f.eks. 'example.com' i 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -10560,9 +10560,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"Modellen (Odoo Document Kind), som dette alias svarer til. Enhver indgående "
-"e-mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af "
-"en ny rekord af denne model (f.eks. en projektopgave)"
+"Modellen (Odoo-dokumenttype), som dette alias svarer til. Enhver indgående e-"
+"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af et "
+"nyt datasæt af denne model (f.eks. en projektopgave)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name

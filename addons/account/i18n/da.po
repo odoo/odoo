@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:35+0000\n"
-"PO-Revision-Date: 2026-03-07 14:20+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-13 09:51+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2544,7 +2544,8 @@ msgstr "Konto brugt til at flytte omkostningsperiode"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr "Konto brugt til at registrere den private del af blandede omkostninger."
+msgstr ""
+"Konto brugt til at registrere den private del af blandede omkostninger."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -3320,8 +3321,8 @@ msgstr ""
 "En konto er en del af finansregnskabet og gør det muligt for din virksomhed\n"
 "                at registrere alle typer debet- og kredittransaktioner.\n"
 "                Virksomheder præsenterer deres årsregnskab i to hoveddele:\n"
-"                statusopgørelse og resultatopgørelse (tab- og vindingskonto)"
-".\n"
+"                statusopgørelse og resultatopgørelse (tab- og "
+"vindingskonto).\n"
 "                Det er lovpligtigt for et selskab\n"
 "                at videregive visse oplysninger."
 
@@ -3407,12 +3408,12 @@ msgstr "Analytiske linjer"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Anvendelsesmuligheder for omkostningsplaner"
+msgstr "Anvendelsesmuligheder for analytiske kontoplaner"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Analytiske planer"
+msgstr "Analytiske kontoplaner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -4351,7 +4352,7 @@ msgstr "Blokeret"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr "Indholdet i brødteksten er det samme som i skabelonen"
+msgstr "Tekstindholdet er det samme som skabelonen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -7780,6 +7781,7 @@ msgstr "Udløbet"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.server,name:account.action_move_export_zip
 msgid "Export ZIP"
 msgstr "Eksportér ZIP"
 
@@ -9064,8 +9066,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"Hvis du sælger varer og tjenesteydelser til kunder i et"
-"                                 EU-land, skal momsen beregnes ud fra "
+"Hvis du sælger varer og tjenesteydelser til kunder i "
+"et                                 EU-land, skal momsen beregnes ud fra "
 "leveringsadressen.                                 Denne regel gælder "
 "uanset, hvor du er bosat."
 
@@ -9197,8 +9199,8 @@ msgstr ""
 "I rapporten '%(report_name)s', i linje '%(line_name)s' med betegnelsen '%"
 "(label)s',\n"
 "er udtrykket i tværrapporten ugyldigt.\n"
-"Forventet format: cross_report(<report_id>|<xml_id>)Eksempel: cross_report"
-"(my_module.my_report) eller cross_report(123)"
+"Forventet format: cross_report(<report_id>|<xml_id>)Eksempel: "
+"cross_report(my_module.my_report) eller cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -11205,7 +11207,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 msgid "Missing foreign currencies on partials having ids: %s"
-msgstr "Manglende angivelse af udenlandsk valuta på delbetalinger med ID’er: %s"
+msgstr ""
+"Manglende angivelse af udenlandsk valuta på delbetalinger med ID’er: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -11754,6 +11757,12 @@ msgid "Nothing to do"
 msgstr "Intet at gøre"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Nothing to export."
+msgstr ""
+
+#. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
 msgid "Notification email for newly received eInvoices"
 msgstr "Notifikationsmail for nyligt oprettede e-fakturaer"
@@ -12157,8 +12166,8 @@ msgid ""
 msgstr ""
 "Valgfrit oversættelsessprog (ISO-kode), der kan vælges ved afsendelse af en "
 "e-mail. Hvis der ikke angives noget, anvendes den engelske udgave. Dette bør "
-"normalt være et pladsholderudtryk, der angiver det passende sprog, f.eks. {{ "
-"object.partner_id.lang }}."
+"normalt være et pladsholderudtryk, der angiver det passende sprog, f.eks. "
+"{{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -16303,7 +16312,8 @@ msgstr "Posteringen er ikke balanceret."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr "Posteringen er sikker med en hash, der ikke kan redigeres eller ændres."
+msgstr ""
+"Posteringen er sikker med en hash, der ikke kan redigeres eller ændres."
 
 #. module: account
 #. odoo-python
@@ -16594,7 +16604,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied to the selected customers/"
 "vendors."
-msgstr "Afstemningsmodellen vil kun blive anvendt på valgte kunder/forhandlere."
+msgstr ""
+"Afstemningsmodellen vil kun blive anvendt på valgte kunder/forhandlere."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -16611,7 +16622,7 @@ msgstr ""
 "        *Indeholder: Kontoudtogslinjen skal indeholde denne streng (store og "
 "små bogstaver ignoreres).\n"
 "        *Indeholder ikke: Negation af \"Indeholder\".\n"
-"        *Match Regex: Angiv dit eget regulære udtryk."
+"        *Match regulært udtryk: Angiv dit eget regulære udtryk."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -16756,8 +16767,8 @@ msgid ""
 "instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
-"Sekvens-regex'en skal som minimum indeholde seq-grupperingsnøglerne. For "
-"eksempel:\n"
+"Sekvensens regulære udtryk skal som minimum indeholde seq-"
+"grupperingsnøglerne. For eksempel:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
@@ -17020,6 +17031,14 @@ msgstr ""
 "Der opstod en fejl, da der blev forsøgt at tilføje et banner til den "
 "oprindelige PDF-fil.\n"
 "Kontrollér venligst, at kildefilen er gyldig."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18331,8 +18350,8 @@ msgstr ""
 "    * Procent: Procentdel af saldoen, mellem 0 og 100.\n"
 "    * Fast: Den faste værdi på afskrivningen. Mængden vil gælde som debet, "
 "hvis den er negativ, og som kredit, hvis den er positiv.\n"
-"    * Fra Mærkat: Der er ikke behov for en regexdelimiter, kun regex'en er "
-"nødvendig. For eksempel, hvis du vil udtrække mængden fra\n"
+"    * Fra Mærkat: Der er ikke behov for en regexdelimiter, kun det regulære "
+"udtryk er nødvendigt. For eksempel, hvis du vil udtrække mængden fra\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "Kan du indtaste\n"
 "BRT: ([\\d,]+)"
@@ -18774,7 +18793,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You can unsubscribe from emails received upon invoice reception here."
-msgstr "Her kan du afmelde de e-mails, du modtager i forbindelse med fakturaer."
+msgstr ""
+"Her kan du afmelde de e-mails, du modtager i forbindelse med fakturaer."
 
 #. module: account
 #. odoo-python
@@ -19077,7 +19097,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr "Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
+msgstr ""
+"Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
 
 #. module: account
 #. odoo-python
@@ -19670,6 +19691,12 @@ msgstr "luk"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "datoer for"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "documents"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
