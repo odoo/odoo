@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_doc_ingest_job_list" model="ir.ui.view">
+        <field name="name">gov.processo.doc.ingest.job.list</field>
+        <field name="model">gov.processo.doc.ingest.job</field>
+        <field name="arch" type="xml">
+            <list string="Jobs de Conversão de Upload" create="false" delete="false">
+                <field name="name"/>
+                <field name="processo_id"/>
+                <field name="doc_id"/>
+                <field name="target_format"/>
+                <field name="source_input_format" optional="show"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'pending'"
+                    decoration-info="state == 'running'"
+                    decoration-danger="state == 'error'"
+                />
+                <field name="parser_used" optional="show"/>
+                <field name="applied_version_number" optional="show"/>
+                <field name="requested_by" optional="show"/>
+                <field name="create_date" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_doc_ingest_job_form" model="ir.ui.view">
+        <field name="name">gov.processo.doc.ingest.job.form</field>
+        <field name="model">gov.processo.doc.ingest.job</field>
+        <field name="arch" type="xml">
+            <form string="Job de Conversão de Upload">
+                <header>
+                    <button
+                        name="action_process_now"
+                        string="Processar Agora"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state not in ('pending', 'error')"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="pending,running,done,error"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Identificação">
+                            <field name="name" readonly="1"/>
+                            <field name="processo_id" readonly="1"/>
+                            <field name="doc_id" readonly="1"/>
+                            <field name="requested_by" readonly="1"/>
+                            <field name="apply_to_document" readonly="1"/>
+                        </group>
+                        <group string="Conversão">
+                            <field name="source_filename" readonly="1"/>
+                            <field name="source_input_format" readonly="1"/>
+                            <field name="target_format" readonly="1"/>
+                            <field name="parser_used" readonly="1"/>
+                            <field name="applied_version_number" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Controle">
+                            <field name="started_at" readonly="1"/>
+                            <field name="finished_at" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Erro" invisible="not error_message">
+                        <field name="error_message" nolabel="1" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Payload">
+                            <field name="payload_json" widget="ace" options="{'mode': 'json'}" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Saída Normalizada">
+                            <field name="normalized_source" widget="ace" options="{'mode': 'text'}" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Fonte Extraída">
+                            <field name="native_source_text" widget="ace" options="{'mode': 'text'}" nolabel="1" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

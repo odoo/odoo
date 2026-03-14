@@ -1,5 +1,5 @@
 {
-    "name": "GRP - IA Machine Learning",
+    "name": "AGI Gov - IA Machine Learning",
     "version": "19.0.1.0.0",
     "category": "Government",
     "summary": "Camada de ML para recuperação híbrida e feedback de geração IA",
@@ -13,8 +13,7 @@
     ],
     "installable": True,
     "application": False,
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
 }
-
 

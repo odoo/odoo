@@ -118,6 +118,7 @@
                         <group string="Controle">
                             <field name="version"/>
                             <field name="ai_generated" widget="boolean_toggle"/>
+                            <field name="xlsx_profile"/>
                             <field name="timbre_id" help="Se vazio, usa o timbre padrão da UG."/>
                             <field name="ai_provider_used" readonly="1" invisible="not ai_provider_used"/>
                             <field name="ai_model_used" readonly="1" invisible="not ai_model_used"/>
@@ -220,11 +221,18 @@
                             <div class="alert alert-info mb-2" role="alert">
                                 A etapa de DFD registra necessidade e quantitativos. Valores podem ficar para a pesquisa de preços.
                                 O worker XLSX utiliza as variáveis estruturadas do processo para gerar a planilha final com fórmulas dinâmicas.
+                                Perfil aplicado: <field name="xlsx_profile" nolabel="1"/>.
                             </div>
                             <div class="mb-2 d-flex gap-2">
                                 <button
                                     name="action_open_process_planilha_items"
                                     string="Abrir Itens Estruturados"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <button
+                                    name="action_open_process_planilha_lots"
+                                    string="Abrir Lotes / Cronograma"
                                     type="object"
                                     class="btn-secondary"
                                 />
@@ -328,6 +336,43 @@
                             </field>
                         </page>
 
+                        <page string="Fonte Typst">
+                            <div class="alert alert-info mb-2" role="alert">
+                                Edite o código Typst aqui quando o modelo usar esse motor. O PDF será gerado via binário <code>typst</code>.
+                            </div>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_gerar_com_ia"
+                                    string="Gerar Conteúdo"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_gerar_pdf"
+                                    string="📄 Gerar PDF"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_apply_template_latex"
+                                    string="🧩 Aplicar Modelo"
+                                    type="object"
+                                    class="btn-secondary"
+                                    invisible="state == 'assinado'"
+                                />
+                            </div>
+                            <field
+                                name="typst_source"
+                                widget="ace"
+                                options="{'mode': 'text'}"
+                                readonly="state == 'assinado'"
+                                nolabel="1"
+                                style="min-height: 320px; font-family: monospace;"
+                            />
+                        </page>
+
                         <page string="Fonte LaTeX">
                             <div class="alert alert-info mb-2" role="alert">
                                 Cole ou edite o código LaTeX aqui, ou aplique o modelo dinâmico a partir das variáveis sincronizadas.
@@ -410,13 +455,14 @@
 
                             <div invisible="pdf_file" class="alert alert-info mt-3" role="alert">
                                 Nenhum PDF gerado ainda. Use o botão
-                                <strong>📄 Gerar PDF</strong> na aba LaTeX ou HTML.
+                                <strong>📄 Gerar PDF</strong> na aba Typst, LaTeX ou HTML.
                             </div>
                         </page>
 
                         <page string="Upload Externo">
                             <div class="alert alert-info" role="alert">
-                                Use esta aba para anexar um documento externo (PDF escaneado, DOCX recebido). O arquivo substitui o PDF gerado internamente para fins de assinatura e arquivamento.
+                                Use esta aba para anexar um documento externo e convertê-lo com o worker documental.
+                                Formatos esperados: PDF, LaTeX, Typst, Markdown, CSV, XLSX/XLS e texto.
                             </div>
                             <group>
                                 <field
@@ -426,11 +472,48 @@
                                 />
                                 <field name="upload_externo_filename" invisible="1"/>
                                 <field name="upload_externo_tipo"/>
+                                <field name="ingest_target_format"/>
                                 <field
                                     name="timbre_id"
                                     help="Timbre para geração do PDF. Vazio = timbre padrão da UG."
                                 />
                             </group>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_enqueue_ingest_worker"
+                                    string="Converter Upload"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_open_ingest_jobs"
+                                    string="Jobs de Conversão"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <group>
+                                <field name="ingest_job_count" readonly="1"/>
+                            </group>
+                            <field name="ingest_job_ids" readonly="1" nolabel="1">
+                                <list create="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="target_format"/>
+                                    <field name="source_input_format" optional="show"/>
+                                    <field
+                                        name="state"
+                                        widget="badge"
+                                        decoration-success="state == 'done'"
+                                        decoration-warning="state == 'pending'"
+                                        decoration-info="state == 'running'"
+                                        decoration-danger="state == 'error'"
+                                    />
+                                    <field name="parser_used" optional="show"/>
+                                    <field name="applied_version_number" optional="show"/>
+                                    <field name="finished_at" optional="show"/>
+                                </list>
+                            </field>
                         </page>
 
                         <page string="Versões">

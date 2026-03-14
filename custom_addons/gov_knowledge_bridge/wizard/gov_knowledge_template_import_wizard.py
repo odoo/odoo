@@ -45,10 +45,7 @@ class GovKnowledgeTemplateImportWizard(models.TransientModel):
     )
     fase = fields.Integer(string="Fase", default=0, required=True)
     output_format = fields.Selection(
-        [
-            ("latex", "LaTeX → PDF"),
-            ("html", "HTML"),
-        ],
+        selection=lambda self: GovTemplateService.get_target_format_selection(),
         string="Saída",
         default="latex",
         required=True,
@@ -74,29 +71,30 @@ class GovKnowledgeTemplateImportWizard(models.TransientModel):
 
     def _get_template_source(self):
         self.ensure_one()
-        if self.output_format != "latex":
-            raise UserError("A importação via Knowledge está habilitada apenas para modelos LaTeX.")
-
         if self.source_mode == "page_content":
-            latex = GovTemplateService.latex_from_page_content(
+            payload = GovTemplateService.extract_template_source_from_page_content(
                 self.article_id.content,
                 title=self.article_id.name,
+                target_format=self.output_format,
             )
-            if not latex:
+            if not payload["normalized_source"]:
                 raise UserError("O artigo Knowledge não possui conteúdo suficiente para gerar um modelo.")
-            return latex, "knowledge_page"
+            return payload
 
         if not self.upload_file:
             raise UserError("Envie um arquivo para importar o modelo.")
-        return GovTemplateService.extract_latex_from_upload(
+        return GovTemplateService.extract_template_source_from_upload(
             self.env,
             self.upload_file,
             self.upload_filename,
+            target_format=self.output_format,
         )
 
     def action_import(self):
         self.ensure_one()
-        template_source, parser_used = self._get_template_source()
+        source_payload = self._get_template_source()
+        template_source = source_payload.get("normalized_source") or ""
+        parser_used = source_payload.get("parser_used")
         parameter_spec = (self.parameter_spec_json or "").strip()
         if not parameter_spec:
             parameter_spec = GovTemplateService.build_inferred_parameter_spec(
@@ -114,13 +112,17 @@ class GovKnowledgeTemplateImportWizard(models.TransientModel):
             "fase": self.fase,
             "output_format": self.output_format,
             "source_document": self.source_document or self.upload_filename or self.article_id.name,
+            "source_filename": source_payload.get("source_filename") or self.upload_filename or self.article_id.name,
+            "source_input_format": source_payload.get("native_format") or "unknown",
+            "source_native_text": source_payload.get("native_source_text") or "",
             "versao_normativa": self.versao_normativa,
             "guidance_text": self.guidance_text,
             "parameter_spec_json": parameter_spec,
             "option_catalog_json": self.option_catalog_json,
             "prompt_system": self.prompt_system,
             "prompt_user_tpl": self.prompt_user_tpl,
-            "latex_template": template_source,
+            "latex_template": source_payload.get("latex_source") or "",
+            "typst_template": source_payload.get("typst_source") or "",
             "active": True,
         }
         if parser_used:

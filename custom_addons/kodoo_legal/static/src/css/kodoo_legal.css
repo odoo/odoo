@@ -1,0 +1,238 @@
+:root {
+    --kodoo-ink: #14212b;
+    --kodoo-muted: #5c6d78;
+    --kodoo-surface: rgba(255, 251, 244, 0.88);
+    --kodoo-surface-strong: #fffaf0;
+    --kodoo-border: rgba(20, 33, 43, 0.12);
+    --kodoo-primary: #0f766e;
+    --kodoo-primary-deep: #0b5f58;
+    --kodoo-accent: #d97706;
+    --kodoo-shadow: 0 22px 58px rgba(20, 33, 43, 0.16);
+    --kodoo-radius-xl: 28px;
+    --kodoo-radius-lg: 18px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: "Sora", "Segoe UI", "Helvetica Neue", sans-serif;
+    color: var(--kodoo-ink);
+    background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(217, 119, 6, 0.16), transparent 24%),
+        linear-gradient(180deg, #fbf6ed 0%, #f4ede2 52%, #efe6d9 100%);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(20, 33, 43, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 33, 43, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    z-index: 0;
+}
+
+a {
+    color: inherit;
+}
+
+.kodoo-legal-page {
+    position: relative;
+    z-index: 1;
+}
+
+.legal-shell {
+    width: min(1120px, calc(100vw - 32px));
+    margin: 0 auto;
+    padding: 40px 0 56px;
+}
+
+.legal-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 32px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--kodoo-radius-xl);
+    background: linear-gradient(135deg, #0f766e 0%, #0b5f58 48%, #10263b 100%);
+    color: #f4fffd;
+    box-shadow: var(--kodoo-shadow);
+}
+
+.legal-hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -10% -35% 52%;
+    height: 220px;
+    background: radial-gradient(circle, rgba(217, 119, 6, 0.36) 0%, transparent 62%);
+    pointer-events: none;
+}
+
+.legal-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.legal-title {
+    margin: 18px 0 10px;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+}
+
+.legal-summary {
+    max-width: 760px;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(244, 255, 253, 0.88);
+}
+
+.legal-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.legal-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #ebfffb;
+    font-size: 13px;
+}
+
+.legal-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.legal-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--kodoo-border);
+    background: rgba(255, 255, 255, 0.62);
+    color: var(--kodoo-muted);
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.legal-nav-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(20, 33, 43, 0.1);
+    border-color: rgba(15, 118, 110, 0.28);
+}
+
+.legal-nav-link.is-active {
+    background: linear-gradient(135deg, #fffdf8 0%, #f7efe3 100%);
+    color: var(--kodoo-primary-deep);
+    border-color: rgba(15, 118, 110, 0.32);
+}
+
+.legal-card {
+    padding: 28px;
+    border: 1px solid var(--kodoo-border);
+    border-radius: var(--kodoo-radius-xl);
+    background: linear-gradient(180deg, var(--kodoo-surface) 0%, var(--kodoo-surface-strong) 100%);
+    box-shadow: var(--kodoo-shadow);
+    backdrop-filter: blur(14px);
+}
+
+.legal-notice {
+    margin-bottom: 24px;
+    padding: 16px 18px;
+    border: 1px solid rgba(15, 118, 110, 0.18);
+    border-radius: var(--kodoo-radius-lg);
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(255, 255, 255, 0.66));
+    color: var(--kodoo-muted);
+    line-height: 1.7;
+}
+
+.legal-section + .legal-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(20, 33, 43, 0.08);
+}
+
+.legal-section h2 {
+    margin: 0 0 12px;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+}
+
+.legal-section p,
+.legal-section li {
+    margin: 0;
+    color: var(--kodoo-muted);
+    line-height: 1.78;
+    font-size: 0.98rem;
+}
+
+.legal-section p + p {
+    margin-top: 12px;
+}
+
+.legal-list {
+    margin: 14px 0 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 10px;
+}
+
+.legal-footer {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(20, 33, 43, 0.08);
+    color: var(--kodoo-muted);
+    line-height: 1.7;
+}
+
+.legal-footer a {
+    color: var(--kodoo-primary-deep);
+    font-weight: 700;
+}
+
+@media (max-width: 720px) {
+    .legal-shell {
+        width: min(100vw - 20px, 1120px);
+        padding: 20px 0 36px;
+    }
+
+    .legal-hero,
+    .legal-card {
+        padding: 22px;
+        border-radius: 22px;
+    }
+
+    .legal-summary {
+        font-size: 1rem;
+    }
+}

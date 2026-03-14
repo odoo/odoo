@@ -1,8 +1,8 @@
 {
-    "name": "GRP - Pagamento",
+    "name": "AGI Gov - Pagamento",
     "version": "19.0.2.0.0",
     "summary": "Programacao de Desembolso e Ordem de Pagamento",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "category": "Government",
     "depends": ["gov_base", "gov_processos", "gov_empenho", "gov_liquidacao", "account"],
@@ -18,4 +18,3 @@
     "installable": True,
     "application": False,
 }
-

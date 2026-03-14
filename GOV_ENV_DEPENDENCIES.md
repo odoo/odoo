@@ -14,12 +14,19 @@ Command:
 pip install -r requirements.txt -r requirements-gov-general.txt
 ```
 
+Notes:
+
+- `requirements-gov-general.txt` is the full host bundle.
+- `requirements-gov-runtime.txt` contains only the document/runtime extras.
+- `requirements-gov-ai.txt` contains the heavyweight AI/embedding extras.
+
 ## 2) System binaries (required in host OS)
 
-### PDF and LaTeX
+### PDF, LaTeX and Typst
 
 - `wkhtmltopdf` (HTML -> PDF fallback)
 - `pdflatex` (LaTeX -> PDF primary)
+- `typst` (optional PDF engine for Typst templates, when available in the target distro)
 - TeX packages commonly required by GOV templates:
   - `texlive-latex-base`
   - `texlive-latex-recommended`
@@ -27,6 +34,11 @@ pip install -r requirements.txt -r requirements-gov-general.txt
   - `texlive-fonts-recommended`
   - `texlive-lang-portuguese`
   - `lmodern`
+
+### Document conversion and file detection
+
+- `pandoc` (recommended for Markdown and text conversion pipelines)
+- `libmagic1` (recommended for MIME/file-type detection used by Python tooling)
 
 ### OCR stack (recommended for scanned documents)
 
@@ -44,9 +56,12 @@ sudo apt-get install -y \
   wkhtmltopdf \
   texlive-latex-base texlive-latex-recommended texlive-latex-extra \
   texlive-fonts-recommended texlive-lang-portuguese lmodern \
+  pandoc libmagic1 \
   tesseract-ocr tesseract-ocr-por \
   ocrmypdf ghostscript poppler-utils
 ```
+
+If your distro provides `typst`, add it as well.
 
 ## 4) Windows host example (Chocolatey)
 
@@ -78,14 +93,38 @@ Lexoid parser params (optional):
 
 ## 7) Docker environment (this repository)
 
-The Docker setup includes a custom Odoo image with GOV system dependencies:
+The repository now separates the images clearly:
 
-- Dockerfile: `docker/odoo/Dockerfile`
-- Compose service: `docker-compose.yml` (`odoo` service uses `build`)
+- Base image: `docker/odoo/Dockerfile`
+- AGI Gov runtime image: `docker/odoo/Dockerfile.gov`
+- Default stack: `docker-compose.yml` uses the AGI Gov runtime image
+- Plain Odoo override: `docker-compose.base.yml`
+- The default AGI Gov image installs only runtime/document extras; AI extras are opt-in.
 
-Build and start:
+Build and start with AGI Gov runtime:
 
 ```bash
 docker compose build odoo
 docker compose up -d
+```
+
+Build and start without AGI Gov runtime extras:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.base.yml build odoo
+docker compose -f docker-compose.yml -f docker-compose.base.yml up -d
+```
+
+Optional extra packages for the AGI Gov image can be injected at build time:
+
+```bash
+AGI_GOV_EXTRA_APT_PACKAGES="typst" \
+AGI_GOV_EXTRA_PIP_PACKAGES="" \
+docker compose build odoo
+```
+
+If you also want the heavyweight AI/embedding stack inside the AGI Gov container:
+
+```bash
+AGI_GOV_INSTALL_AI_EXTRAS=1 docker compose build odoo
 ```

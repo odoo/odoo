@@ -169,6 +169,9 @@
                         <button class="oe_stat_button" name="action_open_planilha_items" type="object" icon="fa-table">
                             <field name="planilha_item_count" widget="statinfo" string="Itens XLSX"/>
                         </button>
+                        <button class="oe_stat_button" name="action_open_planilha_lots" type="object" icon="fa-calendar">
+                            <field name="planilha_lot_count" widget="statinfo" string="Lotes XLSX"/>
+                        </button>
                     </div>
 
                     <div class="o_field_widget mb-3">
@@ -200,6 +203,7 @@
                             <field name="origin_type"/>
                             <field name="process_type"/>
                             <field name="process_scope"/>
+                            <field name="xlsx_profile"/>
                             <field name="retroativo" widget="boolean_toggle"/>
                         </group>
                         <group>
@@ -251,6 +255,7 @@
                             <div class="alert alert-info mb-3" role="alert">
                                 Preencha os itens da futura planilha em formato amigavel. O sistema sincroniza
                                 automaticamente os datasets JSON usados pelo worker XLSX.
+                                Perfil atual: <field name="xlsx_profile" nolabel="1"/>.
                             </div>
                             <div class="mb-3 d-flex gap-2">
                                 <button
@@ -280,6 +285,47 @@
                                     <field name="annual_quantity"/>
                                     <field name="unit_price"/>
                                     <field name="annual_total" optional="show"/>
+                                    <field
+                                        name="status"
+                                        widget="badge"
+                                        decoration-success="status == 'aberta'"
+                                        decoration-warning="status == 'pendente'"
+                                        decoration-danger="status == 'fechada'"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="planilha_lotes_xlsx" string="Lotes e Cronograma XLSX">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Os lotes sao derivados automaticamente a partir dos itens. Aqui o usuario pode
+                                ajustar descricao, classe ABC e cronograma mensal sem precisar editar JSON.
+                            </div>
+                            <div class="mb-3 d-flex gap-2">
+                                <button
+                                    name="action_open_planilha_lots"
+                                    string="Abrir Lista Completa"
+                                    type="object"
+                                    class="btn-primary"
+                                />
+                                <button
+                                    name="action_sync_planilha_structured_parameters"
+                                    string="Regerar Lotes a partir dos Itens"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field name="planilha_lot_ids" nolabel="1">
+                                <list create="false" delete="false">
+                                    <field name="lot_code"/>
+                                    <field name="phase"/>
+                                    <field name="description_effective"/>
+                                    <field name="class_abc_effective"/>
+                                    <field name="item_count"/>
+                                    <field name="expected_value"/>
+                                    <field name="jan" optional="show"/>
+                                    <field name="abr" optional="show"/>
+                                    <field name="jul" optional="show"/>
+                                    <field name="out" optional="show"/>
                                     <field
                                         name="status"
                                         widget="badge"

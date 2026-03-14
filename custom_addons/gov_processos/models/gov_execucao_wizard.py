@@ -375,7 +375,7 @@ R\$ {total_dot:,.2f} & R\$ {total_emp:,.2f} & R\$ {total_liq:,.2f} & R\$ {total_
 {bloco_rodape}
 \begin{{center}}
   \small\color{{gray}}
-  Gerado em \today\ pelo Sistema GRP - Dados sujeitos a conferencia com documentos originais.
+  Gerado em \today\ pelo Sistema AGI Gov - Dados sujeitos a conferencia com documentos originais.
 \end{{center}}
 
 \end{{document}}

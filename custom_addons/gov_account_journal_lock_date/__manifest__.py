@@ -1,10 +1,10 @@
 {
-    "name": "GRP - Accounting Journal Lock Date (Community)",
+    "name": "AGI Gov - Accounting Journal Lock Date (Community)",
     "version": "19.0.1.0.0",
     "summary": "Per-journal lock dates for controlled period close",
     "description": "Community-style journal lock date controls aligned to GOV suite.",
     "category": "Accounting/Accounting",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "depends": [
         "account",
@@ -19,4 +19,3 @@
     "installable": True,
     "application": False,
 }
-

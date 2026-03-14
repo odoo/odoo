@@ -89,11 +89,15 @@
 
                         <group string="Preview do Conteúdo Gerado">
                             <field name="resultado_e_latex" invisible="1"/>
+                            <field name="resultado_formato" invisible="1"/>
                             <field name="resultado_estado" readonly="1"/>
+                            <div invisible="resultado_formato != 'typst'" class="alert alert-secondary" role="alert">
+                                Conteúdo em formato <strong>Typst</strong>. Aceitar salvará na aba "Fonte Typst".
+                            </div>
                             <div invisible="not resultado_e_latex" class="alert alert-secondary" role="alert">
                                 Conteúdo em formato <strong>LaTeX</strong>. Aceitar salvará na aba "Fonte LaTeX".
                             </div>
-                            <div invisible="resultado_e_latex" class="alert alert-secondary" role="alert">
+                            <div invisible="resultado_e_latex or resultado_formato == 'typst'" class="alert alert-secondary" role="alert">
                                 Conteúdo em formato <strong>HTML</strong>. Aceitar salvará na aba "Conteúdo (HTML)".
                             </div>
                             <field
@@ -135,7 +139,7 @@
                         string="Aceitar e Compilar PDF"
                         type="object"
                         class="btn-primary"
-                        invisible="step != 'result' or not resultado_e_latex"
+                        invisible="step != 'result' or resultado_formato == 'html'"
                     />
                     <button
                         name="action_rejeitar"

@@ -22,6 +22,24 @@ class GovProcessoKnowledgeBridge(models.Model):
         compute="_compute_knowledge_article_count",
     )
 
+    def _auto_init(self):
+        self.env.cr.execute(
+            """
+            CREATE TABLE IF NOT EXISTS gov_processo_knowledge_article_rel (
+                processo_id integer NOT NULL,
+                article_id integer NOT NULL
+            )
+            """
+        )
+        result = super()._auto_init()
+        self.env.cr.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS gov_processo_knowledge_article_rel_uniq
+                ON gov_processo_knowledge_article_rel (processo_id, article_id)
+            """
+        )
+        return result
+
     def _compute_knowledge_article_count(self):
         for rec in self:
             rec.knowledge_article_count = len(rec.knowledge_article_ids)

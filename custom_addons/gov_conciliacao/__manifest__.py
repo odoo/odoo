@@ -1,8 +1,8 @@
 {
-    "name": "GRP - Conciliacao Bancaria",
+    "name": "AGI Gov - Conciliacao Bancaria",
     "version": "19.0.1.0.0",
     "summary": "Importacao de extratos, conciliacao e pendencias bancarias",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "category": "Government",
     "depends": [
@@ -23,4 +23,3 @@
     "installable": True,
     "application": False,
 }
-

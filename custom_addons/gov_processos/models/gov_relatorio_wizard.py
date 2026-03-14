@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 
 class GovRelatorioWizard(models.TransientModel):
     _name = "gov.relatorio.wizard"
-    _description = "Wizard de Relatorio Executivo GRP"
+    _description = "Wizard de Relatorio Executivo AGI Gov"
 
     titulo = fields.Char(
         string="Titulo do Relatorio",
@@ -323,7 +323,7 @@ class GovRelatorioWizard(models.TransientModel):
                 r"\vspace{1cm}",
                 r"\begin{center}",
                 r"\small\color{gray}",
-                r"Relatorio gerado automaticamente pelo Sistema GRP \\",
+                r"Relatorio gerado automaticamente pelo Sistema AGI Gov \\",
                 f"{orgao_nome} --- Exercicio {self.exercicio} --- {data_ref}",
                 r"\end{center}",
                 r"\end{document}",

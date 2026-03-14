@@ -1,9 +1,9 @@
 {
-    "name": "GRP - GOV Suite (Full)",
+    "name": "Administração Governamental Integrada - AGI Gov",
     "version": "19.0.1.0.0",
-    "summary": "Instalacao completa da suite GOV com processos, execucao e camada contabil",
+    "summary": "Suíte completa AGI Gov com processos, compras, execução e integração de conhecimento",
     "category": "Government",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "depends": [
         "gov_base",

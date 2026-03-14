@@ -40,3 +40,8 @@ DOC_TYPE_SELECTION = [
     ("prestacao", "Prestação de Contas"),
     ("outro", "Outro"),
 ]
+
+XLSX_PROFILE_SELECTION = [
+    ("procurement_reference", "Compras / Pesquisa de Preços"),
+    ("service_continuous_labor", "Serviços Continuados com Mão de Obra"),
+]

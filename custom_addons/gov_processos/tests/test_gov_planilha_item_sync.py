@@ -65,7 +65,8 @@ class TestGovPlanilhaItemSync(TransactionCase):
         self.assertEqual(len(payload["items"]), 1)
         self.assertEqual(payload["items"][0]["annual_quantity"], 60.0)
         self.assertEqual(payload["lots"][0]["lot_code"], "2")
-        self.assertEqual(payload["schedule"][0]["jun"], "OF 45-60 d")
+        self.assertEqual(payload["schedule"][0]["jan"], "OF 30-45 d")
+        self.assertEqual(payload["schedule"][0]["dez"], "OF 30 d")
 
     def test_closed_phase_item_cannot_be_edited(self):
         item = self.env["gov.processo.planilha.item"].create(

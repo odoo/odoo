@@ -115,8 +115,8 @@ class TestGovXlsxWorker(TransactionCase):
 
         item_formulas = self._get_sheet_formulas(workbook_binary, "xl/worksheets/sheet1.xml")
         lot_formulas = self._get_sheet_formulas(workbook_binary, "xl/worksheets/sheet2.xml")
-        self.assertIn("F5*H5", item_formulas)
-        self.assertTrue(any("SUMIF" in formula for formula in item_formulas))
+        self.assertIn("F9*H9", item_formulas)
+        self.assertTrue(any("SUM(J9:J10)" in formula for formula in item_formulas))
         self.assertTrue(any("COUNTIF" in formula for formula in lot_formulas))
 
     def test_worker_accepts_lot_only_payload_with_synthetic_items(self):

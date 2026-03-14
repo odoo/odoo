@@ -49,6 +49,15 @@ class GovAiGenerateWizard(models.TransientModel):
         help="Conteúdo LaTeX ou HTML gerado pela IA.",
     )
     resultado_e_latex = fields.Boolean(default=False)
+    resultado_formato = fields.Selection(
+        [
+            ("latex", "LaTeX"),
+            ("typst", "Typst"),
+            ("html", "HTML"),
+        ],
+        string="Formato do Resultado",
+        default="html",
+    )
     resultado_score = fields.Integer(
         string="Score de Conformidade",
         default=0,
@@ -109,6 +118,9 @@ class GovAiGenerateWizard(models.TransientModel):
                 "step": "result",
                 "resultado_conteudo": resultado.get("conteudo") or "",
                 "resultado_e_latex": bool(resultado.get("e_latex")),
+                "resultado_formato": resultado.get("output_format") or (
+                    "latex" if resultado.get("e_latex") else "html"
+                ),
                 "resultado_score": int(resultado.get("score", 0) or 0),
                 "resultado_itens": "\n".join(resultado.get("itens_conformidade") or [])
                 or "Nenhum problema identificado.",
@@ -139,7 +151,11 @@ class GovAiGenerateWizard(models.TransientModel):
             raise UserError("Não há conteúdo gerado para aceitar.")
 
         vals = {"ai_generated": True}
-        if self.resultado_e_latex:
+        if self.resultado_formato == "typst":
+            vals["typst_source"] = self.resultado_conteudo
+            vals["latex_source"] = False
+            vals["content_html"] = False
+        elif self.resultado_e_latex or self.resultado_formato == "latex":
             vals["latex_source"] = self.resultado_conteudo
         else:
             vals["content_html"] = self.resultado_conteudo
@@ -196,6 +212,7 @@ class GovAiGenerateWizard(models.TransientModel):
                 "step": "input",
                 "resultado_conteudo": False,
                 "resultado_e_latex": False,
+                "resultado_formato": "html",
                 "resultado_score": 0,
                 "resultado_itens": False,
                 "resultado_passagens": False,
@@ -215,6 +232,6 @@ class GovAiGenerateWizard(models.TransientModel):
         """Aceita e, quando LaTeX, compila PDF automaticamente."""
         self.ensure_one()
         self.action_aceitar()
-        if self.resultado_e_latex and self.doc_id:
+        if self.resultado_formato in {"latex", "typst"} and self.doc_id:
             self.doc_id.action_gerar_pdf()
         return {"type": "ir.actions.act_window_close"}

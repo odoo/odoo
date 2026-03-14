@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class GovDashboard(models.AbstractModel):
     _name = "gov.dashboard"
-    _description = "Painel Executivo GRP"
+    _description = "Painel Executivo AGI Gov"
 
     ug_id = fields.Many2one("res.company", string="UG", readonly=True)
 
@@ -43,7 +43,7 @@ class GovDashboard(models.AbstractModel):
     @api.model
     def get_dashboard_data(self, ug_id=None):
         """
-        Retorna KPIs executivos do GRP por UG.
+        Retorna KPIs executivos do AGI Gov por UG.
         Se ug_id for None, consolida todas as UGs visíveis do usuário.
         """
         try:

@@ -333,7 +333,7 @@ class GovHtmlPdfService:
         footer_html = f"""
 <html><body style="margin:0; padding:2px 20px; border-top:2px solid #{cor2}; font-size:10px; color:#555;">
   {rodape_tag}
-  <span>Gerado pelo Sistema GRP</span>
+  <span>Gerado pelo Sistema AGI Gov</span>
   <span style="float:right;">Pagina <span class="page"></span> de <span class="topage"></span></span>
 </body></html>
 """

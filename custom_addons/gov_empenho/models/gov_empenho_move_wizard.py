@@ -191,7 +191,7 @@ class GovEmpenhoMoveWizard(models.TransientModel):
         if not move:
             raise UserError(
                 "Nao foi possivel gerar o lancamento. Verifique se existe mapeamento contabil "
-                f"para a natureza {ne.natureza_despesa} em GRP -> Configuracao -> Configuracao Contabil."
+                f"para a natureza {ne.natureza_despesa} em AGI Gov -> Configuracao -> Configuracao Contabil."
             )
         return self._reabrir()
 

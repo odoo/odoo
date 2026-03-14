@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="template_etp_grp_latex_compras_faseado" model="gov.ai.template">
-        <field name="name">ETP GRP Faseado - Compras (LaTeX Estruturado)</field>
+        <field name="name">ETP AGI Gov Faseado - Compras (LaTeX Estruturado)</field>
         <field name="doc_type">etp</field>
         <field name="process_type">compras_servicos</field>
         <field name="process_scope">compras</field>
         <field name="fase">1</field>
-        <field name="versao_normativa">Lei 14.133/2021 · ETP GRP estruturado para compras</field>
+        <field name="versao_normativa">Lei 14.133/2021 · ETP AGI Gov estruturado para compras</field>
         <field name="output_format">latex</field>
         <field name="active">True</field>
         <field name="guidance_text"><![CDATA[
@@ -69,7 +69,7 @@ As variaveis podem ser preenchidas ao longo das fases abertas.
 }
         ]]></field>
         <field name="prompt_system"><![CDATA[
-Preencha um ETP em LaTeX no padrao GRP.
+Preencha um ETP em LaTeX no padrao AGI Gov.
 Use apenas os dados do processo e preserve a estrutura do modelo.
 Retorne apenas o LaTeX final.
         ]]></field>
@@ -269,12 +269,12 @@ O ETP deve conter memoria de calculo e fundamentos para os quantitativos estimad
     </record>
 
     <record id="template_tr_grp_latex_compras_faseado" model="gov.ai.template">
-        <field name="name">TR GRP Faseado - Compras (LaTeX Estruturado)</field>
+        <field name="name">TR AGI Gov Faseado - Compras (LaTeX Estruturado)</field>
         <field name="doc_type">tr</field>
         <field name="process_type">compras_servicos</field>
         <field name="process_scope">compras</field>
         <field name="fase">2</field>
-        <field name="versao_normativa">Lei 14.133/2021 · Termo de Referencia GRP estruturado</field>
+        <field name="versao_normativa">Lei 14.133/2021 · Termo de Referencia AGI Gov estruturado</field>
         <field name="output_format">latex</field>
         <field name="active">True</field>
         <field name="guidance_text"><![CDATA[
@@ -336,7 +336,7 @@ O dataset JSON da planilha pode ser reaproveitado neste documento.
 }
         ]]></field>
         <field name="prompt_system"><![CDATA[
-Preencha um Termo de Referencia em LaTeX no padrao GRP.
+Preencha um Termo de Referencia em LaTeX no padrao AGI Gov.
 Preserve a estrutura e use apenas os dados disponiveis.
         ]]></field>
         <field name="prompt_user_tpl"><![CDATA[
@@ -522,12 +522,12 @@ Valor estimado: & {{valor_estimado_global_tr}} \\
     </record>
 
     <record id="template_edital_grp_latex_compras_faseado" model="gov.ai.template">
-        <field name="name">Edital GRP Faseado - Pregao Eletronico (LaTeX Estruturado)</field>
+        <field name="name">Edital AGI Gov Faseado - Pregao Eletronico (LaTeX Estruturado)</field>
         <field name="doc_type">edital</field>
         <field name="process_type">compras_servicos</field>
         <field name="process_scope">compras</field>
         <field name="fase">3</field>
-        <field name="versao_normativa">Lei 14.133/2021 · Edital GRP estruturado para PE/SRP</field>
+        <field name="versao_normativa">Lei 14.133/2021 · Edital AGI Gov estruturado para PE/SRP</field>
         <field name="output_format">latex</field>
         <field name="active">True</field>
         <field name="guidance_text"><![CDATA[
@@ -593,7 +593,7 @@ Os anexos tabulares ficam em campos LaTeX livres.
 }
         ]]></field>
         <field name="prompt_system"><![CDATA[
-Preencha um Edital de Pregao Eletronico em LaTeX no padrao GRP.
+Preencha um Edital de Pregao Eletronico em LaTeX no padrao AGI Gov.
 Mantenha a estrutura e use apenas dados comprovados.
         ]]></field>
         <field name="prompt_user_tpl"><![CDATA[

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="document_page" name="Kodoo legal document">
+        <html lang="en">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title><t t-esc="page_title"/> | <t t-esc="service_name"/></title>
+                <meta name="description" t-att-content="meta_description"/>
+                <link rel="stylesheet" href="/kodoo_legal/static/src/css/kodoo_legal.css"/>
+            </head>
+            <body class="kodoo-legal-page">
+                <div class="legal-shell">
+                    <header class="legal-hero">
+                        <div class="legal-eyebrow">Public legal document</div>
+                        <h1 class="legal-title">
+                            <t t-esc="page_title"/>
+                        </h1>
+                        <p class="legal-summary">
+                            <t t-esc="summary"/>
+                        </p>
+                        <div class="legal-meta-row">
+                            <span class="legal-chip">
+                                Effective date:
+                                <t t-esc="effective_date"/>
+                            </span>
+                            <span class="legal-chip">
+                                Domain:
+                                <t t-esc="service_domain"/>
+                            </span>
+                            <span class="legal-chip">
+                                Operator:
+                                <t t-esc="operator_name"/>
+                            </span>
+                        </div>
+                    </header>
+
+                    <nav class="legal-nav" aria-label="Legal navigation">
+                        <a
+                            href="/privacy-policy"
+                            t-attf-class="legal-nav-link #{'is-active' if page_key == 'privacy_policy' else ''}"
+                        >
+                            Privacy Policy
+                        </a>
+                        <a
+                            href="/eula"
+                            t-attf-class="legal-nav-link #{'is-active' if page_key == 'eula' else ''}"
+                        >
+                            End-User License Agreement
+                        </a>
+                    </nav>
+
+                    <main class="legal-card">
+                        <div class="legal-notice">
+                            These terms apply to Kodoo services operated at
+                            <strong><t t-esc="service_domain"/></strong>,
+                            including authorized QuickBooks Online mirrors, internal dashboards,
+                            and portfolio analytics made available to customer organizations.
+                        </div>
+
+                        <section
+                            t-foreach="sections"
+                            t-as="section"
+                            class="legal-section"
+                        >
+                            <h2>
+                                <t t-esc="section['heading']"/>
+                            </h2>
+                            <t t-foreach="section['paragraphs']" t-as="paragraph">
+                                <p>
+                                    <t t-esc="paragraph"/>
+                                </p>
+                            </t>
+                            <t t-if="section['bullets']">
+                                <ul class="legal-list">
+                                    <t t-foreach="section['bullets']" t-as="bullet">
+                                        <li>
+                                            <t t-esc="bullet"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </t>
+                        </section>
+
+                        <footer class="legal-footer">
+                            <p>
+                                Legal questions:
+                                <a t-attf-href="mailto:#{legal_contact_email}">
+                                    <t t-esc="legal_contact_email"/>
+                                </a>
+                            </p>
+                            <p>
+                                Privacy requests:
+                                <a t-attf-href="mailto:#{privacy_contact_email}">
+                                    <t t-esc="privacy_contact_email"/>
+                                </a>
+                            </p>
+                        </footer>
+                    </main>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>

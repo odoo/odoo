@@ -35,19 +35,19 @@ class ResCompany(models.Model):
         specs = [
             {
                 "xml_name": "rule_gov_processo_operador",
-                "name": "GRP Processo / Operador - Somente UG do usuário",
+                "name": "AGI Gov Processo / Operador - Somente UG do usuário",
                 "domain_force": "[('ug_id','=',user.company_id.id)]",
                 "group_xmlid": "gov_base.group_gov_operador",
             },
             {
                 "xml_name": "rule_gov_processo_gestor",
-                "name": "GRP Processo / Gestor - Todas as UGs",
+                "name": "AGI Gov Processo / Gestor - Todas as UGs",
                 "domain_force": "[(1,'=',1)]",
                 "group_xmlid": "gov_base.group_gov_gestor",
             },
             {
                 "xml_name": "rule_gov_processo_admin",
-                "name": "GRP Processo / Administrador - Acesso total",
+                "name": "AGI Gov Processo / Administrador - Acesso total",
                 "domain_force": "[(1,'=',1)]",
                 "group_xmlid": "gov_base.group_gov_admin",
             },

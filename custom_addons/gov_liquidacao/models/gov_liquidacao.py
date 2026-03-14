@@ -725,7 +725,7 @@ class GovLiquidacao(models.Model):
 \vspace{{0.2cm}}
 \begin{{center}}
   \small\color{{gray}}
-  Documento gerado automaticamente pelo Sistema GRP \\
+  Documento gerado automaticamente pelo Sistema AGI Gov \\
   {orgao} --- Exercicio {exercicio} --- {data_liq}
 \end{{center}}
 

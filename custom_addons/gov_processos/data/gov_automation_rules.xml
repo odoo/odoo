@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="0">
     <record id="rule_tr_assinado_avancar_fase" model="ir.actions.server">
-        <field name="name">GRP: TR assinado - avancar para Planejamento</field>
+        <field name="name">AGI Gov: TR assinado - avancar para Planejamento</field>
         <field name="model_id" ref="gov_processos.model_gov_processo_doc"/>
         <field name="state">code</field>
         <field name="code">
@@ -11,7 +11,7 @@ if records:
     </record>
 
     <record id="automation_tr_assinado" model="base.automation">
-        <field name="name">GRP: TR assinado - Planejamento</field>
+        <field name="name">AGI Gov: TR assinado - Planejamento</field>
         <field name="model_id" ref="gov_processos.model_gov_processo_doc"/>
         <field name="trigger">on_write</field>
         <field name="filter_domain">[('doc_type','=','tr'),('state','=','assinado')]</field>
@@ -21,7 +21,7 @@ if records:
     </record>
 
     <record id="rule_urgencia_activity" model="ir.actions.server">
-        <field name="name">GRP: Processo urgente - Activity regularizacao</field>
+        <field name="name">AGI Gov: Processo urgente - Activity regularizacao</field>
         <field name="model_id" ref="gov_processos.model_gov_processo"/>
         <field name="state">code</field>
         <field name="code">
@@ -31,7 +31,7 @@ if records:
     </record>
 
     <record id="automation_urgencia_criada" model="base.automation">
-        <field name="name">GRP: Processo urgente - Regularizacao</field>
+        <field name="name">AGI Gov: Processo urgente - Regularizacao</field>
         <field name="model_id" ref="gov_processos.model_gov_processo"/>
         <field name="trigger">on_create</field>
         <field name="filter_domain">['|',('urgencia','=',True),('origin_type','in',['ne_indenizatoria','os_urgencia'])]</field>
@@ -40,7 +40,7 @@ if records:
     </record>
 
     <record id="rule_externo_prazo_activity" model="ir.actions.server">
-        <field name="name">GRP: Provocacao externa - Activity com deadline</field>
+        <field name="name">AGI Gov: Provocacao externa - Activity com deadline</field>
         <field name="model_id" ref="gov_processos.model_gov_processo"/>
         <field name="state">code</field>
         <field name="code">
@@ -50,7 +50,7 @@ if records:
     </record>
 
     <record id="automation_externo_prazo" model="base.automation">
-        <field name="name">GRP: Provocacao externa com prazo</field>
+        <field name="name">AGI Gov: Provocacao externa com prazo</field>
         <field name="model_id" ref="gov_processos.model_gov_processo"/>
         <field name="trigger">on_create</field>
         <field name="filter_domain">[('origin_type','=','externo'),('prazo_resposta','!=',False)]</field>

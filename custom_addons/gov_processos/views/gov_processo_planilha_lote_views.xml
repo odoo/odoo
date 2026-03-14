@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_planilha_lote_list" model="ir.ui.view">
+        <field name="name">gov.processo.planilha.lote.list</field>
+        <field name="model">gov.processo.planilha.lote</field>
+        <field name="arch" type="xml">
+            <list string="Lotes e Cronograma XLSX" create="false" delete="false">
+                <field name="lot_code"/>
+                <field name="phase"/>
+                <field name="description_effective"/>
+                <field name="class_abc_effective"/>
+                <field name="item_count"/>
+                <field name="expected_value"/>
+                <field name="notes" optional="show"/>
+                <field name="jan" optional="show"/>
+                <field name="fev" optional="show"/>
+                <field name="mar" optional="show"/>
+                <field name="abr" optional="show"/>
+                <field name="mai" optional="show"/>
+                <field name="jun" optional="show"/>
+                <field name="jul" optional="show"/>
+                <field name="ago" optional="show"/>
+                <field name="set" optional="show"/>
+                <field name="out" optional="show"/>
+                <field name="nov" optional="show"/>
+                <field name="dez" optional="show"/>
+                <field
+                    name="status"
+                    widget="badge"
+                    decoration-success="status == 'aberta'"
+                    decoration-warning="status == 'pendente'"
+                    decoration-danger="status == 'fechada'"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_planilha_lote_form" model="ir.ui.view">
+        <field name="name">gov.processo.planilha.lote.form</field>
+        <field name="model">gov.processo.planilha.lote</field>
+        <field name="arch" type="xml">
+            <form string="Lote Estruturado XLSX">
+                <sheet>
+                    <div class="alert alert-info mb-3" role="alert">
+                        Este lote nasce dos itens estruturados. Ajustes feitos aqui alimentam os datasets do worker XLSX.
+                    </div>
+                    <div class="alert alert-warning mb-3" role="alert" invisible="can_edit">
+                        Este lote so pode ser alterado enquanto a fase correspondente estiver aberta.
+                    </div>
+                    <group>
+                        <group string="Identificacao">
+                            <field name="processo_id" readonly="1"/>
+                            <field name="lot_code" readonly="1"/>
+                            <field name="phase"/>
+                            <field
+                                name="status"
+                                widget="badge"
+                                decoration-success="status == 'aberta'"
+                                decoration-warning="status == 'pendente'"
+                                decoration-danger="status == 'fechada'"
+                            />
+                            <field name="item_count" readonly="1"/>
+                            <field name="expected_value" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Parametros do Lote">
+                            <field name="description_effective" readonly="1"/>
+                            <field name="class_abc_effective" readonly="1"/>
+                            <field name="description_override" readonly="not can_edit"/>
+                            <field name="class_abc_override" readonly="not can_edit"/>
+                            <field name="notes" placeholder="Observacoes internas para o lote..." readonly="not can_edit"/>
+                        </group>
+                    </group>
+                    <group string="Cronograma Mensal">
+                        <group>
+                            <field name="jan" readonly="not can_edit"/>
+                            <field name="fev" readonly="not can_edit"/>
+                            <field name="mar" readonly="not can_edit"/>
+                            <field name="abr" readonly="not can_edit"/>
+                            <field name="mai" readonly="not can_edit"/>
+                            <field name="jun" readonly="not can_edit"/>
+                        </group>
+                        <group>
+                            <field name="jul" readonly="not can_edit"/>
+                            <field name="ago" readonly="not can_edit"/>
+                            <field name="set" readonly="not can_edit"/>
+                            <field name="out" readonly="not can_edit"/>
+                            <field name="nov" readonly="not can_edit"/>
+                            <field name="dez" readonly="not can_edit"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

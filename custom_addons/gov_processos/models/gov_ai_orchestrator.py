@@ -304,6 +304,11 @@ class GovAiOrchestrator(models.AbstractModel):
                 "\n\nUse o template LaTeX abaixo como base e preencha as variáveis:\n\n"
                 f"{template.latex_template}"
             )
+        elif template.output_format == "typst" and template.typst_template:
+            prompt_p1 += (
+                "\n\nUse o template Typst abaixo como base e preencha as variáveis:\n\n"
+                f"{template.typst_template}"
+            )
         conteudo, run, info = self._run_pass(
             doc,
             template,
@@ -408,6 +413,7 @@ class GovAiOrchestrator(models.AbstractModel):
             conteudo.strip().startswith("\\documentclass")
             or "\\begin{document}" in conteudo
         )
+        e_typst = template.output_format == "typst"
         vals = {
             "ai_generated": True,
             "ai_template_id": template.id,
@@ -416,7 +422,11 @@ class GovAiOrchestrator(models.AbstractModel):
             "ai_last_run_id": last_run.id if last_run else False,
             "change_reason": f"Gerado por orquestrador IA ({len(passagens)} passagem(ns))",
         }
-        if e_latex:
+        if e_typst:
+            vals["typst_source"] = conteudo
+            vals["latex_source"] = False
+            vals["content_html"] = False
+        elif e_latex:
             vals["latex_source"] = conteudo
         else:
             if "<" in conteudo and ">" in conteudo:
@@ -464,6 +474,7 @@ class GovAiOrchestrator(models.AbstractModel):
         return {
             "conteudo": conteudo,
             "e_latex": e_latex,
+            "output_format": "typst" if e_typst else ("latex" if e_latex else "html"),
             "score": conformidade["score"],
             "itens_conformidade": conformidade["itens"],
             "passagens": passagens,

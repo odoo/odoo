@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="template_dfd_grp_latex_compras_faseado" model="gov.ai.template">
-        <field name="name">DFD GRP Faseado - Compras (LaTeX Estruturado)</field>
+        <field name="name">DFD AGI Gov Faseado - Compras (LaTeX Estruturado)</field>
         <field name="doc_type">dfd</field>
         <field name="process_type">compras_servicos</field>
         <field name="process_scope">compras</field>
         <field name="fase">0</field>
-        <field name="versao_normativa">Lei 14.133/2021 · IN SEGES/MGI 58/2022 · Modelo GRP faseado</field>
+        <field name="versao_normativa">Lei 14.133/2021 · IN SEGES/MGI 58/2022 · Modelo AGI Gov faseado</field>
         <field name="output_format">latex</field>
         <field name="active">True</field>
         <field name="guidance_text"><![CDATA[
@@ -91,12 +91,12 @@ Preserve integralmente a estrutura visual do documento.
         ]]></field>
         <field name="prompt_system"><![CDATA[
 Voce e um especialista em contratacoes publicas brasileiras e deve preencher um DFD no formato LaTeX.
-Preserve a estrutura visual do modelo GRP, incluindo capa, tabelas, caixas coloridas, secoes e assinaturas.
+Preserve a estrutura visual do modelo AGI Gov, incluindo capa, tabelas, caixas coloridas, secoes e assinaturas.
 Nao invente fatos nem complete variaveis ausentes com conteudo ficticio.
 Retorne apenas o LaTeX final.
         ]]></field>
         <field name="prompt_user_tpl"><![CDATA[
-Preencha o modelo DFD GRP em LaTeX usando somente os dados conhecidos.
+Preencha o modelo DFD AGI Gov em LaTeX usando somente os dados conhecidos.
 Mantenha a estrutura do template e preencha apenas as variaveis disponiveis.
 
 Dados principais:

@@ -4,8 +4,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.sql import column_exists, create_column
 
-from .constants import PROCESS_SCOPE_SELECTION, PROCESS_TYPE_SELECTION
+from .constants import PROCESS_SCOPE_SELECTION, PROCESS_TYPE_SELECTION, XLSX_PROFILE_SELECTION
 
 class GovProcesso(models.Model):
     _name = "gov.processo"
@@ -38,12 +39,42 @@ class GovProcesso(models.Model):
         "encerrado": "execucao",
     }
 
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "gov_processo", "xlsx_profile"):
+            create_column(self.env.cr, "gov_processo", "xlsx_profile", "varchar")
+
+        result = super()._auto_init()
+        self.env.cr.execute(
+            """
+            UPDATE gov_processo
+               SET xlsx_profile = CASE
+                    WHEN process_scope = 'servicos_continuados' THEN 'service_continuous_labor'
+                    ELSE 'procurement_reference'
+               END
+             WHERE xlsx_profile IS NULL
+            """
+        )
+        return result
+
     @api.model
     def _get_template_scope_values(self, scope):
         scope = scope or "compras"
         if scope == "servicos_continuados":
             return ["all", "servicos", "servicos_continuados"]
         return ["all", scope]
+
+    @api.model
+    def _default_xlsx_profile_for_scope(self, scope):
+        return (
+            "service_continuous_labor"
+            if (scope or "compras") == "servicos_continuados"
+            else "procurement_reference"
+        )
+
+    @api.model
+    def _default_xlsx_profile(self):
+        scope = self.env.context.get("default_process_scope") or "compras"
+        return self._default_xlsx_profile_for_scope(scope)
 
     @api.model
     def _get_template_scope_priority(self, selected_scope, template_scope):
@@ -119,6 +150,14 @@ class GovProcesso(models.Model):
         default="compras",
         tracking=True,
         help="Segregação AGU: compras, serviços ou serviços de prestação continuada.",
+    )
+    xlsx_profile = fields.Selection(
+        selection=XLSX_PROFILE_SELECTION,
+        string="Perfil XLSX",
+        required=True,
+        default=lambda self: self._default_xlsx_profile(),
+        tracking=True,
+        help="Layout principal usado pelo worker de planilhas do processo.",
     )
     state = fields.Selection(
         selection=[
@@ -196,6 +235,11 @@ class GovProcesso(models.Model):
         "processo_id",
         string="Itens Estruturados da Planilha",
     )
+    planilha_lot_ids = fields.One2many(
+        "gov.processo.planilha.lote",
+        "processo_id",
+        string="Lotes e Cronograma XLSX",
+    )
     parameter_count = fields.Integer(
         string="Variáveis",
         compute="_compute_parameter_count",
@@ -203,6 +247,10 @@ class GovProcesso(models.Model):
     planilha_item_count = fields.Integer(
         string="Itens XLSX",
         compute="_compute_planilha_item_count",
+    )
+    planilha_lot_count = fields.Integer(
+        string="Lotes XLSX",
+        compute="_compute_planilha_lot_count",
     )
     currency_id = fields.Many2one(
         "res.currency",
@@ -283,6 +331,11 @@ class GovProcesso(models.Model):
         for rec in self:
             rec.planilha_item_count = len(rec.planilha_item_ids)
 
+    @api.depends("planilha_lot_ids")
+    def _compute_planilha_lot_count(self):
+        for rec in self:
+            rec.planilha_lot_count = len(rec.planilha_lot_ids)
+
     @api.depends("doc_ids.versao_ids")
     def _compute_versao_total_count(self):
         for rec in self:
@@ -329,6 +382,13 @@ class GovProcesso(models.Model):
             rec.recommended_template_ids = templates
             rec.recommended_template_count = len(templates)
 
+    @api.onchange("process_scope")
+    def _onchange_process_scope_xlsx_profile(self):
+        for rec in self:
+            recommended = rec._default_xlsx_profile_for_scope(rec.process_scope or "compras")
+            if not rec.xlsx_profile or rec.xlsx_profile == "procurement_reference":
+                rec.xlsx_profile = recommended
+
     @api.depends("prazo_resposta")
     def _compute_prazo_vencido(self):
         today = fields.Date.today()
@@ -361,6 +421,10 @@ class GovProcesso(models.Model):
         for vals in vals_list:
             if vals.get("name", "Novo") == "Novo":
                 vals["name"] = self.env["ir.sequence"].next_by_code("gov.processo") or "Novo"
+            vals.setdefault(
+                "xlsx_profile",
+                self._default_xlsx_profile_for_scope(vals.get("process_scope") or "compras"),
+            )
         records = super().create(vals_list)
         for rec in records:
             rec._set_flags_by_origin()
@@ -503,6 +567,20 @@ class GovProcesso(models.Model):
             },
         }
 
+    def action_open_planilha_lots(self):
+        self.ensure_one()
+        self._sync_planilha_lot_records()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Lotes e Cronograma XLSX — {self.name}",
+            "res_model": "gov.processo.planilha.lote",
+            "view_mode": "list,form",
+            "domain": [("processo_id", "=", self.id)],
+            "context": {
+                "default_processo_id": self.id,
+            },
+        }
+
     def action_sync_planilha_structured_parameters(self):
         self.ensure_one()
         self.sync_planilha_structured_parameters()
@@ -558,7 +636,7 @@ class GovProcesso(models.Model):
         )
         return [record.to_xlsx_payload_dict() for record in records]
 
-    def _serialize_planilha_lot_rows(self):
+    def _derive_planilha_lot_rows_from_items(self):
         self.ensure_one()
         grouped = {}
         ordered_codes = []
@@ -602,22 +680,89 @@ class GovProcesso(models.Model):
         }
         class_abc = (lot_row.get("class_abc") or "").upper()
         if class_abc == "A":
-            selected_months = ("jan", "abr", "jul", "out")
-            label = "OF 30-45 d"
+            month_values.update(
+                {
+                    "jan": "OF 30-45 d",
+                    "mar": "OF 30-45 d",
+                    "mai": "OF 30-45 d",
+                    "jul": "OF 45-60 d",
+                    "set": "OF 45-60 d",
+                    "nov": "OF 30 d",
+                    "dez": "OF 30 d",
+                }
+            )
         elif class_abc == "B":
-            selected_months = ("fev", "jun", "set")
-            label = "OF 45-60 d"
+            month_values.update(
+                {
+                    "jan": "OF 30-45 d",
+                    "mai": "OF 30-45 d",
+                    "set": "OF 45-60 d",
+                    "dez": "OF 30 d",
+                }
+            )
         else:
-            selected_months = ("mar", "ago", "nov")
-            label = "OF 60-90 d"
-        for month_key in selected_months:
-            month_values[month_key] = label
+            month_values.update(
+                {
+                    "jan": "OF 30-45 d",
+                    "jul": "OF 45-60 d",
+                    "dez": "OF 30 d",
+                }
+            )
         return month_values
+
+    def _sync_planilha_lot_records(self):
+        Lot = self.env["gov.processo.planilha.lote"]
+        for processo in self:
+            derived_rows = processo._derive_planilha_lot_rows_from_items()
+            existing_by_code = {
+                (lot.lot_code or ""): lot
+                for lot in processo.planilha_lot_ids
+            }
+            active_codes = []
+            for row in derived_rows:
+                lot_code = row["lot_code"]
+                active_codes.append(lot_code)
+                if lot_code in existing_by_code:
+                    continue
+                values = {
+                    "processo_id": processo.id,
+                    "lot_code": lot_code,
+                    "phase": 1,
+                    **processo._build_default_schedule_for_lot(row),
+                }
+                Lot.with_context(skip_phase_lock=True, skip_planilha_sync=True).create(values)
+            orphan_rows = processo.planilha_lot_ids.filtered(
+                lambda lot: (lot.lot_code or "") not in active_codes
+            )
+            if orphan_rows:
+                orphan_rows.with_context(skip_phase_lock=True, skip_planilha_sync=True).unlink()
+
+    def _serialize_planilha_lot_rows(self):
+        self.ensure_one()
+        if self.planilha_lot_ids:
+            records = self.planilha_lot_ids.sorted(
+                key=lambda rec: (
+                    0 if (rec.lot_code or "").isdigit() else 1,
+                    int(rec.lot_code or 0) if (rec.lot_code or "").isdigit() else (rec.lot_code or ""),
+                    rec.id,
+                )
+            )
+            return [record.to_lot_payload_dict() for record in records]
+        return self._derive_planilha_lot_rows_from_items()
 
     def _serialize_planilha_schedule_rows(self):
         self.ensure_one()
+        if self.planilha_lot_ids:
+            records = self.planilha_lot_ids.sorted(
+                key=lambda rec: (
+                    0 if (rec.lot_code or "").isdigit() else 1,
+                    int(rec.lot_code or 0) if (rec.lot_code or "").isdigit() else (rec.lot_code or ""),
+                    rec.id,
+                )
+            )
+            return [record.to_schedule_payload_dict() for record in records]
         rows = []
-        for lot_row in self._serialize_planilha_lot_rows():
+        for lot_row in self._derive_planilha_lot_rows_from_items():
             rows.append(
                 {
                     "lot_code": lot_row["lot_code"],
@@ -657,6 +802,7 @@ class GovProcesso(models.Model):
         }
 
         for processo in self:
+            processo._sync_planilha_lot_records()
             payloads = {
                 "xlsx_item_rows_json": processo._serialize_planilha_item_rows(),
                 "xlsx_lot_rows_json": processo._serialize_planilha_lot_rows(),
@@ -960,7 +1106,7 @@ class GovProcesso(models.Model):
             processo.message_post(
                 body=Markup(
                     "🚨 <b>Processo de exceção</b> registrado. "
-                    "Activity de regularização criada para o administrador GRP."
+                    "Activity de regularização criada para o administrador AGI Gov."
                 ),
                 message_type="comment",
                 subtype_xmlid="mail.mt_note",

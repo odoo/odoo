@@ -4,6 +4,8 @@ import json
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
+from .constants import XLSX_PROFILE_SELECTION
+
 
 class GovProcessoPlanilhaJob(models.Model):
     _name = "gov.processo.planilha.job"
@@ -25,9 +27,7 @@ class GovProcessoPlanilhaJob(models.Model):
         index=True,
     )
     profile = fields.Selection(
-        [
-            ("procurement_reference", "Planilha de Licitacao / Pesquisa"),
-        ],
+        XLSX_PROFILE_SELECTION,
         string="Perfil",
         required=True,
         default="procurement_reference",
@@ -60,14 +60,15 @@ class GovProcessoPlanilhaJob(models.Model):
     lot_count = fields.Integer(string="Qtd. Lotes", readonly=True)
 
     @api.model
-    def create_from_doc(self, doc, profile="procurement_reference"):
+    def create_from_doc(self, doc, profile=None):
         doc.ensure_one()
+        selected_profile = profile or doc.xlsx_profile or doc.processo_id.xlsx_profile or "procurement_reference"
         return self.create(
             {
                 "name": f"Planilha XLSX - {doc.name}",
                 "processo_id": doc.processo_id.id,
                 "doc_id": doc.id,
-                "profile": profile,
+                "profile": selected_profile,
             }
         )
 
@@ -87,7 +88,11 @@ class GovProcessoPlanilhaJob(models.Model):
             }
         )
         try:
-            result = service.generate_procurement_workbook(self.processo_id, doc=self.doc_id)
+            result = service.generate_workbook(
+                self.processo_id,
+                doc=self.doc_id,
+                profile=self.profile,
+            )
             encoded_binary = base64.b64encode(result["binary"])
             self.write(
                 {

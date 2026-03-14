@@ -18,6 +18,8 @@ Kodoo extends the standard Odoo core with a focus on modern AI/ML capabilities a
 - **GOV Modules:** Specialized `custom_addons/` for government and high-compliance environments.
 - **Docker-Ready Stack:** Includes a pre-configured `docker-compose.yml` featuring Odoo, PostgreSQL, and Ollama for local LLM execution.
 - **Enhanced Document Processing:** Advanced OCR stack (Tesseract, OCRmyPDF) and LaTeX-based PDF generation.
+- **Dedicated AGI Gov Runtime:** The Docker stack can run with a GOV-focused Odoo image that isolates LaTeX, OCR, Typst-ready, and document-ingest dependencies.
+- **Optional AI Extras:** Heavy embedding/ML dependencies can be enabled only when needed, instead of inflating the default GOV container.
 
 ## Project Structure
 
@@ -40,6 +42,26 @@ For AI development and Kodoo-specific workflows:
 ```bash
 pip install -r requirements.txt -r requirements-gov-general.txt
 ./odoo-bin -c kodoo.conf -d kodoo --addons-path=addons,custom_addons
+```
+
+For Docker deployments:
+
+```bash
+docker compose build odoo
+docker compose up -d
+```
+
+To include the optional AI/embedding stack inside the AGI Gov image:
+
+```bash
+AGI_GOV_INSTALL_AI_EXTRAS=1 docker compose build odoo
+```
+
+If you want a plain Odoo image without the AGI Gov runtime extras:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.base.yml build odoo
+docker compose -f docker-compose.yml -f docker-compose.base.yml up -d
 ```
 
 ## Security

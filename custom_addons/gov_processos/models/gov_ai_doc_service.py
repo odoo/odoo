@@ -254,6 +254,10 @@ class GovAiDocService:
             seed = template.latex_template or template.latex_source or ""
             if seed:
                 return cls.render_placeholders(seed, context), "odoo_chat_local_latex"
+        if template and template.output_format == "typst":
+            seed = template.typst_template or template.source_native_text or ""
+            if seed:
+                return cls.render_placeholders(seed, context), "odoo_chat_local_typst"
         rendered = cls.render_placeholders(user_prompt, context)
         html = (
             "<h3>Rascunho IA (Odoo Chat Interno)</h3>"

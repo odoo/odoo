@@ -1,8 +1,8 @@
 {
-    "name": "GRP - Empenho",
+    "name": "AGI Gov - Empenho",
     "version": "19.0.2.0.0",
-    "summary": "Nota de Empenho integrada ao ciclo de processos GRP",
-    "author": "GRP",
+    "summary": "Nota de Empenho integrada ao ciclo de processos AGI Gov",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "category": "Government",
     "depends": ["gov_base", "gov_processos", "account"],
@@ -21,4 +21,3 @@
     "installable": True,
     "application": False,
 }
-

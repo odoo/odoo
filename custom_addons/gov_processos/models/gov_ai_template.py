@@ -2,6 +2,7 @@ import json
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.sql import column_exists, create_column
 
 from .constants import DOC_TYPE_SELECTION, PROCESS_TYPE_SELECTION, TEMPLATE_SCOPE_SELECTION
 from .gov_template_service import GovTemplateService
@@ -67,6 +68,17 @@ class GovAiTemplate(models.Model):
         string="Documento de Origem",
         help="Arquivo/modelo normativo utilizado como referência didática.",
     )
+    source_filename = fields.Char(string="Arquivo de Origem")
+    source_input_format = fields.Selection(
+        selection=lambda self: GovTemplateService.get_source_format_selection(),
+        string="Formato da Fonte Original",
+        default="unknown",
+        help="Formato original carregado no Knowledge ou por upload.",
+    )
+    source_native_text = fields.Text(
+        string="Fonte Original",
+        help="Conteúdo fonte preservado quando o arquivo for textual ou texto extraído da ingestão.",
+    )
     guidance_text = fields.Text(
         string="Orientações de Preenchimento",
         help="Instruções didáticas para montagem do documento.",
@@ -91,14 +103,23 @@ class GovAiTemplate(models.Model):
     prompt_user_tpl = fields.Text(string="Prompt Usuário (template)")
     latex_source = fields.Text(string="Fonte LaTeX (compat)")
     latex_template = fields.Text(string="Template LaTeX")
+    typst_template = fields.Text(string="Template Typst")
     output_format = fields.Selection(
-        [
-            ("latex", "LaTeX → PDF"),
-            ("html", "HTML"),
-        ],
+        selection=lambda self: GovTemplateService.get_target_format_selection(),
         default="latex",
     )
     active = fields.Boolean(default=True)
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "gov_ai_template", "source_filename"):
+            create_column(self.env.cr, "gov_ai_template", "source_filename", "varchar")
+        if not column_exists(self.env.cr, "gov_ai_template", "source_input_format"):
+            create_column(self.env.cr, "gov_ai_template", "source_input_format", "varchar")
+        if not column_exists(self.env.cr, "gov_ai_template", "source_native_text"):
+            create_column(self.env.cr, "gov_ai_template", "source_native_text", "text")
+        if not column_exists(self.env.cr, "gov_ai_template", "typst_template"):
+            create_column(self.env.cr, "gov_ai_template", "typst_template", "text")
+        return super()._auto_init()
 
     def init(self):
         # Backfill de registros legados criados antes do campo "name" obrigatório.
@@ -107,11 +128,13 @@ class GovAiTemplate(models.Model):
             UPDATE gov_ai_template
                SET name = COALESCE(NULLIF(TRIM(name), ''), CONCAT('Template #', id)),
                    process_type = COALESCE(process_type, 'compras_servicos'),
-                   process_scope = COALESCE(process_scope, 'all')
+                   process_scope = COALESCE(process_scope, 'all'),
+                   source_input_format = COALESCE(source_input_format, 'unknown')
              WHERE name IS NULL
                 OR TRIM(name) = ''
                 OR process_type IS NULL
                 OR process_scope IS NULL
+                OR source_input_format IS NULL
             """
         )
         self.env.cr.execute(
@@ -645,7 +668,15 @@ class GovAiTemplate(models.Model):
                 }
 
         placeholder_text = "\n".join(
-            part for part in [self.latex_template, self.latex_source, self.prompt_user_tpl] if part
+            part
+            for part in [
+                self.latex_template,
+                self.typst_template,
+                self.latex_source,
+                self.source_native_text,
+                self.prompt_user_tpl,
+            ]
+            if part
         )
         for index, key in enumerate(GovTemplateService.extract_placeholders(placeholder_text), start=1):
             if key in entries_by_key or key in self._BUILTIN_CONTEXT_KEYS:

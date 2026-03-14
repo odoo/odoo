@@ -125,7 +125,7 @@ class GovEmpenho(models.Model):
     )
 
     processo_id_ref = fields.Integer(
-        string="ID do Processo GRP",
+        string="ID do Processo AGI Gov",
         help=(
             "Referência ao gov.processo. "
             "Vínculo formal via gov.processo.vinculo."

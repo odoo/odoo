@@ -1,9 +1,9 @@
 {
-    "name": "GRP - Accounting Move Template (Community)",
+    "name": "AGI Gov - Accounting Move Template (Community)",
     "version": "19.0.1.0.0",
     "summary": "Recurring journal entry templates for structured period close",
     "category": "Accounting/Accounting",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "depends": [
         "gov_base",
@@ -20,4 +20,3 @@
     "installable": True,
     "application": False,
 }
-

@@ -1,10 +1,10 @@
 {
-    "name": "GRP - Accounting Lock Date Update (Community)",
+    "name": "AGI Gov - Accounting Lock Date Update (Community)",
     "version": "19.0.1.0.0",
     "summary": "Controlled workflow for updating company lock date with audit log",
     "description": "Community-style company lock date update with audit trail.",
     "category": "Accounting/Accounting",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "depends": [
         "account",
@@ -21,4 +21,3 @@
     "installable": True,
     "application": False,
 }
-

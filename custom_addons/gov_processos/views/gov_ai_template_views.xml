@@ -8,6 +8,7 @@
                 <field name="name"/>
                 <field name="process_type"/>
                 <field name="process_scope"/>
+                <field name="source_input_format"/>
                 <field name="is_checklist" widget="boolean_toggle"/>
                 <field name="doc_type"/>
                 <field name="fase"/>
@@ -35,11 +36,22 @@
                         </group>
                         <group string="Fonte e Saída">
                             <field name="source_document"/>
+                            <field name="source_filename"/>
+                            <field name="source_input_format"/>
                             <field name="versao_normativa"/>
                             <field name="output_format"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Fonte Original">
+                            <field
+                                name="source_native_text"
+                                nolabel="1"
+                                widget="ace"
+                                options="{'mode': 'text'}"
+                                placeholder="Fonte original preservada do upload ou do artigo Knowledge..."
+                            />
+                        </page>
                         <page string="Orientações">
                             <field name="guidance_text" nolabel="1" placeholder="Instruções didáticas de preenchimento..."/>
                         </page>
@@ -55,9 +67,12 @@
                             <field name="prompt_system" nolabel="1"/>
                             <field name="prompt_user_tpl" nolabel="1"/>
                         </page>
-                        <page string="Template">
-                            <field name="latex_template" nolabel="1"/>
-                            <field name="latex_source" nolabel="1"/>
+                        <page string="Template LaTeX">
+                            <field name="latex_template" nolabel="1" widget="ace" options="{'mode': 'text'}"/>
+                            <field name="latex_source" nolabel="1" widget="ace" options="{'mode': 'text'}"/>
+                        </page>
+                        <page string="Template Typst">
+                            <field name="typst_template" nolabel="1" widget="ace" options="{'mode': 'text'}"/>
                         </page>
                     </notebook>
                 </sheet>

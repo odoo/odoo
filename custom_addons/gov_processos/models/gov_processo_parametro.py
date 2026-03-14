@@ -109,13 +109,10 @@ class GovProcessoParametro(models.Model):
         store=False,
     )
 
-    _sql_constraints = [
-        (
-            "gov_processo_parametro_key_unique",
-            "unique(processo_id, key)",
-            "Já existe uma variável com esta chave para o processo.",
-        ),
-    ]
+    _key_unique = models.Constraint(
+        "unique(processo_id, key)",
+        "Já existe uma variável com esta chave para o processo.",
+    )
 
     @api.model
     def _normalize_key(self, key):

@@ -8,11 +8,18 @@ from markupsafe import Markup, escape
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.sql import column_exists, create_column
 
-from .constants import DOC_TYPE_SELECTION, PROCESS_SCOPE_SELECTION, PROCESS_TYPE_SELECTION
+from .constants import (
+    DOC_TYPE_SELECTION,
+    PROCESS_SCOPE_SELECTION,
+    PROCESS_TYPE_SELECTION,
+    XLSX_PROFILE_SELECTION,
+)
 from .gov_ai_doc_service import GovAiDocService
 from .gov_latex_service import GovHtmlPdfService, GovLatexService
 from .gov_template_service import GovTemplateService
+from .gov_typst_service import GovTypstService
 
 CHECKLIST_MODE_SELECTION = [
     ("agu_estrito", "AGU Estrito"),
@@ -27,6 +34,46 @@ class GovProcessoDoc(models.Model):
     _inherit = ["mail.thread"]
     _VERSION_SUFFIX_RE = re.compile(r"\s*\(v(\d+)\)\s*$", re.IGNORECASE)
     _HTML_TAG_RE = re.compile(r"<[^>]+>")
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "gov_processo_doc", "xlsx_profile"):
+            create_column(self.env.cr, "gov_processo_doc", "xlsx_profile", "varchar")
+        if not column_exists(self.env.cr, "gov_processo_doc", "typst_source"):
+            create_column(self.env.cr, "gov_processo_doc", "typst_source", "text")
+        if not column_exists(self.env.cr, "gov_processo_doc", "ingest_target_format"):
+            create_column(self.env.cr, "gov_processo_doc", "ingest_target_format", "varchar")
+
+        result = super()._auto_init()
+        self.env.cr.execute(
+            """
+            UPDATE gov_processo_doc doc
+               SET xlsx_profile = COALESCE(
+                    proc.xlsx_profile,
+                    CASE
+                        WHEN proc.process_scope = 'servicos_continuados' THEN 'service_continuous_labor'
+                        ELSE 'procurement_reference'
+                    END
+               )
+              FROM gov_processo proc
+             WHERE doc.processo_id = proc.id
+               AND doc.xlsx_profile IS NULL
+            """
+        )
+        self.env.cr.execute(
+            """
+            UPDATE gov_processo_doc
+               SET xlsx_profile = 'procurement_reference'
+             WHERE xlsx_profile IS NULL
+            """
+        )
+        self.env.cr.execute(
+            """
+            UPDATE gov_processo_doc
+               SET ingest_target_format = 'latex'
+             WHERE ingest_target_format IS NULL
+            """
+        )
+        return result
 
     processo_id = fields.Many2one(
         "gov.processo",
@@ -75,6 +122,13 @@ class GovProcessoDoc(models.Model):
         attachment=True,
     )
     pesquisa_precos_planilha_filename = fields.Char()
+    xlsx_profile = fields.Selection(
+        selection=XLSX_PROFILE_SELECTION,
+        string="Perfil XLSX",
+        default="procurement_reference",
+        help="Permite ajustar o layout de exportacao XLSX deste documento.",
+    )
+    typst_source = fields.Text(string="Fonte Typst")
     latex_source = fields.Text(string="Fonte LaTeX")
     pdf_file = fields.Binary(string="PDF", attachment=True)
     pdf_filename = fields.Char(string="Nome do PDF")
@@ -91,6 +145,12 @@ class GovProcessoDoc(models.Model):
             ("outro", "Outro"),
         ],
         string="Tipo do Upload",
+    )
+    ingest_target_format = fields.Selection(
+        selection=lambda self: GovTemplateService.get_target_format_selection(),
+        string="Destino da Conversão",
+        default="latex",
+        help="Formato principal a ser priorizado quando o upload externo for convertido pelo worker.",
     )
     timbre_id = fields.Many2one(
         "gov.timbre",
@@ -179,6 +239,15 @@ class GovProcessoDoc(models.Model):
         string="Jobs XLSX",
         compute="_compute_xlsx_job_count",
     )
+    ingest_job_ids = fields.One2many(
+        "gov.processo.doc.ingest.job",
+        "doc_id",
+        string="Jobs de Conversão de Upload",
+    )
+    ingest_job_count = fields.Integer(
+        string="Jobs de Conversão",
+        compute="_compute_ingest_job_count",
+    )
 
     @api.depends("versao_ids")
     def _compute_versao_count(self):
@@ -194,6 +263,11 @@ class GovProcessoDoc(models.Model):
     def _compute_xlsx_job_count(self):
         for rec in self:
             rec.xlsx_job_count = len(rec.xlsx_job_ids)
+
+    @api.depends("ingest_job_ids")
+    def _compute_ingest_job_count(self):
+        for rec in self:
+            rec.ingest_job_count = len(rec.ingest_job_ids)
 
     @api.depends(
         "ai_template_id",
@@ -214,8 +288,22 @@ class GovProcessoDoc(models.Model):
             rec.template_parameter_ids = parameters
             rec.template_parameter_count = len(parameters)
 
+    @api.onchange("processo_id")
+    def _onchange_processo_id_xlsx_profile(self):
+        for rec in self:
+            if rec.processo_id and (
+                not rec.xlsx_profile or rec.xlsx_profile == "procurement_reference"
+            ):
+                rec.xlsx_profile = rec.processo_id.xlsx_profile or "procurement_reference"
+
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("xlsx_profile"):
+                continue
+            processo = self.env["gov.processo"].browse(vals.get("processo_id")).exists()
+            if processo:
+                vals["xlsx_profile"] = processo.xlsx_profile or "procurement_reference"
         records = super().create(vals_list)
         records._sync_template_parameters_from_current_template()
         return records
@@ -225,6 +313,7 @@ class GovProcessoDoc(models.Model):
         "content_html",
         "pesquisa_precos_html",
         "pesquisa_precos_planilha",
+        "typst_source",
         "latex_source",
         "pdf_file",
     )
@@ -241,6 +330,7 @@ class GovProcessoDoc(models.Model):
             "content_html",
             "pesquisa_precos_html",
             "pesquisa_precos_planilha",
+            "typst_source",
             "latex_source",
             "pdf_file",
         }
@@ -274,6 +364,7 @@ class GovProcessoDoc(models.Model):
                         "doc_id": rec.id,
                         "version_number": rec.version,
                         "content_snapshot_html": rec.content_html,
+                        "typst_snapshot": rec.typst_source,
                         "latex_snapshot": rec.latex_source,
                         "pdf_snapshot": rec.pdf_file,
                         "changed_by": self.env.user.id,
@@ -417,6 +508,7 @@ class GovProcessoDoc(models.Model):
                 "doc_id": self.id,
                 "version_number": self.version,
                 "content_snapshot_html": self.content_html,
+                "typst_snapshot": self.typst_source,
                 "latex_snapshot": self.latex_source,
                 "pdf_snapshot": self.pdf_file,
                 "changed_by": self.env.user.id,
@@ -430,6 +522,7 @@ class GovProcessoDoc(models.Model):
                 "doc_id": new_doc.id,
                 "version_number": new_doc.version,
                 "content_snapshot_html": new_doc.content_html,
+                "typst_snapshot": new_doc.typst_source,
                 "latex_snapshot": new_doc.latex_source,
                 "pdf_snapshot": new_doc.pdf_file,
                 "changed_by": self.env.user.id,
@@ -653,6 +746,8 @@ class GovProcessoDoc(models.Model):
 
             if template.output_format == "latex":
                 vals["latex_source"] = generated_text
+            elif template.output_format == "typst":
+                vals["typst_source"] = generated_text
             else:
                 if "<" in generated_text and ">" in generated_text:
                     vals["content_html"] = generated_text
@@ -783,9 +878,12 @@ class GovProcessoDoc(models.Model):
         if not template:
             raise UserError("Nenhum template encontrado para aplicar ao documento.")
 
-        template_source = template.latex_template or template.latex_source
+        if template.output_format == "typst":
+            template_source = template.typst_template or template.source_native_text
+        else:
+            template_source = template.latex_template or template.latex_source
         if not template_source:
-            raise UserError("O template selecionado não possui conteúdo LaTeX cadastrado.")
+            raise UserError("O template selecionado não possui conteúdo fonte cadastrado.")
 
         template.sync_process_parameters(self.processo_id)
         context = self._build_ai_context(template, memory_block="")
@@ -794,16 +892,21 @@ class GovProcessoDoc(models.Model):
             raise UserError("O resultado do template ficou vazio após aplicar as variáveis.")
 
         vals = {
-            "latex_source": rendered,
             "ai_generated": False,
-            "change_reason": f"Template LaTeX aplicado manualmente: {template.name}",
+            "change_reason": f"Template {template.output_format.upper()} aplicado manualmente: {template.name}",
         }
+        if template.output_format == "typst":
+            vals["typst_source"] = rendered
+            vals["latex_source"] = False
+        else:
+            vals["latex_source"] = rendered
+            vals["typst_source"] = False
         if not self.ai_template_id:
             vals["ai_template_id"] = template.id
         self.write(vals)
         self.message_post(
             body=Markup(
-                "🧩 <b>Template LaTeX aplicado.</b> "
+                f"🧩 <b>Template {template.output_format.upper()} aplicado.</b> "
                 f"Modelo: <b>{template.name}</b>."
             ),
             message_type="comment",
@@ -827,7 +930,10 @@ class GovProcessoDoc(models.Model):
             raise UserError("Documento sem processo vinculado.")
 
         self.processo_id.sync_planilha_structured_parameters()
-        job = self.env["gov.processo.planilha.job"].create_from_doc(self)
+        job = self.env["gov.processo.planilha.job"].create_from_doc(
+            self,
+            profile=self.xlsx_profile or self.processo_id.xlsx_profile,
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -838,11 +944,40 @@ class GovProcessoDoc(models.Model):
             },
         }
 
+    def action_enqueue_ingest_worker(self):
+        self.ensure_one()
+        if self.state == "assinado":
+            raise UserError("Documento assinado não pode receber nova conversão de upload.")
+        if not self.processo_id:
+            raise UserError("Documento sem processo vinculado.")
+        if not self.upload_externo:
+            raise UserError("Envie um arquivo na aba Upload Externo antes de solicitar a conversão.")
+
+        job = self.env["gov.processo.doc.ingest.job"].create_from_doc(
+            self,
+            target_format=self.ingest_target_format or "latex",
+        )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Conversão enfileirada",
+                "message": f"Job criado: {job.name}",
+                "type": "success",
+            },
+        }
+
     def action_open_process_planilha_items(self):
         self.ensure_one()
         if not self.processo_id:
             raise UserError("Documento sem processo vinculado.")
         return self.processo_id.action_open_planilha_items()
+
+    def action_open_process_planilha_lots(self):
+        self.ensure_one()
+        if not self.processo_id:
+            raise UserError("Documento sem processo vinculado.")
+        return self.processo_id.action_open_planilha_lots()
 
     def action_open_xlsx_jobs(self):
         self.ensure_one()
@@ -858,15 +993,31 @@ class GovProcessoDoc(models.Model):
             },
         }
 
+    def action_open_ingest_jobs(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Conversões de Upload - {self.name}",
+            "res_model": "gov.processo.doc.ingest.job",
+            "view_mode": "list,form",
+            "domain": [("doc_id", "=", self.id)],
+            "context": {
+                "default_doc_id": self.id,
+                "default_processo_id": self.processo_id.id,
+            },
+        }
+
     def action_salvar_memoria_ia(self):
         self.ensure_one()
         if not self.processo_id or not self.processo_id.ug_id:
             raise UserError("Documento sem UG vinculada ao processo.")
-        content = self.content_html or self.latex_source or ""
+        content = self.content_html or self.typst_source or self.latex_source or ""
         if self.latex_source:
             plain = GovTemplateService.plain_text_from_html(self.content_html or "")
             if not plain:
                 plain = re.sub(r"\s+", " ", self.latex_source or "").strip()
+        elif self.typst_source:
+            plain = GovTemplateService.plain_text_from_typst(self.typst_source or "")
         else:
             plain = self._plain_text_from_html(content)
         if not plain:
@@ -906,9 +1057,9 @@ class GovProcessoDoc(models.Model):
         """
         self.ensure_one()
 
-        if not self.latex_source:
+        if not self.latex_source and not self.typst_source:
             raise UserError(
-                'Nenhum código LaTeX encontrado. Preencha a aba "Fonte LaTeX" antes de compilar.'
+                'Nenhum código LaTeX ou Typst encontrado. Preencha a aba correspondente antes de compilar.'
             )
         if self.state == "assinado":
             raise UserError("Documento assinado não pode ser recompilado.")
@@ -920,12 +1071,17 @@ class GovProcessoDoc(models.Model):
         fallback_logo_binary = (
             base64.b64decode(self.processo_id.ug_id.logo) if self.processo_id.ug_id.logo else None
         )
-        pdf_bytes = GovLatexService.compile_with_timbre(
-            self.latex_source,
-            timbre=timbre,
-            fallback_logo_binary=fallback_logo_binary,
-            timeout=120,
-        )
+        if self.typst_source:
+            pdf_bytes = GovTypstService.compile(self.typst_source, timeout=120)
+            change_reason = "PDF compilado via typst"
+        else:
+            pdf_bytes = GovLatexService.compile_with_timbre(
+                self.latex_source,
+                timbre=timbre,
+                fallback_logo_binary=fallback_logo_binary,
+                timeout=120,
+            )
+            change_reason = "PDF compilado via pdflatex"
         b64_pdf = base64.b64encode(pdf_bytes).decode("ascii")
         sha256 = hashlib.sha256(pdf_bytes).hexdigest()
 
@@ -941,11 +1097,12 @@ class GovProcessoDoc(models.Model):
             {
                 "doc_id": self.id,
                 "version_number": self.version,
+                "typst_snapshot": self.typst_source,
                 "latex_snapshot": self.latex_source,
                 "pdf_snapshot": b64_pdf,
                 "changed_by": self.env.user.id,
                 "changed_at": fields.Datetime.now(),
-                "change_reason": "PDF compilado via pdflatex",
+                "change_reason": change_reason,
                 "ai_generated": self.ai_generated,
             }
         )
@@ -979,9 +1136,9 @@ class GovProcessoDoc(models.Model):
 
         if self.state == "assinado":
             raise UserError("Documento assinado nao pode ser regerado.")
-        if not self.latex_source and not self.content_html:
+        if not self.typst_source and not self.latex_source and not self.content_html:
             raise UserError(
-                'Nenhum conteúdo encontrado. Preencha a aba "Fonte LaTeX" ou "Conteúdo (HTML)".'
+                'Nenhum conteúdo encontrado. Preencha a aba "Fonte Typst", "Fonte LaTeX" ou "Conteúdo (HTML)".'
             )
 
         Timbre = self.env.get("gov.timbre")
@@ -989,7 +1146,12 @@ class GovProcessoDoc(models.Model):
             Timbre.get_default_for_company(self.processo_id.ug_id.id) if Timbre else None
         )
 
-        if self.latex_source:
+        if self.typst_source:
+            pdf_bytes = GovTypstService.compile(self.typst_source, timeout=120)
+            b64_pdf = base64.b64encode(pdf_bytes).decode("ascii")
+            sha256 = hashlib.sha256(pdf_bytes).hexdigest()
+            motor = "typst"
+        elif self.latex_source:
             fallback_logo_binary = (
                 base64.b64decode(self.processo_id.ug_id.logo) if self.processo_id.ug_id.logo else None
             )
@@ -1034,6 +1196,7 @@ class GovProcessoDoc(models.Model):
             {
                 "doc_id": self.id,
                 "version_number": self.version,
+                "typst_snapshot": self.typst_source,
                 "latex_snapshot": self.latex_source,
                 "pdf_snapshot": b64_pdf,
                 "changed_by": self.env.user.id,

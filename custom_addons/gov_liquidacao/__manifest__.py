@@ -1,8 +1,8 @@
 {
-    "name": "GRP - Liquidacao",
+    "name": "AGI Gov - Liquidacao",
     "version": "19.0.2.0.0",
     "summary": "Nota de Liquidacao integrada ao ciclo NE -> NL -> OP",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "category": "Government",
     "depends": ["gov_base", "gov_processos", "gov_empenho", "account"],
@@ -19,4 +19,3 @@
     "installable": True,
     "application": False,
 }
-

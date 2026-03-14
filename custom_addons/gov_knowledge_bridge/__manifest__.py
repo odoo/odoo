@@ -1,8 +1,8 @@
 {
-    "name": "GRP - Knowledge Bridge",
+    "name": "AGI Gov - Knowledge Bridge",
     "version": "19.0.1.0.0",
     "category": "Government",
-    "summary": "Integra Document Page com Processo e Documento da suite GOV",
+    "summary": "Integra Document Page com Processo e Documento da suite AGI Gov",
     "depends": ["gov_processos", "document_page"],
     "data": [
         "security/ir.model.access.csv",
@@ -15,7 +15,6 @@
     ],
     "installable": True,
     "application": False,
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
 }
-

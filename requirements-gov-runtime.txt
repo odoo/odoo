@@ -1,0 +1,11 @@
+# AGI Gov runtime/document processing extras.
+# Keep this file focused on features needed by the GOV stack itself,
+# without pulling heavyweight ML frameworks into the default container.
+
+# LaTeX validation in gov_processos/models/gov_latex_service.py
+pylatexenc>=2.10
+
+# OCR/document helpers used by GOV ingestion flows.
+pytesseract>=0.3.10
+pdf2image>=1.17.0
+

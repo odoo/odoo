@@ -1,5 +1,5 @@
 {
-    "name": "GRP - Base Governamental",
+    "name": "AGI Gov - Base Governamental",
     "version": "19.0.1.0.0",
     "category": "Government",
     "depends": ["base", "account"],
@@ -13,5 +13,5 @@
     "installable": True,
     "application": False,
     "license": "LGPL-3",
-    "author": "GRP",
+    "author": "AGI Gov",
 }

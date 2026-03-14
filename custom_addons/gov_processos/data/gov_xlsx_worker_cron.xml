@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="cron_gov_xlsx_worker_jobs" model="ir.cron">
-        <field name="name">GRP - Processar jobs XLSX</field>
+        <field name="name">AGI Gov - Processar jobs XLSX</field>
         <field name="model_id" ref="model_gov_processo_planilha_job"/>
         <field name="state">code</field>
         <field name="code">model._cron_process_pending_jobs()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="False"/>
         <field name="active" eval="True"/>
+        <field name="priority">20</field>
     </record>
 </odoo>

@@ -1,10 +1,10 @@
 {
-    "name": "GRP - Accounting Fiscal Year (Community)",
+    "name": "AGI Gov - Accounting Fiscal Year (Community)",
     "version": "19.0.1.0.0",
     "summary": "Manage fiscal years per company for accounting periods",
     "description": "Community-style fiscal year management aligned to GOV suite.",
     "category": "Accounting/Accounting",
-    "author": "GRP",
+    "author": "AGI Gov",
     "license": "LGPL-3",
     "depends": [
         "gov_base",
@@ -20,4 +20,3 @@
     "installable": True,
     "application": False,
 }
-

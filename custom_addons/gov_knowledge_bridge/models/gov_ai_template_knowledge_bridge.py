@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class GovAiTemplateKnowledgeBridge(models.Model):
@@ -10,6 +11,19 @@ class GovAiTemplateKnowledgeBridge(models.Model):
         ondelete="set null",
         copy=False,
     )
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "gov_ai_template", "knowledge_article_id"):
+            create_column(self.env.cr, "gov_ai_template", "knowledge_article_id", "int4")
+
+        result = super()._auto_init()
+        self.env.cr.execute(
+            """
+            CREATE INDEX IF NOT EXISTS gov_ai_template_knowledge_article_id_idx
+                ON gov_ai_template (knowledge_article_id)
+            """
+        )
+        return result
 
     def action_open_knowledge_article(self):
         self.ensure_one()

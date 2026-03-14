@@ -1,5 +1,5 @@
 {
-    "name": "GRP - Compras",
+    "name": "AGI Gov - Compras",
     "version": "19.0.1.0.0",
     "category": "Government",
     "summary": "Catálogo, banco de preços, trilha de item e previsão orçamentária de compras",
@@ -17,7 +17,7 @@
         "views/gov_compras_menus.xml",
     ],
     "installable": True,
-    "application": True,
-    "author": "GRP",
+    "application": False,
+    "author": "AGI Gov",
     "license": "LGPL-3",
 }

@@ -1,0 +1,10 @@
+# AGI Gov optional AI/embedding extras.
+# These packages are intentionally separated because they pull large ML runtimes
+# such as torch/sentence-transformers and should not be part of the default
+# GOV document-processing container unless explicitly requested.
+
+langchain-core>=0.3.0
+langchain-huggingface>=0.1.0
+sentence-transformers>=3.0.0
+huggingface-hub>=0.24.0
+

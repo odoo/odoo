@@ -1,10 +1,16 @@
 from odoo import fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class GovProcessoVersao(models.Model):
     _name = "gov.processo.versao"
     _description = "Histórico de Versões de Documento"
     _order = "version_number desc"
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "gov_processo_versao", "typst_snapshot"):
+            create_column(self.env.cr, "gov_processo_versao", "typst_snapshot", "text")
+        return super()._auto_init()
 
     doc_id = fields.Many2one(
         "gov.processo.doc",
@@ -15,6 +21,7 @@ class GovProcessoVersao(models.Model):
     version_number = fields.Integer(string="Versão", required=True)
     content_snapshot_html = fields.Html(string="Snapshot HTML")
     latex_snapshot = fields.Text(string="Snapshot LaTeX")
+    typst_snapshot = fields.Text(string="Snapshot Typst")
     pdf_snapshot = fields.Binary(string="PDF desta versão", attachment=True)
     changed_by = fields.Many2one("res.users", default=lambda self: self.env.user)
     changed_at = fields.Datetime(default=fields.Datetime.now)
