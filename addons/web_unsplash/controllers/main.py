@@ -34,7 +34,7 @@ class Web_Unsplash(http.Controller):
             if not url.startswith('https://api.unsplash.com/photos/') and not modules.module.current_test:
                 raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
             access_key = self._get_access_key()
-            requests.get(url, params=url_encode({'client_id': access_key}))
+            requests.get(url, params=url_encode({'client_id': access_key}), timeout=10.0)
         except Exception as e:
             logger.exception("Unsplash download notification failed: " + str(e))
 
@@ -85,7 +85,7 @@ class Web_Unsplash(http.Controller):
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
                     raise Exception(_("ERROR: Unknown Unsplash URL!"))
 
-                req = requests.get(url)
+                req = requests.get(url, timeout=10.0)
                 if req.status_code != requests.codes.ok:
                     continue
 
