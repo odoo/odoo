@@ -29,7 +29,9 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
         cls.main_pos_config.write({'payment_method_ids': [Command.set(payment_methods.ids)]})
 
     def test_vw_request_data(self):
-        def mocked_call_viva_com_check_post_data(self, endpoint, action, data=None):
+        def mocked_call_viva_com_check_post_data(self, endpoint, action, data=None, should_retry=True):
+            if data is None:
+                return {}
             if not isinstance(data['amount'], int):
                 raise TypeError(f"Expected 'amount' to be an integer, but got {data['amount']}.")
             if not data['terminalId'] == '01234543210':
