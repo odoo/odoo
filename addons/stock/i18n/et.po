@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:07+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -58,8 +58,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Siirded %(transfer_list)s: vaja määrata partii/seerianumber toodetele "
-"%(product_list)s."
+"Siirded %(transfer_list)s: vaja määrata partii/seerianumber toodetele %"
+"(product_list)s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
@@ -108,6 +108,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) on olemas asukohas %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -617,8 +625,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Tooted liiguvad <b>%(destination)s</b> suunas, <br/> täpsustatult "
-"<b>%(operation)s</b> asukohast."
+"<br>Tooted liiguvad <b>%(destination)s</b> suunas, <br/> täpsustatult <b>%"
+"(operation)s</b> asukohast."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -628,13 +636,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1898,8 +1906,8 @@ msgstr "Ei leia ühtegi tavalist marsruuti %s."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 "Ei saa liigutada konteinerit, mille sees olevad pakid asuvad teises asukohas "
 "%(old_location)s ,teisse asukohta %(new_location)s ."
@@ -2023,8 +2031,8 @@ msgstr "Toote muutmine on lubatud vaid \"Mustandi\" staatuses."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Märk/märgid, mida kasutatakse koondatud triipkoodis (st triipkood, mis "
 "sisaldab mitut triipkoodi kodeeringut) andmete eraldamiseks"
@@ -2165,8 +2173,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada DHL'ga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2191,8 +2199,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada FedExiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2222,8 +2230,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada UPSiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2238,8 +2246,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada USPSiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8501,8 +8509,8 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
 "Reegel %(rule)s kuulub ettevõttele %(rule_company)s, marsruut kuulub "
 "ettevõttele %(route_company)s."
@@ -8842,11 +8850,11 @@ msgstr "Seerianumbrid"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Seerianumber (%(serial_number)s) on juba asukohas (kohtades): "
-"%(location_list)s olemas. Parandage kodeeritud seerianumber."
+"Seerianumber (%(serial_number)s) on juba asukohas (kohtades): %"
+"(location_list)s olemas. Parandage kodeeritud seerianumber."
 
 #. module: stock
 #. odoo-python
@@ -9731,8 +9739,8 @@ msgstr "See partii/seerianumber (%s) on seotud teise tootega."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -9740,8 +9748,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Seerianumber (%(serial_number)s) on juba kasutusel järgmistes asukohtades: "
-"%(location_list)s.\n"
+"Seerianumber (%(serial_number)s) on juba kasutusel järgmistes asukohtades: %"
+"(location_list)s.\n"
 "\n"
 "Kas see on oodatav? Näiteks võib see juhtuda, kui tarnetoiming on kinnitatud "
 "enne selle vastava vastuvõtutoimingu kinnitamist. Sel juhul lahendatakse "
@@ -10700,11 +10708,11 @@ msgstr "Tühista määramine"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
-"Seerianumbrid pole saadaval. Palun parandage kodeeritud seerianumbrid: "
-"%(serial_numbers_to_locations)s"
+"Seerianumbrid pole saadaval. Palun parandage kodeeritud seerianumbrid: %"
+"(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -11221,8 +11229,8 @@ msgstr "Kui toode saabub asukohta"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 "Kui tooteid on vaja asukohta <b>%(destination)s</b>, <br> <b>%(operation)s</"
 "b> luuakse kauba väljastus <b>%(source_location)s</b> asukohast vajaduse "
@@ -11241,8 +11249,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Kui Tõene väärtus on määratud, siis määratakse stock.move sihtasukohaks "
 "reeglis määratud asukoht. Vastasel juhul võetakse sihtasukoht "
@@ -11503,11 +11511,11 @@ msgstr "Ei saa eemaldada asukohti %s sest nendes on ikka veel tooteid."
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
-"Te ei saa arhiveerida asukohta %(location)s kuna see on kasutusel teie laos "
-"%(warehouse)s"
+"Te ei saa arhiveerida asukohta %(location)s kuna see on kasutusel teie laos %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-python

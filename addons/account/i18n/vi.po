@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-03-07 14:35+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-14 12:55+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/vi/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -205,6 +205,14 @@ msgstr "%(name)s%(ref)s với số tiền %(currency_amount)s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
+"delivered at %(unit_price)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
@@ -313,19 +321,6 @@ msgstr "'%(filename)s' (được xuất từ '%(root_filename)s', type=%(type)s)
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (type=%(type)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
-"(*) Hàng hóa đã giao nhưng chưa lập hóa đơn (phương pháp định giá liên tục)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
-msgstr "(*) Hàng hóa đã lập hóa đơn nhưng chưa giao (định giá liên tục)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -1391,8 +1386,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-trash text-danger\"/>\n"
 "                            <span class=\"text-danger\" "
-"invisible=\"duplicated_ref_ids.length == 1\">Xóa tất cả bản trùng lặp</span>"
-"\n"
+"invisible=\"duplicated_ref_ids.length == 1\">Xóa tất cả bản trùng lặp</"
+"span>\n"
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Xóa bản trùng lặp</span>"
 
@@ -6515,7 +6510,8 @@ msgstr "Chi phí doanh thu"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_equipment
 msgid "Cost of office furniture, fixtures, and business equipment"
-msgstr "Chi phí cho nội thất văn phòng, thiết bị cố định và thiết bị kinh doanh"
+msgstr ""
+"Chi phí cho nội thất văn phòng, thiết bị cố định và thiết bị kinh doanh"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -9933,6 +9929,18 @@ msgid "Goods"
 msgstr "Hàng hóa"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Delivered not Invoiced (perpetual valuation)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Invoiced not Delivered (perpetual valuation)"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
 msgid "Ground Transportation"
 msgstr "Vận tải đường bộ"
@@ -10737,8 +10745,8 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>[,force_date_sope])Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"Trong báo cáo '%(report_name)s', tại dòng '%(line_name)s', với nhãn '%(label)"
-"s',\n"
+"Trong báo cáo '%(report_name)s', tại dòng '%(line_name)s', với nhãn '%"
+"(label)s',\n"
 "Định dạng của biểu thức báo cáo chéo không hợp lệ. \n"
 "Định dạng mong đợi: cross_report(<report_id>|<xml_id>[,force_date_sope])Ví "
 "dụ: cross_report(my_module.my_report) hoặc cross_report(123)"
@@ -13676,7 +13684,7 @@ msgstr "Dịch vụ văn phòng"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_supplies
 msgid "Office Supplies"
-msgstr "Cung cấp văn phòng phẩm"
+msgstr "Văn phòng phẩm"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_furniture
@@ -20230,6 +20238,11 @@ msgid "Transfer to %s"
 msgstr "Luân chuyển tới %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+msgid "Translated Product Name"
+msgstr ""
+
+#. module: account
 #: model:account.group,name:account.2_us_group_661
 msgid "Travel Expenses"
 msgstr "Chi phí đi lại"
@@ -22684,8 +22697,8 @@ msgid ""
 "{{ object.company_id.name }} - New invoice in "
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
-"{{ object.company_id.name }} - Hoá đơn mới trong sổ nhật ký {{ "
-"object.journal_id.display_name or 'Invoices' }}"
+"{{ object.company_id.name }} - Hoá đơn mới trong sổ nhật ký "
+"{{ object.journal_id.display_name or 'Invoices' }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
@@ -22725,6 +22738,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Hóa đơn tự lập (Tham chiếu {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+#~ msgstr ""
+#~ "(*) Hàng hóa đã giao nhưng chưa lập hóa đơn (phương pháp định giá liên "
+#~ "tục)"
+
+#~ msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+#~ msgstr "(*) Hàng hóa đã lập hóa đơn nhưng chưa giao (định giá liên tục)"
 
 #~ msgid ""
 #~ "Value for the amount of the writeoff line\n"

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:09+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -98,6 +98,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) există în locație %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -231,8 +239,8 @@ msgid ""
 "%(operations)s have default source or destination locations within warehouse "
 "%(warehouse)s, therefore you cannot archive it."
 msgstr ""
-"%(operations)s au locații sursă sau destinație implicite în depozitul "
-"%(warehouse)s, prin urmare nu puteți arhiva."
+"%(operations)s au locații sursă sau destinație implicite în depozitul %"
+"(warehouse)s, prin urmare nu puteți arhiva."
 
 #. module: stock
 #. odoo-python
@@ -346,8 +354,8 @@ msgstr "'Pachete - %s' % (object.name)"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Operațiuni de ridicare - %s - %s' % (object.partner_id.name or '', object."
-"name)"
+"'Operațiuni de ridicare - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
 
 #. module: stock
 #. odoo-python
@@ -626,13 +634,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1906,11 +1914,11 @@ msgstr "Nu se poate găsi o rută generică %s."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
-"Nu se poate muta un container care are pachete într-o altă locație "
-"(%(old_location)s) într-o locație diferită (%(new_location)s)."
+"Nu se poate muta un container care are pachete într-o altă locație (%"
+"(old_location)s) într-o locație diferită (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2033,8 +2041,8 @@ msgstr "Modificarea produsului este permisă doar în starea „Ciornă”."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Caracter(e) folosit(e) pentru a separa datele conținute într-un cod de bare "
 "agregat (adică un cod de bare care conține mai multe codificări de coduri de "
@@ -2178,8 +2186,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Calculați costurile de transport și expediați cu DHL<br/>\n"
-"                                    <strong>(vă rugăm să mergeți la Acasă&gt;"
-"Aplicații pentru instalare)</strong>"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2204,8 +2212,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Calculați costurile de transport și expediați cu FedEx<br/>\n"
-"                                    <strong>(vă rugăm să mergeți la Acasă&gt;"
-"Aplicații pentru instalare)</strong>"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2235,8 +2243,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Calculați costurile de transport și expediați cu UPS<br/>\n"
-"                                    <strong>(vă rugăm să mergeți la Acasă&gt;"
-"Aplicații pentru instalare)</strong>"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2251,8 +2259,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Calculați costurile de transport și expediați cu USPS<br/>\n"
-"                                    <strong>(vă rugăm să mergeți la Acasă&gt;"
-"Aplicații pentru instalare)</strong>"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6214,8 +6222,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Nu a fost găsită nicio regulă care să se reumple \"%(product)s\" în "
-"\"%(location)s\".\n"
+"Nu a fost găsită nicio regulă care să se reumple \"%(product)s\" în \"%"
+"(location)s\".\n"
 "Verificați configurația fișelor tehnologice pe produs."
 
 #. module: stock
@@ -8554,11 +8562,11 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
-"Regula %(rule)s îi aparține %(rule_company)s în timp ce ruta îi aparține "
-"%(route_company)s."
+"Regula %(rule)s îi aparține %(rule_company)s în timp ce ruta îi aparține %"
+"(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8905,11 +8913,11 @@ msgstr "Numere de serie"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Numărul de serie (%(serial_number)s) există deja în locație (locuri): "
-"%(location_list)s. Vă rugăm să corectați numărul de serie codificat."
+"Numărul de serie (%(serial_number)s) există deja în locație (locuri): %"
+"(location_list)s. Vă rugăm să corectați numărul de serie codificat."
 
 #. module: stock
 #. odoo-python
@@ -8920,9 +8928,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"Numărul de serie (%(serial_number)s) nu este localizat în "
-"%(source_location)s, dar este localizat în locație (locuri): "
-"%(other_locations)s."
+"Numărul de serie (%(serial_number)s) nu este localizat în %"
+"(source_location)s, dar este localizat în locație (locuri): %"
+"(other_locations)s."
 
 #. module: stock
 #. odoo-python
@@ -8933,11 +8941,11 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"Numărul de serie (%(serial_number)s) nu este localizat în "
-"%(source_location)s, dar este localizat în locație (locuri): "
-"%(other_locations)s.\n"
-"Locația sursă pentru acest transfer va fi schimbată în "
-"%(recommended_location)s"
+"Numărul de serie (%(serial_number)s) nu este localizat în %"
+"(source_location)s, dar este localizat în locație (locuri): %"
+"(other_locations)s.\n"
+"Locația sursă pentru acest transfer va fi schimbată în %"
+"(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9799,8 +9807,8 @@ msgstr "Numărul de lot/serie (%s) este asociat cu alt produs."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -9808,8 +9816,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Numărul de serie (%(serial_number)s) este deja folosit în locația(i): "
-"%(location_list)s.\n"
+"Numărul de serie (%(serial_number)s) este deja folosit în locația(i): %"
+"(location_list)s.\n"
 "\n"
 "Este de așteptat acest lucru? De exemplu, acest lucru poate apărea dacă o "
 "operațiune de livrare este validată înainte ca operațiunea de recepție "
@@ -10800,8 +10808,8 @@ msgstr "Dezatribuie"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Numere de serie indisponibile. Vă rugăm să corectați numerele de serie "
 "introduse: %(serial_numbers_to_locations)s"
@@ -11324,12 +11332,12 @@ msgstr "Când produsul ajunge în"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
-"Când produsele sunt necesare în <b>%(destination)s</b>, <br> "
-"<b>%(operation)s</b> sunt create din <b>%(source_location)s</b> pentru a "
-"acoperi necesarul. %(suffix)s"
+"Când produsele sunt necesare în <b>%(destination)s</b>, <br> <b>%"
+"(operation)s</b> sunt create din <b>%(source_location)s</b> pentru a acoperi "
+"necesarul. %(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -11344,8 +11352,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Când este setat pe Adevărat, locația de destinație a mutării de stoc va fi "
 "cea din regulă. În caz contrar, va fi preluată din tipul de ridicare."
@@ -11610,11 +11618,11 @@ msgstr "Nu puteți dezactiva locațiile %s deoarece acestea încă conțin produ
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
-"Nu puteți arhiva locația %(location)s deoarece este folosită de depozitul "
-"%(warehouse)s"
+"Nu puteți arhiva locația %(location)s deoarece este folosită de depozitul %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11843,8 +11851,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Încă aveți operațiuni în desfășurare pentru tipurile de operațiuni "
-"%(operations)s în depozitul %(warehouse)s"
+"Încă aveți operațiuni în desfășurare pentru tipurile de operațiuni %"
+"(operations)s în depozitul %(warehouse)s"
 
 #. module: stock
 #. odoo-javascript

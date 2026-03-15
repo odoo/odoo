@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:10+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -98,6 +98,14 @@ msgid ""
 msgstr ""
 "\n"
 "（%(serial_number)s）存在于位置 %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -245,8 +253,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
-"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，而订购数量为 %(qty_to_order)s "
-"%(uom)s。"
+"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，而订购数量为 %(qty_to_order)s %"
+"(uom)s。"
 
 #. module: stock
 #. odoo-python
@@ -590,13 +598,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1839,8 +1847,8 @@ msgstr "找不到通用路线 %s."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 
 #. module: stock
@@ -1956,8 +1964,8 @@ msgstr "只允许在“草稿”状态下更改产品。"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr "用于分隔集合条形码（即包含多种条形码编码的条形码）中所含数据的字符"
 
 #. module: stock
@@ -8287,8 +8295,8 @@ msgstr "将会为这些补充仓库创建路线，而且您可以在产品和产
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr "规则%(rule)s属于%(rule_company)s，而路由属于%(route_company)s。"
 
 #. module: stock
@@ -8623,8 +8631,8 @@ msgstr "序列号"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
 "序号（%(serial_number)s）已存在于以下位置：%(location_list)s。请更正编码的序"
 "列号。"
@@ -8638,8 +8646,8 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"序号（%(serial_number)s）并不位于%(source_location)s中，而是在位"
-"置%(other_locations)s。\n"
+"序号（%(serial_number)s）并不位于%(source_location)s中，而是在位置%"
+"(other_locations)s。\n"
 "\n"
 "请更正，以防数据不一致。"
 
@@ -8652,8 +8660,8 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"序号（%(serial_number)s）并不位于 %(source_location)s中，而是在位"
-"置%(other_locations)s。\n"
+"序号（%(serial_number)s）并不位于 %(source_location)s中，而是在位置%"
+"(other_locations)s。\n"
 "\n"
 "此移动的来源位置将变更为%(recommended_location)s"
 
@@ -9492,8 +9500,8 @@ msgstr "批次/序列号（%s）与另一个产品有关联。"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -10415,8 +10423,8 @@ msgstr "取消分配"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr "序列号不可用。请更正已编码的序列号：%(serial_numbers_to_locations)s"
 
 #. module: stock
@@ -10929,8 +10937,8 @@ msgstr "当产品到达"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 "当 <b>%(destination)s</b> 需要产品时，<br>会自动创建<b>%(operation)s</b> 操"
 "作，由 <b>%(source_location)s</b> 调配产品，以满足需求。%(suffix)s"
@@ -10948,8 +10956,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr "设置为 True（真）时，stock.move 的目标位置会依照规则。"
 
 #. module: stock
@@ -11084,8 +11092,8 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New "
 "Lots/Serial Numbers\"."
 msgstr ""
-"在此作业类型下不能创建批次或者序列号。要更改此设置，请在相应的作业类型下勾"
-"选“创建新的批次 / 序列号” 选项。"
+"在此作业类型下不能创建批次或者序列号。要更改此设置，请在相应的作业类型下勾选"
+"“创建新的批次 / 序列号” 选项。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -11186,8 +11194,8 @@ msgstr "您不能禁用位置 %s，因为它们仍然包含产品。"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr "您不可封存位置%(location)s，因为仓库%(warehouse)s正使用它"
 
 #. module: stock

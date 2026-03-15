@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2026-01-24 12:29+0000\n"
+"PO-Revision-Date: 2026-03-14 13:02+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "payment/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -1547,7 +1547,7 @@ msgstr "Messages"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
-msgstr ""
+msgstr "Montant minimum"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
@@ -1557,7 +1557,7 @@ msgstr "MoMo"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile
 msgid "Mobile"
-msgstr ""
+msgstr "Mobile"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
@@ -1818,12 +1818,12 @@ msgstr "Payez plus tard"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_later_label
 msgid "Pay Later Label"
-msgstr ""
+msgstr "Libellé \"Payer plus tard\""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_now_label
 msgid "Pay Now Label"
-msgstr ""
+msgstr "Libellé \"Payer maintenant\""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
@@ -2310,7 +2310,7 @@ msgstr "Samsung Pay"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_satispay
 msgid "Satispay"
-msgstr ""
+msgstr "Satispay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2668,6 +2668,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Later' payment "
 "methods."
 msgstr ""
+"Libellé à afficher sur les boutons de paiement pour les modes de paiement "
+"\"Payer plus tard\"."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_res_company__pay_now_label
@@ -2675,6 +2677,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Now' payment "
 "methods."
 msgstr ""
+"Libellé à afficher sur les boutons de paiement pour les modes de paiement "
+"\"Payer maintenant\"."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
@@ -2759,6 +2763,9 @@ msgid ""
 "The minimum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"Montant minimum de paiement pour lequel ce fournisseur de paiement est "
+"disponible. Laissez vide pour le rendre disponible pour tout montant de "
+"paiement."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -3005,7 +3012,7 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
 msgid "Toss Payments"
-msgstr ""
+msgstr "Toss Payments"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_touch_n_go
@@ -3542,7 +3549,7 @@ msgstr "Capture manuelle non prise en charge"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "minimum or maximum amount exceeded"
-msgstr ""
+msgstr "montant minimum ou maximum dépassé"
 
 #. module: payment
 #. odoo-python

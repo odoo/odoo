@@ -15,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
-"PO-Revision-Date: 2026-01-31 12:40+0000\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-14 13:04+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "sale_timesheet/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -220,6 +220,13 @@ msgid "<span class=\"text-muted small\">Time to Answer</span>"
 msgstr "<span class=\"text-muted small\">Temps pour répondre</span>"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+msgid ""
+"<span class=\"text-muted\">Timesheets without a sales order item are "
+"reported as</span>"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_rating:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_rating:sale_timesheet.job_labour
@@ -370,6 +377,18 @@ msgid ""
 "done\"\n"
 "spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
+"En tant qu’employé de notre entreprise, vous collaborerez avec chaque "
+"département afin de créer et de déployer des produits innovants.</b> "
+"Rejoignez une entreprise en pleine croissance qui offre d’excellents "
+"avantages ainsi que de nombreuses opportunités d’évolution et "
+"d’apprentissage aux côtés de leaders expérimentés. Nous recherchons un "
+"collaborateur expérimenté et talentueux.\n"
+"<br><br>\n"
+"Ce poste est à la fois <b>créatif et exigeant</b>. Vous devrez faire preuve "
+"d’initiative et savoir sortir des sentiers battus. Nous attendons du "
+"candidat qu’il soit proactif et doté d’un véritable esprit d’action. Pour "
+"réussir dans ce rôle, vous devrez disposer de solides compétences en "
+"résolution de problèmes."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -399,7 +418,7 @@ msgstr "Temps facturable"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__billable_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
-msgstr "Type de facturation"
+msgstr "Type facturable"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
@@ -417,7 +436,7 @@ msgstr "Facturé à un prix fixe"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
 msgid "Billed on Milestones"
-msgstr "Facturé sur des jalons"
+msgstr "Facturé par jalons"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
@@ -768,7 +787,7 @@ msgstr "Écriture comptable"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "Extourne d’écriture comptable"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
@@ -857,17 +876,17 @@ msgstr "Compétences nécéssaires"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "My Department"
-msgstr ""
+msgstr "Mon département"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "My Projects"
-msgstr ""
+msgstr "Mes projets"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "My Team"
-msgstr ""
+msgstr "Mon équipe"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -957,6 +976,8 @@ msgid ""
 "Notify the salesperson about an upsell opportunity when completed work "
 "exceeds"
 msgstr ""
+"Notifier le commercial d’une opportunité de vente additionnelle lorsque le "
+"travail effectué dépasse"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -991,12 +1012,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_other_costs
 msgid "Other Costs"
-msgstr ""
+msgstr "Autres coûts"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__11_other_revenues
 msgid "Other Revenues"
-msgstr ""
+msgstr "Autres revenus"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1122,23 +1143,23 @@ msgstr "Responsabilités"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
 msgid "Revenues Fixed Price"
-msgstr ""
+msgstr "Revenus à prix fixe"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
 msgid "Revenues Manual"
-msgstr ""
+msgstr "Revenus manuels"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
 msgid "Revenues Milestones"
-msgstr ""
+msgstr "Revenus par jalons"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
 msgid "Revenues Timesheets"
-msgstr ""
+msgstr "Revenus des feuilles de temps"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1267,7 +1288,7 @@ msgstr "Architecte Senior (Facturation sur feuilles de temps)"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__10_service_revenues
 msgid "Service Revenues"
-msgstr "Revenus du service"
+msgstr "Revenus de services"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
@@ -1524,12 +1545,6 @@ msgid "Timesheets taken when invoicing time spent"
 msgstr "Feuilles de temps prises en compte lorsque le temps passé est facturé"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
-msgid "Timesheets without a sales order item are reported as"
-msgstr ""
-"Les feuilles de temps sans article de commande client sont rapportées comme"
-
-#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
 msgid "Total"
 msgstr "Total"
@@ -1656,13 +1671,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
 msgid "You cannot modify timsheets that are already invoiced."
-msgstr ""
+msgstr "Vous ne pouvez pas modifier des feuilles de temps déjà facturées."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
 msgid "You cannot remove timsheets that are already invoiced."
-msgstr ""
+msgstr "Vous ne pouvez pas supprimer des feuilles de temps déjà facturées."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
@@ -1683,7 +1698,7 @@ msgstr "non facturable"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of the hours sold."
-msgstr ""
+msgstr "des heures vendues."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1696,3 +1711,8 @@ msgstr "project_id"
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "remaining"
 msgstr "restant"
+
+#~ msgid "Timesheets without a sales order item are reported as"
+#~ msgstr ""
+#~ "Les feuilles de temps sans article de commande client sont rapportées "
+#~ "comme"

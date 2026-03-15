@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
-"PO-Revision-Date: 2026-03-07 14:36+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-14 13:00+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/mail/es_419/>\n"
 "Language: es_419\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -103,7 +103,7 @@ msgstr "%(activity)s, asignada a %(name)s, con fecha límite %(deadline)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "%(amount)s items marked as read"
-msgstr ""
+msgstr "%(amount)s elementos marcados como leídos"
 
 #. module: mail
 #. odoo-javascript
@@ -275,19 +275,19 @@ msgstr "%(name)s <%(email)s>"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name)s is presenting"
-msgstr ""
+msgstr "%(name)s está presentando"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name_1)s and %(name_2)s are presenting"
-msgstr ""
+msgstr "%(name_1)s y %(name_2)s están presentando"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name_1)s, %(name_2)s and %(count)s more are presenting"
-msgstr ""
+msgstr "%(name_1)s, %(name_2)s y %(count)s más están presentando"
 
 #. module: mail
 #. odoo-python
@@ -300,6 +300,13 @@ msgid ""
 "(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
+"%(new_line)s%(new_line)s%(bold_start)s@nombre_de_usuario%(bold_end)s para "
+"mencionar a alguien%(new_line)s%(bold_start)s@función%(bold_end)s para "
+"notificar a varias personas%(new_line)s%(bold_start)s#canal%(bold_end)s para "
+"vincular un canal%(new_line)s%(bold_start)s/comando%(bold_end)s para "
+"ejecutar un comando%(new_line)s%(bold_start)s::atajo%(bold_end)s para "
+"insertar una respuesta predefinida%(new_line)s%(bold_start)s:emoji:%"
+"(bold_end)s para insertar un emoji"
 
 #. module: mail
 #. odoo-javascript
@@ -452,6 +459,18 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Keep formatting)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Remove formatting)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "(Translated from: %(language)s)"
 msgstr "(Traducido del: %(language)s)"
@@ -486,6 +505,8 @@ msgid ""
 ") added you as a follower.\n"
 "                        <br/>You'll now receive updates for this"
 msgstr ""
+") te agregó como seguidor\n"
+"                        <br/>Ahora recibirás actualizaciones sobre"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_multi_invite
@@ -493,6 +514,8 @@ msgid ""
 ") added you as a follower.\n"
 "                    <br/>You'll now receive updates for the following"
 msgstr ""
+") te agregó como seguidor\n"
+"                        <br/>Ahora recibirás actualizaciones sobre"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -536,7 +559,7 @@ msgstr "1 hora"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "1 item marked as read"
-msgstr ""
+msgstr "1 elemento marcado como leído"
 
 #. module: mail
 #. odoo-javascript
@@ -622,6 +645,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
 "title=\"to\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"al\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -721,11 +746,14 @@ msgstr "<span class=\"d-block w-75 py-2\">Texto del botón</span>"
 msgid ""
 "<span class=\"fst-italic\" invisible=\"recipient_names\">Unspecified</span>"
 msgstr ""
+"<span class=\"fst-italic\" invisible=\"recipient_names\">Sin especificar</"
+"span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "<span class=\"fst-italic\" invisible=\"subject\">Unspecified</span>"
 msgstr ""
+"<span class=\"fst-italic\" invisible=\"subject\">Sin especificar</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
@@ -1004,7 +1032,7 @@ msgstr "Un ajuste de volumen debe tener un contacto o un invitado."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "API Key:"
-msgstr ""
+msgstr "Clave API:"
 
 #. module: mail
 #. odoo-python
@@ -1044,7 +1072,7 @@ msgstr "Acceso restringido al grupo \"%(groupFullName)s\""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
 msgid "Accessible to anyone with the link"
-msgstr ""
+msgstr "Cualquier persona con el enlace puede acceder"
 
 #. module: mail
 #. odoo-python
@@ -1268,7 +1296,7 @@ msgstr "Tipo de actividad"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_type_available_ids
 msgid "Activity Type Available"
-msgstr ""
+msgstr "Tipo de actividad disponible"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_type_icon
@@ -1452,7 +1480,7 @@ msgstr "Agregar o eliminar seguidores"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Added %(name)s to Favorites"
-msgstr ""
+msgstr "%(name)s agregado a Favoritos"
 
 #. module: mail
 #. odoo-python
@@ -1853,6 +1881,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "Are you sure you want to pin this message to %(conversation)s?"
+msgstr "¿De verdad quieres fijar este mensaje a %(conversation)s?"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid ""
+"Are you sure you want to remove %(member_name)s from the members of '%"
+"(channel_name)s'?"
 msgstr ""
 
 #. module: mail
@@ -1884,7 +1920,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "Are you sure you want to unpin this message?"
-msgstr ""
+msgstr "¿De verdad quieres desfijar este mensaje?"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -1894,7 +1930,7 @@ msgstr "Preguntar al iniciar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Assign to"
-msgstr ""
+msgstr "Asignar a"
 
 #. module: mail
 #. odoo-javascript
@@ -2168,6 +2204,12 @@ msgstr "Ausente"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/action_panel.js:0
+msgid "Back to previous panel"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Background Blur Performance Warning"
 msgstr "Advertencia del rendimiento del desenfoque de fondo"
@@ -2291,19 +2333,19 @@ msgstr "El contenido del cuerpo es igual al de la plantilla"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Bookmark"
-msgstr ""
+msgstr "Marcar"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "Bookmark important messages"
-msgstr ""
+msgstr "Marcar mensajes importantes"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Bookmark removed"
-msgstr ""
+msgstr "Marcador eliminado"
 
 #. module: mail
 #. odoo-javascript
@@ -2311,20 +2353,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_bookmarked
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_bookmarked
 msgid "Bookmarked"
-msgstr ""
+msgstr "Marcado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__bookmarked_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__bookmarked_partner_ids
 msgid "Bookmarked By"
-msgstr ""
+msgstr "Marcado por"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "Bookmarks"
-msgstr ""
+msgstr "Marcadores"
 
 #. module: mail
 #. odoo-javascript
@@ -2459,7 +2501,7 @@ msgstr "Por order de prioridad del servidor"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "CMD"
-msgstr ""
+msgstr "CMD"
 
 #. module: mail
 #. odoo-javascript
@@ -2537,7 +2579,7 @@ msgstr "Puede salir"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_self_edit_readonly_channel
 msgid "Can Self Edit Readonly Channel"
-msgstr ""
+msgstr "Puede editar su propio canal de solo lectura"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2707,7 +2749,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/controllers/discuss/rtc.py:0
 msgid "Cannot join a call in a read-only channel."
-msgstr ""
+msgstr "No puedes unirte a una llamada en un canal de solo lectura."
 
 #. module: mail
 #. odoo-javascript
@@ -2971,7 +3013,7 @@ msgstr "Chats"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Chatter of the record"
-msgstr ""
+msgstr "Chatter del registro"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -3014,7 +3056,7 @@ msgstr "Ciudad, Región, País"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Clear Search"
-msgstr ""
+msgstr "Limpiar búsqueda"
 
 #. module: mail
 #. odoo-javascript
@@ -3087,6 +3129,7 @@ msgstr "Botón de cierre"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/action_panel.js:0
 #: code:addons/mail/static/src/discuss/core/common/action_panel.xml:0
 msgid "Close panel"
 msgstr "Cerrar panel"
@@ -3204,7 +3247,7 @@ msgstr "Modo de redacción"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/action_dialog_patch.js:0
 msgid "Compress"
-msgstr ""
+msgstr "Comprimir"
 
 #. module: mail
 #. odoo-python
@@ -3381,9 +3424,15 @@ msgid "Contents"
 msgstr "Contenidos"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Continue with Full Composer?"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Conversation"
-msgstr ""
+msgstr "Conversación"
 
 #. module: mail
 #. odoo-javascript
@@ -3407,7 +3456,7 @@ msgstr "Conversaciones"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Copy Invite Link"
-msgstr ""
+msgstr "Copiar enlace de invitación"
 
 #. module: mail
 #. odoo-javascript
@@ -3677,7 +3726,7 @@ msgstr "Moneda"
 #: model:ir.model.fields,help:mail.field_mail_mail__is_bookmarked
 #: model:ir.model.fields,help:mail.field_mail_message__is_bookmarked
 msgid "Current user has bookmarked this message"
-msgstr ""
+msgstr "El usuario actual marcó este mensaje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
@@ -3687,7 +3736,7 @@ msgstr "Mensaje personalizado en caso de devolución"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom Call Servers"
-msgstr ""
+msgstr "Servidores de llamada personalizados"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3900,7 +3949,7 @@ msgstr "Resumen predeterminado:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Default Type"
-msgstr ""
+msgstr "Tipo predeterminado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -4101,7 +4150,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
 msgid "Direct Messages"
-msgstr ""
+msgstr "Mensajes directos"
 
 #. module: mail
 #. odoo-javascript
@@ -4334,12 +4383,6 @@ msgstr "¿Quieres que la gente te vea durante la junta?"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
-msgid "Do you want to remove \"%(member_name)s\" from this channel?"
-msgstr "¿Quieres eliminar a \"%(member_name)s\" de este canal?"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 msgid ""
 "Do you want to remove owner from yourself? You will no longer have full "
@@ -4401,6 +4444,12 @@ msgstr "Documento: \""
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Domain"
 msgstr "Dominio"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Don't worry, they can rejoin later or be invited back at any time."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4473,7 +4522,7 @@ msgstr "Fecha límite"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due In"
-msgstr ""
+msgstr "Vence en"
 
 #. module: mail
 #. odoo-javascript
@@ -4537,7 +4586,7 @@ msgstr "Reportes dinámicos"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__generic
 msgid "Dynamic User"
-msgstr ""
+msgstr "Usuario dinámico"
 
 #. module: mail
 #. odoo-javascript
@@ -4817,7 +4866,7 @@ msgstr "Habilitar"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Enable GIFs"
-msgstr ""
+msgstr "Activar GIF"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
@@ -4862,7 +4911,7 @@ msgstr "Ingresar"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Enter name or email"
-msgstr ""
+msgstr "Ingresa un nombre o correo electrónico"
 
 #. module: mail
 #. odoo-javascript
@@ -5169,7 +5218,7 @@ msgstr "Detalles del campo"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__activity_user_id_fname
 msgid "Field name of the user to choose on the record"
-msgstr ""
+msgstr "Nombre del campo del usuario que se elegirá en el registro"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__update_path
@@ -5417,12 +5466,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_layout_force_footer
 msgid "Force Footer"
-msgstr ""
+msgstr "Forzar pie de página"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_layout_force_header
 msgid "Force Header"
-msgstr ""
+msgstr "Forzar encabezado"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -5433,12 +5482,18 @@ msgstr "Forzar envío"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Forever"
-msgstr ""
+msgstr "Por siempre"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
 msgstr "Correo electrónico con formato"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Formatting can only be restored in Full Composer."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5542,18 +5597,18 @@ msgstr "Puerta de enlace"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Generate"
-msgstr ""
+msgstr "Generar"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Generate new invite link"
-msgstr ""
+msgstr "Generar nuevo enlace de invitación"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_template_id
 msgid "Generated From"
-msgstr ""
+msgstr "Generado desde"
 
 #. module: mail
 #. odoo-javascript
@@ -5654,7 +5709,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__has_activity_plans
 #: model:ir.model.fields,field_description:mail.field_ir_cron__has_activity_plans
 msgid "Has Activity Plans"
-msgstr ""
+msgstr "Tiene planes de actividad"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_attachments
@@ -5844,7 +5899,7 @@ msgstr "Nombre del host o IP del servidor de correo"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover on your message to bookmark it"
-msgstr ""
+msgstr "Pasa el cursor sobre tu mensaje para marcarlo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -6086,6 +6141,9 @@ msgid ""
 "If checked, the footer will be always shown in the email body when this "
 "template is used withnotification layout."
 msgstr ""
+"Si esta opción está seleccionada, el pie de página siempre aparecerá en el "
+"cuerpo del correo electrónico cuando esta plantilla use el diseño de "
+"notificación."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_layout_force_header
@@ -6093,6 +6151,9 @@ msgid ""
 "If checked, the header will be always shown in the email body when this "
 "template is used withnotification layout."
 msgstr ""
+"Si esta opción está seleccionada, el encabezado siempre aparecerá en el "
+"cuerpo del correo electrónico cuando esta plantilla use el diseño de "
+"notificación."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_fields__tracking
@@ -6199,11 +6260,15 @@ msgstr "Si quieres configurar un servidor SFU para llamadas grupales grandes."
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_google_translate_api
 msgid "If you want to use Google Translate API to enable message translation."
 msgstr ""
+"Activa esta opción si quieres usar la API de Google Translate para habilitar "
+"la traducción de mensajes."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_tenor_api
 msgid "If you want to use Tenor API to share GIFs in conversations."
 msgstr ""
+"Activa esta opción si quieres usar la API de Tenor para compartir GIF en "
+"conversaciones."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -6214,6 +6279,8 @@ msgstr "Si desea utilizar twilio como proveedor de servidores TURN/STUN"
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_call_server
 msgid "If you want to use your own SFU or ICE servers for video calls."
 msgstr ""
+"Activa esta opción si quieres usar tus propios servidores SFU o ICE para las "
+"videollamadas."
 
 #. module: mail
 #. odoo-javascript
@@ -6277,7 +6344,7 @@ msgstr "En Odoo"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/meeting_chat.xml:0
 msgid "In call messages"
-msgstr ""
+msgstr "Mensajes de la llamada"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__scheduled_date
@@ -6554,7 +6621,7 @@ msgstr "La invitación ya se envió a esta dirección"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Invitation link copied"
-msgstr ""
+msgstr "Enlace de invitación copiado"
 
 #. module: mail
 #. odoo-javascript
@@ -6747,7 +6814,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "It will remain pinned until you decide to remove it."
-msgstr ""
+msgstr "Permanecerá fijado hasta que decidas deshacer esa acción."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_push_device__keys
@@ -7060,7 +7127,7 @@ msgstr "Último uso"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Last edited %(editedDate)s"
-msgstr ""
+msgstr "Última edición el %(editedDate)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -7603,7 +7670,7 @@ msgstr "Reunión"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Meeting - %(date)s"
-msgstr ""
+msgstr "Reunión - %(date)s"
 
 #. module: mail
 #. odoo-javascript
@@ -7698,7 +7765,7 @@ msgstr "Mensaje para \"%(subChannelName)s\""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message #%(channelName)s…"
-msgstr ""
+msgstr "Mensaje para #%(channelName)s…"
 
 #. module: mail
 #. odoo-javascript
@@ -7730,13 +7797,15 @@ msgstr "ID del mensaje"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copied"
-msgstr ""
+msgstr "Enlace del mensaje copiado"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)"
 msgstr ""
+"Ocurrió un error al copiar el enlace del mensaje (es posible que no cuentes "
+"con los permisos correctos)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__message_link_preview_ids
@@ -8118,7 +8187,7 @@ msgstr "Nombre"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__recipient_names
 msgid "Names of the recipients"
-msgstr ""
+msgstr "Nombres de los destinatarios"
 
 #. module: mail
 #. odoo-python
@@ -8209,7 +8278,7 @@ msgstr "Mensaje nuevo"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "New messages will appear here."
-msgstr ""
+msgstr "Los nuevos mensajes aparecerán aquí."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -8266,6 +8335,7 @@ msgstr "Próxima semana"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "No"
 msgstr "No"
@@ -8383,7 +8453,7 @@ msgstr "No hay nadie más aquí."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "No one found to invite."
-msgstr ""
+msgstr "No encontramos a nadie para invitar."
 
 #. module: mail
 #. odoo-python
@@ -8408,6 +8478,8 @@ msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s.%"
 "(error_detail)s"
 msgstr ""
+"No hay un responsable designado para %(activity_type_name)s: %"
+"(activity_summary)s.%(error_detail)s"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
@@ -8436,7 +8508,7 @@ msgstr "No hay un hilo de respuestas"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "No threads found."
-msgstr ""
+msgstr "No encontramos ningún hilo."
 
 #. module: mail
 #. odoo-javascript
@@ -8520,7 +8592,7 @@ msgstr "Nota"
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: mail
 #. odoo-javascript
@@ -8853,6 +8925,8 @@ msgid ""
 "Once a message has been bookmarked, you can come back and review it at any "
 "time here."
 msgstr ""
+"Una vez que marcas un mensaje, puedes volver aquí y revisarlo en cualquier "
+"momento."
 
 #. module: mail
 #. odoo-python
@@ -8907,6 +8981,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_discuss_channel__is_readonly
 msgid "Only admins are allowed to post messages in a read-only channel."
 msgstr ""
+"Solo los administradores pueden publicar mensajes en un canal de solo "
+"lectura."
 
 #. module: mail
 #. odoo-python
@@ -8914,17 +8990,21 @@ msgstr ""
 msgid ""
 "Only channel owners and admins can create threads in a read-only channel."
 msgstr ""
+"Solo los propietarios del canal y los administradores pueden crear hilos en "
+"un canal de solo lectura."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Only channel owners or administrators can reset the invite link."
 msgstr ""
+"Solo los propietarios del canal o los administradores pueden restablecer el "
+"enlace de invitación."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_readonly_channel_type_check
 msgid "Only channels can be read-only."
-msgstr ""
+msgstr "Solo los canales pueden ser de solo lectura."
 
 #. module: mail
 #. odoo-python
@@ -9513,6 +9593,7 @@ msgstr "Permiso necesario"
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Permission denied: invitation link copy failed"
 msgstr ""
+"Permiso denegado: Ocurrió un error al copiar el enlace de la invitación"
 
 #. module: mail
 #. odoo-javascript
@@ -9572,13 +9653,13 @@ msgstr "Fijar"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "Pin Message"
-msgstr ""
+msgstr "Fijar mensaje"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "Pin this message?"
-msgstr ""
+msgstr "¿Quieres fijar este mensaje?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__pinned_at
@@ -9589,6 +9670,7 @@ msgstr "Fijado"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
+#: code:addons/mail/static/src/discuss/call/common/meeting_chat.xml:0
 #: code:addons/mail/static/src/discuss/core/common/pinned_messages_panel.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Pinned Messages"
@@ -9626,7 +9708,7 @@ msgstr "Resumen del plan"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Plan activities: %(activity_plan_name)s"
-msgstr ""
+msgstr "Planificar actividades: %(activity_plan_name)s"
 
 #. module: mail
 #. odoo-python
@@ -9802,7 +9884,7 @@ msgstr "Encuesta cerrada"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/poll.js:0
 msgid "Poll ends on %(date)s"
-msgstr ""
+msgstr "La encuesta termina el %(date)s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_poll_option
@@ -9934,7 +10016,7 @@ msgstr "Asistencia"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.xml:0
 msgid "Presentation Audio"
-msgstr ""
+msgstr "Audio de la presentación"
 
 #. module: mail
 #. odoo-javascript
@@ -9944,6 +10026,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"Presiona %(open_samp)sESC%(close_samp)s %(open_em)spara %"
+"(open_cancel)scancelar%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%"
+"(close_samp)s %(open_em)spara %(open_save)sguardar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -9953,6 +10038,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"Presiona %(open_samp)sESC%(close_samp)s %(open_em)spara %"
+"(open_cancel)scancelar%(close_cancel)s%(close_em)s, %(open_samp)sEnter%"
+"(close_samp)s %(open_em)spara %(open_save)sguardar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -9964,7 +10052,7 @@ msgstr "Presiona [%(shortcut)s]"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Press a key to set it as the Push-to-Talk shortcut."
-msgstr ""
+msgstr "Presiona una tecla para definirla como atajo de pulsar para hablar."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__use_exclusion_list
@@ -10070,12 +10158,15 @@ msgid ""
 "Push-to-Talk works only while this tab is in focus. To use it outside this "
 "tab, we recommend installing our %(anchor_start)sextension%(anchor_end)s."
 msgstr ""
+"Pulsar para hablar solo funciona cuando esta pestaña está activa. Para "
+"usarlo fuera de esta pestaña, te recomendamos instalar nuestra %"
+"(anchor_start)sextensión%(anchor_end)s."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 msgid "Push-to-talk"
-msgstr ""
+msgstr "Pulsar para hablar"
 
 #. module: mail
 #. odoo-javascript
@@ -10187,7 +10278,7 @@ msgstr "Más información"
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_readonly
 msgid "Read-only"
-msgstr ""
+msgstr "Solo lectura"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
@@ -10237,7 +10328,7 @@ msgstr "Destinatario"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__recipient_names
 msgid "Recipient Names"
-msgstr ""
+msgstr "Nombres de los destinatarios"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
@@ -10405,7 +10496,7 @@ msgstr "Eliminar dirección de la lista de exclusión"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Remove all bookmarks"
-msgstr ""
+msgstr "Eliminar todos los marcadores"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
@@ -10417,7 +10508,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Remove from Bookmarks"
-msgstr ""
+msgstr "Eliminar de marcadores"
 
 #. module: mail
 #. odoo-javascript
@@ -10442,7 +10533,7 @@ msgstr "Eliminar este seguidor"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Removed %(name)s from Favorites"
-msgstr ""
+msgstr "Eliminamos %(name)s de Favoritos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_info
@@ -10527,7 +10618,7 @@ msgstr "Responder a"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 msgid "Reply To Address"
-msgstr ""
+msgstr "Dirección de correo electrónico de respuesta"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to
@@ -10787,7 +10878,7 @@ msgstr "Marcar un GIF de Tenor API como favorito"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "Save messages here to easily keep track of them."
-msgstr ""
+msgstr "Guarda mensajes aquí para darles seguimiento con facilidad."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -10911,7 +11002,7 @@ msgstr "Script"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Search %(threadName)s"
-msgstr ""
+msgstr "Buscar %(threadName)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
@@ -11174,7 +11265,7 @@ msgstr "Enviar y nueva invitación"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Date"
-msgstr ""
+msgstr "Fecha de envío"
 
 #. module: mail
 #. odoo-javascript
@@ -11198,12 +11289,12 @@ msgstr "Enviar desde"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
 msgid "Send GIF"
-msgstr ""
+msgstr "Enviar GIF"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send GIFs"
-msgstr ""
+msgstr "Enviar GIF"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -11438,13 +11529,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Set new key"
-msgstr ""
+msgstr "Definir nueva tecla"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up activity types and use activity plans to assign multiple activities"
 msgstr ""
+"Configura los tipos de actividad y usa los planes de actividad para asignar "
+"varias actividades"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11483,7 +11576,7 @@ msgstr "URL del servidor SFU"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Share GIFs in your conversations using the Tenor API"
-msgstr ""
+msgstr "Comparte GIF en tus conversaciones con la API de Tenor"
 
 #. module: mail
 #. odoo-javascript
@@ -11495,7 +11588,7 @@ msgstr "Compartir pantalla"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Share just a tab or a different window instead."
-msgstr ""
+msgstr "Comparte solo una pestaña o una ventana distinta."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
@@ -11541,7 +11634,7 @@ msgstr "Mostrar mis actividades"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Show My Screen Anyway"
-msgstr ""
+msgstr "Mostrar mi pantalla de todas formas"
 
 #. module: mail
 #. odoo-javascript
@@ -11750,7 +11843,7 @@ msgstr "Iniciado por %(authorName)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_preview.js:0
 msgid "Started by %(name)s"
-msgstr ""
+msgstr "Iniciado por %(name)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -11817,7 +11910,7 @@ msgstr "Detener"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Stop Presenting"
-msgstr ""
+msgstr "Dejar de presentar"
 
 #. module: mail
 #. odoo-javascript
@@ -11842,7 +11935,7 @@ msgstr "Desactivar cámara"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.xml:0
 msgid "Stop presenting"
-msgstr ""
+msgstr "Dejar de presentar"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -11936,7 +12029,7 @@ msgstr "Sugerir siguiente actividad"
 #: model:ir.model.fields,help:mail.field_mail_activity_plan_template__suggested_next_type_id
 #: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_id
 msgid "Suggest this activity once the current one is marked as done."
-msgstr ""
+msgstr "Sugiere esta actividad una vez la actual esté marcada como hecha."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -11946,7 +12039,7 @@ msgstr "Siguiente sugerido"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__suggested_next_type_id
 msgid "Suggested Next Activity"
-msgstr ""
+msgstr "Siguiente actividad sugerida"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -12168,12 +12261,14 @@ msgstr "Contenidos del texto"
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Text Copy Failed (Permission denied?)"
 msgstr ""
+"Ocurrió un error al copiar el texto (es probable que no cuentes con los "
+"permisos necesarios)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Text copied"
-msgstr ""
+msgstr "Texto copiado"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -12184,7 +12279,7 @@ msgstr "El"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "The 'Due In' value can't be negative."
-msgstr ""
+msgstr "El valor de \"Vence en\" no puede ser negativo."
 
 #. module: mail
 #. odoo-python
@@ -12289,6 +12384,7 @@ msgstr "El punto de conexión debe ser único"
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid "The field \"%(field_name)s\" must be related to the res.users model."
 msgstr ""
+"El campo \"%(field_name)s\" debe estar relacionado con el modelo res.users."
 
 #. module: mail
 #. odoo-python
@@ -12529,7 +12625,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/poll_votes_panel.xml:0
 msgid "There are no votes for this answer"
-msgstr ""
+msgstr "No hay votos para esta respuesta"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
@@ -12608,7 +12704,7 @@ msgstr "Este canal no tiene ningún mensaje fijado."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "This channel is read-only."
-msgstr ""
+msgstr "Este canal solo es de lectura."
 
 #. module: mail
 #. odoo-javascript
@@ -12620,7 +12716,7 @@ msgstr "Esta conversación no tiene archivos adjuntos."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "This conversation has no threads yet."
-msgstr ""
+msgstr "Esta conversación todavía no tiene hilos."
 
 #. module: mail
 #. odoo-javascript
@@ -12812,7 +12908,7 @@ msgstr "El hilo tiene mensajes sin leer"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_subject_suggested
 msgid "Thread with suggested subject"
-msgstr ""
+msgstr "Hilo con asunto sugerido"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
@@ -12874,6 +12970,8 @@ msgid ""
 "To avoid an infinity mirror, don't share your entire screen or browser "
 "window."
 msgstr ""
+"Para evitar un espejo infinito, no compartas toda tu pantalla ni la ventana "
+"completa del navegador."
 
 #. module: mail
 #. odoo-javascript
@@ -12982,7 +13080,7 @@ msgstr "Alternar el selector de emojis"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.xml:0
 msgid "Toggle Presentation Audio"
-msgstr ""
+msgstr "Activar o desactivar audio de la presentación"
 
 #. module: mail
 #. odoo-javascript
@@ -13069,12 +13167,12 @@ msgstr "Traducir"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Translate Messages"
-msgstr ""
+msgstr "Traducir mensajes"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Translate customer messages using the Google Translate API"
-msgstr ""
+msgstr "Traduce los mensajes de tus clientes con la API de Google Translate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__body
@@ -13145,7 +13243,7 @@ msgstr "Tipo"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Type email to invite"
-msgstr ""
+msgstr "Escribe un correo electrónico para invitarlo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
@@ -13352,6 +13450,8 @@ msgstr "Dejar de silenciar conversación"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -13492,7 +13592,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_call_server
 msgid "Use Call Server"
-msgstr ""
+msgstr "Usa el servidor de llamadas"
 
 #. module: mail
 #. odoo-javascript
@@ -13519,7 +13619,7 @@ msgstr "Usar lista de exclusión"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_google_translate_api
 msgid "Use Google Translate API"
-msgstr ""
+msgstr "Usa la API de Google Translate"
 
 #. module: mail
 #. odoo-javascript
@@ -13535,7 +13635,7 @@ msgstr "Usar servidor SFU"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
 msgid "Use Tenor API"
-msgstr ""
+msgstr "Usa la API de Tenor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -13613,7 +13713,7 @@ msgstr "Usar la función pulsar para hablar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use your own SFU or ICE servers for video calls"
-msgstr ""
+msgstr "Usa tus propios servidores SFU o ICE para las videollamadas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -14094,6 +14194,8 @@ msgid ""
 "Want to spice up your conversations with GIFs? Turn on this feature in "
 "settings."
 msgstr ""
+"¿Quieres darle más vida a tus conversaciones con imágenes GIF? Activa esta "
+"función en los ajustes."
 
 #. module: mail
 #. odoo-javascript
@@ -14226,6 +14328,13 @@ msgid ""
 "All Activities: the synchronization user will count all the activities of "
 "this type, whatever their owner"
 msgstr ""
+"Define si este tipo de actividad debe aparecer en la API del proveedor de "
+"KPI.\n"
+"Ninguna: No muestra este tipo de actividad.\n"
+"Actividades propias: El usuario de sincronización solo cuenta sus propias "
+"actividades de este tipo.\n"
+"Todas las actividades: El usuario de sincronización cuenta todas las "
+"actividades de este tipo sin importar a quién le pertenecen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -14275,6 +14384,7 @@ msgstr "AAAA-MM-DD HH:MM:SS"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Yes"
 msgstr "Sí"
@@ -14307,13 +14417,13 @@ msgstr "Tú"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "You and %(name)s are presenting"
-msgstr ""
+msgstr "%(name)s y tú están presentando"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "You are Presenting"
-msgstr ""
+msgstr "Estás presentando"
 
 #. module: mail
 #. odoo-javascript
@@ -14341,7 +14451,7 @@ msgstr "Es el único en este canal."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "Estás en %(bold_start)s#%(channel_name)s%(bold_end)s."
 
 #. module: mail
 #. odoo-python
@@ -14390,7 +14500,7 @@ msgstr "No tiene permitido subir archivos adjuntos aquí."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "You are presenting"
-msgstr ""
+msgstr "Estás presentando"
 
 #. module: mail
 #. odoo-javascript
@@ -14404,7 +14514,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "You can always pin it again later if needed."
-msgstr ""
+msgstr "Siempre puedes volver a fijarlo en caso de que sea necesario."
 
 #. module: mail
 #. odoo-python
@@ -14463,7 +14573,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You cannot pin messages in a read-only channel."
-msgstr ""
+msgstr "No puedes fijar mensajes en un canal de solo lectura."
 
 #. module: mail
 #. odoo-python
@@ -14471,6 +14581,8 @@ msgstr ""
 msgid ""
 "You cannot set both an activity type and an activity plan on a server action."
 msgstr ""
+"No puedes definir un tipo de actividad y un plan de actividad al mismo "
+"tiempo en una acción de servidor."
 
 #. module: mail
 #. odoo-python
@@ -14513,6 +14625,7 @@ msgstr ""
 msgid ""
 "You do not have the rights to change the read-only state of: %(channels)s."
 msgstr ""
+"No tienes permisos para cambiar el estado de solo lectura de: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -14563,6 +14676,8 @@ msgid ""
 "You're about to create a new invite link. The current link will no longer "
 "grant guests access to the channel. Do you want to proceed?"
 msgstr ""
+"Estás a punto de crear un nuevo enlace de invitación. El enlace actual ya no "
+"le proporcionará acceso a los invitados al canal. ¿Quieres continuar?"
 
 #. module: mail
 #. odoo-javascript
@@ -14578,7 +14693,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "You're all caught up!"
-msgstr ""
+msgstr "¡Estás al día!"
 
 #. module: mail
 #. odoo-javascript
@@ -14596,7 +14711,7 @@ msgstr "¡Le han invitado a una reunión!"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "You, %(name)s and %(count)s more are presenting"
-msgstr ""
+msgstr "Tú, %(name)s y %(count)s más están presentando"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
@@ -14668,13 +14783,13 @@ msgstr "Tu mensaje para cuando no estés en la oficina..."
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "You’ve been added as a follower of %(count)s %(document_model)s."
-msgstr ""
+msgstr "Te agregaron como seguidor de %(count)s %(document_model)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "You’ve been added as a follower of %(document_name)s"
-msgstr ""
+msgstr "Te agregaron como seguidor de %(document_name)s"
 
 #. module: mail
 #. odoo-python
@@ -14900,12 +15015,12 @@ msgstr "Por ejemplo, ACd5543a0b450ar4c7t95f1b6e8a39t543"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. ACzb1d3455b0aar4c7t95f1b6e8"
-msgstr ""
+msgstr "Por ejemplo, ACzb1d3455b0aar4c7t95f1b6e8"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. AIabCd5543a0b450ar4c7t95f1b6e8"
-msgstr ""
+msgstr "Por ejemplo, AIabCd5543a0b450ar4c7t95f1b6e8"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -15350,7 +15465,10 @@ msgstr "“%(member_name)s” en “%(channel_name)s”"
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
-msgstr ""
+msgstr "🔒 Privado"
+
+#~ msgid "Do you want to remove \"%(member_name)s\" from this channel?"
+#~ msgstr "¿Quieres eliminar a \"%(member_name)s\" de este canal?"
 
 #~ msgid "Add GIFs"
 #~ msgstr "Agregar GIF"

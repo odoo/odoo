@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:09+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/stock/"
@@ -92,6 +92,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) существует в Локации %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -311,8 +319,8 @@ msgstr "'Счетный лист'"
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Квитанция на доставку - %s - %s' % (object.partner_id.name or '', object."
-"name)"
+"'Квитанция на доставку - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -339,8 +347,8 @@ msgstr "'Packages - %s' % (object.name)"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Операции комплектования - %s - %s' % (object.partner_id.name or '', object."
-"name)"
+"'Операции комплектования - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
 
 #. module: stock
 #. odoo-python
@@ -611,13 +619,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1873,8 +1881,8 @@ msgstr "Не удается найти какой-либо общий маршр
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 
 #. module: stock
@@ -1996,8 +2004,8 @@ msgstr "Изменение товара допускается только в �
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Символ(ы), используемые для разделения данных внутри составного штрихкода "
 "(например, если один штрихкод содержит несколько закодированных значений)"
@@ -8467,8 +8475,8 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
 "Правило %(rule)s принадлежит %(rule_company)s, а маршрут - %(route_company)s."
 
@@ -8809,11 +8817,11 @@ msgstr "Серийные номера"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Серийный номер (%(serial_number)s) уже существует в месте(ах): "
-"%(location_list)s. Пожалуйста, исправьте серийный номер."
+"Серийный номер (%(serial_number)s) уже существует в месте(ах): %"
+"(location_list)s. Пожалуйста, исправьте серийный номер."
 
 #. module: stock
 #. odoo-python
@@ -8841,8 +8849,8 @@ msgstr ""
 "Серийный номер (%(serial_number)s) не находится в %(source_location)s, но "
 "находится в месте(ах): %(other_locations)s.\n"
 "\n"
-"Исходное местоположение для этого перемещения будет изменено на "
-"%(recommended_location)s"
+"Исходное местоположение для этого перемещения будет изменено на %"
+"(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9700,8 +9708,8 @@ msgstr "Партия/серийный номер (%s) связан с други
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -10683,8 +10691,8 @@ msgstr "Отменить назначение"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Недоступные серийные номера. Проверьте корректность указанных серийных "
 "номеров: %(serial_numbers_to_locations)s"
@@ -11207,11 +11215,11 @@ msgstr "Когда товар поступит в"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
-"Когда товары требуются в <b>%(destination)s</b>, <br> создаются операции "
-"<b>%(operation)s</b> из <b>%(source_location)s</b> для удовлетворения "
+"Когда товары требуются в <b>%(destination)s</b>, <br> создаются операции <b>%"
+"(operation)s</b> из <b>%(source_location)s</b> для удовлетворения "
 "потребности. %(suffix)s"
 
 #. module: stock
@@ -11221,14 +11229,14 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Когда товары прибывают в <b>%(source_location)s</b>, создаются "
-"<br><b>%(operation)s</b> для их отправки в <b>%(destination)s</b>."
+"Когда товары прибывают в <b>%(source_location)s</b>, создаются <br><b>%"
+"(operation)s</b> для их отправки в <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Если установлено значение TRUE, то локация назначения для stock.move будет "
 "определяться по правилу. В противном случае – по типу операции."
@@ -11485,8 +11493,8 @@ msgstr "Нельзя отключить места %s, так как там ещ
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
 "Нельзя архивировать местоположение %(location)s, так как оно используется "
 "складом %(warehouse)s"
@@ -11713,8 +11721,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Имеются незавершенные операции для типов операций %(operations)s на складе "
-"%(warehouse)s"
+"Имеются незавершенные операции для типов операций %(operations)s на складе %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-javascript

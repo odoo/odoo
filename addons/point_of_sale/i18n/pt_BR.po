@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
-"PO-Revision-Date: 2026-03-07 14:41+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-14 13:04+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/point_of_sale/pt_BR/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -852,7 +852,7 @@ msgstr "Requer ação"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Action cancelled (%(ACTION)s)"
-msgstr ""
+msgstr "Ação cancelada (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1173,7 +1173,7 @@ msgstr "Possibilita saber se o custo total já foi calculado ou não"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr ""
+msgstr "Permite imprimir a conta antes do pagamento."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1206,7 +1206,7 @@ msgstr "Valor de %(old_pm)s mudou de %(old_amount)s para %(new_amount)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 msgid "Amount of guests"
-msgstr ""
+msgstr "Número de pessoas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1252,6 +1252,9 @@ msgid ""
 "orders will be available in the next session.\n"
 "The page will now, be reloaded."
 msgstr ""
+"Ocorreu um erro ao encerrar a sessão. Mas não se preocupe, os pedidos não "
+"sincronizados estarão disponíveis na próxima sessão.\n"
+"A página será agora recarregada."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1266,6 +1269,8 @@ msgid ""
 "An error occurred while trying to generate an invoice. Try again from the "
 "order tab or generate the invoice from the backend."
 msgstr ""
+"Ocorreu um erro ao tentar gerar uma fatura. Tente novamente na aba do pedido "
+"ou gere a fatura no back-end."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1291,7 +1296,7 @@ msgstr "Já existe um pedido com esse uuid"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_ticket_printer_service.js:0
 msgid "An unexpected error occurred while printing."
-msgstr ""
+msgstr "Ocorreu um erro inesperado durante a impressão."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1329,7 +1334,7 @@ msgstr "Aplicar"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Apply only on cash methods"
-msgstr ""
+msgstr "Aplicar apenas em métodos à vista"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1355,7 +1360,7 @@ msgstr "Pão de massa fermentada artesanal com crosta crocante e miolo macio."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "As from"
-msgstr ""
+msgstr "A partir de"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -1365,7 +1370,7 @@ msgstr "A partir de"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "O mais rápido possível, com pedidos em atraso"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1544,7 +1549,7 @@ msgstr "Sair (caixa continua aberto)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Backend Invoice"
-msgstr ""
+msgstr "Faturamento no backend"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
@@ -9255,10 +9260,6 @@ msgstr "Partes técnicas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.company_info_receipt
-msgid "Tel."
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "Tel:"
 msgstr "Tel:"

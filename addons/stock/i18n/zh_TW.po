@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:10+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -91,6 +91,14 @@ msgid ""
 msgstr ""
 "\n"
 "（%(serial_number)s）存在於位置 %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -237,8 +245,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
-"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，但訂購數量為 %(qty_to_order)s "
-"%(uom)s。"
+"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，但訂購數量為 %(qty_to_order)s %"
+"(uom)s。"
 
 #. module: stock
 #. odoo-python
@@ -585,13 +593,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1831,8 +1839,8 @@ msgstr "找不到通用路線 %s."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 
 #. module: stock
@@ -1948,8 +1956,8 @@ msgstr "僅允許在“草稿”狀態下更改產品."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr "用於分開聚合條碼（即包含多組條碼編碼的條碼）內含的資料的分隔字符"
 
 #. module: stock
@@ -3546,8 +3554,8 @@ msgid ""
 "checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
 "使用 Odoo 條碼模組享受快節奏的體驗.它速度極快，即使沒有穩定的網路連結也能工"
-"作.它支援全部流程:庫存調整、批次揀選、移動批次或託盤、低庫存檢查等.轉到“模"
-"組”選單以啟用條形碼界面."
+"作.它支援全部流程:庫存調整、批次揀選、移動批次或託盤、低庫存檢查等.轉到“模組”"
+"選單以啟用條形碼界面."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -8268,8 +8276,8 @@ msgstr "將會為這些補充倉庫建立路線，而且您可以在產品和產
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
 "規則 %(rule)s 屬於 %(rule_company)s 公司，但途程/路徑屬於 %(route_company)s "
 "公司。"
@@ -8606,8 +8614,8 @@ msgstr "序號"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
 "序號（%(serial_number)s）已存在於以下位置：%(location_list)s。請更正編碼的序"
 "號。"
@@ -8621,8 +8629,8 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"序號（%(serial_number)s）並不位於 %(source_location)s 中，而是在位置 "
-"%(other_locations)s。\n"
+"序號（%(serial_number)s）並不位於 %(source_location)s 中，而是在位置 %"
+"(other_locations)s。\n"
 "\n"
 "請更正此錯誤，以防止數據出現不一致。"
 
@@ -8635,8 +8643,8 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"序號（%(serial_number)s）並不位於 %(source_location)s 中，而是在位置 "
-"%(other_locations)s。\n"
+"序號（%(serial_number)s）並不位於 %(source_location)s 中，而是在位置 %"
+"(other_locations)s。\n"
 "\n"
 "此移動的來源位置將變更為 %(recommended_location)s"
 
@@ -9476,8 +9484,8 @@ msgstr "批次/序號（%s）已連結至另一個產品。"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -10397,8 +10405,8 @@ msgstr "取消分配"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr "序列號碼不可用。請更正已編碼的序號：%(serial_numbers_to_locations)s"
 
 #. module: stock
@@ -10912,8 +10920,8 @@ msgstr "產品到達時"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 "當 <b>%(destination)s</b> 需要產品時，<br>會自動建立 <b>%(operation)s</b> 操"
 "作，由 <b>%(source_location)s</b> 調配產品，以滿足需求。%(suffix)s"
@@ -10931,8 +10939,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "設定為 True（真）時，stock.move 的目標位置會依照規則。否則，會使用提取類型中"
 "的資料。"
@@ -11174,8 +11182,8 @@ msgstr "您不能禁用位置 %s，因為它們仍然包含產品。"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr "你不可封存位置 %(location)s，因為倉庫 %(warehouse)s 正使用它"
 
 #. module: stock

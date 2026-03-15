@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-02-14 12:21+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -94,6 +94,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) tersedia di lokasi %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -226,8 +234,8 @@ msgid ""
 "%(operations)s have default source or destination locations within warehouse "
 "%(warehouse)s, therefore you cannot archive it."
 msgstr ""
-"%(operations)s memiliki sumber atau tujuan lokasi di dalam gudang "
-"%(warehouse)s, oleh karena itu Anda tidak dapat mengarsipnya."
+"%(operations)s memiliki sumber atau tujuan lokasi di dalam gudang %"
+"(warehouse)s, oleh karena itu Anda tidak dapat mengarsipnya."
 
 #. module: stock
 #. odoo-python
@@ -620,13 +628,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1900,11 +1908,11 @@ msgstr "Tidak dapat menemukan rute generik manapun %s."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
-"Tidak dapat menggerakkan container yang memiliki paket di lokasi lain "
-"(%(old_location)s) ke lokasi yang berbeda (%(new_location)s)."
+"Tidak dapat menggerakkan container yang memiliki paket di lokasi lain (%"
+"(old_location)s) ke lokasi yang berbeda (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2026,8 +2034,8 @@ msgstr "Merubah produk hanya diizinkan pada status 'Draft'."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Character yang digunakan untuk memisahkan data yang terdapat di dalam "
 "barcode agregat (contoh barcode yang memiliki lebih dari satu encoding "
@@ -6176,8 +6184,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Tidak ada peraturan yang ditemukan untuk memulihkan \"%(product)s\" di "
-"\"%(location)s\".\n"
+"Tidak ada peraturan yang ditemukan untuk memulihkan \"%(product)s\" di \"%"
+"(location)s\".\n"
 "Verifikasi rute konfigurasi pada produk."
 
 #. module: stock
@@ -8511,11 +8519,11 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
-"Peraturan %(rule)s dimiliki %(rule_company)s sementara rute dimiliki "
-"%(route_company)s."
+"Peraturan %(rule)s dimiliki %(rule_company)s sementara rute dimiliki %"
+"(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8856,8 +8864,8 @@ msgstr "Nomor Seri"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
 "Nomor seri (%(serial_number)s) sudah tersedia di lokasi: %(location_list)s. "
 "Silakan betulkan nomor seri yang di-encode."
@@ -9751,8 +9759,8 @@ msgstr "Nomor Seri/Lot ini (%s) terhubung ke produk lain."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -9760,8 +9768,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Nomor Seri (%(serial_number)s) sudah digunakan di lokasi: "
-"%(location_list)s.\n"
+"Nomor Seri (%(serial_number)s) sudah digunakan di lokasi: %"
+"(location_list)s.\n"
 "\n"
 "Apakah ini sesuai harapan? Contohnya ini bisa terjadi bila operasi "
 "pengiriman divalidasi sebelum tanda terima operasi yang cocok divalidasi. "
@@ -10749,8 +10757,8 @@ msgstr "Batalkan penetapan"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Nomor-nomor Seri Tidak Tersedia. Silakan betulkan nomor seri yang di-encode: "
 "%(serial_numbers_to_locations)s"
@@ -11272,8 +11280,8 @@ msgstr "Saat produk tiba dalam"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 "Saat produk dibutuhkan di <b>%(destination)s</b>, <br> <b>%(operation)s</b> "
 "dibuat dari <b>%(source_location)s</b> untuk memenuhi kebutuhan. %(suffix)s"
@@ -11291,8 +11299,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Saat ditetapkan menjadi True lokasi tujuan dari stock.move akan menjadi "
 "peraturan. Bila tidak, akan mengambil dari tipe picking."
@@ -11555,11 +11563,11 @@ msgstr "Anda tidak dapat menonaktifkan lokasi %s karena masih memiliki produk."
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
-"Anda tidak dapat mengarsip %(location)s karena digunakan oleh gudang "
-"%(warehouse)s"
+"Anda tidak dapat mengarsip %(location)s karena digunakan oleh gudang %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11795,8 +11803,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Anda masih memiliki operasi yang berlangsung untuk tipe operasi "
-"%(operations)s di gudang %(warehouse)s"
+"Anda masih memiliki operasi yang berlangsung untuk tipe operasi %"
+"(operations)s di gudang %(warehouse)s"
 
 #. module: stock
 #. odoo-javascript

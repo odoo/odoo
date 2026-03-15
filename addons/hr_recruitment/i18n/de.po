@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-02-28 13:43+0000\n"
+"PO-Revision-Date: 2026-03-14 12:56+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_recruitment/de/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -157,6 +157,96 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Guten Tag,\n"
+"    <br/><br/>\n"
+"    hiermit bestätigen wir den Erhalt Ihrer Bewerbung für die Stelle\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
+"out=\"object.job_id.name or ''\">Erfahrener Entwickler</strong></a>\" bei "
+"<strong t-out=\"object.company_id.name or ''\">IhrUnternehmen</strong>.\n"
+"    <br/><br/>\n"
+"    Wir melden uns in Kürze bei Ihnen.\n"
+"\n"
+"    <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Stellenbeschreibung</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    <t t-if=\"object.recruiter_id and object.recruiter_id.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Ihr Ansprechpartner:</strong></"
+"h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.recruiter_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            <span>E-Mail: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"admin@ihrunternehmen.beispiel.com</t></span><br/>\n"
+"            <span>Telefon: <t t-out=\"object.recruiter_id.work_phone or ''\">"
+"+1 650-123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>Wie geht es weiter?</strong></h3>\n"
+"    Wir <strong>beantworten Bewerbungen gewöhnlich innerhalb weniger Tage.</"
+"strong><br/><br/>\n"
+"    <strong> Wenn Sie eine schnellere Rückmeldung\n"
+"    wünschen</strong> oder falls Sie keine zeitnahe Antwort von\n"
+"    uns erhalten, können Sie einfach auf diese E-Mail antworten.\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"    <t t-set=\"location\" t-value=\"''\"/>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
+"(RM)</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentinien</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -203,6 +293,51 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Guten Tag,<br/><br/>\n"
+"    vielen Dank für Ihr Interesse und dafür, dass Sie Teil des Teams von\n"
+"    <b><t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t></b> "
+"möchten werden. Obowohl\n"
+"    Ihr Lebenslauf sehr interessant ist, hat sich unsere Personalabteilung\n"
+"    dazu entschieden, Sie\n"
+"    <b>nicht in die engere Auswahl</b> für die Stelle zu nehmen</b>.\n"
+"    <br/><br/>\n"
+"    Die Personalauswahl ist schwierig, und wir können uns auch irren.\n"
+"    Zögern Sie nicht, auf diese E-Mail zu antworten, wenn Sie\n"
+"    glauben, dass wir einen Fehler gemacht haben, oder wenn Sie weitere "
+"Informationen\n"
+"    über unsere Entscheidung wünschen.\n"
+"    <br/><br/>\n"
+"    Wir werden Ihren Lebenslauf aufbewahren und uns gegebenenfalls mit "
+"Ihnen\n"
+"    in Verbindung setzen, falls in Zukunft eine für Sie\n"
+"     passende Stelle frei wird.\n"
+"    <br/><br/>\n"
+"    Wir wünschen Ihnen alles Gute bei Ihrer Stellensuche und hoffen, dass "
+"wir\n"
+"    die Möglichkeit haben werden, Sie für eine andere Stelle zu\n"
+"    berücksichtigen.\n"
+"    <br/><br/>\n"
+"    Vielen Dank!\n"
+"    <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.recruiter_id\">\n"
+"            -- <br/>\n"
+"            <strong t-out=\"object.recruiter_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            E-Mail: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"admin@ihrunternehmen.beispiel.com</t><br/>\n"
+"            Telefon: <t t-out=\"object.recruiter_id.work_phone or ''\">+1 "
+"650-123-4567</t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            -- <br/>\n"
+"            <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t><br/>"
+"\n"
+"            Die Personalabteilung\n"
+"        </t>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -747,6 +882,8 @@ msgstr "Follower hinzufügen/entfernen"
 #: code:addons/hr_recruitment/wizard/talent_pool_add_applicants.py:0
 msgid "Added the following talents to %(talent_pools)s: %(talent_names)s."
 msgstr ""
+"Die folgenden Talente wurden zu %(talent_pools)s hinzugefügt: %(talent_names)"
+"s."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -962,7 +1099,7 @@ msgstr "Um Stelle bewerben"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 msgid "Apply to Jobs"
-msgstr ""
+msgstr "Um Stellen bewerben"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1169,7 +1306,7 @@ msgstr "Unternehmen"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__company_partner_id
 msgid "Company Partner"
-msgstr ""
+msgstr "Partner des Unternehmens"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings
@@ -1754,7 +1891,7 @@ msgstr "Erweiterter Interviewer"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_recruiter_ids
 msgid "Favorite Recruiter"
-msgstr ""
+msgstr "Lieblingspersonalvermittler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -2913,7 +3050,7 @@ msgstr "Personalvermittler"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__recruiter_email
 msgid "Recruiter Work Email"
-msgstr ""
+msgstr "E-Mail-Adresse des Personalvermittlers"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -2973,7 +3110,7 @@ msgstr "Personalbeschaffung: Absage"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Reference"
-msgstr ""
+msgstr "Referenz"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -3054,7 +3191,7 @@ msgstr "Regex"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Zugehöriges Dokumentmodell"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3548,7 +3685,7 @@ msgstr "Talente"
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/talent_pool_add_applicants.py:0
 msgid "Talents Added To Talent Pool(s)"
-msgstr ""
+msgstr "Talente zum Talentpool hinzugefügt"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
@@ -3759,7 +3896,7 @@ msgstr "UTM-Kampagne"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__utm_reference
 msgid "UTM Reference"
-msgstr ""
+msgstr "UTM-Referenz"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_source

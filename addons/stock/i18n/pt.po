@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:08+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -106,6 +106,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) existe no local %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -241,8 +249,8 @@ msgid ""
 "%(operations)s have default source or destination locations within warehouse "
 "%(warehouse)s, therefore you cannot archive it."
 msgstr ""
-"%(operations)s têm locais de origem ou destino padrão dentro do armazém "
-"%(warehouse)s, portanto, não é possível arquivá-lo."
+"%(operations)s têm locais de origem ou destino padrão dentro do armazém %"
+"(warehouse)s, portanto, não é possível arquivá-lo."
 
 #. module: stock
 #. odoo-python
@@ -359,8 +367,8 @@ msgstr "'Embalagens - %s' % (object.name)"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Operações de separação - %s - %s' % (object.partner_id.name or '', object."
-"name)"
+"'Operações de separação - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
 
 #. module: stock
 #. odoo-python
@@ -622,13 +630,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1901,8 +1909,8 @@ msgstr "Não foi possível encontrar nenhuma rota genérica %s."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 
 #. module: stock
@@ -2025,8 +2033,8 @@ msgstr "A mudança do produto só é permitida na situação 'Rascunho'."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Caracteres usados para separar os dados contidos em um código de barras "
 "agregado (ou seja, um código de barras que contém várias codificações de "
@@ -6188,8 +6196,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Nenhuma regra foi encontrada para repor \"%(product)s\" em "
-"\"%(location)s\".\n"
+"Nenhuma regra foi encontrada para repor \"%(product)s\" em \"%"
+"(location)s\".\n"
 "Verifique a configuração das rotas no produto."
 
 #. module: stock
@@ -8528,11 +8536,11 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
-"A regra %(rule)s pertence a %(rule_company)s enquanto a rota pertence a "
-"%(route_company)s."
+"A regra %(rule)s pertence a %(rule_company)s enquanto a rota pertence a %"
+"(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8876,11 +8884,11 @@ msgstr "Números de série"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"O número de série (%(serial_number)s) já existe nos locais: "
-"%(location_list)s. Corrija o número de série codificado."
+"O número de série (%(serial_number)s) já existe nos locais: %"
+"(location_list)s. Corrija o número de série codificado."
 
 #. module: stock
 #. odoo-python
@@ -8891,9 +8899,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"O número de série (%(serial_number)s) não está localizado em "
-"%(source_location)s, mas está localizado no(s) local(is): "
-"%(other_locations)s.\n"
+"O número de série (%(serial_number)s) não está localizado em %"
+"(source_location)s, mas está localizado no(s) local(is): %"
+"(other_locations)s.\n"
 "\n"
 "Corrija isso para evitar dados inconsistentes."
 
@@ -8906,12 +8914,12 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"O número de série (%(serial_number)s) não está localizado em "
-"%(source_location)s, mas está localizado no(s) local(is): "
-"%(other_locations)s.\n"
+"O número de série (%(serial_number)s) não está localizado em %"
+"(source_location)s, mas está localizado no(s) local(is): %"
+"(other_locations)s.\n"
 "\n"
-"O local de origem dessa movimentação será alterado para "
-"%(recommended_location)s"
+"O local de origem dessa movimentação será alterado para %"
+"(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9774,8 +9782,8 @@ msgstr "O número de lote/série (%s) está vinculado a outro produto."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -9783,8 +9791,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"O número de série (%(serial_number)s) já é usado nesses locais: "
-"%(location_list)s.\n"
+"O número de série (%(serial_number)s) já é usado nesses locais: %"
+"(location_list)s.\n"
 "\n"
 "Isso é esperado? Por exemplo, esse caso pode ocorrer se uma operação de "
 "entrega for validada antes da validação da operação de recebimento "
@@ -10767,8 +10775,8 @@ msgstr "Remover atribuição"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Números de série indisponíveis. Corrija os números de série codificados:\n"
 "%(serial_numbers_to_locations)s"
@@ -11291,12 +11299,12 @@ msgstr "Quando o produto chegar em"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
-"Quando há necessidade de produtos em<b>%(destination)s</b>, <br> "
-"<b>%(operation)s</b> são criadas em<b>%(source_location)s</b> para atendê-"
-"la. %(suffix)s"
+"Quando há necessidade de produtos em<b>%(destination)s</b>, <br> <b>%"
+"(operation)s</b> são criadas em<b>%(source_location)s</b> para atendê-la. %"
+"(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -11305,14 +11313,14 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Quando os produtos chegam em <b>%(source_location)s</b>, <br> "
-"<b>%(operation)s</b> são criadas para enviá-los para <b>%(destination)s</b>."
+"Quando os produtos chegam em <b>%(source_location)s</b>, <br> <b>%"
+"(operation)s</b> são criadas para enviá-los para <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Quando definido como Verdadeiro, o local de destino do stock.move será a "
 "regra. Caso contrário, será obtido do tipo de separação."
@@ -11579,11 +11587,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
-"Não é possível arquivar o local %(location)s pois ele é usado pelo armazém "
-"%(warehouse)s"
+"Não é possível arquivar o local %(location)s pois ele é usado pelo armazém %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-python

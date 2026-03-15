@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-03-07 14:42+0000\n"
+"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-14 13:05+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/stock/"
 "de/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: stock
 #. odoo-python
@@ -45,8 +45,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Transfers %(transfer_list)s: Sie müssen eine Los-/Seriennummer für Produkte "
-"%(product_list)s angeben."
+"Transfers %(transfer_list)s: Sie müssen eine Los-/Seriennummer für Produkte %"
+"(product_list)s angeben."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
@@ -95,6 +95,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) existiert in %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -224,8 +232,8 @@ msgid ""
 "%(operations)s have default source or destination locations within warehouse "
 "%(warehouse)s, therefore you cannot archive it."
 msgstr ""
-"%(operations)s haben Standardquell- oder -ziellagerorte im Lager "
-"%(warehouse)s, daher können Sie sie nicht archivieren."
+"%(operations)s haben Standardquell- oder -ziellagerorte im Lager %"
+"(warehouse)s, daher können Sie sie nicht archivieren."
 
 #. module: stock
 #. odoo-python
@@ -341,8 +349,8 @@ msgstr "'Pakete - %s' % (object.name)"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Kommissioniervorgänge - %s - %s' % (object.partner_id.name or '', object."
-"name)"
+"'Kommissioniervorgänge - %s - %s' % (object.partner_id.name or '', "
+"object.name)"
 
 #. module: stock
 #. odoo-python
@@ -621,13 +629,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -664,13 +672,13 @@ msgstr ""
 "<br/><br/>\n"
 "       wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung "
 "versandt wurde.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Ihre Sendungsverfolgungsreferenz lautet\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1564,8 +1572,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Da für dieses Produkt bereits andere Maßeinheiten als %(uom)s (z. B.: "
-"%(problem_uom)s) verwendet wurden, kann die Änderung der Maßeinheit nicht "
+"Da für dieses Produkt bereits andere Maßeinheiten als %(uom)s (z. B.: %"
+"(problem_uom)s) verwendet wurden, kann die Änderung der Maßeinheit nicht "
 "vorgenommen werden. Wenn Sie sie ändern möchten, archivieren Sie das Produkt "
 "und erstellen Sie ein neues."
 
@@ -1956,8 +1964,8 @@ msgstr "Es kann keine allgemein gültige Beschaffungsroute %s gefunden werden."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 "Ein Behälter mit Paketen an einem anderen Lagerort (%(old_location)s) kann "
 "nicht an einen anderen Lagerort (%(new_location)s) verschoben werden."
@@ -2084,8 +2092,8 @@ msgstr "Die Änderung des Produkts ist nur im Status „Entwurf“ erlaubt."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Verwendete Zeichen, um Daten in einem aggregierten Barcode zu trennen (d. h. "
 "ein Barcode mit mehreren Barcode-Codierungen)"
@@ -5064,7 +5072,7 @@ msgstr "Ist Ausschuss"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__is_scrap
 msgid "Is Scrapped"
-msgstr ""
+msgstr "Wurde Ausschuss gemeldet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5678,7 +5686,7 @@ msgstr "Los-/Seriennummer umgelagert"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Los-/Seriennummern"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5807,7 +5815,7 @@ msgstr "März"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as To Do"
-msgstr ""
+msgstr "Als To-do markieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_max_qty
@@ -6329,7 +6337,7 @@ msgstr "Keine Bewegung gefunden. Erstellen Sie eine!"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -7145,7 +7153,7 @@ msgstr "Partnerspezifische Anweisungen"
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
 msgid "Pay now"
-msgstr ""
+msgstr "Jetzt bezahlen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
@@ -8567,7 +8575,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
 msgid "Revert"
-msgstr ""
+msgstr "Rückgängig machen"
 
 #. module: stock
 #. odoo-python
@@ -8652,11 +8660,11 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
-"Regel %(rule)s gehört zu %(rule_company)s während die Route zu "
-"%(route_company)s gehört."
+"Regel %(rule)s gehört zu %(rule_company)s während die Route zu %"
+"(route_company)s gehört."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8809,7 +8817,7 @@ msgstr "Ausschuss melden"
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid "Scrap %(lot_name)s"
-msgstr ""
+msgstr "%(lot_name)s ausrangieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__scrap_location_id
@@ -8839,18 +8847,18 @@ msgstr "Stichwort für Ausschussgrund"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Scrap of %s"
-msgstr ""
+msgstr "Ausschuss von %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Scrapped"
-msgstr ""
+msgstr "Ausschuss gemeldet"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scrapped Lots"
-msgstr ""
+msgstr "Ausrangierte Lose"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_scrapped_moves_action
@@ -8862,7 +8870,7 @@ msgstr "Ausschuss"
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid "Scraps of %s"
-msgstr ""
+msgstr "Ausschüsse von %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
@@ -9004,11 +9012,11 @@ msgstr "Seriennummern"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Seriennummer (%(serial_number)s) existiert schon an folgenden Lagerorten: "
-"%(location_list)s. Bitte korrigieren Sie die veschlüsselte Seriennummer."
+"Seriennummer (%(serial_number)s) existiert schon an folgenden Lagerorten: %"
+"(location_list)s. Bitte korrigieren Sie die veschlüsselte Seriennummer."
 
 #. module: stock
 #. odoo-python
@@ -9191,7 +9199,7 @@ msgstr "Kurzname zur Identifizierung des Lagerhauses"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__should_replenish_scrapped
 msgid "Should Replenish"
-msgstr ""
+msgstr "Sollte aufgefüllt werden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
@@ -9908,8 +9916,8 @@ msgstr "Die Los-/Seriennummer (%s) ist mit einem anderen Proukt verknüpft-"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -10925,8 +10933,8 @@ msgstr "Zuweisung aufheben"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Nichtverfügbare Seriennummern. Bitte korrigieren Sie die verschlüsselten "
 "Seriennummern: %(serial_numbers_to_locations)s"
@@ -11457,12 +11465,12 @@ msgstr "Bei Produkteingang in"
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
-"Wenn Produkte in <b>%(destination)s</b> benötigt werden, <br> "
-"werden<b>%(operation)s</b> aus <b>%(source_location)s</b> erstellt, um den "
-"Bedarf zu decken. %(suffix)s"
+"Wenn Produkte in <b>%(destination)s</b> benötigt werden, <br> werden<b>%"
+"(operation)s</b> aus <b>%(source_location)s</b> erstellt, um den Bedarf zu "
+"decken. %(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -11471,14 +11479,14 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Wenn Produkte in <b>%(source_location)s</b> eingehen, <br> werden "
-"<b>%(operation)s</b> erstellt, um sie in <b>%(destination)s</b> zu versenden."
+"Wenn Produkte in <b>%(source_location)s</b> eingehen, <br> werden <b>%"
+"(operation)s</b> erstellt, um sie in <b>%(destination)s</b> zu versenden."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Wenn diese Option auf Wahr gesetzt ist, ist der Zielort der stock.move die "
 "Regel, andernfalls wird sie vom Kommissioniertyp übernommen."
@@ -11757,8 +11765,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
 "Sie können den Lagerort %(location)s nicht archivieren, da er von Ihrem "
 "Lagerhaus %(warehouse)s verwendet wird."
@@ -11950,7 +11958,7 @@ msgstr "Sie können jeweils nur eine Kommissionierung zurückgeben."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You must select a lot/serial number."
-msgstr ""
+msgstr "Sie müssen eine Los-/Seriennummer auswählen."
 
 #. module: stock
 #. odoo-python
@@ -12177,7 +12185,7 @@ msgstr "^FT210,30^A0N,25^FD"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FT35,30^A0N,15^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,15^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label

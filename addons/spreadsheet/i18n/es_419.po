@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:37+0000\n"
-"PO-Revision-Date: 2026-03-07 14:42+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
+"PO-Revision-Date: 2026-03-14 13:05+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/spreadsheet/es_419/>\n"
 "Language: es_419\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -125,6 +125,9 @@ msgid ""
 "%(replaceable_count)s match(es) replaced. %(irreplaceable_count)s match(es) "
 "cannot be replaced as they are part of a formula or inside a locked sheet"
 msgstr ""
+"%(replaceable_count)s coincidencia(s) reemplazada(s) y no es posible "
+"reemplazar %(irreplaceable_count)s coincidencia(s) porque forma(n) parte de "
+"una fórmula o está(n) dentro de una hoja bloqueada"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -343,6 +346,8 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "0 = replace all matches. A negative number counts from the end."
 msgstr ""
+"0 = reemplaza todas las coincidencias. Un número negativo cuenta desde el "
+"final."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1400,7 +1405,7 @@ msgstr "Filas con bandas de color"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Banded rows:"
-msgstr ""
+msgstr "Filas con bandas de color:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1480,7 +1485,7 @@ msgstr "Negro"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Blue"
-msgstr ""
+msgstr "Azul"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1964,6 +1969,14 @@ msgstr "Casilla"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Checks whether a string matches the supplied regular expression."
+msgstr "Comprueba si una cadena coincide con la expresión regular indicada."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Checks whether there is a reference to a cell that contains a formula, and "
+"returns TRUE or FALSE."
 msgstr ""
 
 #. module: spreadsheet
@@ -3345,25 +3358,25 @@ msgstr "Estilo de visualización"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % difference from \"%s\" : %s"
-msgstr ""
+msgstr "Aparece como % de diferencia con \"%s\" : %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % difference from next \"%s\""
-msgstr ""
+msgstr "Aparece como % de diferencia con el siguiente \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % difference from previous \"%s\""
-msgstr ""
+msgstr "Aparece como % de diferencia con el anterior \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of \"%s\" : %s"
-msgstr ""
+msgstr "Aparece como % de \"%s\" : %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3381,7 +3394,7 @@ msgstr "Aparece como % del total general"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of next \"%s\""
-msgstr ""
+msgstr "Aparece como % del siguiente \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3399,13 +3412,13 @@ msgstr "Aparece como % del total de la columna principal"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of parent row total"
-msgstr ""
+msgstr "Aparece como % del total de la fila principal"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of previous \"%s\""
-msgstr ""
+msgstr "Aparece como % del \"%s\" anterior"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3423,19 +3436,19 @@ msgstr "Aparece como % del total acumulado basado en \"%s\""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from \"%s\" : %s"
-msgstr ""
+msgstr "Aparece como diferencia con \"%s\" : %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from next \"%s\""
-msgstr ""
+msgstr "Aparece como diferencia con el \"%s\" siguiente"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from previous \"%s\""
-msgstr ""
+msgstr "Aparece como diferencia con el \"%s\" anterior"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3670,7 +3683,7 @@ msgstr "Editar enlace"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Edit pivot style"
-msgstr ""
+msgstr "Editar estilo de la tabla dinámica"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4502,7 +4515,7 @@ msgstr "Obtiene información sobre una celda."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gets the spilled range of an array formula."
-msgstr ""
+msgstr "Obtiene el rango expandido de una fórmula de matriz."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4588,7 +4601,7 @@ msgstr "Mayor o igual que."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Green"
-msgstr ""
+msgstr "Verde"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5413,7 +5426,7 @@ msgstr "Es mayor que"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is in Top/Bottom ranking"
-msgstr ""
+msgstr "Está en la clasificación superior/inferior"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5455,13 +5468,13 @@ msgstr "Es una fecha válida"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is value duplicate"
-msgstr ""
+msgstr "Es un valor duplicado"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is value unique"
-msgstr ""
+msgstr "Es un valor único"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5704,7 +5717,7 @@ msgstr "Ubicación"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Lock sheet"
-msgstr ""
+msgstr "Bloquear hoja"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5817,6 +5830,8 @@ msgid ""
 "Match(es) cannot be replaced as they are part of a formula or inside a "
 "locked sheet"
 msgstr ""
+"Las coincidencias no se pueden reemplazar porque forman parte de una fórmula "
+"o están dentro de una hoja bloqueada"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6571,19 +6586,19 @@ msgstr "Gráfico de barras de Odoo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Combo Chart"
-msgstr ""
+msgstr "Gráfico combinado de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Funnel Chart"
-msgstr ""
+msgstr "Gráfico de embudo de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Geo Chart"
-msgstr ""
+msgstr "Gráfico geográfico de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6601,7 +6616,7 @@ msgstr "Gráfico circular de Odoo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Pyramid Chart"
-msgstr ""
+msgstr "Gráfico de pirámide de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6613,7 +6628,7 @@ msgstr "Gráfico de radar de Odoo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Scatter Chart"
-msgstr ""
+msgstr "Gráfico de dispersión de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6625,19 +6640,19 @@ msgstr "Hoja de cálculo de Odoo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Sunburst Chart"
-msgstr ""
+msgstr "Gráfico de proyección solar de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Treemap Chart"
-msgstr ""
+msgstr "Diagrama de árbol de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Waterfall Chart"
-msgstr ""
+msgstr "Gráfico de cascada de Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6690,6 +6705,8 @@ msgstr "Solo se puede dividir una selección de una sola columna"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Only single-cell references are allowed to get the spilled range."
 msgstr ""
+"Solo se permiten referencias de una sola celda para obtener el rango "
+"expandido."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6837,7 +6854,7 @@ msgstr "Circular"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Pin the side panel"
-msgstr ""
+msgstr "Fija el panel lateral"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6879,7 +6896,7 @@ msgstr "Tabla dinámica"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Pivot table style"
-msgstr ""
+msgstr "Estilo de la tabla dinámica"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6926,7 +6943,7 @@ msgstr "Seleccione solo un rango de celdas"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_data_source.js:0
 msgid "Please specify the property field name"
-msgstr ""
+msgstr "Indica el nombre del campo de propiedad"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7371,7 +7388,7 @@ msgstr "Reemplazar todo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Replace text in a string based on the supplied regular expression."
-msgstr ""
+msgstr "Reemplaza texto en una cadena según la expresión regular indicada."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8675,7 +8692,7 @@ msgstr "Tangente de un ángulo en radianes."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Target must contain at least one zone"
-msgstr ""
+msgstr "El destino debe contener al menos una zona"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11330,7 +11347,7 @@ msgstr "El importe de amortización por cada 100 de valor nominal o par."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The reference to get the spilled range from."
-msgstr ""
+msgstr "La referencia desde la cual obtener el rango expandido."
 
 #. module: spreadsheet
 #. odoo-javascript

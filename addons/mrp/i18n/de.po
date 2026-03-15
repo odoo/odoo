@@ -18,16 +18,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-06 18:36+0000\n"
-"PO-Revision-Date: 2026-03-07 14:36+0000\n"
+"PO-Revision-Date: 2026-03-14 13:01+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/mrp/de/"
-">\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/mrp/"
+"de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -529,7 +529,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
-msgstr ""
+msgstr "<span invisible=\"time_mode == 'manual'\"> / letzte</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2145,7 +2145,7 @@ msgstr "Benutzerdefinierte Beschreibung"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
 msgid "Custom Work Order Dependencies"
-msgstr ""
+msgstr "Abhängigkeiten benutzerdefinierter Arbeitsaufträgen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -2240,6 +2240,9 @@ msgid ""
 "If you are in the computed duration mode, enter an estimate since there "
 "aren't any work orders yet."
 msgstr ""
+"Standard-Betriebszeit. Basiseinheit in Minuten.\n"
+"Wenn Sie im Modus „Berechnete Dauer“ sind, geben Sie eine Schätzung ein, da "
+"noch keine Arbeitsaufträge vorliegen."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2310,6 +2313,11 @@ msgid ""
 "- Based on Theoretical time: the cost will be calculated based on estimated "
 "time and costs."
 msgstr ""
+"Legt fest, wie Odoo die Kosten des Vorgangs berechnet:\n"
+"- Basierend auf der tatsächlichen Zeit: Die Kosten werden auf Grundlage der "
+"erfassten Zeit und der tatsächlichen Mitarbeiterkosten berechnet.\n"
+"- Basierend auf der theoretischen Zeit: Die Kosten werden auf Grundlage der "
+"geschätzten Zeit und Kosten berechnet."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
@@ -2545,7 +2553,7 @@ msgstr "Geschätzt"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Estimated %(date)s %(workcenter_name)s"
-msgstr ""
+msgstr "Erwartet: %(date)s %(workcenter_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -2867,12 +2875,12 @@ msgstr "Stunden"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "Stunden pro Tag"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_week
 msgid "Hours per Week"
-msgstr ""
+msgstr "Stunden pro Woche"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__id
@@ -3154,7 +3162,7 @@ msgstr "Ist gesperrt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_planned
 msgid "Is Planned"
-msgstr ""
+msgstr "Ist geplant"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
@@ -3829,7 +3837,7 @@ msgstr "Sonstiges"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__move_id
 msgid "Move"
-msgstr ""
+msgstr "Buchung"
 
 #. module: mrp
 #. odoo-python
@@ -5164,7 +5172,7 @@ msgstr "Verbleibende Tage"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__remaining_time
 msgid "Remaining Working Time"
-msgstr ""
+msgstr "Verbleibende Arbeitszeit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cycle_number
@@ -5335,7 +5343,7 @@ msgstr "Stückliste suchen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 msgid "Search BoM Line"
-msgstr ""
+msgstr "Stücklistenzeile suchen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -6003,6 +6011,7 @@ msgstr "Die zu demontierende Menge muss positiv sein."
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__remaining_time
 msgid "The remaining time to finish this work order in hours."
 msgstr ""
+"Die verbleibende Zeit in Stunden, um diesen Arbeitsauftrag abzuschließen."
 
 #. module: mrp
 #. odoo-python
@@ -6061,7 +6070,7 @@ msgstr "Der Arbeitsauftrag sollte bereits bearbeitet worden sein."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
 msgid "Theoretical time"
-msgstr ""
+msgstr "Theoretische Zeit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6082,7 +6091,7 @@ msgstr "Es gibt keinen definierten Kalender für den Arbeitsplatz %s."
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
 msgid "There is no serial numbers to apply."
-msgstr ""
+msgstr "Es gibt keine Seriennummern, die verwendet werden können."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -6275,7 +6284,7 @@ msgstr "Zu bestellen"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "To Plan"
-msgstr ""
+msgstr "Zu planen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6379,7 +6388,7 @@ msgstr "Erwartete Gesamtdauer (in Minuten)"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__cost
 msgid "Total real cost of the work order based on duration and hourly cost."
-msgstr ""
+msgstr "Gesamtkosten des Arbeitsauftrags auf Basis von Dauer und Stundensatz."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -6569,7 +6578,7 @@ msgstr "Stückliste aktualisieren"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Update Planning"
-msgstr ""
+msgstr "Planung aktualisieren"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -6609,7 +6618,7 @@ msgstr "Für Produktionen verwendet"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_used_in_boms
 msgid "Used in BoM"
-msgstr ""
+msgstr "In Stückliste verwendet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
@@ -6810,6 +6819,8 @@ msgid ""
 "Wizard for warning about mismatching expected vs actual component "
 "consumption quantities for MOs"
 msgstr ""
+"Assistent zur Warnung bei Abweichungen zwischen erwarteten und tatsächlichen "
+"Komponentenverbrauchswerten für Fertigungsaufträge"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -7257,6 +7268,12 @@ msgid ""
 "the bill of materials.\n"
 "                        Please confirm it has been done on purpose."
 msgstr ""
+"Sie haben bei den folgenden Produkten eine andere Menge als erwartet "
+"verbraucht\n"
+"                        und/oder ein Produkt verbraucht, das nicht in der "
+"Stückliste enthalten ist.\n"
+"                        Bitte bestätigen Sie, dass dies absichtlich "
+"geschehen ist."
 
 #. module: mrp
 #. odoo-python
