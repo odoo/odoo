@@ -81,9 +81,17 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                 if layout == 'page_per_section':
                     page0, _ = self.env['survey.question'].create(pages)
 
+                cookie_key = f'survey_{survey.access_token}'
+                # clear the cookie to start a new survey
+                self.opener.cookies.pop(cookie_key, None)
+
                 response = self._access_start(survey)
-                user_input = self.env['survey.user_input'].search([('access_token', '=', response.url.split('/')[-1])])
+                self.assertTrue(response.history, "Survey start should redirect")
+                cookie_token = response.history[0].cookies.get(cookie_key)
+                user_input = self.env['survey.user_input'].search([('access_token', '=', cookie_token)])
                 answer_token = user_input.access_token
+                self.assertTrue(cookie_token)
+                self.assertTrue(user_input)
 
                 r = self._access_page(survey, answer_token)
                 self.assertResponse(r, 200)

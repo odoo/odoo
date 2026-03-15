@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-02 13:44+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-06 17:47+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/nl/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -728,8 +728,8 @@ msgstr "Actie gevraagd"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Action cancelled (%s)"
-msgstr "Actie geannuleerd (%s)"
+msgid "Action cancelled (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1475,6 +1475,8 @@ msgstr "Eenvoudige kassabon"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Be aware that reloading data will delete unsaved orders."
 msgstr ""
+"Houd er rekening mee dat het herladen van gegevens niet-opgeslagen "
+"bestellingen zal verwijderen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -1835,8 +1837,8 @@ msgstr "Contant verschil gevonden tijdens het tellen (winst) - sluiting"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash drawer opened (%s)"
-msgstr "Kassalade geopend (%s)"
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2031,7 +2033,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Checking Local Network Access permission..."
-msgstr ""
+msgstr "Toestemming voor toegang tot het lokale netwerk controleren..."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -2217,8 +2219,26 @@ msgstr "Afsluitende sessie"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "Kasverschil voor %(payment_method)s (%(session)s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2475,7 +2495,7 @@ msgstr "Doorgaan"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
-msgstr "Blijven verkopen"
+msgstr "Doorgaan met verkopen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2942,7 +2962,7 @@ msgstr "Standaard btw verkoop"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default journals for orders and invoices"
-msgstr "Standaardjournalen voor orders en facturen"
+msgstr "Standaarddagboeken voor orders en facturen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3983,7 +4003,7 @@ msgstr "Verberg gebruik betaalterminal"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Hide details"
-msgstr ""
+msgstr "Details verbergen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
@@ -4575,7 +4595,7 @@ msgstr "LED lamp"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 msgid "LNA Permission status"
-msgstr ""
+msgstr "Status toestemming Lokale netwerktoegang"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -4847,7 +4867,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Local Network Access"
-msgstr ""
+msgstr "Toegang tot lokaal netwerk"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4858,6 +4878,10 @@ msgid ""
 "feature. Please note that IOS devices do not support Local Network Access "
 "yet."
 msgstr ""
+"De configuratie voor lokale netwerktoegang is ingeschakeld, maar je browser "
+"is niet gebaseerd op Chromium. Gebruik een browser op basis van Chromium om "
+"deze functie te kunnen gebruiken. Houd er rekening mee dat iOS-apparaten nog "
+"geen ondersteuning bieden voor lokale netwerktoegang."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4874,13 +4898,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid "Local Network Access is not configured for this POS."
-msgstr ""
+msgstr "Lokale netwerktoegang is niet geconfigureerd voor deze kassa."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid "Local Network Access permission granted."
-msgstr ""
+msgstr "Toegang tot lokaal netwerk verleend."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4901,6 +4925,9 @@ msgid ""
 "might not work properly. Please allow Local Network Access in your browser "
 "settings."
 msgstr ""
+"Toegang tot het lokale netwerk is nog niet toegestaan. Sommige "
+"hardwareapparaten werken mogelijk niet goed. Sta toegang tot het lokale "
+"netwerk toe in je browserinstellingen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5486,6 +5513,8 @@ msgstr "Geen beschikbaar slot voor deze dag"
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "No valid orders were selected. No new invoices could be generated"
 msgstr ""
+"Er zijn geen geldige orders geselecteerd. Er konden geen nieuwe "
+"verkoopfacturen worden gegenereerd"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -5725,7 +5754,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Oops!"
-msgstr ""
+msgstr "Oeps!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5822,6 +5851,24 @@ msgstr "Beginsaldo opgeteld bij alle contante transacties."
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
 msgstr "Kasgeld opening"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7427,7 +7474,7 @@ msgstr "Hvhd"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__qty
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -7688,7 +7735,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Reload data"
-msgstr ""
+msgstr "Gegevens herladen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8432,7 +8479,7 @@ msgstr "Categorie afbeeldingen in het kassasysteem weergeven."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Show details"
-msgstr ""
+msgstr "Details weergeven"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -8554,6 +8601,8 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
+"Er is iets misgegaan... Als je echt vastzit, deel het rapport dan met je "
+"vriendelijke ondersteuningsdienst"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -9551,12 +9600,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
-msgid "There is already a cash payment line."
-msgstr "Er is al een regel voor contante betaling."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "Er is al een elektronische betaling in behandeling."
@@ -9642,9 +9685,8 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
-"Deze contacte betaalmethode is reeds gebruikt in een ander Kassasysteem. \n"
-"Een nieuwe contante betaalmethode moet worden aangemaakt voor dit "
-"Kassasysteem."
+"Deze contante betaalmethode wordt reeds gebruikt bij een andere kassa.\n"
+"Een nieuwe contante betaalmethode moet worden aangemaakt voor deze kassa."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9984,7 +10026,7 @@ msgstr "Totale prijs incl. btw:"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr "Totale btw:"
 
@@ -10305,10 +10347,15 @@ msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "Btw"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "VAT:"
+msgstr "Btw:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10499,8 +10546,8 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
-"Je mag de afrondingsmethode niet wijzigen terwijl een kassasessie die "
-"geopend is deze gebruikt."
+"Je kunt de afrondingsmethode niet wijzigen terwijl een open kassasessie deze "
+"gebruikt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10531,6 +10578,8 @@ msgid ""
 "You can not archive this journal because it is set on the following payment "
 "method : %s."
 msgstr ""
+"Je kunt dit dagboek niet archiveren omdat het is ingesteld op de volgende "
+"betaalmethode: %s."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10603,6 +10652,16 @@ msgid ""
 msgstr ""
 "Je kunt '%(picking_type)s' niet archiveren omdat het wordt gebruikt door een "
 "kassaconfiguratie '%(config)s'."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
+"Je kunt een product dat in een kassaconfiguratie is ingesteld als speciaal "
+"product niet archiveren. Wijzig eerst de configuratie."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10971,13 +11030,6 @@ msgstr "voorspeld"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "free"
-msgstr "gratis"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
 msgstr "van"
@@ -11007,6 +11059,12 @@ msgstr "in behandeling"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "in this category."
 msgstr "in deze categorie."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
+msgid "included"
+msgstr "inbegrepen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11094,6 +11152,18 @@ msgstr "om de knoppen te activeren."
 msgid "using"
 msgstr "gebruikende"
 
+#~ msgid "Action cancelled (%s)"
+#~ msgstr "Actie geannuleerd (%s)"
+
+#~ msgid "Cash drawer opened (%s)"
+#~ msgstr "Kassalade geopend (%s)"
+
+#~ msgid "There is already a cash payment line."
+#~ msgstr "Er is al een regel voor contante betaling."
+
+#~ msgid "free"
+#~ msgstr "gratis"
+
 #~ msgid ""
 #~ "This journal is associated with payment method %(payment_method)s that is "
 #~ "being used by order %(pos_order)s in the active pos session %"
@@ -11122,9 +11192,6 @@ msgstr "gebruikende"
 #~ "niet gefactureerd kunnen worden.\n"
 #~ "\n"
 #~ "%s"
-
-#~ msgid "VAT:"
-#~ msgstr "Btw:"
 
 #~ msgid "Ok"
 #~ msgstr "Ok"

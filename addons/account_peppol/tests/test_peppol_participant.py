@@ -3,6 +3,7 @@ from base64 import b64encode
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged, freeze_time
+from odoo.tests.form import Form
 from odoo.tools.misc import file_open
 
 from odoo.addons.account_peppol.tests.common import PeppolConnectorCommon
@@ -300,6 +301,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         # Disconnect from the network.
         with self._mock_requests([
             self._mock_cancel_peppol_registration(),
+            self._mock_get_all_documents(),
             self._mock_participant_status('sender'),
         ]):
             config_wizard = self.env['peppol.config.wizard'].with_context(allowed_company_ids=branch.ids).create({})
@@ -343,3 +345,95 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
         # Should successfully deregister despite Exception
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
+
+    def test_peppol_commercial_entity(self):
+        company_peppol = self.env["res.company"].create({
+            "name": "test_be",
+            "country_id": self.env.ref("base.be").id,
+        })
+        receivable = self.env["account.account"].create({
+            "account_type": "income",
+            "name": "test_receiv",
+            "code": "TESTR",
+            "company_ids": [Command.link(company_peppol.id)]
+        })
+        payable = self.env["account.account"].create({
+            "account_type": "expense",
+            "name": "test_pay",
+            "code": "TESTP",
+            "company_ids": [Command.link(company_peppol.id)]
+        })
+        partner_view = self.env.ref("base.view_partner_form")
+        self.env["ir.ui.view"].create({
+            "name": "test_inherit",
+            "inherit_id": partner_view.id,
+            "model": "res.partner",
+            "type": "form",
+            "arch": """<xpath expr="//field" position="after">
+                    <field name="commercial_partner_id" />
+                </xpath>"""
+        })
+        env_partner = (self.env["res.partner"]
+            .with_company(company_peppol)
+            .with_context(
+                default_property_account_receivable_id=receivable.id,
+                default_property_account_payable_id=payable.id
+            ))
+        with Form(env_partner, view=partner_view) as partner_form:
+            self.assertEqual(partner_form.peppol_verification_state, "not_verified")
+            partner_form.name = "test"
+            partner_form.vat = "BE0477472701"
+            partner_form.peppol_eas = "odemo"
+            self.assertFalse(partner_form.commercial_partner_id)
+            p_rec = partner_form.save()
+            self.assertEqual(p_rec.commercial_partner_id, p_rec)
+            self.assertEqual(p_rec.commercial_partner_id.name, "test")
+
+    def test_do_not_reset_peppol_endpoint(self):
+        be_country = self.env.ref('base.be')
+        self.env.company.write({
+            'country_id': be_country.id,
+            'vat': 'BE0477472701',
+        })
+        with self._mock_requests([
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
+        ]):
+            wizard = self.env['peppol.registration'].create({
+                'peppol_eas': '0088',
+                'peppol_endpoint': '88888888888',
+                'phone_number': '+32483123456',
+                'contact_email': 'yourcompany@test.example.com',
+            })
+            wizard.button_register_peppol_participant()
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        with Form(self.env.company.partner_id) as partner:
+            # Test with NewID record
+            partner.vat = 'BE0477472701'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        company_partner = self.env.company.partner_id
+
+        other_company = self.env['res.company'].create({'name': 'new company 3', 'country_id': be_country.id})
+        self.env = self.env(context=dict(allowed_company_ids=other_company.ids))
+        # Do not raise even if no access to a registered company
+
+        company_partner.vat = 'BE0477472701'
+        self.assertRecordValues(company_partner, [{
+            'peppol_eas': '0088',
+            'peppol_endpoint': '88888888888',
+        }])
+
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0475646428',
+        }])

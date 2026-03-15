@@ -6,6 +6,7 @@ import { insertText } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { press, waitFor, queryOne } from "@odoo/hoot-dom";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { findInSelection } from "@html_editor/utils/selection";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -344,6 +345,77 @@ test("should not navigate table cells when table picker is open", async () => {
                             </table>
                             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                         </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `
+    );
+});
+
+test.tags("desktop");
+test("should not navigate table cells when powerbox is open", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p>test[]</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+
+    // Open powerbox
+    await insertText(editor, "/");
+    await waitFor(".o-we-powerbox");
+
+    // Cursor is in second td.
+    const secondTd = el.querySelectorAll("td")[1];
+
+    // Selection starts in first cell
+    let selectedTd = findInSelection(editor.shared.selection.getEditableSelection(), "td");
+    expect(selectedTd).toBe(secondTd);
+
+    // ArrowUp should not navigate table cells
+    press("ArrowUp");
+    await animationFrame();
+
+    selectedTd = findInSelection(editor.shared.selection.getEditableSelection(), "td");
+    expect(selectedTd).toBe(secondTd);
+
+    // ArrowDown should not navigate table cells
+    press("ArrowDown");
+    await animationFrame();
+
+    selectedTd = findInSelection(editor.shared.selection.getEditableSelection(), "td");
+    expect(selectedTd).toBe(secondTd);
+
+    // Enter applies the powerbox command in the same cell
+    press("Enter");
+    await animationFrame();
+
+    expectContentToBe(
+        el,
+        `
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td><p><br></p></td>
+                        </tr>
+                    <tr>
+                        <td><h1>test[]</h1></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
                     </tr>
                 </tbody>
             </table>

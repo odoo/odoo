@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, RecordCapturer
+from odoo.tools import file_open
 from odoo.tools.misc import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -418,7 +419,54 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         }
 
         invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
-        self.assertEqual(invoice.partner_id, self.internal_user.partner_id)
+        self.assertFalse(invoice.partner_id)
+
+        message_ids = invoice.message_ids
+        self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
+        self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
+
+        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        self.assertEqual(following_partners, self.env.user.partner_id)
+
+    def test_supplier_invoice_forwarded_by_internal_with_company_in_body(self):
+        """ In this test, the bill was forwarded by an employee,
+            and the company email address is found in the body."""
+        self.journal.company_id.partner_id.email = 'contact@example.com'
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % (self.journal.company_id.partner_id.name, self.journal.company_id.partner_id.email),
+            'attachments': [b'Hello, invoice'],
+        }
+
+        invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
+
+        message_ids = invoice.message_ids
+        self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
+        self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
+
+        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        self.assertEqual(following_partners, self.env.user.partner_id)
+
+    def test_supplier_invoice_forwarded_by_internal_with_unknown_supplier_in_body(self):
+        """ In this test, the bill was forwarded by an employee,
+            and an unknown partner email address is found in the body."""
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % ("Test supplier", "unknown_supplier@other.com"),
+            'attachments': [b'Hello, invoice'],
+        }
+
+        invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
 
         message_ids = invoice.message_ids
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
@@ -967,3 +1015,44 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             move_id = self.journal.create_document_from_attachment(attachment.ids).get('res_id')
 
         self.assertEqual(self.env['account.move'].browse(move_id).attachment_ids, attachment)
+
+    def test_import_xml_with_embedded_pdf(self):
+        with file_open("account/tests/test_files/xml_with_embedded_pdf.xml", 'rb') as file:
+            xml_vals = {'name': 'invoice.xml', 'raw': file.read(), 'mimetype': 'application/xml'}
+
+        self.assert_attachment_import(
+            origin='journal',
+            attachments_vals=[xml_vals],
+            expected_invoices={
+                1: {
+                    'invoice.xml': {
+                        'on_invoice': True,
+                        'on_message': True,
+                        'is_decoded': True,
+                        'is_new': True,
+                    },
+                    'test_pdf.pdf': {
+                        'on_invoice': True,
+                        'on_message': True,
+                    },
+                },
+            },
+        )
+
+        self.assert_attachment_import(
+            origin='mail_alias',
+            attachments_vals=[xml_vals],
+            expected_invoices={
+                1: {
+                    'invoice.xml': {
+                        'on_message': True,
+                        'is_decoded': True,
+                        'is_new': True,
+                    },
+                    'test_pdf.pdf': {
+                        'on_invoice': True,
+                        'on_message': True,
+                    },
+                },
+            },
+        )

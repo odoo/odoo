@@ -1141,7 +1141,7 @@
                 <input
                     type="text"
                     class="o_wsale_attribute_search_bar form-control"
-                    t-att-placeholder="'Search %s (%s)' % (a.name, len(a.value_ids))"
+                    t-attf-placeholder="Search {{a.name}} ({{len(a.value_ids)}})"
                     t-att-data-container-id="'searchable-values-%s' % a.id"
                 />
             </div>
@@ -2145,12 +2145,11 @@
                                     </div>
 
                                     <div
-                                        t-if="combination_info['prevent_zero_price_sale']"
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_contact mb-4"
                                     >
                                         <div
                                             id="contact_us_wrapper"
-                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes}"
+                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes} {{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}"
                                         >
                                             <section
                                                 class="s_text_block"
@@ -2366,7 +2365,18 @@
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
             <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
-                <t t-call="website_sale.product_price"/>
+                <div>
+                    <t t-call="website_sale.product_price"/>
+                    <small 
+                        t-if="combination_info.get('base_unit_price')"
+                        class="ms-1 text-muted o_base_unit_price_wrapper d-none"
+                    >
+                        <t
+                            t-call="website_sale.base_unit_price"
+                            base_unit_price="combination_info['base_unit_price']"
+                        />
+                    </small>
+                </div>
             </div>
         </xpath>
     </template>
@@ -3038,7 +3048,7 @@
                 <t t-set="product" t-value="line.product_id"/>
                 <t
                     t-set="base_unit_price"
-                    t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"
+                    t-value="product._get_base_unit_price(product_price/line.product_qty)"
                 />
             </t>
         </small>

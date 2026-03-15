@@ -659,10 +659,14 @@ export class DeletePlugin extends Plugin {
             for (const child of [...node.childNodes]) {
                 remove(child);
             }
-            if (this.isUnremovable(node, root)) {
+            if (
+                this.isUnremovable(node, root) ||
+                (!this.dependencies.selection.isNodeEditable(node) &&
+                    !node.parentElement?.isContentEditable)
+            ) {
                 return false;
             }
-            if (node.hasChildNodes()) {
+            if (node.hasChildNodes() && node.isContentEditable) {
                 node.before(...node.childNodes);
                 node.remove();
                 return false;

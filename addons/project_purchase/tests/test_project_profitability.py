@@ -985,16 +985,28 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         purchase_order = self.env['purchase.order'].create({
             "name": "A purchase order",
             "partner_id": self.partner_a.id,
-            "order_line": [Command.create({
-                "analytic_distribution": {
-                    # this is the analytic_account that is linked to the project
-                    f"{self.analytic_account.id},{other_analytic_account.id}": 100,
-                },
-                "product_id": self.product_order.id,
-                "product_qty": 1,
-                "price_unit": self.product_order.standard_price,
-                "currency_id": self.env.company.currency_id.id,
-            })],
+            "order_line": [
+                Command.create({
+                    "analytic_distribution": {
+                        # this is the analytic_account that is linked to the project
+                        f"{self.analytic_account.id},{other_analytic_account.id}": 100,
+                    },
+                    "product_id": self.product_order.id,
+                    "product_qty": 1,
+                    "price_unit": self.product_order.standard_price,
+                    "currency_id": self.env.company.currency_id.id,
+                }),
+                Command.create({
+                    "analytic_distribution": {
+                        # this is the analytic_account that is linked to the project
+                        f"{other_analytic_account.id},{self.analytic_account.id}": 100,
+                    },
+                    "product_id": self.product_order.id,
+                    "product_qty": 1,
+                    "price_unit": self.product_order.standard_price,
+                    "currency_id": self.env.company.currency_id.id,
+                }),
+            ],
         })
         purchase_order.button_confirm()
 
@@ -1011,11 +1023,11 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                     'id': 'purchase_order',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
                     'to_bill': 0.0,
-                    'billed': -235.0,
+                    'billed': -470.0,
                 }],
                 'total': {
                     'to_bill': 0.0,
-                    'billed': -235.0,
+                    'billed': -470.0,
                 },
             },
         )

@@ -2,6 +2,7 @@
 import pytz
 from datetime import datetime
 
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -50,6 +51,7 @@ class TestResourceCalendar(TransactionCase):
         flexible_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible Calendar',
             'hours_per_day': 7.0,
+            'hours_per_week': 30,
             'full_time_required_hours': 30,
             'flexible_hours': True,
             'tz': 'UTC',
@@ -103,3 +105,121 @@ class TestResourceCalendar(TransactionCase):
             '2019-05-31': False,
         }
         self.assertEqual(days, expected_res)
+
+    def test_resource_calendar_form_view(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {
+                                   'name': 'Monday',
+                                   'hour_from': 8,
+                                   'hour_to': 16,
+                                   'day_period': 'full_day',
+                                   'dayofweek': '0',
+                               }),
+                               (0, 0, {
+                                   'name': 'Tuesday',
+                                   'hour_from': 8,
+                                   'hour_to': 16,
+                                   'day_period': 'full_day',
+                                   'dayofweek': '1',
+                               }),
+                               (0, 0, {
+                                   'name': 'Wednesday',
+                                   'hour_from': 8,
+                                   'hour_to': 16,
+                                   'day_period': 'full_day',
+                                   'dayofweek': '2',
+                               })],
+        })
+        calendar_form = Form(calendar)
+
+        self.assertEqual(calendar_form.hours_per_day, 8)
+        self.assertEqual(calendar_form.hours_per_week, 24)
+
+        with calendar_form.attendance_ids.edit(0) as line_form:
+            line_form.hour_from = 11
+        line_form.save()
+
+        # The calendar form values should be recomputed
+        self.assertEqual(calendar_form.hours_per_day, 7)
+        self.assertEqual(calendar_form.hours_per_week, 21)
+
+        calendar_form.save()
+        self.assertEqual(calendar.hours_per_day, 7)
+        self.assertEqual(calendar.hours_per_week, 21)
+
+    def test_resource_calendar_form_view_duration_based(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {
+                                   'name': 'Monday',
+                                   'hour_from': 8,
+                                   'hour_to': 16,
+                                   'day_period': 'full_day',
+                                   'dayofweek': '0',
+                               }),
+                               (0, 0, {
+                                   'name': 'Tuesday',
+                                   'hour_from': 8,
+                                   'hour_to': 16,
+                                   'day_period': 'full_day',
+                                   'dayofweek': '1',
+                               }),
+                               (0, 0, {
+                                   'name': 'Wednesday',
+                                   'hour_from': 8,
+                                   'hour_to': 16,
+                                   'day_period': 'full_day',
+                                   'dayofweek': '2',
+                               })],
+        })
+        calendar.duration_based = True
+        calendar_form = Form(calendar)
+
+        self.assertEqual(calendar_form.hours_per_day, 8)
+        self.assertEqual(calendar_form.hours_per_week, 24)
+
+        with calendar_form.attendance_ids.edit(0) as line_form:
+            line_form.duration_hours = 5
+        line_form.save()
+
+        # The calendar form values should be recomputed
+        self.assertEqual(calendar_form.hours_per_day, 7)
+        self.assertEqual(calendar_form.hours_per_week, 21)
+
+        calendar_form.save()
+        self.assertEqual(calendar.hours_per_day, 7)
+        self.assertEqual(calendar.hours_per_week, 21)
+
+    def test_duration_based_average_hours(self):
+        """Checks that the average hours for days and weeks are correctly computed when the option Define Amount of
+        Hours per Day has been checked."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based Calendar',
+            'attendance_ids': False,
+            'duration_based': True,
+        })
+        with Form(calendar) as form:
+            with form.attendance_ids.new() as monday_attendance:
+                monday_attendance.name = 'Mon'
+                monday_attendance.dayofweek = '0'
+                monday_attendance.day_period = 'full_day'
+                monday_attendance.duration_hours = 4.0
+
+            with form.attendance_ids.new() as tuesday_attendance:
+                tuesday_attendance.name = 'Tue'
+                tuesday_attendance.dayofweek = '1'
+                tuesday_attendance.day_period = 'full_day'
+                tuesday_attendance.duration_hours = 4.0
+
+            with form.attendance_ids.new() as wednesday_attendance:
+                wednesday_attendance.name = 'Wed'
+                wednesday_attendance.dayofweek = '2'
+                wednesday_attendance.day_period = 'full_day'
+                wednesday_attendance.duration_hours = 4.0
+            self.assertEqual(
+                (form.hours_per_week, form.hours_per_day),
+                (12, 4),
+            )

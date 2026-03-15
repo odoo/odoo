@@ -321,6 +321,7 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
     setup() {
         super.setup();
         this.reload = false;
+        this.canTimeout = false;
     }
     apply({ editingElement: productDetailMainEl }) {
         // Emulate click on the main image of the carousel.
@@ -360,15 +361,18 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
 export class ProductAddExtraImageAction extends BaseProductPageAction {
     static id = "productAddExtraImage";
     static dependencies = [...super.dependencies, "media"];
-    async apply({ editingElement: el }) {
-        // Prompts the user for images, then saves the new images.
+    setup() {
+        super.setup();
+        this.canTimeout = false;
+    }
+    async load({ editingElement: el }) {
         if (this.model === "product.template") {
             this.services.notification.add(
                 'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants',
                 { type: "info" }
             );
         }
-        await new Promise((resolve) => {
+        return new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
                 addFieldImage: true,
                 multiImages: true,
@@ -377,14 +381,20 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
                 // Kinda hack-ish but the regular save does not get the information we need
                 save: async (imgEls, selectedMedia, activeTab) => {
                     if (selectedMedia.length) {
-                        const type =
-                            activeTab === TABS["IMAGES"].id ? "image" : "video";
-                        await this.extraMediaSave(el, type, selectedMedia, imgEls);
+                        const type = activeTab === TABS["IMAGES"].id ? "image" : "video";
+                        resolve({ imgEls, selectedMedia, type });
                     }
                 },
             });
             onClose.then(resolve);
         });
+    }
+    async apply({ editingElement: el, loadResult }) {
+        if (!loadResult) {
+            return BuilderAction.cancelReload;
+        }
+        const { imgEls, selectedMedia, type } = loadResult;
+        await this.extraMediaSave(el, type, selectedMedia, imgEls);
     }
 }
 export class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {

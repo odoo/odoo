@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Toss Payments Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'toss_payments'">
+                    <field
+                        string="Client Key"
+                        name="toss_payments_client_key"
+                        required="code == 'toss_payments' and state != 'disabled'"
+                    />
+                    <field
+                        string="Secret Key"
+                        name="toss_payments_secret_key"
+                        required="code == 'toss_payments' and state != 'disabled'"
+                        password="True"
+                    />
+                    <field
+                        string="Webhook URL"
+                        name="toss_payments_webhook_url"
+                        widget="CopyClipboardChar"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

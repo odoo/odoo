@@ -5,7 +5,7 @@ from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
-PROXY_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago/1'
+PROXY_URL = 'https://mercadopago.api.odoo.com/api/mercado_pago'
 
 PAYMENT_RETURN_ROUTE = '/payment/mercado_pago/return'
 OAUTH_RETURN_ROUTE = '/payment/mercado_pago/oauth/return'
@@ -15,45 +15,23 @@ WEBHOOK_ROUTE = '/payment/mercado_pago/webhook'
 # The countries supported by Mercado Pago.
 SUPPORTED_COUNTRIES = {
     'AR',
-    'BO',
     'BR',
     'CL',
     'CO',
-    'CR',
-    'DO',
-    'EC',
-    'GT',
-    'HN',
     'MX',
-    'NI',
-    'PA',
-    'PY',
     'PE',
-    'SV',
     'UY',
-    'VE',
 }
 
 # Mapping of country codes to corresponding currency codes.
 CURRENCY_MAPPING = {
     'AR': 'ARS',  # Argentina - Argentine Peso
-    'BO': 'BOB',  # Bolivia - Boliviano
     'BR': 'BRL',  # Brazil - Brazilian Real
     'CL': 'CLP',  # Chile - Chilean Peso
     'CO': 'COP',  # Colombia - Colombian Peso
-    'CR': 'CRC',  # Costa Rica - Costa Rican Colón
-    'DO': 'DOP',  # Dominican Republic - Dominican Peso
-    'EC': 'USD',  # Ecuador - United States Dollar
-    'GT': 'GTQ',  # Guatemala - Guatemalan Quetzal
-    'HN': 'HNL',  # Honduras - Honduran Lempira
     'MX': 'MXN',  # Mexico - Mexican Peso
-    'NI': 'NIO',  # Nicaragua - Nicaraguan Córdoba
-    'PA': 'PAB',  # Panama - Panamanian Balboa (also uses USD)
-    'PY': 'PYG',  # Paraguay - Paraguayan Guaraní
     'PE': 'PEN',  # Peru - Peruvian Sol
-    'SV': 'USD',  # El Salvador - United States Dollar
     'UY': 'UYU',  # Uruguay - Uruguayan Peso
-    'VE': 'VES'   # Venezuela - Venezuelan Bolívar
 }
 
 # Set of currencies where Mercado Pago's minor units deviates from the ISO 4217 standard.

@@ -34,6 +34,7 @@ class PopupOptionPlugin extends Plugin {
         dropzone_selector: {
             selector: ".s_popup",
             exclude: "#website_cookies_bar",
+            excludeAncestor: ".s_popup, .s_table_of_content, .s_tabs, .s_tabs_images",
             dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
         },
         builder_actions: {

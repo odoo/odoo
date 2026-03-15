@@ -15,7 +15,6 @@ import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
-import { getDeepestPosition } from "@html_editor/utils/dom_info";
 import { scrollAndHighlightHeading } from "@html_editor/utils/url";
 
 export class HtmlViewer extends Component {
@@ -152,19 +151,7 @@ export class HtmlViewer extends Component {
     onCopy(ev) {
         ev.preventDefault();
         const selection = ev.target.ownerDocument.defaultView.getSelection();
-        const [deepAnchorNode, deepAnchorOffset] = getDeepestPosition(
-            selection.anchorNode,
-            selection.anchorOffset
-        );
-        const [deepFocusNode, deepFocusOffset] = getDeepestPosition(
-            selection.focusNode,
-            selection.focusOffset
-        );
-
-        const range = new Range();
-        range.setStart(deepAnchorNode, deepAnchorOffset);
-        range.setEnd(deepFocusNode, deepFocusOffset);
-        const clonedContents = range.cloneContents();
+        const clonedContents = selection.getRangeAt(0).cloneContents();
         fillHtmlTransferData(ev, "clipboardData", clonedContents, {
             textContent: selection.toString(),
         });

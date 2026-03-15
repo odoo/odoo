@@ -1,4 +1,4 @@
-from odoo import models, fields, release, _
+from odoo import models, fields, release, tools, _
 from datetime import datetime
 from odoo.exceptions import UserError
 
@@ -26,8 +26,7 @@ class ComplianceLetter(models.TransientModel):
         date_obj = datetime.strptime(str(fields.Date.today()), '%Y-%m-%d')
         day = date_obj.day
         day_suffix = 'th' if 11 <= day <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
-        formatted_date = date_obj.strftime(f"%B {day}{day_suffix}, %Y")
-        return formatted_date
+        return tools.format_date(self.env, date_obj, date_format=f"MMMM d'{day_suffix}', Y")
 
     def _get_odoo_version(self):
         return release.major_version

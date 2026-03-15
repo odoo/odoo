@@ -118,21 +118,20 @@ class AccountJournal(models.Model):
 
         # If the invoice wasn't sent to ZATCA because of a timeout, it will retain its existing chain index
         # Make sure there are no opened invoices with the journal's existing sequence
-        move_ids = self.env['account.move'].search(
-            [
-                ('journal_id', '=', self.id),
-                ('l10n_sa_chain_index', '!=', 0)
-            ]
-        )
-        stuck_moves = [move for move in move_ids if not move._l10n_sa_is_in_chain()]
-        if stuck_moves:
+        has_stuck_moves = self.env['account.edi.document'].search([
+            ('move_id.journal_id', '=', self.id),
+            ('move_id.l10n_sa_chain_index', '!=', 0),
+            ('edi_format_id.code', '=', 'sa_zatca'),
+            ('state', '=', 'to_send'),
+        ], limit=1)
+        if has_stuck_moves:
             raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
 
     # ====== CSR Generation =======
 
     def _l10n_sa_csr_required_fields(self):
         """ Return the list of fields required to generate a valid CSR as per ZATCA requirements """
-        return ['l10n_sa_private_key_id', 'vat', 'name', 'city', 'country_id', 'state_id']
+        return ['l10n_sa_private_key_id', 'vat', 'name', 'city', 'country_id', 'state_id', 'street']
 
     def _l10n_sa_generate_csr(self):
         """

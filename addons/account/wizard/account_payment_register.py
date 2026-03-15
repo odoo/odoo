@@ -5,7 +5,7 @@ import markupsafe
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import frozendict, SQL
+from odoo.tools import frozendict, OrderedSet
 from odoo.tools.misc import clean_context
 
 
@@ -347,7 +347,7 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
             batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
-            banks_per_partner = defaultdict(lambda: {'inbound': set(), 'outbound': set()})
+            banks_per_partner = defaultdict(lambda: {'inbound': OrderedSet(), 'outbound': OrderedSet()})
             for line in lines:
                 batch_key = self._get_line_batch_key(line)
                 vals = batches[frozendict(batch_key)]
@@ -388,8 +388,8 @@ class AccountPaymentRegister(models.TransientModel):
                 balance = sum(lines.mapped('balance'))
                 vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
                 if merge:
-                    partner_banks = banks_per_partner[batch_key['partner_id']]
-                    vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                    partner_banks = banks_per_partner[key['partner_id']]
+                    vals['payment_values']['partner_bank_id'] = next(iter(partner_banks[vals['payment_values']['payment_type']]))
                     vals['lines'] = lines
                 batch_vals.append(vals)
 
@@ -398,22 +398,24 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_method_line_id', 'line_ids', 'group_payment', 'partner_bank_id')
     def _compute_trust_values(self):
         for wizard in self:
-            total_payment_count = 0
             untrusted_payments_count = 0
             untrusted_accounts = self.env['res.partner.bank']
             missing_account_partners = self.env['res.partner']
 
+            total_payment_count = len(wizard.batches)
+            if not wizard.group_payment:
+                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
+                total_payment_count = len(total_amount_values['lines'])
+
             # Validate batches; if require_partner_bank_account and the account isn't setup and trusted, we do not allow the payment
             for batch in wizard.batches:
-                payment_count = 1 if wizard.group_payment else len(batch['lines'])
-                total_payment_count += payment_count
                 # Use the currently selected partner_bank_id if in edit mode, otherwise use batch account
                 batch_account = wizard.partner_bank_id or wizard._get_batch_account(batch)
                 if wizard.require_partner_bank_account:
                     if not batch_account:
                         missing_account_partners += batch['lines'].partner_id
                     elif not batch_account.allow_out_payment:
-                        untrusted_payments_count += payment_count
+                        untrusted_payments_count += 1 if wizard.group_payment else len(batch['lines'].filtered(lambda line: line in total_amount_values['lines']))
                         untrusted_accounts |= batch_account
 
             wizard.update({
@@ -461,7 +463,10 @@ class AccountPaymentRegister(models.TransientModel):
                     and not (len(lines.move_id) == 1 and lines.move_id.is_invoice(include_receipts=True))
                 )
             else:
-                wizard.can_group_payments = any(len(batch_result['lines']) != 1 for batch_result in wizard.batches)
+                total_amounts_to_pay = wizard._get_total_amounts_to_pay(wizard.batches)
+                wizard.can_group_payments = any(
+                    len(batch_result['lines'].filtered(lambda line: line in total_amounts_to_pay['lines'])) != 1 for batch_result in wizard.batches
+                )
 
     @api.depends('can_edit_wizard', 'amount')
     def _compute_communication(self):

@@ -49,7 +49,7 @@ export class PurchaseStockProductCatalogSearchModel extends AccountProductCatalo
      */
     async _fetchSections() {
         this._editSuggestContext();
-        super._fetchSections(...arguments);
+        await super._fetchSections(...arguments);
     }
 
     /**

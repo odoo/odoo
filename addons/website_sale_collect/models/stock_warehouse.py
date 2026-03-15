@@ -31,9 +31,9 @@ class StockWarehouse(models.Model):
         try:
             pickup_location_values = {
                 'id': self.id,
-                'name': wh_location['name'].title(),
-                'street': wh_location['street'].title(),
-                'city': wh_location.city.title(),
+                'name': wh_location['name'],
+                'street': wh_location['street'],
+                'city': wh_location.city,
                 'state': wh_location.state_id.code or '',
                 'zip_code': wh_location.zip or '',
                 'country_code': wh_location.country_code,
@@ -47,7 +47,7 @@ class StockWarehouse(models.Model):
         if self.opening_hours:
             opening_hours_dict = {str(i): [] for i in range(7)}
             for att in self.opening_hours.attendance_ids:
-                if att.day_period in ('morning', 'afternoon'):
+                if att.day_period in ('morning', 'afternoon', 'full_day'):
                     opening_hours_dict[att.dayofweek].append(
                         f'{format_duration(att.hour_from)} - {format_duration(att.hour_to)}'
                     )

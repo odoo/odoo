@@ -11,7 +11,6 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestStockValuation(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -28,7 +27,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-    def _dropship_product1(self):
+    def _dropship_product1(self, bill_price=None):
         # enable the dropship route on the product
         dropshipping_route = self.quick_ref('stock_dropshipping.route_drop_shipping')
         self.product1.write({'route_ids': [(6, 0, [dropshipping_route.id])]})
@@ -75,6 +74,8 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         for i in range(len(self.purchase_order1.order_line)):
             with move_form.invoice_line_ids.edit(i) as line_form:
                 line_form.tax_ids.clear()
+                if bill_price:
+                    line_form.price_unit = bill_price
         self.vendor_bill1 = move_form.save()
         self.vendor_bill1.action_post()
 
@@ -83,8 +84,8 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.customer_invoice1.action_post()
 
         all_amls = self.vendor_bill1.line_ids + self.customer_invoice1.line_ids
-        if self.sale_order1.picking_ids.move_ids.account_move_ids:
-            all_amls |= self.sale_order1.picking_ids.move_ids.account_move_ids.line_ids
+        if self.sale_order1.picking_ids.move_ids.account_move_id:
+            all_amls |= self.sale_order1.picking_ids.move_ids.account_move_id.line_ids
         return all_amls
 
     def _check_results(self, expected_aml, expected_aml_count, all_amls):
@@ -184,6 +185,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
     # -------------------------------------------------------------------------
     # Anglosaxon
     # -------------------------------------------------------------------------
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_standard_perpetual_anglosaxon_ordered(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
@@ -207,6 +209,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         self._check_results(expected_aml, 10, all_amls)
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_standard_perpetual_anglosaxon_delivered(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
@@ -230,6 +233,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         self._check_results(expected_aml, 10, all_amls)
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_fifo_perpetual_anglosaxon_ordered(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -250,6 +254,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         self._check_results(expected_aml, 10, all_amls)
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_fifo_perpetual_anglosaxon_delivered(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -269,6 +274,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         }
         self._check_results(expected_aml, 10, all_amls)
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_standard_perpetual_anglosaxon_ordered_return(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
@@ -303,6 +309,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         self._check_results(expected_aml, 4, all_amls_return - all_amls)
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_fifo_return(self):
         """Test the return of a dropship order with a product set to FIFO costing
         method. The unit price is correctly computed on the return picking svl.
@@ -346,6 +353,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertTrue(8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
         self.assertTrue(-8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_cogs_multiple_invoices(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -436,6 +444,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         dropship3_cogs_line = customer_invoice3.line_ids.filtered(lambda aml: aml.account_id.id == account_output.id)
         self.assertEqual(dropship3_cogs_line.balance, -24)
 
+    @skip('Temporary to fast merge new valuation')
     def test_dropship_standard_perpetual_anglosaxon_ordered_return_internal_aml(self):
         """
         test that, with sbc installed, the return to an internal location of a dropshipped move
@@ -503,3 +512,12 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             {'credit': 10, 'debit': 0, 'account_id': stock_interim_delivered.id},
             {'credit': 0, 'debit': 10, 'account_id': stock_valuation_account.id},
         ])
+
+    def test_dropship_bill_standard_price_update(self):
+        """ Test that the price of the product is updated when the bill has a different
+        price than the Purchase order
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self._dropship_product1(bill_price=15)
+        self.assertEqual(self.product1.standard_price, 15)

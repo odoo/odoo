@@ -10,7 +10,9 @@ patch(DataServiceOptions.prototype, {
                 condition: (record) =>
                     record
                         .backLink("<-pos.order.line.coupon_id")
-                        .find((l) => !(l.order_id?.finalized && l.order_id.isSynced)),
+                        .find((l) => !l.order_id?.canBeRemovedFromIndexedDB),
+                getRecordsBasedOnLines: (orderlines) =>
+                    orderlines.map((line) => line.coupon_id).filter((c) => c),
             },
         };
     },

@@ -54,13 +54,19 @@ export class AddSnippetDialog extends Component {
         let root;
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
-            if (isFirefox) {
-                // Make sure empty preview iframe is loaded.
+            if (isFirefox && !(this.iframeRef.el?.contentDocument.readyState === "complete")) {
+                // Make sure empty preview iframe is loaded. This was necessary
+                // in Firefox < 148 as it created and parsed a new document.
                 // This event is never triggered on Chrome.
                 await new Promise((resolve) => {
                     this.iframeRef.el.addEventListener("load", resolve, { once: true });
                 });
             }
+
+            // Ensure preview styles are applied before mounting the snippets.
+            // Otherwise layout-dependent measurements (e.g., carousel height in
+            // preview) can be wrong.
+            await this.insertStyle();
 
             const iframeDocument = this.iframeRef.el.contentDocument;
             iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
@@ -73,7 +79,6 @@ export class AddSnippetDialog extends Component {
             });
             root.mount(iframeDocument.body);
 
-            await this.insertStyle();
             this.insertColorScheme();
             this.state.showIframe = true;
         });

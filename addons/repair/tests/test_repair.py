@@ -906,6 +906,22 @@ class TestRepair(TestRepairCommon):
                 'company_id': company.id,
             })
 
+    def test_missing_inventory_loss_location_raises_user_error(self):
+        """
+        Test that a missing inventory loss location raises a UserError when creating a warehouse.
+        """
+        inv_locations = self.env['stock.location'].search([
+            ('usage', '=', 'inventory'),
+            ('company_id', '=', self.env.company.id),
+        ])
+        if inv_locations:
+            inv_locations.write({'usage': "internal"})
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse'].create({
+                'name': 'ELCT',
+                'code': 'ET',
+            })
+
     def test_add_product_from_catalog(self):
         """Check that only consumable products are available in the catalog."""
         catalog_action = self.repair0.action_add_from_catalog()
@@ -941,6 +957,20 @@ class TestRepair(TestRepairCommon):
         repair_order.action_repair_start()
         repair_order.action_repair_end()
         self.assertEqual(sale_line.discount, 15)
+
+    def test_delete_repair_resets_outgoing_stock_moves(self):
+        """
+        Test that deleting draft repair order clears its outgoing stock quantities and
+        related moves are unlinked
+        """
+        repair = self._create_simple_repair_order()
+        self._create_simple_part_move(repair.id, 1.0)
+        moves = repair.move_ids
+        self.assertEqual(repair.state, 'draft')
+        self.assertEqual(moves.state, 'draft')
+        repair.unlink()
+        self.assertFalse(repair.exists())
+        self.assertFalse(moves.exists())
 
 
 @tagged('post_install', '-at_install')

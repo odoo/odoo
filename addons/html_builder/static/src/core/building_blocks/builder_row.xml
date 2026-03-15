@@ -38,7 +38,7 @@
                     >
 
                     <span class="text-nowrap text-truncate" t-out="props.label" t-ref="label"/>
-                    <i t-if="state.tooltip" class="fa fa-question icon-sup"/>
+                    <i t-if="props.tooltip" class="fa fa-question icon-sup" t-att-class="this.isBackendRTL ? 'fa-flip-horizontal' : ''"/>
                 </div>
                 <div
                     class="hb-row-content d-flex"

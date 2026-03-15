@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo import http
 
 from urllib.parse import urlparse
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
+from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from unittest.mock import patch
 from datetime import datetime
 
@@ -311,6 +312,30 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         self.start_tour(self_route, "test_self_order_table_sharing-meal_mode")
 
+    def test_delete_mobile_order_from_backend(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        self_route = self.pos_config._get_self_order_route()
+
+        @http.route('/pos-self-order/test-delete-order-from-backend/', auth='public', type='jsonrpc', website=True)
+        def delete_mobile_order_from_backend(self, order_ids):
+            self.env['pos.order'].sudo().browse(order_ids).unlink()
+
+        with patch.object(
+            PosSelfOrderController,
+            'delete_mobile_order_from_backend',
+            delete_mobile_order_from_backend,
+            create=True,
+        ):
+            self.start_tour(self_route, 'test_delete_mobile_order_from_backend')
+
     def test_pos_self_order_table_transfer(self):
         """
         Verify that transferring a POS order to a new table clears
@@ -355,3 +380,15 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.self_ordering_table_id, order.table_id)
+
+    def test_self_order_meal_do_not_change_tracking_number_on_sync(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_meal_do_not_change_tracking_number_on_sync')

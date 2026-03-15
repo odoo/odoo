@@ -299,6 +299,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             | (cls.env.ref('stock.group_stock_manager', False) or no_group)
             | cls.quick_ref('account.group_account_manager')
             | cls.quick_ref('account.group_account_user')
+            | cls.quick_ref('account.group_validate_bank_account')
             | cls.quick_ref('base.group_system')  # company creation during setups
         )
 

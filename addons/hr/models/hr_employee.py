@@ -455,7 +455,7 @@ class HrEmployee(models.Model):
             versions = versions.filtered(lambda c: c.date_start <= self.env.context['before_date'])
         return versions
 
-    def _get_first_version_date(self, no_gap=True):
+    def _get_first_versions_filtered(self, no_gap=True):
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
             raise AccessError(_("Only HR users can access first version date on an employee."))
@@ -481,7 +481,15 @@ class HrEmployee(models.Model):
         versions = self._get_first_versions().sorted('date_start', reverse=True)
         if no_gap:
             versions = remove_gap(versions)
+        return versions
+
+    def _get_first_version_date(self, no_gap=True):
+        versions = self._get_first_versions_filtered(no_gap=no_gap)
         return min(versions.mapped('date_start')) if versions else False
+
+    def _get_first_contract_date(self, no_gap=True):
+        versions = self._get_first_versions_filtered(no_gap=no_gap).filtered(lambda x: x.contract_date_start)
+        return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')
     def _compute_legal_name(self):
@@ -1360,13 +1368,13 @@ We can redirect you to the public employee list."""
         employees = employees.sorted(key=lambda employee: index_per_employee[employee])
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
+        if self.env.context.get('salary_simulation'):
+            return employees
         for employee_sudo in employees.sudo():
             # creating 'svg/xml' attachments requires specific rights
             if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
                 employee_sudo.image_1920 = employee_sudo._avatar_generate_svg()
                 employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
-        if self.env.context.get('salary_simulation'):
-            return employees
         employee_departments = employees.department_id
         if employee_departments:
             self.env['discuss.channel'].sudo().search([

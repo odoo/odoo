@@ -92,6 +92,15 @@
     }
 }
 
+.o_builder_disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.o_builder_disabled  > *{
+    pointer-events: none;
+}
+
 body:has(.o_builder_sidebar_open) .o_notification_manager {
     @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
 }

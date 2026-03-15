@@ -271,18 +271,137 @@ export class MockPermissionStatus extends MockEventTarget {
     }
 }
 
+export class MockServiceWorker extends MockEventTarget {
+    static publicListeners = ["error", "message"];
+
+    /** @type {ServiceWorkerState} */
+    state = "activated";
+
+    /**
+     * @param {string} scriptURL
+     */
+    constructor(scriptURL) {
+        super(...arguments);
+
+        /** @type {string} */
+        this.scriptURL = scriptURL;
+    }
+
+    /**
+     * @param {any} _message
+     */
+    postMessage(_message) {}
+}
+
+export class MockServiceWorkerContainer extends MockEventTarget {
+    static publicListeners = ["controllerchange", "message", "messageerror"];
+
+    /**
+     * @private
+     */
+    _readyResolved = false;
+
+    /**
+     * @private
+     * @type {Map<string, MockServiceWorkerRegistration>}
+     */
+    _registrations = new Map();
+
+    /** @type {MockServiceWorker | null} */
+    controller = null;
+
+    get ready() {
+        return this._readyPromise;
+    }
+
+    constructor() {
+        super(...arguments);
+
+        const { promise, resolve } = Promise.withResolvers();
+        /**
+         * @type {Promise<MockServiceWorkerRegistration>}
+         * @private
+         */
+        this._readyPromise = promise;
+        /**
+         * @type {(value: MockServiceWorkerRegistration) => void}
+         * @private
+         */
+        this._resolveReady = resolve;
+    }
+
+    async getRegistration(scope = "/") {
+        return this._registrations.get(scope);
+    }
+
+    async getRegistrations() {
+        return Array.from(this._registrations.values());
+    }
+
+    /**
+     * @param {string} scriptURL
+     * @param {{ scope?: string }} [options]
+     */
+    async register(scriptURL, options = {}) {
+        const scope = options.scope ?? "/";
+
+        const registration = new MockServiceWorkerRegistration(scriptURL, scope);
+        this._registrations.set(scope, registration);
+
+        if (!this.controller) {
+            this.controller = registration.active;
+            this.dispatchEvent(new Event("controllerchange"));
+        }
+
+        if (!this._readyResolved) {
+            this._readyResolved = true;
+            this._resolveReady(registration);
+        }
+
+        return registration;
+    }
+
+    startMessages() {}
+}
+
+export class MockServiceWorkerRegistration {
+    /** @type {MockServiceWorker | null} */
+    installing = null;
+    /** @type {MockServiceWorker | null} */
+    waiting = null;
+
+    /**
+     * @param {string} scriptURL
+     * @param {string} scope
+     */
+    constructor(scriptURL, scope) {
+        /** @type {MockServiceWorker | null} */
+        this.active = new MockServiceWorker(scriptURL);
+        /** @type {string} */
+        this.scope = scope;
+    }
+
+    async unregister() {
+        return true;
+    }
+
+    async update() {}
+}
+
 export const currentPermissions = getPermissions();
 
 export const mockClipboard = new MockClipboard();
 
 export const mockPermissions = new MockPermissions();
 
+export const mockServiceWorker = new MockServiceWorkerContainer();
+
 export const mockNavigator = createMock(navigator, {
     clipboard: { value: mockClipboard },
     maxTouchPoints: { get: () => (globalThis.ontouchstart === undefined ? 0 : 1) },
     permissions: { value: mockPermissions },
     sendBeacon: { get: () => mockValues.sendBeacon },
-    serviceWorker: { get: () => undefined },
+    serviceWorker: { value: mockServiceWorker },
     userAgent: { get: () => mockValues.userAgent },
     vibrate: { get: () => mockValues.vibrate },
 });

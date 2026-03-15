@@ -3,8 +3,6 @@
 import logging
 from base64 import b64decode
 from datetime import datetime, timezone
-from escpos import printer
-import escpos.exceptions
 import io
 import subprocess
 import win32print
@@ -12,7 +10,7 @@ import pywintypes
 import ghostscript
 
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
-from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import EscposNotAvailableError, PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
@@ -36,21 +34,6 @@ class PrinterDriver(PrinterDriverBase):
         else:
             self.device_subtype = "office_printer"
 
-        if self.device_subtype == "receipt_printer" and self.receipt_protocol == 'escpos':
-            self._init_escpos(device)
-
-    def _init_escpos(self, device):
-        if self.device_connection != 'network':
-            return
-
-        self.escpos_device = printer.Network(device['port'], timeout=5)
-        try:
-            self.escpos_device.open()
-            self.escpos_device.close()
-        except escpos.exceptions.Error:
-            _logger.exception("Could not initialize escpos class")
-            self.escpos_device = None
-
     @classmethod
     def supported(cls, device):
         return True
@@ -64,12 +47,6 @@ class PrinterDriver(PrinterDriverBase):
         super().disconnect()
 
     def print_raw(self, data, action_unique_id=None):
-        if self.escpos_device:
-            try:
-                return self.print_raw_escpos(data, action_unique_id)
-            except EscposNotAvailableError:
-                _logger.warning("Failed to print via python-escpos, falling back to Windows printing")
-
         job_id = False
         page_started = False
         try:

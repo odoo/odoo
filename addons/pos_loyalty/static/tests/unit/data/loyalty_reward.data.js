@@ -96,6 +96,28 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_uom_id: false,
             reward_product_domain: "[]",
         },
+        {
+            id: 4,
+            description: "100% Cheapest Discount",
+            program_id: 8,
+            reward_type: "discount",
+            required_points: 1,
+            clear_wallet: false,
+            currency_id: 1,
+            discount: 100,
+            discount_mode: "percent",
+            discount_applicability: "cheapest",
+            all_discount_product_ids: [],
+            is_global_discount: false,
+            discount_max_amount: 0,
+            discount_line_product_id: 5,
+            reward_product_id: false,
+            multi_product: false,
+            reward_product_ids: [5],
+            reward_product_qty: 1,
+            reward_product_uom_id: false,
+            reward_product_domain: "[]",
+        },
     ];
 }
 

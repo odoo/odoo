@@ -135,8 +135,9 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @patch_nilvera_request
     def setUpClass(cls):
         super().setUpClass()
-        cls.einvoice_partner._check_nilvera_customer()
-        cls.earchive_partner._check_nilvera_customer()
+        with patch.object(cls.env.cr, 'commit', autospec=True):
+            cls.einvoice_partner._check_nilvera_customer()
+            cls.earchive_partner._check_nilvera_customer()
         cls.env['account.journal'].create({
             'name': 'TR Journal',
             'code': 'TRJ',
@@ -149,7 +150,9 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
 
         invoices_data = {
-            invoice: {**invoice.read()[0], 'extra_edis': {'tr_nilvera'}},
+            invoice: {
+                **self.env['account.move.send']._get_default_sending_settings(invoice),
+            }
         }
 
         with patch('odoo.addons.l10n_tr_nilvera_einvoice.models.account_move.AccountMove._l10n_tr_nilvera_submit_einvoice') as mock_submit_einvoice, \

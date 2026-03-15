@@ -5,6 +5,7 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
+import { rpcBus } from "../network/rpc";
 import {
     translatedTerms,
     translatedTermsGlobal,
@@ -34,6 +35,13 @@ export const localizationService = {
         const localizationDB = new IndexedDB("localization", session.registry_hash);
         const translationURL = session.translationURL || "/web/webclient/translations";
         const lang = jsToPyLocale(user.lang || document.documentElement.getAttribute("lang"));
+
+        rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
+            const { method, model } = ev.detail.data.params || {};
+            if (method === "lang_install" && model === "base.language.install") {
+                rpcBus.trigger("CLEAR-CACHES");
+            }
+        });
 
         const fetchTranslations = async (hash) => {
             let queryString = objectToUrlEncodedString({ hash, lang });

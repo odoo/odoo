@@ -240,7 +240,7 @@ class MyInvoisDocumentPoS(models.Model):
             if continuous_orders:
                 config_lines.append(self.env["pos.order"].browse(continuous_orders))
                 continuous_orders = []
-            lines_per_config[config] = config_lines
+            lines_per_config.setdefault(config, []).extend(config_lines)
 
         return lines_per_config
 

@@ -353,3 +353,23 @@ class TestPatchUtils(BaseCase):
             "<added>A</added><removed>B</removed>"
             "</i></p></div>",
         )
+
+    def test_double_closing_div_between_repeated_content(self):
+        initial_content = (
+            "<div data-embedded='wrapper'>"
+            "<div data-embedded-editable='content'>"
+            "<p>repeated</p>"
+            "</div></div>"
+            "<p>repeated</p>"
+        )
+        new_content = "<h1><br></h1>"
+        comparison = generate_comparison(new_content, initial_content)
+        self.assertEqual(
+            comparison,
+            "<div data-embedded='wrapper'>"
+            "<div data-embedded-editable='content'>"
+            "<p><added>repeated</added></p>"
+            "</div></div>"
+            "<p><added>repeated</added></p>"
+            "<h1><br></h1>"
+        )

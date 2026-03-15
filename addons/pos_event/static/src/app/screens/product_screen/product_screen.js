@@ -125,8 +125,8 @@ patch(ProductScreen.prototype, {
             slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
-                if (ticket.seats_max === 0 && !event.seats_limited) {
-                    acc[ticket.id] = "unlimited";
+                if (ticket.seats_max === 0) {
+                    acc[ticket.id] = event.seats_limited ? event.seats_available : "unlimited";
                 } else {
                     acc[ticket.id] = ticket.seats_available;
                 }
@@ -245,29 +245,32 @@ patch(ProductScreen.prototype, {
                     registration_answer_ids: Object.entries({
                         ...textAnswer,
                         ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                    })
+                        .map(([questionId, answer]) => [
+                            "create",
+                            {
+                                question_id: this.pos.models["event.question"].get(
+                                    parseInt(questionId)
+                                ),
+                                value_text_box: answer,
+                            },
+                        ])
+                        .concat(
+                            Object.entries({
+                                ...simpleChoice,
+                                ...globalSimpleChoice,
+                            }).map(([questionId, answer]) => [
+                                "create",
+                                {
+                                    question_id: this.pos.models["event.question"].get(
+                                        parseInt(questionId)
+                                    ),
+                                    value_answer_id: this.pos.models["event.question.answer"].get(
+                                        parseInt(answer)
+                                    ),
+                                },
+                            ])
+                        ),
                 });
             }
         }

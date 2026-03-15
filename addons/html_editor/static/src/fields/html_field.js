@@ -86,6 +86,7 @@ export class HtmlField extends Component {
         this.ormService = useService("orm");
 
         this.isDirty = false;
+        this.lastChangeId = 0;
         this.state = useState({
             key: 0,
             showCodeView: false,
@@ -95,6 +96,7 @@ export class HtmlField extends Component {
         });
 
         useRecordObserver((record) => {
+            const key = this.state.key;
             // Reset Wysiwyg when we discard or onchange value
             const newValue = fixInvalidHTML(record.data[this.props.name]);
             if (!this.isDirty) {
@@ -104,6 +106,10 @@ export class HtmlField extends Component {
                     this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
                     this.lastValue = value;
                 }
+            }
+            if (key === this.state.key && record.resId !== this.props.record.resId) {
+                // Ensure key is reset for 2 different records with identical html values
+                this.state.key++;
             }
         });
         useRecordObserver((record) => {
@@ -154,12 +160,16 @@ export class HtmlField extends Component {
         stripVersion(element);
     }
 
-    async updateValue(value) {
+    async updateValue(value, { changeId } = { changeId: this.lastChangeId }) {
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
-        this.isDirty = false;
-        await this.props.record.update({ [this.props.name]: value }).catch(() => {
-            this.isDirty = true;
-        });
+        await this.props.record.update({ [this.props.name]: value }).then(
+            () => {
+                if (this.lastChangeId === changeId) {
+                    this.isDirty = false;
+                }
+            },
+            () => {}
+        );
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
 
@@ -196,12 +206,13 @@ export class HtmlField extends Component {
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
+            const changeId = this.lastChangeId;
             const el = await this.getEditorContent();
             const content = el.innerHTML;
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
             if (!urgent || (urgent && this.lastValue !== comparisonValue)) {
-                await this.updateValue(content);
+                await this.updateValue(content, { changeId });
             }
         }
     }
@@ -220,6 +231,12 @@ export class HtmlField extends Component {
 
     onChange() {
         this.isDirty = true;
+        // Keep track of every change individually to avoid resetting dirtiness
+        // after committing a change if another change occurred in the meantime.
+        this.lastChangeId++;
+        // Ensure that FormController.beforeLeave is able to save record
+        // changes.
+        this.props.record.setDirty();
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
     }
 
@@ -377,6 +394,12 @@ export const htmlField = {
             editorConfig.cleanEmptyStructuralContainers = Boolean(
                 options.cleanEmptyStructuralContainers
             );
+        }
+        if ("debouncePowerbuttons" in options) {
+            editorConfig.debouncePowerbuttons = Boolean(options.debouncePowerbuttons);
+        }
+        if ("debounceHints" in options) {
+            editorConfig.debounceHints = Boolean(options.debounceHints);
         }
         return {
             editorConfig,

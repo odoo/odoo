@@ -145,7 +145,7 @@ test("visitor leaving ends the livechat conversation", async () => {
     await contains(".o-mail-ChatWindow");
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
-    await contains("span", { text: "This livechat conversation has ended" });
+    await contains("span", { text: "This livechat conversation has ended." });
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });

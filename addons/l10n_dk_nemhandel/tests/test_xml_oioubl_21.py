@@ -28,6 +28,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'acc_type': 'iban',
             'partner_id': cls.company_data['company'].partner_id.id,
             'acc_number': 'DK5000400440116243',
+            'allow_out_payment': True,
         })
 
         cls.company_data['company'].partner_id.update({
@@ -39,6 +40,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'city': 'Aalborg',
             'zip': '9430',
             'vat': 'DK12345674',
+            'nemhandel_identifier_value': '12345674',
             'phone': '+45 32 12 35 56',
             'street': 'Paradisæblevej, 11',
             'country_id': cls.env.ref('base.dk').id,

@@ -175,11 +175,72 @@ $line-height-truncate: 1.5em;
         margin-left: auto;
         margin-right: auto;
     }
+
+    // Temporary workaround addresses a scenario where the user might add a link
+    // in the description. Since a card is enclosed within an `<a>` tag, inserting
+    // another `<a>` tag inside would disrupt the HTML   structure, leading to a
+    // broken layout. The following rules adapt that said broken layout to visually
+    // resemble a card.
+
+    // TODO: Address the issue on master by wrapping in `<a>` tag only the image
+    div:has(> .card + .card-body) {
+        --card-cap-padding-x: #{$card-cap-padding-x};
+        --card-cap-padding-y: #{$card-cap-padding-y};
+        --card-spacer-x: #{$card-spacer-x};
+        --card-spacer-y: #{$card-spacer-y};
+        --card-cap-bg: #{$card-cap-bg};
+        --card-border-width: #{$card-border-width};
+        --card-border-color: #{$card-border-color};
+        --card-inner-border-radius: #{$card-inner-border-radius};
+
+        flex-direction: column;
+
+        // Link wrapping the course cover
+        > .o_wslides_course_card {
+            --card-border-radius: #{$card-border-radius} #{$card-border-radius} 0 0;
+
+            height: auto !important;
+            border-bottom: 0;
+        }
+
+        // Links in the description field
+        .card-text .o_wslides_course_card {
+            display: inline;
+            border: 0;
+        }
+
+        .card-body {
+            border-width: 0 var(--card-border-width) 0 var(--card-border-width) !important;
+
+            // Link wrapping the course title + unpublished badge
+            & > .o_wslides_course_card {
+                display: inline;
+                border: 0;
+                height: auto !important;
+            }
+
+            // Restore card-body/card-footer properties as they're not in a .card anymore
+            &, & + .card-footer {
+                border: var(--card-border-width) solid var(--card-border-color);
+            }
+
+            // Hide empty links rendered above/inside the description field
+            // except those wrapped in a <p> tag
+            .card-text {
+                > .o_wslides_course_card, .o_wslides_course_card:empty {
+                    display: none;
+                }
+            }
+        }
+    }
 }
 
 // Courses Card
 // **************************************************
-.o_wslides_course_card.o_wslides_course_unpublished {
+// Move the opacity to the container to ensure opacity is applied even if the card
+// is not wrapped in a <a> tag
+
+div:has(> .card + .card-body, > .o_wslides_course_unpublished > .card-body) {
     opacity: 0.5;
 }
 

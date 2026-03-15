@@ -28,7 +28,7 @@ export class SignatureField extends Component {
 
     setup() {
         this.displaySignatureRatio = 3;
-
+        this.notification = useService("notification");
         this.dialogService = useService("dialog");
         this.state = useState({
             isValid: true,

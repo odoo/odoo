@@ -46,17 +46,29 @@
             <span>Subject: <t t-esc="message.subject || message.default_subject"/></span>
         </div>
         <t t-out="body"/>
+        <div t-if="signature" data-o-mail-quote="1">
+            <br/>
+            <t t-call="html_editor.Signature">
+                <t t-set="signatureClass" t-value="'o-signature-container'"/>
+            </t>
+        </div>
     </t>
 
     <t t-name="mail.Message.bodyInReply">
         <div><br/></div>
-        <div class="o_mail_reply_container">
+        <div class="o_mail_reply_container" data-o-mail-quote="1">
             <div class="o_mail_reply_content">
                 <div>
                     <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
                 </div>
                 <blockquote t-out="body"/>
             </div>
+        </div>
+        <div t-if="signature" data-o-mail-quote="1">
+            <br/>
+            <t t-call="html_editor.Signature">
+                <t t-set="signatureClass" t-value="'o-signature-container'"/>
+            </t>
         </div>
     </t>
 </templates>

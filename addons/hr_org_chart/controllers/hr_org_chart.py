@@ -43,7 +43,7 @@ class HrOrgChartController(http.Controller):
     @http.route('/hr/get_org_chart', type='jsonrpc', auth='user')
     def get_org_chart(self, employee_id, new_parent_id=None, **kw):
         employee = self._get_employee(employee_id, **kw)
-        new_parent = self._get_employee(new_parent_id, **kw)
+        new_parent = self._get_employee(new_parent_id, **kw).sudo()
         if not employee:  # to check
             return {
                 'managers': [],

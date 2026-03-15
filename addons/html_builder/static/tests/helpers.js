@@ -127,7 +127,11 @@ class BuilderContainer extends Component {
         });
         this.iframeLoaded = new Promise((resolve) => {
             onMounted(async () => {
-                if (isBrowserFirefox()) {
+                // Fix for Firefox < 148.
+                if (
+                    isBrowserFirefox() &&
+                    !(this.iframeRef.el?.contentDocument.readyState === "complete")
+                ) {
                     await originalIframeLoaded;
                 }
 

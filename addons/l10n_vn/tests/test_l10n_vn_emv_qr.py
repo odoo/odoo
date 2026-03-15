@@ -32,11 +32,13 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             'proxy_type': 'bank_acc',
             'proxy_value': '660704060000129',
             'include_reference': True,
+            'allow_out_payment': True,
         })
 
         cls.acc_emv_vn_without_paynow_info = cls.env['res.partner.bank'].create({
             'acc_number': '1234567890',
             'partner_id': cls.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         cls.emv_qr_invoice = cls.env['account.move'].create({

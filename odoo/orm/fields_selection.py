@@ -206,11 +206,8 @@ class Selection(Field[str | typing.Literal[False]]):
             # force all values to be strings (check _get_year_selection)
             return [(str(key), str(label)) for key, label in selection]
 
-        # translate selection labels
-        if env.lang:
-            return env['ir.model.fields'].get_field_selection(self.model_name, self.name)
-        else:
-            return selection
+        translations = dict(env['ir.model.fields'].get_field_selection(self.model_name, self.name))
+        return [(key, translations.get(key, label)) for key, label in selection]
 
     def _default_group_expand(self, records, groups, domain):
         # return a group per selection option, in definition order

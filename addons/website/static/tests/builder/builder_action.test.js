@@ -1,4 +1,4 @@
-import { xml } from "@odoo/owl";
+import { onWillStart, xml } from "@odoo/owl";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     advanceTime,
@@ -9,6 +9,7 @@ import {
     queryOne,
     waitFor,
 } from "@odoo/hoot-dom";
+import { Builder } from "@html_builder/builder";
 import { Plugin } from "@html_editor/plugin";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
@@ -195,4 +196,58 @@ describe("BuilderMany2One: exit editor when previewing", () => {
             message: "The preview should have been reverted",
         });
     });
+});
+
+test("Builder is disabled when reloading", async () => {
+    onRpc("ir.ui.view", "save", () => true);
+    addBuilderAction({
+        TestReloadAction: class extends BuilderAction {
+            static id = "testReload";
+            setup() {
+                this.reload = {};
+            }
+            isApplied({ editingElement }) {
+                return editingElement.dataset.applied === "true";
+            }
+            async apply({ editingElement }) {
+                editingElement.dataset.applied = "true";
+            }
+            clean({ editingElement }) {
+                editingElement.dataset.applied = "false";
+            }
+        },
+    });
+
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".target";
+            static template = xml`<BuilderButton action="'testReload'">Reload editor</BuilderButton>`;
+        }
+    );
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<section class="target">Section</section>`
+    );
+    const def = new Deferred();
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            super.setup();
+            onWillStart(async () => {
+                await def;
+            });
+        },
+    });
+    await contains(":iframe .target").click();
+    await waitSidebarUpdated();
+    await contains(".options-container [data-action-id='testReload']").click();
+    expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(1);
+    // when builder is disabled we can't go to another tab, or do anything else
+    // in the builder
+    await contains(".o-snippets-tabs [data-name='blocks']").click();
+    expect(".o-snippets-tabs [data-name='customize']").toHaveClass("active");
+    // new instance of the builder shouldn't be disabled
+    def.resolve();
+    await waitSidebarUpdated();
+    expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(0);
+    await contains(".o-snippets-tabs [data-name='blocks']").click();
+    expect(".o-snippets-tabs [data-name='blocks']").toHaveClass("active");
 });

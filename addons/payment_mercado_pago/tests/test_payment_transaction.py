@@ -24,6 +24,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         self.assertDictEqual(request_payload, {
             'external_reference': tx.reference,
             'notification_url': f'{webhook_url}/{sanitized_reference}',
+            'statement_descriptor': tx.company_id.name,
             'auto_return': 'all',
             'back_urls': {
                 'failure': return_url,

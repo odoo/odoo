@@ -264,8 +264,8 @@ export class ProductConfiguratorDialog extends Component {
         if (product.quantity === quantity) {
             return false;
         }
-        const { price } = await this._updateCombination(product, quantity, product.uom.id);
         product.quantity = quantity;
+        const { price } = await this._updateCombination(product, quantity, product.uom.id);
         product.price = parseFloat(price);
 
         return true;

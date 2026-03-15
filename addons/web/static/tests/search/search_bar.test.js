@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import {
+    advanceTime,
     clear,
     click,
     edit,
@@ -46,7 +47,7 @@ import {
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
-import { SearchBar } from "@web/search/search_bar/search_bar";
+import { SearchBar, DROPDOWN_CLOSE_DELAY } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 class Partner extends models.Model {
     name = fields.Char();
@@ -213,6 +214,45 @@ test("navigation with facets (2)", async () => {
     await keyDown("ArrowRight");
     await animationFrame();
     expect(queryFirst`.o_searchview .o_searchview_facet:nth-child(1)`).toBeFocused();
+});
+
+test.tags("desktop");
+test("navigation should move forward from search bar filter", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        context: { search_default_date_group_by: 1 },
+    });
+
+    expect(`.o_searchview .o_searchview_facet`).toHaveCount(1);
+    expect(queryFirst`.o_searchview input`).toBeFocused();
+
+    // press tab to navigate forward to the toggler
+    await keyDown("Tab");
+    await animationFrame();
+    expect(queryFirst`.o_searchview_dropdown_toggler`).toBeFocused();
+});
+
+test.tags("desktop");
+test("navigation should move backward from search bar filter", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        context: { search_default_date_group_by: 1 },
+    });
+
+    expect(`.o_searchview .o_searchview_facet`).toHaveCount(1);
+    expect(queryFirst`.o_searchview input`).toBeFocused();
+
+    // press shift+tab to navigate backward to the search icon button
+    await keyDown("Shift");
+    await press("Tab");
+    await animationFrame();
+    await press("Tab");
+    await animationFrame();
+    expect(queryFirst`.d-print-none.btn`).toBeFocused();
 });
 
 test.tags("mobile");
@@ -492,6 +532,44 @@ test("update suggested filters in autocomplete menu with Japanese IME", async ()
     expect(`.o_searchview_autocomplete`).toHaveCount(1);
     expect(queryFirst`.o_searchview_autocomplete .o-dropdown-item`).toHaveText(
         `Search Foo for: ${TEST}`
+    );
+});
+
+test("intermediate Backspace events from iOS Korean IME shouldn't close autocomplete", async () => {
+    // This test simulates the behavior of the iOS Korean IME during composition.
+    // On iOS, `isComposing` is not set, but the IME sends a Backspace before
+    // rewriting the composing syllable. Our component (SearchBar) must handle
+    // this without closing the autocomplete dropdown.
+
+    // Typing 'ㄱ' followed by 'ㅏ' produces the precomposed syllable '가'.
+    const COMPOSED_SYLLABLE = "가";
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+
+    await click(".o_searchview input");
+
+    // User types the initial consonant 'ㄱ'
+    await press("ㄱ");
+
+    // Wait search autocomplete
+    await animationFrame();
+
+    // User types the second character 'ㅏ'
+    // iOS sends Backspace to remove previous char and inserts the precomposed syllable
+    await press("Backspace");
+    await press("가");
+
+    // Autocomplete should remain open even after composition with backspace.
+    await animationFrame();
+    await advanceTime(DROPDOWN_CLOSE_DELAY);
+    await animationFrame();
+    expect(queryFirst`.o_searchview input`).toHaveValue(COMPOSED_SYLLABLE);
+    expect(`.o_searchview_autocomplete .o-dropdown-item:first`).toHaveText(
+        `Search Foo for: ${COMPOSED_SYLLABLE}`
     );
 });
 
@@ -1040,6 +1118,8 @@ test("search a property", async () => {
 
     // search for a partner, and expand the many2many property
     await contains(`.o_searchview_input`).clear();
+    // wait for autocomplete to close to make sure it updates its state
+    await advanceTime(DROPDOWN_CLOSE_DELAY);
     await editSearch("Bo");
     await contains(".o_expand").click();
     await contains(".o_searchview_autocomplete .o-dropdown-item:nth-child(3) .o_expand").click();

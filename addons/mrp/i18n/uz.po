@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -449,6 +449,11 @@ msgstr "<span class=\"o_stat_text\">Materiallar ro‘yxati tahlili</span>"
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Child MO</span>"
 msgstr "<span class=\"o_stat_text\">Bog‘liq ishlab chiqarish buyrug‘i</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -6225,6 +6230,11 @@ msgid "Show Bom Tab"
 msgstr "Materiallar ro‘yxati ichki oynasini ko‘rsatish"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
+msgid "Show Copy Operations Button"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #, fuzzy
 msgid "Show Details"
@@ -6646,6 +6656,13 @@ msgstr ""
 "Zaxiradan chiqarish mumkin bo‘lgan vaqtni tekshirish uchun texnik maydon"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__show_copy_operations_button
+msgid ""
+"Technical field used to control the visibility of the 'Copy Existing "
+"Operations' button."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 #, fuzzy
 msgid "The BoM has been updated since creation of the MO"
@@ -6879,6 +6896,12 @@ msgstr ""
 #, fuzzy
 msgid "There is no defined calendar on workcenter %s."
 msgstr "%s ish markazida belgilangan taqvim mavjud emas."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves

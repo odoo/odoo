@@ -25,8 +25,8 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         self.website.prevent_zero_price_sale = True
 
         self.product_template_sofa.list_price = 0
-        red_sofa, blue_sofa = self.product_template_sofa.product_variant_ids[:2]
-        blue_sofa.product_template_attribute_value_ids.price_extra = 20
+        red_sofa = self.product_template_sofa.product_variant_ids[:1]
+        red_sofa.product_template_attribute_value_ids.price_extra = 20
 
         self.start_tour(red_sofa.website_url, 'website_sale_contact_us_button')
 

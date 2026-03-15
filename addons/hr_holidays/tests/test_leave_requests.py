@@ -335,6 +335,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'flexible_hours': True,
             'full_time_required_hours': 21,
             'hours_per_day': 3,
+            'hours_per_week': 21,
         })
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
@@ -566,6 +567,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         calendar.write({
             'flexible_hours': True,
             'hours_per_day': 8.0,
+            'hours_per_week': 40,
             'full_time_required_hours': 40
         })
 
@@ -1374,6 +1376,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'Flexible 40h/week',
             'hours_per_day': 8.0,
+            'hours_per_week': 40,
             'full_time_required_hours': 40,
             'flexible_hours': True,
         })
@@ -1558,6 +1561,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'Test calendar',
             'hours_per_day': 8,
+            'hours_per_week': 56,
             'full_time_required_hours': 56,
             'flexible_hours': True
         })
@@ -1633,6 +1637,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'Test calendar',
             'hours_per_day': 8,
+            'hours_per_week': 56,
             'full_time_required_hours': 56,
             'flexible_hours': True
         })
@@ -2132,6 +2137,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Flexible 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
+            'hours_per_week': 40.0,
             'full_time_required_hours': 40.0,
             'flexible_hours': True,
             'schedule_type': 'flexible',
@@ -2158,6 +2164,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         calendar = self.env['resource.calendar'].create({
             'name': 'Test calendar',
             'hours_per_day': 8,
+            'hours_per_week': 56,
             'full_time_required_hours': 56,
             'flexible_hours': True
         })

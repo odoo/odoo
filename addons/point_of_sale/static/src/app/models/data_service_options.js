@@ -6,23 +6,22 @@ export class DataServiceOptions {
             "pos.order": {
                 key: "uuid",
                 condition: (record) =>
-                    record.finalized &&
-                    record.isSynced &&
+                    record.canBeRemovedFromIndexedDB &&
                     record.pos_session_id !== parseInt(odoo.pos_session_id),
             },
             "pos.order.line": {
                 key: "uuid",
-                condition: (record) => record.order_id?.finalized && record.order_id.isSynced,
+                condition: (record) => record.order_id?.canBeRemovedFromIndexedDB,
             },
             "pos.payment": {
                 key: "uuid",
-                condition: (record) =>
-                    record.pos_order_id?.finalized && record.pos_order_id.isSynced,
+                condition: (record) => record.pos_order_id?.canBeRemovedFromIndexedDB,
             },
             "product.attribute.custom.value": {
                 key: "id",
-                condition: (record) =>
-                    record.order_id?.finalized && typeof record.order_id.id === "number",
+                condition: (record) => record.pos_order_id?.canBeRemovedFromIndexedDB,
+                getRecordsBasedOnLines: (orderlines) =>
+                    orderlines.flatMap((line) => line.custom_attribute_value_ids),
             },
         };
     }

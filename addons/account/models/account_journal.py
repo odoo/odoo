@@ -288,9 +288,6 @@ class AccountJournal(models.Model):
     incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
         string="Send Copy To",
         help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
-        compute='_compute_incoming_einvoice_notification_email',
-        store=True,
-        readonly=False,
     )
 
     _code_company_uniq = models.Constraint(
@@ -537,16 +534,6 @@ class AccountJournal(models.Model):
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
-    @api.depends('company_id', 'type')
-    def _compute_incoming_einvoice_notification_email(self):
-        for journal in self:
-            if (
-                journal.type == 'purchase'
-                and not journal.incoming_einvoice_notification_email
-                and journal.company_id.email
-            ):
-                journal.incoming_einvoice_notification_email = journal.company_id.email
-
     @api.depends('type')
     def _compute_show_fetch_in_einvoices_button(self):
         # TO OVERRIDE
@@ -571,13 +558,16 @@ class AccountJournal(models.Model):
             journal.default_account_id = False
             journal.profit_account_id = False
             journal.loss_account_id = False
-            if journal.type == 'sale':
-                journal.default_account_id = journal.company_id.income_account_id
-            elif journal.type == 'purchase':
-                journal.default_account_id = journal.company_id.expense_account_id
+            company = journal.company_id
+            if journal.type == 'sale' and company.income_account_id.active:
+                journal.default_account_id = company.income_account_id
+            elif journal.type == 'purchase' and company.expense_account_id.active:
+                journal.default_account_id = company.expense_account_id
             elif journal.type in ('cash', 'bank'):
-                journal.profit_account_id = journal.company_id.default_cash_difference_income_account_id
-                journal.loss_account_id = journal.company_id.default_cash_difference_expense_account_id
+                if company.default_cash_difference_income_account_id.active:
+                    journal.profit_account_id = company.default_cash_difference_income_account_id
+                if company.default_cash_difference_expense_account_id.active:
+                    journal.loss_account_id = company.default_cash_difference_expense_account_id
 
         # codes are reset and recomputed whenever the
         # journal type changes through the form view
@@ -830,7 +820,10 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-
+        if 'bank_acc_number' in vals or 'bank_account_id' in vals:
+            for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
+                if bank._user_can_trust():
+                    bank.allow_out_payment = True
         return result
 
     def _alias_get_creation_values(self):
@@ -1037,28 +1030,27 @@ class AccountJournal(models.Model):
 
         for journal, vals in zip(journals, vals_list):
             # Create the bank_account_id if necessary
-            if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
-                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+            if journal.type == 'bank':
+                if not journal.bank_account_id and vals.get('bank_acc_number'):
+                    journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+                if journal.bank_account_id and journal.bank_account_id._user_can_trust():
+                    journal.bank_account_id.allow_out_payment = True
 
         return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
-        res_partner_bank = self.env['res.partner.bank'].search([
-            ('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
-            ('partner_id', '=', self.company_id.partner_id.id),
-        ], limit=1)
-        if res_partner_bank:
-            self.bank_account_id = res_partner_bank.id
-        else:
-            self.bank_account_id = self.env['res.partner.bank'].create({
-                'acc_number': acc_number,
+        self.bank_account_id = self.env['res.partner.bank']._find_or_create_bank_account(
+            account_number=acc_number,
+            partner=self.company_id.partner_id, allow_company_account_creation=True,
+            company=self.company_id,
+            extra_create_vals={
                 'bank_id': bank_id,
                 'currency_id': self.currency_id.id,
-                'partner_id': self.company_id.partner_id.id,
                 'journal_id': self,
-            }).id
+            }
+        )
 
     @api.depends('currency_id')
     def _compute_display_name(self):

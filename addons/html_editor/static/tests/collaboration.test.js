@@ -1809,6 +1809,54 @@ describe("Collaboration with embedded components", () => {
                 `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-embedded-state='{"stateChangeId":3,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"2":2}}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
         });
+
+        test("should not sanitize data-embedded-props or data-embedded-state in case they contain specific characters flagged by DOMPurify regex", async () => {
+            const peerInfos = await setupMultiEditor({
+                peerIds: ["c1", "c2"],
+                contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
+                Plugins: [EmbeddedComponentPlugin],
+                resources: {
+                    embedded_components: [collaborativeObject],
+                },
+            });
+            const e1 = peerInfos.c1.editor;
+            const e2 = peerInfos.c2.editor;
+            e1.editable.append(
+                ...parseHTML(
+                    e1.document,
+                    `<div data-embedded="obj" data-embedded-props='{"obj":{"1":"&lt;style"}}'></div>`
+                ).children
+            );
+            e1.shared.history.addStep();
+            await animationFrame();
+            mergePeersSteps(peerInfos);
+            await animationFrame();
+            // evaluate that data-embedded-props was preserved for e2
+            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"<style"}}' data-oe-protected="true"><div class="obj">1_<style</div></div><p data-selection-placeholder=""><br></p>`
+            );
+            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"<style"}}' data-oe-protected="true"><div class="obj">1_<style</div></div><p data-selection-placeholder=""><br></p>`
+            );
+            const obj1 = [...peerInfos.c1.plugins.get("embeddedComponents").components][0].root.node
+                .component;
+            const obj2 = [...peerInfos.c2.plugins.get("embeddedComponents").components][0].root.node
+                .component;
+            obj1.embeddedState.obj["1"] = "-->";
+            await animationFrame();
+            mergePeersSteps(peerInfos);
+            await animationFrame();
+            // evaluate that data-embedded-state was preserved for e2
+            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"-->"}}' data-embedded-state='{"stateChangeId":1,"previous":{"obj":{"1":"<style"}},"next":{"obj":{"1":"-->"}}}' data-oe-protected="true"><div class="obj">1_--></div></div><p data-selection-placeholder=""><br></p>`
+            );
+            expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"-->"}}' data-embedded-state='{"stateChangeId":1,"previous":{"obj":{"1":"<style"}},"next":{"obj":{"1":"-->"}}}' data-oe-protected="true"><div class="obj">1_--></div></div><p data-selection-placeholder=""><br></p>`
+            );
+            expect(obj2.embeddedState).toEqual({
+                obj: { 1: "-->" },
+            });
+        });
     });
 
     test("Should not duplicate selection placeholders", async () => {

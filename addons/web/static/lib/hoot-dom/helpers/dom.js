@@ -90,6 +90,10 @@ import { waitUntil } from "./time";
  *  raw?: boolean;
  * }} QueryTextOptions
  *
+ * @typedef {{
+ *  raw?: boolean;
+ * }} QueryValueOptions
+ *
  * @typedef {"both" | "x" | "y"} ScrollAxis
  *
  * @typedef {import("./time").WaitOptions} WaitOptions
@@ -116,11 +120,9 @@ const {
     innerWidth,
     innerHeight,
     Map,
-    MutationObserver,
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseInt: $parseInt, parseFloat: $parseFloat },
     Object: { entries: $entries, keys: $keys, values: $values },
     RegExp,
-    Set,
     String: { raw: $raw },
     window,
 } = globalThis;
@@ -344,7 +346,7 @@ function getNodeContent(node) {
         case "textarea":
             return getNodeValue(node);
         case "select":
-            return [...node.selectedOptions].map(getNodeValue).join(",");
+            return [...node.selectedOptions].map((node) => getNodeValue(node)).join(",");
     }
     return getNodeText(node);
 }
@@ -377,6 +379,13 @@ function getQueryFilter(pseudoClass, content) {
         }
         throw new HootDomError(message);
     }
+}
+
+/**
+ * @param {Node} node
+ */
+function getRawValue(node) {
+    return node.value;
 }
 
 /**
@@ -512,7 +521,7 @@ function isWhiteSpace(char) {
 }
 
 /**
- * @param {(node: Node) => NodeValue} getContent
+ * @param {(node: Node) => string} getContent
  * @param {boolean} exact
  */
 function makePseudoClassMatcher(getContent, exact) {
@@ -520,17 +529,17 @@ function makePseudoClassMatcher(getContent, exact) {
         const regex = parseRegExp(content);
         if (isInstanceOf(regex, RegExp)) {
             return function stringMatches(node) {
-                return regex.test(String(getContent(node)));
+                return regex.test(getContent(node));
             };
         } else {
             const lowerContent = content.toLowerCase();
             if (exact) {
                 return function stringEquals(node) {
-                    return String(getContent(node)).toLowerCase() === lowerContent;
+                    return getContent(node).toLowerCase() === lowerContent;
                 };
             } else {
                 return function stringContains(node) {
-                    return String(getContent(node)).toLowerCase().includes(lowerContent);
+                    return getContent(node).toLowerCase().includes(lowerContent);
                 };
             }
         }
@@ -1138,7 +1147,7 @@ customPseudoClasses
     .set("selected", () => isNodeSelected)
     .set("shadow", () => getNodeShadowRoot)
     .set("text", makePseudoClassMatcher(getInlineNodeText, true))
-    .set("value", makePseudoClassMatcher(getNodeValue, false))
+    .set("value", makePseudoClassMatcher(getRawValue, false))
     .set("viewPort", () => isNodeInViewPort)
     .set("visible", () => isNodeVisible);
 
@@ -1202,29 +1211,31 @@ export function getNodeAttribute(node, attribute) {
 
 /**
  * @param {Node} node
- * @param {boolean} [raw]
+ * @param {QueryValueOptions} [options]
  * @returns {NodeValue}
  */
-export function getNodeValue(node, raw) {
-    if (!raw) {
-        switch (node.type) {
-            case "checkbox":
-            case "radio":
-                return node.checked;
-            case "file":
-                return [...node.files];
-            case "number":
-            case "range":
-                return node.valueAsNumber;
-            case "date":
-            case "datetime-local":
-            case "month":
-            case "time":
-            case "week":
-                return node.valueAsDate.toISOString();
-        }
+export function getNodeValue(node, options) {
+    if (options?.raw) {
+        return getRawValue(node);
     }
-    return node.value;
+    switch (node.type) {
+        case "checkbox":
+        case "radio":
+            return node.checked;
+        case "file":
+            return [...node.files];
+        case "number":
+        case "range":
+            return node.valueAsNumber;
+        case "date":
+        case "datetime-local":
+        case "month":
+        case "time":
+        case "week":
+            return node.valueAsDate.toISOString();
+        default:
+            return node.value || "";
+    }
 }
 
 /**
@@ -1840,51 +1851,6 @@ export function matches(target, selector) {
 }
 
 /**
- * Listens for DOM mutations on a given target.
- *
- * This helper has 2 main advantages over directly calling the native MutationObserver:
- * - it ensures a single observer is created for a given target, even if multiple
- *  callbacks are registered;
- * - it keeps track of these observers, which allows to check whether an observer
- *  is still running while it should not, and to disconnect all running observers
- *  at once.
- *
- * @param {HTMLElement} target
- * @param {MutationCallback} callback
- */
-export function observe(target, callback) {
-    if (observers.has(target)) {
-        observers.get(target).callbacks.add(callback);
-    } else {
-        const callbacks = new Set([callback]);
-        const observer = new MutationObserver((mutations, observer) => {
-            for (const callback of callbacks) {
-                callback(mutations, observer);
-            }
-        });
-        observer.observe(target, {
-            attributes: true,
-            characterData: true,
-            childList: true,
-            subtree: true,
-        });
-        observers.set(target, { callbacks, observer });
-    }
-
-    return function disconnect() {
-        if (!observers.has(target)) {
-            return;
-        }
-        const { callbacks, observer } = observers.get(target);
-        callbacks.delete(callback);
-        if (!callbacks.size) {
-            observer.disconnect();
-            observers.delete(target);
-        }
-    };
-}
-
-/**
  * Returns a list of nodes matching the given {@link Target}.
  * This function can either be used as a **template literal tag** (only supports
  * string selector without options) or invoked the usual way.
@@ -2028,12 +1994,12 @@ export function queryAllTexts(target, options) {
  * *values* of the matching nodes.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryValueOptions} [options]
  * @returns {NodeValue[]}
  */
 export function queryAllValues(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options).map(getNodeValue);
+    return _guardedQueryAll(target, options).map((node) => getNodeValue(node, options));
 }
 
 /**
@@ -2133,12 +2099,12 @@ export function queryText(target, options) {
  * the matching node.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryValueOptions} [options]
  * @returns {NodeValue}
  */
 export function queryValue(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return getNodeValue(_queryOne(target, options));
+    return getNodeValue(_queryOne(target, options), options);
 }
 
 /**

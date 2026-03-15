@@ -459,3 +459,50 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         mo.move_raw_ids.picked = True
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+
+    def test_labor_move_not_duplicated_when_backorder_always(self):
+        """Ensure labor accounting entry is not duplicated when create backorder is set to always."""
+        self.env.ref('base.group_user').implied_ids += self.env.ref('mrp.group_mrp_routings')
+
+        picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        self.assertTrue(picking_type, "Manufacturing operation type not found")
+        picking_type.create_backorder = 'always'
+
+        self.workcenter.costs_hour = 20
+
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'work',
+            'bom_id': self.bom_1.id,
+            'workcenter_id': self.workcenter.id,
+            'time_cycle': 60,
+            'sequence': 1,
+        })
+
+        production = self._create_mo(self.bom_1, 100)
+        production.action_confirm()
+
+        workorder = production.workorder_ids
+        self.assertTrue(workorder, "Workorder should have been created")
+        workorder.duration = 1.0
+        workorder.time_ids.write({'duration': 1.0})
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 50
+        production = mo_form.save()
+
+        production.move_raw_ids.picked = True
+        production._post_inventory()
+        production.button_mark_done()
+
+        labour_moves = self.env['account.move'].search([
+            ('ref', '=', f'{production.name} - Labour'),
+            ('state', '=', 'posted'),
+            ('company_id', '=', production.company_id.id),
+        ])
+        self.assertEqual(
+            len(labour_moves), 1,
+            "Labor entry should not be duplicated when backorder=always",
+        )

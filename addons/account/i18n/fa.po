@@ -31,13 +31,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # ebrahim khorami <ebrahim@farasat.co>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Omid Ghaffarinia <omid.ghaffarinia@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2025-11-10 14:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-17 12:43+0000\n"
+"Last-Translator: Omid Ghaffarinia <omid.ghaffarinia@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/account/"
 "fa/>\n"
 "Language: fa\n"
@@ -45,7 +46,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -90,6 +91,14 @@ msgstr ""
 "  مثال: ‎180 / (1 - 10%)‎ = ‎200‎ (شامل قیمت نیست)  \n"
 "  مثال: ‎200 * (1 - 10%)‎ = ‎180‎ (شامل قیمت است)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -227,6 +236,12 @@ msgid ""
 msgstr ""
 "%(order)s - %(order_line)s؛ %(quantity_invoiced)s فاکتور شده، %"
 "(quantity_delivered)s تحویل داده شده با قیمت هر واحد %(unit_price)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -854,17 +869,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> قسط <b>%(amount)s</b> سررسید در <b style='color: "
 "#704A66;'>%(date)s</b>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted "
-"behavior.</span>"
-msgstr ""
-"<br/>\n"
-"                        <span>لطفاً مطمئن شوید که این رفتار موردنظر است.</"
-"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1803,10 +1807,7 @@ msgstr "<span>$ <span class=«ارزش ارز رایج- oe»>19,250.00</span></"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<span>1.00</span>\n"
-"                                                        <span "
-"groups=\"uom.group_uom\">Units</span>"
+msgid "<span>1.00</span>"
 msgstr ""
 
 #. module: account
@@ -4746,6 +4747,12 @@ msgid "Bank of odoo"
 msgstr "بانک اودو"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
 msgstr "پیکربندی دستی حساب بانکی"
@@ -5537,6 +5544,8 @@ msgid "Chart of accounts set!"
 msgstr "تنظیم جدول حساب‌ها"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "کنترل"
@@ -11356,6 +11365,7 @@ msgstr "دفتر روزنامه:"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "دفترروزنامه‌‌ها"
 
@@ -13121,14 +13131,6 @@ msgstr "بارگذاری طرح اسناد"
 #: model:ir.model,name:account.model_onboarding_onboarding_step
 msgid "Onboarding Step"
 msgstr "مراحل معارفه سازمانی"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -17707,6 +17709,14 @@ msgid ""
 msgstr "حساب بانکی یک دفترروزنامه بانک باید به همان شرکت تعلق داشته باشد (%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "صورت وضعیت بانک مورد استفاده برای نطبیق حساب بانک"
@@ -17773,6 +17783,15 @@ msgstr "ترکیب مدل مرجع و نوع مرجع در روزنامه اجر
 #: code:addons/account/models/partner.py:0
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -18260,6 +18279,14 @@ msgstr "مبلغ باقیمانده در یک قلم روزنامه که به و
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "تراز جاری (%s) با تراز پایانی مشخص شده همخوانی ندارد."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19410,6 +19437,11 @@ msgid "Unit Price:"
 msgstr "قیمت واحد:"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Units"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr ""
@@ -19853,16 +19885,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"ارز شمقداری رکوردهای حذفی\n"
-"    * درصد: درصد مانده ، بین 0 تا 100.\n"
-"    * ثابت: مقدار ثابت خروج. در صورت منفی بودن مبلغ ، بدهی و در صورت مثبت "
-"بودن اعتبار محاسبه می شود.\n"
-"    * از برچسب: نیازی به محدود کننده نیست ، به عنوان مثال اگر می خواهید "
-"مقدار را از آن استخراج کنید\n"
-"\n"
-"شما می توانید وارد شوید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20500,6 +20533,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -20863,6 +20903,13 @@ msgid ""
 msgstr ""
 "اگر برخی از تطبیق های جزئی هنوز باز هستند ، نمی توانید برای جلوگیری از تطبیق "
 "حساب تغییر دهید."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21469,7 +21516,7 @@ msgstr "به دلیل ... از پرداخت‌ها صرف‌نظر می‌شود
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "postponing it to {new_date}"
-msgstr "به تعویق انداختن تا  {new_date}"
+msgstr "به تعویق انداختن تا {new_date}"
 
 #. module: account
 #. odoo-python
@@ -21660,6 +21707,35 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "ارز شمقداری رکوردهای حذفی\n"
+#~ "    * درصد: درصد مانده ، بین 0 تا 100.\n"
+#~ "    * ثابت: مقدار ثابت خروج. در صورت منفی بودن مبلغ ، بدهی و در صورت مثبت "
+#~ "بودن اعتبار محاسبه می شود.\n"
+#~ "    * از برچسب: نیازی به محدود کننده نیست ، به عنوان مثال اگر می خواهید "
+#~ "مقدار را از آن استخراج کنید\n"
+#~ "\n"
+#~ "شما می توانید وارد شوید"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                        <span>Please make sure that this is a wanted "
+#~ "behavior.</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                        <span>لطفاً مطمئن شوید که این رفتار موردنظر است.</"
+#~ "span>"
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

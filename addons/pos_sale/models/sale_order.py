@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import math
 
 from odoo import api, fields, models, _, Command
 from odoo.tools import format_date
@@ -68,8 +69,8 @@ class SaleOrder(models.Model):
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
-            invoices = sale_order.order_line.invoice_lines.move_id.filtered(lambda invoice: invoice.state in ('draft', 'posted'))
-            total_invoices_paid = sum(invoices.mapped('amount_total'))
+            invoice_lines = sale_order.order_line.invoice_lines.filtered(lambda l: l.parent_state in ('draft', 'posted'))
+            total_invoices_paid = sum(invoice_lines.mapped(lambda l: math.copysign(l.price_total, -l.balance)))
             pos_orders = sale_order.order_line.pos_order_line_ids.order_id
             total_pos_orders_paid = sum(pos_orders.mapped('amount_total'))
             sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_orders_paid - sale_order.amount_paid, 0.0)
@@ -182,7 +183,10 @@ class SaleOrderLine(models.Model):
                 if sale_line.product_id.tracking != 'none':
                     move_lines = sale_line.move_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == sale_line.product_id.id)
                     item['lot_names'] = move_lines.lot_id.mapped('name')
-                    item['lot_qty_by_name'] = {line.lot_id.name: line.quantity for line in move_lines}
+                    lot_qty_by_name = {}
+                    for line in move_lines:
+                        lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
+                    item['lot_qty_by_name'] = lot_qty_by_name
                 if product_uom == sale_line_uom:
                     results.append(item)
                     continue

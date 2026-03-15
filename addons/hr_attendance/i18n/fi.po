@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-02-03 09:40+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"PO-Revision-Date: 2026-02-25 16:52+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "hr_attendance/fi/>\n"
@@ -226,7 +226,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
-msgstr "Järjestelmävalvoja"
+msgstr "Ylläpitäjä"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -347,6 +347,12 @@ msgstr "Läsnäolo"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_search_view
 msgid "Attendance Approver"
 msgstr "Läsnäolon hyväksyjä"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Attendance Error"
+msgstr "Läsnäolovirhe"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -722,6 +728,12 @@ msgid "Connect an RFID reader, and scan a token."
 msgstr "Liitä RFID-lukija ja skannaa tunniste."
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Connection lost. Check in/out could not be recorded."
+msgstr "Yhteys katkesi. Sisään-/uloskirjautumista ei voitu tallentaa."
+
+#. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
 msgid ""
 "Controls how the rates from the different rules that apply are combined.\n"
@@ -876,10 +888,11 @@ msgstr "Näytön aika"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
-"Do not have access, user cannot edit the attendances that are not his own."
+"Do not have access, user cannot edit the attendances that are not their own "
+"or if they are not the attendance manager of the employee."
 msgstr ""
-"Käyttäjällä ei ole käyttöoikeuksia, joten hän ei voi muokata muita kuin omia "
-"läsnäolojaan."
+"Ei käyttöoikeutta. Käyttäjä voi muokata vain omia läsnäolojaan, ellei hän ei "
+"ole kyseisen työntekijän läsnäolovastaava."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -1342,8 +1355,13 @@ msgstr "Lataa näytetiedot"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-msgid "Location"
-msgstr "Sijainti"
+msgid "Location (In)"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Location (Out)"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1695,6 +1713,12 @@ msgid "Powered by"
 msgstr "Palvelun tarjoaa"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Proceed Anyway"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "Provide a description or sources for this ruleset."
 msgstr "Anna kuvaus tai lähteet tälle sääntökokonaisuudelle."
@@ -2007,8 +2031,8 @@ msgid ""
 "enabled."
 msgstr ""
 "Läsnäolon ylimääräiset tunnit voivat muuttua negatiiviseksi arvoksi. Tämä "
-"edustaa puuttuvia tunteja odotuksiin verrattuna, jos Poissaolojen hallinta -"
-"asetus on käytössä."
+"edustaa puuttuvia tunteja odotuksiin verrattuna, jos Poissaolojen hallinta "
+"-asetus on käytössä."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2177,6 +2201,14 @@ msgstr "Kokeile Itsepalvelupäätettä"
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "Try the top"
 msgstr "Kokeile yläosaa"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid ""
+"Unable to get a valid location. Do you want to proceed with your check-in/"
+"out anyway?"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-python
@@ -2395,6 +2427,15 @@ msgstr "hintaan"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "valinnaisella PIN-koodilla"
+
+#~ msgid "Location"
+#~ msgstr "Sijainti"
+
+#~ msgid ""
+#~ "Do not have access, user cannot edit the attendances that are not his own."
+#~ msgstr ""
+#~ "Käyttäjällä ei ole käyttöoikeuksia, joten hän ei voi muokata muita kuin "
+#~ "omia läsnäolojaan."
 
 #~ msgid "Departement"
 #~ msgstr "Osasto"

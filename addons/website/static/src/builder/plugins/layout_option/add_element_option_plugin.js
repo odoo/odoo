@@ -92,6 +92,10 @@ export class AddGridElementAction extends BuilderAction {
     static id = "addGridElement";
     static dependencies = ["addElementOption", "media"];
 
+    setup() {
+        this.canTimeout = false;
+    }
+
     async apply({ editingElement: rowEl, params: { mainParam: elementType } }) {
         if (elementType === "image") {
             // Choose an image with the media dialog.

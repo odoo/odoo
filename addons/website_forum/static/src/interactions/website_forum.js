@@ -95,7 +95,7 @@ export class WebsiteForum extends Interaction {
 
             this.mountComponent(selectMenuWrapperEl, WebsiteForumTagsWrapper, {
                 defaulValue: defaulValue,
-                disabled: isReadOnly,
+                isReadOnly: isReadOnly,
             });
         }
 

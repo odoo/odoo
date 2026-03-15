@@ -605,6 +605,7 @@ class TestCreatePicking(ProductVariantsCommon):
                 values = {
                     'warehouse_id': picking_type_out.warehouse_id,
                     'action': 'pull_push',
+                    'reference_ids': reference,
                 }
             return self.env['stock.rule'].run([self.env['stock.rule'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
@@ -634,8 +635,10 @@ class TestCreatePicking(ProductVariantsCommon):
             'price': 12.0,
         })
 
+        reference = self.env['stock.reference'].create({'name': 'reference'})
         # Create initial procurement that will generate the initial move and its picking.
         create_run_procurement(product, 50, {
+            'reference_ids': reference,
             'warehouse_id': picking_type_out.warehouse_id,
             'partner_id': vendor.id
         })
@@ -892,6 +895,7 @@ class TestCreatePicking(ProductVariantsCommon):
         """
         Check the product price update from receiving discounted goods.
         """
+        self.env['product.value'].search([('product_id', '=', self.product_id_1.id)]).unlink()
         self.product_id_1.categ_id = self.env['product.category'].create({
             'name': 'average',
             'property_cost_method': 'average',
@@ -910,3 +914,30 @@ class TestCreatePicking(ProductVariantsCommon):
         po.picking_ids.button_validate()
         # Update the quantity to 10 to trigger the discount
         self.assertEqual(self.product_id_1.standard_price, 450.0)
+
+    def test_duplicate_move_description(self):
+        """ Ensure the vendor reference appears only once in the description. """
+
+        self.product_id_1.update({
+            "seller_ids": [Command.create({
+                "partner_id": self.partner_id.id,
+                "min_qty": 4,
+                "price": 35,
+                "product_name": "Product 1",
+                "product_code": "P01"
+            })]
+        })
+
+        po = self.env["purchase.order"].create({
+            "partner_id": self.partner_id.id,
+            "order_line": [Command.create({
+                "product_id": self.product_id_1.id,
+                "product_qty": 4.0,
+                "price_unit": 35.0,
+            })]
+        })
+
+        po.button_confirm()
+        move = po.picking_ids.move_ids
+
+        self.assertEqual(move.description_picking, "[P01] Product 1", f'The vendor reference "{move.description_picking}" is not the expected one.')

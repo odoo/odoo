@@ -16,4 +16,7 @@ class L10n_LatamIdentificationType(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['name']
+        fields = super()._load_pos_data_fields(config)
+        if self.env.company.country_id.code == 'PE':
+            fields.append('name')
+        return fields

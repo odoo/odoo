@@ -46,11 +46,14 @@ class StockMove(models.Model):
         super()._compute_description_picking()
         for move in self:
             if move.purchase_line_id:
+                current_description = move.description_picking
                 seller = move.purchase_line_id.sudo().selected_seller_id
                 vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
                 vendor_reference += f' {seller.product_name}' if seller.product_name else ''
+                if vendor_reference.strip() in current_description:
+                    vendor_reference = ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
-                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + move.description_picking).strip()
+                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + current_description).strip()
 
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
@@ -166,11 +169,11 @@ class StockMove(models.Model):
                 continue
             aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
-                value += aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
+                aml_quantity += self._get_quantity_from_bill(aml, quantity)
+                value += self._get_value_from_bill(aml)
             elif aml.move_type == 'in_refund':
-                aml_quantity -= aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
-                value -= aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
+                aml_quantity -= self._get_quantity_from_bill(aml, quantity)
+                value -= self._get_value_from_bill(aml)
 
         if aml_quantity <= 0:
             return valuation_data
@@ -206,6 +209,14 @@ class StockMove(models.Model):
             value=self.company_currency_id.format(value), quantity=aml_quantity, unit=self.product_id.uom_id.name,
             bills=account_moves.mapped('display_name'))
         return valuation_data
+
+    def _get_value_from_bill(self, aml):
+        self.ensure_one()
+        return aml.company_id.currency_id.round(aml.price_subtotal / aml.currency_rate)
+
+    def _get_quantity_from_bill(self, aml, quantity):
+        self.ensure_one()
+        return aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
 
     def _get_cost_ratio(self, quantity):
         self.ensure_one()

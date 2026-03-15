@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from unittest.mock import patch
 
 from odoo.tests import tagged
@@ -183,6 +184,15 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.assertEqual(invoice.l10n_it_edi_state, "processing")
             self.assertEqual(invoice.l10n_it_edi_transaction, success['id_transaction'])
 
+    def test_l10n_it_edi_send_success_with_signed_data_update_attachment(self):
+        invoice = self.init_invoice(self.italian_partner_a)
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        signed_data_result = base64.b64encode(b'some signed data').decode()
+        success = {'id_transaction': "SDI ID 1", 'signed': True, 'signed_data': signed_data_result}
+        with patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_upload_single', return_value=success, autospec=True):
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['email'])
+            self.assertEqual(invoice.l10n_it_edi_attachment_file, signed_data_result.encode())
+
     def test_l10n_it_edi_send_proxy_error(self):
         invoice = self.init_invoice(self.italian_partner_a)
         self.generate_l10n_it_edi_send_attachments(invoice)
@@ -254,3 +264,21 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice, sending_methods=['l10n_it_edi'])
         non_info_alerts = {k: v for k, v in wizard.alerts.items() if v.get('level') != 'info'}
         self.assertFalse(non_info_alerts)
+
+    def test_l10n_it_edi_foreign_currency(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.italian_partner_a.id,
+            'company_id': self.company.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Zero total line',
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'discount': 100.0,
+                'tax_ids': [(6, 0, self.default_tax.ids)],
+            })],
+        })
+        invoice.action_post()
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        self.assertTrue(invoice.l10n_it_edi_attachment_file)

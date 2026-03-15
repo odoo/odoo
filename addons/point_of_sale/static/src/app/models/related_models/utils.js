@@ -91,16 +91,19 @@ export function convertDateToRaw(value) {
  *
  * @param {Object|Array} obj - The object or array to make immutable.
  * @param {string} errorMsg - The error message to throw on modification attempts.
+ * @param valueConverter
  * @returns {Proxy} A Proxy that enforces deep immutability.
  */
-export function deepImmutable(obj, errorMsg) {
+export function deepImmutable(obj, errorMsg, valueConverter = (value) => value) {
     return new Proxy(obj, {
         get(target, prop, receiver) {
             if ("__deepImmutable" === prop) {
                 return true;
             }
-            const value = Reflect.get(target, prop, receiver);
-            return value && typeof value === "object" ? deepImmutable(value, errorMsg) : value;
+            const value = valueConverter(Reflect.get(target, prop, receiver));
+            return value && typeof value === "object"
+                ? deepImmutable(value, errorMsg, valueConverter)
+                : value;
         },
         set() {
             throw new Error(errorMsg);
