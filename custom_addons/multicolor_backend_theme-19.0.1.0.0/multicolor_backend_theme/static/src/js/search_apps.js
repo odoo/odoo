@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import { NavBar } from "@web/webclient/navbar/navbar";
-const { fuzzyLookup } = require('@web/core/utils/search');
+import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
-const { onMounted, useState, useRef } = owl;
+import { onMounted, useState, useRef } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 
 patch(NavBar.prototype, {
@@ -80,7 +80,7 @@ patch(NavBar.prototype, {
     },
 
     getMenuUrl(actionID, menuId) {
-        return `/web#action=${actionID}&menu_id=${menuId}`;
+        return `/odoo/action-${actionID}?menu_id=${menuId}`;
     },
 
     onSearchResultClick(ev) {

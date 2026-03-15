@@ -101,4 +101,138 @@
             </body>
         </html>
     </template>
+
+    <template id="integration_page" name="Kodoo integration page">
+        <html lang="en">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title><t t-esc="page_title"/> | <t t-esc="service_name"/></title>
+                <meta name="description" t-att-content="meta_description"/>
+                <link rel="stylesheet" href="/kodoo_legal/static/src/css/kodoo_legal.css"/>
+            </head>
+            <body class="kodoo-legal-page">
+                <div class="legal-shell">
+                    <header class="legal-hero">
+                        <div class="legal-eyebrow">QuickBooks app setup</div>
+                        <h1 class="legal-title">
+                            <t t-esc="page_title"/>
+                        </h1>
+                        <p class="legal-summary">
+                            <t t-esc="summary"/>
+                        </p>
+                        <div class="legal-meta-row">
+                            <span class="legal-chip">
+                                Host domain:
+                                <t t-esc="urls['host_domain']"/>
+                            </span>
+                            <span class="legal-chip">
+                                Connect:
+                                <t t-esc="urls['connect_url']"/>
+                            </span>
+                        </div>
+                        <div class="integration-actions">
+                            <t t-if="primary_action">
+                                <a class="integration-action integration-action-primary" t-att-href="primary_action['href']">
+                                    <t t-esc="primary_action['label']"/>
+                                </a>
+                            </t>
+                            <t t-if="secondary_action">
+                                <a class="integration-action integration-action-secondary" t-att-href="secondary_action['href']">
+                                    <t t-esc="secondary_action['label']"/>
+                                </a>
+                            </t>
+                        </div>
+                    </header>
+
+                    <nav class="legal-nav" aria-label="QuickBooks navigation">
+                        <a
+                            href="/quickbooks"
+                            t-attf-class="legal-nav-link #{'is-active' if page_key == 'quickbooks_hub' else ''}"
+                        >
+                            Setup Hub
+                        </a>
+                        <a
+                            href="/quickbooks/connect"
+                            t-attf-class="legal-nav-link #{'is-active' if page_key == 'quickbooks_connect' else ''}"
+                        >
+                            Connect
+                        </a>
+                        <a
+                            href="/quickbooks/launch"
+                            t-attf-class="legal-nav-link #{'is-active' if page_key == 'quickbooks_launch' else ''}"
+                        >
+                            Launch
+                        </a>
+                        <a
+                            href="/quickbooks/disconnect"
+                            t-attf-class="legal-nav-link #{'is-active' if page_key == 'quickbooks_disconnect' else ''}"
+                        >
+                            Disconnect
+                        </a>
+                    </nav>
+
+                    <main class="legal-card">
+                        <div class="legal-notice">
+                            <t t-esc="notice"/>
+                        </div>
+
+                        <div class="integration-grid">
+                            <article class="integration-card" t-foreach="cards" t-as="card">
+                                <div class="surface-title">
+                                    <t t-esc="card['label']"/>
+                                </div>
+                                <div class="integration-card-value">
+                                    <t t-esc="card['value']"/>
+                                </div>
+                                <p class="integration-card-copy">
+                                    <t t-esc="card['description']"/>
+                                </p>
+                                <t t-if="card['href']">
+                                    <a class="integration-inline-link" t-att-href="card['href']">
+                                        <t t-esc="card['action_label']"/>
+                                    </a>
+                                </t>
+                            </article>
+                        </div>
+
+                        <section
+                            t-foreach="sections"
+                            t-as="section"
+                            class="legal-section"
+                        >
+                            <h2>
+                                <t t-esc="section['heading']"/>
+                            </h2>
+                            <t t-foreach="section['paragraphs']" t-as="paragraph">
+                                <p>
+                                    <t t-esc="paragraph"/>
+                                </p>
+                            </t>
+                            <t t-if="section['bullets']">
+                                <ul class="legal-list">
+                                    <t t-foreach="section['bullets']" t-as="bullet">
+                                        <li>
+                                            <t t-esc="bullet"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </t>
+                        </section>
+
+                        <footer class="legal-footer">
+                            <p>
+                                Privacy Policy:
+                                <a href="/privacy-policy">https://<t t-esc="service_domain"/>/privacy-policy</a>
+                            </p>
+                            <p>
+                                End-User License Agreement:
+                                <a href="/eula">https://<t t-esc="service_domain"/>/eula</a>
+                            </p>
+                        </footer>
+                    </main>
+                </div>
+            </body>
+        </html>
+    </template>
 </odoo>

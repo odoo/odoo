@@ -37,4 +37,4 @@ class LoginPage(http.Controller):
                 'theme_main_color': active_theme[0].theme_main_color,
                 'view_font_color': active_theme[0].view_font_color,
                 'theme_font_color': active_theme[0].theme_font_color,
-                } if active_theme else []
+                } if active_theme else None

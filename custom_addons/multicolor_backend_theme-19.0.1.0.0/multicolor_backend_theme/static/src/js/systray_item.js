@@ -9,7 +9,7 @@ import { user } from "@web/core/user";
 patch(NavBar.prototype, {
     setup(...args) {
         super.setup(...args);
-        this.state = useState({
+        this.themeState = useState({
             theme_data: {},
             selected_theme: {}
         });
@@ -18,35 +18,33 @@ patch(NavBar.prototype, {
         this.notification = useService('notification');
         this.current_theme = {};
         this.themes_by_id = {};
-//        this.user = useService("user");
         onWillStart(async () => {
-            var self = this;
-            this.user = await user.hasGroup("multicolor_backend_theme.multicolor_theme_manager_access");
+            this.isThemeManager = await user.hasGroup("multicolor_backend_theme.multicolor_theme_manager_access");
             const theme_data = await this.orm.searchRead('theme.config', [], ['name', 'is_theme_active', 'theme_font_color', 'theme_main_color', 'view_font_color']);
-            return $.when(theme_data).then((theme_data) => {
-                self.state.theme_data = theme_data;
+            if (theme_data) {
+                this.themeState.theme_data = theme_data;
                 theme_data.forEach(theme => {
                     if (theme.is_theme_active) {
-                        self.selected_theme = theme;
+                        this.selected_theme = theme;
                     }
-                    self.themes_by_id[theme.id] = theme;
+                    this.themes_by_id[theme.id] = theme;
                 })
-                if (!self.selected_theme) {
-                    self.selected_theme = theme_data[0];
-                    self.selected_theme.is_theme_active = true;
+                if (!this.selected_theme && theme_data.length > 0) {
+                    this.selected_theme = theme_data[0];
+                    this.selected_theme.is_theme_active = true;
                 }
-                self.state.selected_theme = self.selected_theme;
-                self.onClickApply();
-            });
+                this.themeState.selected_theme = this.selected_theme;
+                await this.onClickApply();
+            }
         });
     },
     //    Handle the onChange event for selecting a theme.
     onChangeTheme() {
         let themeId = parseInt($('.theme_select').val());
-        this.state.selected_theme = this.themes_by_id[themeId];
+        this.themeState.selected_theme = this.themes_by_id[themeId];
         const colorProperties = ['theme_main_color', 'theme_font_color', 'view_font_color'];
         colorProperties.forEach(property => {
-            document.getElementById(property).style.backgroundColor = this.state.selected_theme[property];
+            document.getElementById(property).style.backgroundColor = this.themeState.selected_theme[property];
         });
         this.onChangeActive();
     },
@@ -60,7 +58,7 @@ patch(NavBar.prototype, {
                 layout: 'hex',
                 flat: false,
                 enableAlpha: false,
-                color: self.selected_theme[property],
+                color: self.themeState.selected_theme[property],
                 onSubmit: function(ev) {
                     let elId = $(ev.el).attr('id');
                     $('#' + elId).css('background-color', '#' + ev.hex);
@@ -93,32 +91,36 @@ patch(NavBar.prototype, {
     },
     //    Handle the onClick event for applying the selected theme.
     async onClickApply(){
-        if (this.state.selected_theme) {
-            this.appliedTheme = this.state.selected_theme;
-            document.documentElement.style.setProperty("--theme_main_color", this.state.selected_theme.theme_main_color);
-            document.documentElement.style.setProperty("--theme_font_color", this.state.selected_theme.theme_font_color);
-            document.documentElement.style.setProperty("--view_font_color", this.state.selected_theme.view_font_color);
+        if (this.themeState.selected_theme) {
+            this.appliedTheme = this.themeState.selected_theme;
+            document.documentElement.style.setProperty("--theme_main_color", this.themeState.selected_theme.theme_main_color);
+            document.documentElement.style.setProperty("--theme_font_color", this.themeState.selected_theme.theme_font_color);
+            document.documentElement.style.setProperty("--view_font_color", this.themeState.selected_theme.view_font_color);
             $('.cybro-main-menu .input-group-text').css({
-                'background-color': this.state.selected_theme.theme_main_color,
-                'border-color': this.state.selected_theme.theme_main_color,
-                'color': this.state.selected_theme.theme_font_color,
+                'background-color': this.themeState.selected_theme.theme_main_color,
+                'border-color': this.themeState.selected_theme.theme_main_color,
+                'color': this.themeState.selected_theme.theme_font_color,
             });
             $('.o_loading').css({
-                'background-color': this.state.selected_theme.theme_main_color,
-                'color': this.state.selected_theme.theme_font_color,
+                'background-color': this.themeState.selected_theme.theme_main_color,
+                'color': this.themeState.selected_theme.theme_font_color,
             });
             $('.btn-primary').css({
-                'background-color': this.state.selected_theme.theme_main_color,
-                'color': this.state.selected_theme.theme_font_color,
+                'background-color': this.themeState.selected_theme.theme_main_color,
+                'color': this.themeState.selected_theme.theme_font_color,
             });
-            $('.o-mail-ChatWindow-header').attr('style', `background-color: ${this.state.selected_theme.theme_main_color} !important; color: ${this.state.selected_theme.theme_font_color};`);
+            $('.o-mail-ChatWindow-header').attr('style', `background-color: ${this.themeState.selected_theme.theme_main_color} !important; color: ${this.themeState.selected_theme.theme_font_color};`);
 
         }
         let curr_theme_id = parseInt($('.theme_select').val());
         if (curr_theme_id){
             let result = await this.orm.call('theme.config','update_active_theme',[curr_theme_id]);
-            this.themes_by_id[result['prev']].is_theme_active = false;
-            this.themes_by_id[curr_theme_id].is_theme_active = true;
+            if (result && result['prev'] && this.themes_by_id[result['prev']]) {
+                this.themes_by_id[result['prev']].is_theme_active = false;
+            }
+            if (this.themes_by_id[curr_theme_id]) {
+                this.themes_by_id[curr_theme_id].is_theme_active = true;
+            }
             this.onChangeActive();
             this.notification.add("Theme has been successfully updated",
                 { type: 'success' }, 3000
@@ -128,8 +130,8 @@ patch(NavBar.prototype, {
    //    Handle the onClick event for creating new theme.
     async onClickCreate(){
         let result = await this.orm.call('theme.config', 'create_new_theme',[]);
-        this.state.selected_theme = result[0];
-        this.state.theme_data.push(result[0]);
+        this.themeState.selected_theme = result[0];
+        this.themeState.theme_data.push(result[0]);
         this.themes_by_id[result[0].id] = result[0];
         this.onChangeActive();
     },
@@ -143,8 +145,8 @@ patch(NavBar.prototype, {
             );
         } else {
             this.orm.unlink('theme.config', [themeId]);
-            this.state.theme_data = this.state.theme_data.filter(data => data.id !== themeId);
-            this.state.selected_theme = this.appliedTheme;
+            this.themeState.theme_data = this.themeState.theme_data.filter(data => data.id !== themeId);
+            this.themeState.selected_theme = this.appliedTheme;
         };
         this.onChangeActive();
     },
@@ -163,15 +165,17 @@ patch(NavBar.prototype, {
             themeInput.style.backgroundColor = 'white';
             editIcon.classList.remove('fa-check');
             editIcon.classList.add('fa-pencil');
-            this.orm.write('theme.config', [this.state.selected_theme.id] , {
+            this.orm.write('theme.config', [this.themeState.selected_theme.id] , {
                 name: themeInput.value
             });
-            this.state.selected_theme.name = themeInput.value;
-            this.themes_by_id[this.state.selected_theme.id].name = themeInput.value;
+            this.themeState.selected_theme.name = themeInput.value;
+            this.themes_by_id[this.themeState.selected_theme.id].name = themeInput.value;
         };
     },
     //    Function to set active selected theme.
     onChangeActive() {
-        document.getElementById('active_theme').style.display = this.state.selected_theme.is_theme_active ? 'block' : 'none';
+        if (document.getElementById('active_theme')) {
+            document.getElementById('active_theme').style.display = this.themeState.selected_theme.is_theme_active ? 'block' : 'none';
+        }
     },
 });

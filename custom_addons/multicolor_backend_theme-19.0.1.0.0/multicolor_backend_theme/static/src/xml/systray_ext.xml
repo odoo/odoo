@@ -9,7 +9,7 @@
                 <t t-log="'insidethe dropdown'"/>
                 <a data-display="static" aria-expanded="false" title="Themes"
                    role="button">
-                    <t t-if="user">    
+                    <t t-if="this.isThemeManager">    
                         <i class="fa fa-paint-brush" role="img"
                             aria-label="Themes Configuration" />
                     </t>
@@ -20,17 +20,17 @@
                         <div class="themes_list">
                             <div class="row theme_obj">
                                 <select class="theme_select form-control" t-on-change="onChangeTheme">
-                                    <t t-foreach="state.theme_data"
+                                    <t t-foreach="themeState.theme_data"
                                        t-as="theme_data_id" t-key="theme_data_id.id">
                                         <option t-att-id="theme_data_id.id" t-att-value="theme_data_id.id"
-                                                t-att-selected="theme_data_id.id === state.selected_theme.id">
+                                                t-att-selected="themeState.selected_theme and theme_data_id.id === themeState.selected_theme.id">
                                             <span t-esc="theme_data_id.name"/>
                                         </option>
                                     </t>
                                 </select>
                             </div>
                         </div>
-                        <div class="theme_data">
+                        <div class="theme_data" t-if="themeState.selected_theme">
                             <div class="row name">
                                 <div class="cell">
                                     <p>Name</p>
@@ -39,7 +39,7 @@
                                     <input type="text"
                                            id="themeName"
                                            readonly="readonly"
-                                           t-att-value="state.selected_theme.name"/>
+                                           t-att-value="themeState.selected_theme.name"/>
                                     <i id="editIcon" class="fa fa-pencil" t-on-click="onEditName"/>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                                     </div>
                                     <div class="cell">
                                         <div class="color" id="theme_main_color" t-on-click="onClickBaseColor"
-                                             t-att-style="'background-color:'+state.selected_theme.theme_main_color">
+                                             t-att-style="'background-color:'+themeState.selected_theme.theme_main_color">
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="cell">
                                         <div class="color" id="theme_font_color" t-on-click="onClickBaseColor"
-                                             t-att-style="'background-color:'+state.selected_theme.theme_font_color"/>
+                                             t-att-style="'background-color:'+themeState.selected_theme.theme_font_color"/>
                                     </div>
                                 </div>
                                 <div class="row view_font_color">
@@ -76,10 +76,13 @@
                                     </div>
                                     <div class="cell">
                                         <div class="color" id="view_font_color" t-on-click="onClickBaseColor"
-                                             t-att-style="'background-color:'+state.selected_theme.view_font_color"/>
+                                             t-att-style="'background-color:'+themeState.selected_theme.view_font_color"/>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="theme_data" t-else="">
+                            <p>No themes available. Click create to add one.</p>
                         </div>
                     </div>
                     <!--View for Theme create, remove and apply buttons-->

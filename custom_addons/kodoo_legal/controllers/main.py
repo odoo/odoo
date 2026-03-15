@@ -8,6 +8,25 @@ SERVICE_DOMAIN = "kodoo.online"
 OPERATOR_NAME = "Kodoo for MD Portfolio companies and invited affiliates"
 LEGAL_CONTACT_EMAIL = "legal@kodoo.online"
 PRIVACY_CONTACT_EMAIL = "privacy@kodoo.online"
+QUICKBOOKS_BASE_PATH = "/quickbooks"
+
+
+def _absolute_url(path):
+    return f"https://{SERVICE_DOMAIN}{path}"
+
+
+def _quickbooks_urls():
+    return {
+        "host_domain": SERVICE_DOMAIN,
+        "hub_path": QUICKBOOKS_BASE_PATH,
+        "hub_url": _absolute_url(QUICKBOOKS_BASE_PATH),
+        "connect_path": f"{QUICKBOOKS_BASE_PATH}/connect",
+        "connect_url": _absolute_url(f"{QUICKBOOKS_BASE_PATH}/connect"),
+        "launch_path": f"{QUICKBOOKS_BASE_PATH}/launch",
+        "launch_url": _absolute_url(f"{QUICKBOOKS_BASE_PATH}/launch"),
+        "disconnect_path": f"{QUICKBOOKS_BASE_PATH}/disconnect",
+        "disconnect_url": _absolute_url(f"{QUICKBOOKS_BASE_PATH}/disconnect"),
+    }
 
 
 def _privacy_policy_sections():
@@ -403,6 +422,49 @@ class KodooLegalController(http.Controller):
             "current_path": request.httprequest.path,
         }
 
+    def _integration_values(
+        self,
+        page_key,
+        page_title,
+        summary,
+        notice,
+        cards,
+        sections,
+        primary_action=None,
+        secondary_action=None,
+    ):
+        urls = _quickbooks_urls()
+        normalized_cards = []
+        for card in cards:
+            normalized_cards.append(
+                {
+                    "label": card["label"],
+                    "value": card["value"],
+                    "description": card["description"],
+                    "href": card.get("href", ""),
+                    "action_label": card.get("action_label", ""),
+                }
+            )
+        return {
+            "page_key": page_key,
+            "page_title": page_title,
+            "summary": summary,
+            "meta_description": summary,
+            "notice": notice,
+            "cards": normalized_cards,
+            "sections": sections,
+            "primary_action": primary_action,
+            "secondary_action": secondary_action,
+            "effective_date": EFFECTIVE_DATE,
+            "service_name": SERVICE_NAME,
+            "service_domain": SERVICE_DOMAIN,
+            "operator_name": OPERATOR_NAME,
+            "legal_contact_email": LEGAL_CONTACT_EMAIL,
+            "privacy_contact_email": PRIVACY_CONTACT_EMAIL,
+            "urls": urls,
+            "current_path": request.httprequest.path,
+        }
+
     @http.route(
         [
             "/privacy-policy",
@@ -462,5 +524,296 @@ class KodooLegalController(http.Controller):
                 summary=summary,
                 meta_description=summary,
                 sections=_eula_sections(),
+            ),
+        )
+
+    @http.route(
+        ["/quickbooks", "/quickbooks/", "/qbo", "/qbo/"],
+        type="http",
+        auth="public",
+        methods=["GET"],
+    )
+    def quickbooks_hub(self, **kwargs):
+        del kwargs
+        urls = _quickbooks_urls()
+        cards = [
+            {
+                "label": "Host domain",
+                "value": urls["host_domain"],
+                "description": "Enter this customer-facing domain in QuickBooks without the https protocol.",
+            },
+            {
+                "label": "Launch URL",
+                "value": urls["launch_url"],
+                "description": "Send customers here after authentication so they can continue into Kodoo.",
+                "href": urls["launch_path"],
+                "action_label": "Open launch page",
+            },
+            {
+                "label": "Disconnect URL",
+                "value": urls["disconnect_url"],
+                "description": "Use this public page to guide customers through disconnect and data-removal requests.",
+                "href": urls["disconnect_path"],
+                "action_label": "Open disconnect page",
+            },
+            {
+                "label": "Connect/Reconnect URL",
+                "value": urls["connect_url"],
+                "description": "Use this page as the customer-facing entry point for first-time connection and reconnection.",
+                "href": urls["connect_path"],
+                "action_label": "Open connect page",
+            },
+        ]
+        sections = [
+            {
+                "heading": "How To Use These URLs",
+                "paragraphs": [
+                    (
+                        "These URLs are public, customer-facing pages served directly "
+                        "from the Odoo-backed kodoo.online domain so they remain stable "
+                        "for Intuit app review, onboarding, and support."
+                    ),
+                    (
+                        "The connect page is the front door for initial setup and "
+                        "reconnection. The launch page is the post-authentication "
+                        "destination. The disconnect page documents how customers can "
+                        "end access and request removal of synchronized data."
+                    ),
+                ],
+                "bullets": [
+                    "Keep the host domain as kodoo.online with no protocol.",
+                    "Use the https URLs exactly as published below.",
+                    "Pair these routes with the public Privacy Policy and EULA pages already in this module.",
+                ],
+            }
+        ]
+        return request.render(
+            "kodoo_legal.integration_page",
+            self._integration_values(
+                page_key="quickbooks_hub",
+                page_title="QuickBooks App Setup Hub",
+                summary=(
+                    "Customer-facing setup pages and canonical URLs for the Kodoo "
+                    "QuickBooks-connected dashboard and mirror experience."
+                ),
+                notice=(
+                    "Use this hub as the operational reference for app-review fields, "
+                    "support handoff, and customer onboarding."
+                ),
+                cards=cards,
+                sections=sections,
+                primary_action={"label": "Open Connect Page", "href": urls["connect_path"]},
+                secondary_action={"label": "Review Privacy Policy", "href": "/privacy-policy"},
+            ),
+        )
+
+    @http.route(
+        [
+            "/quickbooks/connect",
+            "/quickbooks/connect/",
+            "/quickbooks/reconnect",
+            "/quickbooks/reconnect/",
+            "/qbo/connect",
+            "/qbo/connect/",
+        ],
+        type="http",
+        auth="public",
+        methods=["GET"],
+    )
+    def quickbooks_connect(self, **kwargs):
+        del kwargs
+        urls = _quickbooks_urls()
+        cards = [
+            {
+                "label": "Canonical connect URL",
+                "value": urls["connect_url"],
+                "description": "Use this exact https URL in QuickBooks for both connect and reconnect actions.",
+            },
+            {
+                "label": "Next destination",
+                "value": urls["launch_url"],
+                "description": "After sign-in or authorization, customers should continue to the launch page.",
+                "href": urls["launch_path"],
+                "action_label": "Preview launch page",
+            },
+        ]
+        sections = [
+            {
+                "heading": "Connection Flow",
+                "paragraphs": [
+                    (
+                        "Customers should begin here when linking QuickBooks Online to "
+                        "Kodoo for the first time or when refreshing a previously revoked connection."
+                    ),
+                    (
+                        "This page can later hand off directly to the production OAuth "
+                        "flow without changing the public URL, which keeps your app-review metadata stable."
+                    ),
+                ],
+                "bullets": [
+                    "Authenticate to Kodoo with an authorized company account.",
+                    "Approve QuickBooks scopes only for the entities you want mirrored into Kodoo.",
+                    "Return to the launch page to continue into dashboards and reporting.",
+                ],
+            }
+        ]
+        return request.render(
+            "kodoo_legal.integration_page",
+            self._integration_values(
+                page_key="quickbooks_connect",
+                page_title="Connect Or Reconnect QuickBooks",
+                summary=(
+                    "Start or refresh a QuickBooks connection for Kodoo's mirrored "
+                    "dashboards, portfolio reporting, and analytics workflows."
+                ),
+                notice=(
+                    "If you are not sure which company file or administrator account to "
+                    "use, pause here and confirm the correct QuickBooks entity before connecting."
+                ),
+                cards=cards,
+                sections=sections,
+                primary_action={
+                    "label": "Sign In To Kodoo",
+                    "href": f"/web/login?redirect={urls['launch_path']}",
+                },
+                secondary_action={"label": "Open Setup Hub", "href": urls["hub_path"]},
+            ),
+        )
+
+    @http.route(
+        ["/quickbooks/launch", "/quickbooks/launch/", "/qbo/launch", "/qbo/launch/"],
+        type="http",
+        auth="public",
+        methods=["GET"],
+    )
+    def quickbooks_launch(self, **kwargs):
+        del kwargs
+        urls = _quickbooks_urls()
+        cards = [
+            {
+                "label": "Canonical launch URL",
+                "value": urls["launch_url"],
+                "description": "Use this exact https URL as the post-authentication destination in QuickBooks setup.",
+            },
+            {
+                "label": "Workspace entry",
+                "value": _absolute_url("/web"),
+                "description": "After authentication, continue into the Kodoo workspace and dashboards.",
+                "href": "/web",
+                "action_label": "Open Kodoo workspace",
+            },
+        ]
+        sections = [
+            {
+                "heading": "After Authentication",
+                "paragraphs": [
+                    (
+                        "Customers arrive here after authenticating or finishing an "
+                        "integration handoff. From here they can continue into the Kodoo "
+                        "workspace, dashboards, and company-level reporting."
+                    ),
+                    (
+                        "If the QuickBooks connection still requires a final approval step, "
+                        "an administrator can complete it from the Kodoo workspace without changing this URL."
+                    ),
+                ],
+                "bullets": [
+                    "Open the Kodoo workspace.",
+                    "Confirm the intended company or portfolio scope.",
+                    "Review the Privacy Policy and EULA before enabling live synchronization.",
+                ],
+            }
+        ]
+        return request.render(
+            "kodoo_legal.integration_page",
+            self._integration_values(
+                page_key="quickbooks_launch",
+                page_title="Launch Kodoo After Authentication",
+                summary=(
+                    "Post-authentication landing page for customers continuing from "
+                    "QuickBooks into Kodoo."
+                ),
+                notice=(
+                    "This route is safe to publish in review forms because it stays "
+                    "customer-facing even before the full OAuth callback flow is finalized."
+                ),
+                cards=cards,
+                sections=sections,
+                primary_action={"label": "Open Kodoo Workspace", "href": "/web"},
+                secondary_action={"label": "Review EULA", "href": "/eula"},
+            ),
+        )
+
+    @http.route(
+        [
+            "/quickbooks/disconnect",
+            "/quickbooks/disconnect/",
+            "/qbo/disconnect",
+            "/qbo/disconnect/",
+        ],
+        type="http",
+        auth="public",
+        methods=["GET"],
+    )
+    def quickbooks_disconnect(self, **kwargs):
+        del kwargs
+        urls = _quickbooks_urls()
+        cards = [
+            {
+                "label": "Canonical disconnect URL",
+                "value": urls["disconnect_url"],
+                "description": "Use this exact https URL in QuickBooks setup for customer-facing disconnect guidance.",
+            },
+            {
+                "label": "Privacy contact",
+                "value": PRIVACY_CONTACT_EMAIL,
+                "description": "Use this contact for integration removal and cached-data deletion requests.",
+                "href": f"mailto:{PRIVACY_CONTACT_EMAIL}",
+                "action_label": "Email privacy team",
+            },
+        ]
+        sections = [
+            {
+                "heading": "Disconnecting The App",
+                "paragraphs": [
+                    (
+                        "If you want to stop sharing QuickBooks data with Kodoo, begin "
+                        "by notifying your Kodoo administrator or portfolio operator so "
+                        "they can identify the exact company and connection to revoke."
+                    ),
+                    (
+                        "Disconnecting access may stop future synchronization before all "
+                        "cached or derived data is removed. Requests involving deletion "
+                        "or retention are handled under the Privacy Policy and the "
+                        "customer's contractual data-management obligations."
+                    ),
+                ],
+                "bullets": [
+                    "Ask an authorized administrator to revoke or rotate the active integration credentials.",
+                    "Email privacy@kodoo.online if you need deletion or disconnect confirmation.",
+                    "Review the Privacy Policy for retention and data-removal handling.",
+                ],
+            }
+        ]
+        return request.render(
+            "kodoo_legal.integration_page",
+            self._integration_values(
+                page_key="quickbooks_disconnect",
+                page_title="Disconnect QuickBooks From Kodoo",
+                summary=(
+                    "Customer-facing guidance for disconnecting QuickBooks access and "
+                    "requesting handling of synchronized data."
+                ),
+                notice=(
+                    "This page is intentionally public so customers and reviewers can see "
+                    "a stable disconnect destination even before self-service revocation is automated."
+                ),
+                cards=cards,
+                sections=sections,
+                primary_action={
+                    "label": "Email Privacy Team",
+                    "href": f"mailto:{PRIVACY_CONTACT_EMAIL}",
+                },
+                secondary_action={"label": "Review Privacy Policy", "href": "/privacy-policy"},
             ),
         )

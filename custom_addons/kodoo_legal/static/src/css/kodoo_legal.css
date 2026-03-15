@@ -220,6 +220,77 @@ a {
     font-weight: 700;
 }
 
+.integration-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.integration-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.integration-action:hover,
+.integration-inline-link:hover {
+    transform: translateY(-1px);
+}
+
+.integration-action-primary {
+    background: linear-gradient(135deg, #fff3d6 0%, #ffd79b 100%);
+    color: #7d4a06;
+    box-shadow: 0 10px 26px rgba(217, 119, 6, 0.18);
+}
+
+.integration-action-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+    color: #f4fffd;
+}
+
+.integration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.integration-card {
+    padding: 18px;
+    border: 1px solid rgba(20, 33, 43, 0.1);
+    border-radius: var(--kodoo-radius-lg);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84) 0%, rgba(249, 243, 232, 0.88) 100%);
+}
+
+.integration-card-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.55;
+    word-break: break-word;
+}
+
+.integration-card-copy {
+    margin: 12px 0 0;
+    color: var(--kodoo-muted);
+    line-height: 1.7;
+}
+
+.integration-inline-link {
+    display: inline-flex;
+    margin-top: 14px;
+    color: var(--kodoo-primary-deep);
+    font-weight: 700;
+    text-decoration: none;
+}
+
 @media (max-width: 720px) {
     .legal-shell {
         width: min(100vw - 20px, 1120px);
@@ -234,5 +305,9 @@ a {
 
     .legal-summary {
         font-size: 1rem;
+    }
+
+    .integration-actions {
+        flex-direction: column;
     }
 }
