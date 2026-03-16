@@ -168,6 +168,7 @@
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': this.ui.isSmall, 'd-flex flex-column gap-lg-2': !this.ui.isSmall }" t-att-style="this.ui.isSmall ? 'max-height: 120px;' : ''">
                 <t t-foreach="this.payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
                     <div t-if="this.showPaymentMethod(paymentMethod)" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
+                        role="button"
                         t-att-class="{'opacity-50': !paymentMethod.getPaymentInterfaceStates().status, 'd-flex justify-content-between align-items-center': true}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
