@@ -338,7 +338,7 @@ class ResCompany(models.Model):
             closing = self.env['account.move'].browse(closing_id).exists().filtered(lambda am: am.state == 'posted')
         if not closing:
             return False
-        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
+        am_state_field = self.env['ir.model.fields'].sudo().search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
         state_tracking = closing.message_ids.sudo().tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
         create_date = state_tracking[-1:].create_date
         if create_date and create_date.date() == closing.date:
