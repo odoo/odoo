@@ -103,11 +103,11 @@ class PaymentTransaction(models.Model):
         return {
             "givenName": given_name,
             "familyName": family_name,
-            "streetAndNumber": self.partner_address,
-            "postalCode": self.partner_zip,
-            "city": self.partner_city,
-            "country": self.partner_country_id.code,
-            "email": self.partner_email,
+            "streetAndNumber": self.partner_address or "",
+            "postalCode": self.partner_zip or "",
+            "city": self.partner_city or "",
+            "country": self.partner_country_id.code or "",
+            "email": self.partner_email or "",
         }
 
     @api.model
