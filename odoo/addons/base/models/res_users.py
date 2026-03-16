@@ -206,6 +206,10 @@ class Groups(models.Model):
     def _check_one_user_type(self):
         self.users._check_one_user_type()
 
+    @api.constrains('view_access')
+    def _check_inherited_view_groups(self):
+        self.view_access._check_groups()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
         classified = self.env['res.config.settings']._get_classified_fields()
