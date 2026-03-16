@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- /shop/product page -->
     <template id="website_sale.base_unit_price" name="Product Base unit price">
-        <span
-            class="o_base_unit_price"
-            t-out="base_unit_price"
-            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-        />/<span class="oe_custom_base_unit" t-field="product.base_unit_name"/>
+        <small class="o_product_price_unit text-muted d-block">
+            (<span
+                t-out="base_unit_price"
+                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+             />
+            /
+            <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
+        </small>
     </template>
 
     <template id="website_sale.product" name="Product" track="1">
@@ -121,16 +123,11 @@
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_price mb-4"
                                     >
                                         <t t-call="website_sale.product_price"/>
-                                        <small
+                                        <t
                                             t-if="combination_info.get('base_unit_price')"
-                                            class="text-muted o_base_unit_price_wrapper d-block d-none"
-                                        >
-                                            (<t
-                                                t-call="website_sale.base_unit_price"
-                                                product="product"
-                                                base_unit_price="combination_info['base_unit_price']"
-                                            />)
-                                        </small>
+                                            t-call="website_sale.base_unit_price"
+                                            base_unit_price="combination_info['base_unit_price']"
+                                        />
                                     </div>
 
                                     <t name="variant_info">
@@ -634,15 +631,11 @@
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
                 <div>
                     <t t-call="website_sale.product_price"/>
-                    <small
+                    <t
                         t-if="combination_info.get('base_unit_price')"
-                        class="ms-1 text-muted o_base_unit_price_wrapper d-none"
-                    >
-                        <t
-                            t-call="website_sale.base_unit_price"
-                            base_unit_price="combination_info['base_unit_price']"
-                        />
-                    </small>
+                        t-call="website_sale.base_unit_price"
+                        base_unit_price="combination_info['base_unit_price']"
+                    />
                 </div>
             </div>
         </xpath>

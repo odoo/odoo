@@ -245,16 +245,15 @@
             <t t-set="product_price" t-value="line._get_cart_display_price()"/>
             <t t-call="website_sale.cart_product_price"/>
         </h6>
-        <small
+        <div
             t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('product.group_show_uom_price') and line.product_id.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
             groups="product.group_show_uom_price"
         >
             <t t-set="product" t-value="line.product_id"/>
             <t t-call="website_sale.base_unit_price"
-                product="product"
                 base_unit_price="product._get_base_unit_price(product_price/line.product_qty)"/>
-        </small>
+        </div>
     </template>
 
     <template id="website_sale.cart_combo_item_line">
@@ -536,6 +535,11 @@
                                         t-options="{'widget': 'monetary','display_currency': website.currency_id}"
                                     />
                                 </h6>
+                                <t
+                                    t-if="combination_info.get('base_unit_price')"
+                                    t-call="website_sale.base_unit_price"
+                                    base_unit_price="combination_info['base_unit_price']"
+                                />
                                 <button
                                     name="add_to_cart"
                                     class="btn btn-primary text-nowrap"

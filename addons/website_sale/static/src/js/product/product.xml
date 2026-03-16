@@ -19,10 +19,10 @@
             <t t-call="website_sale.not_for_sale"/>
         </button>
         <t name="sale_product_configurator_price" position="after">
-            <t t-call="website_sale.strikethrough_product_price"/>
+            <t t-call="website_sale.product_prices"/>
         </t>
         <t name="sale_product_configurator_optional_price" position="after">
-            <t t-call="website_sale.strikethrough_product_price"/>
+            <t t-call="website_sale.product_prices"/>
         </t>
         <xpath
             expr="//div[@name='o_sale_product_configurator_name']//span[hasclass('h5')]"
@@ -48,11 +48,19 @@
         </div>
     </t>
 
-    <t t-name="website_sale.strikethrough_product_price">
+    <t t-name="website_sale.product_prices">
         <h5
             class="oe_striked_price text-muted small text-decoration-line-through text-nowrap"
             t-if="this.props.strikethrough_price"
-            t-out="this.formattedStrikethroughPrice"
+            t-out="this.getFormattedPrice(this.props.strikethrough_price)"
         />
+        <div
+            t-if="this.props.base_unit_price"
+            class="o_product_price_unit small w-100 text-muted d-block pb-2"
+        >
+            (<span t-out="this.getFormattedPrice(this.props.base_unit_price)"/>
+            /
+            <span t-out="this.props.base_unit_name"/>)
+        </div>
     </t>
 </templates>

@@ -46,8 +46,8 @@ export class Product extends Component {
      *
      * @return {String} - The price, in the format of the given currency.
      */
-    getFormattedPrice() {
-        return formatCurrency(this.props.price, this.env.currency.id);
+    getFormattedPrice(price) {
+        return formatCurrency(price, this.env.currency.id);
     }
 
     /**
