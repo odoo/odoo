@@ -215,6 +215,7 @@ class MailMessage(models.Model):
         ('auto_comment', 'Automated Targeted Notification'),
         ('out_of_office', 'Out-of-office Message'),
         ('user_notification', 'User Specific Notification'),
+        ('tracking', 'Tracking'),
         ],
         'Type', required=True, default='comment',
         help="Used to categorize message generator"

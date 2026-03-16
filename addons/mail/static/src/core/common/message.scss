@@ -66,6 +66,36 @@
     }
 }
 
+.o_track {
+    .o-mail-Message-body {
+        padding-left: 0px;
+
+        b::before {
+            color: $body-color;
+            content: "🡒";
+            margin: 0 5px;
+        }
+        i {
+          &::before {
+            margin-left: 5px;
+            content: "(";
+          }
+
+          &::after {
+            content: ")";
+          }
+        }
+
+        b {
+            color: $info;
+            font-weight: bold;
+        }
+        i {
+            color: $text-muted;
+        }
+    }
+}
+
 .o-mail-Message-bubble {
     background-color: var(--o-message-bubble-bg) !important;
     border-color: var(--o-message-bubble-border-color) !important;

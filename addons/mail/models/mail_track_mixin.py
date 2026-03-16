@@ -6,7 +6,7 @@ from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import MissingError
-from odoo.tools import clean_context, ormcache
+from odoo.tools import clean_context, format_datetime, format_date, format_amount, formatLang, ormcache
 
 if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
@@ -326,7 +326,7 @@ class MailTrackMixin(models.AbstractModel):
         :param ValuesType initial_values: dict of initial values for each updated
             fields;
 
-        :return: a tuple (changes, tracking_value_ids) where
+        :return: a tuple (changes, tracking_values) where
           changes: set of updated column names; contains onchange tracked fields
           that changed;
           tracking_values: a values to create ``mail.tracking.value`` records;
@@ -458,6 +458,7 @@ class MailTrackMixin(models.AbstractModel):
         values = {
             'field_id': field.id,
             'field_name': col_name,
+            'field_label': col_info['string'],
             'field_type': col_info['type'],
             'old_value': initial_value,
             'new_value': new_value,
@@ -471,32 +472,57 @@ class MailTrackMixin(models.AbstractModel):
         if col_info.get('company_dependent') is True:
             field_info['company_id'] = self.env.company.id
 
-        if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
+        if col_info['type'] in {'integer', 'float', 'char', 'text'}:
             values.update({
                 f'old_value_{col_info["type"]}': initial_value,
-                f'new_value_{col_info["type"]}': new_value
+                f'new_value_{col_info["type"]}': new_value,
+                'old_value': formatLang(self.env, initial_value),
+                'new_value': formatLang(self.env, new_value),
             })
+            if col_info['type'] == 'char':
+                values.update({
+                    'old_value': initial_value or 'None',
+                    'new_value': new_value or 'None',
+                })
+
         elif col_info['type'] == 'monetary':
             currency_id = col_info.get('currency_id')
             if not currency_id:
                 currency_id = self[col_info['currency_field']].id
             field_info['currency_id'] = currency_id
+            currency = col_info.get('currency_field') and self[col_info['currency_field']]
             values.update({
                 'old_value_float': initial_value,
-                'new_value_float': new_value
+                'new_value_float': new_value,
+                'old_value': format_amount(self.env, initial_value or 0, currency) if currency else initial_value,
+                'new_value': format_amount(self.env, new_value or 0, currency) if currency else new_value,
+            })
+        elif col_info['type'] == 'datetime':
+            tz = self.env.user.tz or self.env.company.tz
+            values.update({
+                f'old_value_{col_info["type"]}': initial_value,
+                f'new_value_{col_info["type"]}': new_value,
+                'old_value': format_datetime(self.env, initial_value, tz=tz or self.env.company.tz) if initial_value else 'None',
+                'new_value': format_datetime(self.env, new_value, tz=tz or self.env.company.tz) if new_value else 'None',
             })
         elif col_info['type'] == 'date':
             values.update({
+                'old_value': format_date(self.env, initial_value) if initial_value else 'None',
+                'new_value': format_date(self.env, new_value) if new_value else 'None',
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
                 'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
             })
         elif col_info['type'] == 'boolean':
             values.update({
                 'old_value_integer': initial_value,
-                'new_value_integer': new_value
+                'new_value_integer': new_value,
+                'old_value': 'Yes' if initial_value else 'No',
+                'new_value': 'Yes' if new_value else 'No',
             })
         elif col_info['type'] == 'selection':
             values.update({
+                'old_value': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or 'None',
+                'new_value': new_value and dict(col_info['selection'])[new_value] or 'None',
                 'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
                 'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
             })
@@ -516,6 +542,8 @@ class MailTrackMixin(models.AbstractModel):
                 new_value = (new_value.id, new_value.display_name)
 
             values.update({
+                'old_value': initial_value[1] or 'None',
+                'new_value': new_value[1] or 'None',
                 'old_value_integer': initial_value[0],
                 'new_value_integer': new_value[0],
                 'old_value_char': initial_value[1],
@@ -553,6 +581,8 @@ class MailTrackMixin(models.AbstractModel):
                 new_value_char = ', '.join(value[1] for value in new_value)
 
             values.update({
+                'old_value': old_value_char or 'None',
+                'new_value': new_value_char or 'None',
                 'old_value_char': old_value_char,
                 'new_value_char': new_value_char,
             })
@@ -570,6 +600,8 @@ class MailTrackMixin(models.AbstractModel):
         """Generate the values for the <mail.tracking.values> corresponding to a property."""
         col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
 
+        field_label = f"{col_info['string']}: {initial_value['string']}"
+
         field_info = {
             'desc': f"{col_info['string']}: {initial_value['string']}",
             'name': col_name,
@@ -582,7 +614,7 @@ class MailTrackMixin(models.AbstractModel):
         tracking_values = self._create_mail_tracking_values(
             value, False, col_name, col_info,
         )
-        return {**tracking_values, 'field_info': field_info}
+        return {**tracking_values, 'field_info': field_info, 'field_label': field_label}
 
     # track value formatting
     # ------------------------------------------------------

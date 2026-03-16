@@ -559,7 +559,7 @@ class MailThread(models.AbstractModel):
 
         # fire template-based message generation
         for record_su in self:
-            tracked_fields, _tracking_value_ids = trackings.get(record_su.id, (None, None))
+            tracked_fields, _message_tracking_values = trackings.get(record_su.id, (None, None))
             record_su._track_post_template(tracked_fields)
 
         # if track_records:
@@ -669,12 +669,16 @@ class MailThread(models.AbstractModel):
                     author_id=author_id,
                     subtype_id=subtype.id,
                     tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
+                    message_tracking_values=tracking_values,
+                    message_type="tracking",
                 )
             elif tracking_values:
                 record._message_log(
                     body=body,
                     author_id=author_id,
                     tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
+                    message_tracking_values=tracking_values,
+                    message_type="tracking",
                 )
 
     def _track_log_get_default_body(self, track_init_values: ValuesType) -> str | Markup:
@@ -2227,6 +2231,7 @@ class MailThread(models.AbstractModel):
                      partner_ids=None, outgoing_email_to=False,
                      incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None, body_is_html=False,
+                     message_tracking_values=None,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
@@ -2260,6 +2265,7 @@ class MailThread(models.AbstractModel):
             composer will be attached to the related document.
         :param bool body_is_html: indicates body should be threated as HTML even if str
             to be used only for RPC calls
+        :param message_tracking_values: optional list of tracking values
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2375,7 +2381,7 @@ class MailThread(models.AbstractModel):
         msg_values.update(
             self._process_attachments_for_post(attachments, attachment_ids, msg_values)
         )  # attachement_ids, body
-        new_message = self._message_create([msg_values])
+        new_message = self._message_create([msg_values], message_tracking_values)
 
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
@@ -2877,7 +2883,7 @@ class MailThread(models.AbstractModel):
             self._process_attachments_for_post(attachments, attachment_ids, msg_values)
         )  # attachement_ids, body
 
-        new_message = self._message_create([msg_values])
+        new_message = self._message_create([msg_values], message_tracking_values)
         self._fallback_lang()._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
@@ -2921,7 +2927,7 @@ class MailThread(models.AbstractModel):
                      author_id=None, email_from=None,
                      message_type='notification',
                      partner_ids=False,
-                     attachment_ids=False, tracking_value_ids=False):
+                     attachment_ids=False, tracking_value_ids=False, message_tracking_values=False):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
         for more details. """
         self.ensure_one()
@@ -2931,14 +2937,14 @@ class MailThread(models.AbstractModel):
             author_id=author_id, email_from=email_from,
             message_type=message_type,
             partner_ids=partner_ids,
-            attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids
+            attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids, message_tracking_values=message_tracking_values
         )
 
     def _message_log_batch(self, bodies, subject=False,
                            author_id=None, email_from=None,
                            message_type='notification',
                            partner_ids=False,
-                           attachment_ids=False, tracking_value_ids=False):
+                           attachment_ids=False, tracking_value_ids=False, message_tracking_values=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2953,7 +2959,7 @@ class MailThread(models.AbstractModel):
         :return: created messages (as sudo)
         """
         # protect against side-effect prone usage
-        if len(self) > 1 and (attachment_ids or tracking_value_ids):
+        if len(self) > 1 and (attachment_ids or (tracking_value_ids and message_tracking_values)):
             raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
@@ -2984,7 +2990,7 @@ class MailThread(models.AbstractModel):
                             res_id=record.id,
                             body=escape(bodies.get(record.id, '')))
                        for record in self]
-        return self.sudo()._message_create(values_list)
+        return self.sudo()._message_create(values_list, message_tracking_values)
 
     def set_message_pin(self, message_id, pinned):
         """(Un)pin a message on the thread.
@@ -3091,9 +3097,32 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return textwrap.shorten(self.display_name or '', width=100, placeholder="...")
 
-    def _message_create(self, values_list):
+    def _messages_format_tracking(self, tracking_values: list[dict[str, any]]) -> str:  # html
+        """ Format tracking values for mail messages.
+
+        This low-level helper is used to render tracking lines (field changes)
+        on the main model using the QWeb tracking template.
+
+        tracking_values: List of dictionaries representing tracked
+            field changes. Each dictionary typically contains information such as:
+            - old_value: previous value of the field
+            - new_value: updated value of the field
+            - field_desc: human-readable field label
+        return: Rendered HTML content of the tracking values """
+
+        return self.env['ir.qweb']._render(
+            "mail.mail_tracking_template", {'trackingValues': tracking_values}
+        )
+
+    def _message_create(self, values_list, tracking_values=None):
         """ Low-level helper to create mail.message records. It is mainly used
-        to hide the cleanup of given values, for mail gateway or helpers."""
+        to hide the cleanup of given values, for mail gateway or helpers.
+
+        values_list: List of dictionaries containing the values
+            to create mail.message records.
+        tracking_values: Optional list of dictionaries containing
+            tracking information for field changes.
+        return: Created mail.message records """
         values_list = [
             {
                 key: val
@@ -3113,6 +3142,10 @@ class MailThread(models.AbstractModel):
         for values in values_list:
             create_values = dict(values)
             create_values['partner_ids'] = [(4, pid) for pid in (create_values.get('partner_ids') or [])]
+            if tracking_values:
+                tracking_body = self._messages_format_tracking(tracking_values)
+                create_values['body'] = tracking_body + values['body'] if values.get('body') else tracking_body
+
             create_values_list.append(create_values)
 
         # remove context, notably for default keys, as this thread method is not
