@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from datetime import datetime, timedelta
+from freezegun import freeze_time
+from lxml import html
 from odoo import Command, fields
 from odoo.tests import tagged, HttpCase
 from odoo.tools import SQL
@@ -96,6 +98,37 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ) for recs in (cls.product_tmpls.product_variant_ids, cls.product_tmpls)
         ))
 
+    def assert_snippet_filters_route_public_access(self, filter, products, **kwargs):
+        """Assert the access as a public user to the data returned by the route /website/snippet/filters"""
+
+        result = self.url_open("/website/snippet/filters", json={"params": {
+            "filter_id": filter.id,
+            "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
+            "limit": 16,
+            "search_domain": [],
+            **kwargs,
+        }}).json()["result"]
+        self.assertEqual(len(result), len(products))
+        for product, html_description in zip(products, result):
+            tree = html.fromstring(html_description)
+            self.assertEqual(tree.xpath('//h2')[0].text_content().strip(), product.display_name)
+            self.assertEqual(
+                tree.xpath('//*[@name="product_price"]/span')[0].text,
+                self.env['ir.qweb.field.float'].value_to_html(product.lst_price, {'precision': 2})
+            )
+
+        # A visitor / public user must not be able to guess the cost price of sold products through the search domain
+        with self.assertLogs("odoo.http", "WARNING") as logs:
+            result = self.url_open("/website/snippet/filters", json={"params": {
+                "filter_id": filter.id,
+                "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
+                "limit": 16,
+                "search_domain": [("standard_price", "=", 42)],
+                **kwargs,
+            }}).json()
+            self.assertIn('You do not have enough rights to access the field "standard_price"', logs.output[0])
+            self.assertTrue(result.get('error'))
+
     def test_latest_sold_filter_returns_latest_sold_product(self):
         base_time = fields.Datetime.now()
         computer = self.computer.product_variant_id
@@ -117,6 +150,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )._get_products('latest_sold')
         self.assertEqual(products[0]['product_id'], self.pink_case_M.id)
 
+        self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M + computer)
+
     def test_latest_sold_filter_returns_all_variants_by_default(self):
         self._create_so(
             state='sale',
@@ -133,6 +168,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         product_ids = {p['product_id'] for p in products}
         self.assertSetEqual(product_ids, {self.pink_case_M.id, self.pink_case_L.id})
 
+        self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M + self.pink_case_L)
+
     def test_latest_sold_filter_hides_variants_if_context(self):
         self._create_so(
             state='sale',
@@ -148,6 +185,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )._get_products('latest_sold')
         product_ids = {p['product_id'] for p in products}
         self.assertSetEqual(product_ids, {self.computer_case.product_variant_id.id})
+
+        self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M + self.pink_case_L)
 
     def test_latest_sold_filter_returns_only_sellable_products(self):
         not_sellable_product = self.env['product.product'].create({
@@ -167,6 +206,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 dynamic_filter=dyn_filter, website_id=self.website.id
             )._get_products('latest_sold')
         self.assertTrue(all(p['_record'].sale_ok for p in products))
+
+        self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M)
 
     def test_latest_viewed_filter(self):
         """Check the latest viewed filter after viewing 2 different cases and 1 computer.
@@ -201,6 +242,13 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 {self.computer_case.product_variant_id.id, self.computer.product_variant_id.id},
                 'When hiding variants, "Latest viewed" filter should return 1 variant per template',
             )
+
+        now = datetime.now()
+        for i, product in enumerate(viewed_products):
+            with freeze_time(now - timedelta(seconds=i)):
+                self.url_open("/shop/products/recently_viewed_update", json={"params": {"product_id": product.id}})
+
+        self.assert_snippet_filters_route_public_access(dyn_filter, viewed_products)
 
     def test_recently_sold_with_filter(self):
         """Check the recently-sold-with filter after selling 1 computer, 1 monitor & 1 case.
@@ -243,6 +291,12 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 '"Recently sold with" filter should return generic variants when hiding variants',
             )
 
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter,
+            self.pink_case_L + monitor,
+            productTemplateId=str(self.computer.id)
+        )
+
     def test_accessories_filter(self):
         """Check the accessories filter on the computer product.
 
@@ -271,6 +325,12 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 "Accessories filter should return 2 results when hiding variants",
             )
 
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter,
+            self.computer_case.product_variant_ids[:16],
+            productTemplateId=str(self.computer.id)
+        )
+
     def test_alternative_products_filter(self):
         """Check the alternative products filter on the Mac product.
 
@@ -298,6 +358,12 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 [self.computer.product_variant_id.id, self.windows_pc.product_variant_id.id],
                 "Alternative products filter should return 2 results when hiding variants",
             )
+
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter,
+            self.mac.alternative_product_ids.product_variant_ids[:16],
+            productTemplateId=str(self.mac.id)
+        )
 
     def test_newest_products_filter(self):
         """Check the newest products filter.
@@ -334,6 +400,15 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 16,
                 "When displaying newest product templates, 16 unique templates should be shown",
             )
+
+        products = self.computer_case.product_variant_ids[:16]
+        now = datetime.now()
+        for i, product in enumerate(products):
+            self.env.cr.execute(
+                "UPDATE product_product SET create_date = %s WHERE id = %s",
+                (fields.Datetime.to_string(now + timedelta(seconds=i)), product.id)
+            )
+        self.assert_snippet_filters_route_public_access(dyn_filter, products.sorted(reverse=True))
 
     def test_shop_attribute_filters_remain_when_changing_page(self):
         self.env['product.attribute'].search([]).write({'visibility': 'hidden'})
