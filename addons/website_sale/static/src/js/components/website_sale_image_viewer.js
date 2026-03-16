@@ -11,7 +11,7 @@ export class ProductImageViewer extends Dialog {
     static template = "website_sale.ProductImageViewer";
     static props = {
         ...Dialog.props,
-        images: { type: NodeList, required: true },
+        images: { type: Array, required: true },
         selectedImageIdx: { type: Number, optional: true },
         close: Function,
     };
@@ -19,7 +19,7 @@ export class ProductImageViewer extends Dialog {
     setup() {
         super.setup();
         this.imageContainerRef = useRef("imageContainer");
-        this.images = [...this.props.images].map(image => {
+        this.images = this.props.images.map((image) => {
             return {
                 src: image.dataset.zoomImage || image.src,
                 thumbnailSrc: image.src.replace('/image_1024/', '/image_256/'),
