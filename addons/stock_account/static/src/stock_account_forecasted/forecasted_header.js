@@ -1,8 +1,18 @@
 import { patch } from "@web/core/utils/patch";
-
+import { user } from "@web/core/user";
+import { onWillStart } from "@odoo/owl";
 import { ForecastedHeader as Parent } from "@stock/stock_forecasted/forecasted_header";
 
 patch(Parent.prototype, {
+    setup() {
+        super.setup(...arguments);
+        onWillStart(async () => {
+            this.isStockManager = await user.hasGroup(
+                "stock.group_stock_manager"
+            );
+        });
+    },
+
     _onClickValuation() {
         return this.action.doAction(
             "stock_account.stock_move_valuation_action",
