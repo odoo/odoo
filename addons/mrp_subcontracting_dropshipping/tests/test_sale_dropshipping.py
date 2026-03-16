@@ -360,3 +360,29 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         compo_move = sale_order.order_line.move_ids.filtered(lambda sm: sm.product_id == compo)
         compo_bom_line = kit_bom.bom_line_ids.filtered(lambda bl: bl.product_id == compo)
         self.assertTrue(compo_move.bom_line_id == compo_bom_line, "The bom_line_id on the stock move was set incorrectly")
+
+    def test_mixed_mto_manufacture_and_dropship_so_keeps_links_separate(self):
+        warehouse = self.env.ref('stock.warehouse0')
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
+        self.comp2.route_ids = [Command.set((manufacture_route | mto_route).ids)]
+        self.comp1.write({
+            'seller_ids': [Command.create({'partner_id': self.supplier.id})],
+            'route_ids': [Command.set(self.dropship_route.ids)],
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({'product_id': self.comp2.id}),
+                Command.create({'product_id': self.comp1.id})
+            ]
+        })
+        sale_order.action_confirm()
+        manufacturing_order = sale_order.mrp_production_ids
+        purchase = sale_order._get_purchase_orders()
+        self.assertEqual(len(manufacturing_order), 1)
+        self.assertEqual(manufacturing_order.sale_order_count, 1)
+        self.assertEqual(manufacturing_order.purchase_order_count, 0)
+        self.assertEqual(len(purchase), 1)
+        self.assertEqual(purchase.mrp_production_count, 0)
