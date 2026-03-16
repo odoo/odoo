@@ -394,6 +394,7 @@ class ProductProduct(models.Model):
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
         elif locations:
+<<<<<<< b0ef0f8dacb5721b21c3d898aadf2dba289fa2b1
             paths_query = models.Query(locations)
             paths_query.add_where(SQL(
                 """EXISTS (
@@ -406,13 +407,54 @@ class ProductProduct(models.Model):
                 paths_query.table.parent_path,
             ))
             loc_domain = Domain('location_id', 'in', paths_query)
+||||||| 2e20e9a1a328757cc8a19261af3ba2287fb23558
+            alias = locations._table + '_inner'
+            paths_query = Query(locations.env, alias, SQL.identifier(locations._table))
+            paths_query.add_where(SQL(
+                """EXISTS (
+                    SELECT 1
+                      FROM stock_location parent
+                     WHERE parent.id IN %s
+                       AND %s LIKE parent.parent_path || '%%'
+                )""",
+                tuple(locations.ids),
+                SQL.identifier(alias, 'parent_path'),
+            ))
+            loc_domain = Domain('location_id', 'in', paths_query)
+=======
+            descendants_query = Query(
+                locations.env,
+                'descendants',
+                SQL(
+                    """
+                    (
+                        WITH RECURSIVE descendants AS (
+                            SELECT id
+                            FROM stock_location
+                            WHERE id IN %s
+
+                            UNION
+
+                            SELECT sl.id
+                            FROM stock_location sl
+                            JOIN descendants d
+                                ON sl.location_id = d.id
+                        )
+                        SELECT id FROM descendants
+                    )
+                    """,
+                    tuple(locations.ids),
+                ),
+            )
+            loc_domain = Domain('location_id', 'in', descendants_query)
+>>>>>>> 58d3f7f638cbeb20111cad9796580553f7a3f2d1
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
-            dest_loc_domain_done = Domain('location_dest_id', 'in', paths_query)
+            dest_loc_domain_done = Domain('location_dest_id', 'in', descendants_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
-                    '&', ('location_final_id', '!=', False), ('location_final_id', 'in', paths_query),
-                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', paths_query),
+                    '&', ('location_final_id', '!=', False), ('location_final_id', 'in', descendants_query),
+                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', descendants_query),
             ])
             dest_loc_domain = Domain([
                 '|',
