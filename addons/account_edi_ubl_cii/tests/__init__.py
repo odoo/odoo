@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import common
 from . import test_autopost_bills
 from . import test_multilevel_constraints
@@ -7,4 +5,12 @@ from . import test_partner_peppol_fields
 from . import test_ubl_cii
 from . import test_download_docs
 from . import test_ubl_export_bis3_be
-from . import test_ubl_export_bis3_selfbilling_be
+from . import test_ubl_import_bis3_invoice_be
+from . import test_ubl_import_bis3_invoice_be_auto_generate_pdf
+from . import test_ubl_import_bis3_invoice_be_cash_rounding
+from . import test_ubl_import_bis3_invoice_be_decode_invoice_line
+from . import test_ubl_import_bis3_invoice_be_retrieve_account
+from . import test_ubl_import_bis3_invoice_be_retrieve_partner
+from . import test_ubl_import_bis3_invoice_be_retrieve_product
+from . import test_ubl_import_bis3_invoice_be_retrieve_tax
+from . import test_ubl_export_bis3_invoice_selfbilling_be
