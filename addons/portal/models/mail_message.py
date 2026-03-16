@@ -135,7 +135,7 @@ class MailMessage(models.Model):
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                         "type": "partner",
-                    },
+                    } if message.author_id else False,
                     "thread": {"model": values["model"], "id": values["res_id"]},
                 }
             )
