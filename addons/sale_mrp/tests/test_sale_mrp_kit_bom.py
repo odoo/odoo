@@ -914,7 +914,7 @@ class TestSaleMrpKitBom(TransactionCase):
         # check that after validating, if the packages was changed to a package of the component the quantity is good
         so.picking_ids.button_validate()
         aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
-        key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
+        key = f"{comp_product.id}_{comp_product.display_name}_{comp_product.stock_move_ids[0].description_bom_line}_{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
         self.assertEqual(aggr_prod_qty[key]['packaging_quantity'], 2)
 
     def test_product_packaging_qty_no_packaging(self):
