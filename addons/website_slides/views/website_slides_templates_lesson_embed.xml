@@ -27,7 +27,12 @@
                                         </div>
                                     </div>
                                     <div class="col flex-grow-0 d-flex text-nowrap small">
-                                        <a class="oe_slide_js_embed_option_link" href="#" data-bs-toggle="modal" t-attf-data-bs-target="#slideShareModal_{{slide.id}}">
+                                        <a class="oe_slide_js_embed_option_link" role="button"
+                                            t-att-data-id="slide.id"
+                                            t-att-data-name="slide.name"
+                                            t-att-data-url="slide.website_share_url"
+                                            t-att-data-category="slide.slide_category"
+                                            t-att-data-embed-code="slide.embed_code_external if slide.slide_category in ['video', 'document'] else False">
                                             <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
                                             Share
                                         </a>
@@ -41,18 +46,10 @@
                                 t-attf-data-slideurl="/slides/slide/#{slug(slide)}/pdf_content"
                                 t-attf-data-downloadable="#{False}"
                                 t-att-data-defaultpage="page">
-                            <t t-if="is_external_embed">
-                                <t t-call="website_slides.slide_share_modal"
-                                    record="slide"
-                                    email_sharing="slide.channel_id.share_slide_template_id"
-                                    website_share_url="slide.website_share_url"
-                                    include_embed="True"
-                                    embed_hide_starting_page="True"/>
-                            </t>
-                            <div id="slide_suggest" class="oe_slide_embed_option bg-300 container-fluid overflow-auto d-none">
+                            <div id="slide_suggest" class="oe_slide_embed_option bg-black-50 container-fluid overflow-auto d-none">
                                 <div class="row">
                                     <t t-foreach="related_slides" t-as="suggest_slide">
-                                        <div class="col-6 col-md-4 col-lg-3 oe_slides_suggestion_media">
+                                        <div class="col-6 col-md-4 col-lg-3 mt-3 oe_slides_suggestion_media">
                                             <div class="card mb-3">
                                                 <a t-att-href="suggest_slide.website_absolute_url" target="_new" class="card-img-top ratio ratio-16x9">
                                                     <img t-att-src="website.image_url(suggest_slide, 'image_1024')" class="card-img-top embed-responsive-item" t-att-alt="suggest_slide.name"/>
@@ -63,7 +60,6 @@
                                                             <t t-out="suggest_slide.name"/>
                                                         </a>
                                                     </h6>
-                                                    <div class="oe_slides_suggestion_caption"/>
                                                 </div>
                                             </div>
                                         </div>

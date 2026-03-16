@@ -421,7 +421,7 @@ class SlideSlide(models.Model):
             elif slide.slide_category == 'document' and slide.source_type == 'local_file':
                 slide_url = base_url + self.env['ir.http']._url_for('/slides/embed/%s?page=1' % slide.id)
                 slide_url_external = base_url + self.env['ir.http']._url_for('/slides/embed_external/%s?page=1' % slide.id)
-                base_embed_code = Markup('<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0" aria-label="%s"></iframe>')
+                base_embed_code = Markup('<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" allow="clipboard-write" height="%s" width="%s" frameborder="0" aria-label="%s"></iframe>')
                 iframe_aria_label = _('Embed code')
                 embed_code = base_embed_code % (slide_url, 315, 420, iframe_aria_label)
                 embed_code_external = base_embed_code % (slide_url_external, 315, 420, iframe_aria_label)

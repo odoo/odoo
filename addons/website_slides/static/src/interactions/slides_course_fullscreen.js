@@ -422,7 +422,14 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
                     slideData.id
                 )}/image_1024`;
             } else if (slideData.category === "document") {
-                slideData.embedUrl = this.stringToElements(slideData.embedCode)[0]?.src;
+                // `embedCode` is the code shown in SlideShareDialog to allow
+                // the user to share it. We extract `embedUrl` from it to set
+                // the iframe src in Fullscreen mode so we need the non-external
+                // version of the url (i.e. /embed/ and not /embed_external/)
+                slideData.embedUrl = this.stringToElements(slideData.embedCode)[0]?.src.replace(
+                    "/embed_external/",
+                    "/embed/"
+                );
             }
             // fill empty property to allow searching on it with list.filter(matcher)
             slideData.isQuiz = !!slideData.isQuiz;
@@ -625,7 +632,9 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
     }
 }
 
-registry.category("public.interactions").add("website_slides.text_highlight", FullscreenTextHighlight);
+registry
+    .category("public.interactions")
+    .add("website_slides.text_highlight", FullscreenTextHighlight);
 registry
     .category("public.interactions")
     .add("website_slides.WebsiteSlidesFullscreen", WebsiteSlidesFullscreen);

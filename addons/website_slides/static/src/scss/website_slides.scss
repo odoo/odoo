@@ -35,6 +35,15 @@ $line-height-truncate: 1.5em;
     }
 }
 
+:root {
+    // Border color
+    // Let borders color adapt according to body and CCs. Also, set a fallback
+    // value for browsers that don't support the color-mix function (used by
+    // 'fade-currentColor').
+    --o-border-color: #{o-color('300')};
+    --o-border-color: #{fade-currentColor()};
+}
+
 // Common to new slides pages
 // **************************************************
 
