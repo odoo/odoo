@@ -9,7 +9,7 @@ const TOUCHMOVE_STEP = 96;
 
 const productImageViewerProps = {
     ...dialogProps,
-    images: t.instanceOf(NodeList),
+    images: t.instanceOf(Array),
     selectedImageIdx: t.number().optional(),
     imageRatio: t.string().optional('auto'),
     imageRatioMobile: t.string().optional('auto'),
@@ -24,7 +24,7 @@ export class ProductImageViewer extends Dialog {
     setup() {
         super.setup();
         this.imageContainerRef = useRef("imageContainer");
-        this.images = [...this.props.images].map(image => {
+        this.images = this.props.images.map((image) => {
             return {
                 src: image.dataset.zoomImage || image.src,
                 thumbnailSrc: image.src.replace('/image_1024/', '/image_256/'),
