@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account.PartnerField">
+        <t t-if="props.readonly">
+            <t t-out="nameToDisplay"/>
+        </t>
+        <t t-else="">
+            <Field name="'partner_id'" record="props.record"/>
+        </t>
+    </t>
+</templates>
