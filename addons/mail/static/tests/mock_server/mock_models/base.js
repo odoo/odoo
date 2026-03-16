@@ -36,9 +36,6 @@ export class Base extends models.ServerModel {
         initialTrackedFieldValues = kwargs.initialTrackedFieldValues;
         record = kwargs.record;
 
-        /** @type {import("mock_models").MailTrackingValue} */
-        const MailTrackingValue = this.env["mail.tracking.value"];
-
         const trackingValueIds = [];
         const changedFieldNames = [];
         for (const fname in trackedFieldNamesToField) {
@@ -48,16 +45,6 @@ export class Base extends models.ServerModel {
                 continue;
             }
             if (initialValue !== newValue) {
-                const tracking = MailTrackingValue._create_tracking_values(
-                    initialValue,
-                    newValue,
-                    fname,
-                    trackedFieldNamesToField[fname],
-                    this
-                );
-                if (tracking) {
-                    trackingValueIds.push(tracking);
-                }
                 changedFieldNames.push(fname);
             }
         }

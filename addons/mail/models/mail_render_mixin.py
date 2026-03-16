@@ -221,7 +221,6 @@ class MailRenderMixin(models.AbstractModel):
             if 'subtype_internal' not in template_ctx:
                 template_ctx['subtype_internal'] = subtype.is_internal
         template_ctx.setdefault('subtype', subtype)
-        template_ctx.setdefault('tracking_values', [])
         # record info
         if 'model_description' not in template_ctx:
             template_ctx['model_description'] = self.env['ir.model']._get(context_record._name).display_name if context_record else False

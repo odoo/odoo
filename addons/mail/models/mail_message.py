@@ -956,16 +956,6 @@ class MailMessage(models.Model):
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
-            if thread and is_notification is not False:
-                tracking_value_domain = (
-                    Domain("mail_message_id.res_id", "=", thread.id)
-                    & Domain("mail_message_id.model", "=", thread._name)
-                    & self._get_tracking_values_domain(search_term)
-                )
-                # sudo: mail.tracking.value - searching allowed tracking values for acessible records
-                tracking_values = self.env["mail.tracking.value"].sudo().search(tracking_value_domain)
-                accessible_tracking_value_ids = tracking_values._filter_has_field_access(self.env)
-                message_domain |= Domain("id", "in", accessible_tracking_value_ids.mail_message_id.ids)
             domain &= message_domain
         if search_term or is_notification is not None:
             res["count"] = self.search_count(domain)

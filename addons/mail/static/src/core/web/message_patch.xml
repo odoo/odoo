@@ -9,20 +9,6 @@
                             <t t-out="this.props.messageSearch?.highlight(this.message.subtype_id.description) ?? this.message.subtype_id.description"/>
                         </p>
                     </t>
-                    <t t-if="this.message.trackingValues.length">
-                        <ul class="mb-0 list-unstyled d-flex flex-column gap-1">
-                            <t name="trackingValues" t-foreach="this.message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
-                                <li class="o-mail-Message-tracking" role="group">
-                                    <span class="o-mail-Message-trackingOld text-muted fw-bold" t-out="this.formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.oldValue)"/>
-                                    <t t-if="!trackingValue.fieldInfo.isPropertyField">
-                                        <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-2 text-600"/>
-                                        <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-out="this.formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.newValue)"/>
-                                    </t>
-                                    <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-out="this.props.messageSearch?.highlight(trackingValue.fieldInfo.changedField) ?? trackingValue.fieldInfo.changedField"/>)</span>
-                                </li>
-                            </t>
-                        </ul>
-                    </t>
                     <div t-if="!this.message.isEmpty and this.message.richBody" t-custom-ref="body">
                         <t t-call="mail.Message.bodyAsNotification"/>
                     </div>

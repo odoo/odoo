@@ -201,8 +201,6 @@ export class Message extends Record {
     pinned_at = fields.Datetime();
     /** @type {string} */
     subject;
-    /** @type {Object[]} */
-    trackingValues = [];
     /** @type {string|undefined} */
     translationValue;
     /** @type {string|undefined} */
@@ -409,7 +407,6 @@ export class Message extends Record {
         return (
             this.isBodyEmpty &&
             this.attachment_ids.length === 0 &&
-            this.trackingValues.length === 0 &&
             !this.subtype_id?.description &&
             !this.poll
         );
