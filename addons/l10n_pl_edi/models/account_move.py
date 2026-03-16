@@ -643,3 +643,7 @@ class AccountMove(models.Model):
         self.create(bills_vals_list)
 
         return blocking_error
+
+    def _fa3_get_currency_rate(self):
+        self.ensure_one()
+        return 1/self.invoice_currency_rate
