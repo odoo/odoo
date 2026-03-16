@@ -333,6 +333,8 @@ class TestHrAttendanceOvertime(HttpCase):
 
         # 8:00 -> 21:00 should contain 4 hours of overtime
         self.assertAlmostEqual(attendance.overtime_hours, 4, 2)
+        self.assertAlmostEqual(attendance.worked_hours, 12, 2)
+        self.assertAlmostEqual(attendance.expected_hours, 8, 2)
 
         # Total overtime for that day : 4 hours
         overtime_1 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
@@ -348,6 +350,8 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         # 8:00 -> 19:00 should contain 2 hours of overtime
         self.assertAlmostEqual(m_attendance_1.overtime_hours, 2, 2)
+        self.assertAlmostEqual(m_attendance_1.worked_hours, 10, 2)
+        self.assertAlmostEqual(m_attendance_1.expected_hours, 8, 2)
 
         m_attendance_2 = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
@@ -356,6 +360,8 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         # 19:00 -> 20:00 should contain 1 hour of overtime
         self.assertAlmostEqual(m_attendance_2.overtime_hours, 1, 2)
+        self.assertAlmostEqual(m_attendance_2.worked_hours, 1, 2)
+        self.assertAlmostEqual(m_attendance_2.expected_hours, 0, 2)
 
         m_attendance_3 = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
@@ -364,6 +370,8 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         # 21:00 -> 23:00 should contain 2 hours of overtime
         self.assertAlmostEqual(m_attendance_3.overtime_hours, 2, 2)
+        self.assertAlmostEqual(m_attendance_3.worked_hours, 2, 2)
+        self.assertAlmostEqual(m_attendance_3.expected_hours, 0, 2)
 
         overtime_2 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
                                                                 ('date', '=', datetime(2023, 1, 3))])
@@ -377,6 +385,8 @@ class TestHrAttendanceOvertime(HttpCase):
         })
 
         self.assertEqual(m_attendance_3.overtime_hours, 1.5)
+        self.assertAlmostEqual(m_attendance_3.worked_hours, 1.5, 2)
+        self.assertAlmostEqual(m_attendance_3.expected_hours, 0, 2)
 
         # Deleting previous attendances should update correctly the overtime hours in other attendances
         m_attendance_2.unlink()
@@ -387,6 +397,11 @@ class TestHrAttendanceOvertime(HttpCase):
             'check_out': datetime(2023, 1, 3, 21, 30)
         })
         self.assertEqual(m_attendance_3.overtime_hours, 0.5)
+        self.assertAlmostEqual(m_attendance_1.worked_hours, 8, 2)
+        self.assertAlmostEqual(m_attendance_1.expected_hours, 8, 2)
+
+        self.assertAlmostEqual(m_attendance_3.worked_hours, 0.5, 2)
+        self.assertAlmostEqual(m_attendance_3.expected_hours, 0, 2)
 
         self.europe_employee.ruleset_id = self.ruleset
         # Create an attendance record for early check-in
