@@ -755,7 +755,7 @@ class AccountMove(models.Model):
                 'itemCode': line.product_id.code or '',
                 'itemName': textwrap.shorten(item_name, width=500, placeholder='...'),
                 'unitName': line.product_uom_id.name or 'Units',
-                'unitPrice': line.price_unit * sign,
+                'unitPrice': line.currency_id.round(line.price_unit * sign),
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
                 'itemTotalAmountWithoutTax': line.currency_id.round(line.price_unit * line.quantity),
