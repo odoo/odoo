@@ -87,7 +87,7 @@ patch(ProductScreen.prototype, {
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some((av) =>
-                Object.values(av).some((a) => typeof a === "number" && a > 0)
+                Object.values(av).some((a) => (typeof a === "number" && a > 0) || a === "unlimited")
             );
             if (!isAvailable || eventSeats === 0) {
                 this.notification.add("All slots are booked out for this event.", {
