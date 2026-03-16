@@ -1419,8 +1419,9 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # select mail.message: 1
         # filter records: 1 / model (access rules done in batch)
         # _get_mail_message_access: 3 on custom implementation, no prefetching
+        # recheck condition: 1
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=5), profile:
+        with self.assertQueryCount(employee=6), profile:
             found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
         self.assertEqual(found, self.messages - self.messages_emp_nope)
 

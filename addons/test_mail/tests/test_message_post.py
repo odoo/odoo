@@ -14,6 +14,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.service.model import call_kw
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tests import tagged
 from odoo.tools import email_normalize, formataddr, mute_logger
 from odoo.tests.common import users
@@ -1622,7 +1623,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     {'partner': self.partner_employee, 'type': 'inbox'},
                     {'partner': self.partner_1, 'type': 'email'}]}
                 ]
-            ), patch.object(MailTestSimple, '_check_access', return_value=None):
+            ), patch.object(MailTestSimple, '_access_domain', return_value=Domain.TRUE):
             new_msg = self.test_record.with_user(self.user_portal).message_post(
                 body=Markup('<p>Test</p>'),
                 message_type='comment',

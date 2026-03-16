@@ -17,6 +17,7 @@ from odoo import api, Command, fields, SUPERUSER_ID
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, LockError
+from odoo.fields import Domain
 from odoo.tests import common, tagged, users
 from odoo.tools import formataddr, mute_logger
 
@@ -75,11 +76,8 @@ class TestMailMail(MailCommon):
 
         def _patched_check_access(self, *args, **kwargs):
             if self.env.su:
-                return None
-            inaccessible = self.filtered(lambda att: att.name in ('file 2', 'file 4'))
-            if inaccessible:
-                return inaccessible, lambda: AccessError(self.env._("No access"))
-            return None
+                return Domain.TRUE
+            return Domain('name', 'not in', ('file 2', 'file 4'))
 
         mail.invalidate_recordset()
 
@@ -88,7 +86,7 @@ class TestMailMail(MailCommon):
             'raw': b'secret',
         })
 
-        with patch.object(self.env.registry['ir.attachment'], '_check_access', _patched_check_access):
+        with patch.object(self.env.registry['ir.attachment'], '_access_domain', _patched_check_access):
             # Sanity check
             self.env.transaction.clear_access_cache()
             self.assertEqual(mail.restricted_attachment_count, 2)

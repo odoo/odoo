@@ -146,19 +146,16 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         # Other company (no access)
         # ------------------------------------------------------------
 
-        _original_car = MailMessage._check_access
-        with patch.object(MailMessage, '_check_access',
-                          autospec=True, side_effect=_original_car) as mock_msg_car:
-            with self.assertRaises(AccessError):
-                test_records_mc_c1.message_post(
-                    body='<p>Hello</p>',
-                    force_record_name='CustomName',  # avoid ACL on display_name
-                    message_type='comment',
-                    reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
-                    subtype_xmlid='mail.mt_comment',
-                )
-            self.assertEqual(mock_msg_car.call_count, 2,
-                             'Check at model level succeeds and check at record level fails')
+        self.assertTrue(self.env['mail.message'].has_access('create'), 'Check at model level succeeds')
+        with self.assertRaises(AccessError):
+            # check at record level fails
+            test_records_mc_c1.message_post(
+                body='<p>Hello</p>',
+                force_record_name='CustomName',  # avoid ACL on display_name
+                message_type='comment',
+                reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
+                subtype_xmlid='mail.mt_comment',
+            )
         with self.assertRaises(AccessError):
             _name = test_records_mc_c1.name
 

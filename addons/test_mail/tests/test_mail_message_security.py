@@ -6,6 +6,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.mail_test_access import MailTestAccess
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tools import mute_logger
 from odoo.tests import HttpCase, tagged
 
@@ -390,7 +391,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             message.with_user(self.user_portal).read(['subject', 'body'])
 
-        with patch.object(MailTestSimple, '_check_access', return_value=None):
+        with patch.object(MailTestSimple, '_access_domain', return_value=Domain.TRUE):
             with self.assertRaises(AccessError):
                 message.with_user(self.user_portal).read(['subject', 'body'])
 

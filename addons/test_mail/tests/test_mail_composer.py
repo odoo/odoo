@@ -8,13 +8,12 @@ from datetime import timedelta
 from itertools import chain, product
 from unittest.mock import patch
 
-from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.wizard.mail_compose_message import MailComposeMessage
 from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.fields import Datetime as FieldDatetime
+from odoo.fields import Command, Datetime as FieldDatetime, Domain
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form, tagged, users
 from odoo.tools import email_normalize, mute_logger, formataddr
@@ -1232,7 +1231,7 @@ class TestComposerInternals(TestMailComposer):
         self.test_record.message_subscribe(partner_ids=portal_user.partner_id.ids)
 
         # patch check access rights for write access, required to post a message by default
-        with patch.object(MailTestTicket, '_check_access', return_value=None):
+        with patch.object(MailTestTicket, '_access_domain', return_value=Domain.TRUE):
             with self.assertRaises(AccessError):
                 # ensure portal can not send messages
                 self.env['mail.compose.message'].with_user(portal_user).with_context(

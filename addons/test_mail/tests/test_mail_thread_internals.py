@@ -8,6 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
+from odoo.fields import Domain
 from odoo.tests import Form, users, warmup, tagged
 from odoo.tools import mute_logger
 
@@ -1161,10 +1162,10 @@ class TestDiscuss(MailCommon, TestRecipients):
         def _employee_crash(recordset, operation):
             """ If employee is test employee, consider they have no access on document """
             if recordset.env.uid == self.user_employee.id and not recordset.env.su:
-                return recordset, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return Domain.FALSE
             return DEFAULT
 
-        with patch.object(MailTestSimple, '_check_access', autospec=True, side_effect=_employee_crash):
+        with patch.object(MailTestSimple, '_access_domain', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
                 self.env['mail.test.simple'].with_user(self.user_employee).browse(self.test_record.ids).read(['name'])
 

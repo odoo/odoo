@@ -14,6 +14,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tests import tagged, Form, HttpCase, users
+from odoo.fields import Domain
 from odoo.tests.common import freeze_time
 from odoo.tools import mute_logger
 
@@ -36,7 +37,7 @@ class TestActivityRights(TestActivityCommon):
         def _employee_no_access(records, operation):
             """Simulates employee having no access to the document"""
             if records.env.uid == self.user_employee.id and not records.env.su:
-                return records, lambda: exceptions.AccessError('Access denied to document')
+                return Domain.FALSE
             return DEFAULT
 
         test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
@@ -52,7 +53,7 @@ class TestActivityRights(TestActivityCommon):
         self.assertEqual(action['res_id'], self.test_record.id)
 
         # If user has no access to the record, should return activity view instead
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_no_access):
+        with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_no_access):
             self.env.transaction.clear_access_cache()
             self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
@@ -66,7 +67,7 @@ class TestActivityRights(TestActivityCommon):
         def _employee_crash(records, operation):
             """ If employee is test employee, consider they have no access on document """
             if records.env.uid == self.user_employee.id and not records.env.su:
-                return records, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return Domain.FALSE
             return DEFAULT
 
         act_emp_for_adm = self.test_record.with_user(self.user_employee).activity_schedule(
@@ -92,7 +93,7 @@ class TestActivityRights(TestActivityCommon):
         ]:
             with self.subTest(user=activity.user_id.name, creator=activity.create_uid.name):
                 # no document access -> based on create_uid / user_id
-                with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+                with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_crash):
                     activity = activity.with_user(self.user_employee)
                     self.assertEqual(activity.can_write, can_write)
                     if can_write:
@@ -153,10 +154,10 @@ class TestActivityRights(TestActivityCommon):
         def _employee_crash(records, operation):
             """ If employee is test employee, consider they have no access on document """
             if records.env.uid == self.user_employee.id and not records.env.su:
-                return records, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return Domain.FALSE
             return DEFAULT
 
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+        with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_crash):
             _activity = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_employee.id)
