@@ -1,5 +1,5 @@
 import { ThemeSelector } from "./theme_selector";
-import { assets, AssetsLoadingError, getBundle, loadBundle } from "@web/core/assets";
+import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
 import {
     Component,
     markup,
@@ -14,8 +14,8 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { localization } from "@web/core/l10n/localization";
-import { browser } from "@web/core/browser/browser";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
 
 const CSSSheetsCache = new Map();
 
@@ -38,14 +38,7 @@ export class ThemeSelectorIframe extends Component {
         };
         this.iframeRef = useRef("iframe");
         onMounted(() => {
-            if (this.iframeRef.el.contentDocument.readyState === "complete") {
-                this.setupIframe();
-            } else {
-                // Browsers like Firefox only make iframe document available after dispatching "load"
-                this.iframeRef.el.addEventListener("load", () => this.setupIframe(), {
-                    once: true,
-                });
-            }
+            this.setupIframe();
         });
         onWillUnmount(() => {
             if (this.themeSelectorRoot) {
@@ -102,31 +95,32 @@ export class ThemeSelectorIframe extends Component {
     }
 
     async setupIframe() {
-        this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
-        this.iframeRef.el.contentDocument.body.style.setProperty(
-            "direction",
-            localization.direction
-        );
-        this.themeSelectorRoot = this.__owl__.app.createRoot(ThemeSelector, {
-            props: this.getThemeSelectorProps(),
-        });
-        await Promise.all([
-            this.loadIframeAssets(),
-            this.themeSelectorRoot.mount(this.iframeRef.el.contentDocument.body),
-        ]);
-        browser.requestAnimationFrame(() => {
-            if (status(this) !== "destroyed") {
-                this.state.show = true;
-            }
-        });
+        let loadingError;
+        try {
+            await loadIframe(this.iframeRef.el, async (iframe) => {
+                iframe.contentDocument.head.appendChild(this.renderHeadContent());
+                iframe.contentDocument.body.style.setProperty("direction", localization.direction);
+                this.themeSelectorRoot = this.__owl__.app.createRoot(ThemeSelector, {
+                    props: this.getThemeSelectorProps(),
+                });
+                return Promise.all([
+                    this.loadIframeAssets(),
+                    this.themeSelectorRoot.mount(this.iframeRef.el.contentDocument.body),
+                ]);
+            });
+        } catch (error) {
+            loadingError = error;
+        }
+        if (!status(this) === "destroyed") {
+            return;
+        } else if (loadingError) {
+            throw loadingError;
+        }
+        this.state.show = true;
     }
 
     loadIframeAssets() {
-        return loadBundle("mass_mailing.assets_iframe_theme_selector", {
-            targetDoc: this.iframeRef.el.contentDocument,
-            css: true,
-            js: false,
-        });
+        return loadIframeBundles(this.iframeRef.el, ["mass_mailing.assets_iframe_theme_selector"]);
     }
 
     /**
