@@ -1,17 +1,17 @@
 import { defineMailModels } from '@mail/../tests/mail_test_helpers';
 import { expect, test } from '@odoo/hoot';
 import { queryAllTexts } from '@odoo/hoot-dom';
+import { saleManagementModels } from '@sale_management/../tests/sale_management_test_helpers';
 import {
     clickSave,
     contains,
     defineModels,
     fields,
-    models,
     mountView,
     onRpc,
 } from '@web/../tests/web_test_helpers';
 
-class SaleOrderTemplateLine extends models.ServerModel {
+class SaleOrderTemplateLine extends saleManagementModels.SaleOrderTemplateLine {
     _name = 'sale.order.template.line';
 
     product_uom_qty = fields.Float({ default: 1.00 });
@@ -80,7 +80,7 @@ class SaleOrderTemplateLine extends models.ServerModel {
     ];
 }
 
-class SaleOrderTemplate extends models.ServerModel {
+class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
     _name = 'sale.order.template';
     _records = [
         {

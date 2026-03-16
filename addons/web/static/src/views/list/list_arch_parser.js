@@ -173,6 +173,7 @@ export class ListArchParser {
                     } else if (childNode.tagName === "create") {
                         controls.push({
                             type: "create",
+                            name: childNode.getAttribute("name"),
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
                             invisible: childNode.getAttribute("invisible"),

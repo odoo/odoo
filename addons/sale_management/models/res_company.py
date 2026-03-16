@@ -10,6 +10,11 @@ class ResCompany(models.Model):
     sale_order_template_id = fields.Many2one(
         string="Default Sale Template",
         comodel_name="sale.order.template",
-        domain="['|', ('company_id', '=', False), ('company_id', '=', id)]",
+        domain="""[
+            ('template_type', '=', 'quotation'),
+            '|',
+            ('company_id', '=', False),
+            ('company_id', '=', id),
+        ]""",
         check_company=True,
     )

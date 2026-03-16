@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="sale_order_template_rule_company" model="ir.rule">
-        <field name="name">Quotation Template multi-company</field>
+        <field name="name">Order Templates multi-company</field>
         <field name="model_id" ref="model_sale_order_template"/>
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="sale_order_template_rule_visibility_salesman" model="ir.rule">
+        <field name="name">Order Templates: Salesmen can only see own and shared templates</field>
+        <field name="model_id" ref="model_sale_order_template"/>
+        <field name="domain_force">[('user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="sale_order_template_rule_visibility_manager" model="ir.rule">
+        <field name="name">Order Templates: Manager can access all the templates</field>
+        <field name="model_id" ref="model_sale_order_template"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
     </record>
 </odoo>

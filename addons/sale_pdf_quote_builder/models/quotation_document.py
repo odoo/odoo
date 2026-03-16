@@ -32,6 +32,7 @@ class QuotationDocument(models.Model):
         relation="header_footer_quotation_template_rel",
         groups="sales_team.group_sale_salesman",
         check_company=True,
+        domain="[('template_type', '=', 'quotation')]",
     )
     form_field_ids = fields.Many2many(
         string="Form Fields Included",
@@ -52,7 +53,7 @@ class QuotationDocument(models.Model):
         domain = super()._access_domain(operation)
         if domain.is_false():
             return domain
-        return self.env['ir.rule']._compute_domain(self._name, operation, include_inherits=False)
+        return self.env["ir.rule"]._compute_domain(self._name, operation, include_inherits=False)
 
     # === CONSTRAINT METHODS ===#
 

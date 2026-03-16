@@ -2,23 +2,29 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 
 
 class SaleOrderTemplate(models.Model):
     _name = "sale.order.template"
-    _description = "Quotation Template"
+    _description = "Order Templates"
     _order = "sequence, id"
 
     active = fields.Boolean(
         default=True,
-        help="If unchecked, it will allow you to hide the quotation template without removing it.",
+        help="If unchecked, it will allow you to hide the Order template without removing it.",
     )
     company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company)
 
-    name = fields.Char(string="Quotation Template", required=True)
+    name = fields.Char(string="Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)
     sequence = fields.Integer(default=10)
+    template_type = fields.Selection(
+        string="Type",
+        selection=[("quotation", "Quotation"), ("section", "Section")],
+        default="quotation",
+        required=True,
+    )
 
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
@@ -69,6 +75,15 @@ class SaleOrderTemplate(models.Model):
         "otherwise the sales journal with the lowest sequence is used.",
     )
 
+    # Access control and visibility fields
+    share_template = fields.Boolean(string="Share", default=True)
+    team_ids = fields.Many2many(string="Sales Team", comodel_name="crm.team")
+    user_has_access = fields.Boolean(
+        string="Can User access",
+        compute="_compute_user_has_access",
+        search="_search_user_has_access",
+    )
+
     # === COMPUTE METHODS ===#
 
     @api.depends("company_id")
@@ -89,6 +104,37 @@ class SaleOrderTemplate(models.Model):
             template.prepayment_percent = (
                 template.company_id or template.env.company
             ).prepayment_percent
+
+    @api.depends_context("uid")
+    @api.depends("team_ids", "share_template", "team_ids.member_ids", "team_ids.user_id")
+    def _compute_user_has_access(self):
+        for template in self:
+            template.user_has_access = (
+                template.share_template
+                and (
+                    not template.team_ids
+                    or self.env.user in template.team_ids.member_ids
+                    or self.env.user in template.team_ids.user_id
+                )
+            ) or template.create_uid == self.env.user
+
+    def _search_user_has_access(self, operator, value):
+        if operator not in {"=", "!="}:
+            return NotImplemented
+
+        if (operator == "=" and value) or (operator == "!=" and not value):
+            x2many_operator = "in"
+        else:
+            x2many_operator = "not in"
+
+        return (
+            Domain("share_template", operator, value)
+            & (
+                Domain("team_ids", operator, not value)
+                | Domain("team_ids.member_ids", x2many_operator, self.env.user.ids)
+                | Domain("team_ids.user_id", x2many_operator, self.env.user.ids)
+            )
+        ) | Domain("create_uid", x2many_operator, self.env.user.ids)
 
     # === ONCHANGE METHODS ===#
 
@@ -203,7 +249,9 @@ class SaleOrderTemplate(models.Model):
                 "product_uom_qty": 0,
             }),
             Command.create({
-                "product_id": self.env.ref("product.product_template_dining_table").product_variant_id.id
+                "product_id": self.env.ref(
+                    "product.product_template_dining_table"
+                ).product_variant_id.id
             }),
             Command.create({"product_id": self.env.ref("product.monitor_stand").id}),
             Command.create({
@@ -245,3 +293,57 @@ class SaleOrderTemplate(models.Model):
                 "product_uom_qty": 0,
             }),
         ]
+
+    # === PUBLIC ===#
+
+    @api.model
+    def get_section_templates(self, company_id):
+        """Return section templates created by the current user for the given company and its
+        accessible branches.
+
+        :param int company_id: ID of the company to fetch templates for
+        :return: Section templates
+        :rtype: list[dict]
+        """
+        company = self.env["res.company"].browse(company_id)
+        domain = (
+            Domain("template_type", "=", "section")
+            & Domain("user_has_access", "=", True)
+            & self._check_company_domain(company)
+        )
+        return self.search_read(domain, fields=["id", "name", "create_uid"], load="")
+
+    def prepare_section_template_order_lines(self, order_changes, fields_spec):
+        """Prepare `sale.order.line` value dicts from a section template.
+
+        Builds order line values from the given section template, applies
+        `sale.order.line` onchange with provided order-level changes, and
+        returns the resulting values ready for insertion.
+
+        :param dict order_changes: Order values to consider for onchange
+        :param dict fields_spec: Fields specification for onchange
+        :return: Prepared sale order line values
+        :rtype: list[dict]
+        """
+        self.ensure_one()
+        result = []
+
+        for line in self.sale_order_template_line_ids:
+            onchange_values = {**line._prepare_order_line_values(), **order_changes}
+            onchange_result = self.env["sale.order.line"].onchange(onchange_values, [], fields_spec)
+            result.append(onchange_result.get("value", {}))
+
+        return result
+
+    def unlink_section_template(self):
+        """Unlink the template with sudo if it is a section template.
+
+        :return: Whether the template was unlinked
+        :rtype: bool
+        """
+        self.ensure_one()
+        if self.template_type == "section":
+            # .sudo because we allow salesman to delete their own templates
+            return self.sudo().unlink()
+
+        return False

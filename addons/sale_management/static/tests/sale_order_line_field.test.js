@@ -1,6 +1,6 @@
-import { defineMailModels } from '@mail/../tests/mail_test_helpers';
 import { expect, test } from '@odoo/hoot';
 import { queryAllTexts } from '@odoo/hoot-dom';
+import { saleManagementModels } from "@sale_management/../tests/sale_management_test_helpers";
 import {
     clickSave,
     contains,
@@ -9,9 +9,8 @@ import {
     mountView,
     onRpc,
 } from '@web/../tests/web_test_helpers';
-import { saleModels } from '@sale/../tests/sale_test_helpers';
 
-class SaleOrderLine extends saleModels.SaleOrderLine {
+class SaleOrderLine extends saleManagementModels.SaleOrderLine {
     // for skipping tax setup required for prices computation to run correctly
     price_unit = fields.Float({ default: 3.00 });
     price_total = fields.Float({ default: 3.00 });
@@ -101,17 +100,19 @@ class SaleOrderLine extends saleModels.SaleOrderLine {
     ];
 }
 
-class SaleOrder extends saleModels.SaleOrder {
+class SaleOrder extends saleManagementModels.SaleOrder {
     _records = [
         {
             id: 1,
             name: "Optional Sections Sale order",
             order_line: SaleOrderLine._records.map(record => record.id),
+            company_id: 1,
         },
     ];
     _views = {
         form: `
             <form>
+                <field name="company_id" invisible="1"/>
                 <field
                     name="order_line"
                     widget="sol_o2m"
@@ -140,8 +141,7 @@ class SaleOrder extends saleModels.SaleOrder {
     };
 }
 
-defineModels({ SaleOrderLine, SaleOrder });
-defineMailModels();
+defineModels({ ...saleManagementModels, SaleOrderLine, SaleOrder });
 
 const EXPECTED_LINE_RECORDS = [
     "r1",
@@ -408,4 +408,24 @@ test("Drag and drop optional subsection under hidden section resets its optional
 
     await clickSave();
     expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Selecting a section template should append its section and lines to the order", async () => {
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+    });
+
+    await contains("button:contains(Add a Section)").click();
+    expect(".o_section_templates_dropdown").toBeVisible();
+
+    await contains("span.o-dropdown-item:contains(Section Template 1)").click();
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual([
+        ...EXPECTED_LINE_RECORDS,
+        "Section Template 1",
+        "line1",
+        "line2",
+    ]);
 });

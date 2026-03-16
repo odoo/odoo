@@ -12,6 +12,86 @@
                 <span t-else="">Set Optional</span>
             </DropdownItem>
         </t>
+        <t t-name="add_note_button" position="after">
+            <DropdownItem
+                onSelected="() => this.env.onSaveSectionTemplate(record)"
+                attrs="{
+                    'class': !this.env.canBeSavedAsTemplate(record) ? 'text-muted' : '',
+                    'title': this.env.getSaveAsTemplateButtonTooltip(record),
+                }"
+            >
+                <i class="me-1 fa fa-fw fa-save"/>
+                <span>Save as Template</span>
+            </DropdownItem>
+        </t>
+    </t>
+
+    <t t-name="sale_management.ListRenderer.Rows" t-inherit="web.ListRenderer.Rows">
+        <xpath expr="//td[hasclass('o_field_x2many_list_row_add')]//button" position="attributes">
+            <attribute
+                name="t-if"
+                separator="and"
+                add="(control.name !== 'add_section_control' or !this.env.state.sectionTemplates.length)"
+            />
+        </xpath>
+        <xpath expr="//td[hasclass('o_field_x2many_list_row_add')]//button" position="after">
+            <Dropdown
+                t-if="(
+                    control.type === 'create'
+                    and !this.evalColumnInvisible(control.invisible)
+                    and control.name === 'add_section_control'
+                    and this.env.state.sectionTemplates.length
+                )"
+                menuClass="'o_section_templates_dropdown'"
+                position="'bottom-end'"
+            >
+                <button
+                    name="section_create_control_button"
+                    t-attf-class="btn btn-link ml16"
+                    t-att-tabindex="this.props.list.editedRecord ? '-1' : '0'"
+                    t-att-data-hotkey="control.hotkey || false"
+                >
+                    Add a section
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem
+                        class="'text-action'"
+                        onSelected="() => this.add({ context: control.context })"
+                    >
+                        New Section
+                    </DropdownItem>
+
+                    <t
+                        t-foreach="this.env.state.sectionTemplates"
+                        t-as="sectionTemplate"
+                        t-key="sectionTemplate.id"
+                    >
+                        <DropdownItem
+                            onSelected="() => this.env.onAddSectionTemplate(sectionTemplate.id)"
+                        >
+                            <div class="d-flex align-items-center gap-4">
+                                <span
+                                    class="flex-grow-1 text-truncate"
+                                    t-att-title="sectionTemplate.name"
+                                    t-out="sectionTemplate.name"
+                                />
+
+                                <a
+                                    t-if="sectionTemplate.create_uid === this.user.userId"
+                                    href="#"
+                                    role="button"
+                                    class="text-muted p-0"
+                                    title="Delete"
+                                    t-on-click.stop.prevent="() => this.env.onDeleteSectionTemplate(sectionTemplate.id)"
+                                >
+                                    <i class="fa fa-trash"/>
+                                </a>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </xpath>
     </t>
 
 </templates>

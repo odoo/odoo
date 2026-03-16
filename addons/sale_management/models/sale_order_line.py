@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Command, Domain
 
 
 class SaleOrderLine(models.Model):
@@ -40,6 +41,63 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return True
 
+    # === PUBLIC === #
+
+    def save_section_template(self):
+        """Create a `sale.order.template` from a section and its related lines.
+
+        Given a section line of a sale order, this method collects the section
+        itself and all its related lines, and stores them as an inactive
+        ``sale.order.template`` with template_type ``section``. If a template with
+        the same name and user already exists, its lines are replaced;
+        otherwise, a new template is created.
+
+        :return: created/updated section template values
+        """
+        self.ensure_one()
+        section_lines = self.order_id.order_line.filtered(
+            lambda line: (
+                line.product_type != "combo"
+                and not line.combo_item_id
+                and self._is_line_in_section(line)
+            )
+        )
+
+        domain = (
+            Domain("name", "=", self.name)
+            & Domain("company_id", "=", self.order_id.company_id.id)
+            & Domain("template_type", "=", "section")
+            & Domain("create_uid", "=", self.env.user.id)
+        )
+
+        existing_template = self.env["sale.order.template"].search(domain, limit=1)
+
+        template_lines = [
+            Command.create(section_line._prepare_template_line_values())
+            for section_line in self + section_lines
+        ]
+
+        if existing_template:
+            template_lines_data = [Command.clear(), *template_lines]
+            # .sudo because we allow salesman to update their own templates
+            existing_template.sudo().sale_order_template_line_ids = template_lines_data
+            return existing_template.read(["id", "name", "create_uid"], load="")[0]
+
+        # .sudo because we allow salesman to and maintaincreate their own templates
+        new_template = (
+            self
+            .env["sale.order.template"]
+            .sudo()
+            .create({
+                "name": self.name,
+                "template_type": "section",
+                "sale_order_template_line_ids": template_lines,
+                "company_id": self.order_id.company_id.id,
+                "share_template": False,
+            })
+        )
+        return new_template.read(["id", "name", "create_uid"], load="")[0]
+
     # === TOOLING ===#
 
     def _is_line_optional(self):
@@ -56,3 +114,21 @@ class SaleOrderLine(models.Model):
 
     def _can_be_edited_on_portal(self):
         return super()._can_be_edited_on_portal() and self._is_line_optional()
+
+    def _prepare_template_line_values(self):
+        """Prepare create values for a sale order template line from a sale order line.
+
+        :return: `sale.order.template.line` create values
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            "name": self.name,
+            "product_uom_qty": self.product_uom_qty,
+            "product_uom_id": self.product_uom_id.id,
+            "display_type": self.display_type,
+            "is_optional": self.is_optional,
+            "product_id": self.product_id.id,
+            "collapse_composition": self.collapse_composition,
+            "collapse_prices": self.collapse_prices,
+        }

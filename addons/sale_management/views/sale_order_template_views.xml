@@ -7,8 +7,20 @@
             <search string="Search Quotation Template">
                 <field name="name"/>
                 <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+                <separator/>
+                <filter
+                    string="Quotation Templates"
+                    name="template_type_quotation"
+                    domain="[('template_type', '=', 'quotation')]"
+                />
+                <filter
+                    string="Section Templates"
+                    name="template_type_section"
+                    domain="[('template_type', '=', 'section')]"
+                />
                 <group>
                     <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Type" name="template_type" context="{'group_by': 'template_type'}"/>
                 </group>
             </search>
         </field>
@@ -18,8 +30,9 @@
         <field name="name">sale.order.template.form</field>
         <field name="model">sale.order.template</field>
         <field name="arch" type="xml">
-            <form string="Quotation Template">
+            <form string="Templates">
                 <sheet>
+                    <field name="active" invisible="1"/>
                     <div name="button_box" class="oe_button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title" name="sale_order_template_title">
@@ -28,23 +41,21 @@
                             <field name="name" placeholder="e.g. Standard Consultancy Package" class="d-block"/>
                         </h1>
                     </div>
-                    <group>
-                        <group name="sale_info">
-                            <field name="active" invisible="1"/>
-                            <label for="number_of_days" string="Quotation Validity"/>
-                            <div id="number_of_days">
-                                <field name="number_of_days" style="width: 3rem;"/>
-                                <div class="d-inline-block">days</div>
-                            </div>
-                            <field name="mail_template_id" context="{'default_model': 'sale.order'}"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
-                            <field name="journal_id"/>
-                        </group>
-                        <group name="so_confirmation">
-                            <field name="require_signature"/>
-                            <field name="require_payment" widget="boolean_toggle"/>
-                            <field name="prepayment_percent" invisible="not require_payment" widget="percentage"/>
-                        </group>
+                    <group name="sale_info" class="w-50">
+                        <field name="template_type"/>
+                        <field name="share_template"/>
+                        <field
+                            name="team_ids"
+                            invisible="not share_template"
+                            widget="many2many_tags"
+                            placeholder="Visible to all"
+                        />
+                        <field
+                            name="company_id"
+                            options="{'no_create': True}"
+                            groups="base.group_multi_company"
+                            placeholder="Visible to all"
+                        />
                     </group>
                     <notebook name="main_book">
                         <page string="Lines" name="order_lines">
@@ -106,11 +117,55 @@
                             </list>
                         </field>
                     </page>
-                        <page string="Terms &amp; Conditions" name="terms_and_conditions">
+                        <page
+                            string="Terms &amp; Conditions"
+                            name="terms_and_conditions"
+                            invisible="template_type == 'section'"
+                        >
                             <field
                                 name="note"
                                 nolabel="1"
                                 placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                        </page>
+                        <page
+                            string="Settings"
+                            name="settings"
+                            invisible="template_type == 'section'"
+                        >
+                            <group name="settings">
+                                <group string="Confirmation" name="confirmation">
+                                    <label for="number_of_days" string="Quotation Validity"/>
+                                    <div class="w-25" id="number_of_days">
+                                        <field name="number_of_days" style="width: 3rem;"/>
+                                        <div class="d-inline-block">days</div>
+                                    </div>
+                                    <field name="require_signature" widget="boolean_toggle"/>
+                                    <label for="require_payment"/>
+                                    <div>
+                                        <field
+                                            name="require_payment"
+                                            class="oe_inline"
+                                            widget="boolean_toggle"
+                                        />
+                                        <span invisible="not require_payment">
+                                            of
+                                            <field
+                                                name="prepayment_percent"
+                                                class="mx-2 w-25"
+                                                widget="percentage"
+                                            />
+                                        </span>
+                                    </div>
+                                    <field
+                                        name="mail_template_id"
+                                        class="w-50"
+                                        context="{'default_model': 'sale.order'}"
+                                    />
+                                </group>
+                                <group string="Invoicing" name="invoicing">
+                                    <field name="journal_id"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -125,15 +180,17 @@
             <list string="Quotation Template">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="template_type" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
         </field>
     </record>
 
     <record id="sale_order_template_action" model="ir.actions.act_window">
-        <field name="name">Quotation Templates</field>
+        <field name="name">Templates</field>
         <field name="res_model">sale.order.template</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_template_type_quotation': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your quotation template

@@ -47,9 +47,11 @@
                                     <span t-else="">Hide Composition</span>
                                 </DropdownItem>
                             </t>
-                            <DropdownItem onSelected="() => this.addNoteInSection(record)">
-                                <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
-                            </DropdownItem>
+                            <t t-name="add_note_button">
+                                <DropdownItem onSelected="() => this.addNoteInSection(record)">
+                                    <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
+                                </DropdownItem>
+                            </t>
                             <DropdownItem t-if="this.hasPreviousSection(record)" onSelected="() => this.moveSectionUp(record)">
                                 <i class="me-1 fa fa-fw fa-arrow-up"/><span>Move Up</span>
                             </DropdownItem>

@@ -13,7 +13,12 @@ class ResConfigSettings(models.TransientModel):
         string="Default Template",
         related="company_id.sale_order_template_id",
         readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="""[
+            ('template_type', '=', 'quotation'),
+            '|',
+            ('company_id', '=', False),
+            ('company_id', '=', company_id),
+        ]""",
     )
 
     def set_values(self):
