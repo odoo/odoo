@@ -109,6 +109,10 @@ class ResGroups(models.Model):
             self.env.registry.clear_cache('groups')
             raise
 
+    @api.constrains('view_access')
+    def _check_inherited_view_groups(self):
+        self.view_access._check_groups()
+
     @api.constrains('user_ids')
     def _check_user_disjoint_groups(self):
         # Here we should check all the users in any group of 'self':
