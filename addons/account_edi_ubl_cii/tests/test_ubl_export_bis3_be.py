@@ -12,6 +12,11 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
+        return subfolder_format, 'invoice', subfolder_country
+
     def test_invoice_item_description_name(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(
