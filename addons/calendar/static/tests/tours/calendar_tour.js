@@ -11,7 +11,6 @@ const todayDate = function () {
 };
 
 registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -33,6 +32,9 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             trigger: "div[name='start'] button",
             content: "Open the date picker",
             run: "click",
+        },
+        {
+            trigger: ".o_datetime_picker",
         },
         {
             trigger: "#start_0",
