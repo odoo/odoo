@@ -2368,9 +2368,10 @@ class TestStockValuation(TestStockValuationCommon):
         report_for_company_1 = report.with_company(company_1).with_context(warehouse_id=warehouse_1.id)
         report_for_company_2 = report.with_company(company_2).with_context(warehouse_id=warehouse_2.id)
         report_value_1 = report_for_company_1.get_report_values(docids=product.ids)
+        self.env["stock.quant"].invalidate_model(["value"])
         report_value_2 = report_for_company_2.get_report_values(docids=product.ids)
-        self.assertEqual(report_value_1['docs']['value'], "U 50.00")
-        self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
+        self.assertEqual(report_value_1['docs']['values_per_warehouse'][warehouse_1.id], "U 50.00")
+        self.assertEqual(report_value_2['docs']['values_per_warehouse'][warehouse_2.id], "48.00 DD")
 
     @freeze_time("2024-01-10 10:00:00")
     def test_product_qty_and_value_correct_at_to_date_with_timezone(self):

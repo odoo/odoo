@@ -6,7 +6,7 @@ export class ForecastedButtons extends Component {
     static template = "stock.ForecastedButtons";
 
     props = useProps({
-        action: t.object(),
+        context: t.object(),
         resModel: t.string().optional(),
         reloadReport: t.function(),
     });
@@ -14,7 +14,7 @@ export class ForecastedButtons extends Component {
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
-        this.context = this.props.action.context;
+        this.context = this.props.context;
         this.productId = this.context.active_id;
         this.resModel = this.props.resModel || this.context.active_model || this.context.params?.active_model || 'product.template';
     }

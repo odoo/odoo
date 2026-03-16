@@ -135,6 +135,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
                 'uom_id': self.product.uom_id.id,
             })]
         })
+        po_warehouse_id = po.picking_type_id.warehouse_id.id
         # This PO belongs to a different company, it should not be shown
         different_company_po = self.env['purchase.order'].create({
             'company_id': self.env['res.company'].create({'name': 'Different Company'}).id,
@@ -157,8 +158,8 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         # No exception was raised, but user is not allowed to edit pickings
         self.assertEqual(report_values['docs']['user_can_edit_pickings'], False)
         # The data in the report includes only the first PO
-        self.assertEqual(report_values['docs']['product'][self.product.id]['draft_purchase_qty']['in'], 1)
-        self.assertEqual(report_values['docs']['product'][self.product.id]['draft_purchase_orders'], [{'id': po.id, 'name': po.name}])
+        self.assertEqual(report_values['docs']['product'][f'{self.product.id}_{po_warehouse_id}']['draft_purchase_qty']['in'], 1)
+        self.assertEqual(report_values['docs']['product'][f'{self.product.id}_{po_warehouse_id}']['draft_purchase_orders'], [{'id': po.id, 'name': po.name}])
         # A sales user cannot access the PO directly, despite viewing it's info in the report
         with self.assertRaises(AccessError, msg='Sales user is not allowed to access a PO'):
             po.with_user(self.user_salesperson).button_confirm()
