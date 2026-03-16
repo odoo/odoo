@@ -152,7 +152,11 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_qty_and_
             trigger: '.js_product input[name=add_qty]',
             run: "edit 3",
         },
-        ...tourUtils.addToCartFromProductPage(),
+        {
+            content: "Add to cart",
+            trigger: '.js_product button[name="add_to_cart"]',
+            run: "click",
+        },
         {
             content: "check that only newly added qty showing in the notification",
             trigger: '.toast-body span:contains("3")',
