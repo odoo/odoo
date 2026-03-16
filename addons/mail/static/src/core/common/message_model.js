@@ -438,7 +438,7 @@ export class Message extends Record {
         if (this.author) {
             return this.getPersonaName(this.author);
         }
-        return this.email_from;
+        return this.email_from || _t("Unnamed");
     }
 
     get notificationHidden() {
