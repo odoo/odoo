@@ -26,28 +26,21 @@
                             </t>
                         </h3>
                     </div>
-                    
+
                     <div class="o_att_today_wrap px-3">
                         <table class="table mb-0">
                             <tbody>
                                 <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
                                     <td>
-                                        <t t-set="start" t-value="this.splitTime(attendance.start)"/>
-                                        <t t-out="start.h"/>:<span class="text-muted"><t t-out="start.m"/></span>
+                                        <t t-out="attendance.start"/>
                                     </td>
                                     <td class="px-0">–</td>
                                     <td>
-                                        <t t-if="attendance.end">
-                                            <t t-set="end" t-value="this.splitTime(attendance.end)"/>
-                                            <t t-out="end.h"/>:<span class="text-muted"><t t-out="end.m"/></span>
-                                        </t>
-                                        <t t-else="">
-                                            Now
-                                        </t>
+                                        <t t-if="attendance.end" t-out="attendance.end"/>
+                                        <t t-else="">Now</t>
                                     </td>
                                     <td class="ps-4 text-end">
-                                        <t t-set="duration" t-value="this.splitTime(attendance.duration)"/>
-                                        <t t-out="duration.h"/>h<span class="text-muted"><t t-out="duration.m"/></span>
+                                        <t t-out="attendance.duration"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -55,8 +48,7 @@
                                         Today
                                     </td>
                                     <td class="border-bottom-0 ps-4 text-end">
-                                        <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
-                                        <t t-out="total.h"/>h<span class="text-muted"><t t-out="total.m"/></span>
+                                        <t t-out="hoursToday"/>
                                     </td>
                                 </tr>
                             </tbody>
