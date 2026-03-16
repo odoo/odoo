@@ -262,14 +262,22 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(len(groups), 0, "The group should have auto-deleted")
 
     def test_09_alternative_po_line_price_unit(self):
-        """Checks PO line's `price_unit` is keep even if a line from an
-        alternative is chosen and thus the PO line's quantity was set to 0. """
+        """Checks PO line's `price_unit` is kept even if a line from an
+        alternative is chosen. """
+        self.product_09.seller_ids = [
+            Command.create({
+                'partner_id': self.res_partner_1.id,
+                'price': 100,
+                'min_qty': 1,
+            })
+        ]
+
         # Creates a first Purchase Order.
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.res_partner_1
         with po_form.order_line.new() as line:
             line.product_id = self.product_09
-            line.product_qty = 1
+            line.product_qty = 2
             line.price_unit = 16
         po_1 = po_form.save()
 
@@ -287,11 +295,33 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         po_2.order_line.action_choose()
 
         self.assertEqual(
-            po_1.order_line.product_uom_qty, 0,
-            "Line's quantity from the original PO should be reset to 0")
+            po_1.order_line.product_uom_qty, 2,
+            "The original PO line quantity should remain 2")
         self.assertEqual(
             po_1.order_line.price_unit, 16,
             "Line's unit price from the original PO shouldn't be changed")
+        self.assertEqual(
+            po_1.state, 'cancel',
+            "The original PO should be cancelled"
+        )
+
+        po_1.order_line.action_choose()
+        self.assertEqual(
+            po_1.state, 'draft',
+            "The original PO should be reset to draft"
+        )
+        self.assertEqual(
+            po_2.state, 'cancel',
+            "The second PO should be cancelled"
+        )
+        self.assertEqual(
+            po_2.order_line.product_uom_qty, 2,
+            "Line's quantity from the second PO should remain 2"
+        )
+        self.assertEqual(
+            po_2.order_line.price_unit, 12,
+            "Line's unit price from the second PO shouldn't be changed"
+        )
 
     def test_10_alternative_po_line_price_unit_different_uom(self):
         """ Check that the uom is copied in the alternative PO, and the "unit_price"

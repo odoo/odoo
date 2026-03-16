@@ -315,10 +315,12 @@ class PurchaseOrderLine(models.Model):
         return False
 
     def action_choose(self):
+        if self.order_id.state == 'cancel':
+            self.order_id.button_draft()
         order_lines = (self.order_id | self.order_id.alternative_po_ids).mapped('order_line')
         order_lines = order_lines.filtered(lambda l: l.product_qty and l.product_id.id in self.product_id.ids and l.id not in self.ids)
         if order_lines:
-            return order_lines.action_clear_quantities()
+            return order_lines.order_id.button_cancel()
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
