@@ -169,6 +169,12 @@ class AccountEdiUBL(models.AbstractModel):
         tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
         if not tax_grouping_key or tax_grouping_key['is_withholding']:
             return
+
+        # We do not want to group the positive and negative lines together;
+        # the following changes the grouping key to be like in 18.0 to 18.3.
+        if tax_grouping_key['tax_category_code'] == 'E' and tax_data and tax_data['tax']:
+            tax_grouping_key['tax_exemption_reason'] = None
+
         return tax_grouping_key
 
     def _ubl_default_payable_amount_tax_withholding_grouping_key(self, base_line, tax_data, vals, currency):
