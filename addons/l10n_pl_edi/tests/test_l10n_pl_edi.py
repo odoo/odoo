@@ -601,6 +601,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                     return {'xml_content': file.read()}
             return {'error': {'retry_after': 120, 'message': 'Too Many Requests'}}
 
+        start = fields.Datetime.now()
         with (
             patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
             patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
@@ -616,5 +617,5 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertFalse(bill_2)
 
         self.assertEqual(len(capt.records), cron_runs_before + 1)
-        self.assertGreaterEqual(capt.records[-1].call_at, fields.Datetime.now() + timedelta(seconds=120))
-        self.assertLessEqual(capt.records[-1].call_at, fields.Datetime.now() + timedelta(seconds=240))
+        self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
+        self.assertLessEqual(capt.records[-1].call_at, start + timedelta(seconds=240))
