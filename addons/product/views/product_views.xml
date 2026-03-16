@@ -124,31 +124,26 @@
                                             options="{'no_quick_create': True}"
                                         />
                                     </div>
-                                    <div colspan="2" class="o_row" name="standard_price_uom" invisible="type == 'combo'
+                                    <div colspan="2" class="d-flex align-items-baseline gap-2" name="standard_price_uom" invisible="type == 'combo'
                                         or (not is_product_variant and (
                                             product_variant_count &gt; 1
                                             or (product_variant_count == 0 and is_dynamically_created)
                                         ))"
                                     >
-                                        <div class="o_cell d-flex">
-                                            <label for="standard_price" class="o_form_label"/>
-                                            <field
-                                                name="standard_price"
-                                                widget="monetary"
-                                                options="{
-                                                    'currency_field': 'cost_currency_id',
-                                                    'field_digits': True,
-                                                }"
-                                            />
-                                        </div>
-                                        <div class="o_cell  d-flex" groups="uom.group_uom">
-                                            <label for="uom_id" string="Per" class="o_form_label"/>
-                                            <field
-                                                name="uom_id" widget="many2one_uom"
-                                                options="{'no_quick_create': True}"
-                                                nolabel="1"
-                                            />
-                                        </div>
+                                        <label for="standard_price" class="o_form_label"/>
+                                        <field
+                                            name="standard_price"
+                                            widget="monetary"
+                                            options="{
+                                                'currency_field': 'cost_currency_id',
+                                                'field_digits': True,
+                                            }"
+                                        />
+                                        <span groups="uom.group_uom">per</span>
+                                        <field
+                                            groups="uom.group_uom" name="uom_id" widget="many2one_uom"
+                                            options="{'no_quick_create': True}"
+                                        />
                                     </div>
                                     <field name="categ_id" string="Category"/>
                                     <field name="company_id"
