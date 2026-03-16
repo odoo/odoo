@@ -70,6 +70,26 @@ function removeColumn(cell) {
     };
 }
 
+function clearRowContent(row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.clearRowContent(row);
+    };
+}
+
+function clearColumnContent(cell) {
+    return (editor) => {
+        if (!cell) {
+            const selection = editor.shared.selection.getEditableSelection();
+            cell = findInSelection(selection, "td");
+        }
+        editor.shared.table.clearColumnContent(cell);
+    };
+}
+
 describe("row", () => {
     describe("convert", () => {
         test("should convert the first row to table header", async () => {
@@ -426,6 +446,236 @@ describe("row", () => {
                 contentAfter: "<p>[]<br></p>",
             });
         });
+        test("should remove rows where all cells are selected", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">gh</td>
+                                <td class="o_selected_td">ij</td>
+                                <td class="o_selected_td">kl</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">mn</td>
+                                <td class="o_selected_td">op</td>
+                                <td class="o_selected_td">qr</td>
+                            </tr>
+                            <tr>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeRow(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab[]</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove rows with partial cell selection", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">gh</td>
+                                <td class="o_selected_td">ij</td>
+                                <td>kl</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">mn</td>
+                                <td class="o_selected_td">op</td>
+                                <td>qr</td>
+                            </tr>
+                            <tr>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeRow(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab[]</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("clear content", () => {
+        test("should clear content of a single row based on selection", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: clearRowContent(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should clear content of all fully selected rows", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">[]gh</td>
+                                <td class="o_selected_td">ij</td>
+                                <td class="o_selected_td">kl</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">mn</td>
+                                <td class="o_selected_td">op</td>
+                                <td class="o_selected_td">qr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: clearRowContent(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td">[]<p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should clear partially selected cells across rows", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                                <td class="o_selected_td">[]ij</td>
+                                <td class="o_selected_td">kl</td>
+                            </tr>
+                            <tr>
+                                <td>mn</td>
+                                <td class="o_selected_td">op</td>
+                                <td class="o_selected_td">qr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: clearRowContent(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                                <td class="o_selected_td">[]<p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td>mn</td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
     });
 });
 
@@ -723,6 +973,248 @@ describe("column", () => {
                 ),
                 stepFunction: removeColumn(),
                 contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove columns where all cells are selected", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td class="o_selected_td">cd</td>
+                                <td class="o_selected_td">ef</td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td class="o_selected_td">kl</td>
+                                <td class="o_selected_td">mn</td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td class="o_selected_td">st</td>
+                                <td class="o_selected_td">uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeColumn(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab[]</td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove columns with partial cell selection", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td class="o_selected_td">[]cd</td>
+                                <td class="o_selected_td">ef</td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td class="o_selected_td">kl</td>
+                                <td class="o_selected_td">mn</td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeColumn(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab[]</td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("clear content", () => {
+        test("should clear content of a single column based on selection", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: clearColumnContent(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<p><br></p></td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should clear content of all fully selected columns", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td class="o_selected_td">[]cd</td>
+                                <td class="o_selected_td">ef</td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td class="o_selected_td">kl</td>
+                                <td class="o_selected_td">mn</td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td class="o_selected_td">st</td>
+                                <td class="o_selected_td">uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: clearColumnContent(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td class="o_selected_td">[]<p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should clear content of partially selected cells across columns", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td class="o_selected_td">[]cd</td>
+                                <td class="o_selected_td">ef</td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td class="o_selected_td">kl</td>
+                                <td class="o_selected_td">mn</td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: clearColumnContent(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td class="o_selected_td">[]<p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td>gh</td>
+                            </tr>
+                            <tr>
+                                <td>ij</td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td class="o_selected_td"><p><br></p></td>
+                                <td>op</td>
+                            </tr>
+                            <tr>
+                                <td>qr</td>
+                                <td>st</td>
+                                <td>uv</td>
+                                <td>wx</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
             });
         });
     });

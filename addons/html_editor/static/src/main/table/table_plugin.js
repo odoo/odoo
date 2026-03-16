@@ -379,13 +379,22 @@ export class TablePlugin extends Plugin {
      */
     removeColumn(cell) {
         const table = closestElement(cell, "table");
-        const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
-        const index = cells.findIndex((td) => td === cell);
-        const siblingCell = cells[index - 1] || cells[index + 1];
-        table
-            .querySelectorAll(`tr :is(td, th):nth-of-type(${index + 1})`)
-            .forEach((td) => td.remove());
-        // not sure we should move the cursor?
+        const selectedTds = table.querySelectorAll(".o_selected_td");
+        let startColumnIndex, endColumnIndex;
+        if (selectedTds.length) {
+            startColumnIndex = getColumnIndex(selectedTds[0]);
+            endColumnIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
+        } else {
+            startColumnIndex = endColumnIndex = getColumnIndex(cell);
+        }
+        const siblingCell =
+            cell.parentElement.children[startColumnIndex - 1] ||
+            cell.parentElement.children[endColumnIndex + 1];
+        for (const row of table.rows) {
+            for (let columnIndex = endColumnIndex; columnIndex >= startColumnIndex; columnIndex--) {
+                row.cells[columnIndex].remove();
+            }
+        }
         siblingCell
             ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingCell))
             : this.deleteTable(table);
@@ -395,8 +404,18 @@ export class TablePlugin extends Plugin {
      */
     removeRow(row) {
         const table = closestElement(row, "table");
-        const siblingRow = row.previousElementSibling || row.nextElementSibling;
-        row.remove();
+        const selectedTds = table.querySelectorAll(".o_selected_td");
+        let startRowIndex, endRowIndex;
+        if (selectedTds.length) {
+            startRowIndex = getRowIndex(selectedTds[0]);
+            endRowIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
+        } else {
+            startRowIndex = endRowIndex = getRowIndex(row);
+        }
+        const siblingRow = table.rows[startRowIndex - 1] || table.rows[endRowIndex + 1];
+        for (let rowIndex = endRowIndex; rowIndex >= startRowIndex; rowIndex--) {
+            table.rows[rowIndex].remove();
+        }
         siblingRow
             ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingRow.cells[0]))
             : this.deleteTable(table);
@@ -605,23 +624,29 @@ export class TablePlugin extends Plugin {
      */
     clearColumnContent(cell) {
         const table = closestElement(cell, "table");
-        const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
-        const index = cells.findIndex((td) => td === cell);
-        table.querySelectorAll(`tr :is(td, th):nth-of-type(${index + 1})`).forEach((td) => {
+        const selectedTds = table.querySelectorAll(".o_selected_td");
+        const index = getColumnIndex(cell);
+        const tds = selectedTds.length
+            ? selectedTds
+            : [...table.rows].map((row) => row.cells[index]);
+        for (const td of tds) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             fillEmpty(baseContainer);
             td.replaceChildren(baseContainer);
-        });
+        }
     }
     /**
      * @param {HTMLTableRowElement} row
      */
     clearRowContent(row) {
-        row.querySelectorAll("td, th").forEach((td) => {
+        const table = closestElement(row, "table");
+        const selectedTds = table.querySelectorAll(".o_selected_td");
+        const tds = selectedTds.length ? selectedTds : row.cells;
+        for (const td of tds) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             fillEmpty(baseContainer);
             td.replaceChildren(baseContainer);
-        });
+        }
     }
     deleteTable(table) {
         table =
@@ -669,16 +694,12 @@ export class TablePlugin extends Plugin {
             firstCellColumnIndex === 0 && lastCellColumnIndex === firstRowCells.length - 1;
 
         if (areFullColumnsSelected) {
-            for (let index = firstCellColumnIndex; index <= lastCellColumnIndex; index++) {
-                this.removeColumn(firstRowCells[index]);
-            }
+            this.removeColumn(firstRowCells[firstCellColumnIndex]);
             return;
         }
 
         if (areFullRowsSelected) {
-            for (let index = firstCellRowIndex; index <= lastCellRowIndex; index++) {
-                this.removeRow(rows[index]);
-            }
+            this.removeRow(rows[firstCellRowIndex]);
             return;
         }
 
