@@ -149,13 +149,13 @@ class MailMessage(models.Model):
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                         "avatar_128_access_token": message.author_id._get_avatar_128_access_token(),
-                    },
+                    } if message.author_id else False,
                     "thread": {
                        "has_mail_thread": isinstance(self.env[values["model"]], self.pool["mail.thread"]),
                        "id": values["res_id"],
                        "model": values["model"],
                    },
-                }
+                },
             )
         return vals_list
 
