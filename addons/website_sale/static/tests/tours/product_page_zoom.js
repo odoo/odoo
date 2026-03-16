@@ -60,3 +60,22 @@ registry.category("web_tour.tours").add('website_sale.product_page_zoom', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add("website_sale.zoom_grid_image_order", {
+    steps: () => [
+        {
+            content: "check that the product page is in grid layout",
+            trigger: "#o-grid-product",
+        },
+        {
+            content: "open the image viewer from the third image in visual order",
+            trigger:
+                ".o_wsale_product_page_grid_column:nth-child(2) .product_detail_img[alt='image 3']",
+            run: "click",
+        },
+        {
+            content: "verify that the viewer opens at the third position (matching visual order)",
+            trigger: ".o_wsale_image_viewer_carousel li:nth-child(3).active",
+        },
+    ],
+});

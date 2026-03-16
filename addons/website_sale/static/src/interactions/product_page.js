@@ -288,6 +288,21 @@ export class ProductPage extends Interaction {
         });
     }
 
+    /**
+     * Returns product images and sorts them by their visual position in grid
+     * layout so that navigation matches the rendered order.
+     *
+     * @param {HTMLElement} salePage
+     * @returns {HTMLImageElement[]}
+     */
+    _getVisuallyOrderedProductImages(salePage) {
+        const images = [...salePage.querySelectorAll(".product_detail_img")];
+        if (this._getProductImageContainerSelector() === "#o-grid-product") {
+            return images.sort((a, b) => a.offsetTop - b.offsetTop);
+        }
+        return images;
+    }
+
     _getProductImageContainerSelector() {
         const imageLayout = this.el.querySelector('#product_detail_main').dataset.imageLayout;
         return {
@@ -302,7 +317,7 @@ export class ProductPage extends Interaction {
         // Zoom on click
         if (this.el.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
-            const images = this.el.querySelectorAll('.product_detail_img');
+            const images = this._getVisuallyOrderedProductImages(this.el);
             const { imageRatio, imageRatioMobile } = this.el.dataset;
             for (const [idx, image] of images.entries()) {
                 const handler = () =>
