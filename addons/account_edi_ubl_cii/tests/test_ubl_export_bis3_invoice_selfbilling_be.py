@@ -1,13 +1,11 @@
-from contextlib import contextmanager
-from unittest import mock
-
 from odoo import Command
 from .common import TestUblBis3Common, TestUblCiiBECommon
 from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
-class TestUblExportBis3SelfbillingBE(TestUblBis3Common, TestUblCiiBECommon):
+class TestUblExportBis3InvoiceSelfBillingBE(TestUblBis3Common, TestUblCiiBECommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -18,21 +16,10 @@ class TestUblExportBis3SelfbillingBE(TestUblBis3Common, TestUblCiiBECommon):
             'is_self_billing': True,
         })
 
-    @contextmanager
-    def allow_sending_vendor_bills(self):
-        old_get_move_constraints = self.env.registry['account.move.send']._get_move_constraints
-
-        def patched_get_move_constraints(self, move):
-            constraints = old_get_move_constraints(self, move)
-            if move.is_purchase_document():
-                constraints.pop('not_sale_document', None)
-            return constraints
-
-        with mock.patch.object(self.env.registry['account.move.send'], '_get_move_constraints', patched_get_move_constraints):
-            yield
-
-    def subfolder(self):
-        return super().subfolder().replace('export', 'export/bis3/invoice_selfbilling')
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
+        return subfolder_format, 'invoice_selfbilling', subfolder_country
 
     def test_invoice_selfbilling(self):
         tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
@@ -45,8 +32,7 @@ class TestUblExportBis3SelfbillingBE(TestUblBis3Common, TestUblCiiBECommon):
             post=True,
         )
 
-        with self.allow_sending_vendor_bills():
-            self._generate_invoice_ubl_file(invoice)
+        self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_selfbilling')
 
     def test_invoice_selfbilling_reverse_charge(self):
@@ -79,8 +65,7 @@ class TestUblExportBis3SelfbillingBE(TestUblBis3Common, TestUblCiiBECommon):
             post=True,
         )
 
-        with self.allow_sending_vendor_bills():
-            self._generate_invoice_ubl_file(invoice)
+        self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_selfbilling_reverse_charge')
 
     def test_credit_note_selfbilling(self):
@@ -95,6 +80,5 @@ class TestUblExportBis3SelfbillingBE(TestUblBis3Common, TestUblCiiBECommon):
             post=True,
         )
 
-        with self.allow_sending_vendor_bills():
-            self._generate_invoice_ubl_file(invoice)
+        self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_credit_note_selfbilling')
