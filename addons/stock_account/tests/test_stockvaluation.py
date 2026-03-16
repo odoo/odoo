@@ -3224,3 +3224,23 @@ class TestStockValuation(TestStockValuationCommon):
                 {'added_value': -100, 'total_quantity': 10, 'total_value': 200, 'avco_value': 20},
             ]
         )
+
+    def test_accounting_user_can_reopen_inventory_valuation_report_after_closing(self):
+        """Ensure users with accounting privileges but not stock can reopen the Inventory Valuation
+        report after closing, without triggering access errors on technical models.
+        """
+
+        accounting_user = self._create_new_internal_user(
+            name='Accounting User',
+            login='accounting_user',
+            groups='account.group_account_manager',
+        )
+        accounting_user.write({
+            'company_id': self.company.id,
+            'company_ids': [Command.set(self.company.ids)],
+        })
+
+        self._make_in_move(self.product_standard, 10, unit_cost=10)
+        self.company.with_user(accounting_user).action_close_stock_valuation(at_date=Date.today(), auto_post=True)
+        report = self.env['stock_account.stock.valuation.report'].with_user(accounting_user)._get_report_data(date=Date.today())
+        self.assertTrue(report)
