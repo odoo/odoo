@@ -20,8 +20,11 @@ function changeDescriptionContentAndSave(newContent) {
             run: "click",
         },
         {
-            trigger: `div.note-editable[spellcheck='true'].odoo-editor-editable`,
+            trigger: `div.note-editable[spellcheck='true'].odoo-editor-editable .o-paragraph`,
             run: `editor ${newText}`,
+        },
+        {
+            trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${newText})`,
         },
         ...stepUtils.saveForm(),
     ];
