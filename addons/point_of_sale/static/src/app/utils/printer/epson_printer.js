@@ -98,7 +98,7 @@ function encodeRaster(rasterData) {
 /**
  * Create the raster data from a canvas
  */
-function processCanvas(canvas) {
+export function processCanvas(canvas) {
     const rasterData = canvasToRaster(canvas);
     const encodedData = encodeRaster(rasterData);
     return ePOSPrint([

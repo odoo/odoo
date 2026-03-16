@@ -5,6 +5,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -29,7 +30,11 @@ export class ConfirmationPage extends Component {
         });
         useLayoutEffect(
             () => {
-                if (!this.confirmedOrder || !this.confirmedOrder.uiState?.receiptReady) {
+                if (
+                    !this.confirmedOrder ||
+                    !this.confirmedOrder.uiState?.receiptReady ||
+                    typeof this.confirmedOrder.id !== "number"
+                ) {
                     return;
                 }
 
@@ -52,7 +57,7 @@ export class ConfirmationPage extends Component {
     }
 
     get confirmedOrder() {
-        return this.selfOrder.currentOrder;
+        return this.selfOrder.models["pos.order"].getBy("uuid", this.selfOrder.selectedOrderUuid);
     }
 
     async initOrder(retry = true) {
@@ -97,10 +102,33 @@ export class ConfirmationPage extends Component {
     }
 
     async printOrderChanges() {
-        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-            const order = this.confirmedOrder;
-            await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
+        const order = this.confirmedOrder;
+        if (this.selfOrder.config.self_ordering_mode === "mobile") {
+            // Need the server answer to be sure a customer doesn't try
+            // to print its changes several times.
+            const result = await rpc("/pos-self-order/update-last-changes", {
+                access_token: this.selfOrder.access_token,
+                order_id: order.id,
+                order_access_token: order.access_token,
+            });
+            const changes = result.last_order_preparation_change;
+            try {
+                order.last_order_preparation_change = JSON.parse(changes);
+            } catch (error) {
+                logPosMessage(
+                    "ConfirmationPage",
+                    "printOrderChanges",
+                    "Error while getting old preparation changes",
+                    "#ff0000",
+                    [error]
+                );
+                // Do not print changes if we can't parse them, to avoid
+                // printing wrong information and to avoid blocking the
+                // user in case of error.
+                return;
+            }
         }
+        await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
     }
 
     async printOrder() {
