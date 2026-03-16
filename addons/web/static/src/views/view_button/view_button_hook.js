@@ -105,7 +105,7 @@ export function useViewButtons(ref, options = {}) {
                 }
                 await options.afterExecuteAction?.(clickParams);
                 if (closeDialog) {
-                    closeDialog();
+                    closeDialog(clickParams);
                 }
                 if (error) {
                     return Promise.reject(error);
