@@ -388,6 +388,21 @@ export class MockServiceWorkerRegistration {
     async update() {}
 }
 
+// Naive lock that doesn't lock anything
+export class MockLockManager {
+    async request(name, ...args) {
+        const callback = args.length > 1 ? args[1] : args[0];
+        callback();
+    }
+
+    async query() {
+        return {
+            held: [],
+            pending: [],
+        };
+    }
+}
+
 export const currentPermissions = getPermissions();
 
 export const mockClipboard = new MockClipboard();
@@ -396,8 +411,11 @@ export const mockPermissions = new MockPermissions();
 
 export const mockServiceWorker = new MockServiceWorkerContainer();
 
+export const mockLockManager = new MockLockManager();
+
 export const mockNavigator = createMock(navigator, {
     clipboard: { value: mockClipboard },
+    locks: { value: mockLockManager },
     maxTouchPoints: { get: () => (globalThis.ontouchstart === undefined ? 0 : 1) },
     permissions: { value: mockPermissions },
     sendBeacon: { get: () => mockValues.sendBeacon },

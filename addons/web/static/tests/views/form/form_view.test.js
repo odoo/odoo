@@ -337,6 +337,8 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     expect(".o_field_widget[name=foo] input").toHaveValue("yop");
     await contains(".o_field_widget[name=foo] input").edit("new foo");
 
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
     offline = true;
     await contains(".o_form_button_save").click();
     expect(".o_form_renderer").not.toHaveClass("o_form_readonly"); // We can create/edit offline
@@ -403,6 +405,8 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     expect(".o_form_renderer").toHaveClass("o_form_editable");
     expect(".o_field_widget[name=foo] input").toHaveValue("yop");
     await contains(".o_field_widget[name=foo] input").edit("new foo");
+
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
 
     offline = true;
     await contains(".o_breadcrumb .o_back_button").click();

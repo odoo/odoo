@@ -322,9 +322,9 @@ class OfflineManager extends Reactive {
     // -------------------------------------------------------------------------
 
     async _syncORM() {
+        // Only one tab can execute this block at a time
         await navigator.locks.request("db-sync", async () => {
             this._syncingORM = true;
-            // Only one tab can execute this block at a time
             await this._updateScheduledORMList();
 
             for (const [index, { key, value }] of Object.values(this._ormToSync)
