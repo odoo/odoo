@@ -180,6 +180,11 @@ class AccountMove(models.Model):
         string='Ledger',
         store=False,
     )
+    journal_company_id = fields.Many2one(
+        'res.company',
+        related='journal_id.company_id',
+        string='Company of the Journal',
+    )
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company',
