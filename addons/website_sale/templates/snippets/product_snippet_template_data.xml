@@ -81,7 +81,7 @@
                         />
                         <div class="o_wsale_product_sub justify-content-between gap-2">
                             <!-- Price(s) -->
-                            <div class="product_price" aria-label="Price information">
+                            <div aria-label="Price information">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <!-- Actions -->
@@ -155,6 +155,11 @@
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     />
                 </del>
+                <t
+                    t-if="data.get('base_unit_price')"
+                    t-call="website_sale.base_unit_price"
+                    base_unit_price="data['base_unit_price']"
+                />
             </t>
         </template>
 
