@@ -322,6 +322,30 @@ class TestWebsiteSaleImage(HttpCase):
         # when there is a template image, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
 
+    def test_03_shop_zoom_grid_image_order(self):
+        image_red = _create_image(color='#FF0000', dims=(1800, 1500))
+        image_green = _create_image(color='#00FF00')
+        image_blue = _create_image(color='#0000FF')
+        image_purple = _create_image(color='#FF00FF')
+
+        product = self.env['product.product'].create({
+            'name': 'A Colorful Image',
+            'image_1920': image_red,
+            'website_published': True,
+            'product_variant_image_ids': [
+                Command.create({'name': 'image 1', 'image_1920': image_green}),
+                Command.create({'name': 'image 2', 'image_1920': image_blue}),
+                Command.create({'name': 'image 3', 'image_1920': image_purple}),
+            ],
+        })
+
+        self.env['website'].get_current_website().write({'product_page_image_layout': 'grid'})
+        self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('key', '=', 'website_sale.product_picture_magnify_click')
+        ]).write({'active': True})
+
+        self.start_tour(product.website_url, 'shop_zoom_grid_image_order')
+
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleRemoveImage(HttpCase):
 
