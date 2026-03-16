@@ -108,8 +108,12 @@ class ResPartner(models.Model):
     def autocomplete_by_vat(self, vat, query_country_id, timeout=15):
         query_country_id = query_country_id or self.env.company.country_id.id
         query_country_code = self.env['res.country'].browse(query_country_id).code
+        vat_query = vat.upper()
+        if vat_query.startswith(query_country_code):
+            vat_query = vat_query[len(query_country_code):]
+
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
-            'query': vat,
+            'query': vat_query,
             'query_country_code': query_country_code,
         }, timeout=timeout)
         if response and not response.get("error"):
