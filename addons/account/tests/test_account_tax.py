@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -186,7 +187,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
         # tracking done using _track_add
         self.assertEqual(len(self._new_msgs), 2)
-        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
+        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body, reverse=True), [
             {
                 'body_content': '<b>Invoice</b> repartition line 3',
                 'tracking_values': [
@@ -233,7 +234,14 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
         # tracking done using _track_add
         self.assertEqual(len(self._new_msgs), 6)
-        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
+        messages = self._new_msgs.sorted(
+            key=lambda m: (
+                '<b>Invoice</b>' not in (m.body or ''),
+                int(re.search(r'line (\d+)', m.body or '').group(1)) if re.search(r'line (\d+)', m.body or '') else 0
+            )
+        )
+
+        for msg, exp_values in zip(messages, [
             {
                 'body_content': '<b>Invoice</b> repartition line 1',
                 'tracking_values': [
