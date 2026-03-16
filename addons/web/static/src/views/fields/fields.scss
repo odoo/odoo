@@ -108,7 +108,7 @@
     text-align: inherit;
     display: var(--fieldWidget-display, inline-block);
 
-    &:not(.o_form_label .o_field_widget.o_readonly_modifier, h1 .o_field_widget, h2 .o_field_widget) {
+    &:not(.o_form_label .o_field_widget.o_readonly_modifier, h1 .o_field_widget, h2 .o_field_widget):not(.alert *) {
         margin-bottom: var(--fieldWidget-margin-bottom);
     }
 

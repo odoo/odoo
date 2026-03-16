@@ -330,33 +330,31 @@
                         placeholder="Add Title"
                     />
                 </div>
-                <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
+                <div class="o_input_box  pt-1 pb-2">
                     <!--when "stop" is set manually, "duration" is computed. When "start" is changed
                     "stop" is computed based on the previously-computed "duration". Hence we need to
                     keep the last computed duration in the front-end model and send it with "start"
                     when it changes-->
                     <!--field is also used for custom behavior in default_get, check before removing-->
-                    <div class="o_input_box">
-                        <i class="o_input_box_overlay_start fa fa-clock-o d-touch-none" title="Dates"/>
-                        <field name="duration" invisible="1" force_save="1"/>
-                        <field name="start" nolabel="1"
-                            widget="daterange" options="{'end_date_field': 'stop'}"
-                            placeholder="Dates"
-                            invisible="allday"
-                        />
-                        <field name="start_date" nolabel="1"
-                            widget="daterange" options="{'end_date_field': 'stop_date'}"
-                            placeholder="Dates"
-                            invisible="not allday"
-                        />
-                        <span class="text-nowrap w-auto">
-                            <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
-                            <field name="show_as" invisible="1"/>
-                            <field name="allday" class="mb-0" title="All Day" nolabel="1"/>
-                            <span>All day</span>
-                        </span>
-                        <field name="stop" invisible="1"/>
-                    </div>
+                    <i class="o_input_box_overlay_start fa fa-clock-o d-touch-none" title="Dates"/>
+                    <field name="duration" invisible="1" force_save="1"/>
+                    <field name="start" nolabel="1" class="d-block"
+                        widget="daterange" options="{'end_date_field': 'stop'}"
+                        placeholder="Dates"
+                        invisible="allday"
+                    />
+                    <field name="start_date" nolabel="1" class="d-block"
+                        widget="daterange" options="{'end_date_field': 'stop_date'}"
+                        placeholder="Dates"
+                        invisible="not allday"
+                    />
+                    <span class="d-flex text-nowrap justify-content-between justify-content-md-start align-items-center mx-3">
+                        <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
+                        <field name="show_as" invisible="1"/>
+                        <label for="allday" string="All day"/>
+                        <field name="allday" widget="boolean_toggle"  class="mb-0" title="All Day" nolabel="1"/>
+                    </span>
+                    <field name="stop" invisible="1"/>
                 </div>
                 <div class="o_input_box">
                     <i class="o_input_box_overlay_start fa fa-user" title="Participants"/>
@@ -394,7 +392,7 @@
                     <i class="o_input_box_overlay_start fa fa-circle" title="Show as"/>
                     <field name="show_as" nolabel="1"/>
                 </div>
-                <div class="o_input_box">
+                <div class="o_input_box d-flex">
                     <i class="o_input_box_overlay_start fa fa-sticky-note" title="Notes"/>
                     <field name="notes" nolabel="1" placeholder="Notes" widget="calendar_event_notes_html"/>
                 </div>
