@@ -1328,16 +1328,20 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         nodes = vals['party_node']['cac:PartyTaxScheme']
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
+        country_code = commercial_partner.country_id.code
+        vat = None
 
         if commercial_partner.vat and commercial_partner.vat != '/':
-            country_code = commercial_partner.country_id.code
+            vat = commercial_partner.vat
             if country_code in GST_COUNTRY_CODES:
                 tax_scheme_id = 'GST'
+            elif country_code == 'HU' and not vat.upper().startswith('HU'):
+                tax_scheme_id = 'HU_TAX_NUMBER'
             else:
                 tax_scheme_id = 'VAT'
 
             nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cbc:CompanyID': {'_text': vat},
                 'cac:TaxScheme': {
                     'cbc:ID': {'_text': tax_scheme_id},
                 },
@@ -1350,6 +1354,29 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'cbc:ID': {'_text': commercial_partner.peppol_eas},
                 },
             })
+
+        if country_code == 'RO':
+            # Every company has a CIF in Romania.
+            # Only VAT-registered companies have a VAT number.
+            # The VAT number is simply the CIF activated for VAT purposes.
+            # To distinguish both, we just check if the number starts with RO or not.
+            nodes = vals['party_node']['cac:PartyTaxScheme'] = []  # Clear the party nodes
+            vat = vat or commercial_partner.company_registry
+            if vat:
+                if vat.upper().startswith('RO'):
+                    nodes.append({
+                        'cbc:CompanyID': {'_text': vat},
+                        'cac:TaxScheme': {
+                            'cbc:ID': {'_text': 'VAT'},
+                        },
+                    })
+                else:
+                    nodes.append({
+                        'cbc:CompanyID': {'_text': vat},
+                        'cac:TaxScheme': {
+                            'cbc:ID': {'_text': 'CIF'},
+                        },
+                    })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.ubl
