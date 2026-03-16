@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.http import _request_stack
 from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users
 from odoo.tools import mute_logger
+from odoo import Command
 
 
 class TestUsers(TransactionCase):
@@ -523,6 +524,54 @@ class TestUsersGroupWarning(TransactionCase):
                 cls.group_field_service_administrator).ids,
         })
 
+    def test_prevent_inherited_views_in_group_assignment(self):
+        """ Groups can only be assigned non-inherited (primary) views.
+
+        Inherited views (mode='extension') must not be linked to groups directly.
+        They inherit access from their parent view. Attempting to assign an
+        inherited view to a group should raise a ValidationError. """
+
+        View = self.env['ir.ui.view']
+        group = self.group_sales_user
+        normal_view = View.create({
+            'name': 'Test Base View',
+            'type': 'form',
+            'model': 'res.partner',
+            'arch': '<form><field name="name"/></form>',
+        })
+        inherited_view = View.create({
+            'name': 'Inherited View',
+            'type': 'form',
+            'model': 'res.partner',
+            'inherit_id': normal_view.id,
+            'mode': 'extension',
+            'arch': '''
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="email"/>
+                </xpath>
+            ''',
+        })
+
+        # Case 1: inherited view should fail
+        with self.assertRaises(ValidationError):
+            group.write({
+                'view_access': [Command.link(inherited_view.id)],
+            })
+
+        # Case 2: normal view should pass
+        group.write({
+            'view_access': [Command.link(normal_view.id)],
+        })
+        self.assertIn(normal_view, group.view_access)
+
+        # Case 3: both views should fail
+        with self.assertRaises(ValidationError):
+            group.write({
+                'view_access': [
+                    Command.link(normal_view.id),
+                    Command.link(inherited_view.id)
+                ],
+            })
 
     def test_user_group_empty_group_warning(self):
         """ User changes Empty Sales access from 'Sales: Administrator'. The
