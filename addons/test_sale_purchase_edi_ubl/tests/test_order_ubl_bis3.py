@@ -348,10 +348,12 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         xml_attachment = self.get_purchase_xml(po_line_vals)
 
         so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
-        self.assertEqual(len(so.order_line), 2)
-        allowance_lines = so.order_line.filtered(lambda l: not l.product_id)
-        self.assertEqual(len(allowance_lines), 1)
-        self.assertEqual(30.0, allowance_lines.price_subtotal)
+        self.assertRecordValues(so.order_line, [{
+            'price_unit': 50.0,
+            'product_uom_qty': 10.0,
+            'product_uom_id': self.uom_units.id,
+            'discount': 0.0,
+        }])
 
     def test_po_import_line_allowance_charges(self):
         so_line_vals = [{
@@ -364,7 +366,9 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         xml_attachment = self.get_sale_xml(so_line_vals)
 
         po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
-        self.assertEqual(len(po.order_line), 2)
-        allowance_lines = po.order_line.filtered(lambda l: not l.product_id)
-        self.assertEqual(len(allowance_lines), 1)
-        self.assertEqual(50.0, allowance_lines.price_subtotal)
+        self.assertRecordValues(po.order_line, [{
+            'price_unit': 55.0,
+            'product_uom_qty': 10.0,
+            'uom_id': self.uom_units.id,
+            'discount': 0.0,
+        }])
