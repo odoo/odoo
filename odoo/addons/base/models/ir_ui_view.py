@@ -1122,7 +1122,7 @@ actual arch.
 
     @api.model
     def _get_cached_template_prefetched_keys(self):
-        return ['id', 'key', 'active']
+        return ['id', 'key', 'active', 'type']
 
     def _get_template_minimal_cache_keys(self):
         return (bool(self.env.context.get('active_test', True)),)
