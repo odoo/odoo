@@ -2,11 +2,11 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
-import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
 import { Component, onWillStart, proxy, useProps, usePlugin } from "@odoo/owl";
 import { ActionPlugin, standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { ORM } from "@web/core/orm_plugin";
@@ -16,7 +16,7 @@ export class StockForecasted extends Component {
     static components = {
         ControlPanel,
         ForecastedButtons,
-        ForecastedWarehouseFilter,
+        Dropdown,
         ForecastedHeader,
         View,
         ForecastedDetails,
@@ -34,7 +34,6 @@ export class StockForecasted extends Component {
             this.context.active_id = this.props.action.params.active_id;
             this.reloadReport();
         }
-        this.warehouses = proxy([]);
 
         onWillStart(this._getReportValues);
     }
@@ -43,11 +42,6 @@ export class StockForecasted extends Component {
         await this._getResModel();
         const isTemplate = !this.resModel || this.resModel === 'product.template';
         this.reportModelName = `stock.forecasted_product_${isTemplate ? "template" : "product"}`;
-        this.warehouses.splice(0, this.warehouses.length);
-        this.warehouses.push(...await this.orm.searchRead('stock.warehouse', [],['id', 'name', 'code']));
-        if (!this.context.warehouse_id) {
-            this.updateWarehouse(this.warehouses[0].id);
-        }
         const reportValues = await this.orm.call(this.reportModelName, "get_report_values", [], {
             context: this.context,
             docids: [this.productId],
@@ -84,12 +78,8 @@ export class StockForecasted extends Component {
         }
     }
 
-    async updateWarehouse(id) {
-        const hasPreviousValue = this.context.warehouse_id !== undefined;
+    updateWarehouse(id) {
         this.context.warehouse_id = id;
-        if (hasPreviousValue) {
-            await this.reloadReport();
-        }
     }
 
     async reloadReport() {
@@ -104,10 +94,55 @@ export class StockForecasted extends Component {
         return this.action.doAction(actionRequest, options);
     }
 
+    get warehouseId() {
+        return this.context.warehouse_id || 0;
+    }
+
+    _dropdownItems(allLabel, records, selectedId, onSelect) {
+        return [{ id: 0, display_name: allLabel }, ...records].map((record) => ({
+            id: record.id,
+            label: record.display_name,
+            class: { selected: record.id === selectedId },
+            onSelected: () => onSelect(record.id),
+        }));
+    }
+
+    get warehousesItems() {
+        return this._dropdownItems(_t("All Warehouses"), this.docs.warehouses, this.warehouseId, (id) =>
+            this.updateWarehouse(id)
+        );
+    }
+
+    get activeWarehouseName() {
+        return this.warehousesItems.find((item) => item.id === this.warehouseId)?.label;
+    }
+
+    get filteredDocs() {
+        const warehouse = this.warehouseId;
+
+        if (!warehouse) {
+            return this.docs;
+        }
+
+        return {
+            ...this.docs,
+            lines: this.docs.lines.filter((l) => l.warehouse_id === warehouse),
+            product: Object.fromEntries(
+                Object.entries(this.docs.product).filter(([key]) => {
+                    const [, warehouseId] = key.split("_").map(Number);
+                    return warehouseId === warehouse;
+                })
+            ),
+            multiple_warehouses: !warehouse,
+            warehouse_ids: [warehouse],
+        };
+    }
+
     get graphDomain() {
-        const domain = [
+        const filteredDocs = this.filteredDocs;
+        return [
             ["state", "=", "forecast"],
-            ["warehouse_id", "=", this.context.warehouse_id],
+            ["warehouse_id", "in", this.filteredDocs.warehouse_ids],
         ];
         if (this.resModel === "product.template") {
             domain.push(["product_tmpl_id", "=", this.productId]);
@@ -135,6 +170,13 @@ export class StockForecasted extends Component {
             domain: domain,
         };
         return this.action.doAction(action);
+    }
+
+    getForecastedButtonsProps() {
+        return {
+            context: this.context,
+            reloadReport: this.reloadReport.bind(this),
+        };
     }
 }
 
