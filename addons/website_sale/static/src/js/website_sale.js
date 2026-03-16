@@ -275,6 +275,23 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _getProductImageContainer: function () {
         return document.querySelector(this._getProductImageContainerSelector());
     },
+    /**
+     * Returns product images and sorts them by their visual position in grid
+     * layout so that navigation matches the rendered order.
+     *
+     * @private
+     * @param {HTMLElement} salePage
+     * @returns {HTMLImageElement[]}
+     */
+    _getVisuallyOrderedProductImages(salePage) {
+        const images = [...salePage.querySelectorAll(".product_detail_img")];
+        if (this._getProductImageLayout() === "grid") {
+            return images.sort((a, b) => {
+                return a.offsetTop - b.offsetTop;
+            });
+        }
+        return images;
+    },
     _isEditorEnabled() {
         return document.body.classList.contains("editor_enable");
     },
@@ -319,7 +336,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         // Zoom on click
         if (salePage.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
-            const images = salePage.querySelectorAll(".product_detail_img");
+            const images = this._getVisuallyOrderedProductImages(salePage);
             for (const image of images ) {
                 const handler = () => {
                     if (salePage.dataset.ecomZoomAuto) {
@@ -330,7 +347,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                         }
                     }
                     this.call("dialog", "add", ProductImageViewer, {
-                        selectedImageIdx: [...images].indexOf(image),
+                        selectedImageIdx: images.indexOf(image),
                         images,
                     });
                 };
