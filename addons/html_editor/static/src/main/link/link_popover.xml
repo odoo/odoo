@@ -1,11 +1,20 @@
 <templates id="template" xml:space="preserve">
 
+    <t t-name="html_editor.TextFieldsIcon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="oe_link_label_icon" height="18px" width="18px" viewBox="0 -960 960 960">
+            <path d="M280-160v-520H80v-120h520v120H400v520H280Zm360 0v-320H520v-120h360v120H760v320H640Z"/>
+        </svg>
+    </t>
+
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="this.onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
             <div t-if="this.state.editing" class="container-fluid d-flex vertical-center p-2" t-custom-ref="editing-wrapper">
                 <div t-if="this.state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
-                        <input name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-custom-model="this.state.url" title="URL" placeholder="Type your URL"
+                        <label for="o_linkpopover_url_img" class="o_we_input_label">
+                            <span class="fa fa-link"></span>
+                        </label>
+                        <input id="o_linkpopover_url_img" name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-custom-model="this.state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="this.onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': this.state.type ===  ''}" t-on-click="this.onClickApply">Apply</button>
                     </div>
@@ -46,7 +55,11 @@
                 <t t-else="">
                     <div class="col p-2 o_link_popover_container">
                         <div class="input-group mb-2" t-att-class="{'d-none': !this.state.showLabel}">
+                            <label for="o_we_label_link" class="o_we_input_label">
+                                <t t-call="html_editor.TextFieldsIcon"/>
+                            </label>
                             <input t-custom-ref="label"
+                                id="o_we_label_link"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
                                 t-custom-model="this.state.label"
                                 title="Label"
@@ -54,7 +67,11 @@
                                 t-on-input="this.onChange"/>
                         </div>
                         <div class="input-group mb-2">
+                            <label for="o_linkpopover_url" class="o_we_input_label">
+                                <span class="fa fa-link"></span>
+                            </label>
                             <input t-custom-ref="url"
+                                id="o_linkpopover_url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
                                 t-custom-model="this.state.url"

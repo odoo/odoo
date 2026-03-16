@@ -115,6 +115,17 @@ describe("should open a popover", () => {
         await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(".o-we-linkpopover").toHaveCount(0);
     });
+    test("clicking input prefix icon should focus associated input", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        execCommand(editor, "openLinkTools");
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover label[for='o_we_label_link']").toHaveCount(1);
+        expect(".o-we-linkpopover label[for='o_linkpopover_url']").toHaveCount(1);
+        await click(".o-we-linkpopover label[for='o_linkpopover_url']");
+        expect(".o_we_href_input_link").toBeFocused();
+        await click(".o-we-linkpopover label[for='o_we_label_link']");
+        expect(".o_we_label_link").toBeFocused();
+    });
 });
 
 describe("popover should not reposition when editing", () => {
