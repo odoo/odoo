@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Server Action: Generate / Refresh All                         -->
+    <!-- ============================================================ -->
+    <record id="action_generate_all_annual_leave" model="ir.actions.server">
+        <field name="name">Generate / Refresh All</field>
+        <field name="model_id" ref="model_ksw_annual_leave"/>
+        <field name="binding_model_id" ref="model_ksw_annual_leave"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = model.action_generate_all()</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- List View                                                     -->
+    <!-- ============================================================ -->
+    <record id="ksw_annual_leave_view_list" model="ir.ui.view">
+        <field name="name">ksw.annual.leave.list</field>
+        <field name="model">ksw.annual.leave</field>
+        <field name="arch" type="xml">
+            <list string="Annual Leave Dashboard" create="false" edit="false">
+                <header>
+                    <button name="action_generate_all" type="object"
+                            string="⟳ Refresh All" class="btn-primary"/>
+                </header>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="joining_date"/>
+                <field name="years_of_service"/>
+                <field name="daily_rate"/>
+                <field name="total_accrued_days"/>
+                <field name="leaves_taken"/>
+                <field name="remaining_balance"
+                       decoration-success="remaining_balance > 0"
+                       decoration-danger="remaining_balance &lt;= 0"/>
+                <field name="allocation_id" string="Allocation" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form View                                                     -->
+    <!-- ============================================================ -->
+    <record id="ksw_annual_leave_view_form" model="ir.ui.view">
+        <field name="name">ksw.annual.leave.form</field>
+        <field name="model">ksw.annual.leave</field>
+        <field name="arch" type="xml">
+            <form string="Annual Leave" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="Employee">
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="joining_date"/>
+                        </group>
+                        <group string="Service">
+                            <field name="years_of_service"/>
+                            <field name="daily_rate"/>
+                        </group>
+                    </group>
+                    <separator string="Leave Balance"/>
+                    <group>
+                        <group string="Accrual">
+                            <field name="total_accrued_days" class="fw-bold text-primary"/>
+                        </group>
+                        <group string="Usage">
+                            <field name="leaves_taken"/>
+                            <field name="remaining_balance" class="fw-bold text-success"/>
+                        </group>
+                    </group>
+                    <separator string="Allocation"/>
+                    <group>
+                        <field name="allocation_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Search View                                                   -->
+    <!-- ============================================================ -->
+    <record id="ksw_annual_leave_view_search" model="ir.ui.view">
+        <field name="name">ksw.annual.leave.search</field>
+        <field name="model">ksw.annual.leave</field>
+        <field name="arch" type="xml">
+            <search string="Search Annual Leave">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter name="no_joining_date" string="Missing Joining Date"
+                        domain="[('joining_date', '=', False)]"/>
+                <group>
+                    <filter string="Department" name="group_department"
+                            domain="[]" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Window Action                                                 -->
+    <!-- ============================================================ -->
+    <record id="action_ksw_annual_leave" model="ir.actions.act_window">
+        <field name="name">Annual Leave</field>
+        <field name="res_model">ksw.annual.leave</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No annual leave records yet.
+            </p>
+            <p>Use the <b>Generate / Refresh All</b> action to create records
+               for all employees automatically.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menu Item under Management                                    -->
+    <!-- ============================================================ -->
+    <menuitem
+        id="menu_ksw_annual_leave"
+        name="Annual Leave"
+        parent="hr_holidays.menu_hr_holidays_management"
+        action="action_ksw_annual_leave"
+        sequence="20"/>
+
+</odoo>

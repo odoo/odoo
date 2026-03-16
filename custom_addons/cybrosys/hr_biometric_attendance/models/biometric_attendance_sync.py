@@ -351,35 +351,46 @@ class BiometricAttendanceSync(models.AbstractModel):
 
     @api.model
     def cron_generate_absences(self):
-        """Daily cron: check only yesterday for absences. Lightweight."""
+        """Daily cron: check from last run to yesterday for absences."""
         cron_start = fields.Datetime.now()
         today = fields.Date.context_today(self)
         yesterday = today - timedelta(days=1)
 
+        # lastcall is passed by ir.cron via context
+        lastcall = self.env.context.get('lastcall')
+        if lastcall:
+            date_from = lastcall.date()
+        else:
+            date_from = yesterday
+
+        if date_from > yesterday:
+            _logger.info("ABSENCE CRON: nothing to check (date_from %s > yesterday %s)",
+                         date_from, yesterday)
+            return True
+
         _logger.info("=" * 80)
         _logger.info(
-            "ABSENCE DETECTION CRON STARTED - %s (checking %s)",
-            cron_start, yesterday)
+            "ABSENCE DETECTION CRON STARTED - %s (checking %s to %s)",
+            cron_start, date_from, yesterday)
         _logger.info("=" * 80)
 
         employees = self.env['hr.employee'].search([
             ('biometric_user_id', '!=', False),
         ])
-        _logger.info("Checking %d employees for absences on %s",
-                     len(employees), yesterday)
+        _logger.info("Checking %d employees for absences from %s to %s",
+                     len(employees), date_from, yesterday)
 
         total_created = self._generate_absences_date_range(
-            employees, yesterday, yesterday)
+            employees, date_from, yesterday)
 
-        # --- Generate weekend records for yesterday ---
-        self._generate_weekend_records(employees, yesterday, yesterday)
+        self._generate_weekend_records(employees, date_from, yesterday)
 
         duration = (fields.Datetime.now() - cron_start).total_seconds()
         _logger.info("=" * 80)
         _logger.info(
             "ABSENCE CRON SUMMARY: %.2fs | employees: %d | "
-            "absences created: %d",
-            duration, len(employees), total_created)
+            "absences created: %d | range: %s to %s",
+            duration, len(employees), total_created, date_from, yesterday)
         _logger.info("=" * 80)
         return True
 
