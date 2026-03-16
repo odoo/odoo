@@ -3,6 +3,8 @@
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ZATCA_invoice_not_mandatory_if_deposit", {
@@ -42,5 +44,27 @@ registry.category("web_tour.tours").add("ZATCA_invoice_mandatory_if_regular_orde
             PaymentScreen.isInvoiceButtonChecked(),
             // Try to uncheck it and verify it remains checked
             PaymentScreen.clickInvoiceButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ZATCA_blocks_settle_due_and_sale_on_same_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.settleCustomerAccount(
+                "AAAA Generic Partner",
+                "23.0",
+                "TSJ/2026/",
+                "",
+                false,
+                false
+            ),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            Dialog.is({ title: "Settlement Error" }),
         ].flat(),
 });
