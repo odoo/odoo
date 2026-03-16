@@ -374,7 +374,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             invoice_vals={
                 'amount_total': 7125,
                 'amount_tax': 1225,
-                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 3999, 1, 1000, 899, 1)],
+                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 4000, 1000, 900)],
             },
         )
         # source: base-creditnote-correction.xml
