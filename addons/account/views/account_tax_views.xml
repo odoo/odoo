@@ -244,7 +244,6 @@
                                     <field name="analytic" invisible="amount_type == 'group'" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="country_id" required="True"/>
-                                    <field name="invoice_legal_notes"/>
                                 </group>
                                 <group name="advanced_booleans">
                                     <field name="price_include" invisible="1"/>
@@ -260,6 +259,11 @@
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" invisible="amount_type == 'group' or not hide_tax_exigibility"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'" groups="account.group_account_readonly"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Legal Notes" name="legal_notes">
+                                    <field name="invoice_legal_notes" nolabel="1" colspan="2" placeholder="This note will be mentioned on invoices using this tax."/>
                                 </group>
                             </group>
                         </page>
