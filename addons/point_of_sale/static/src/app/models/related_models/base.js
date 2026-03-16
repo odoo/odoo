@@ -44,6 +44,7 @@ export class Base extends WithLazyGetterTrap {
      */
     setup(_vals) {
         this._dirty = !this.isSynced;
+        this._initialized = true;
     }
 
     /**

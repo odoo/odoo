@@ -29,7 +29,11 @@ export class ConfirmationPage extends Component {
         });
         useLayoutEffect(
             () => {
-                if (!this.confirmedOrder || !this.confirmedOrder.uiState?.receiptReady) {
+                if (
+                    !this.confirmedOrder ||
+                    !this.confirmedOrder.uiState?.receiptReady ||
+                    typeof this.confirmedOrder.id !== "number"
+                ) {
                     return;
                 }
 
@@ -52,7 +56,7 @@ export class ConfirmationPage extends Component {
     }
 
     get confirmedOrder() {
-        return this.selfOrder.currentOrder;
+        return this.selfOrder.models["pos.order"].getBy("uuid", this.selfOrder.selectedOrderUuid);
     }
 
     async initOrder(retry = true) {
@@ -96,11 +100,43 @@ export class ConfirmationPage extends Component {
         return true;
     }
 
+    /**
+     * Two call are performed to update-last-changes.
+     *
+     * The first one is to get the last changes from the server and to
+     * be sure that the customer doesn't already try to order something
+     * to the kitchen.
+     *
+     * The second one is to update the last changes with the current
+     * status of the order. Since this application is public, we cannot
+     * fully trust the client data, and we need the server to validate
+     * the changes before sending them to the printer.
+     */
     async printOrderChanges() {
-        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-            const order = this.confirmedOrder;
-            await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
+        const order = this.confirmedOrder;
+        if (!order) {
+            return;
         }
+
+        if (this.selfOrder.config.self_ordering_mode === "mobile") {
+            const result = await rpc("/pos-self-order/update-last-changes", {
+                access_token: this.selfOrder.access_token,
+                order_id: order.id,
+                order_access_token: order.access_token,
+            });
+            this.selfOrder.models.connectNewData(result);
+        }
+
+        // Preparation display part ensure changes are up to date.
+        await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
+        const result = await rpc("/pos-self-order/update-last-changes", {
+            access_token: this.selfOrder.access_token,
+            order_id: order.id,
+            order_access_token: order.access_token,
+            update: true,
+        });
+        this.selfOrder.models.connectNewData(result);
+        this.selfOrder.data.debouncedSynchronizeLocalDataInIndexedDB();
     }
 
     async printOrder() {

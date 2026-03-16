@@ -471,12 +471,15 @@ registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend",
             Utils.checkIsNoBtn("Order Now"),
             {
                 trigger: "body",
-                run: async () => {
-                    // Simulate mobile self-order deletion from the backend
-                    await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
-                        order_ids: [posmodel.currentOrder.id],
-                    });
-                },
+                run: async () =>
+                    new Promise((resolve) => {
+                        setTimeout(async () => {
+                            await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
+                                order_ids: [posmodel.currentOrder.id],
+                            });
+                            resolve();
+                        }, 150);
+                    }),
             },
             Utils.clickBtn("Order Now"),
             ProductPage.isShown(),
