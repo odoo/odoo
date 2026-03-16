@@ -1694,7 +1694,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         invoice = self._create_and_invoice_order()
         self.assertNotEqual(
             invoice.partner_bank_id.id,
-            allowed_bank.id,
+            blocked_bank.id,
             "Invoice should not use journal bank account when not allowed."
         )
 
