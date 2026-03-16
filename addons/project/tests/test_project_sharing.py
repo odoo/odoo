@@ -128,6 +128,85 @@ class TestProjectSharing(TestProjectSharingCommon):
             'access_mode': 'edit',
         })
 
+    def test_project_share_handles_missing_partner_email_based_on_permissions(self):
+        """Test project sharing behavior when some collaborators do not have an email.
+
+            This test validates two different flows depending on the user permissions.
+
+            Flow 1: Project Manager (no write access on res.partner)
+            ---------------------------------------------------------
+            1. Create two partners: one with an email and one without.
+            2. A project manager tries to share the project with both partners.
+            3. Since the project manager cannot edit partners, the system cannot
+            request an email update.
+            4. The partner without an email is skipped.
+            5. A notification is returned:
+            "Project shared — partners without a work email were skipped.".
+
+            Flow 2: Admin user (has write access on res.partner)
+            ------------------------------------------------------
+            6. Admin shares the same project with the same partners.
+            7. Because admin can edit partners, the system opens a wizard listing
+            collaborators without an email.
+            8. Admin fills the missing email in the wizard.
+            9. After submitting, the share action completes successfully.
+            10. A success notification is returned:
+            "Project shared with your collaborators."
+        """
+        partner_1, partner_2 = self.env['res.partner'].create([
+            {'name': "Test 1", 'email': 'test1@example.com'},
+            {'name': "Test 2"},
+        ])
+
+        project_manager = new_test_user(
+            self.env, login='project-manager', groups='project.group_project_manager', name='Project Manager',
+        )
+
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': self.project_no_collabo.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': partner_1.id, 'send_invitation': True}),
+                Command.create({'partner_id': partner_2.id, 'send_invitation': True}),
+            ],
+        })
+
+        # The project manager does not have write access on `res.partner`, we will not share the project to the partner without email set.
+        self.assertFalse(partner_2.with_user(project_manager).has_access('write'))
+        action = project_share_wizard.with_user(project_manager).action_share_record()
+        self.assertEqual(action['type'], 'ir.actions.client', 'The action should return a notification')
+        self.assertEqual(action['tag'], 'display_notification', 'The action should return a notification')
+        self.assertDictEqual(action['params'], {
+            'type': 'info',
+            'message': "Project shared — partners without a work email were skipped.",
+            'next': {'type': 'ir.actions.act_window_close'},
+        })
+
+        # The admin user has write access on `res.partner`, we will open the partners with no email wizard to fill the missing email.
+        self.assertTrue(partner_2.has_access('write'))
+        action = project_share_wizard.action_share_record()
+        self.assertEqual(action['name'], 'No Email Address for Collaborators')
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'The action should open a form view to complete missing email')
+
+        # Open the wizard that lists collaborators without an email so the missing email addresses can be completed.
+        no_email_wizard = self.env.ref('project.partner_no_email_list_wizard').id
+        email_wizard_form = Form(
+            self.env['project.share.wizard'].browse(action['res_id']),
+            view=no_email_wizard,
+        )
+        for partner in email_wizard_form.partners_no_email:
+            partner.email = 'test@example.com'
+        email_wizard = email_wizard_form.save()
+
+        action = email_wizard.action_share_record()
+        self.assertEqual(action['type'], 'ir.actions.client', 'The action should return a notification')
+        self.assertEqual(action['tag'], 'display_notification', 'The action should return a notification')
+        self.assertDictEqual(action['params'], {
+            'type': 'success',
+            'message': "Project shared with your collaborators.",
+            'next': {'type': 'ir.actions.act_window_close'},
+        })
+
     def test_project_share_wizard_add_collaborator_with_limited_access(self):
         ProjectShare = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id)
         self.project_portal.write({
