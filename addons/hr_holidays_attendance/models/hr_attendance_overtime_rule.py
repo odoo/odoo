@@ -9,23 +9,21 @@ class HrAttendanceOvertimeRule(models.Model):
     _inherit = 'hr.attendance.overtime.rule'
 
     compensable_as_leave = fields.Boolean("Give back as time off", default=False)
+    leave_compensation_rate = fields.Float(default=1.0)
 
     def _extra_overtime_vals(self):
-        if not self:
-            return {
-                **super()._extra_overtime_vals(),
-                'compensable_as_leave': False,
-            }
 
-        res = super()._extra_overtime_vals()
-        res['compensable_as_leave'] = any(self.mapped('compensable_as_leave'))
-        if self.ruleset_id.rate_combination_mode == 'sum' and any(self.mapped('paid')):
-            combined_rate = 1.0
-            combined_rate += sum(r.amount_rate - 1.0 for r in self.filtered(
-                lambda r: r.paid and not r.compensable_as_leave
-            ))
-            combined_rate += sum(r.amount_rate for r in self.filtered(
-                lambda r: r.paid and r.compensable_as_leave
-            ))
-            res['amount_rate'] = combined_rate
-        return res
+        cal_rules = self.filtered('compensable_as_leave')
+
+        total_leave_compensation_rate = 0.0
+        if cal_rules:
+            if self.ruleset_id.rate_combination_mode == 'sum':
+                total_leave_compensation_rate = sum((r.leave_compensation_rate - 1.0 for r in cal_rules), start=1.0)
+            elif self.ruleset_id.rate_combination_mode == 'max':
+                total_leave_compensation_rate = max(r.leave_compensation_rate for r in cal_rules)
+
+        return {
+            **super()._extra_overtime_vals(),
+            'compensable_as_leave': any(self.mapped('compensable_as_leave')),
+            'leave_compensation_rate': total_leave_compensation_rate,
+        }

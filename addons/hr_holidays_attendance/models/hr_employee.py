@@ -9,16 +9,15 @@ class HrEmployee(models.Model):
     def _get_deductible_employee_overtime(self):
         # return dict {employee: number of hours}
         diff_by_employee = defaultdict(lambda: 0)
-        for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
-            domain=[
-                ('compensable_as_leave', '=', True),
+        for _, lines in self.env['hr.attendance.overtime.line'].sudo()._read_group(
+            domain=[('compensable_as_leave', '=', True),
                 ('employee_id', 'in', self.ids),
-                ('status', '=', 'approved'),
-            ],
+                ('status', '=', 'approved')],
             groupby=['employee_id'],
-            aggregates=['manual_duration:sum'],
+            aggregates=['id:recordset']
         ):
-            diff_by_employee[employee] += hours
+            for line in lines:
+                diff_by_employee[line.employee_id] += line.manual_duration * line.leave_compensation_rate
         for employee, hours in self.env['hr.leave']._read_group(
             domain=[
                 ('work_entry_type_id.overtime_deductible', '=', True),
