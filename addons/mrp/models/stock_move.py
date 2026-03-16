@@ -77,6 +77,16 @@ class StockMoveLine(models.Model):
                 move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
         return super(StockMoveLine, self).write(vals)
 
+    def _get_aggregated_description(self, move):
+        desc = super()._get_aggregated_description(move)
+        if bom_desc := move.description_bom_line:
+            return desc + bom_desc
+        return desc
+
+    def _get_aggregated_line_key(self, move, product, uom, description):
+        line_key = f"{product.id}_{product.display_name}_{description or ''}_{uom.id}_{move.product_packaging_id or ''}"
+        return line_key
+
     def _get_aggregated_properties(self, move_line=False, move=False):
         aggregated_properties = super()._get_aggregated_properties(move_line, move)
         bom = aggregated_properties['move'].bom_line_id.bom_id

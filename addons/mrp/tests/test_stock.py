@@ -629,9 +629,14 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertEqual(len(aggregate_not_kit_values.keys()), 2)
         self.assertTrue(all('Not' in val for val in aggregate_not_kit_values), 'Only non kit products should be included')
 
+        delivery.move_line_ids.move_id.description_picking = False
         aggregate_kit_values = delivery.move_line_ids._get_aggregated_product_quantities(kit_name=bom_kit.product_id.name)
         self.assertEqual(len(aggregate_kit_values.keys()), 2)
         self.assertTrue(all('Component' in val for val in aggregate_kit_values), 'Only kit products should be included')
+        self.assertEqual(
+            {v['description'] for v in aggregate_kit_values.values()},
+            {'Kit - 1/2', 'Kit - 2/2'}
+        )
 
     def test_scrap_consu_kit_not_available(self):
         """
