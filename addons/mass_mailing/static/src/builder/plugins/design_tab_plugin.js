@@ -27,7 +27,7 @@ export class DesignTabPlugin extends Plugin {
                 OPTION_POSITIONS.BODY,
                 this.getDesignOptionBlock("design-body", {
                     template: "mass_mailing.DesignBodyOption",
-                    title: _t("Body"),
+                    title: _t("Mailing"),
                 })
             ),
             withSequence(
