@@ -112,6 +112,7 @@ class User(models.Model):
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
     employee_bank_account_id = fields.Many2one(related='employee_id.bank_account_id', string="Employee's Bank Account Number", related_sudo=False, readonly=False)
     employee_country_id = fields.Many2one(related='employee_id.country_id', string="Employee's Country", readonly=False, related_sudo=False)
+    employee_country_code = fields.Char(related='employee_id.company_country_code', string="Employee's Country Code", readonly=True, related_sudo=False)
     identification_id = fields.Char(related='employee_id.identification_id', readonly=False, related_sudo=False)
     ssnid = fields.Char(related='employee_id.ssnid', readonly=False, related_sudo=False)
     passport_id = fields.Char(related='employee_id.passport_id', readonly=False, related_sudo=False)
