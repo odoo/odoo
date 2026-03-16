@@ -517,6 +517,27 @@ export class SurveyForm extends Interaction {
     // -------------------------------------------------------------------------
 
     /**
+     * Set parameters.
+     *
+     * @param {Array} [options]
+     */
+    setParams(options) {
+        const params = {};
+        if (options.previousPageId) {
+            params.previous_page_id = options.previousPageId;
+        }
+        if (options.showNextPostSubmitPage) {
+            params.next_post_submit_page_or_question = true;
+        }
+        if (this.options.isStartScreen) {
+            params.lang_code = this.el.querySelector(
+                ".o_survey_lang_selector[name='lang_code']"
+            ).value;
+        }
+        return params;
+    }
+
+    /**
      * This function will send a json rpc call to the server to
      * - start the survey (if we are on start screen)
      * - submit the answers of the current page
@@ -536,18 +557,9 @@ export class SurveyForm extends Interaction {
             return;
         }
         this.submitting = true;
-        const params = {};
-        if (options.previousPageId) {
-            params.previous_page_id = options.previousPageId;
-        }
-        if (options.showNextPostSubmitPage) {
-            params.next_post_submit_page_or_question = true;
-        }
+        const params = this.setParams(options);
         let route = "/survey/submit";
         if (this.options.isStartScreen) {
-            params.lang_code = this.el.querySelector(
-                ".o_survey_lang_selector[name='lang_code']"
-            ).value;
             route = "/survey/begin";
             // Hide survey title in 'page_per_question' layout: it takes too much space
             if (this.options.questionsLayout === "page_per_question") {
