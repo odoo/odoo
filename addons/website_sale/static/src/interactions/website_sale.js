@@ -198,6 +198,23 @@ export class WebsiteSale extends Interaction {
         }[this._getProductImageLayout()];
     }
 
+    /**
+     * Returns product images and sorts them by their visual position in grid
+     * layout so that navigation matches the rendered order.
+     *
+     * @param {HTMLElement} salePage
+     * @returns {HTMLImageElement[]}
+     */
+    _getVisuallyOrderedProductImages(salePage) {
+        const images = [...salePage.querySelectorAll(".product_detail_img")];
+        if (this._getProductImageLayout() === "grid") {
+            return images.sort((a, b) => {
+                return a.offsetTop - b.offsetTop;
+            });
+        }
+        return images;
+    }
+
     _isEditorEnabled() {
         return document.body.classList.contains("editor_enable");
     }
@@ -212,7 +229,7 @@ export class WebsiteSale extends Interaction {
         // Zoom on click
         if (salePage.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
-            const images = this.el.querySelectorAll('.product_detail_img');
+            const images = this._getVisuallyOrderedProductImages(salePage);
             for (const [idx, image] of images.entries()) {
                 const handler = () => {
                     this.services.dialog.add(ProductImageViewer, {
