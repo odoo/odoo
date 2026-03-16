@@ -16,3 +16,25 @@
     height: 40px;
   }
 }
+
+.o_spreadsheet_share {
+  > div {
+    grid-template-columns: auto min-content;
+    border: 1px solid #e6e6e6;
+
+    .o_clipboard_button {
+      border: none;
+    }
+    > span:first-child,
+    a {
+      padding-left: 4px;
+      margin-left: 4px;
+      margin-right: 4px;
+      align-self: center;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
