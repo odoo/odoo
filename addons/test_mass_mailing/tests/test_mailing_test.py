@@ -100,7 +100,7 @@ class TestMailingTest(TestMassMailCommon):
                 Hello <a href="http://www.example.com/view">World<a/>
                     <div class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" style="text-align: center; padding-left: 15px; padding-right: 15px;">
                         <a href="/view">
-                            View Online
+                            View in Browser
                         </a>
                     </div>
                     <div class="o_mail_footer_links">

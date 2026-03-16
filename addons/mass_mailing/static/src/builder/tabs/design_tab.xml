@@ -19,6 +19,11 @@
 </t>
 
 <t t-name="mass_mailing.DesignBodyOption">
+        <BuilderRow label.translate='Show "View in Browser"' extraLabelClass="'pe-2 o_view_in_browser_label'">
+            <div class="o_snippet_view_in_browser">
+                <BuilderCheckbox action="'toggleViewInBrowserAction'"/>
+            </div>
+        </BuilderRow>
     <BuilderRow label.translate="Body Width">
         <BuilderButtonGroup>
             <BuilderButton classAction="'o_mail_small'" applyTo="'.o_mail_wrapper'">
