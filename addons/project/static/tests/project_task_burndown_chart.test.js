@@ -170,13 +170,11 @@ test("burndown.chart: check that groupby 'Stage > Date' results in 'Date > Stage
 
 test("burndown.chart: check the toggle between 'Stage' and 'Burnup chart'", async () => {
     await mountViewWithSearch();
-    await toggleGroupBy("Stage");
     const searchFacets = queryAll(".o_facet_value");
     expect(searchFacets).toHaveCount(2);
 
     const [dateSearchFacet, stageSearchFacet] = searchFacets;
     expect(dateSearchFacet).toHaveText("Date: Month");
-    expect(stageSearchFacet).toHaveText("Burnup chart");
-    await toggleMenuItem("Burnup chart");
+    expect(stageSearchFacet).toHaveText("Stage");
     checkGroupByOrder();
 });

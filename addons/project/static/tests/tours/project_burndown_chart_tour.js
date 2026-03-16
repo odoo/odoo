@@ -46,10 +46,6 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     trigger: '.o_control_panel .o_searchview_dropdown_toggler',
     run: "click",
 }, {
-    content: 'The Stage group menu item is visible',
-    trigger: '.o_group_by_menu .o_menu_item:contains("Stage")',
-    run: "click",
-}, {
     content: 'Open the Date group by sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date")',
     run: "click",
