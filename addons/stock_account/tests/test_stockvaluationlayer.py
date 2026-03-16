@@ -686,6 +686,22 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 0.0)
         self.assertEqual(self.product.avg_cost, 42.0)
 
+    def test_return_value_fallback_zero_valued_qty(self):
+        self.product.standard_price = 42.0
+        self._make_in_move(self.product, 1, create_picking=True)
+        move_out = self._make_out_move(self.product, 1, create_picking=True)
+
+        external_owner = self.env['res.partner'].create({'name': 'External Owner'})
+        move_out.move_line_ids.owner_id = external_owner
+        self.assertEqual(move_out._get_valued_qty(), 0.0)
+
+        returned = self._make_return(move_out, 1)
+        self.assertEqual(returned._get_value_from_returns(1), {
+            'value': 0,
+            'quantity': 0,
+            'description': False,
+        })
+
     def test_multicompany(self):
         """FIFO: value computed from each company's own move stack."""
         self.category_fifo.with_company(self.other_company).property_cost_method = 'fifo'
