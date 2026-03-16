@@ -56,6 +56,16 @@ export class PublicReadonlySpreadsheet extends Component {
             this.data,
             {
                 mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
+<<<<<<< 55268c1fb616a896296814160024be4bf88bfd07
+||||||| 6f0e69e059328c32ddcd26868d2c54fe0357f920
+                custom: {
+                    isFrozenSpreadsheet: this.env.isFrozenSpreadsheet?.(),
+                },
+=======
+                custom: {
+                    isFrozenSpreadsheet: true,
+                },
+>>>>>>> 1ba286da47cd3de616456f544ee645dcae4248a0
             },
             this.data.revisions || []
         );

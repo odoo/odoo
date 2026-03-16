@@ -14,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
     };
     odoo.isReady = false;
     const env = makeEnv();
+    env.isFrozenSpreadsheet = () => true;
     await startServices(env);
     await whenReady();
     const app = new App(PublicReadonlySpreadsheet, {
