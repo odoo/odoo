@@ -185,7 +185,6 @@
                 </xpath>
                 <xpath expr="//div[@name='tracking_and_qty_no_stock']" position="replace">
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
-                    <field name="is_storable" widget="boolean_toggle" groups="!stock.group_production_lot"/>
                     <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
                     <label for="qty_available" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
@@ -198,6 +197,11 @@
                         <field name="qty_available" readonly="True" groups="!stock.group_stock_manager"/>
                         <field groups="uom.group_uom" name="uom_name" class="o_input_box_overlay_end"/>
                     </div>
+                </xpath>
+                <xpath expr="//field[@name='is_storable']" position="attributes">
+                    <attribute name="groups">!stock.group_production_lot</attribute>
+                    <attribute name="widget">boolean_toggle</attribute>
+                    <attribute name="invisible"></attribute>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
                     <label for="sale_delay" invisible="not sale_ok"/>

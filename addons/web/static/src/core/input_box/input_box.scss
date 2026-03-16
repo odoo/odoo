@@ -52,21 +52,19 @@
         min-width: var(--inputbox-overlay-size);
         padding: 0 !important;
         z-index: 1;
-        pointer-events: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
 
-        &.btn, .btn, button {
+        &:is(button, .btn), :is(button, .btn){
             border-radius: calc(1.5 * var(--inputbox-spacing-unit));
             line-height: 0;
-            pointer-events: auto;
             padding: 0 !important;
         }
-        .btn {
-            display: block;
-            width: inherit;
-            height: inherit;
+        &:is(span, .fa), :is(span, .fa):not(button *, .btn *) {
+            &:not(button, .btn, :has(button, .btn)) {
+                pointer-events: none;
+            }
         }
         // prefix and suffix have a default value, but it can change when positionInputBoxOverlay is called since an InputBox can have multiple prefix/suffixes
         &.o_input_box_overlay_start {

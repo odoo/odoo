@@ -96,17 +96,18 @@
                                         invisible="not product_tooltip"
                                     />
                                     <field name="show_qty_update_button" invisible="1"/>
-                                    <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu'">
-                                        <label for="is_storable" invisible="type != 'consu'"/>
-                                        <field name="is_storable"/>
-                                        <div name="product_template_qty_field" class="o_input_box" invisible="is_product_variant or not is_storable">
-                                            <a type="action" name="%(product_variant_edit_qty_action)d" invisible="not show_qty_update_button" class="o_input_box_overlay_start">
+                                    <field name="is_storable" invisible="type != 'consu' or is_storable"/>
+                                    <label for="is_storable" invisible="type != 'consu'  or not is_storable"/>
+                                    <div name="tracking_and_qty_no_stock" class="o_input_box" invisible="type != 'consu' or not is_storable">
+                                        <field name="is_storable" class="o_input_box_overlay_start"/>
+                                        <div name="product_template_qty_field" invisible="is_product_variant">
+                                            <a type="action" name="%(product_variant_edit_qty_action)d" invisible="not show_qty_update_button">
                                                 <field name="qty_available" readonly="True"/>
                                             </a>
                                             <field name="qty_available" invisible="show_qty_update_button"/>
                                             <field name="uom_name" class="o_input_box_overlay_end" groups="uom.group_uom"/>
                                         </div>
-                                        <div name="product_product_qty_field" class="o_input_box" invisible="not is_product_variant or not is_storable">
+                                        <div name="product_product_qty_field" invisible="not is_product_variant">
                                             <field name="qty_available"/>
                                             <field name="uom_name" class="o_input_box_overlay_end" groups="uom.group_uom"/>
                                         </div>
