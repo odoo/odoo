@@ -70,9 +70,9 @@
                                                         invisible="ttype != 'many2one'"
                                                         readonly="ttype != 'many2one'"/>
                                                     <field name="relation_field"
-                                                        invisible="ttype != 'one2many'"
+                                                        invisible="ttype != 'one2many' or related or compute"
                                                         readonly="ttype != 'one2many'"
-                                                        required="ttype == 'one2many'"/>
+                                                        required="ttype == 'one2many' and not related and not compute"/>
                                                     <field name="relation_table" groups="base.group_no_one"
                                                         invisible="ttype != 'many2many' or state != 'manual'"
                                                         readonly="ttype != 'many2many' or state != 'manual'"/>
@@ -97,7 +97,7 @@
                                                 </field>
                                             </group>
                                         </page>
-                                        <page name="compute" string="Compute" groups="base.group_no_one">
+                                        <page name="compute" string="Compute" groups="base.group_no_one" invisible="ttype == 'one2many' and relation_field">
                                             <group>
                                                 <field name="related"/>
                                                 <field name="depends" required="compute not in [False, '']"/>
@@ -262,9 +262,9 @@
                                             invisible="ttype != 'many2one'"
                                             readonly="ttype != 'many2one'"/>
                                         <field name="relation_field"
-                                            invisible="ttype != 'one2many'"
+                                            invisible="ttype != 'one2many' or related or compute"
                                             readonly="ttype != 'one2many'"
-                                            required="ttype == 'one2many'"/>
+                                            required="ttype == 'one2many' and not related and not compute"/>
                                         <field name="relation_model_field"
                                             invisible="ttype != 'many2one_reference'"
                                             readonly="ttype != 'many2one_reference'"
@@ -326,7 +326,7 @@
                                     </field>
                                 </group>
                             </page>
-                            <page name="compute" string="Compute" groups="base.group_no_one">
+                            <page name="compute" string="Compute" groups="base.group_no_one" invisible="ttype == 'one2many' and relation_field">
                                 <group>
                                     <field name="related"/>
                                     <field name="depends" required="bool(compute) and store"/>
