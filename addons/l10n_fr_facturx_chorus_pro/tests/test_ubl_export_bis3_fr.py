@@ -6,6 +6,11 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiFRCommonChorusPro):
 
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
+        return subfolder_format, 'invoice', subfolder_country
+
     def _assert_invoice_partner_party_identifiers(self, partner, test_file):
         tax_20 = self.percent_tax(20.0)
         product = self._create_product(lst_price=100.0, taxes_id=tax_20)
