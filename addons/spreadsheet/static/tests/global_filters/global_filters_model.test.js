@@ -2250,6 +2250,7 @@ test("Can set a value to a relation filter from the SET_MANY_GLOBAL_FILTER_VALUE
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
+        label: "relational filter",
     });
     model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", {
         filters: [{ filterId: "42", value: { operator: "in", ids: [31] } }],
@@ -2267,6 +2268,7 @@ test("Can set a value to a date filter from the SET_MANY_GLOBAL_FILTER_VALUE com
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
+        label: "date filter",
         defaultValue: "this_month",
     });
     const newValue = { type: "month", year: 2016, month: 5 };

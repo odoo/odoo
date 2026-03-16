@@ -1,4 +1,5 @@
 /** @ts-check */
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 /**
  * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
@@ -8,9 +9,26 @@
  */
 
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import { globalFieldMatchingRegistry } from "../helpers";
+import {
+    globalFieldMatchingRegistry,
+    checkFilterAndValue,
+} from "@spreadsheet/global_filters/helpers";
 
 export class GlobalFiltersUIPlugin extends OdooUIPlugin {
+    allowDispatch(cmd) {
+        switch (cmd.type) {
+            case "SET_MANY_GLOBAL_FILTER_VALUE":
+                for (const { filterId, value } of cmd.filters) {
+                    const result = checkFilterAndValue(this.getters, filterId, value);
+                    if (result !== CommandResult.Success) {
+                        return result;
+                    }
+                }
+                return CommandResult.Success;
+        }
+        return CommandResult.Success;
+    }
+
     /**
      * Handle a spreadsheet command
      *

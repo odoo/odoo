@@ -312,13 +312,28 @@ const FILTERS_BEHAVIORS = {
     ],
 };
 
+export function checkFilterAndValue(getters, filterId, value) {
+    if (!getters.getGlobalFilter(filterId)) {
+        return CommandResult.FilterNotFound;
+    }
+    if (!checkFilterValueIsValid(getters.getGlobalFilter(filterId), value)) {
+        return CommandResult.InvalidValueTypeCombination;
+    }
+
+    const currentFilterValue = getters.getGlobalFilterValue(filterId);
+    if (deepEqual(currentFilterValue, value)) {
+        return CommandResult.NoChanges;
+    }
+    return CommandResult.Success;
+}
+
 /**
  * Check if the value is valid for given filter.
  * @param {GlobalFilter | CmdGlobalFilter} filter
  * @param {any} value
  * @returns {boolean}
  */
-export function checkFilterValueIsValid(filter, value) {
+function checkFilterValueIsValid(filter, value) {
     if (value === undefined) {
         return true;
     }

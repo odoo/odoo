@@ -17,7 +17,7 @@ import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import {
-    checkFilterValueIsValid,
+    checkFilterAndValue,
     getDateDomain,
     getDateRange,
     getDateGlobalFilterValueFromDefault,
@@ -25,7 +25,6 @@ import {
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
-import { deepEqual } from "@web/core/utils/objects";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
 const { DateTime } = luxon;
 
@@ -43,6 +42,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         "isGlobalFilterActive",
         "getTextFilterOptions",
         "getTextFilterOptionsFromRanges",
+        "getDefaultValueFromGlobalFilter",
     ]);
     constructor(config) {
         super(config);
@@ -57,19 +57,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     allowDispatch(cmd) {
         switch (cmd.type) {
             case "SET_GLOBAL_FILTER_VALUE": {
-                const filter = this.getters.getGlobalFilter(cmd.id);
-                if (!filter) {
-                    return CommandResult.FilterNotFound;
-                }
-                if (!checkFilterValueIsValid(filter, cmd.value)) {
-                    return CommandResult.InvalidValueTypeCombination;
-                }
-
-                const currentFilterValue = this.getters.getGlobalFilterValue(cmd.id);
-                if (deepEqual(currentFilterValue, cmd.value)) {
-                    return CommandResult.NoChanges;
-                }
-                break;
+                return checkFilterAndValue(this.getters, cmd.id, cmd.value);
             }
         }
         return CommandResult.Success;
@@ -136,7 +124,11 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         if (value !== undefined) {
             return value;
         }
-        const preventDefaultValue = this.values[filterId]?.preventDefaultValue;
+        return this.getDefaultValueFromGlobalFilter(filter);
+    }
+
+    getDefaultValueFromGlobalFilter(filter) {
+        const preventDefaultValue = this.values[filter.id]?.preventDefaultValue ?? false;
         if (preventDefaultValue || filter.defaultValue === undefined) {
             return undefined;
         }
