@@ -39,8 +39,8 @@ patch(PaymentScreen.prototype, {
 
     async validateOrder(isForceValidate) {
         const order = this.currentOrder;
-        // the isSettleDueLine() is only available if enterprise:pos_settle_due module is installed
-        const settleLineCount = order.lines.filter((line) => line.isSettleDueLine?.()).length;
+        // the isAnySettleLine() is only available if enterprise:pos_settle_due module is installed.
+        const settleLineCount = order.lines.filter((line) => line.isAnySettleLine?.()).length;
         if (settleLineCount && settleLineCount !== order.lines.length) {
             return this.dialog.add(AlertDialog, {
                 title: _t("Settlement Error"),
