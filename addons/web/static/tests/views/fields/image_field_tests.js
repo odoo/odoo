@@ -270,7 +270,7 @@ QUnit.module("Fields", (hooks) => {
         // event.target and not from a direct reference to the input element.
         const fileInput = target.querySelector("input[type=file]");
         const fakeInput = {
-            files: [new File([imageData], "fake_file.png", { type: "png" })],
+            files: [new File([imageData], "fake_file.png", { type: "image/png" })],
         };
         fileInput.addEventListener(
             "change",
@@ -334,7 +334,7 @@ QUnit.module("Fields", (hooks) => {
                 new File(
                     [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
                     "fake_file.png",
-                    { type: "png" }
+                    { type: "image/png" }
                 )
             );
             assert.strictEqual(
@@ -361,7 +361,7 @@ QUnit.module("Fields", (hooks) => {
                 new File(
                     [Uint8Array.from([...atob(PRODUCT_IMAGE)].map((c) => c.charCodeAt(0)))],
                     "fake_file2.gif",
-                    { type: "png" }
+                    { type: "image/png" }
                 )
             );
             assert.strictEqual(
@@ -707,7 +707,7 @@ QUnit.module("Fields", (hooks) => {
 
         async function setFiles() {
             const list = new DataTransfer();
-            list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
+            list.items.add(new File([imageData], "fake_file.png", { type: "image/png" }));
             const fileInput = target.querySelector("input[type=file]");
             fileInput.files = list.files;
             fileInput.dispatchEvent(new Event("change"));
@@ -942,7 +942,7 @@ QUnit.module("Fields", (hooks) => {
                 new File(
                     [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
                     "fake_file.png",
-                    { type: "png" }
+                    { type: "image/png" }
                 )
             );
             assert.strictEqual(

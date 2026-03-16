@@ -595,11 +595,12 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.payment_difference = 0.0
 
-    @api.depends('can_edit_wizard', 'writeoff_account_id')
+    @api.depends('can_edit_wizard', 'writeoff_account_id', 'payment_difference_handling', 'currency_id')
     def _compute_writeoff_is_exchange_account(self):
         for wizard in self:
             wizard.writeoff_is_exchange_account = all((
                 wizard.can_edit_wizard,
+                wizard.payment_difference_handling == 'reconcile',
                 wizard.currency_id != wizard.source_currency_id,
                 wizard.writeoff_account_id,
                 wizard.writeoff_account_id in (

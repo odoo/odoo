@@ -1144,7 +1144,12 @@ class ChromeBrowser:
         log_path = pathlib.Path(self.user_data_dir, 'err.log')
         with log_path.open('wb') as log_file:
             # pylint: disable=subprocess-popen-preexec-fn
-            proc = subprocess.Popen(cmd, stderr=log_file, preexec_fn=_preexec)  # noqa: PLW1509
+            proc = subprocess.Popen(
+                cmd,
+                stderr=log_file,
+                preexec_fn=_preexec,
+                env={**os.environ, 'TMPDIR': self.user_data_dir},
+            )  # noqa: PLW1509
 
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
@@ -1788,6 +1793,9 @@ which leads to stray network requests and inconsistencies."""
 
 @lru_cache(1)
 def _find_executable():
+    browser_bin_path = os.environ.get('ODOO_BROWSER_BIN')  # used for testing specific Chrome builds
+    if browser_bin_path and os.path.exists(browser_bin_path):
+        return browser_bin_path
     system = platform.system()
     if system == 'Linux':
         for bin_ in ['google-chrome', 'chromium', 'chromium-browser', 'google-chrome-stable']:
