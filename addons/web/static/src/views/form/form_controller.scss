@@ -1302,7 +1302,7 @@ body:not(.o_touch_device) .o_form_view {
 .o_touch_device .o_form_view {
     .o_wrap_cell:has(.o_input, textarea, select, [contenteditable]):not(:has(.o_setting_box)) .o_form_label:not(.o_field_widget .o_form_label):not(.form-check-label),
     .oe_title:is(:has(.o_input, textarea, select, [contenteditable]), :not(:has(h1,h2,h3,h4,h5,h6))) .o_form_label,
-    .o_cell:not(.o_wrap_field_inline *):has(+ .o_cell .o_field_widget :is(.o_input, textarea, select, [contenteditable], .o_colorlist), + .o_cell .o_field_widget.o_readonly_modifier):not(:has(table)) .o_form_label {
+    .o_cell:not(.o_wrap_field_inline *):has(+ .o_cell .o_field_widget :is(.o_input, textarea, select, [contenteditable], .o_colorlist), + .o_cell .o_field_widget.o_readonly_modifier,  + .o_cell .o_row .o_field_widget.o_field_boolean):not(:has(table)) .o_form_label {
         position: absolute;
         transform: translate(var(--inputbox-spacing-unit), calc(-.5 * var(--fieldWidget-label-height) - #{$input-border-width}));
         background: $o-view-background-color;
