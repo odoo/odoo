@@ -202,7 +202,7 @@ will update the cost of every lot/serial number in stock."),
             "value_svl": value_svl,
             "quantity_svl": quantity_sum,
             "avg_cost": avg_cost,
-            "total_value": avg_cost * self.sudo(False).qty_available if avg_cost else 0
+            "total_value": avg_cost * self.sudo(False)._with_valuation_context().qty_available if avg_cost else 0
         }
 
     @api.depends('stock_valuation_layer_ids')
@@ -217,6 +217,10 @@ will update the cost of every lot/serial number in stock."),
             aggregates = group_mapping.get(product._origin, (0, 0))
             vals = product._prepare_valuation_layer_field_values(aggregates)
             product.update(vals)
+
+    def _with_valuation_context(self):
+        valued_locations = self.env['stock.location'].search([('company_id', 'in', self.env.companies.ids), ('usage', 'in', ['internal', 'transit'])])
+        return self.with_context(location=valued_locations.ids)
 
     # -------------------------------------------------------------------------
     # Actions
