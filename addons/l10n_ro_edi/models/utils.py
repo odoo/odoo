@@ -1,6 +1,6 @@
 import io
 import zipfile
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import requests
 from lxml import etree
@@ -31,14 +31,16 @@ def make_efactura_request(session, company, endpoint, params, data=None) -> dict
     url = f"https://api.anaf.ro/{send_mode}/FCTEL/rest/{endpoint}"
     if endpoint in ['upload', 'uploadb2c', 'transformare']:
         method = 'POST'
-    elif endpoint in ['stareMesaj', 'descarcare', 'listaMesajeFactura']:
+    elif endpoint in ['stareMesaj', 'descarcare', 'listaMesajePaginatieFactura']:
         method = 'GET'
     else:
         return {'error': company.env._('Unknown endpoint.')}
     headers = {'Content-Type': 'application/xml',
                'Authorization': f'Bearer {company.l10n_ro_edi_access_token}'}
     if endpoint == 'transformare':
-        url = "https://webservicesp.anaf.ro/prod/FCTEL/rest/transformare/FACT1/DA"
+        url = "https://webservicesp.anaf.ro/prod/FCTEL/rest/transformare/%s/%s" % (
+            params.get("standard", "FACT1"), params.get("novld", "DA")
+        )
         headers = {'Content-Type': 'text/plain'}
 
     try:
@@ -221,15 +223,94 @@ def _request_ciusro_download_answer(company, key_download, session):
     return {'error': company.env._("The SPV data could not be parsed.")}
 
 
-def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
+def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1):
     """
-    This method makes a "Fetch Messages" (GET/listaMesajeFactura) request to the Romanian SPV.
+    This method makes a "Fetch Messages" (GET/listaMesajePaginatieFactura) request to the Romanian SPV.
     After processing the response, if messages were indeed fetched, it will fetch the content
-    of said messages.
+    of said messages. It used the pagination system of the SPV to make sure all messages are fetched,
+    by default only the first 500 are shown, so in case of bigger comapnies, this method needs to be paginated.
 
     Possible returns:
-    - {'error': `str`} if there was a failing response from a bad request;
-    - {'sent_invoices_messages': [`dict`], 'sent_invoices_refused_messages': [`dict`], 'received_bills_messages': [`dict`]}
+    Returns a dict with messages and errors keys,  messages is a list of all messages obtained from SPV and
+    errors is a list of all errors encountered during the pagination request or the fetching of the message content.
+    - {messages: [`dict`], errors: [`str`]}
+    where `dict` is {
+        'data_creare': `str`,
+        'cif': `str`,
+        'id_solicitare': `str`,
+        'detalii': `str`,
+        'tip': 'FACTURA TRIMISA'|'ERORI FACTURA'|'FACTURA PRIMITA',
+        'id': `str`,
+        'answer': <`_request_ciusro_download_answer`>
+    } representing a message.
+
+    :param company: ``res.company`` object
+    :param session: ``requests.Session()`` object
+    :param nb_days(optional,default=1): ``int`` the number of days for which the request should be made, min=1, max=60
+    :return: {'error': `str`} | {'sent_invoices_messages': [`dict`], 'sent_invoices_refused_messages': [`dict`], 'received_bills_messages': [`dict`]}
+    """
+    def pagination_request(session, company, params):
+        pagina = params.get("pagina", 1)
+        start_time = params.get("start_time")
+        end_time = params.get("end_time")
+        numar_total_pagini = 1
+        messages = params.get("messages", [])
+        errors = params.get("errors", [])
+        result = make_efactura_request(
+            session=session,
+            company=company,
+            endpoint='listaMesajePaginatieFactura',
+            params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': pagina},
+        )
+
+        page_messages = []
+        if 'error' not in result:
+            try:
+                msg_content = json.loads(result['content'])
+                page_messages = msg_content.get('mesaje', [])
+                numar_total_pagini = msg_content.get('numar_total_pagini', 1)
+                if eroare := msg_content.get('eroare'):
+                    errors.append(eroare)
+            except ValueError:
+                errors.append(company.env._("The SPV data from page %s could not be parsed.") % pagina)
+        else:
+            msg_content = json.loads(result['content'])
+            if eroare := msg_content.get('eroare'):
+                errors.append(eroare)
+        messages += page_messages
+        if pagina < numar_total_pagini:
+            params.update(
+                {
+                    "pagina": pagina + 1,
+                    "messages": messages,
+                    "errors": errors
+                }
+            )
+            return pagination_request(session, company, params)
+        return {'messages': messages, 'errors': errors}
+    start_time = end_time = 0
+    end_time = datetime.now()
+    start_time = end_time - timedelta(days=nb_days)
+    start_time = str(start_time.timestamp() * 1e3).split(".")[0]
+    end_time = str(end_time.timestamp() * 1e3).split(".")[0]
+
+    message_response = pagination_request(
+        session=session,
+        company=company,
+        params={'start_time': start_time, 'end_time': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': 1, 'messages': [], 'errors': []},
+    )
+
+    return message_response
+
+
+def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
+    """ This method processes the messages obtained from _request_ciusro_synchronize_invoices_pagination
+    by fetching the content of each message and separating them into three categories:
+    - Accepted sent invoices messages (representing the accepted status of an invoice sent to SPV)
+    - Refused sent invoices messages (representing the refused status of an invoice sent to SPV)
+    - Received bills messages (representing the received status of an invoice received from SPV)
+    - Errors during the pagination request or the fetching of the message content
+    - {'sent_invoices_messages': [`dict`], 'sent_invoices_refused_messages': [`dict`], 'received_bills_messages': [`dict`], 'errors': [`str`]}
     where `dict` is {
         'data_creare': `str`,
         'cif': `str`,
@@ -241,33 +322,19 @@ def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
     } representing a message.
     sent_invoices_messages will contain all message validating an invoice, sent_invoices_refused_messages will contain all messages refusing an invoice
     and received_bills_messages will contain all message representing received bills.
-
-    :param company: ``res.company`` object
-    :param session: ``requests.Session()`` object
-    :param nb_days(optional,default=1): ``int`` the number of days for which the request should be made, min=1, max=60
-    :return: {'error': `str`} | {'sent_invoices_messages': [`dict`], 'sent_invoices_refused_messages': [`dict`], 'received_bills_messages': [`dict`]}
     """
-    result = make_efactura_request(
-        session=session,
-        company=company,
-        endpoint='listaMesajeFactura',
-        params={'zile': nb_days, 'cif': company.vat.replace('RO', '')},
-    )
-    if 'error' in result:
-        return {'error': result['error']}
-
-    try:
-        msg_content = json.loads(result['content'])
-    except ValueError:
-        return {'error': company.env._("The SPV data could not be parsed.")}
-
-    if eroare := msg_content.get('eroare'):
-        return {'error': eroare}
-
+    message_response = _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=nb_days)
+    messages = message_response.get('messages', [])
+    errors = message_response.get('errors', [])
     received_bills_messages = []
     sent_invoices_accepted_messages = []
     sent_invoices_refused_messages = []
-    for message in msg_content.get('mesaje'):
+    for message in messages:
+        # This method takes a lot of time, if you have a lot of messages
+        # so would be good to recheck it or if it's really needed for all
+        # messages, for purchase invoice, I don't see it required,
+        # but it is used also in _l10n_ro_edi_process_bill_messages.
+        # Probably we can check before for which the response is needed.
         message['answer'] = _request_ciusro_download_answer(
             key_download=message['id'],
             company=company,
@@ -279,27 +346,30 @@ def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
             sent_invoices_refused_messages.append(message)
         elif message['tip'] == 'FACTURA PRIMITA':
             received_bills_messages.append(message)
-
     return {
         'sent_invoices_accepted_messages': sent_invoices_accepted_messages,
         'sent_invoices_refused_messages': sent_invoices_refused_messages,
-        'received_bills_messages': received_bills_messages
+        'received_bills_messages': received_bills_messages,
+        'errors': errors
     }
 
 
-def _request_ciusro_xml_to_pdf(company, xml_data):
+def _request_ciusro_xml_to_pdf(company, xml_data, inv_type, validate_xml):
     """
     This method makes a 'transformare' request to get the official PDF of an invoice.
 
     :param company: ``res.company`` object
     :param xml_data: String of XML data to be sent
+    :param inv_type: String, invoice type, either 'FACT1' or 'CN' depending on the move_type of the invoice
+    :param validate_xml: String, either 'DA' or 'NU', depending on whether the XML needs validation
     :return: response dict from E-Factura
     """
+    #
     return make_efactura_request(
         session=requests,
         company=company,
         endpoint='transformare',
-        params={'standard': 'FACT1',
-                'novld': 'DA'},
+        params={'standard': inv_type,
+                'novld': validate_xml},
         data=xml_data,
     )
