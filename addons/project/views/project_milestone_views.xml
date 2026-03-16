@@ -128,8 +128,8 @@
         <field name="sequence">10</field>
         <field name="name">Milestones</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-        <field name="action_id" ref="project.project_milestone_action"/>
-        <field name="python_method" eval="False"/>
+        <field name="action_id" eval="False"/>
+        <field name="python_method">action_get_list_view</field>
         <field name="domain">[('allow_milestones', '=', True)]</field>
         <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
     </record>
@@ -139,8 +139,8 @@
         <field name="sequence">25</field>
         <field name="name">Milestones</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
-        <field name="action_id" ref="project.project_milestone_action"/>
-        <field name="python_method" eval="False"/>
+        <field name="action_id" eval="False"/>
+        <field name="python_method">action_get_list_view</field>
         <field name="domain">[('allow_milestones', '=', True)]</field>
         <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
     </record>
