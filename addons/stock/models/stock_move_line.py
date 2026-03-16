@@ -839,18 +839,24 @@ class StockMoveLine(models.Model):
         move_line_to_unlink.unlink()
         move_to_reassign._action_assign()
 
+    def _get_aggregated_description(self, move):
+        return move.description_picking or ""
+
+    def _get_aggregated_line_key(self, move, product, uom, description):
+        return f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{move.packaging_uom_id.id or ""}'
+
     def _get_aggregated_properties(self, move_line=False, move=False):
         move = move or move_line.move_id
         uom = move.product_uom or move_line.product_uom_id
         packaging_uom = move.packaging_uom_id
         name = move.product_id.display_name
-        description = move.description_picking or ""
+        description = self._get_aggregated_description(move)
         product = move.product_id
         if description.startswith(name):
             description = description.removeprefix(name).strip()
         elif description.startswith(product.name):
             description = description.removeprefix(product.name).strip()
-        line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{packaging_uom.id}'
+        line_key = self._get_aggregated_line_key(move, product, uom, description)
         return {
             'line_key': line_key,
             'name': name,
