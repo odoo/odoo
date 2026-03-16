@@ -4980,6 +4980,20 @@ class TestStockMove(TestStockCommon):
         warning = scrap.action_scrap()
         self.assertEqual(warning.get('res_model'), 'stock.warn.insufficient.qty.scrap', "Should trigger the warning as no qty in location")
 
+    def test_scrap_13_discard_of_insufficient_warning(self):
+        """ Check that the scrap move is not deleted when insufficient
+            quantity warning is discarded via the scrap move form view.
+        """
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
+            'product_id': self.productA.id,
+            'quantity': 5,
+        })
+        Form.from_action(self.env, scrap.action_scrap()).save().action_cancel()
+        self.assertTrue(scrap.exists(), "The scrap move should not be deleted after discarding the warning.")
+        Form.from_action(self.env, scrap.with_context(unlink_on_discard=True).action_scrap()).save().action_cancel()
+        self.assertFalse(scrap.exists(), "The scrap move should have been deleted after discarding the warning.")
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """
