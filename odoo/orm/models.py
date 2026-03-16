@@ -4715,6 +4715,21 @@ class BaseModel(metaclass=MetaModel):
             sec_domain = sec_domain.optimize_full(self_sudo)
             if sec_domain.is_false():
                 return self.browse()._as_query()
+            if (
+                sec_domain.is_condition('id', 'any!', Query)
+                and (ids := sec_domain.value._ids) is not None
+            ):
+                # optimization: browse ids and filter using the domain
+                records = self.browse(ids)
+                self.env._add_to_access_cache(records)
+                records = records.filtered_domain(domain)
+                if order:
+                    records = records.with_prefetch().sorted(order)
+                if offset:
+                    records = records[offset:]
+                if limit:
+                    records = records[:limit]
+                return records._as_query(ordered=bool(order))
             if not sec_domain.is_true():
                 query.add_where(sec_domain._to_sql(query.table._with_model(self_sudo)))
 
