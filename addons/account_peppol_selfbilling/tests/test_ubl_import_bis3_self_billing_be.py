@@ -16,8 +16,10 @@ class TestUblBis3SelfBilling(TestUblBis3Common, TestUblCiiBECommon):
             'is_self_billing': True,
         })
 
-    def subfolder(self):
-        return ''
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
+        return subfolder_format, 'self_invoice', subfolder_country
 
     def test_export_selfbilling(self):
         tax_21 = self.percent_tax(21.0)
