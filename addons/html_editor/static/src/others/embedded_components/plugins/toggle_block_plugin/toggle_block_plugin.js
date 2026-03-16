@@ -2,7 +2,7 @@ import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { isEmptyBlock, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isParagraphRelatedElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     childNodes,
     children,
@@ -322,8 +322,8 @@ export class ToggleBlockPlugin extends Plugin {
         }
         let nextEl;
         if (content.parentElement.matches(".d-none")) {
-            nextEl = toggle.nextSibling;
-            if (nextEl.matches?.(toggleSelector)) {
+            nextEl = toggle.nextElementSibling;
+            if (nextEl?.matches(toggleSelector)) {
                 this.explodeToggle(nextEl);
                 nextEl = toggle.nextSibling;
             }
@@ -334,16 +334,15 @@ export class ToggleBlockPlugin extends Plugin {
                 nextEl = content.firstChild;
             }
         }
-        if (!isParagraphRelatedElement(nextEl)) {
-            return;
+        if (nextEl && (isTextNode(nextEl) || isParagraphRelatedElement(nextEl))) {
+            title.append(nextEl);
+            this.dependencies.selection.setCursorEnd(block);
+            this.dependencies.delete.deleteForward(
+                this.dependencies.selection.getEditableSelection(),
+                "character"
+            );
+            return true;
         }
-        title.append(nextEl);
-        this.dependencies.selection.setCursorEnd(block);
-        this.dependencies.delete.deleteForward(
-            this.dependencies.selection.getEditableSelection(),
-            "character"
-        );
-        return true;
     }
 
     handleDeleteForwardBeforeToggle({ startContainer, startOffset }) {
