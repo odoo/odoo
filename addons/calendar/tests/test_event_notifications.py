@@ -78,6 +78,11 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with self.assertNoNotifications():
             self.event.partner_ids = self.partner
 
+    def test_message_inactive_template(self):
+        self.env['mail.template'].search([]).active = False
+        with self.assertNoNotifications():
+            self.event.partner_ids = self.partner
+
     def test_message_set_inactive_invite(self):
         self.event.active = False
         with self.assertNoNotifications():
