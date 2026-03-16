@@ -1244,7 +1244,6 @@
 
             &:not(.o_field_widget *):not(.o_input_box_overlay_start, .o_input_box_overlay_end) {
                 &:not(.o_field_html) {
-                    line-height: calc(2.5 * var(--inputbox-spacing-unit));
                     // input boxes should always have at least the height of: line-height + vertical padding + border width
                     min-height: calc((2.5 + 2) * var(--inputbox-spacing-unit) + 2 * var(--fieldWidget-outline-width));
                 }
@@ -1258,7 +1257,7 @@
             }
         }
 
-        .o_input, textarea, select, [contenteditable] {
+        .o_input, textarea, select, [contenteditable], .o_input + .o_dropdown_button {
             border-color: transparent;
             padding: 0;
             font-size: var(--body-font-size);

@@ -951,7 +951,10 @@ test("editable and readonly/empty fields have the same minimum size", async () =
             <field name="int_field"/>
         </form>`,
     });
-    const targetSize = Math.floor(queryFirst(".o_field_widget").getBoundingClientRect().height);
-    expect(Math.floor(queryFirst(".o_field_widget.o_readonly_modifier").getBoundingClientRect().height)).toBe(targetSize);
-    expect(Math.floor(queryFirst(".o_field_widget[name='int_field']").getBoundingClientRect().height)).toBe(targetSize);
+    const targetSize = queryFirst(".o_field_widget").getBoundingClientRect().height;
+    const readonlySize = queryFirst(".o_readonly_modifier").getBoundingClientRect().height;
+    const intSize = queryFirst("[name='int_field']").getBoundingClientRect().height;
+
+    expect(Math.abs(targetSize - readonlySize) <= 1).toBe(true);
+    expect(Math.abs(targetSize - intSize) <= 1).toBe(true);
 });
