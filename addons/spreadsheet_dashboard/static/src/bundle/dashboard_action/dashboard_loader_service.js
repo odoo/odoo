@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
 import { _t } from "@web/core/l10n/translation";
+import { cookie } from "@web/core/browser/cookie";
 
 /**
  * @type {{
@@ -275,6 +276,7 @@ export class DashboardLoader {
             mode: "dashboard",
             defaultCurrency: createDefaultCurrency(serverResult.default_currency),
             external: { geoJsonService: this.geoJsonService },
+            colorScheme: cookie.get("color_scheme")
         };
     }
 }
