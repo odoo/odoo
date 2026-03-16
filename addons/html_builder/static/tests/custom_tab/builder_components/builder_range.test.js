@@ -10,7 +10,6 @@ import { expect, test, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, fill, freezeTime, press } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 describe.current.tags("desktop");
 
@@ -27,12 +26,10 @@ test("should commit changes", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`,
+    });
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
@@ -62,18 +59,14 @@ test("range input should step up or down with arrow keys", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-integer-step";
-            static template = xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`;
-        }
-    );
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-fractional-step";
-            static template = xml`<BuilderRange action="'customAction'" step="0.15" displayRangeValue="true"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-integer-step",
+        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+    });
+    addBuilderOption({
+        selector: ".test-fractional-step",
+        template: xml`<BuilderRange action="'customAction'" step="0.15" displayRangeValue="true"/>`,
+    });
     await setupHTMLBuilder(`
         <div class="test-integer-step">10</div>
         <div class="test-fractional-step">14.85</div>
@@ -158,12 +151,10 @@ test("keeping an arrow key pressed should commit only once", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+    });
     freezeTime();
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
@@ -201,12 +192,10 @@ test("should syncronize previews", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderRange withNumberInput="true" action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange withNumberInput="true" action="'customAction'"/>`,
+    });
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
@@ -259,12 +248,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderRange action="'customAction'" unit="'px'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRange action="'customAction'" unit="'px'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5px</div>
                 `);
@@ -289,12 +276,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderRange action="'customAction'" unit="'s'" saveUnit="'ms'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRange action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5000ms</div>
                 `);
@@ -316,12 +301,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderRange action="'customAction'" unit="'s'" saveUnit="'ms'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRange action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
         // note that 5000 has no unit of measure
         await setupHTMLBuilder(`
                     <div class="test-options-target">5000</div>
@@ -344,12 +327,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderRange action="'customAction'" unit="'px'" saveUnit="''"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRange action="'customAction'" unit="'px'" saveUnit="''"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5</div>
                 `);
@@ -375,12 +356,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderRange action="'customAction'" unit="'s'" saveUnit="'ms'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRange action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5s</div>
                 `);

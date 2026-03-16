@@ -6,17 +6,14 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 
 test("switch to custom tab and click on a main page option", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = "main";
-            static template = xml`<BuilderButton classAction="'my-custom-class'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: "main",
+        template: xml`<BuilderButton classAction="'my-custom-class'"/>`,
+    });
     await setupWebsiteBuilder(`<main>b</main>`);
     await contains('[id="customize-tab"]').click();
     await contains("[data-class-action='my-custom-class']").click();

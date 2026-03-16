@@ -29,7 +29,6 @@ import {
 } from "@html_builder/../tests/helpers";
 import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBuilder } from "@website/builder/website_builder";
@@ -193,13 +192,11 @@ test("reload save with target, then discard and edit again should not reselect t
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-option";
-            static template = xml`<BuilderButton action="'testAction'"/>`;
-            static reloadTarget = true;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-option",
+        template: xml`<BuilderButton action="'testAction'"/>`,
+        reloadTarget: true,
+    });
     const deferred = Promise.withResolvers();
     await setupWebsiteBuilder(`<div class="test-option">b</div>`, {
         delayReload: async () => await deferred.promise,
@@ -245,13 +242,11 @@ test("preview shouldn't let o_dirty", async () => {
         };
     }
     addPlugin(TestPlugin);
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-option";
-            static template = xml`<BuilderButton action="'testAction'"/>`;
-            static reloadTarget = true;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-option",
+        template: xml`<BuilderButton action="'testAction'"/>`,
+        reloadTarget: true,
+    });
     await setupWebsiteBuilder(`<div class="test-option">b</div>`);
     editorIsStart = true;
     await contains(":iframe .test-option").click();
@@ -590,13 +585,11 @@ test("attempt to prevent closing window with unsaved changes", async () => {
 test("Modifying an element inside '.o_not_editable' should not mark this element as 'dirty'", async () => {
     // An example of such a situation is a change of the blog author that makes
     // a change of the author avatar accordingly.
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test";
-            static template = xml`<BuilderButton classAction="'x'"/>`;
-            static editableOnly = false;
-        }
-    );
+    addBuilderOption({
+        selector: ".test",
+        editableOnly: false,
+        template: xml`<BuilderButton classAction="'x'"/>`,
+    });
     await setupWebsiteBuilder(`
         <div class="o_not_editable" data-oe-model="model" data-oe-id="1" data-oe-field="field">
             <p class="test">Test</p>

@@ -18,7 +18,6 @@ import {
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models } from "@web/../tests/web_test_helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 describe.current.tags("desktop");
 
@@ -34,12 +33,10 @@ test("should get the initial value of the input", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
     await setupHTMLBuilder(`
                 <div class="test-options-target">10</div>
             `);
@@ -49,18 +46,14 @@ test("should get the initial value of the input", async () => {
     expect(input).toHaveValue(10);
 });
 test("hide/display base on applyTo", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".parent-target";
-            static template = xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`;
-        }
-    );
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".parent-target";
-            static template = xml`<BuilderNumberInput applyTo="'.my-custom-class'" action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".parent-target",
+        template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+    });
+    addBuilderOption({
+        selector: ".parent-target",
+        template: xml`<BuilderNumberInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
+    });
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
@@ -90,12 +83,10 @@ test("hide/display base on applyTo", async () => {
     expect("[data-action-id='customAction'] input").toHaveValue(10);
 });
 test("input with classAction and styleAction", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderNumberInput classAction="'testAction'" styleAction="'--custom-property'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput classAction="'testAction'" styleAction="'--custom-property'"/>`,
+    });
     await setupHTMLBuilder(`
                 <div class="test-options-target">10</div>
             `);
@@ -120,12 +111,10 @@ test("input kept on async action", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
     await setupHTMLBuilder(`<div class="test-options-target" data-test="1">Hello</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".options-container input").edit("2");
@@ -150,18 +139,14 @@ test("input should remove invalid char", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-        }
-    );
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target-composable";
-            static template = xml`<BuilderNumberInput action="'customAction'" composable="true"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    addBuilderOption({
+        selector: ".test-options-target-composable",
+        template: xml`<BuilderNumberInput action="'customAction'" composable="true"/>`,
+    });
     await setupHTMLBuilder(
         `<div class="test-options-target" data-test="1">Hello</div><div class="test-options-target-composable" data-test="2">World</div>`
     );
@@ -206,18 +191,14 @@ test("should select input value on focus only if selectTextOnFocus prop is set",
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target-1";
-            static template = xml`<BuilderNumberInput action="'customAction'" selectTextOnFocus="true"/>`;
-        }
-    );
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target-2";
-            static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target-1",
+        template: xml`<BuilderNumberInput action="'customAction'" selectTextOnFocus="true"/>`,
+    });
+    addBuilderOption({
+        selector: ".test-options-target-2",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
     await setupHTMLBuilder(`
                 <div class="test-options-target-1">10</div>
                 <div class="test-options-target-2">10</div>
@@ -244,12 +225,10 @@ describe("default value", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" default="20"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" default="20"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10</div>
         `);
@@ -270,12 +249,10 @@ describe("default value", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" />`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" />`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -302,12 +279,10 @@ describe("default value", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" default="1"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" default="1"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -335,12 +310,10 @@ describe("default value", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" default="null"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" default="null"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -372,12 +345,10 @@ describe("operations", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -403,12 +374,10 @@ describe("operations", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -437,12 +406,10 @@ describe("operations", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -475,12 +442,10 @@ describe("operations", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" preview="false"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" preview="false"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">10</div>
                 `);
@@ -507,12 +472,10 @@ describe("keyboard triggers", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" step="2"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" step="2"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10</div>
         `);
@@ -543,12 +506,10 @@ describe("keyboard triggers", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" composable="true"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" composable="true"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10 4 0</div>
         `);
@@ -579,12 +540,10 @@ describe("keyboard triggers", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" />`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" />`,
+        });
         await setupHTMLBuilder(`<div class="test-options-target">Non empty div.</div>`);
         await contains(":iframe .test-options-target").click();
         await click("[data-action-id='customAction'] input");
@@ -607,12 +566,10 @@ describe("keyboard triggers", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" />`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" />`,
+        });
         await setupHTMLBuilder(`<div class="test-options-target">Non empty div.</div>`);
         await contains(":iframe .test-options-target").click();
         await click("[data-action-id='customAction'] input");
@@ -638,12 +595,10 @@ describe("keyboard triggers", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10</div>
         `);
@@ -678,12 +633,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" unit="'px'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'px'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5px</div>
                 `);
@@ -709,12 +662,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5000ms</div>
                 `);
@@ -736,12 +687,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
         // note that 5000 has no unit of measure
         await setupHTMLBuilder(`
                     <div class="test-options-target">5000</div>
@@ -765,12 +714,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" unit="'px'" saveUnit="''"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'px'" saveUnit="''"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5</div>
                 `);
@@ -796,12 +743,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5s</div>
                 `);
@@ -841,18 +786,14 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customActionText'" unit="'px'" placeholder="'placeholder'" default="null"/>`;
-            }
-        );
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderButton action="'customActionButton'">Empty</BuilderButton>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customActionText'" unit="'px'" placeholder="'placeholder'" default="null"/>`,
+        });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderButton action="'customActionButton'">Empty</BuilderButton>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5px</div>
                 `);
@@ -922,12 +863,10 @@ describe("unit & saveUnit", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" unit="'px'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" unit="'px'"/>`,
+        });
         await setupHTMLBuilder(`
                     <div class="test-options-target">5px</div>
                 `);
@@ -969,12 +908,10 @@ describe("sanitized values", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10</div>
         `);
@@ -995,12 +932,10 @@ describe("sanitized values", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" min="0"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" min="0"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10</div>
         `);
@@ -1022,12 +957,10 @@ describe("sanitized values", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" min="1"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" min="1"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">2</div>
         `);
@@ -1055,12 +988,10 @@ describe("sanitized values", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" max="10"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" max="10"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">3</div>
         `);
@@ -1082,12 +1013,10 @@ describe("sanitized values", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput action="'customAction'" composable="true"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" composable="true"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target">10</div>
         `);
@@ -1097,12 +1026,10 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue("3 4 5");
     });
     test("after input, displayed value is cleaned to match only numbers", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1112,12 +1039,10 @@ describe("sanitized values", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "0");
     });
     test("after input, displayed value is cleaned to match only numbers (default=null)", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'" default="null"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" default="null"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1127,12 +1052,10 @@ describe("sanitized values", () => {
         expect(":iframe .test-options-target").not.toHaveAttribute("data-number");
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers (non-composable)", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1142,12 +1065,10 @@ describe("sanitized values", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-number", 0);
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers (composable)", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'" composable="true"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" composable="true"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1157,12 +1078,10 @@ describe("sanitized values", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-number", -3);
     });
     test("accept decimal numbers", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1172,12 +1091,10 @@ describe("sanitized values", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
     test("BuilderNumberInput transforms , into . (composable)", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'" composable="true"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" composable="true"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1187,12 +1104,10 @@ describe("sanitized values", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
     test("displays the correct value (no floating point precision error)", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'" step="0.1"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" step="0.1"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1208,12 +1123,10 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue(0.2);
     });
     test("rounds the number to 3 decimals", async () => {
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+        });
         await setupHTMLBuilder(`
             <div class="test-options-target" data-number="10">Test</div>
         `);
@@ -1232,12 +1145,10 @@ describe("sanitized values", () => {
             make_scss_customization() {}
         }
         defineModels([WebEditorAssets]);
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderNumberInput dataAttributeAction="'number'" unit="'px'" saveUnit="'rem'"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" unit="'px'" saveUnit="'rem'"/>`,
+        });
         await setupHTMLBuilder(`<div class="test-options-target">Test</div>`);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit("19");

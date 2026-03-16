@@ -6,7 +6,6 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 
@@ -22,13 +21,13 @@ test("do not update builder if in preview mode", async () => {
         };
     }
     addPlugin(P);
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderButton id="'id1'" action="'customAction'">b1</BuilderButton>
-        <BuilderButton classAction="'b2_class'" t-if="this.isActiveItem('id1')">b2</BuilderButton>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButton id="'id1'" action="'customAction'">b1</BuilderButton>
+            <BuilderButton classAction="'b2_class'" t-if="this.isActiveItem('id1')">b2</BuilderButton>
+        `,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").hover();

@@ -2,7 +2,6 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -26,25 +25,23 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         def.resolve();
         return "";
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`
-        <BuilderColorPicker
-            enabledTabs="['theme', 'custom', 'gradient']"
-            preview="false"
-            defaultColor="''"
-            action="'customizeWebsiteColor'"
-            actionParam="{
-                mainParam: 'test-custom',
-                gradientColor: 'test-gradient',
-                combinationColor: 'test',
-                nullValue: 'NULL',
-            }"
-        />
-        `;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderColorPicker
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'test-custom',
+                    gradientColor: 'test-gradient',
+                    combinationColor: 'test',
+                    nullValue: 'NULL',
+                }"
+            />
+        `,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         loadIframeBundles: true,
     });

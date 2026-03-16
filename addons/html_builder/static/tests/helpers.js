@@ -361,10 +361,19 @@ export function addBuilderOption(option) {
         patchWithCleanup(BuilderOptionsPlugin.prototype, {
             computeBuilderOptionsFromTemplate() {
                 const options = super.computeBuilderOptionsFromTemplate();
-                const normalizedTestOptions = testBuilderOptions.map((option, index) => {
-                    const optionName = `TestBuilderOption${index}`;
-                    return this.createOptionClass(optionName, {}, option);
-                });
+                const normalizedTestOptions = testBuilderOptions.map(
+                    ({ optionAttributes, OptionComponent }, index) => {
+                        const optionName = `TestBuilderOption${index}`;
+                        if (!OptionComponent) {
+                            return this.createOptionClass(optionName, optionAttributes);
+                        }
+                        return this.createOptionClass(
+                            optionName,
+                            optionAttributes,
+                            OptionComponent
+                        );
+                    }
+                );
                 return [...options, ...normalizedTestOptions];
             },
         });
@@ -374,7 +383,16 @@ export function addBuilderOption(option) {
         });
         isBuilderOptionPatched = true;
     }
-    testBuilderOptions.push(option);
+
+    const normalizeBuilderOption = (option) => {
+        const { Component: OptionComponent, ...optionAttributes } = option;
+        return {
+            optionAttributes,
+            OptionComponent,
+        };
+    };
+
+    testBuilderOptions.push(normalizeBuilderOption(option));
 }
 
 export function addBuilderAction(actions = {}) {

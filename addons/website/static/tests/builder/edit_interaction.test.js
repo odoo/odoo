@@ -15,7 +15,6 @@ import {
     confirmAddSnippet,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 
@@ -51,12 +50,10 @@ test("ensure order of operations when hovering an option", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderButton action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'"/>`,
+    });
     patchWithCleanup(EditInteractionPlugin.prototype, {
         refreshInteractions(element) {
             expect.step("refreshInteractions");

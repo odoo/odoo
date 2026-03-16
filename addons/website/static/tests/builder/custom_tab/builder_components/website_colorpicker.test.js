@@ -2,7 +2,6 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption, waitForEndOfOperation } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -11,13 +10,11 @@ import {
 
 defineWebsiteModels();
 
-const ColorPickerOption = class extends BaseOptionComponent {
-    static selector = ".test-options-target";
-    static template = xml`<BuilderColorPicker styleAction="'background-color'"/>`;
-};
-
 test("should apply o_cc color", async () => {
-    addBuilderOption(ColorPickerOption);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
@@ -28,7 +25,10 @@ test("should apply o_cc color", async () => {
 });
 
 test("should remove o_cc color on reset", async () => {
-    addBuilderOption(ColorPickerOption);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target o_cc o_cc3">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
@@ -40,12 +40,10 @@ test("should remove o_cc color on reset", async () => {
 });
 
 test("should have the theme tab", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderColorPicker enabledTabs="['custom', 'theme']" styleAction="'background-color'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['custom', 'theme']" styleAction="'background-color'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
@@ -59,12 +57,10 @@ test("should have the theme tab", async () => {
 });
 
 test("should work with color transition", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderColorPicker styleAction="'color'" enabledTabs="['custom']" />`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'color'" enabledTabs="['custom']" />`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         // The CSS for the class "o_we_force_no_transition" is needed
         loadIframeBundles: true,

@@ -2,7 +2,6 @@ import { expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -71,12 +70,10 @@ test("Do not set contenteditable attribute on data-oe-readonly", async () => {
         };
     }
     addPlugin(TestPlugin);
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".target";
-            static template = xml`<BuilderButton classAction="'test-class'">Test</BuilderButton>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".target",
+        template: xml`<BuilderButton classAction="'test-class'">Test</BuilderButton>`,
+    });
     await setupWebsiteBuilder(`
         <section>
             <div class="non-editable">

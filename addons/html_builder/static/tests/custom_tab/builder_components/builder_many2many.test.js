@@ -9,7 +9,6 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 class Test extends models.Model {
     _name = "test";
@@ -36,12 +35,10 @@ test("many2many: find tag, select tag, unselect tag", async () => {
             expect(kwargs.domain).toEqual([["id", "not in", [1]]]);
         }
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderMany2Many dataAttributeAction="'test'" model="'test'" limit="10"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderMany2Many dataAttributeAction="'test'" model="'test'" limit="10"/>`,
+    });
     const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target">b</div>`
     );
@@ -108,12 +105,10 @@ test("many2many: async load", async () => {
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderMany2Many action="'testAction'" model="'test'" limit="10"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderMany2Many action="'testAction'" model="'test'" limit="10"/>`,
+    });
     const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target">b</div>`
     );

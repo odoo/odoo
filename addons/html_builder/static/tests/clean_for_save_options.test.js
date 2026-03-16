@@ -7,19 +7,19 @@ import { contains } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 
 test("clean for save of option with selector that matches an element on the page", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
+    addBuilderOption({
+        selector: ".test-options-target",
+        Component: class extends BaseOptionComponent {
             static template = xml`
-                    <BuilderButtonGroup>
-                        <BuilderButton classAction="'x'"/>
-                    </BuilderButtonGroup>
-                `;
+                <BuilderButtonGroup>
+                    <BuilderButton classAction="'x'"/>
+                </BuilderButtonGroup>
+            `;
             static cleanForSave() {
                 expect.step("clean for save option");
             }
-        }
-    );
+        },
+    });
     const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
     const editor = getEditor();
     await contains(":iframe .test-options-target").click();
@@ -31,30 +31,28 @@ test("clean for save of option with selector that matches an element on the page
 });
 
 test("clean for save of option with selector and exclude that matches an element on the page", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
+    addBuilderOption({
+        selector: ".test-options-target",
+        exclude: "div",
+        Component: class extends BaseOptionComponent {
             static template = xml`
-                    <BuilderButtonGroup>
-                        <BuilderButton classAction="'x'"/>
-                    </BuilderButtonGroup>
-                `;
-            static exclude = "div";
+                <BuilderButtonGroup>
+                    <BuilderButton classAction="'x'"/>
+                </BuilderButtonGroup>
+            `;
             cleanForSave = (_) => {
                 expect.step("clean for save option");
             };
-        }
-    );
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`
-                    <BuilderButtonGroup>
-                        <BuilderButton classAction="'y'"/>
-                    </BuilderButtonGroup>
-                `;
-        }
-    );
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButtonGroup>
+                <BuilderButton classAction="'y'"/>
+            </BuilderButtonGroup>
+        `,
+    });
     const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
     const editor = getEditor();
     await contains(":iframe .test-options-target").click();

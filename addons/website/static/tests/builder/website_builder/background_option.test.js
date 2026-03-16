@@ -20,10 +20,10 @@ const HEX_GREEN = "#00ff00";
 defineWebsiteModels();
 
 test("change the background shape of elements", async () => {
-    addBuilderOption(
-        class TestBackgroundOption extends BackgroundOption {
-            static selector = ".selector";
-            static applyTo = ".applyTo";
+    addBuilderOption({
+        selector: ".selector",
+        applyTo: ".applyTo",
+        Component: class TestBackgroundOption extends BackgroundOption {
             static props = {
                 ...BackgroundOption.props,
                 withColors: { type: Boolean, optional: true },
@@ -37,8 +37,8 @@ test("change the background shape of elements", async () => {
                 withShapes: true,
                 withColorCombinations: false,
             };
-        }
-    );
+        },
+    });
     await setupWebsiteBuilder(`
         <div class="selector">
             <div id="first" class="applyTo" data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>

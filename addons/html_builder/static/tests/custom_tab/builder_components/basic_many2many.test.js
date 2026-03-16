@@ -34,7 +34,6 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     });
     const selection = reactive([]);
     class TestComponent extends BaseOptionComponent {
-        static selector = ".test-options-target";
         static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)"/>`;
         selection = selection;
         setSelection(newSelection) {
@@ -44,7 +43,10 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
             }
         }
     }
-    addBuilderOption(TestComponent);
+    addBuilderOption({
+        selector: ".test-options-target",
+        Component: TestComponent,
+    });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
@@ -91,7 +93,6 @@ test("basic many2many: toggle dropdown without changing search term or selection
     });
     const selection = reactive([]);
     class TestComponent extends BaseOptionComponent {
-        static selector = ".test-options-target";
         static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)" limit="1"/>`;
         selection = selection;
         setSelection(newSelection) {
@@ -101,7 +102,10 @@ test("basic many2many: toggle dropdown without changing search term or selection
             }
         }
     }
-    addBuilderOption(TestComponent);
+    addBuilderOption({
+        selector: ".test-options-target",
+        Component: TestComponent,
+    });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();

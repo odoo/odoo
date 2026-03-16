@@ -11,7 +11,6 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import {
     contains,
     defineModels,
@@ -153,12 +152,10 @@ describe("BuilderMany2One: exit editor when previewing", () => {
                 }
             },
         });
-        addBuilderOption(
-            class extends BaseOptionComponent {
-                static selector = ".test-options-target";
-                static template = xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10" preview="true"/>`;
-            }
-        );
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10" preview="true"/>`,
+        });
 
         await setupWebsiteBuilder(`<div class="test-options-target">Homepage</div>`);
         await contains(":iframe .test-options-target").click();
@@ -210,12 +207,10 @@ test("Builder is disabled when reloading", async () => {
         },
     });
 
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".target";
-            static template = xml`<BuilderButton action="'testReload'">Reload editor</BuilderButton>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".target",
+        template: xml`<BuilderButton action="'testReload'">Reload editor</BuilderButton>`,
+    });
     const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<section class="target">Section</section>`
     );

@@ -107,9 +107,9 @@ async function updateBgColor(selector, bgColor, waitSidebarUpdated) {
 }
 
 beforeEach(async () => {
-    addBuilderOption(
-        class TestBackgroundOption extends BackgroundOption {
-            static selector = "section";
+    addBuilderOption({
+        selector: "section",
+        Component: class TestBackgroundOption extends BackgroundOption {
             static props = {
                 ...BackgroundOption.props,
                 withColors: { type: Boolean, optional: true },
@@ -122,8 +122,8 @@ beforeEach(async () => {
                 withShapes: true,
                 withColorCombinations: false,
             };
-        }
-    );
+        },
+    });
 });
 
 test("Connections shape takes neighbor element's background color", async () => {

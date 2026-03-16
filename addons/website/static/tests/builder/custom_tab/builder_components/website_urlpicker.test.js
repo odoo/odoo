@@ -2,7 +2,6 @@ import { after, before, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -10,11 +9,6 @@ import {
 import { advanceTime } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
-
-const UrlPickerOption = class extends BaseOptionComponent {
-    static selector = ".test-options-target";
-    static template = xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`;
-};
 
 let originalWindowOpen;
 function mockWindowOpen() {
@@ -73,7 +67,10 @@ after(() => {
 });
 
 test("link button opens in new window if url not empty", async () => {
-    addBuilderOption(UrlPickerOption);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -91,7 +88,10 @@ test("opens dropdown when typing /", async () => {
     mockGetSuggestedLinks(() => {
         expect.step("button_immediate_install");
     });
-    addBuilderOption(UrlPickerOption);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -103,7 +103,10 @@ test("opens dropdown when typing /", async () => {
 
 test("selects and commits value from dropdown", async () => {
     mockGetSuggestedLinks();
-    addBuilderOption(UrlPickerOption);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -117,7 +120,10 @@ test("selects and commits value from dropdown", async () => {
 
 test("collects anchors in current page and suggests them", async () => {
     mockGetSuggestedLinks();
-    addBuilderOption(UrlPickerOption);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+    });
     await setupWebsiteBuilder(`
         <div class="test-options-target">b</div>
         <div id="anchor1" data-anchor="true">anchor1</div>

@@ -14,7 +14,6 @@ import {
     setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 
@@ -351,12 +350,10 @@ test("Applying an overlay button action should wait for the actions in progress"
             }
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BuilderButton action="'customAction'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'"/>`,
+    });
 
     const { getEditableContent, getEditor } = await setupWebsiteBuilder(`
         <div class="test-options-target">plop</div>

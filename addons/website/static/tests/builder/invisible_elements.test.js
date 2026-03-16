@@ -4,7 +4,6 @@ import {
     getSnippetStructure,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
@@ -37,12 +36,10 @@ test("click on invisible elements in the invisible elements tab (check eye icon)
 });
 
 test("click on invisible elements in the invisible elements tab (check sidebar tab)", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".s_test";
-            static template = xml`<BuilderButton classAction="'my-custom-class'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`<BuilderButton classAction="'my-custom-class'"/>`,
+    });
     await setupWebsiteBuilder(
         '<div class="s_test d-lg-none o_snippet_desktop_invisible" data-invisible="1">a</div>'
     );

@@ -8,7 +8,6 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 defineWebsiteModels();
 
@@ -31,12 +30,10 @@ test("empty border input is treated as 0", async () => {
             return hasBorder;
         },
     });
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BorderConfigurator label="'Border'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BorderConfigurator label="'Border'"/>`,
+    });
     await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`, {
         loadIframeBundles: true,
     });
@@ -63,12 +60,10 @@ test("empty border input is treated as 0", async () => {
     expect.verifySteps(["hasBorder"]);
 });
 test("hasBorder is true when multiple-value border starts by 0", async () => {
-    addBuilderOption(
-        class extends BaseOptionComponent {
-            static selector = ".test-options-target";
-            static template = xml`<BorderConfigurator label="'Border'"/>`;
-        }
-    );
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BorderConfigurator label="'Border'"/>`,
+    });
     await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`, {
         loadIframeBundles: true,
     });
