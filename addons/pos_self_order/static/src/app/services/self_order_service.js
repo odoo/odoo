@@ -479,7 +479,8 @@ export class SelfOrder extends Reactive {
     }
 
     initHardware() {
-        if (this.config.self_ordering_mode !== "kiosk") {
+        const orderingMode = this.config.self_ordering_mode;
+        if (!["kiosk", "mobile"].includes(orderingMode)) {
             return;
         }
 
