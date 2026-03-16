@@ -577,6 +577,7 @@ class QwebCallParameters(NamedTuple):
     view_ref: str | int
     method: str | None
     values: dict | None
+    root_values: dict | None
     scope: bool | Literal['root']
     directive: str
     path_xml: tuple[str | int, str, str] | None
@@ -626,9 +627,14 @@ class QwebContent:
 
     def __str__(self):
         if self.html is None:
+            process = {
+                'qweb_loaded_functions': {},
+                'qweb_loaded_options': {},
+                'qweb_loaded_codes': {},
+            }
             params = self.params__
             self.html = ''.join(self.irQweb._render_iterall(
-               params.view_ref, params.method, params.values, params.directive,
+               params.view_ref, params.method, params.values, params.root_values, process, params.directive,
             ))
         return self.html
 
@@ -729,36 +735,38 @@ class IrQweb(models.AbstractModel):
 
         irQweb = self.with_context(**options)._prepare_environment(values)
         irQweb = irQweb.with_context(
-            # List of generated and/or used functions, used for optimal performance
-            __qweb_loaded_functions={},
-            # List of codes generated during compilation. It is mainly used for debugging and displaying error messages.
-            __qweb_loaded_codes={},
-            __qweb_loaded_options={},
             # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
             _qweb_error_path_xml=[None, None, None],
         )
 
         safe_eval.check_values(values)
 
-        root_values = values.copy()
-        values['__qweb_root_values'] = root_values['__qweb_root_values'] = root_values
+        root_values = frozendict(values.copy())
+        process = {
+            # List of generated and/or used functions, used for optimal performance
+            'qweb_loaded_functions': {},
+            'qweb_loaded_options': {},
+            # List of codes generated during compilation. It is mainly used for debugging and displaying error messages.
+            'qweb_loaded_codes': {},
+        }
 
-        iterator = irQweb._render_iterall(template, None, values)
+        iterator = irQweb._render_iterall(template, None, values, root_values, process)
         return Markup(''.join(iterator))
 
-    def _render_iterall(self, view_ref, method, values, directive='render') -> Iterator[str]:
+    def _render_iterall(self, view_ref, method, values, root_values, process, directive='render') -> Iterator[str]:
         """ Iterate over the generator method.
             Generator elements are a str
         """
-        root_values = values['__qweb_root_values']
-        loaded_functions = self.env.context['__qweb_loaded_functions']
-        loaded_options = self.env.context['__qweb_loaded_options']
+
+        loaded_functions = process['qweb_loaded_functions']
+        loaded_options = process['qweb_loaded_options']
 
         params = QwebCallParameters(
             context={},
             view_ref=view_ref,
             method=method,
             values=None,
+            root_values=root_values,
             scope=False,
             directive=directive,
             path_xml=None,
@@ -805,8 +813,9 @@ class IrQweb(models.AbstractModel):
 
                     # Fetch the compiled function and template options
                     if not render_template:
-                        template_functions, def_name, options = irQweb._compile(params.view_ref)
+                        template_functions, def_name, options, _code = irQweb._compile(params.view_ref)
                         loaded_functions.update(template_functions)
+                        loaded_options[params.view_ref] = options
                         render_template = template_functions[params.method or def_name]
                     else:
                         options = loaded_options[params.view_ref]
@@ -824,7 +833,7 @@ class IrQweb(models.AbstractModel):
                     iterator = iter([])
                     try:
                         # Create the iterator from the template
-                        iterator = render_template(irQweb, values)
+                        iterator = render_template(irQweb, values, root_values, process)
                     finally:
                         if is_content and self.env.context['_qweb_error_path_xml'][1]:
                             # add a stack frame to log a complete error with the path when compile the template
@@ -840,7 +849,7 @@ class IrQweb(models.AbstractModel):
             raise
 
         except Exception as error:
-            qweb_error_info = self._get_error_info(error, stack[1:], stack[-1])
+            qweb_error_info = self._get_error_info(error, stack[1:], stack[-1], process)
             if qweb_error_info.template is None and qweb_error_info.ref is None:
                 qweb_error_info.ref = view_ref
 
@@ -876,16 +885,27 @@ class IrQweb(models.AbstractModel):
             error.qweb = qweb_error_info
             raise
 
-    def _get_error_info(self, error, stack: list[QwebStackFrame], frame: QwebStackFrame) -> QWebErrorInfo:
+    def _get_error_info(self, error, stack: list[QwebStackFrame], frame: QwebStackFrame, process) -> QWebErrorInfo:
         no_id_ref = 'etree._Element'
 
         path = None
         html = None
-        loaded_codes = self.env.context['__qweb_loaded_codes']
+        loaded_codes = process['qweb_loaded_codes']
+
+        # The compilation may have failed before the compilation options were loaded
+        # or come from an evaluated QWebContent.
+        options = frame.options or {}
+        if frame.params.view_ref not in loaded_codes:
+            try:
+                _template_functions, _def_name, options, code = self._compile(frame.params.view_ref)
+                loaded_codes[frame.params.view_ref] = code
+            except Exception:  # noqa: BLE001
+                pass
+
         if (frame.params.view_ref in loaded_codes and not isinstance(error, RecursionError)) or len(stack) <= 1:
-            options = frame.options or {}  # The compilation may have failed before the compilation options were loaded.
             if 'ref' not in options:
-                options = self.env.context['__qweb_loaded_options'].get(frame.params.view_ref) or {}
+                options = process['qweb_loaded_options'].get(frame.params.view_ref) or {}
+
             ref = options.get('ref') or frame.params.view_ref  # The template can have a null reference, for example for a provided etree.
             ref_name = options.get('ref_name') or None
             code = loaded_codes.get(frame.params.view_ref) or loaded_codes.get(no_id_ref)
@@ -940,6 +960,8 @@ class IrQweb(models.AbstractModel):
 
         if path:
             source.append((ref, path, html))
+        elif isinstance(frame.params, QwebCallParameters) and frame.params.path_xml:
+            ref, path, html = frame.params.path_xml
 
         surrounding = None
         if self.env.context.get('dev_mode') and line_nb:
@@ -981,9 +1003,9 @@ class IrQweb(models.AbstractModel):
             ref = self._get_template_info(template)['id']
 
         if ref:
-            template_functions, def_name, options = self._generate_code_cached(ref)
+            template_functions, def_name, options, code = self._generate_code_cached(ref)
         else:
-            template_functions, def_name, options = self._generate_code_uncached(template)
+            template_functions, def_name, options, code = self._generate_code_uncached(template)
 
         render_template = template_functions[def_name]
         if options.get('profile') and render_template.__name__ != 'profiled_method_compile':
@@ -991,13 +1013,13 @@ class IrQweb(models.AbstractModel):
             ref_xml = str(val) if (val := options.get('ref_xml')) else None
 
             def wrap(function):
-                def profiled_method_compile(self, values):
+                def profiled_method_compile(self, values, root_values, process):
                     qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
                     self = self.with_context(qweb_tracker=qweb_tracker)
                     if qweb_tracker.execution_context_enabled:
                         with ExecutionContext(template=ref):
-                            return function(self, values)
-                    return function(self, values)
+                            return function(self, values, root_values, process)
+                    return function(self, values, root_values, process)
 
                 return profiled_method_compile
 
@@ -1005,7 +1027,7 @@ class IrQweb(models.AbstractModel):
                 if isinstance(function, FunctionType):
                     template_functions[key] = wrap(function)
 
-        return (template_functions, def_name, options)
+        return (template_functions, def_name, options, code)
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
@@ -1035,12 +1057,12 @@ class IrQweb(models.AbstractModel):
         assert isinstance(self, IrQweb)
         ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
 
-        code, options, def_name = self._generate_code(template)
+        code, options, def_name, error = self._generate_code(template)
 
-        if code is None:
-            Error, message, stack = options['error']
+        if error:
+            Error, message, stack = error
 
-            def not_found_template(self, values):
+            def not_found_template(self, values, root_values, process):
                 if tools.config['dev_mode']:
                     _logger.info(stack)
                 if self.env.context.get('raise_if_not_found', True):
@@ -1048,19 +1070,21 @@ class IrQweb(models.AbstractModel):
                 _logger.warning('Cannot load template %s: %s', template, message)
                 return ''
 
-            return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options)
+            return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options), ''
 
         wrap_code = '\n'.join([
             "def generate_functions():",
             indent_code(code, 1),
             f"    code = {code!r}",
-            "    return template_functions",
+            "    return template_functions, code",
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
         globals_dict = self.__prepare_globals()
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
-        return globals_dict['generate_functions'](), def_name, frozendict(options)
+
+        template_functions, code = globals_dict['generate_functions']()
+        return template_functions, def_name, frozendict(options), code
 
     def _generate_code(self, template: int | str | etree._Element):
         """ Compile the given template into a rendering function (generator)::
@@ -1095,8 +1119,8 @@ class IrQweb(models.AbstractModel):
             message = str(e)
             if hasattr(e, 'context') and e.context.get('view'):
                 message = f"{message} (view: {e.context['view'].key})"
-            options['error'] = (e.__class__, message, traceback.format_exc())
-            return (None, options, 'not_found_template')
+            error = (e.__class__, message, traceback.format_exc())
+            return (None, options, 'not_found_template', error)
 
         compile_context.pop('raise_if_not_found', None)
 
@@ -1147,22 +1171,22 @@ class IrQweb(models.AbstractModel):
         compile_context['_text_concat'] = []
         self._append_text("", compile_context)  # To ensure the template function is a generator and doesn't become a regular function
         compile_context['template_functions'][f'{def_name}_content'] = (
-            [f"def {def_name}_content(self, values):"]
+            [f"def {def_name}_content(self, values, root_values, process):"]
             + [indent_code('attrs = None', 1)]
             + [indent_code('if False: yield ""', 1)]
             + self._compile_root(element, compile_context)
             + self._flush_text(compile_context, 1, rstrip=True))
 
         compile_context['template_functions'][def_name] = [indent_code(f"""
-            def {def_name}(self, values):
+            def {def_name}(self, values, root_values, process):
                 attrs = None
                 if 'xmlid' not in values:
                     values['xmlid'] = {options['ref_name']!r}
                     values['viewid'] = {options['ref']!r}
-                self.env.context['__qweb_loaded_functions'].update(template_functions)
-                self.env.context['__qweb_loaded_options'][{options['ref']!r}] = self.env.context['__qweb_loaded_options'][{options['ref_name']!r}] = template_options
-                self.env.context['__qweb_loaded_codes'][{options['ref']!r}] = self.env.context['__qweb_loaded_codes'][{options['ref_name']!r}] = code
-                yield from {def_name}_content(self, values)
+                process['qweb_loaded_functions'].update(template_functions)
+                process['qweb_loaded_options'][{options['ref']!r}] = process['qweb_loaded_options'][{options['ref_name']!r}] = template_options
+                process['qweb_loaded_codes'][{options['ref']!r}] = process['qweb_loaded_codes'][{options['ref_name']!r}] = code
+                yield from {def_name}_content(self, values, root_values, process)
                 """, 0)]
 
         code_lines = []
@@ -1185,7 +1209,7 @@ class IrQweb(models.AbstractModel):
         compile_context['_qweb_error_path_xml'][1] = None
         compile_context['_qweb_error_path_xml'][2] = None
 
-        return (code, options, def_name)
+        return (code, options, def_name, None)
 
     # read and load input template
 
@@ -1221,6 +1245,10 @@ class IrQweb(models.AbstractModel):
 
         # template is (id or ref) to a database stored template
         id_or_xmlid = _id_or_xmlid(template)  # e.g. <t t-call="33"/> or <t t-call="web.layout"/>
+
+        if self._get_template_info(id_or_xmlid).get('type') not in (None, 'qweb'):
+            raise ValueError('This is not a QWeb view')
+
         value = self._preload_trees([id_or_xmlid]).get(id_or_xmlid)
         if value.get('error'):
             raise value['error']
@@ -2141,7 +2169,7 @@ class IrQweb(models.AbstractModel):
                     self._flush_text(compile_context, 1))
                 if content:
                     def_name = compile_context['make_name']('t_set')
-                    def_code = [f"def {def_name}(self, values):"]
+                    def_code = [f"def {def_name}(self, values, root_values, process):"]
                     def_code.append(indent_code('attrs = None', 1))
                     def_code.append(indent_code('if False: yield ""', 1))
                     def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
@@ -2149,7 +2177,7 @@ class IrQweb(models.AbstractModel):
                     compile_context['template_functions'][def_name] = def_code
 
                     code.append(indent_code(f"""
-                        values[{varname!r}] = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, values.copy(), 'root', 't-set', (template_options['ref'], {path!r}, {xml!r})))
+                        values[{varname!r}] = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, values.copy(), root_values, 'root', 't-set', (template_options['ref'], {path!r}, {xml!r})))
                     """, level))
                 else:
                     code.append(indent_code(f"values[{varname!r}] = ''", level))
@@ -2628,7 +2656,7 @@ class IrQweb(models.AbstractModel):
         # values from content (t-out="0")
         if bool(list(el) or el.text):
             def_name = compile_context['make_name']('t_call')
-            code_content = [f"def {def_name}(self, values):"]
+            code_content = [f"def {def_name}(self, values, root_values, process):"]
             code_content.append(indent_code('attrs = None', 1))
             code_content.append(indent_code('if False: yield ""', 1))
             code_content.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
@@ -2640,7 +2668,7 @@ class IrQweb(models.AbstractModel):
 
             code.append(indent_code(f"""
                 t_call_content_values = values.copy()
-                qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, 'root', 't-call-content', (template_options['ref'], {path!r}, {xml!r})))
+                qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, root_values, 'root', 't-call-content', (template_options['ref'], {path!r}, {xml!r})))
                 t_call_values = {{ {T_CALL_SLOT}: qwebContent}}
             """, level))
         else:
@@ -2686,7 +2714,7 @@ class IrQweb(models.AbstractModel):
                     template = int(template)
                 """, level))
 
-        code.append(indent_code(f"yield QwebCallParameters(t_call_options, template, None, t_call_values, True, 't-call', (template_options['ref'], {path!r}, {xml!r}))", level))
+        code.append(indent_code(f"yield QwebCallParameters(t_call_options, template, None, t_call_values, root_values, True, 't-call', (template_options['ref'], {path!r}, {xml!r}))", level))
 
         return code
 
@@ -2759,7 +2787,7 @@ class IrQweb(models.AbstractModel):
         ref, path, xml = compile_context['_qweb_error_path_xml']
 
         def_name = compile_context['make_name']('t_log')
-        def_code = [f"def {def_name}(self, values):"]
+        def_code = [f"def {def_name}(self, values, root_values, process):"]
         def_code.append(indent_code('attrs = None', 1))
         def_code.append(indent_code('if False: yield ""', 1))
         def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
@@ -2768,7 +2796,7 @@ class IrQweb(models.AbstractModel):
         compile_context['template_functions'][def_name] = def_code
 
         code.append(indent_code(f"""
-            yield QwebContent(self, QwebCallParameters(self.env.context, {ref!r}, {def_name!r}, values, False, 't-log', ({ref!r}, {path!r}, {xml!r})))
+            yield QwebContent(self, QwebCallParameters(self.env.context, {ref!r}, {def_name!r}, values, root_values, False, 't-log', ({ref!r}, {path!r}, {xml!r})))
         """, level))
 
         return code
@@ -3120,7 +3148,7 @@ def render(template_name, values, load, **options):
         def _prepare_environment(self, values):
             values['true'] = True
             values['false'] = False
-            return self.with_context(__qweb_loaded_functions={})
+            return self
 
         def _get_field(self, *args):
             raise NotImplementedError("Fields are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
