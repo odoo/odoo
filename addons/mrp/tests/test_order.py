@@ -32,6 +32,19 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 'user_id': self.env.user.id,
             })
 
+    def test_mrp_plan_and_unplan_reset_date_start(self):
+        past_date = fields.Datetime.now() - timedelta(days=1)
+        mo = self.env['mrp.production'].with_context(tracking_disable=False, mail_notrack=False).create({
+            'product_id': self.bom_2.product_id.id,
+            'product_uom_qty': 1.0,
+            'date_start': past_date,
+        })
+        self.env.cr.flush()
+        mo.action_confirm()
+        mo.button_plan()
+        self.env.cr.flush()
+        self.assertEqual(past_date, mo.previous_date_start)
+
     def test_access_rights_manager(self):
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))

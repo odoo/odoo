@@ -154,6 +154,7 @@ class MrpProduction(models.Model):
         'Start', copy=False, default=_get_default_date_start,
         help="Date you plan to start production or date you actually started production.",
         index=True, required=True, tracking=True)
+    previous_date_start = fields.Datetime()
     date_finished = fields.Datetime(
         'End', copy=False, default=_get_default_date_finished,
         compute='_compute_date_finished', store=True,
@@ -1796,15 +1797,11 @@ class MrpProduction(models.Model):
     def button_unplan(self):
         self._unplan_workorders()
         for order in self:
-            previous_date_start = None
             for message in order.message_ids:
-                if message.sudo().tracking_value_ids.field_id.mapped('name') == ['date_start']:
-                    previous_date_start = message.sudo().tracking_value_ids.old_value_datetime
-                    break
                 if message.subtype_id.id == self.env.ref('mrp.mrp_mo_planned').id:
                     break
-            if previous_date_start:
-                order.date_start = previous_date_start
+            if order.previous_date_start:
+                order.date_start = order.previous_date_start
             order.message_post(body=self.env._("The manufacturing order has been unplanned."))
 
     def _unplan_workorders(self):
@@ -3155,6 +3152,21 @@ class MrpProduction(models.Model):
         self.lot_producing_ids = [Command.clear()]
         self.qty_producing = 0
         self._set_qty_producing(False)
+
+    def _track_execute(self, track_init_values, trackings, track_records=None):
+        """
+           Extend tracking behavior to manage the `previous_date_start` field
+           based on changes to `date_start`.
+        """
+        res = super()._track_execute(track_init_values, trackings, track_records=track_records)
+        for mo in self:
+            changes, _tracking_values = trackings.get(mo.id, ([], None))
+            if 'date_start' in changes:
+                if mo.is_planned and mo.state == 'confirmed':
+                    mo.previous_date_start = track_init_values.get(mo.id)['date_start']
+                else:
+                    mo.previous_date_start = False
+        return res
 
     def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
