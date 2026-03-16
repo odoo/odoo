@@ -1275,6 +1275,59 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         with self.assertRaises(UserError, msg='Should not be able to invoice already invoiced timesheets'):
             wizard_2.create_invoices()
 
+    def test_invoice_timesheet_uom_conversion_with_period(self):
+        """
+        Ensure that invoice quantities are correctly computed when the
+        sale order line UoM differs from the timesheet UoM.
+        """
+        self.env.company.timesheet_encode_uom_id = self.uom_hour.id
+        product = self.env['product.product'].create({
+            'name': "Test service product",
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'service_policy': 'delivered_timesheet',
+            'invoice_policy': 'delivery',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'taxes_id': False,
+            'uom_id': self.uom_hour.id,
+        })
+        uom_days = self.env.ref('uom.product_uom_day')
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': product.id, 'product_uom_qty': 3, 'product_uom_id': uom_days.id}),
+            ],
+        })
+        sale_order.action_confirm()
+        task = sale_order.tasks_ids
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'date': '2026-03-16',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 16,
+            'employee_id': self.employee_user.id,
+            'company_id': self.company_data['company'].id,
+        })
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': '2026-03-16',
+            'date_end_invoice_timesheet': '2026-03-20',
+            'sale_order_ids': [(6, 0, sale_order.ids)],
+        })
+        invoice_dict = wizard.create_invoices()
+        invoice = self.env['account.move'].browse(invoice_dict['res_id'])
+        self.assertEqual(invoice.invoice_line_ids.quantity, 2)
+
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
 
