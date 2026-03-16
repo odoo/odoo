@@ -142,7 +142,7 @@ class MailMessage(models.Model):
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                         "type": "partner",
-                    },
+                    } if message.author_id else False,
                     "thread": {
                        "has_mail_thread": isinstance(self.env[values["model"]], self.pool["mail.thread"]),
                        "id": values["res_id"],
