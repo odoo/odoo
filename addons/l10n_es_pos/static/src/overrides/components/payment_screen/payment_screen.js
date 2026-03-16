@@ -28,7 +28,7 @@ patch(PaymentScreen.prototype, {
                 if (!order.partner_id && order.to_invoice) {
                     const setPricelist =
                         this.pos.config.pricelist_id?.id != order.pricelist_id?.id
-                            ? order.pricelist_id.id
+                            ? order.pricelist_id
                             : false;
                     const setFiscalPosition =
                         this.pos.config.default_fiscal_position_id?.id !=
