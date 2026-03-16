@@ -4,7 +4,7 @@
         <a
             t-att-href="href"
             t-att-class="option.partner ? 'o_mail_redirect' : 'o_channel_redirect'"
-            t-att-data-oe-id="option.partner ? option.partner.id : option.channel.id"
+            t-att-data-oe-id="option.partner ? option.partner.id : option.thread.id"
             t-att-data-oe-model="option.partner ? 'res.partner' : 'discuss.channel'"
             target="_blank"
             data-oe-protected="true"

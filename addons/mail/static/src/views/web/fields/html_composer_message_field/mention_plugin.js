@@ -26,7 +26,7 @@ export class MentionPlugin extends Plugin {
             href: url(
                 stateToUrl({
                     model: option.partner ? "res.partner" : "discuss.channel",
-                    resId: option.partner ? option.partner.id : option.channel.id,
+                    resId: option.partner ? option.partner.id : option.thread.id,
                 })
             ),
         });
