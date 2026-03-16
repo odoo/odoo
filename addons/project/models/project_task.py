@@ -385,6 +385,15 @@ class ProjectTask(models.Model):
             elif task.display_in_project and task.project_id == task.parent_id.sudo().project_id:
                 task.display_in_project = False
 
+    @api.depends_context('formatted_display_name', 'show_muted_project')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if not (self.env.context.get('formatted_display_name') and self.env.context.get('show_muted_project')):
+            return
+        for task in self:
+            if task.project_id:
+                task.display_name = f'{task.name} \t --{task.project_id.sudo().name}--'
+
     @api.depends('stage_id', 'depend_on_ids.state')
     def _compute_state(self):
         for task in self:
