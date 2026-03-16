@@ -2,13 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="stock.ForecastedWarehouseFilter">
-        <div t-if="this.displayWarehouseFilter" class="btn-group">
-            <Dropdown items="this.warehousesItems">
-                <button class="btn btn-secondary">
-                    <span class="oi" data-icon="home"/> Warehouse: <t t-out="this.activeWarehouse.name"/>
-                </button>
-            </Dropdown>
-        </div>
+        <Dropdown items="this.warehousesItems">
+            <button class="btn btn-secondary text-truncate" style="max-width: 30ch">
+                <span class="oi" data-icon="home"/> Warehouse: <t t-out="this.activeWarehouse.name"/>
+            </button>
+        </Dropdown>
     </t>
 
 </templates>
