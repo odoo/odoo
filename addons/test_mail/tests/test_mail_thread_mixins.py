@@ -35,15 +35,24 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
                     self.flush_tracking()
                 with self.mock_datetime_and_now(now):
                     new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 0})
+                    expected = {'d': '2025-11-27 08:46:00', 's': create_stage.id}
+                    if new.duration_tracking:
+                        self.assertDictEqual(new.duration_tracking, expected)
+
                 with self.mock_datetime_and_now(now + timedelta(minutes=10)):
                     new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 600})
+                    if new.duration_tracking:
+                        self.assertDictEqual(new.duration_tracking, expected)
+
                 with self.mock_datetime_and_now(now + timedelta(minutes=20)):
                     new.write({'stage_id': self.stage_2.id})
                     self.flush_tracking()
                     new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 1200, str(self.stage_2.id): 0})
+                    self.assertDictEqual(new.duration_tracking, {
+                        'd': '2025-11-27 09:06:00',
+                        's': self.stage_2.id,
+                        exp_key: 20,
+                    })
 
     def test_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()

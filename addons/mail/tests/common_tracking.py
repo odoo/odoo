@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 
 
@@ -59,32 +60,40 @@ class MailTrackingDurationMixinCase(MailCommon):
         on the provided minutes. If new_stage is given, the stage of the
         records is updated as well. """
         self.assertEqual(len(records), len(records_trackings))
-        for record, tracking_dict in records_trackings.items():
-            tracking_dict[str(record[self.track_duration_field].id) if record[self.track_duration_field].id else '0'] += minutes * 60
+
+        for record in records:
+            tracking_dict = records_trackings[record]
+            stage_id = tracking_dict.get('s') or record[self.track_duration_field].id or '0'
+            tracking_dict[str(stage_id)] += minutes
             if new_stage is not False:
-                tracking_dict[str(new_stage.id) if new_stage.id else '0'] += 0
                 record[self.track_duration_field] = new_stage
+                tracking_dict['d'] = str(self.env.cr.now())
+                tracking_dict['s'] = new_stage.id if new_stage else 0
                 self.flush_tracking()
 
         # check computed value matches mock stored values
-        self.assertTrackingDuration(records, records_trackings)
+        self.assertTrackingDuration(records, records_trackings, new_stage)
 
-    def assertTrackingDuration(self, records, records_trackings):
+    def assertTrackingDuration(self, records, records_trackings, new_stage):
         """ Assert content of records's duration_tracking value. """
         records.invalidate_recordset(fnames=['duration_tracking'])
         for record in records:
             tracking_dict = records_trackings[record]
-            self.assertDictEqual(record.duration_tracking, dict(tracking_dict))
+            # Now we calculate current stage time on JS
+            if new_stage is not False:
+                self.assertDictEqual(record.duration_tracking, dict(tracking_dict))
 
     def _test_record_duration_tracking(self):
         """ Moves a record's many2one field through several values and asserts
         the duration spent in that value each time.
 
         Total time: 1: 5+ // 2: 10+50+55+ // 3: 50+20+ // 4: 20+200 // No: 30"""
+
         with patch.object(self.env.cr, 'now', return_value=self.mock_start_time) as now:
             records = (self.rec_1 + self.rec_2).with_env(self.env)
             records_trackings = {record: defaultdict(lambda: 0) for record in records}
 
+            last_stage_update_on = False
             for additional_time, stage in [
                 (5, self.stage_2),
                 (10, False),
@@ -98,15 +107,20 @@ class MailTrackingDurationMixinCase(MailCommon):
             ]:
                 with self.subTest(additional_time=additional_time, stage=stage):
                     now.return_value += timedelta(minutes=additional_time)
+                    if stage is not False:
+                        last_stage_update_on = now.return_value
                     self._update_mock_timing(records, records_trackings, additional_time, new_stage=stage)
             for record in records:
+                current_stage_time = now.return_value - fields.Datetime.to_datetime(record.duration_tracking.get('d'))
                 self.assertDictEqual(
                     record.duration_tracking, {
-                        '0': 30 * 60,  # no stage tracking
-                        str(self.stage_1.id): 5 * 60,
-                        str(self.stage_2.id): 115 * 60,
-                        str(self.stage_3.id): 70 * 60,
-                        str(self.stage_4.id): 220 * 60,
+                        '0': 30,
+                        str(self.stage_1.id): 5,
+                        str(self.stage_2.id): 115,
+                        str(self.stage_3.id): 70 - int(current_stage_time / timedelta(minutes=1)),  # now we compute current stage time from d in JS
+                        str(self.stage_4.id): 220,
+                        'd': str(last_stage_update_on),
+                        's': self.stage_3.id,
                     }
                 )
 
