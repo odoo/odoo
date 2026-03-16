@@ -1,4 +1,5 @@
 import ast
+import inspect
 
 from textwrap import dedent
 from unittest.mock import patch
@@ -9,6 +10,7 @@ from odoo.tools import mute_logger
 from odoo.tools.safe_eval import (
     const_eval,
     expr_eval,
+    safe_checker,
     safe_eval,
     UnsafeObjectError,
     UnsafePolicy,
@@ -347,3 +349,128 @@ class TestSafeEvalRuntime(TransactionCase):
         """
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_generator(self):
+        # Not listen `YIELD` event for external generator
+        expr = """
+            gen = get_generator()
+            list(gen)
+        """
+
+        def get_generator():
+            _local_var = self.unsafe_context['UnsafeClass']
+            yield self.unsafe_context['UnsafeClass']
+
+        safe_ctx = {
+            'get_generator': get_generator,
+        }
+        safe_eval(dedent(expr), safe_ctx, mode='exec')
+
+        # Attempt to use a dangerous object (caught in `safe_call`)
+        expr = """
+            g = (UnsafeClass() for _ in [0])
+        """
+        safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+        with self.assertRaises(UnsafeObjectError):
+            list(self.unsafe_context['g'])
+
+        # Attempt to hide a dangerous object (caught by the `YIELD` event)
+        expr = """
+            g = (UnsafeClass for _ in [0])
+            use_generator(g)
+        """
+        self.unsafe_context.update(
+            # External logic that uses a generator
+            # Regardless of the usage, the context must be checked
+            use_generator=lambda g: list(g),  # noqa: PLW0108
+        )
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        # Attempt to alter the generator's context by modifying globals
+        # (caught by the `YIELD` event)
+        expr = """
+            d['g'] = (d['foo'] for _ in [0])
+            use_generator(d)
+        """
+
+        def use_generator_1(d):
+            # Make the generator's context unsafe
+            d['foo'] = self.unsafe_context['UnsafeClass']
+            # Attempt to consume the generator
+            list(d['g'])  # Triggers `UnsafeObjectError`
+
+        safe_ctx = {
+            'd': {},
+            'use_generator': use_generator_1,
+        }
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), safe_ctx, mode='exec')
+
+        # Attempt to alter the generator's context by modifying locals
+        # (caught by the `YIELD` event)
+        expr = """
+            d={}
+            g = (d['foo'] for d in [d])
+            use_generator(g, d)
+        """
+
+        def use_generator_2(g, d):
+            # Make the generator's context unsafe
+            d['foo'] = self.unsafe_context['UnsafeClass']
+            # Attempt to consume the generator
+            return list(g)  # Triggers `UnsafeObjectError`
+
+        safe_ctx = {
+            'use_generator': use_generator_2,
+        }
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), safe_ctx, mode='exec')
+
+        # Attempt to alter the generator's context by modifying builtins
+        # and shadow them in globals (caught by the `YIELD` event)
+        expr = """
+            g = (foo for _ in [0])
+            use_generator(g)
+        """
+
+        def use_generator_3(g):
+            # Make the generator's context unsafe
+            frame = inspect.currentframe()
+            safe_call_frame = frame.f_back
+            generator_frame = safe_call_frame.f_back
+            generator_frame.f_builtins['foo'] = self.unsafe_context['UnsafeClass']
+            # Attempt to consume the generator
+            list(g)  # Triggers `UnsafeObjectError`
+
+        safe_ctx = {
+            'foo': '',  # Shadow builtin
+            'use_generator': use_generator_3,
+        }
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), safe_ctx, mode='exec')
+
+    def test_trust_iterators(self):
+        iterators = (
+            iter(''),
+            iter(b''),
+            iter(bytearray()),
+            iter({}.keys()),
+            iter({}.values()),
+            iter({}.items()),
+            iter([]),
+            iter(()),
+            iter(set()),
+            iter(reversed([])),
+            iter(range(0)),
+            iter(range(1 << 1000)),
+            # No-operation iterators
+            iter(zip()),
+            iter(map(lambda: 0, [])),
+            iter(filter(lambda: 0, [])),
+            iter(sorted([])),
+            iter(enumerate([])),
+        )
+        for iterator in iterators:
+            safe_checker.check(iterator)

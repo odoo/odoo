@@ -18,7 +18,7 @@ import ast
 import contextvars
 import dis
 import functools
-import gc
+import inspect
 import logging
 import os
 import re
@@ -672,6 +672,13 @@ class _SafeChecker:
 
     MAPPINGS = frozenset((dict, defaultdict, OrderedDict, types.MappingProxyType))
     SEQUENCES = frozenset((list, tuple, set, frozenset, OrderedSet))
+    ITERATORS = frozenset((
+        type(iter('')), type(iter(b'')), type(iter(bytearray())),
+        type(iter([])), type(iter(())), type(iter(set())),
+        type(iter(reversed([]))),
+        type(iter({}.keys())), type(iter({}.values())), type(iter({}.items())),
+        type(iter(range(0))), type(iter(range(1 << 1000))),  # `range_iterator` vs `longrange_iterator`
+    ))
 
     def __init__(self):
         self.__hooks: WeakKeyDictionary[type, typing.Callable | None] = WeakKeyDictionary()
@@ -679,6 +686,7 @@ class _SafeChecker:
         for t in _SafeWhitelist.TRUSTED_TYPES: self.add_hook(t, None)  # Optimization to save time when serializing these types  # noqa: E701
         for t in self.SEQUENCES: self.add_hook(t, list)  # noqa: E701
         for t in self.MAPPINGS: self.add_hook(t, dict)  # noqa: E701
+        for t in self.ITERATORS: self.add_hook(t, self._hook_iterator)  # noqa: E701
         self.add_hook(type, self._hook_class)
         self.add_hook(types.ModuleType, self._hook_module)
         self.add_hook(types.BuiltinFunctionType, self._hook_builtin_function)
@@ -688,7 +696,7 @@ class _SafeChecker:
         self.add_hook(types.MethodDescriptorType, self._hook_descriptor)
         self.add_hook(functools.partial, self._hook_partial)
         self.add_hook(lazy, self._hook_lazy)
-        self.add_hook(type(reversed([])), self._hook_simple_iterator)
+        self.add_hook(types.GeneratorType, None)
         d = {}
         self.add_hook(type(d.items()), list)
         self.add_hook(type(d.keys()), list)
@@ -697,7 +705,6 @@ class _SafeChecker:
         self.add_hook(type(d.items()), list)
         self.add_hook(type(d.keys()), list)
         self.add_hook(type(d.values()), list)
-        self.add_hook(types.GeneratorType, None)  # TODO: Make the hook (to listen for the yield event)
 
     def add_hook(self, type_: type, hook: typing.Callable | None = None) -> None:
         self.__hooks[type_] = hook
@@ -770,8 +777,8 @@ class _SafeChecker:
 
         return hook(obj)
 
-    def _hook_simple_iterator(self, obj):
-        return gc.get_referents(obj)[-1]
+    def _hook_iterator(self, obj):
+        return obj.__reduce__()
 
     def _hook_module(self, obj):
         safe_whitelist.check_module(obj)
@@ -833,7 +840,7 @@ class _SafeWhitelist:
     ))
     TRUSTED_BUILTIN_FUNCTIONS = frozenset((
         min, max, sum, abs, sorted, round, len, repr, all, any, ord, chr, divmod,
-        isinstance, hasattr,
+        isinstance, hasattr, iter,
     ))
 
     @staticmethod
@@ -942,16 +949,20 @@ safe_checker = _SafeChecker()
 safe_whitelist = _SafeWhitelist()
 
 
+def handle_unsafe_error(error):
+    _logger_runtime.warning(error)
+    if unsafe_policy() is UnsafePolicy.RAISE:
+        raise error
+    if unsafe_policy() is UnsafePolicy.TERMINATE:
+        os._exit(1)
+
+
 def safe_call(callee, /, *args, **kwargs):
     """ Ensure objects used for the call are safe """
     try:
         safe_checker.check((callee, args, kwargs))
     except UnsafeError as e:
-        _logger_runtime.warning(e)
-        if unsafe_policy() is UnsafePolicy.RAISE:
-            raise
-        if unsafe_policy() is UnsafePolicy.TERMINATE:
-            os._exit(1)
+        handle_unsafe_error(e)
     return callee(*args, **kwargs)
 
 
@@ -971,12 +982,28 @@ def monitoring_call(code, instruction_offset, callee, arg0):
         raise UnsafeContextError(f'{call_id} is overridden')
 
 
+def monitoring_yield(code, instruction_offset, retval):
+    """ Ensure mutating context of generator is safe """
+    frame = sys._getframe(1)
+    objs = list(frame.f_locals.values())
+    for name in code.co_names:
+        if name in frame.f_globals:
+            objs.append(frame.f_globals[name])
+        if name in frame.f_builtins:
+            objs.append(frame.f_builtins[name])
+    try:
+        safe_checker.check(objs)
+    except UnsafeObjectError as e:
+        handle_unsafe_error(e)
+
+
 _BUILTINS[safe_transformer.CALL_ID] = safe_call
 
 EVENTS = sys.monitoring.events
 TOOL_ID = 4  # Not prevent other tools from using "official IDs"
 sys.monitoring.use_tool_id(TOOL_ID, 'ODOO_UNSAFE_POLICY_TOOL')
 sys.monitoring.register_callback(TOOL_ID, EVENTS.CALL, monitoring_call)
+sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_YIELD, monitoring_yield)
 
 
 def add_monitoring(code):
@@ -984,6 +1011,8 @@ def add_monitoring(code):
     while codes:
         code = codes.pop()
         sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.CALL)
+        if code.co_flags & inspect.CO_GENERATOR:
+            sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.PY_YIELD)
         codes.extend(const for const in code.co_consts if isinstance(const, types.CodeType))
 
 
