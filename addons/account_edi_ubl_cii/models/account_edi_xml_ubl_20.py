@@ -293,10 +293,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'tax_amount_currency': 0.0,
             })
             if epd_tax_to_discount:
-                for percentage, base_amount_currency in epd_tax_to_discount.items():
-                    epd_base_tax_amounts[percentage]['base_amount_currency'] += base_amount_currency
+                for (percentage, tax_category), base_amount_currency in epd_tax_to_discount.items():
+                    epd_base_tax_amounts[percentage, tax_category]['base_amount_currency'] += base_amount_currency
                 epd_accounted_tax_amount = 0.0
-                for percentage, amounts in epd_base_tax_amounts.items():
+                for (percentage, _tax_category), amounts in epd_base_tax_amounts.items():
                     amounts['tax_amount_currency'] = invoice.currency_id.round(
                         amounts['base_amount_currency'] * percentage / 100.0)
                     epd_accounted_tax_amount += amounts['tax_amount_currency']
@@ -313,7 +313,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 }
                 if epd_tax_to_discount:
                     # early payment discounts: need to recompute the tax/taxable amounts
-                    epd_base_amount = epd_base_tax_amounts.get(subtotal['percent'], {}).get('base_amount_currency', 0.0)
+                    tax_category_id = subtotal['tax_category_vals']['id']
+                    epd_base_amount = epd_base_tax_amounts.get((subtotal['percent'], tax_category_id), {}).get('base_amount_currency', 0.0)
                     taxable_amount_after_epd = subtotal['taxable_amount'] - epd_base_amount
                     subtotal.update({
                         'taxable_amount': taxable_amount_after_epd,
@@ -321,21 +322,30 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_totals_vals['tax_subtotal_vals'].append(subtotal)
 
         if epd_tax_to_discount:
-            # early payment discounts: hence, need to add a subtotal section
-            tax_totals_vals['tax_subtotal_vals'].append({
-                'currency': invoice.currency_id,
-                'currency_dp': invoice.currency_id.decimal_places,
-                'taxable_amount': sum(epd_tax_to_discount.values()),
-                'tax_amount': 0.0,
-                'tax_category_vals': {
-                    'id': 'E',
-                    'percent': 0.0,
-                    'tax_scheme_vals': {
-                        'id': "VAT",
+            epd_amount = sum(epd_tax_to_discount.values())
+            # if a 0% subtotal already exists : we merge it with the EPD subtotal.
+            # otherwise, we create a new subtotal node for EPD.
+            is_merged = False
+            for vals in tax_totals_vals['tax_subtotal_vals']:
+                if vals['tax_category_vals']['id'] == 'E':
+                    vals['taxable_amount'] += epd_amount
+                    is_merged = True
+                    break
+            if not is_merged:
+                tax_totals_vals['tax_subtotal_vals'].append({
+                    'currency': invoice.currency_id,
+                    'currency_dp': invoice.currency_id.decimal_places,
+                    'taxable_amount': epd_amount,
+                    'tax_amount': 0.0,
+                    'tax_category_vals': {
+                        'id': 'E',
+                        'percent': 0.0,
+                        'tax_scheme_vals': {
+                            'id': "VAT",
+                        },
+                        'tax_exemption_reason': _("Exempt from tax"),
                     },
-                    'tax_exemption_reason': "Exempt from tax",
-                },
-            })
+                })
         return [tax_totals_vals]
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -382,7 +392,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
         if epd_tax_to_discount:
             # One Allowance per tax rate (VAT included)
-            for tax_amount, discount_amount in epd_tax_to_discount.items():
+            for (tax_amount, tax_category), discount_amount in epd_tax_to_discount.items():
                 vals_list.append({
                     'charge_indicator': 'false',
                     'allowance_charge_reason_code': '66',
@@ -391,7 +401,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'currency_dp': 2,
                     'currency_name': invoice.currency_id.name,
                     'tax_category_vals': [{
-                        'id': 'S',
+                        'id': tax_category,
                         'percent': tax_amount,
                         'tax_scheme_vals': {'id': 'VAT'},
                     }],
@@ -410,6 +420,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'tax_scheme_vals': {'id': 'VAT'},
                 }],
             })
+
         return vals_list
 
     def _get_pricing_exchange_rate_vals_list(self, invoice):
@@ -606,14 +617,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # If you change this method, please change the corresponding new helper as well (at the end of this file).
         """
         Get the early payment discounts grouped by the tax rate of the product it is linked to
-        :returns {float: float}: mapping tax amounts to early payment discount amounts
+        :returns {float, str: float}: mapping (tax amount, tax category) pairs to early payment discount amounts
         """
         if invoice.invoice_payment_term_id.early_pay_discount_computation != 'mixed':
             return {}
+        customer = invoice.commercial_partner_id
+        supplier = invoice.company_id.partner_id.commercial_partner_id
         tax_to_discount = defaultdict(lambda: 0)
         for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd'):
-            for tax in line.tax_ids:
-                tax_to_discount[tax.amount] += line.amount_currency
+            tax_category_list = self._get_tax_category_list(customer, supplier, line.tax_ids)
+            for i, tax in enumerate(line.tax_ids):
+                tax_category = tax_category_list[i]['id']
+                tax_to_discount[tax.amount, tax_category] += line.amount_currency
         return tax_to_discount
 
     def _get_tax_grouping_key(self, base_line, tax_data):
