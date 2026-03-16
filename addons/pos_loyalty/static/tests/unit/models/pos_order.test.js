@@ -356,4 +356,32 @@ describe("pos.order - loyalty", () => {
         const rewardLine = order._get_reward_lines()[0];
         expect(rewardLine.prices.total_included).toBe(-10);
     });
+
+    test("gift card reward with tax-included discount product", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Product with tax_incl tax
+        const line = await addProductLineToOrder(store, order, {
+            productId: 24,
+            templateId: 24,
+            qty: 1,
+        });
+        expect(line.prices.total_included).toBe(10);
+        expect(line.prices.total_excluded).toBe(8.7);
+
+        // Discount product also with tax_incl tax
+        const reward = models["loyalty.reward"].get(5);
+        const card = models["loyalty.card"].get(3);
+
+        const result = order._applyReward(reward, card.id);
+        expect(result).toBe(true);
+
+        const rewardLines = order._get_reward_lines();
+        expect(rewardLines.length).toBe(1);
+
+        // The gift card should discount the full tax-included amount, not just the base.
+        expect(rewardLines[0].prices.total_included).toBe(-10);
+    });
 });

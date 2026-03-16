@@ -6,3 +6,19 @@ patch(ProductProduct.prototype, {
         return [...super._load_pos_data_fields(), "all_product_tag_ids"];
     },
 });
+
+ProductProduct._records = [
+    ...ProductProduct._records,
+    {
+        id: 301,
+        product_tmpl_id: 301,
+        lst_price: 0,
+        standard_price: 0,
+        display_name: "Gift Card Discount Product",
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [],
+        product_template_variant_value_ids: [],
+    },
+];

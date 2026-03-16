@@ -1175,25 +1175,41 @@ patch(PosOrder.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
+            let taxes = discountProduct.taxes_id;
+            if (this.fiscal_position_id) {
+                taxes = this.fiscal_position_id.getTaxesAfterFiscalPosition(taxes);
+            }
             const price = discountProduct.getTaxDetails({
                 overridedValues: {
-                    tax_ids: discountProduct.taxes_id,
+                    tax_ids: taxes,
                     price_unit: -Math.min(maxDiscount, discountable),
                     special_mode: "total_included",
                 },
             });
-
+            let priceUnit = price.total_excluded;
+            let rewardTaxIds = [];
+            if (reward.program_id.program_type === "gift_card" && taxes.length) {
+                const priceInclTaxIds = new Set(
+                    taxes.filter((t) => t.price_include).map((t) => t.id)
+                );
+                for (const taxData of price.taxes_data) {
+                    if (priceInclTaxIds.has(taxData.tax.id)) {
+                        priceUnit += taxData.tax_amount_currency;
+                    }
+                }
+                rewardTaxIds = discountProduct.taxes_id;
+            }
             return [
                 {
                     product_id: discountProduct,
-                    price_unit: price.total_excluded,
+                    price_unit: priceUnit,
                     qty: 1,
                     reward_id: reward,
                     is_reward_line: true,
                     coupon_id: coupon_id,
                     points_cost: pointCost,
                     reward_identifier_code: rewardCode,
-                    tax_ids: discountProduct.taxes_id,
+                    tax_ids: rewardTaxIds,
                 },
             ];
         }
