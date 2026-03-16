@@ -308,7 +308,6 @@ export class SelfOrder extends Reactive {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
-        this.printKioskChanges(access_token);
         this.resetCategorySelection();
     }
 
@@ -479,9 +478,11 @@ export class SelfOrder extends Reactive {
     }
 
     initHardware() {
-        if (this.config.self_ordering_mode !== "kiosk") {
+        const orderingMode = this.config.self_ordering_mode;
+        if (!["kiosk", "mobile"].includes(orderingMode)) {
             return;
         }
+
         let useLna = false;
         for (const printerConfig of this.config.preparation_printer_ids) {
             const printer = this.createPrinter(printerConfig);
@@ -492,6 +493,11 @@ export class SelfOrder extends Reactive {
 
             useLna = useLna || printerConfig.use_lna;
         }
+
+        if (orderingMode !== "kiosk") {
+            return;
+        }
+
         for (const relPrinter of this.config.receipt_printer_ids) {
             const printerDevice = this.createPrinter(relPrinter);
             this.printer.setFallbackPrinter(printerDevice);
@@ -554,6 +560,7 @@ export class SelfOrder extends Reactive {
         const orderData = order.getOrderData();
         order.last_order_preparation_change = { lines: {} };
         const changes = changesToOrder(order, this.config.preparationCategories);
+        let printed = false;
         for (const printer of this.kitchenPrinters) {
             const orderlines = filterChangeByCategories(
                 printer.config.product_categories_ids.map((c) => c.id),
@@ -561,6 +568,7 @@ export class SelfOrder extends Reactive {
                 this.models
             ).new;
             if (orderlines.length > 0) {
+                printed = true;
                 const printingChanges = {
                     ...orderData,
                     changes: {
@@ -574,6 +582,7 @@ export class SelfOrder extends Reactive {
                 await printer.printReceipt(receipt);
             }
             if (orderData.general_customer_note) {
+                printed = true;
                 const printingChanges = {
                     ...orderData,
                     changes: {
@@ -588,6 +597,19 @@ export class SelfOrder extends Reactive {
             }
         }
         order.updateLastOrderChange();
+
+        try {
+            if (printed) {
+                await rpc("/pos-self-order/update-last-changes", {
+                    access_token: this.access_token,
+                    order_id: order.id,
+                    order_access_token: order.access_token,
+                    last_order_preparation_change: order.last_order_preparation_change,
+                });
+            }
+        } catch {
+            console.info("Offline mode, cannot update the last changes");
+        }
     }
     async initKioskData() {
         if (this.session && this.access_token) {

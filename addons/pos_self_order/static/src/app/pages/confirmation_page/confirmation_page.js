@@ -30,7 +30,10 @@ export class ConfirmationPage extends Component {
         });
         useEffect(
             () => {
-                if (!this.confirmedOrder) {
+                if (
+                    !this.confirmedOrder?.uiState?.receiptReady ||
+                    typeof this.confirmedOrder.id !== "number"
+                ) {
                     return;
                 }
 
@@ -48,7 +51,7 @@ export class ConfirmationPage extends Component {
     }
 
     get confirmedOrder() {
-        return this.selfOrder.currentOrder;
+        return this.selfOrder.models["pos.order"].getBy("uuid", this.selfOrder.selectedOrderUuid);
     }
 
     async initOrder(retry = true) {
@@ -93,7 +96,8 @@ export class ConfirmationPage extends Component {
     }
 
     async printOrder() {
-        if (this.selfOrder.config.self_ordering_mode === "kiosk" && this.canPrintReceipt()) {
+        await this.selfOrder.printKioskChanges(this.confirmedOrder.access_token);
+        if (this.canPrintReceipt()) {
             try {
                 this.isPrinting = true;
                 const order = this.confirmedOrder;
