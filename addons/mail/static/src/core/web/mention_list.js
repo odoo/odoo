@@ -101,6 +101,7 @@ export class MentionList extends Component {
                     return {
                         label: suggestion.displayName,
                         thread: suggestion,
+                        channel: suggestion,
                         classList: "o-mail-Composer-suggestion",
                     };
                 });
