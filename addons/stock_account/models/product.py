@@ -359,7 +359,9 @@ class ProductProduct(models.Model):
         return last_in
 
     def _with_valuation_context(self):
-        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        valued_locations = self.env['stock.location'].search(
+            [('is_valued_internal', '=', True), ('company_id', '=', self.env.companies.ids + [False])]
+        )
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id])
 
     def _get_remaining_moves(self):

@@ -3122,3 +3122,37 @@ class TestStockValuation(TestStockValuationCommon):
         recs[-2:]._compute_cumulative_fields()
         self.assertEqual(recs[-1].total_quantity, 3)
         self.assertEqual(recs[-1].total_value, 30)
+
+    def test_total_value_multi_company(self):
+        # Ensure that total_value is computed with the allowed_companies data only
+
+        # Company A
+        product_cp_a = self.product_standard_auto.with_company(self.company)
+        product_cp_a.standard_price = 10
+        self._make_in_move(product_cp_a, 1)
+
+        # Company B
+        company_b = self.env['res.company'].sudo().create({'name': 'Company B'})
+        self.patch(self, 'env', company_b.with_company(company_b).env)
+
+        product_cp_b = self.product_standard_auto.with_context(allowed_company_ids=company_b.ids)
+        product_cp_b.standard_price = 10
+        wh_b = self.env['stock.warehouse'].search([('company_id', '=', company_b.id)], limit=1)
+        self._make_in_move(product_cp_b, 2, location_dest_id=wh_b.lot_stock_id.id, picking_type_id=wh_b.in_type_id.id)
+
+        # Multi Companies
+        product_multi_cp = self.product_standard_auto.with_context(allowed_company_ids=(self.company | company_b).ids)
+
+        # Company A: 1 unit * $10 = $10
+        self.assertEqual(product_cp_a.qty_available, 1)
+        self.assertEqual(product_cp_a.total_value, 10)
+
+        # Company B: 2 unit * $10 = $20
+        self.assertEqual(product_cp_b.qty_available, 2)
+        self.assertEqual(product_cp_b.total_value, 20)
+
+        # Company A & B: 3 unit * $10 = $30
+        # Clear cache because product_multi_cp still has 'self.env.company' as main company
+        (product_cp_a | product_cp_b).invalidate_recordset()
+        self.assertEqual(product_multi_cp.qty_available, 3)
+        self.assertEqual(product_multi_cp.total_value, 30)
