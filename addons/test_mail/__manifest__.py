@@ -10,6 +10,7 @@ tests independently to functional aspects of other models. """,
     'depends': [
         'mail',
         'test_orm',
+        'mail_tracking',
     ],
     'data': [
         'security/ir.model.access.csv',

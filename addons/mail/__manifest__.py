@@ -73,7 +73,6 @@ For more specific needs, you may also assign custom-defined actions
         'views/ir_filters_views.xml',
         'views/ir_mail_server_views.xml',
         'views/mail_message_subtype_views.xml',
-        'views/mail_tracking_value_views.xml',
         'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
         'views/mail_message_schedule_views.xml',

@@ -458,7 +458,7 @@ class MailTrackMixin(models.AbstractModel):
         values = {
             'field_id': field.id,
             'field_name': col_name,
-            'field_label': col_info['string'],
+            'field_label': col_info.get('string'),
             'field_type': col_info['type'],
             'old_value': initial_value,
             'new_value': new_value,
@@ -476,13 +476,16 @@ class MailTrackMixin(models.AbstractModel):
             values.update({
                 f'old_value_{col_info["type"]}': initial_value,
                 f'new_value_{col_info["type"]}': new_value,
-                'old_value': formatLang(self.env, initial_value),
-                'new_value': formatLang(self.env, new_value),
             })
-            if col_info['type'] == 'char':
+            if col_info['type'] in {'char', 'text'}:
                 values.update({
                     'old_value': initial_value or 'None',
                     'new_value': new_value or 'None',
+                })
+            else:
+                values.update({
+                    'old_value': formatLang(self.env, initial_value or 0),
+                    'new_value': formatLang(self.env, new_value or 0),
                 })
 
         elif col_info['type'] == 'monetary':

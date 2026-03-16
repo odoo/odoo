@@ -270,13 +270,6 @@ class MailMessage(models.Model):
         search="_search_is_bookmarked",
         help="Current user has bookmarked this message",
     )
-    # tracking
-    tracking_value_ids = fields.One2many(
-        'mail.tracking.value', 'mail_message_id',
-        string='Tracking values',
-        groups="base.group_system",
-        help='Tracked values are stored in a separate model. This field allow to reconstruct '
-             'the tracking and to generate statistics on the model.')
     # polls
     ended_poll_ids = fields.One2many('mail.poll', 'end_message_id')
     started_poll_ids = fields.One2many('mail.poll', 'start_message_id')
@@ -722,7 +715,6 @@ class MailMessage(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        tracking_values_list = []
         for values in vals_list:
             if not (self.env.su or self.env.user.has_group('base.group_user')):
                 values.pop('author_id', None)
@@ -767,9 +759,6 @@ class MailMessage(models.Model):
                     return f'{data_to_url[key][0]}{match.group(3)} alt="{data_to_url[key][1]}" data-attachment-id="{data_to_url[key][2]}"'
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
-            # delegate creation of tracking after the create as sudo to avoid access rights issues
-            tracking_values_list.append(values.pop('tracking_value_ids', False))
-
         messages = super().create(vals_list)
 
         # link back attachments to records, to filter out attachments linked to
@@ -810,30 +799,9 @@ class MailMessage(models.Model):
         if attachments_tocheck:
             attachments_tocheck.check_access('read')
 
-        # from tracking commands, create relevant tracking information (protected model)
-        messages._create_tracking_data(tracking_values_list)
-
         messages.filtered(lambda msg: msg._is_thread_message() and msg.message_type != 'user_notification')._invalidate_documents()
 
         return messages
-
-    def _create_tracking_data(self, tracking_values_ids_list):
-        for message, tracking_values_cmd in zip(self, tracking_values_ids_list):
-            if not tracking_values_cmd:
-                continue
-            track_vals_lst = []
-            for cmd in tracking_values_cmd:
-                if len(cmd) == 3 and cmd[0] == 0:
-                    track_values = dict(cmd[2])  # copy to avoid altering original dict
-                    for key in (k for k in ('field_name', 'field_type', 'new_value', 'old_value') if k in cmd[2]):
-                        track_values.pop(key)
-                    track_values['mail_message_id'] = message.id
-                    track_vals_lst.append(track_values)
-            other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
-            if track_vals_lst:
-                self.env['mail.tracking.value'].sudo().create(track_vals_lst)
-            if other_cmd:
-                message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
     def write(self, vals):
         if not (self.env.su or self.env.user.has_group('base.group_user')):
@@ -1294,15 +1262,6 @@ class MailMessage(models.Model):
 
             res.attr("needaction", needaction)
 
-            def tracking_values(message):
-                # sudo: mail.message - filtering allowed tracking values
-                trackings = message.sudo().tracking_value_ids._filter_has_field_access(message.env)
-                record = record_by_message.get(message)
-                if record and hasattr(record, "_track_filter_for_display"):
-                    trackings = record._track_filter_for_display(trackings)
-                return message._message_tracking_value_format(trackings)
-
-            res.attr("trackingValues", tracking_values)
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
@@ -1426,10 +1385,6 @@ class MailMessage(models.Model):
             (not self.body or tools.is_html_empty(self.body))
             and (not self.subtype_id or not self.subtype_id.description)
             and not self.attachment_ids
-            and not (
-                self.has_field_access(self._fields["tracking_value_ids"], "read")
-                and self.tracking_value_ids
-            )
             and not self.has_poll
         )
 
