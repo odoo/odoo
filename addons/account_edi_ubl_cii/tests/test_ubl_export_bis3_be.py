@@ -435,6 +435,34 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_early_pay_discount_with_discount_on_lines')
 
+    def test_invoice_early_pay_discount_with_0_tax(self):
+        pay_terms = self.env['account.payment.term'].create({
+            'name': '2% Before 10 Days',
+            'note': 'Payment terms: 2% if paid within 15 Days',
+            'early_discount': True,
+            'discount_days': 10,
+            'discount_percentage': 2.0,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'value_amount': 100.0,
+                'nb_days': 30,
+            })],
+        })
+        partner_id = self.partner_be
+        partner_id.property_payment_term_id = pay_terms.id
+        tax_0 = self.env['account.tax'].create({'name': '0% Tax', 'amount': 0.0})
+
+        invoice = self._create_invoice_one_line(
+            partner_id=partner_id,
+            product_id=self.product_a,
+            tax_ids=tax_0,
+            invoice_date="2026-05-07",
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_early_pay_discount_with_0_tax')
+
     def test_invoice_cash_rounding_add_invoice_line(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)
