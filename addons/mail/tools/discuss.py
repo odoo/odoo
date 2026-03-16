@@ -257,6 +257,21 @@ ids_by_model.update(
 NO_VALUE = object()
 
 
+def store_enqueue(func):
+    """Wraps a Store method to postpone its execution until get_result()."""
+
+    @wraps(func)
+    def store_enqueue__wrapper(store, *args, **kwargs):
+        if func.__name__ == "resolve_data_request" and "data_id" not in kwargs:
+            kwargs["data_id"] = store.data_id
+        if not store.is_executing_operation_queue:
+            store.operation_queue.append(lambda: func(store, *args, **kwargs))
+            return store
+        return func(store, *args, **kwargs)
+
+    return store_enqueue__wrapper
+
+
 class Store:
     """Helper to build a dict of data for sending to web client.
     It supports merging of data from multiple sources, either through list extend or dict update.
@@ -268,8 +283,11 @@ class Store:
         self.already_done = set()
         self.data = {}
         self.data_id = None
+        self.is_executing_operation_queue = False
+        self.operation_queue = []
         self.target = Store.Target(bus_channel, bus_subchannel)
 
+    @store_enqueue
     def add(self, records, fields, *, as_thread=False, fields_params=None):
         """Add records to the store. Data is coming from _to_store() method of the model if it is
         defined, and fallbacks to _read_format() otherwise.
@@ -306,6 +324,7 @@ class Store:
             if self.add_depth == 0:
                 self.already_done.clear()
 
+    @store_enqueue
     def add_global_values(self, field_fn=None, /, **values):
         """Add global values to the store. Global values are stored in the Store singleton
         (mail.store service) in the client side.
@@ -315,6 +334,7 @@ class Store:
         self.add_singleton_values("Store", field_fn or values)
         return self
 
+    @store_enqueue
     def add_model_values(self, model_name, values):
         """Add values to a model in the store.
 
@@ -333,6 +353,7 @@ class Store:
             del self.data[model_name][index]["_DELETE"]
         return self
 
+    @store_enqueue
     def add_records_fields(self, field_list, as_thread=False):
         """Same as Store.add() but without calling _to_store().
 
@@ -351,6 +372,7 @@ class Store:
                     self.add_model_values(record._name, {"id": record.id, **record_data})
         return self
 
+    @store_enqueue
     def add_singleton_values(self, model_name, values):
         """Add values to the store for a singleton model."""
         if not values:
@@ -365,6 +387,7 @@ class Store:
             self._add_values(data, model_name)
         return self
 
+    @store_enqueue
     def delete(self, records, as_thread=False):
         """Delete records from the store."""
         if not records:
@@ -394,6 +417,13 @@ class Store:
 
     def get_result(self):
         """Gets resulting data built from adding all data together."""
+        self.is_executing_operation_queue = True
+        try:
+            for func in self.operation_queue:
+                func()
+            self.operation_queue.clear()
+        finally:
+            self.is_executing_operation_queue = False
         res = Store.Result()
         for model_name, records in sorted(self.data.items()):
             if not ids_by_model[model_name]:  # singleton
@@ -409,16 +439,17 @@ class Store:
         if res := self.get_result():
             self.target.channel._bus_send(notification_type, res, subchannel=self.target.subchannel)
 
-    def resolve_data_request(self, values=None):
+    @store_enqueue
+    def resolve_data_request(self, values=None, *, data_id=None):
         """Add values to the store for the current data request.
 
         Use case: resolve a specific data request from a client."""
-        if not self.data_id:
+        if not data_id:
             return self
         data_list = []
         self._add_abstract_fields_value(self._format_fields(values or [{}]), data_list)
         for data in data_list:
-            self.add_model_values("DataResponse", {"id": self.data_id, "_resolve": True, **data})
+            self.add_model_values("DataResponse", {"id": data_id, "_resolve": True, **data})
         return self
 
     def _add_values(self, values, model_name, index=None):

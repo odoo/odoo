@@ -38,14 +38,16 @@ class TestDiscussTools(TransactionCase):
     def test_040_store_invalid(self):
         """Test adding invalid value."""
         store = Store()
+        store.add_model_values("key1", True)
         with self.assertRaises(TypeError):
-            store.add_model_values("key1", True)
+            store.get_result()
 
     def test_042_store_invalid_missing_id(self):
         """Test Thread adding invalid list value."""
         store = Store()
+        store.add_model_values("key1", {"test": True})
         with self.assertRaises(AssertionError):
-            store.add_model_values("key1", {"test": True})
+            store.get_result()
 
     def test_060_store_data_empty_val(self):
         """Test empty values are not present in result."""
@@ -103,14 +105,16 @@ class TestDiscussTools(TransactionCase):
     def test_140_store_store_invalid_bool(self):
         """Test Store adding invalid value."""
         store = Store()
+        store.add_model_values("key1", True)
         with self.assertRaises(TypeError):
-            store.add_model_values("key1", True)
+            store.get_result()
 
     def test_141_store_store_invalid_list(self):
         """Test adding invalid value."""
         store = Store()
+        store.add_model_values("key1", [{"test": True}])
         with self.assertRaises(AssertionError):
-            store.add_model_values("key1", [{"test": True}])
+            store.get_result()
 
     def test_160_store_store_data_empty_val(self):
         """Test Store empty values are not present in result."""
@@ -183,26 +187,30 @@ class TestDiscussTools(TransactionCase):
     def test_240_store_thread_invalid_bool(self):
         """Test Thread adding invalid bool value."""
         store = Store()
+        store.add_model_values("mail.thread", True)
         with self.assertRaises(TypeError):
-            store.add_model_values("mail.thread", True)
+            store.get_result()
 
     def test_241_store_thread_invalid_list(self):
         """Test Thread adding invalid list value."""
         store = Store()
+        store.add_model_values("mail.thread", [True])
         with self.assertRaises(AttributeError):
-            store.add_model_values("mail.thread", [True])
+            store.get_result()
 
     def test_242_store_thread_invalid_missing_id(self):
         """Test Thread adding invalid missing id."""
         store = Store()
+        store.add_model_values("mail.thread", {"model": "res.partner"})
         with self.assertRaises(AssertionError):
-            store.add_model_values("mail.thread", {"model": "res.partner"})
+            store.get_result()
 
     def test_243_store_thread_invalid_missing_model(self):
         """Test Thread adding invalid list value."""
         store = Store()
+        store.add_model_values("mail.thread", {"id": 1})
         with self.assertRaises(AssertionError):
-            store.add_model_values("mail.thread", {"id": 1})
+            store.get_result()
 
     def test_260_store_thread_data_empty_val(self):
         """Test Thread empty values are not present in result."""
@@ -263,6 +271,35 @@ class TestDiscussTools(TransactionCase):
         store.add(user_a, "_store_im_status_fields")
         data2 = store.get_result()
         self.assertEqual(data2["res.partner"][0]["im_status"], "online")
+
+    def test_393_delayed_add(self):
+        """Test that delayed store.add() postpones reading fields until get_result()."""
+        user_a = new_test_user(self.env, "test_user_390@example.com")
+        store = Store()
+        store.add(user_a, "_store_im_status_fields")
+        self.assertEqual(user_a.partner_id.im_status, "offline")
+        self.env["mail.presence"]._update_presence(user_a)
+        data = store.get_result()
+        self.assertEqual(data["res.partner"][0]["im_status"], "online")
+
+    def test_395_delayed_add_ignores_deleted_record(self):
+        """Test that delayed store.add() ignores deleted records."""
+        user_a = new_test_user(self.env, "test_user_390@example.com")
+        store = Store()
+        store.add(user_a, ["name"])
+        user_a.unlink()
+        data = store.get_result()
+        self.assertFalse(data)
+
+    def test_397_delayed_delete_keeps_deleted_record(self):
+        """Test that delayed store.delete() keeps deleted records."""
+        user_a = new_test_user(self.env, "test_user_390@example.com")
+        store = Store()
+        user_a.unlink()
+        store.add(user_a, ["name"])
+        store.delete(user_a)
+        data = store.get_result()
+        self.assertEqual({"res.users": [{"id": user_a.id, "_DELETE": True}]}, data)
 
     # 4xx Tests many command modes
 

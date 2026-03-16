@@ -1282,6 +1282,7 @@ class DiscussChannel(models.Model):
         # prefetch in batch, including nested relations (member, guest, ...)
         prefetch_store = Store(bus_channel=res.target.channel, bus_subchannel=res.target.subchannel)
         prefetch_store.add(all_members, "_store_member_fields")
+        prefetch_store.get_result()  # execute the queued operations, which access the nested fields
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
