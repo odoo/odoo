@@ -196,6 +196,23 @@ class PosSelfOrderController(http.Controller):
             pos_config._notify('REMOVE_ORDERS', {'deleted_order_tokens': deleted_order_tokens})
         return self._generate_return_values(orders, pos_config) if orders else {}
 
+    @http.route('/pos-self-order/update-last-changes', auth='public', type='jsonrpc', website=True)
+    def update_last_changes(self, access_token, order_id, order_access_token, last_order_preparation_change=None):
+        """
+        This route can be used to update the last_order_preparation_change
+        field of the order or to simply retrieve the current value
+        """
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(self.env._("Your order does not exist or has been removed"))
+
+        if last_order_preparation_change:
+            pos_order.write({'last_order_preparation_change': last_order_preparation_change})
+
+        return {'last_order_preparation_change': pos_order.last_order_preparation_change}
+
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='jsonrpc', website=True)
     def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
         pos_config = self._verify_pos_config(access_token)
