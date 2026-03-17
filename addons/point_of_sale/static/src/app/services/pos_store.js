@@ -792,6 +792,9 @@ export class PosStore extends WithLazyGetterTrap {
                     );
                     product = productPackaging && productPackaging.product_id;
                 }
+                if (!product && opts.product) {
+                    product = opts.product;
+                }
             } else {
                 product = opts.presetVariant;
             }
@@ -1181,8 +1184,10 @@ export class PosStore extends WithLazyGetterTrap {
             const payload =
                 values?.payload && Object.keys(values?.payload).length
                     ? values.payload
-                    : await this.openConfigurator(productTemplate, opts);
-
+                    : await this.openConfigurator(productTemplate, {
+                          ...opts,
+                          product: values?.product_id,
+                      });
             if (payload) {
                 // Find candidate based on instantly created variants.
                 const attributeValues = this.models["product.template.attribute.value"]
