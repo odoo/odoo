@@ -1,6 +1,5 @@
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { Chatbot } from "@im_livechat/core/common/chatbot_model";
 
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
@@ -151,24 +150,24 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 // Simulate that the user is typing, so the chatbot shouldn't go to the next step
                 trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
                 async run(helpers) {
-                    chatbotDelayProcessingDef = new Deferred();
+                    chatbotDelayProcessingDef = Promise.withResolvers();
                     let failTimeout = setTimeout(() => {
                         chatbotDelayProcessingDef.reject(
                             "Chatbot should stay in multi line step when user is typing."
                         );
                     }, 5000);
-                    chatbotDelayProcessingDef.then(() => clearTimeout(failTimeout));
+                    chatbotDelayProcessingDef.promise.then(() => clearTimeout(failTimeout));
                     helpers.edit("Never mind!");
-                    await chatbotDelayProcessingDef;
-                    chatbotDelayProcessingDef = new Deferred();
+                    await chatbotDelayProcessingDef.promise;
+                    chatbotDelayProcessingDef = Promise.withResolvers();
                     failTimeout = setTimeout(() => {
                         chatbotDelayProcessingDef.reject(
                             "Chatbot should stay in multi line step if user isn't done typing."
                         );
                     }, 5000);
-                    chatbotDelayProcessingDef.then(() => clearTimeout(failTimeout));
+                    chatbotDelayProcessingDef.promise.then(() => clearTimeout(failTimeout));
                     helpers.edit("Never mind!!!");
-                    await chatbotDelayProcessingDef;
+                    await chatbotDelayProcessingDef.promise;
                 },
             },
             {
