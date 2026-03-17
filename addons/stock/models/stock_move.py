@@ -2357,7 +2357,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         @param qty: quantity in the UoM of move.product_uom
         """
         existing_smls = self.move_line_ids
-        self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
+        self.with_context(auto_conso=True).move_line_ids = self._set_quantity_done_prepare_vals(qty)
         # `_set_quantity_done_prepare_vals` may return some commands to create new SMLs
         # These new SMLs need to be redirected thanks to putaway rules
         (self.move_line_ids - existing_smls)._apply_putaway_strategy()
