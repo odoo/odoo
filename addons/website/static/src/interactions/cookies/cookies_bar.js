@@ -44,20 +44,7 @@ export class CookiesBar extends Popup {
 
     start() {
         super.start();
-
-        // Add a link to the cookie policy page in the copyright footer.
-        // TODO: In master, add this link via XML.
-        const copyrightFooterContainerEl = document.querySelector(
-            ".o_footer_copyright_name"
-        )?.parentElement;
-        if (copyrightFooterContainerEl) {
-            const cookiePolicyLinkEl = cloneContentEls(`
-                <p><a href="/cookie-policy" class="o_cookie_policy_link">${_t(
-                    "Cookie Policy"
-                )}</a></p>
-            `).firstElementChild;
-            this.insert(cookiePolicyLinkEl, copyrightFooterContainerEl);
-        }
+        this.insertCookiePolicyLink();
 
         // Since cookie preferences can be changed, update the gtag script that
         // toggles the gtag consent. So, when the user modifies their cookie
@@ -101,6 +88,22 @@ export class CookiesBar extends Popup {
                 newScriptEl,
                 originalTrackingCodeScriptEl
             );
+        }
+    }
+
+    insertCookiePolicyLink() {
+        // Add a link to the cookie policy page in the copyright footer.
+        // TODO: In master, add this link via XML.
+        const copyrightFooterContainerEl = document.querySelector(
+            ".o_footer_copyright_name"
+        )?.parentElement;
+        if (copyrightFooterContainerEl) {
+            const cookiePolicyLinkEl = cloneContentEls(`
+                <p><a href="/cookie-policy" class="o_cookie_policy_link">${_t(
+                    "Cookie Policy"
+                )}</a></p>
+            `).firstElementChild;
+            this.insert(cookiePolicyLinkEl, copyrightFooterContainerEl);
         }
     }
 
