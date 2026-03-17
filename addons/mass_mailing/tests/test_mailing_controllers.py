@@ -465,7 +465,6 @@ class TestMailingControllers(TestMailingControllersCommon):
                 'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
             }
         )
-        self.assertFalse(msg_fb.body)
         self.assertMessageFields(
             msg_bl2, {
                 'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '

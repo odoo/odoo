@@ -114,7 +114,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     },
                     "subject": False,
                     "subtype_id": self.env.ref("mail.mt_comment").id,
-                    "trackingValues": [],
                     "write_date": fields.Datetime.to_string(chatbot_message.write_date),
                 }
             ),
@@ -175,7 +174,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "scheduledDatetime": False,
                         "subject": False,
                         "subtype_id": self.env.ref("mail.mt_note").id,
-                        "trackingValues": [],
                     },
                 ),
                 "mail.message.subtype": [

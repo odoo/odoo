@@ -127,15 +127,17 @@ class MailTrackingDurationMixinCase(MailCommon):
     def _test_queries_batch_duration_tracking(self, query_count=2):
         """ The MailTrackingDuration mixin is only supposed to add 3 queries """
         batch = self.rec_1 | self.rec_2 | self.rec_3 | self.rec_4
-        batch[self.track_duration_field] = self.stage_2.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_4.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_1.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_3.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_2.id
+        with patch.object(self.env.cr, 'now', return_value=self.mock_start_time):
+            batch[self.track_duration_field] = self.stage_2.id
+            self.flush_tracking()
+            batch[self.track_duration_field] = self.stage_4.id
+            self.flush_tracking()
+            batch[self.track_duration_field] = self.stage_1.id
+            self.flush_tracking()
+            batch[self.track_duration_field] = self.stage_3.id
+            self.flush_tracking()
+            batch[self.track_duration_field] = self.stage_2.id
+            self.flush_tracking()
 
         with self.assertQueryCount(query_count):
             batch._compute_duration_tracking()

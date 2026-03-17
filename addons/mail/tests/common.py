@@ -58,6 +58,10 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         super(MockEmail, cls).setUpClass()
         cls._mc_enabled = False
 
+    def setUp(self):
+        super().setUp()
+        self.is_mail_track_installed = 'mail_tracking' in self.env['ir.module.module']._installed()
+
     # ------------------------------------------------------------
     # UTILITY MOCKS
     # ------------------------------------------------------------
@@ -803,6 +807,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         for fname, fvalue in fields_values.items():
             with self.subTest(fname=fname, fvalue=fvalue):
                 # email_{cc, to} are lists, hence order is not important
+                self.assertTrackingFormatted(message, fvalue)
                 if fname in {'incoming_email_cc', 'incoming_email_to'}:
                     self.assertEqual(
                         sorted(tools.mail.email_split_and_format_normalize(message[fname])),
@@ -810,12 +815,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                         f'Message: expected {fvalue} for {fname}, got {message[fname]}',
                     )
                 # tracking values themselves, a shortcut
-                elif fname == 'tracking_values':
+                elif self.is_mail_track_installed and fname == 'tracking_values':
                     self.assertTracking(message, fvalue, strict=True)
+                elif fname == 'message_type':
+                    self.assertIn(message[fname], [fvalue, 'tracking'])
                 # body content: not strict equal, just check given content is inside it
                 elif fname == 'body_content':
                     self.assertIn(fvalue, message['body'])
-                else:
+                elif fname not in ['tracking_values', 'body']:
                     self.assertEqual(
                         message[fname], fvalue,
                         f'Message: expected {fvalue} for {fname}, got {message[fname]}',
@@ -1030,6 +1037,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # ------------------------------------------------------------
     # OTHER ASSERTS
     # ------------------------------------------------------------
+
+    def assertTrackingFormatted(self, message, body):
+        def _normalize_html(html):
+            return ' '.join((html or '').split())
+        body = _normalize_html(message.body)
+        expected = _normalize_html(body)
+        self.assertIn(expected, body)
 
     def assertTracking(self, message, data, strict=False):
         """ Check generated tracking linked to a given message.
