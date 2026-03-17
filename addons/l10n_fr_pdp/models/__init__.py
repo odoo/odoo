@@ -1,3 +1,5 @@
+from . import account_edi_cii
+from . import account_edi_common
 from . import account_edi_proxy_user
 from . import account_edi_xml_cii_facturx
 from . import account_edi_xml_ubl_21_fr
