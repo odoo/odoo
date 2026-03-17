@@ -3,7 +3,7 @@
     50%, 100% { opacity: 0; }
 }
 
-*[data-selection-placeholder] {
+.odoo-editor-editable *[data-selection-placeholder] {
     height: 0;
     // margin-bottom is set to -1px to compensate for the border, important
     // is necessary to prevent other more specific selector from overriding
@@ -22,5 +22,9 @@
     // Disable hints:
     &:after {
         content: none !important;
+    }
+
+    ::selection {
+        background-color: transparent !important;
     }
 }

@@ -126,7 +126,7 @@ describe("insert separator", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p>abc</p><p>]xyz</p><hr contenteditable="false" class="o_selected_hr"><p>[<br></p>`
+            `<p>abc</p><p>xyz]</p><hr contenteditable="false" class="o_selected_hr"><p>[<br></p>`
         );
     });
 
