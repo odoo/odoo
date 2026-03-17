@@ -311,6 +311,61 @@ class TestMenu(common.TransactionCase):
         with self.assertRaises(UserError):
             self.main_menu.parent_id = self.another_menu.id
 
+    def test_menu_search(self):
+        Menu = self.env['website.menu']
+        page_url = '/page_specific'
+        page = self.env['website.page'].create({
+            'url': page_url,
+            'website_id': self.ref('website.default_website'),
+            # ir.ui.view properties
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>Specific View</div>',
+            'key': 'test.specific_view',
+        })
+        existing_menus = Menu.search([])
+        root_menu = menu_root = Menu.create({
+            'name': 'Root',
+        })
+        mega_menu = Menu.create({
+            'name': 'Mega menu',
+            'mega_menu_content': '<body><div/></body>',
+        })
+        child_menu_without_url = Menu.create({
+            'name': 'Child menu',
+            'parent_id': menu_root.id,
+        })
+        child_menu_url = 'https://child_menu_with_url'
+        child_menu_with_url = Menu.create({
+            'name': 'Child menu',
+            'parent_id': menu_root.id,
+            'url': child_menu_url
+        })
+        page_specific_menu = Menu.create({
+            'name': 'Page Specific menu',
+            'page_id': page.id
+        })
+        url_defined_by_user = 'https://external_url_menu'
+        external_url_menu = Menu.create({
+            'name': 'External url menu',
+            'url': url_defined_by_user
+        })
+        hashtag_url = "#"
+        hashtag_url_menu = Menu.create({
+            'name': 'Hashtag url menu',
+            'url': hashtag_url
+        })
+        res = Menu.search([('url', '=', '#')])
+        self.assertEqual(res - existing_menus, root_menu + mega_menu + child_menu_without_url + hashtag_url_menu)
+        res = Menu.search([('url', '!=', '#')])
+        self.assertEqual(res - existing_menus, child_menu_with_url + page_specific_menu + external_url_menu)
+        res = Menu.search([('url', '=', child_menu_url)])
+        self.assertEqual(res - existing_menus, child_menu_with_url)
+        res = Menu.search([('url', '=', url_defined_by_user)])
+        self.assertEqual(res - existing_menus, external_url_menu)
+        res = Menu.search([('url', '!=', url_defined_by_user)])
+        self.assertEqual(res - existing_menus, page_specific_menu + child_menu_with_url + child_menu_without_url + mega_menu + root_menu + hashtag_url_menu)
+
 
 class TestMenuHttp(common.HttpCase):
     def setUp(self):
