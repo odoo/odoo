@@ -43,7 +43,7 @@ class L10n_LatamCheck(models.Model):
     outstanding_line_id = fields.Many2one('account.move.line', readonly=True, check_company=True)
     issue_state = fields.Selection(
         selection=[('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
-        string="Issuing Status",
+        string="Issue Status",
         compute='_compute_issue_state',
         store=True,
     )

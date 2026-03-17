@@ -125,7 +125,7 @@ class L10nInEwaybill(models.Model):
     def action_set_to_challan(self):
         self.ensure_one()
         if self.state != 'pending':
-            raise UserError(_("You can only generate a challan when the status is 'Pending'."))
+            raise UserError(_("You can only generate a Challan when the status is 'Pending'."))
         self.write({
             'state': 'challan',
         })

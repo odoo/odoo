@@ -1168,7 +1168,7 @@ class AccountPayment(models.Model):
             if payment.outstanding_account_type == 'asset_cash':
                 raise UserError(_("You cannot reconcile payments linked to an Asset Cash account."))
             if payment.state != 'paid':
-                raise UserError(_("You can only reconcile payments that have a 'Paid' status."))
+                raise UserError(_("You can only reconcile payments that have a status of 'Paid'."))
             payment.state = 'reconciled'
 
     def action_reject(self):

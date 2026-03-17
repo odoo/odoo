@@ -341,7 +341,7 @@ class MyInvoisDocument(models.Model):
         invalid_documents = documents.filtered(lambda d: d.invoice_ids and any(invoice.state in ('draft', 'cancel') for invoice in d.invoice_ids))
         if invalid_documents and allow_raising:
             raise UserError(self.env._(
-                "You cannot send this document to MyInvois because the related invoice(s) (%s) are in 'Draft' or 'Cancelled' status.",
+                "You cannot send this document to MyInvois because the related invoice(s) (%s) have a status of 'Draft' or 'Cancelled'.",
                 format_list(self.env, invalid_documents.mapped('name')),
             ))
 
@@ -563,7 +563,7 @@ class MyInvoisDocument(models.Model):
             ),
             # You cannot cancel an invoice that has been rejected or that is invalid
             "update_incorrect_state": self.env._(
-                "You can only update the status of invoices with a 'Valid' status.",
+                "You can only update the status of invoices with a status of 'Valid'.",
             ),
             "update_period_over": self.env._(
                 "It has been more than 72h since the invoice validation, you can no longer update it.\n"
@@ -1185,7 +1185,7 @@ class MyInvoisDocument(models.Model):
             raise UserError(self.env._('It has been more than 72h since the document validation, you can no longer cancel it.\n'
                                        'Instead, you should issue a debit or credit note.'))
         if self.myinvois_state not in ['valid', 'rejected']:
-            raise UserError(self.env._("You can only change the status of documents that are 'Valid' or 'Rejected'."))
+            raise UserError(self.env._("You can only change the status of a document that has a status of 'Valid' or 'Rejected'."))
 
     def _action_myinvois_update_document(self, new_status='cancelled'):
         """

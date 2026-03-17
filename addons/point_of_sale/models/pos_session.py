@@ -1,14 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 from collections import defaultdict
 from datetime import timedelta
-from itertools import groupby, starmap
-from markupsafe import Markup
-import logging
+from itertools import starmap
 
-from odoo import api, fields, models, _
+from markupsafe import Markup
+
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_is_zero, float_compare, frozendict, plaintext2html, split_every
+from odoo.tools import (
+    float_compare,
+    float_is_zero,
+    format_list,
+    frozendict,
+    plaintext2html,
+    split_every,
+)
 from odoo.tools.constants import PREFETCH_MAX
 
 _logger = logging.getLogger(__name__)
@@ -205,7 +213,7 @@ class PosSession(models.Model):
                 'status': 'success',
             }
         if self.state != 'opening_control' or len(self.order_ids) > 0:
-            raise UserError(_("You can only cancel a session that is in 'Opening Control' status and has no orders."))
+            raise UserError(_("You can only cancel a session that has a status of 'Opening Control' and no orders."))
         self.sudo().unlink()
         return {
             'status': 'success',
@@ -1762,9 +1770,9 @@ class PosSession(models.Model):
         draft_orders = self.get_session_orders().filtered(lambda order: order.state == 'draft')
         if draft_orders:
             raise UserError(_(
-                    'There are still orders in draft status in the session. '
+                    'There are still orders with a draft status in the session. '
                     'Pay or cancel the following orders to validate the session:\n%s',
-                    ', '.join(draft_orders.mapped('name'))
+                    format_list(self.env, draft_orders.mapped('name')),
             ))
         return True
 
