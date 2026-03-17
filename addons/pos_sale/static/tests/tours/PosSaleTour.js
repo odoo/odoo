@@ -363,7 +363,7 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
             Order.hasLine({
                 productName: "Down Payment",
                 quantity: "1.0",
-                price: "22.00",
+                price: "20.00",
             }),
         ].flat(),
 });

@@ -388,8 +388,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
         });
 
         // We need one unique line for the fixed amount taxes
-        let fixed_taxes_downpayment = 0;
-        const fixed_taxes_tab = [];
         const down_payment_line_to_create = [];
 
         Object.keys(grouped).forEach((key) => {
@@ -405,14 +403,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
             const fixed_taxes = group[0].tax_id.filter(
                 (id) => this.pos.taxes_by_id[id].amount_type === "fixed"
             );
-            const total_qty = group.reduce((total, line) => (total += line.product_uom_qty), 0);
-            fixed_taxes.forEach((tax_id) => {
-                const tax = this.pos.taxes_by_id[tax_id];
-                fixed_taxes_downpayment += tax.amount * total_qty * percentage;
-                fixed_taxes_tab.push(tab);
-            });
 
-            // We need to remove the amount of the fixed tax as they will have a separate line
             const fixed_tax_total_amount = fixed_taxes.reduce((total, tax_id) => {
                 const tax = this.pos.taxes_by_id[tax_id];
                 return total + tax.amount;
@@ -448,19 +439,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
             });
         });
 
-        if (fixed_taxes_downpayment !== 0) {
-            // We try to merge the fixed taxes in one line that has no tax if possible
-            const line = down_payment_line_to_create.find((line) => !line.tax_ids.length);
-            if (line) {
-                line.price += fixed_taxes_downpayment;
-            } else {
-                down_payment_line_to_create.push({
-                    price: fixed_taxes_downpayment,
-                    tab: fixed_taxes_tab.flat(),
-                    tax_ids: [],
-                });
-            }
-        }
         for (const down_payment_line of down_payment_line_to_create) {
             this.pos.get_order().add_orderline(
                 new Orderline(

@@ -335,24 +335,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 line['analytic_distribution'],
                 tax_repartition['price_subtotal']
             ])
-            for fixed_tax in fixed_taxes:
-                # Fixed taxes cannot be set as taxes on down payments as they always amounts to 100%
-                # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
-                # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
-                # any other non fixed tax.
-                if fixed_tax.price_include:
-                    continue
-
-                if fixed_tax.include_base_amount:
-                    pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
-                        .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')
-                else:
-                    pct_tax = self.env['account.tax']
-                down_payment_values.append([
-                    pct_tax,
-                    line['analytic_distribution'],
-                    line['quantity'] * fixed_tax.amount
-                ])
 
         downpayment_line_map = {}
         analytic_map = {}
