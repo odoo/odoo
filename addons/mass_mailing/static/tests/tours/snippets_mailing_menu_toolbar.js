@@ -65,6 +65,10 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
         run: "click",
     },
     {
+        content: "Wait for the block library dialog to close after selection",
+        trigger: "body:not(:has(.modal-content.o_add_snippet_dialog))",
+    },
+    {
         content: "Wait for .s_text_block to be loaded",
         trigger: ':iframe .s_text_block p',
     },
