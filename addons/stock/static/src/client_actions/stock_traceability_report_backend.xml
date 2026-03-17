@@ -68,7 +68,13 @@
                             <a class="o_stock_report_partner_action" href="#" t-on-click.prevent="() => this.onClickPartner(line)" t-esc="col"/>
                         </span>
                         <span t-elif="col and line.lot_name === col">
+<<<<<<< c9a01e37b4ab7cba5b7df260adfc7d003b5594ed
                             <a class="o_stock_report_lot_action" href="#" t-on-click.prevent="() => this.onClickOpenLot(line)" t-esc="col"/>
+||||||| 9ab602dc232a49f219b6b7cec1de8cf82fb19ca1
+                            <span class="o_stock_report_lot_action" t-esc="col" />
+=======
+                            <a class="o_stock_report_lot_action" t-esc="col" t-on-click.prevent="() => this.onCLickOpenLot(line)"/>
+>>>>>>> 8d1e4c36084be65beb68a75e33116c05494e4cba
                         </span>
                         <t t-elif="col" t-esc="col"/>
                     </td>
