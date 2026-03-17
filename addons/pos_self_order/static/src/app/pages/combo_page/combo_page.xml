@@ -42,7 +42,12 @@
                     <div class="d-flex o_self_fade" t-if="!this.isAttributeSelection() and !this.state.showResume">
                         <div class="d-flex flex-column w-100">
                             <div t-if="this.selectedChoice.qty_free &gt; 0 and this.selectedChoice.qty_free  &lt; this.selectedChoice.qty_max" class="d-flex justify-content-center mb-3 mb-lg-4">
-                                <h2 class="m-0">Choose your <t t-out="this.selectedChoice.name"/> — <span class="text-muted"><t t-out="this.selectedChoice.qty_free"/> included</span></h2>
+                                <h2 class="m-0">
+                                    Choose your <t t-out="this.selectedChoice.name"/> 
+                                    — 
+                                    <span class="text-muted"><t t-out="this.selectedChoice.qty_free"/> included</span>
+                                    <span class="text-danger fst-italic"> (up to <t t-out="this.selectedChoice.qty_max"/>)</span>
+                                </h2>
                             </div>
                             <div class="o_self_combo_products row  justify-content-center" t-att-class="{ 'small-item-nb': this.comboItems.length &lt; 3}">
                                 <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3" t-att-class="{'col-kiosk-p-4 ': this.comboItems.length &lt; 4}" t-foreach="this.comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
