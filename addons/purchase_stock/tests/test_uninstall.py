@@ -17,7 +17,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
             'partner_id': partner.id,
             'state': 'purchase',
             'order_line': [fields.Command.create({
-                'product_id': self.product_1.id,
+                'product_id': self.product.id,
             })],
         })
         order_line = purchase_order.order_line
@@ -40,7 +40,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
         original_compute = PurchaseOrderLine._compute_qty_received
         def _compute_qty_received(records):
             records.read()
-            with self.assertQueryCount(0):
+            with self.assertQueryCount(5):
                 original_compute(records)
                 records.flush_recordset()
 

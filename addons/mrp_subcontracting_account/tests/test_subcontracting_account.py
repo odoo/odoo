@@ -65,11 +65,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 30.0, 'credit': 0.0},
         ])
 
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         # Validate the bill from the subcontractor
         scrap_form = Form(self.env['stock.move'].with_context(default_is_scrap=True), view='stock.view_scrap_move_form')
         scrap_form.product_id = self.finished
         scrap_form.location_id = self.stock_location
-        scrap_form.location_dest_id = self.company.scrap_location_id
 
         scrap_form.quantity = 1
         scrap_form.company_id = self.company
