@@ -5,6 +5,7 @@ import {
     isMediaElement,
     isProtected,
     isProtecting,
+    isSelfClosingElement,
     isUnprotecting,
     selfClosingHtmlTags,
 } from "@html_editor/utils/dom_info";
@@ -1085,8 +1086,9 @@ export class SelectionPlugin extends Plugin {
             const selectingBackward = ["ArrowLeft", "ArrowUp"].includes(ev.key);
             const currentBlock = closestBlock(focusNode);
             const isAtBoundary = selectingBackward
-                ? firstLeaf(currentBlock) === focusNode && focusOffset === 0
-                : lastLeaf(currentBlock) === focusNode && focusOffset === nodeSize(focusNode);
+                ? [firstLeaf(currentBlock), currentBlock].includes(focusNode) && focusOffset === 0
+                : [lastLeaf(currentBlock), currentBlock].includes(focusNode) &&
+                  focusOffset === nodeSize(focusNode);
             const adjacentBlock = selectingBackward
                 ? currentBlock.previousElementSibling
                 : currentBlock.nextElementSibling;
@@ -1094,8 +1096,11 @@ export class SelectionPlugin extends Plugin {
                 ? adjacentBlock?.previousElementSibling
                 : adjacentBlock?.nextElementSibling;
             if (!adjacentBlock?.isContentEditable && targetBlock && isAtBoundary) {
-                const leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
-                const offset = selectingBackward ? nodeSize(leafNode) : 0;
+                let leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
+                let offset = selectingBackward ? nodeSize(leafNode) : 0;
+                if (isSelfClosingElement(leafNode)) {
+                    [leafNode, offset] = selectingBackward ? leftPos(leafNode) : rightPos(leafNode);
+                }
                 selection.extend(leafNode, offset);
                 ev.preventDefault();
             }

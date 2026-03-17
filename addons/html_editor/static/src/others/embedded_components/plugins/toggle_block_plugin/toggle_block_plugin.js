@@ -52,15 +52,6 @@ export class ToggleBlockPlugin extends Plugin {
             ),
         ],
         move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
-        is_selection_blocker_predicates: (blocker) => {
-            // Prevent the insertion of selection placeholders around toggle blocks.
-            if (
-                blocker.nodeType === Node.ELEMENT_NODE &&
-                blocker.dataset.embedded === "toggleBlock"
-            ) {
-                return false;
-            }
-        },
         powerbox_items: [
             {
                 commandId: "insertToggleBlock",
@@ -157,6 +148,24 @@ export class ToggleBlockPlugin extends Plugin {
     }
 
     /**
+     * Returns the next or previous toggle block sibling of a node,
+     * removing any selection placeholder in between.
+     *
+     * @param {Node} node
+     * @param {"next"|"previous"} direction
+     * @returns {Node|null}
+     */
+    getAdjacentToggleBlock(node, direction) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
+        let sibling = node[`${direction}ElementSibling`];
+        if (systemNodeSelectors && sibling?.matches(systemNodeSelectors)) {
+            sibling.remove();
+            sibling = node[`${direction}ElementSibling`];
+        }
+        return sibling?.matches(toggleSelector) ? sibling : null;
+    }
+
+    /**
      * Handle all behaviors linked to the use of deleteBackward in the editor:
      * 1. selection at start of title: explode the toggle and keep title and content as siblings
      * 2. selection at end of content in a paragraph: unwraps from the toggle content
@@ -235,8 +244,8 @@ export class ToggleBlockPlugin extends Plugin {
     handleDeleteBackwardAfterToggle({ endContainer, endOffset }) {
         const block = closestBlock(endContainer);
         const leaf = isEmptyBlock(endContainer) ? endContainer : firstLeaf(block);
-        const toggle = block?.previousSibling;
-        if (!toggle?.matches?.(toggleSelector) || endOffset !== 0 || leaf !== endContainer) {
+        const toggle = this.getAdjacentToggleBlock(block, "previous");
+        if (!toggle || endOffset !== 0 || leaf !== endContainer) {
             return;
         }
         let target = toggle.querySelector(contentSelector);
@@ -298,8 +307,8 @@ export class ToggleBlockPlugin extends Plugin {
         ) {
             return;
         }
-        let nextEl = toggle.nextSibling;
-        if (nextEl?.matches?.(toggleSelector)) {
+        let nextEl = this.getAdjacentToggleBlock(toggle, "next");
+        if (nextEl) {
             this.explodeToggle(nextEl);
             nextEl = toggle.nextSibling;
         }
@@ -334,13 +343,18 @@ export class ToggleBlockPlugin extends Plugin {
         }
         let nextEl;
         if (content.parentElement.matches(".d-none")) {
-            nextEl = toggle.nextSibling;
-            if (nextEl.matches?.(toggleSelector)) {
+            nextEl = this.getAdjacentToggleBlock(toggle, "next");
+            if (nextEl) {
                 this.explodeToggle(nextEl);
                 nextEl = toggle.nextSibling;
             }
         } else {
+            const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
             nextEl = content.firstChild;
+            if (systemNodeSelectors && nextEl?.matches(systemNodeSelectors)) {
+                nextEl.remove();
+                nextEl = content.firstChild;
+            }
             if (nextEl.matches?.(toggleSelector)) {
                 this.explodeToggle(nextEl);
                 nextEl = content.firstChild;
@@ -499,23 +513,23 @@ export class ToggleBlockPlugin extends Plugin {
     handleTab() {
         const toggle = this.getToggleFromTitleSelection();
         if (toggle) {
-            const previousSibling = toggle.previousSibling;
-            if (previousSibling?.matches?.(toggleSelector)) {
+            const previousToggleBlock = this.getAdjacentToggleBlock(toggle, "previous");
+            if (previousToggleBlock) {
                 const cursors = this.dependencies.selection.preserveSelection();
-                const previousSiblingContent = previousSibling.querySelector(contentSelector);
+                const previousToggleContent = previousToggleBlock.querySelector(contentSelector);
                 if (
-                    children(previousSiblingContent).length === 1 &&
-                    isEmptyBlock(previousSiblingContent.firstElementChild)
+                    children(previousToggleContent).length === 1 &&
+                    isEmptyBlock(previousToggleContent.firstElementChild)
                 ) {
-                    previousSiblingContent.replaceChildren(toggle);
+                    previousToggleContent.replaceChildren(toggle);
                 } else {
-                    previousSiblingContent.append(toggle);
+                    previousToggleContent.append(toggle);
                 }
                 const content = toggle.querySelector(contentSelector);
                 if (!content.parentElement.matches(".d-none")) {
                     toggle.after(...children(content));
                 }
-                this.forceToggle(previousSibling, {
+                this.forceToggle(previousToggleBlock, {
                     showContent: true,
                     restoreSelection: cursors.restore,
                 });
