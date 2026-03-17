@@ -8,6 +8,7 @@ import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
 import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
+import { ForecastedProductVariantFilter } from "./forecasted_product_variant_filter";
 import { Component, onWillStart, proxy } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
@@ -17,6 +18,7 @@ export class StockForecasted extends Component {
         ControlPanel,
         ForecastedButtons,
         ForecastedWarehouseFilter,
+        ForecastedProductVariantFilter,
         ForecastedHeader,
         View,
         ForecastedDetails,
@@ -28,13 +30,14 @@ export class StockForecasted extends Component {
 
         this.context = proxy(this.props.action.context);
         this.productId = this.context.active_id;
-        this.resModel = this.context.active_model;
+        this.resModel = this.variantId ? "product.product" : this.context.active_model;
         this.title = this.props.action.name || _t("Forecasted Report");
         if(!this.context.active_id){
             this.context.active_id = this.props.action.params.active_id;
             this.reloadReport();
         }
         this.warehouses = proxy([]);
+        this.variants = proxy([]);
 
         onWillStart(this._getReportValues);
     }
@@ -44,10 +47,12 @@ export class StockForecasted extends Component {
         const isTemplate = !this.resModel || this.resModel === 'product.template';
         this.reportModelName = `stock.forecasted_product_${isTemplate ? "template" : "product"}`;
         await this._loadWarehouses();
+        if (this.context.has_variants) {
+            await this._loadVariants();
         }
         const reportValues = await this.orm.call(this.reportModelName, "get_report_values", [], {
             context: this.context,
-            docids: [this.productId],
+            docids: [this.variantId || this.productId],
         });
         this.docs = {
             ...reportValues.docs,
@@ -58,7 +63,6 @@ export class StockForecasted extends Component {
     }
 
     async _getResModel(){
-        this.resModel = this.context.active_model || this.context.params?.active_model;
         //Following is used as a fallback when the forecast is not called by an action but through browser's history
         if (!this.resModel) {
             let resModel = this.props.action.res_model;
@@ -94,9 +98,31 @@ export class StockForecasted extends Component {
         }
     }
 
+    async _loadVariants() {
+        const variants = await this.orm.searchRead(
+            "product.product",
+            [["product_tmpl_id", "=", this.productId]],
+            ["id", "display_name"]
+        );
+        this.variants = [{ id: 0, display_name: _t("All Variants") }, ...variants];
+
+        // If no variant is selected by the user, set a default.
+        if (this.variantId === undefined) {
+            this.updateVariant(this.variants[0].id);
+        }
+    }
+
     async updateWarehouse(id) {
         const hasPreviousValue = this.warehouseId !== undefined;
         this.context.warehouse_id = id;
+        if (hasPreviousValue) {
+            await this.reloadReport();
+        }
+    }
+
+    async updateVariant(id) {
+        const hasPreviousValue = this.variantId !== undefined;
+        this.context.variant_id = id;
         if (hasPreviousValue) {
             await this.reloadReport();
         }
@@ -118,6 +144,10 @@ export class StockForecasted extends Component {
         return this.context.warehouse_id;
     }
 
+    get variantId() {
+        return this.context.variant_id;
+    }
+
     get selectedWarehouseIds() {
         return this.warehouseId === 0
             ? this.warehouses.filter(({ id }) => id > 0).map(({ id }) => id)
@@ -132,7 +162,11 @@ export class StockForecasted extends Component {
         if (this.resModel === "product.template") {
             domain.push(["product_tmpl_id", "=", this.productId]);
         } else if (this.resModel === "product.product") {
-            domain.push(["product_id", "=", this.productId]);
+            domain.push([
+                "product_id",
+                "=",
+                this.context.active_model === "product.template" ? this.variantId : this.productId,
+            ]);
         }
         return domain;
     }

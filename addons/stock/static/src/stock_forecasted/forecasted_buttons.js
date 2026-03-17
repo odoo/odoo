@@ -14,7 +14,7 @@ export class ForecastedButtons extends Component {
         this.actionService = useService("action");
         this.orm = useService("orm");
         this.context = this.props.action.context;
-        this.productId = this.context.active_id;
+        this.productId = this.context.variant_id ? this.context.variant_id : this.context.active_id;
         this.resModel = this.props.resModel || this.context.active_model || this.context.params?.active_model || 'product.template';
     }
 
