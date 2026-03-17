@@ -258,10 +258,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return vals
 
-    def _can_export_selfbilling(self):
-        # Overridden in `account_peppol_selfbilling`
-        return False
-
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._export_invoice_vals(invoice)

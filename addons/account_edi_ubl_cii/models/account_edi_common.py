@@ -829,6 +829,10 @@ class AccountEdiCommon(models.AbstractModel):
     def _correct_invoice_tax_amount(self, tree, invoice):
         pass  # To be implemented by the format if needed
 
+    def _can_export_selfbilling(self):
+        # Overridden in `account_peppol_selfbilling`
+        return False
+
     # -------------------------------------------------------------------------
     # Check xml using the free API from Ph. Helger, don't abuse it !
     # -------------------------------------------------------------------------
