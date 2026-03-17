@@ -1928,6 +1928,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'state': 'draft',
             'ref': False,
             'payment_state': 'not_paid',
+            'invoice_origin': 'S00001',
         })
 
     def test_out_invoice_create_refund_multi_currency(self):
