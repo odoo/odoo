@@ -75,6 +75,9 @@ export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true 
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
  * @param {import("models").Persona[]} validMentions.partners
+ * @param rawBody {string|ReturnType<markup>}
+ * @param validRecords {Object}
+ * @param validRecords.partners {Partner}
  */
 export async function prettifyMessageContent(
     rawBody,
@@ -134,18 +137,21 @@ function linkify(text) {
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
+        const url = match[0];
+        const fixedUrl = !/^https?:\/\//i.test(url) ? `http://${url}` : url;
+        if (!URL.canParse(fixedUrl)) {
+            continue;
+        }
         result = htmlJoin([result, text.slice(curIndex, match.index)]);
-        // Decode the url first, in case it's already an encoded url
-        const inputUrl = decodeURI(match[0]);
-        const url = !/^https?:\/\//i.test(inputUrl) ? "http://" + inputUrl : inputUrl;
+        const { href } = URL.parse(fixedUrl);
         const link = document.createElement("a");
         setAttributes(link, {
             target: "_blank",
             rel: "noreferrer noopener",
-            href: encodeURI(url),
+            href,
         });
-        link.textContent = inputUrl;
-        const messageMatch = messageUrlRegExp.exec(url);
+        link.textContent = url;
+        const messageMatch = messageUrlRegExp.exec(fixedUrl);
         if (messageMatch !== null) {
             setAttributes(link, {
                 "data-oe-id": messageMatch[1],
