@@ -723,6 +723,13 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_visibility_option", login="admin")
 
     def test_website_font_family(self):
+        self.env['ir.attachment'].create({
+            'name': 'googleFontMetadata',
+            'type': 'binary',
+            'mimetype': 'application/json',
+            'raw': b'{"familyMetadataList":[{"family":"First test font"}, {"family":"Second test font"}]}',
+            'public': True,
+        })
         self.start_tour(self.env['website'].get_client_action_url('/', True), "website_font_family", login="admin")
 
     def test_website_seo_notification(self):

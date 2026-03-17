@@ -1114,7 +1114,7 @@ class Website(Home):
                     'mimetype': 'application/json',
                     'raw': json_content,
                 })
-        return json.loads(metadata.raw)
+        return json.loads(metadata.raw.content)
 
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'
