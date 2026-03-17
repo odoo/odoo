@@ -105,18 +105,7 @@ class PosOrderReceipt(models.AbstractModel):
         qr.add_data(qrcode_url)
         qr.make(fit=True)
 
-        img = qr.make_image(fill_color="black", back_color="white").convert("RGBA")
-        datas = img.getdata()
-        newData = []
-
-        # Make white background fully transparent
-        for item in datas:
-            if item[0] > 240 and item[1] > 240 and item[2] > 240:
-                newData.append((255, 255, 255, 0))
-                continue
-            newData.append(item)
-
-        img.putdata(newData)
+        img = qr.make_image(fill_color="black", back_color="transparent")
 
         # Convert to base64
         buffer = BytesIO()
