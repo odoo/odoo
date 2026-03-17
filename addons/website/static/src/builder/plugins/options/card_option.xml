@@ -16,10 +16,10 @@
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <card_option selector=".s_card" t-attf-exclude="div:is({{cardParentHandlers}}) > .s_card"/>
+        <card_option selector=".s_card" t-attf-exclude="div:is({{this.cardParentHandlers}}) > .s_card"/>
         <card_option
-            t-att-selector="cardParentHandlers"
-            t-att-applyTo="cardDisableWidthApplyTo"
+            t-att-selector="this.cardParentHandlers"
+            t-att-applyTo="this.cardDisableWidthApplyTo"
             props='{ "disableWidth": true }'/>
     </xpath>
 </t>

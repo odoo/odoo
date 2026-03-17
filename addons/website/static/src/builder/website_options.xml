@@ -27,8 +27,8 @@
 
         <t id="background_options">
             <website_background_option
-                t-att-selector="blockquoteParentHandlers"
-                t-att-applyTo="blockquoteDisableWidthApplyTo"
+                t-att-selector="this.blockquoteParentHandlers"
+                t-att-applyTo="this.blockquoteDisableWidthApplyTo"
                 props='{ "withColors": true,"withImages": true, "withShapes": true, "withColorCombinations": true }'/>
             <website_background_option
                 selector="section"
@@ -38,19 +38,19 @@
                 selector=".s_process_step .s_process_step_number"
                 props='{ "withColors": true, "withImages": false, "withColorCombinations": false }'/>
             <website_background_option
-                t-att-selector="cardParentHandlers"
-                t-att-applyTo="websiteBgApplyTo"
+                t-att-selector="this.cardParentHandlers"
+                t-att-applyTo="this.websiteBgApplyTo"
                 props='{ "withColors": true, "withImages": true, "withShapes": true, "withColorCombinations": true }'/>
             <website_background_option
-                t-att-selector="websiteBackgroundBgColorImageOptionSelector"
-                t-att-exclude="websiteBackgroundBgColorImageOptionExclude"
+                t-att-selector="this.websiteBackgroundBgColorImageOptionSelector"
+                t-att-exclude="this.websiteBackgroundBgColorImageOptionExclude"
                 props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
             <website_background_option
-                t-att-selector="websiteBackgroundBgColorOptionSelector"
-                t-att-exclude="websiteBackgroundBgColorOptionExclude"
+                t-att-selector="this.websiteBackgroundBgColorOptionSelector"
+                t-att-exclude="this.websiteBackgroundBgColorOptionExclude"
                 props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
             <website_background_option
-                t-att-selector="baseOnlyBgImageSelector"
+                t-att-selector="this.baseOnlyBgImageSelector"
                 props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
         </t>
 
@@ -91,7 +91,7 @@
                 template="html_builder.ImageAndFaOption"
                 selector="span.fa, i.fa, img"
                 t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
-            <dynamic_svg_option t-att-selector="dynamicSVGSelector"/>
+            <dynamic_svg_option t-att-selector="this.dynamicSVGSelector"/>
             <grid_image_option selector="img"/>
         </t>
 
@@ -104,7 +104,7 @@
         <border_option
             template="website.BorderOption"
             selector="section .row > div, section:has(.s_carousel_cards)"
-            t-attf-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, {{cardParentHandlers}}, {{blockquoteParentHandlers}}"/>
+            t-attf-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, {{this.cardParentHandlers}}, {{this.blockquoteParentHandlers}}"/>
         <content_width_option
             template="website.ContentWidthOption"
             selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
@@ -117,12 +117,12 @@
 
         <animate_option
             selector=".o_animable, section .row > div, img, .fa, .btn"
-            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{specialBlockquoteSelector}}"/>
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
         <visibility_option selector="section, .s_hr"/>
         <device_visibility_option
             template="website.DeviceVisibilityOption"
-            t-att-selector="deviceVisibilityOptionSelector"
+            t-att-selector="this.deviceVisibilityOptionSelector"
             exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize, .s_website_form_submit"/>
         <!-- Final hook for options that must appear after Animation / Visibility. -->
         <t id="bottom_options_hook"/>

@@ -26,7 +26,7 @@
             editableOnly="false"
             groups='["website.group_website_designer"]'/>
         <product_page_option
-            t-att-selector="productPageOptionSelector"
+            t-att-selector="this.productPageOptionSelector"
             title="Product Page"
             editableOnly="false"
             groups='["website.group_website_designer"]'/>
@@ -68,7 +68,7 @@
 
     <xpath expr="//navbar_logo_option" position="after">
         <products_ribbon_option
-            t-attf-selector="#products_grid .oe_product, {{productPageOptionSelector}}"
+            t-attf-selector="#products_grid .oe_product, {{this.productPageOptionSelector}}"
             editableOnly="false"
             groups='["website.group_website_designer"]'/>
     </xpath>

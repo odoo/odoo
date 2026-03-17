@@ -61,10 +61,10 @@
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <blockquote_option selector=".s_blockquote" t-att-exclude="specialBlockquoteSelector"/>
+        <blockquote_option selector=".s_blockquote" t-att-exclude="this.specialBlockquoteSelector"/>
         <blockquote_option
-            t-att-selector="blockquoteParentHandlers"
-            t-att-applyTo="blockquoteDisableWidthApplyTo"
+            t-att-selector="this.blockquoteParentHandlers"
+            t-att-applyTo="this.blockquoteDisableWidthApplyTo"
             props='{ "disableWidth": true }'/>
     </xpath>
 </t>
