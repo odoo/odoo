@@ -1633,6 +1633,7 @@ class HrExpense(models.Model):
                 'partner_id': employee_sudo.work_contact_id.id,
                 'commercial_partner_id': employee_sudo.user_partner_id.id,
                 'currency_id': expenses_sudo.company_currency_id.id,
+                'company_id': expenses_sudo.company_id.id,
                 'line_ids': [Command.create(expense_sudo._prepare_move_lines_vals()) for expense_sudo in expenses_sudo],
                 'partner_bank_id': employee_sudo.primary_bank_account_id.id,
                 'attachment_ids': attachments_data,
@@ -1715,6 +1716,7 @@ class HrExpense(models.Model):
             'journal_id': journal.id,
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
