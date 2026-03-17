@@ -84,7 +84,11 @@ class FileAccessor:
     @property
     def content(self):
         if self._content is None:
-            self._content = self.path.read_text()
+            try:
+                self._content = self.path.read_text()
+            except Exception as e:
+                e.add_note(f"File: {self.path}")
+                raise
         return self._content
 
     @content.setter
