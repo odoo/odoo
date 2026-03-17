@@ -505,6 +505,14 @@ class BaseModel(metaclass=MetaModel):
         search='_search_display_name',
     )
 
+    def first(self) -> Self:
+        """
+            Returns the first record of the recordset or a void one.
+        """
+        if self:
+            return next(iter(self))
+        return self
+
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
         return name == 'related_sudo'

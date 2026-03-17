@@ -154,6 +154,26 @@ class TestORM(TransactionCase):
         recs = partner.browse([-1])
         self.assertFalse(recs.exists())
 
+    def test_first(self):
+        partner = self.env['res.partner']
+
+        partner_1 = partner.create({
+            "name": "Partner 1",
+        })
+        partner_2 = partner.create({
+            "name": "Partner 2",
+        })
+
+        first_partner = (partner_1 | partner_2).first()
+        self.assertEqual(
+            partner_1,
+            first_partner,
+        )
+
+        browse_partner = partner.browse()
+        void_partner = browse_partner.first()
+        self.assertFalse(void_partner)
+
     def test_lock_for_update(self):
         partner = self.env['res.partner']
         p1, p2 = partner.search([], limit=2)
