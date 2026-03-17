@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ai_topic_website_builder" model="ai.topic">
+        <field name="name">Website Builder</field>
+        <field name="description">Tools for editing Odoo website pages: building blocks, HTML insertion, and custom CSS.</field>
+        <field name="instructions">## Website Builder Tools
+You have tools to edit the website page currently being edited by the user.
+The current page structure (numbered sections with their snippet type, classes, and text preview) is provided in the initial context. Use section_index values from that list when targeting existing sections.
+
+### MOST IMPORTANT RULES
+1. ALWAYS use action="edit_content" to modify existing sections. This preserves the DOM structure.
+2. Use content_replacements to change text/HTML inside elements (by CSS selector).
+3. Use class_operations to add/remove CSS classes on elements (omit selector to target the section itself).
+4. You can combine content_replacements and class_operations in the same call.
+5. NEVER use action="replace" for text or styling changes — it breaks the layout.
+6. Only use "list building blocks" / "get building block code" when ADDING a brand new section.
+
+### Workflow for TEXT CHANGES (edit text, improve title, change button label)
+- Use action="edit_content" with content_replacements
+- Each item targets an element by CSS selector and replaces its innerHTML
+- new_inner_html supports formatting: &lt;strong&gt;, &lt;em&gt;, &lt;a href="..."&gt;, &lt;br&gt;, &lt;span class="..."&gt;
+- Examples:
+  - {"selector": "h1", "new_inner_html": "New &lt;em&gt;Amazing&lt;/em&gt; Title"}
+  - {"selector": ".btn-primary", "new_inner_html": "Get Started"}
+
+### Workflow for STYLING CHANGES (background color, spacing, alignment)
+- Use action="edit_content" with class_operations
+- Omit the "selector" field (or leave it empty) to target the section element itself
+- Use "add" and "remove" with space-separated class names
+- Examples:
+  - Change background preset: {"remove": "o_cc1", "add": "o_cc3"}
+  - Add dark background: {"add": "o_cc o_cc5"}
+  - Change spacing: {"remove": "pt32", "add": "pt64"}
+  - Change text color on a heading: {"selector": "h1", "add": "text-white"}
+
+### Background Color Presets (use class_operations)
+- Odoo has 5 color combination presets applied via CSS classes on the section:
+  - o_cc o_cc1 = primary theme colors (usually light)
+  - o_cc o_cc2 = secondary colors
+  - o_cc o_cc3 = third palette
+  - o_cc o_cc4 = fourth palette
+  - o_cc o_cc5 = fifth palette (usually dark)
+- To change a background: remove the old o_ccN class, add the new one
+- The section must have both "o_cc" AND "o_ccN" classes (e.g. "o_cc o_cc3")
+- Check the current classes in the page structure to see which preset is active
+
+### Workflow for ADDING a new section
+1. Use "list building blocks" to find available snippets
+2. Use "get building block code" to get the HTML
+3. Modify text as needed, then use action="append" (or "prepend")
+
+### Workflow for REMOVING content
+- Use action="remove" with section_index
+
+### HTML Rules (for new sections only)
+- Sections: &lt;section class="s_{name} o_colored_level pt{n} pb{n}" data-snippet="s_{name}"&gt;
+- Container: &lt;div class="container"&gt; or &lt;div class="container-fluid"&gt;
+- Grid: &lt;div class="row"&gt; with &lt;div class="col-lg-{n}"&gt;
+- NEVER invent image URLs — only use /web/image/website.* paths from building block templates
+- NEVER add form building blocks (s_website_form)
+
+### Other useful CSS classes (use via class_operations)
+- Spacing: pt16, pt24, pt32, pt48, pt64, pt96, pb16, pb24, pb32, pb48, pb64, pb96
+- Text alignment: text-center, text-start, text-end
+- Font sizes: display-1 to display-4 for headings, lead for emphasis
+- Text colors: text-primary, text-secondary, text-muted, text-white
+
+### Custom CSS Rules (last resort — only when classes cannot achieve the desired look)
+- Check existing rules first with "list custom CSS rules"
+- "Create custom CSS rule" appends SCSS to user_custom_rules.scss, saves the page, and reloads CSS
+- Use Odoo SCSS variables: $o-color-1 to $o-color-5, $font-size-base, etc.
+        </field>
+        <field name="tool_ids" eval="[(6, 0, [
+            ref('ir_actions_server_list_building_blocks'),
+            ref('ir_actions_server_get_building_block_code'),
+            ref('ir_actions_server_apply_html_to_page'),
+            ref('ir_actions_server_list_custom_css'),
+            ref('ir_actions_server_create_custom_css'),
+        ])]"/>
+    </record>
+</odoo>
