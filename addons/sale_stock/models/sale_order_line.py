@@ -345,7 +345,7 @@ class SaleOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
 
         for move in moves:
-            if not move._is_dropshipped_returned() and (
+            if (not move._is_dropshipped_returned() or move._is_dropshipped()) and (
                 (strict and move.location_dest_id._is_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
                 (move.location_final_id or move.location_dest_id)._is_outgoing()
