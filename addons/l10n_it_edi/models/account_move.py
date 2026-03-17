@@ -1,6 +1,7 @@
 
 import logging
 import re
+import string
 import uuid
 import unicodedata
 from base64 import b64encode, b64decode
@@ -12,6 +13,8 @@ from odoo.exceptions import LockError, UserError
 from odoo.fields import Domain
 from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
 from odoo.tools.sql import column_exists, create_column
+
+from stdnum.it import codicefiscale, iva
 
 from odoo import _, api, Command, fields, models, modules
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -1457,6 +1460,97 @@ class AccountMove(models.Model):
             extra_info["pension_fund_assosoftware_tags"] = True
         return extra_info, message_to_log
 
+    def _l10n_it_edi_get_payment_info(self, tree):
+        """ Map XML payment data from node //DatiPagamento/DettaglioPagamento to dict """
+        payment_info = []
+        amount_total = 0.0
+        for node in tree.xpath('//DatiPagamento/DettaglioPagamento'):
+            amount = get_float(node, './ImportoPagamento')
+            payment_info.append({
+                'acc_number': get_text(node, './IBAN') or False,
+                'payment_mode': get_text(node, './ModalitaPagamento') or False,
+                'invoice_date_due': get_date(node, './DataScadenzaPagamento') or False,
+                'amount': amount,
+                'payment_code': get_text(node, './CodicePagamento') or False,
+            })
+            amount_total += amount
+        return {
+            'info': payment_info,
+            'amount_total': amount_total,
+        }
+
+    def _l10n_it_edi_get_partner_info(self, node):
+        """ Map the XML partner data to dict from one of the nodes:
+            - CedentePrestatore (seller)
+            - CessionarioCommittente (buyer)
+
+            The Codice Fiscale can have two forms:
+                - personal: GTTPLA84T04F205G
+                - equal to the company VAT: 01234567890
+
+            A company may be part of a VAT group:
+                - the VAT is shared and the Codice Fiscale is the old VAT number before grouping
+                - Both VAT and Codice Fiscale must be specified
+
+            So in case:
+                - Partner is domestic (country == IT)
+                - VAT is not specified
+                - the Codice Fiscale looks like 01234567890
+            we also set it as VAT number
+        """
+        master_data = node.xpath('.//Anagrafica')
+        # Simplified invoice has a different structure
+        personal_data_node = master_data[0] if master_data else node
+
+        # name
+        company_name = get_text(personal_data_node, './Denominazione')
+        first_name = get_text(personal_data_node, './Nome')
+        last_name = get_text(personal_data_node, './Cognome')
+        name = company_name or f"{last_name} {first_name}"
+
+        # country_code, VAT and codice_fiscale
+        codice_fiscale = get_text(node, './/CodiceFiscale') or False
+        vat_no_prefix = get_text(node, './/IdFiscaleIVA/IdCodice') or False
+        is_company = True
+        if vat_no_prefix:
+            # Take country from VAT node
+            country_code = get_text(node, './/IdFiscaleIVA/IdPaese').upper()
+        else:
+            # Take country from address, that's a mandatory field
+            country_code = get_text(node, './Sede/Nazione').upper()
+            # Italian Codice Fiscale may be used as VAT number if it is not a personal one
+            if country_code == 'IT':
+                if codicefiscale._code_re.match(codice_fiscale):
+                    is_company = False
+                else:
+                    if iva.is_valid(codice_fiscale):
+                        vat_no_prefix = codice_fiscale
+
+        # address
+        postal_address = {'country_code': country_code}
+        address_node = next(iter(node.xpath('./Sede')), None)
+        # Simplified invoice has no address tag
+        if address_node is not None:
+            address = get_text(address_node, './Indirizzo')
+            address_no = get_text(address_node, './NumeroCivico')
+            full_address = f"{address} {address_no}".rstrip()
+            postal_address = {
+                **postal_address,
+                'street': string.capwords(full_address) or False,
+                'city': string.capwords(get_text(address_node, './Comune')) or False,
+                'zip': get_text(address_node, './CAP') or False,
+            }
+
+        return {
+            'postal_address': postal_address,
+            'vat': f"{country_code}{vat_no_prefix}" if vat_no_prefix else '/',
+            'codice_fiscale': codice_fiscale,
+            'is_company': is_company,
+            'name': name,
+            'phone': get_text(node, './Contatti/Telefono') or False,
+            'email': get_text(node, './Contatti/Email') or False,
+        }
+
     def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
         """ Decode a FatturaPA attachment into an Odoo move.
 
@@ -1529,26 +1623,31 @@ class AccountMove(models.Model):
             # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
             extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree, incoming=incoming)
 
-            # Partner
+            # Partner -------------------------------------------
             partner_info = buyer_seller_info[partner_role]
-            vat = get_text(tree, partner_info['vat_xpath'])
-            codice_fiscale = get_text(tree, partner_info['codice_fiscale_xpath'])
-            email = get_text(tree, '//DatiTrasmissione//Email') if partner_info['role'] == 'seller' else ''
-            destination_code = get_text(tree, "//CodiceDestinatario") if partner_info['role'] == 'buyer' else ''
-            if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email, destination_code):
+            partner_node = tree.xpath(partner_info['section_xpath'])[0]
+            partner_info = self._l10n_it_edi_get_partner_info(partner_node)
+            sender_email = get_text(tree, '//DatiTrasmissione//Email') if partner_role == 'seller' else False
+            destination_code = get_text(tree, "//CodiceDestinatario") if partner_role == 'buyer' else False
+            if partner := self._l10n_it_edi_search_partner(
+                company,
+                partner_info.get('vat'),
+                partner_info.get('codice_fiscale'),
+                partner_info.get('email') or sender_email,
+                destination_code,
+            ):
                 self.partner_id = partner
-            else:
-                message = Markup("<br/>").join((
-                    _("Partner not found, useful informations from XML file:"),
-                    self._compose_info_message(tree, partner_info['section_xpath'])
-                ))
-                message_to_log.append(message)
 
-            # Payment code
-            if payment_code := get_text(tree, './/DettaglioPagamento[1]/CodicePagamento'):
-                self.payment_reference = payment_code
+            # If not found by Codice Fiscale, search for VAT or create, just like all other EDIs do
+            if not self.partner_id:
+                import_partner_args = {k: v for k, v in partner_info.items() if k not in ('codice_fiscale', 'is_company')}
+                self.partner_id, logs = self.env['account.edi.common']._import_partner(company_id=company, **import_partner_args)
+                if logs:
+                    self.partner_id.is_company = partner_info.get('is_company')
+                    self.partner_id.l10n_it_codice_fiscale = partner_info.get('codice_fiscale', False)
+                    message_to_log.extend(logs)
 
-            # Document Number
+            # Document Number -----------------------------------
             if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):
                 self.ref = number
 
@@ -1588,63 +1687,33 @@ class AccountMove(models.Model):
                 ))
                 message_to_log.append(message)
 
-            # Due date. <2.4.2.5>
-            if due_date := get_date(tree, './/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento'):
-                self.invoice_date_due = fields.Date.to_string(due_date)
-            else:
-                message_to_log.append(_("Payment due date invalid in XML file: %s", str(due_date)))
-
             # Information related to the purchase order <2.1.2>
             if (po_refs := get_text(tree, '//DatiGenerali/DatiOrdineAcquisto/IdDocumento', many=True)):
                 self.invoice_origin = ", ".join(po_refs)
 
-            # Total amount. <2.4.2.6>
-            if amount_total := sum(float(x) for x in get_text(tree, './/ImportoPagamento', many=True) if x):
-                message_to_log.append(_("Total amount from the XML File: %s", amount_total))
+            # Payment / Bank --------------------------------------
+            payments_info = self._l10n_it_edi_get_payment_info(tree)
+            if payments_info['info']:
+                message_to_log.append(_("Total amount from the XML File: %s", payments_info['amount_total']))
+                payment_due_dates = []
+                self.l10n_it_payment_method = False
+                for payment_info in payments_info['info']:
+                    # Search / Create the bank account only on incoming docs
+                    if self.move_type not in ('out_invoice', 'in_refund') and (iban := payment_info.get('acc_number')):
+                        self.env['account.edi.common'].with_company(company)._import_partner_bank(self, [iban])
+                    # Set payment data on the bill
+                    self.payment_reference = self.payment_reference or payment_info.get('payment_code', False)
+                    payment_due_dates.append(payment_info.get('invoice_date_due'))
+                    if (
+                        not self.l10n_it_payment_method
+                        and (payment_method := payment_info.get('payment_mode'))
+                        and payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code()
+                    ):
+                        self.l10n_it_payment_method = payment_method
+                if payment_due_dates := [x for x in payment_due_dates if x]:
+                    self.invoice_date_due = max(payment_due_dates)
 
-            # l10n_it_payment_method
-            if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
-                if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
-                    self.l10n_it_payment_method = payment_method
-
-            # Bank account. <2.4.2.13>
-            if self.move_type not in ('out_invoice', 'in_refund'):
-                if acc_number := get_text(tree, './/DatiPagamento/DettaglioPagamento/IBAN'):
-                    if self.partner_id and self.partner_id.commercial_partner_id:
-                        bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', acc_number),
-                            ('partner_id', '=', self.partner_id.commercial_partner_id.id),
-                            ('company_id', 'in', [self.company_id.id, False])
-                        ], order='company_id', limit=1)
-                    else:
-                        bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', acc_number),
-                            ('company_id', 'in', [self.company_id.id, False])
-                        ], order='company_id', limit=1)
-                    if bank:
-                        self.partner_bank_id = bank
-                    else:
-                        message = Markup("<br/>").join((
-                            _("Bank account not found, useful informations from XML file:"),
-                            self._compose_info_message(tree, [
-                                './/DatiPagamento//Beneficiario',
-                                './/DatiPagamento//IstitutoFinanziario',
-                                './/DatiPagamento//IBAN',
-                                './/DatiPagamento//ABI',
-                                './/DatiPagamento//CAB',
-                                './/DatiPagamento//BIC',
-                                './/DatiPagamento//ModalitaPagamento'
-                            ])
-                        ))
-                        message_to_log.append(message)
-            elif elements := tree.xpath('.//DatiPagamento/DettaglioPagamento'):
-                message = Markup("<br/>").join((
-                    _("Bank account not found, useful informations from XML file:"),
-                    self._compose_info_message(tree, './/DatiPagamento')
-                ))
-                message_to_log.append(message)
-
-            # Invoice lines. <2.2.1>
+            # Invoice lines ---------------------------------------
             tag_name = './/DettaglioLinee' if not extra_info['simplified'] else './/DatiBeniServizi'
             for element in tree.xpath(tag_name):
                 move_line = self.invoice_line_ids.create({
