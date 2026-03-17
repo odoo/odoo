@@ -105,6 +105,16 @@ class TestAllocations(TestHrHolidaysCommon):
         })
         allocation_wizard.action_generate_allocations()
 
+    def test_group_allocation_wizard_work_entry_type_domain(self):
+        """Test that work_entry_type_id field can be accessed without domain errors."""
+        wizard = self.env['hr.leave.allocation.generate.multi.wizard'].create({
+            'work_entry_type_id': self.work_entry_type.id,
+        })
+        self.env['hr.work.entry.type'].search(
+            wizard._domain_work_entry_type_id()
+        )
+        self.assertTrue(True, "Domain evaluation succeeded")
+
     def test_allocation_request_day(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
