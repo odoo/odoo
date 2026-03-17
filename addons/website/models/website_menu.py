@@ -25,7 +25,8 @@ class WebsiteMenu(models.Model):
         return menu.sequence or 0
 
     name = fields.Char('Menu', required=True, translate=True)
-    url = fields.Char("Url", compute="_compute_url", store=True, required=True, readonly=False, default="#", copy=True)
+    url = fields.Char("Url", compute="_compute_url", compute_sudo=True, inverse="_inverse_url", search="_search_url")
+    manual_url = fields.Char('Url defined by user')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade', index='btree_not_null')
     controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')
@@ -68,13 +69,69 @@ class WebsiteMenu(models.Model):
                 menu_name += f' [{menu.website_id.name}]'
             menu.display_name = menu_name
 
-    @api.depends("page_id", "is_mega_menu", "child_id")
+    @api.depends("page_id", "page_id.url", "is_mega_menu", "child_id", "manual_url")
     def _compute_url(self):
         for menu in self:
             if menu.is_mega_menu or menu.child_id:
                 menu.url = "#"
             else:
-                menu.url = (menu.page_id.url if menu.page_id else menu.url) or "#"
+                menu.url = (menu.page_id.url if menu.page_id else menu.manual_url) or "#"
+
+    def _inverse_url(self):
+        for menu in self:
+            # search for a page that has the url and adapt manual_url and
+            # page_id correctly.
+            # Check if the url matches a website.page (to set the m2o relation),
+            # except if the menu url contains '#', we then unset the page_id
+            if not menu.url:
+                menu.page_id = None
+                menu.manual_url = ''
+                continue
+            if '#' in menu.url:
+                # Multiple case possible
+                # 1. `#` => menu container (dropdown, ..)
+                # 2. `#top` or `#bottom` => special anchors valid for any page
+                # 3. `#anchor` => anchor on current page
+                # 4. `/url#something` => valid internal URL
+                # 5. https://google.com#smth => valid external URL
+                url = menu.url
+                if menu.page_id:
+                    menu.page_id = None
+                if request and menu.url.startswith('#') and len(menu.url) > 1 and \
+                        menu.url not in ['#top', '#bottom']:
+                    # Working on case 2.: prefix anchor with referer URL
+                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    url = referer_url + menu.url
+                menu.manual_url = url
+            else:
+                domain = menu.website_id.website_domain() & (
+                    Domain("url", "=", menu["url"])
+                    | Domain("url", "=", "/" + menu["url"])
+                )
+                page = self.env["website.page"].search(domain, limit=1)
+                if page:
+                    menu.page_id = page.id
+                    menu.manual_url = ''
+                else:
+                    if menu.page_id:
+                        try:
+                            # a page shouldn't have the same url as a controller
+                            self.env['ir.http']._match(menu.url)
+                            menu.page_id = None
+                            menu.manual_url = menu.url
+                        except werkzeug.exceptions.NotFound:
+                            menu.page_id.write({'url': menu.url})
+                            menu.manual_url = ''
+                    else:
+                        menu.manual_url = menu.url
+
+    def _search_url(self, operator, value):
+        if (value == '#' or '#' in value or operator in Domain.NEGATIVE_OPERATORS):
+            return NotImplemented
+        return Domain.OR([
+            Domain('page_id.url', operator, value),
+            Domain('manual_url', operator, value)
+        ])
 
     @api.constrains("parent_id", "child_id", "is_mega_menu", "mega_menu_content")
     def _validate_parent_menu(self):
@@ -318,41 +375,6 @@ class WebsiteMenu(models.Model):
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = WebsiteMenu.browse(menu['id'])
-            # Check if the url match a website.page (to set the m2o relation),
-            # except if the menu url contains '#', we then unset the page_id
-            if '#' in menu['url']:
-                # Multiple case possible
-                # 1. `#` => menu container (dropdown, ..)
-                # 2. `#top` or `#bottom` => special anchors valid for any page
-                # 3. `#anchor` => anchor on current page
-                # 4. `/url#something` => valid internal URL
-                # 5. https://google.com#smth => valid external URL
-                if menu_id.page_id:
-                    menu_id.page_id = None
-                if request and menu['url'].startswith('#') and len(menu['url']) > 1 and \
-                        menu['url'] not in ['#top', '#bottom']:
-                    # Working on case 2.: prefix anchor with referer URL
-                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
-                    menu['url'] = referer_url + menu['url']
-            else:
-                domain = WebsiteMenu.env["website"].browse(website_id).website_domain() & (
-                    Domain("url", "=", menu["url"])
-                    | Domain("url", "=", "/" + menu["url"])
-                )
-                page = WebsiteMenu.env["website.page"].search(domain, limit=1)
-                if page:
-                    menu['page_id'] = page.id
-                    menu['url'] = page.url
-                    if isinstance(menu.get('parent_id'), str):
-                        # Avoid failure if parent_id is sent as a string from a customization.
-                        menu['parent_id'] = int(menu['parent_id'])
-                elif menu_id.page_id:
-                    try:
-                        # a page shouldn't have the same url as a controller
-                        WebsiteMenu.env['ir.http']._match(menu['url'])
-                        menu_id.page_id = None
-                    except werkzeug.exceptions.NotFound:
-                        menu_id.page_id.write({'url': menu['url']})
             menu_id.write(menu)
 
         return True
