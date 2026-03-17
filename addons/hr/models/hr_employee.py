@@ -884,12 +884,11 @@ class HrEmployee(models.Model):
         for employee_id in contract_versions_by_employee:
             for contract_versions in contract_versions_by_employee[employee_id].values():
                 effective_date = date_end if use_latest_version else date_start
-                if use_latest_version:
-                    if effective_date:
-                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
-                        contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
-                    else:
-                        contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]
+                if effective_date:
+                    correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
+                    contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
+                else:
+                    contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]
         return contracts_by_employee
 
     def _get_contract_versions(self, date_start=None, date_end=None, domain=None):
@@ -913,7 +912,7 @@ class HrEmployee(models.Model):
         version_domain = Domain('contract_date_start', '!=', False)
         if self.ids:
             version_domain &= Domain('employee_id', 'in', self.ids)
-        elif not any(self._ids):  # onchange
+        elif not any(self._ids) and self._origin.ids:  # onchange
             version_domain &= Domain('employee_id', 'in', self._origin.ids)
         if date_start:
             version_domain &= Domain('contract_date_end', '=', False) | Domain('contract_date_end', '>=', date_start)
