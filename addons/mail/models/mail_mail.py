@@ -132,7 +132,7 @@ class MailMail(models.Model):
         and the number of attachments we do not have access to.
         """
         for mail_sudo, mail in zip(self.sudo(), self):
-            mail.unrestricted_attachment_ids = mail_sudo.attachment_ids.sudo(False)._filtered_access('read')
+            mail.unrestricted_attachment_ids = mail.sudo(False).attachment_ids
             mail.restricted_attachment_count = len(mail_sudo.attachment_ids) - len(mail.unrestricted_attachment_ids)
 
     def _inverse_unrestricted_attachment_ids(self):

@@ -100,7 +100,8 @@ class TestMailMail(MailCommon):
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 3)
             self.assertEqual(mail.unrestricted_attachment_ids.mapped('name'), ['file 1', 'file 3', 'new file'])
-            self.assertEqual(len(mail.attachment_ids), 5)
+            self.assertEqual(len(mail.attachment_ids), 3)
+            self.assertEqual(len(mail.sudo().attachment_ids), 5)
 
             # Remove an attachment
             mail.write({
@@ -109,13 +110,13 @@ class TestMailMail(MailCommon):
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
             self.assertEqual(mail.unrestricted_attachment_ids.mapped('name'), ['file 1', 'file 3'])
-            self.assertEqual(len(mail.attachment_ids), 4)
+            self.assertEqual(len(mail.sudo().attachment_ids), 4)
 
             # Reset command
             mail.invalidate_recordset()
             mail.write({'unrestricted_attachment_ids': [Command.clear()]})
             self.assertEqual(len(mail.unrestricted_attachment_ids), 0)
-            self.assertEqual(len(mail.attachment_ids), 2)
+            self.assertEqual(len(mail.sudo().attachment_ids), 2)
 
             # Read in SUDO
             mail.invalidate_recordset()
