@@ -1,16 +1,4 @@
 <odoo>
-    <div t-name="spreadsheet.FigureComponent" t-inherit="o-spreadsheet-FigureComponent" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o-figure-menu-item')]" position="before">
-            <div
-                t-if="this.hasOdooLink and !this.env.model.getters.isDashboard()"
-                class="o-figure-menu-item o-chart-external-link"
-                t-on-click="(ev, isMiddleClick) => this.navigateToOdooLink(isMiddleClick)"
-                t-on-auxclick="(ev, isMiddleClick) => this.navigateToOdooLink(isMiddleClick)"
-                >
-                <span class="fa fa-external-link" />
-            </div>
-        </xpath>
-    </div>
     <div t-name="spreadsheet.ScorecardChart" t-inherit="o-spreadsheet-ScorecardChart" t-inherit-mode="extension">
         <xpath expr="//canvas[1]" position="attributes">
             <attribute name="t-on-click">() => this.onClick()</attribute>
