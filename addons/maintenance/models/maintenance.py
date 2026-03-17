@@ -153,6 +153,7 @@ class MaintenanceEquipment(models.Model):
     is_assigned = fields.Boolean(compute='_compute_is_assigned', search='_search_is_assigned')
     # maintenance.mixin override
     technician_user_id = fields.Many2one(tracking=True)
+    equipment_req_properties_definition = fields.PropertiesDefinition('Maintenance Request Properties')
 
     def _get_owner_methods_by_equipment_assign_to(self):
         return {
@@ -320,6 +321,12 @@ class MaintenanceRequest(models.Model):
         ('until', 'Until'),
     ], default="forever", string="Until")
     repeat_until = fields.Date(string="End Date")
+    equipment_req_properties = fields.Properties(
+            string='Maintenance Request Properties',
+            definition='equipment_id.equipment_req_properties_definition',
+            copy=True,
+            precompute=False
+        )
 
     def cancel_equipment_request(self):
         self.write({'state': 'cancelled', 'recurring_maintenance': False})
