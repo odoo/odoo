@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, markup, t, useProps, usePlugin } from "@odoo/owl";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
 import { ActionPlugin } from "@web/webclient/actions/action_plugin";
-import { ORM } from "@web/core/orm_plugin";
 
 export const forecastedButtonsProps = {
     context: t.object(),
@@ -16,7 +15,6 @@ export class ForecastedButtons extends Component {
 
     setup() {
         this.actionPlugin = usePlugin(ActionPlugin);
-        this.orm = usePlugin(ORM);
     }
 
     /**
@@ -45,17 +43,6 @@ export class ForecastedButtons extends Component {
             target: 'new',
             context: context,
         };
-        return this.actionPlugin.doAction(action, { onClose: this._onClose.bind(this) });
-    }
-
-    async _onClickUpdateQuantity() {
-        const action = await this.orm.call(this.resModel, "action_open_quants", [[this.productId]]);
-        if (action.res_model === "stock.quant") { // Quant view in inventory mode.
-            action.views = [[false, "list"]];
-        }
-        if (action.help) {
-            action.help = markup(action.help);
-        }
         return this.actionPlugin.doAction(action, { onClose: this._onClose.bind(this) });
     }
 

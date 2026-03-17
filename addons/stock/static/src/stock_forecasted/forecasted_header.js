@@ -30,6 +30,19 @@ export class ForecastedHeader extends Component {
         return this.action.doAction(action);
     }
 
+    async _onClickTransfers(type) {
+        const productIds = this.props.docs.product_variants_ids;
+        const action = await this.orm.call(
+            "stock.forecasted_product_product",
+            "action_open_forecast_moves",
+            [productIds, this.props.docs.warehouse_ids, type]
+        );
+        if (action.help) {
+            action.help = markup(action.help);
+        }
+        return this.action.doAction(action);
+    }
+
     get products() {
         return this.props.docs.product;
     }
