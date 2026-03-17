@@ -379,10 +379,10 @@
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <group class="o_form_header_group flex-md-row-reverse">
+                        <div class="o_form_header_group flex-md-row-reverse">
                             <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                            <group class="o_form_header_details" col="2">
-                                <h1 colspan="2">
+                            <div class="o_form_header_details flex-grow-1">
+                                <h1>
                                     <field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/>
                                 </h1>
                                 <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
@@ -390,8 +390,8 @@
                                     <span>All general settings about this product are managed on</span>
                                     <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
                                 </p>
-                            </group>
-                        </group>
+                            </div>
+                        </div>
                         <group>
                             <group name="codes" string="Codes">
                                 <field name="default_code"/>
