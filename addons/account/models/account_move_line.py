@@ -1,6 +1,7 @@
 from collections import defaultdict
 from contextlib import contextmanager, ExitStack
 from datetime import date
+from lxml.builder import E
 import logging
 import re
 
@@ -520,6 +521,38 @@ class AccountMoveLine(models.Model):
             if toolbar := res['views']['list'].get('toolbar'):
                 # We dont want any additionnal action in the "account.move.line.payment.list" view toolbar
                 toolbar['action'] = []
+        return res
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'search':
+            target_filter = arch.xpath("//filter[@name='no_st_line_id']")
+            if target_filter and (journal_groups := self.env['account.journal.group'].search([])):
+                filter_group = E.filter(string=_("Ledger"))
+                target_filter[0].addnext(E.separator())
+                target_filter[0].addnext(filter_group)
+                target_filter[0].addnext(E.separator())
+                filter_group.append(E.filter(
+                    string=_("Local Gaap"),
+                    name='local_gaap',
+                    domain="[('journal_id.journal_group_id', '=', False)]",
+                ))
+                for group in journal_groups:
+                    filter_group.append(E.filter(
+                        string=group.name,
+                        name=f'journal_group_{group.id}',
+                        domain=f"[('journal_id', 'in', {group.included_journal_ids.ids})]",
+                    ))
+        return arch, view
+
+    @api.model
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        res = super().formatted_read_group(domain, groupby, aggregates, having, offset, limit, order)
+        for data in res:
+            if 'journal_group_id' in data:
+                if not data.get('journal_group_id'):
+                    data['journal_group_id'] = (0, _("Local Gaap"))
         return res
 
     # -------------------------------------------------------------------------
