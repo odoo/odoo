@@ -632,6 +632,7 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.product_id.is_storable and self.is_valued\
         and (self.location_dest_id.valuation_account_id or self.location_id.valuation_account_id)\
+        and not self.uom_id.is_zero(self.quantity)\
         and self.product_id.valuation == 'real_time'
 
     def _should_exclude_for_valuation(self):
