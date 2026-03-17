@@ -10,7 +10,6 @@ import {
 registerWebsitePreviewTour(
     "snippet_popup_open_on_top",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
