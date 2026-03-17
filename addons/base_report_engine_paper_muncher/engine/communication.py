@@ -10,6 +10,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from email.utils import format_datetime
+from itertools import count
 from typing import BinaryIO, Optional, IO
 from wsgiref.types import WSGIEnvironment
 from lxml import etree, html
@@ -24,9 +25,9 @@ from odoo.http.router import root
 _logger = logging.getLogger(__name__)
 
 SERVER_SOFTWARE = f'{odoo.release.product_name}/{odoo.release.version}'
-DEFAULT_READ_TIMEOUT = 60  # seconds
-DEFAULT_READLINE_TIMEOUT = 60 * 15  # seconds (15 minutes is for the put request)
-DEFAULT_WRITE_TIMEOUT = 30  # seconds
+DEFAULT_READ_TIMEOUT = 15  # seconds
+DEFAULT_READLINE_TIMEOUT = 1 * 15 # seconds (15 minutes is for the put request)
+DEFAULT_WRITE_TIMEOUT = 15  # seconds
 DEFAULT_CHUNK_SIZE = 4096  # bytes
 HTML_BODY_PATTERN = re.compile(
     r'(?s)(.*?)(<body[^>]*>)(.*?)(</body>)(.*)', re.IGNORECASE)
@@ -76,13 +77,13 @@ def readline_with_timeout(
 
 
 def read_all_with_timeout(
-        file_object: BinaryIO,
+        file_object: IO[bytes],
         timeout: int = DEFAULT_READ_TIMEOUT,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
 ) -> bytes:
     """Read all data from a file-like object until EOF, with a timeout per chunk.
 
-    :param BinaryIO file_object: File-like object to read from.
+    :param IO[bytes] file_object: File-like object to read from.
     :param int timeout: Timeout in seconds for the entire read operation.
     :param int chunk_size: Number of bytes to read per chunk.
     :return: All bytes read until EOF.
@@ -91,7 +92,7 @@ def read_all_with_timeout(
     """
     fd = file_object.fileno()
     data = bytearray()
-    deadline = time.monotonic() + timeout
+    deadline = time.monotonic() + timeout +1
 
     with selectors.DefaultSelector() as selector:
         selector.register(fd, selectors.EVENT_READ)
@@ -101,12 +102,32 @@ def read_all_with_timeout(
                 break
             data.extend(chunk)
         else:
+            print(data.decode('utf-8', errors='replace'))
             raise TimeoutError("Timeout while reading data")
     _logger.debug(
         "Elapsed time reading: %.3f seconds",
         time.monotonic() - (deadline - timeout)
     )
     return bytes(data)
+
+def consume_paper_muncher_request(
+        stdout: IO[bytes],
+        timeout: int = DEFAULT_READLINE_TIMEOUT
+) -> None:
+    """Read and discard all header lines from a Paper Muncher request.
+
+    :param IO[bytes] stdout: File-like stdout stream from Paper Muncher.
+    :param int timeout: Timeout in seconds for each line read.
+    :return: None
+    :rtype: None
+    """
+    deadline = time.monotonic() + timeout
+    while line := readline_with_timeout(stdout, timeout=int(remaining_time(deadline))):
+        _logger.debug("Paper Muncher request line: %s", line.rstrip())
+        if line == b"\r\n":
+            return
+        if not line:
+            raise EOFError("EOF reached while reading request headers")
 
 
 def write_with_timeout(
@@ -142,34 +163,13 @@ def write_with_timeout(
         time.monotonic() - (deadline - timeout)
     )
 
-
-def consume_paper_muncher_request(
-        stdout: IO[bytes],
-        timeout: int = DEFAULT_READLINE_TIMEOUT
-) -> None:
-    """Read and discard all header lines from a Paper Muncher request.
-
-    :param IO[bytes] stdout: File-like stdout stream from Paper Muncher.
-    :param int timeout: Timeout in seconds for each line read.
-    :return: None
-    :rtype: None
-    """
-    deadline = time.monotonic() + timeout
-    while line := readline_with_timeout(stdout, timeout=int(remaining_time(deadline))):
-        _logger.debug("Paper Muncher request line: %s", line.rstrip())
-        if line == b"\r\n":
-            return
-        if not line:
-            raise EOFError("EOF reached while reading request headers")
-
-
 def read_paper_muncher_request(
-        stdout: BinaryIO,
+        stdout: IO[bytes],
         timeout: int = DEFAULT_READLINE_TIMEOUT,
 ) -> Optional[str]:
     """Read the HTTP-like request line from Paper Muncher and return the path.
 
-    :param BinaryIO stdout: File-like stdout stream from Paper Muncher.
+    :param IO[bytes] stdout: File-like stdout stream from Paper Muncher.
     :param int timeout: Timeout in seconds for each line read.
     :return: The requested asset path, or ``None`` if the method is PUT.
     :rtype: str or None
@@ -177,7 +177,12 @@ def read_paper_muncher_request(
     :raises ValueError: If the request format is invalid or the method is unsupported.
     """
     deadline = time.monotonic() + timeout
-    first_line_bytes = readline_with_timeout(stdout, timeout=int(remaining_time(deadline)))
+    _logger.debug("read_paper_muncher_request: starting, timeout=%d", timeout)
+    try:
+        first_line_bytes = readline_with_timeout(stdout, timeout=int(remaining_time(deadline)))
+    except TimeoutError as e:
+        _logger.error("Timeout reading first line from Paper Muncher (waited %d seconds)", timeout)
+        raise
 
     if not first_line_bytes:
         raise EOFError("EOF reached while reading first line from subprocess")
@@ -246,6 +251,8 @@ def generate_environ(path: str) -> WSGIEnvironment:
     """
     url, _, query_string = path.partition('?')
     current_environ = request.httprequest.environ
+    # TODO by security forge request with public user env
+    # TODO for protected documents odoo should give a URL with an access token
     environ = create_environ(
         method='GET',
         path=url,
@@ -362,3 +369,158 @@ def make_multi_docs_html(bodies, header='', footer=''):
         )))
 
     return documents
+
+
+def _serve_requests(process, documents):
+    """Read the requests from paper-muncher and serve either `documents`, or an internal answer  send by
+     `generate_odoo_http_response`.
+
+    Lève et tue le processus en cas d'EOF ou Timeout.
+    """
+    _logger.info("_serve_requests: Starting request loop, %d documents available", len(documents))
+    documents_served = set()  # Track which document indices we've served
+
+    for request_no in count(start=1):
+        # Check if process exited prematurely
+        poll_result = process.poll()
+        if poll_result is not None:
+            _logger.warning("Request #%d: Process already exited with code %d", request_no, poll_result)
+            # This might be normal - Paper Muncher may have finished
+            break
+
+        # Use shorter timeout if we've already served all documents
+        all_docs_served = len(documents_served) >= len(documents)
+        timeout_to_use = 5 if all_docs_served else DEFAULT_READLINE_TIMEOUT
+
+        _logger.info("=== Request #%d: Waiting for Paper Muncher request (pid=%d, docs=%d/%d, timeout=%ds) ===",
+                     request_no, process.pid, len(documents_served), len(documents), timeout_to_use)
+        try:
+            path = read_paper_muncher_request(process.stdout, timeout=timeout_to_use)
+            _logger.info("Request #%d: Received path=%r", request_no, path)
+        except EOFError as e:
+            # EOF typically means Paper Muncher closed its output - it's generating the PDF
+            _logger.info("Request #%d: EOF from Paper Muncher - assuming PDF generation started", request_no)
+            break
+        except TimeoutError as e:
+            stderr_output = read_all_with_timeout(process.stderr)
+            if stderr_output:
+                _logger.warning(
+                    "Paper Muncher error output: %s",
+                    stderr_output.decode('utf-8', errors='replace'),
+                )
+            if all_docs_served:
+                # Timeout after serving all docs is probably normal - Paper Muncher is rendering
+                _logger.info("Request #%d: Timeout after all documents served - assuming PDF generation started", request_no)
+                break
+            _logger.error("Request #%d: Timeout before all documents served (%d/%d): %s",
+                          request_no, len(documents_served), len(documents), e)
+            try:
+                process.kill()
+            except Exception:
+                pass
+            try:
+                process.wait()
+            except Exception:
+                pass
+            raise
+
+        if path is None:
+            _logger.info("Request #%d: Received PUT request (end of requests)", request_no)
+            break
+
+        # Accepte '/0.html', '0.html' ou '0.html?foo'
+        m = re.match(r'^/?(?P<index>\d+)\.html(?:\?.*)?$', path)
+        is_document = bool(m)
+
+        _logger.info("Request #%d: path=%r is_document=%s (documents_count=%d)",
+                     request_no, path, is_document, len(documents))
+
+        try:
+            if is_document:
+                index = int(m.group('index'))
+                _logger.info("Request #%d: Document request for index=%d", request_no, index)
+                if index < 0 or index >= len(documents):
+                    _logger.error("Request #%d: Invalid index %d (must be 0-%d)",
+                                  request_no, index, len(documents) - 1)
+                    try:
+                        process.kill()
+                    except Exception:
+                        pass
+                    try:
+                        process.wait()
+                    except Exception:
+                        pass
+                    raise RuntimeError(f"Paper Muncher requested invalid document index: {index}")
+                content = documents[index]
+                _logger.info("Request #%d: Serving document[%d] (%d bytes)",
+                             request_no, index, len(content))
+                now = datetime.now(timezone.utc)
+                response_headers = (
+                                       b"HTTP/1.1 200 OK\r\n"
+                                       b"Content-Length: %(length)d\r\n"
+                                       b"Content-Type: text/html\r\n"
+                                       b"Date: %(date)s\r\n"
+                                       b"Server: %(server)s\r\n"
+                                       b"\r\n"
+                                   ) % {
+                                       b'length': len(content.encode()),
+                                       b'date': format_datetime(now, usegmt=True).encode(),
+                                       b'server': SERVER_SOFTWARE.encode(),
+                                   }
+                _safe_write(process, response_headers)
+                _safe_write(process, content.encode())
+                process.stdin.flush()
+                documents_served.add(index)  # Track that we've served this document
+                _logger.info("Request #%d: Document[%d] sent successfully (total docs served: %d/%d)",
+                             request_no, index, len(documents_served), len(documents))
+            else:
+                _logger.info("Request #%d: Asset request for path=%s", request_no, path)
+                for chunk in generate_odoo_http_response(path):
+                    _safe_write(process, chunk)
+                process.stdin.flush()
+                _logger.info("Request #%d: Asset %s sent successfully", request_no, path)
+        except TimeoutError as e:
+            _logger.error("Request #%d: Timeout while writing: %s", request_no, e)
+            # _safe_write a déjà tenté de tuer le process
+            raise
+        except Exception as e:
+            _logger.error("Request #%d: Unexpected error: %s", request_no, e, exc_info=True)
+            try:
+                process.kill()
+            except Exception:
+                pass
+            try:
+                process.wait()
+            except Exception:
+                pass
+            raise
+
+        if process.poll() is not None:
+            _logger.error("Request #%d: Paper Muncher crashed!", request_no)
+            raise RuntimeError(
+                "Paper Muncher crashed while serving asset"
+                f" {request_no}: {path}"
+            )
+
+    _logger.info("_serve_requests: Request loop completed successfully")
+
+
+def _safe_write(process, data: bytes) -> None:
+    """Write bytes to process.stdin using write_with_timeout and kill the process on TimeoutError.
+
+    :param process: subprocess.Popen instance with stdin attribute
+    :param data: bytes to write
+    :raises TimeoutError: re-raises after killing the process
+    """
+    try:
+        write_with_timeout(process.stdin, data)
+    except TimeoutError:
+        try:
+            process.kill()
+        except Exception:
+            pass
+        try:
+            process.wait()
+        except Exception:
+            pass
+        raise

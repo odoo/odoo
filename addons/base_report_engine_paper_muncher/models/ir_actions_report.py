@@ -50,10 +50,6 @@ class IrActionsReport(models.Model):
         :rtype: bytes, list
         '''
 
-        report_name = self._get_report(report_ref).report_name or "placeholder_report_title"
-        if landscape:
-            args += ['--orientation', 'landscape']
-
         paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
 
         try:
@@ -81,9 +77,9 @@ class IrActionsReport(models.Model):
             bodies, html_ids, header, footer, specific_paperformat_args = report_sudo \
                 .with_context(debug=False)._prepare_wkhtmltopdf_html(html, report_model=report_sudo.model)
             return self._run_paper_muncher(bodies,
-                                           report_ref=report_ref,
-                                           header=header,
-                                           footer=footer,
-                                           landscape=landscape,
-                                           specific_paperformat_args=specific_paperformat_args)
+                   report_ref=report_ref,
+                   header=header,
+                   footer=footer,
+                   landscape=landscape,
+                   specific_paperformat_args=specific_paperformat_args)
         return super()._run_pdf_engine(engine_name, html, report_ref, landscape)

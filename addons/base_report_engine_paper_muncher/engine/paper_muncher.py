@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import re
 
 import subprocess
 from collections.abc import Mapping, Sequence
 from datetime import datetime, timezone
 from email.utils import format_datetime
-from itertools import count
 from typing import Optional
 from lxml import etree, html
 from PyPDF2 import PdfMerger
@@ -20,7 +18,8 @@ try:
 except ImportError:
     magic = None
 
-from .communication import write_with_timeout, read_paper_muncher_request, partition_on_body, consume_paper_muncher_request, read_all_with_timeout, make_multi_docs_html, generate_odoo_http_response
+from .communication import (partition_on_body, consume_paper_muncher_request, read_all_with_timeout, make_multi_docs_html,
+                            _serve_requests, _safe_write)
 from .utils import get_paper_muncher_binary
 
 _logger = logging.getLogger(__name__)
@@ -58,17 +57,25 @@ def run_paper_muncher(
         open_body, body, close_body = partition_on_body(bodies[0])
         documents = ["".join((open_body, header, body, footer, close_body, "\n"))]
 
+    FEATURE_FLAGS = True
+
+
     # hack for general ledger
     fname = str(inspect.stack()[2].function)
     if fname  == "_render_qweb_pdf_prepare_streams":
         extra_args = ['--scale', '72dpi']
     elif fname == "export_to_pdf":
-        extra_args = ['--scale', '50dpi']
+        extra_args = ['--scale', '72dpi']
     else:
         extra_args = []
 
     if landscape:
         extra_args += ['--orientation', 'landscape']
+
+    if FEATURE_FLAGS:
+        extra_args += ['--feature', '*=on']
+        extra_args += ['--debug', '*=on']
+        extra_args += ['--margins', 'none']
 
     if paperformat and paperformat.format:
         if paperformat.format != 'custom':
@@ -88,16 +95,6 @@ def run_paper_muncher(
         return run_process(binary, extra_args, documents[0])
     return run_process_multi(binary, extra_args, documents)
 
-    #merger = PdfMerger()
-    #for content in documents:
-    #    pdf_bytes = run_process(binary, extra_args, content)
-    #    merger.append(BytesIO(pdf_bytes))
-    #output = BytesIO()
-    #merger.write(output)
-    #merger.close()
-
-    #return output.getvalue()
-
 
 def run_process_multi(
         binary,
@@ -105,109 +102,82 @@ def run_process_multi(
         documents,
 ):
     names = [f"pipe:{i}.html" for i in range(len(documents))]
+    _logger.info("=== run_process_multi START ===")
+    _logger.info("Documents count: %d", len(documents))
+    _logger.info("Names: %s", names)
+    _logger.info("Binary: %s", binary)
+    _logger.info("Extra args: %s", extra_args)
+
+    for i, doc in enumerate(documents):
+        doc_preview = doc[:200] if len(doc) > 200 else doc
+        _logger.info("Document[%d]: %d bytes, preview: %r", i, len(doc), doc_preview)
+
+    command = [binary, *names, '-o', "pipe:"] + extra_args
+    _logger.info("Full command: %s", ' '.join(command))
+
     with subprocess.Popen(
-            [binary, *names, '-o', "pipe:" ] + extra_args,
+            command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
     ) as process:
-        for request_no in count(start=1):
-            try:
-                path = read_paper_muncher_request(process.stdout)
-            except (EOFError, TimeoutError):
-                process.kill()
-                process.wait()
-                raise
-
-            if path is None:
-                break
-
-            # if match with format /{i}.html it's a document request and get the i
-            is_document = re.match(r'^/(\d+).html$', path)
-            if is_document:
-                index = int(is_document.group(1))
-                content = documents[index]
-                now = datetime.now(timezone.utc)
-                response_headers = (
-                                       b"HTTP/1.1 200 OK\r\n"
-                                       b"Content-Length: %(length)d\r\n"
-                                       b"Content-Type: text/html\r\n"
-                                       b"Date: %(date)s\r\n"
-                                       b"Server: %(server)s\r\n"
-                                       b"\r\n"
-                                   ) % {
-                                       b'length': len(content.encode()),
-                                       b'date':  format_datetime(now, usegmt=True).encode(),
-                                       b'server': SERVER_SOFTWARE.encode(),
-                                   }
-                write_with_timeout(process.stdin, response_headers)
-                write_with_timeout(process.stdin, content.encode())
-                process.stdin.flush()
-            else:
-                for chunk in generate_odoo_http_response(path):
-                    write_with_timeout(process.stdin, chunk)
-                process.stdin.flush()
+        _logger.info("Paper Muncher process started: pid=%d", process.pid)
+        try:
+            _serve_requests(process, documents)
+            # Multi-document mode: Paper Muncher doesn't send PUT request
+            # Just close stdin and read the PDF
+            _logger.info("Closing stdin to signal end of input")
+            process.stdin.close()
 
             if process.poll() is not None:
-                raise RuntimeError(
-                    "Paper Muncher crashed while serving asset"
-                    f" {request_no}: {path}"
+                raise RuntimeError("Paper Muncher crashed before returning PDF")
+
+            try:
+                rendered_content = read_all_with_timeout(process.stdout)
+                stderr_output = read_all_with_timeout(process.stderr)
+            except (EOFError, TimeoutError):
+                try:
+                    process.kill()
+                except Exception:
+                    pass
+                try:
+                    process.wait()
+                except Exception:
+                    pass
+                raise
+
+            if stderr_output:
+                _logger.warning(
+                    "Paper Muncher error output: %s",
+                    stderr_output.decode('utf-8', errors='replace'),
                 )
 
-        now = datetime.now(timezone.utc)
-        final_response = (
-                             b"HTTP/1.1 200 OK\r\n"
-                             b"Date: %(date)s\r\n"
-                             b"Server: %(server)s\r\n"
-                             b"\r\n"
-                         ) % {
-                             b'date': format_datetime(now, usegmt=True).encode(),
-                             b'server': SERVER_SOFTWARE.encode(),
-                         }
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                try:
+                    process.kill()
+                except Exception:
+                    pass
+                try:
+                    process.wait()
+                except Exception:
+                    pass
+                _logger.warning(
+                    "Paper Muncher did not terminate in time, forcefully killed it"
+                )
 
-        write_with_timeout(process.stdin, final_response)
-        process.stdin.flush()
-        process.stdin.close()
+            if process.returncode != 0:
+                _logger.warning("Paper Muncher exited with code %d", process.returncode)
 
-        if process.poll() is not None:
-            raise RuntimeError("Paper Muncher crashed before returning PDF")
+            if not rendered_content.startswith(b'%PDF-'):
+                raise RuntimeError("Paper Muncher did not return valid PDF content")
 
-        try:
-            rendered_content = read_all_with_timeout(process.stdout)
-            stderr_output = read_all_with_timeout(process.stderr)
-        except (EOFError, TimeoutError):
-            process.kill()
-            process.wait()
+            _logger.info("=== run_process_multi SUCCESS ===")
+            return rendered_content
+        except Exception as e:
+            _logger.error("=== run_process_multi FAILED: %s ===", e, exc_info=True)
             raise
-
-        if stderr_output:
-            _logger.warning(
-                "Paper Muncher error output: %s",
-                stderr_output.decode('utf-8', errors='replace'),
-            )
-
-        try:
-            process.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            process.kill()
-            process.wait()
-            _logger.warning(
-                "Paper Muncher did not terminate in time,"
-                "forcefully killed it"
-            )
-
-        if process.returncode != 0:
-            _logger.warning(
-                "Paper Muncher exited with code %d",
-                process.returncode,
-            )
-
-        if not rendered_content.startswith(b'%PDF-'):
-            raise RuntimeError(
-                "Paper Muncher did not return valid PDF content"
-            )
-
-        return rendered_content
 
 
 def run_process(
@@ -221,17 +191,13 @@ def run_process(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
     ) as process:
-        # Phase 1: send HTML content headers and body
         try:
             consume_paper_muncher_request(process.stdout)
         except EOFError as early_eof:
-            raise RuntimeError(
-                "Paper Muncher terminated prematurely (phase 1)"
-            ) from early_eof
+            raise RuntimeError("Paper Muncher terminated prematurely (phase 1)") from early_eof
 
         if process.poll() is not None:
-            raise RuntimeError(
-                "Paper Muncher crashed before receiving content")
+            raise RuntimeError("Paper Muncher crashed before receiving content")
 
         now = datetime.now(timezone.utc)
         response_headers = (
@@ -243,92 +209,90 @@ def run_process(
                                b"\r\n"
                            ) % {
                                b'length': len(content.encode()),
-                               b'date':  format_datetime(now, usegmt=True).encode(),
+                               b'date': format_datetime(now, usegmt=True).encode(),
                                b'server': SERVER_SOFTWARE.encode(),
                            }
 
-        write_with_timeout(process.stdin, response_headers)
-        write_with_timeout(process.stdin, content.encode())
-        process.stdin.flush()
-
-        if process.poll() is not None:
-            raise RuntimeError(
-                "Paper Muncher crashed while sending HTML content")
-
-        # Phase 2: serve asset requests until the pdf is ready
-        for request_no in count(start=1):
-            try:
-                path = read_paper_muncher_request(process.stdout)
-            except (EOFError, TimeoutError):
-                process.kill()
-                process.wait()
-                raise
-
-            if path is None:
-                break
-
-            for chunk in generate_odoo_http_response(path):
-                write_with_timeout(process.stdin, chunk)
-            process.stdin.flush()
-
-            if process.poll() is not None:
-                raise RuntimeError(
-                    "Paper Muncher crashed while serving asset"
-                    f" {request_no}: {path}"
-                )
-
-        # Phase 3: send final OK and read PDF bytes
-        now = datetime.now(timezone.utc)
-        final_response = (
-                             b"HTTP/1.1 200 OK\r\n"
-                             b"Date: %(date)s\r\n"
-                             b"Server: %(server)s\r\n"
-                             b"\r\n"
-                         ) % {
-                             b'date': format_datetime(now, usegmt=True).encode(),
-                             b'server': SERVER_SOFTWARE.encode(),
-                         }
-
-        write_with_timeout(process.stdin, final_response)
-        process.stdin.flush()
-        process.stdin.close()
-
-        if process.poll() is not None:
-            raise RuntimeError("Paper Muncher crashed before returning PDF")
-
         try:
-            rendered_content = read_all_with_timeout(process.stdout)
-            stderr_output = read_all_with_timeout(process.stderr)
-        except (EOFError, TimeoutError):
-            process.kill()
-            process.wait()
+            _safe_write(process, response_headers)
+            _safe_write(process, content.encode())
+            process.stdin.flush()
+        except TimeoutError:
             raise
 
-        if stderr_output:
-            _logger.warning(
-                "Paper Muncher error output: %s",
-                stderr_output.decode('utf-8', errors='replace'),
-            )
+        if process.poll() is not None:
+            raise RuntimeError("Paper Muncher crashed while sending HTML content")
 
+        print("Doc content",content)
+        _serve_requests(process, [content])
+        return _finalize_and_read(process)
+
+
+def _finalize_and_read(process):
+    """Envoie la réponse finale OK, ferme stdin, lit stdout/stderr et effectue
+    les vérifications de terminaison du processus. Retourne les bytes PDF.
+    """
+    now = datetime.now(timezone.utc)
+    final_response = (
+                         b"HTTP/1.1 200 OK\r\n"
+                         b"Date: %(date)s\r\n"
+                         b"Server: %(server)s\r\n"
+                         b"\r\n"
+                     ) % {
+                         b'date': format_datetime(now, usegmt=True).encode(),
+                         b'server': SERVER_SOFTWARE.encode(),
+                     }
+
+    try:
+        _safe_write(process, final_response)
+        process.stdin.flush()
+        process.stdin.close()
+    except TimeoutError:
+        raise
+
+    if process.poll() is not None:
+        raise RuntimeError("Paper Muncher crashed before returning PDF")
+
+    try:
+        rendered_content = read_all_with_timeout(process.stdout)
+        stderr_output = read_all_with_timeout(process.stderr)
+    except (EOFError, TimeoutError):
         try:
-            process.wait(timeout=5)
-        except subprocess.TimeoutExpired:
             process.kill()
+        except Exception:
+            pass
+        try:
             process.wait()
-            _logger.warning(
-                "Paper Muncher did not terminate in time,"
-                "forcefully killed it"
-            )
+        except Exception:
+            pass
+        raise
 
-        if process.returncode != 0:
-            _logger.warning(
-                "Paper Muncher exited with code %d",
-                process.returncode,
-            )
+    if stderr_output:
+        _logger.warning(
+            "Paper Muncher error output: %s",
+            stderr_output.decode('utf-8', errors='replace'),
+        )
 
-        if not rendered_content.startswith(b'%PDF-'):
-            raise RuntimeError(
-                "Paper Muncher did not return valid PDF content"
-            )
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        try:
+            process.kill()
+        except Exception:
+            pass
+        try:
+            process.wait()
+        except Exception:
+            pass
+        _logger.warning(
+            "Paper Muncher did not terminate in time, forcefully killed it"
+        )
 
-        return rendered_content
+    if process.returncode != 0:
+        _logger.warning("Paper Muncher exited with code %d", process.returncode)
+
+    if not rendered_content.startswith(b'%PDF-'):
+        raise RuntimeError("Paper Muncher did not return valid PDF content")
+
+    return rendered_content
+
