@@ -40,7 +40,7 @@ class HrVersion(models.Model):
     def _get_more_vals_attendance_interval(self, interval):
         return []
 
-    # Is used to add more values, for example leave_id (in hr_holidays)
+    # Is used to add more values, for example leave_id (in hr_time)
     def _get_more_vals_leave_interval(self, interval, leaves):
         return []
 

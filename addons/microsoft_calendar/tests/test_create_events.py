@@ -565,17 +565,17 @@ class TestCreateEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     @patch.object(MicrosoftCalendarService, 'insert')
-    def test_no_videocall_hr_holidays(self, mock_insert, mock_get_events):
+    def test_no_videocall_hr_times(self, mock_insert, mock_get_events):
         """
-        Test HR holidays synchronization with Microsoft Calendar, ensuring no online meetings
+        Test HR Time synchronization with Microsoft Calendar, ensuring no online meetings
         are generated for leave requests.
         """
-        # Skip test if HR Holidays module isn't installed
-        if self.env['ir.module.module']._get('hr_holidays').state not in ['installed', 'to upgrade']:
-            self.skipTest("The 'hr_holidays' module must be installed to run this test.")
+        # Skip test if HR Time module isn't installed
+        if self.env['ir.module.module']._get('hr_time').state not in ['installed', 'to upgrade']:
+            self.skipTest("The 'hr_time' module must be installed to run this test.")
 
-        self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
-        self.user_employee = mail_new_test_user(self.env, login='enguerran', password='enguerran', groups='base.group_user,hr_holidays.group_hr_holidays_employee')
+        self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_time.group_hr_time_manager')
+        self.user_employee = mail_new_test_user(self.env, login='enguerran', password='enguerran', groups='base.group_user,hr_time.group_hr_time_employee')
         self.rd_dept = self.env['hr.department'].with_context(tracking_disable=True).create({
             'name': 'Research and Development',
         })
@@ -591,20 +591,20 @@ class TestCreateEvents(TestCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        self.holiday = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(self.user_employee).create({
+        self.time = self.env['hr.time'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(self.user_employee).create({
             'name': 'Time Off Employee',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': self.hr_work_entry_type.id,
             'request_date_from': datetime(2020, 1, 15),
             'request_date_to': datetime(2020, 1, 15),
         })
-        self.holiday.with_user(self.user_hrmanager).action_approve()
+        self.time.with_user(self.user_hrmanager).action_approve()
 
         # Ensure the event exists in the calendar and is correctly linked to the time off
         search_domain = [
-            ('name', 'like', self.holiday.employee_id.name),
-            ('start_date', '>=', self.holiday.request_date_from),
-            ('stop_date', '<=', self.holiday.request_date_to),
+            ('name', 'like', self.time.employee_id.name),
+            ('start_date', '>=', self.time.request_date_from),
+            ('stop_date', '<=', self.time.request_date_to),
         ]
         record = self.env['calendar.event'].search(search_domain)
         self.assertTrue(record, "The time off event should exist.")

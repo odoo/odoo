@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, date, UTC
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestFlexibleResourceCalendar(TransactionCase):

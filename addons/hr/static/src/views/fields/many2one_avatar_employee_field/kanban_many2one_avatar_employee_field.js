@@ -48,7 +48,7 @@ export class KanbanMany2OneAvatarEmployeeField extends Component {
     }
 
     get uniqueId() {
-        // hr_leave_stats widget uses this field but doesn't provide the write_date
+        // hr_time_stats widget uses this field but doesn't provide the write_date
         return this.value?.write_date ? this.value.write_date.toMillis() : undefined;
     }
 }

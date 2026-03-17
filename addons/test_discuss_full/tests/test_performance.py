@@ -43,7 +43,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users (_read_format)
     #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - fetch hr_employee (_compute_work_location_type)
-    #       - search hr_leave (_compute_leave_status)
+    #       - search hr_time (_compute_leave_status)
     _query_count_init_store = 21
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -77,7 +77,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search hr_employee (_store_im_status_fields override)
     #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - fetch hr_employee (_compute_work_location_type)
-    #                   - search hr_leave (_compute_leave_status)
+    #                   - search hr_time (_compute_leave_status)
     #                   - fetch res_users (_read_format)
     #           - search bus_bus (_bus_last_id)
     #           - count discuss_channel_member (member_count)
@@ -113,7 +113,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - search hr_employee (_store_im_status_fields override)
     #               - search hr_employee_location (_store_im_status_fields override)
     #               - fetch hr_employee (_compute_work_location_type)
-    #               - search hr_leave (_compute_leave_status)
+    #               - search hr_time (_compute_leave_status)
     #               - search_fetch res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_read_format)
@@ -206,7 +206,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        self.leaves = self.env['hr.leave'].create([{
+        self.leaves = self.env['hr.time'].create([{
             'request_date_from': fields.Datetime.today() + relativedelta(days=-2),
             'request_date_to': fields.Datetime.today() + relativedelta(days=2),
             'employee_id': employee.id,

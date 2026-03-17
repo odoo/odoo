@@ -1,0 +1,144 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import date, datetime, timezone
+from dateutil.relativedelta import relativedelta
+
+from freezegun import freeze_time
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.tests.common import tagged
+from odoo.addons.hr_time.tests.common import TestHrHolidaysCommon
+from odoo.addons.mail.tools.discuss import Store
+
+
+@tagged("post_install", "-at_install", "out_of_office")
+class TestOutOfOffice(TestHrHolidaysCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Legal Leaves',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+
+    @freeze_time('2024-06-06')
+    def test_leave_ooo(self):
+        self.assertFalse(self.employee_hruser.leave_date_to, 'user should not be on leave')
+        # validate a leave from 2024-06-05 (Wednesday) to 2024-06-07 (Friday)
+        first_leave = self.env['hr.time'].create({
+            'name': 'Christmas',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2024-06-05",
+            'request_date_to': "2024-06-07",
+        })
+        first_leave.action_approve()
+        # validate a leave from 2024-06-10 (Monday) to 2024-06-11 (Tuesday)
+        second_leave = self.env['hr.time'].create({
+            'name': 'Christmas',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2024-06-10",
+            'request_date_to': "2024-06-11",
+        })
+        second_leave.action_approve()
+        # missing dependencies on compute functions
+        self.employee_hruser.invalidate_recordset(["leave_date_to"])
+
+        partner = self.employee_hruser.user_id.partner_id
+        partner2 = self.user_employee.partner_id
+
+        channel = self.env['discuss.channel'].with_user(self.user_employee).with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+        }).create({
+            'channel_partner_ids': [(4, partner.id), (4, partner2.id)],
+            'channel_type': 'chat',
+            'name': 'test'
+        })
+        data = Store().add(channel, "_store_channel_fields")._build_result()
+        partner_info = next(p for p in data["res.partner"] if p["id"] == partner.id)
+        partner2_info = next(p for p in data["res.partner"] if p["id"] == partner2.id)
+        user_info = next(u for u in data["res.users"] if u["id"] == partner_info["main_user_id"])
+        user2_info = next(u for u in data["res.users"] if u["id"] == partner2_info["main_user_id"])
+        employee_info = next(e for e in data["hr.employee"] if e["id"] == user_info["employee_ids"][0])
+        employee2_info = next(e for e in data["hr.employee"] if e["id"] == user2_info["employee_ids"][0])
+        self.assertFalse(employee2_info["leave_date_to"], "current user should not be out of office")
+        # The employee will be back in the office the day after his second leave ends
+        self.assertEqual(
+            employee_info["leave_date_to"], "2024-06-12", "correspondent should be out of office"
+        )
+        self.assertEqual(
+            self.employee_hruser.user_id.with_context(formatted_display_name=True).display_name,
+            'armande (base.group_user,hr_time.group_hr_time_user) \t ✈ --Back on Jun 12, 2024--',
+            'formatted display name should show the "Back on" formatted date'
+        )
+
+    @freeze_time('2024-06-04')
+    def test_leave_ooo_batched(self):
+        self.assertFalse(self.employee_emp.leave_date_to, 'first employee should not be on leave')
+        self.assertFalse(self.employee_hruser.leave_date_to, 'second employee should not be on leave')
+        employees = self.employee_emp | self.employee_hruser
+        leaves = self.env['hr.time'].create([{
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2024-06-03",
+            'request_date_to': "2024-06-06",
+        }, {
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2024-06-02",
+            'request_date_to': "2024-06-05",
+        }])
+        leaves.write({'state': 'validate'})
+        employees.invalidate_recordset(["leave_date_to"])
+        self.assertEqual(employees.mapped("leave_date_to"), [date(2024, 6, 7), date(2024, 6, 6)])
+
+
+@tagged('out_of_office')
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
+class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Legal Leaves',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        cls.leave_date_end = (datetime.today() + relativedelta(days=2))
+        cls.leave = cls.env['hr.time'].create({
+            'name': 'Christmas',
+            'employee_id': cls.employee_hruser_id,
+            'work_entry_type_id': cls.work_entry_type.id,
+            'request_date_from': (date.today() - relativedelta(days=1)),
+            'request_date_to': cls.leave_date_end,
+        })
+
+        cls.hr_user = cls.employee_hruser.user_id
+        cls.hr_partner = cls.employee_hruser.user_id.partner_id
+        cls.employer_partner = cls.user_employee.partner_id
+
+    def test_search_absent_employee(self):
+        present_employees = self.env['hr.employee'].search([('is_absent', '!=', True)])
+        absent_employees = self.env['hr.employee'].search([('is_absent', '=', True)])
+        today_date = datetime.now(timezone.utc).date()
+        holidays = self.env['hr.time'].sudo().search([
+            ('employee_id', '!=', False),
+            ('state', '=', 'validate'),
+            ('date_from', '<=', today_date),
+            ('date_to', '>=', today_date),
+        ])
+        for employee in present_employees:
+            self.assertFalse(employee in holidays.employee_id)
+        for employee in absent_employees:
+            self.assertFalse(employee not in holidays.employee_id)

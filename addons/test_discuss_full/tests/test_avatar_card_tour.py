@@ -61,7 +61,7 @@ class TestAvatarCardTour(MailCommon, HttpCase):
             company_ids=[Command.link(cls.env.company.id), Command.link(cls.company_2.id)],
         )
 
-        # hr_holidays setup for multi-company
+        # hr_time setup for multi-company
         work_entry_type = (
             cls.env['hr.work.entry.type']
             .with_company(cls.company_2)
@@ -76,7 +76,7 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                 }
             )
         )
-        cls.env["hr.leave"].with_company(cls.company_2).with_context(
+        cls.env["hr.time"].with_company(cls.company_2).with_context(
             leave_skip_state_check=True
         ).create(
             {
