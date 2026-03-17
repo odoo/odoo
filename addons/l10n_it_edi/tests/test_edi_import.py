@@ -27,12 +27,40 @@ class TestItEdiImport(TestItEdi):
         xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
         <FatturaElettronicaHeader>
           <DatiTrasmissione>
+            <IdTrasmittente>
+                <IdPaese>IT</IdPaese>
+                <IdCodice>01234560157</IdCodice>
+            </IdTrasmittente>
             <ProgressivoInvio>TWICE_TEST</ProgressivoInvio>
           </DatiTrasmissione>
+          <CedentePrestatore>
+            <DatiAnagrafici>
+              <CodiceFiscale>10062090963</CodiceFiscale>
+              <Anagrafica>
+                <Denominazione>DITTA ALPHA</Denominazione>
+              </Anagrafica>
+            </DatiAnagrafici>
+            <Sede>
+                <Indirizzo>VIALE ROMA 543</Indirizzo>
+                <CAP>07100</CAP>
+                <Comune>SASSARI</Comune>
+                <Provincia>SS</Provincia>
+                <Nazione>IT</Nazione>
+            </Sede>
+          </CedentePrestatore>
           <CessionarioCommittente>
             <DatiAnagrafici>
               <CodiceFiscale>01234560157</CodiceFiscale>
+              <Anagrafica>
+                <Denominazione>DITTA BETA</Denominazione>
+              </Anagrafica>
             </DatiAnagrafici>
+            <Sede>
+                <Indirizzo>Via Teulada</Indirizzo>
+                <CAP>20100</CAP>
+                <Comune>Milano</Comune>
+                <Nazione>IT</Nazione>
+            </Sede>
           </CessionarioCommittente>
           </FatturaElettronicaHeader>
           <FatturaElettronicaBody>
@@ -401,6 +429,124 @@ class TestItEdiImport(TestItEdi):
                 },
             ],
         }], applied_xml)
+
+    def test_receive_bill_bank_account_01(self):
+        """ When importing a vendor bill, if IBAN is present and the partner's found,
+            the related bank account must be linked or created.
+        """
+        banksy_partner = self.env['res.partner'].create({
+            'name': 'Banksy',
+            'vat': 'IT00313371213',
+            'l10n_it_codice_fiscale': '00313371213',
+            'country_id': self.env.ref('base.it').id,
+            'company_id': self.company.id,
+            'invoice_edi_format': 'it_edi_xml',
+            'is_company': False,
+        })
+
+        iban = "IT75F0200839061000400xxxxx"
+        applied_xml = f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """
+
+        # Import but don't check yet
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], applied_xml)
+
+        # Check the created bank account
+        partner_bank_account = self.env['res.partner.bank'].search([
+            ('acc_number', '=', iban),
+            ('partner_id', '=', banksy_partner.id),
+            ('company_id', '=', self.company.id),
+        ])
+        self.assertEqual(partner_bank_account, banksy_partner.bank_ids)
+        self.assertFalse(partner_bank_account.allow_out_payment)
+
+        # Check the bank account being correct and linked to the invoice
+        self.assertRecordValues(invoice, [{
+            'partner_id': banksy_partner.id,
+            'partner_bank_id': partner_bank_account.id,
+            'invoice_date_due': fields.Date.from_string('2015-02-28'),
+        }])
+
+        banksy_partner.invalidate_recordset(['is_company'])
+        self.assertFalse(invoice.partner_id.is_company)
+
+    def test_receive_bill_bank_account_02(self):
+        """ When importing a vendor bill, if IBAN is present but the partner's not found, then:
+            - Partner is created
+            - Account is created
+        """
+        self.italian_partner_a.l10n_it_codice_fiscale = '00465840031'
+        existing_partners = self.env['res.partner'].search([])
+        iban = "IT75F0200839061000400xxxxx"
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """)
+        self.assertRecordValues(invoice.partner_id, [{
+            'name': "SOCIETA' ALPHA SRL",
+            'street': 'Viale Roma 543',
+            'city': 'Sassari',
+            'zip': '07100',
+            'phone': '321321312',
+            'email': 'vacinna@tulullu.it',
+            'is_company': True,
+        }])
+        self.assertTrue(invoice.partner_id not in existing_partners)
+        self.assertRecordValues(invoice.partner_bank_id, [{'acc_number': iban, 'allow_out_payment': False}])
+
+    def test_receive_bill_bank_account_03(self):
+        """Partner retrieved by ``name``, not ``l10n_it_codice_fiscale``
+           ``is_company`` must stay False, and not be updated to True
+        """
+        self.italian_partner_a.l10n_it_codice_fiscale = '00465840031'
+        alpha_partner = self.env['res.partner'].create({
+            'name': "SOCIETA' ALPHA SRL",
+            'country_id': self.env.ref('base.it').id,
+            'company_id': self.company.id,
+            'invoice_edi_format': 'it_edi_xml',
+            'is_company': False,
+        })
+
+        # Import but don't check yet
+        self._assert_import_invoice('IT01234567889_FPR03.xml', [{}])
+
+        alpha_partner.invalidate_recordset(['is_company'])
+        self.assertFalse(alpha_partner.is_company)
+
+    def test_import_due_date_on_issued_invoice(self):
+        """ DataScadenzaPagamento and CodicePagamento populate
+        invoice_date_due and payment_reference on out_invoice and
+        in_refund too. The bank account block stays incoming-only
+        and never writes the XML IBAN on res.partner.bank.
+        """
+        iban = "IT75F0200839061000400xxxxx"
+        applied_xml = f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento" position="replace">
+                <DataScadenzaPagamento>2020-02-29</DataScadenzaPagamento>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <CodicePagamento>REF-OUT-2020-001</CodicePagamento>
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """
+        self._assert_import_invoice(
+            'IT01234567890_FPR01.xml',
+            [{
+                'invoice_date_due': fields.Date.from_string('2020-02-29'),
+                'payment_reference': 'REF-OUT-2020-001',
+            }],
+            applied_xml,
+            move_type='out_invoice',
+        )
+        # Bank account block stays incoming-only: no res.partner.bank
+        # carries the XML IBAN.
+        self.assertFalse(self.env['res.partner.bank'].search([
+            ('acc_number', '=', iban),
+        ]))
 
     def test_receive_bill_with_multiple_discounts_in_line(self):
         applied_xml = """
