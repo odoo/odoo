@@ -98,7 +98,7 @@ export class StatusBarField extends Component {
             this.specialData = useSpecialData(async (orm, props) => {
                 const { foldField, name: fieldName, record } = props;
                 const { relation } = record.fields[fieldName];
-                const fieldNames = ["display_name"];
+                const fieldNames = this.getFieldNames();
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
@@ -175,6 +175,13 @@ export class StatusBarField extends Component {
      */
     getDomain() {
         return [];
+    }
+
+    /**
+     * Override this to change the fields to fetch
+     */
+    getFieldNames() {
+        return ['display_name'];
     }
 
     /**
