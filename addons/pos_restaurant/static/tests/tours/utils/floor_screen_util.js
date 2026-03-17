@@ -160,6 +160,9 @@ export function goTo(name) {
         ...clickTableSelectorButton(),
         ...Numpad.enterValue(name),
         {
+            trigger: `.input-value:contains(${name})`,
+        },
+        {
             trigger: ".floor-screen .jump-button",
             run: "click",
         },
