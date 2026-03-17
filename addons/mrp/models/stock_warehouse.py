@@ -55,6 +55,7 @@ class StockWarehouse(models.Model):
                     ('action', '=', 'manufacture'), ('warehouse_id', '=', warehouse.id)]).route_id
             if not manufacture_route:
                 continue
+            manufacture_route = manufacture_route.sudo()
             if warehouse.manufacture_to_resupply:
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
@@ -64,7 +65,7 @@ class StockWarehouse(models.Model):
         manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
         for warehouse in self:
             if warehouse.manufacture_to_resupply:
-                manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
+                manufacture_route.sudo().warehouse_ids = [Command.link(warehouse.id)]
         return super()._create_or_update_route()
 
     def get_rules_dict(self):
