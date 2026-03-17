@@ -55,7 +55,6 @@ export class StockForecasted extends Component {
     }
 
     async _getResModel(){
-        this.resModel = this.context.active_model || this.context.params?.active_model;
         //Following is used as a fallback when the forecast is not called by an action but through browser's history
         if (!this.resModel) {
             let resModel = this.props.action.res_model;
@@ -80,6 +79,10 @@ export class StockForecasted extends Component {
 
     updateWarehouse(id) {
         this.context.warehouse_id = id;
+    }
+
+    updateVariant(id) {
+        this.context.variant_id = id;
     }
 
     async reloadReport() {
@@ -107,9 +110,19 @@ export class StockForecasted extends Component {
         }));
     }
 
+    get variantId() {
+        return this.context.variant_id || 0;
+    }
+
     get warehousesItems() {
         return this._dropdownItems(_t("All Warehouses"), this.docs.warehouses, this.warehouseId, (id) =>
             this.updateWarehouse(id)
+        );
+    }
+
+    get variantItems() {
+        return this._dropdownItems(_t("All Variants"), this.docs.product_variants, this.variantId, (id) =>
+            this.updateVariant(id)
         );
     }
 
@@ -117,24 +130,37 @@ export class StockForecasted extends Component {
         return this.warehousesItems.find((item) => item.id === this.warehouseId)?.label;
     }
 
+    get activeVariantName() {
+        return this.variantItems.find((item) => item.id === this.variantId)?.label;
+    }
+
     get filteredDocs() {
         const warehouse = this.warehouseId;
+        const variant = this.variantId;
 
-        if (!warehouse) {
+        if (!variant && !warehouse) {
             return this.docs;
         }
-
-        return {
+        return{
             ...this.docs,
-            lines: this.docs.lines.filter((l) => l.warehouse_id === warehouse),
+            lines: this.docs.lines.filter(
+                (l) =>
+                    (!variant || l.product.id === variant) &&
+                    (!warehouse || l.warehouse_id === warehouse)
+            ),
             product: Object.fromEntries(
                 Object.entries(this.docs.product).filter(([key]) => {
-                    const [, warehouseId] = key.split("_").map(Number);
-                    return warehouseId === warehouse;
+                    const [productId, warehouseId] = key.split("_").map(Number);
+                    return (
+                        (!variant || productId === variant) &&
+                        (!warehouse || warehouseId === warehouse)
+                    );
                 })
             ),
+            multiple_product: !variant,
             multiple_warehouses: !warehouse,
-            warehouse_ids: [warehouse],
+            warehouse_ids: warehouse ? [warehouse] : this.docs.warehouse_ids,
+            product_variants_ids: variant ? [variant] : this.docs.product_variants_ids,
         };
     }
 
@@ -142,14 +168,9 @@ export class StockForecasted extends Component {
         const filteredDocs = this.filteredDocs;
         return [
             ["state", "=", "forecast"],
-            ["warehouse_id", "in", this.filteredDocs.warehouse_ids],
+            ["warehouse_id", "in", filteredDocs.warehouse_ids],
+            ["product_id", "in", filteredDocs.product_variants_ids],
         ];
-        if (this.resModel === "product.template") {
-            domain.push(["product_tmpl_id", "=", this.productId]);
-        } else if (this.resModel === "product.product") {
-            domain.push(["product_id", "=", this.productId]);
-        }
-        return domain;
     }
 
     get graphInfo() {

@@ -115,22 +115,19 @@ class StockForecasted_Product_Product(models.AbstractModel):
         if product_template_ids:
             products = self.env['product.template'].browse(product_template_ids)
             res.update({
-                'product_templates' : products.read(fields=['id', 'display_name']),
-                'product_templates_ids' : products.ids,
-                'product_variants' : [{
-                        'id' : pv.id,
-                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
-                    } for pv in products.product_variant_ids],
-                'product_variants_ids' : products.product_variant_ids.ids,
-                'multiple_product' : len(products.product_variant_ids) > 1,
+                'product_templates': products.read(fields=['id', 'display_name']),
+                'product_templates_ids': products.ids,
+                'product_variants': products.product_variant_ids.read(fields=['id', 'display_name']),
+                'product_variants_ids': products.product_variant_ids.ids,
+                'multiple_product': len(products.product_variant_ids) > 1,
             })
         elif product_ids:
             products = self.env['product.product'].browse(product_ids)
             res.update({
-                'product_templates' : False,
-                'product_variants' : products.read(fields=['id', 'display_name']),
-                'product_variants_ids' : products.ids,
-                'multiple_product' : len(products) > 1,
+                'product_templates': False,
+                'product_variants': products.read(fields=['id', 'display_name']),
+                'product_variants_ids': products.ids,
+                'multiple_product': len(products) > 1,
             })
 
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
