@@ -7,13 +7,14 @@ import { charField, CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { PageDependencies } from "@website/components/dialog/page_properties";
+import { TranslationButton } from "@web/views/fields/translation/translation_button";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
  * is updated.
  */
 class PageUrlField extends UrlField {
-    static components = { PageDependencies };
+    static components = { PageDependencies, TranslationButton };
     static template = "website.PageUrlField";
     // Inlined from UrlField's static props (UrlField is not yet converted to
     // an exported schema const; it has no defaultProps of its own).
@@ -81,6 +82,9 @@ class PageUrlField extends UrlField {
         // and thus doesn't accept an empty string.
         this.props.record.data[this.props.name] = `/${value.trim()}`;
         return value;
+    }
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
     }
 }
 
