@@ -38,7 +38,7 @@
             <field name="signature" type="html"><div>Mr Demo</div></field>
             <field name="company_id" ref="main_company"/>
             <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
-            <field name="image_1920" type="base64" file="base/static/img/user_demo-image.png"/>
+            <field name="image_1920" type="bytes" file="base/static/img/user_demo-image.png"/>
         </record>
 
         <record id="partner_demo" model="res.partner">
@@ -60,7 +60,7 @@
             <field name="email">admin@yourcompany.example.com</field>
             <field name="tz">Europe/Brussels</field>
             <field name="user_id" ref="base.user_admin"/>
-            <field name="image_1920" type="base64" file="base/static/img/partner_root-image.png"/>
+            <field name="image_1920" type="bytes" file="base/static/img/partner_root-image.png"/>
         </record>
 
         <record id="base.user_admin" model="res.users">
@@ -76,7 +76,7 @@
             <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
             <field name="zip">07002</field>
             <field name="country_id" ref="base.us"/>
-            <field name="image_1920" type="base64" file="base/static/img/partner_demo_portal.png"/>
+            <field name="image_1920" type="bytes" file="base/static/img/partner_demo_portal.png"/>
             <field name="phone">(683)-556-5104</field>
         </record>
         <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">

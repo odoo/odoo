@@ -3,7 +3,7 @@
 
     <record id="payment_provider_adyen" model="payment.provider">
         <field name="name">Adyen</field>
-        <field name="image_128" type="base64" file="payment_adyen/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_adyen/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_adyen"/>
         <!-- https://www.adyen.com/payment-methods -->
         <field name="payment_method_ids"
@@ -75,7 +75,7 @@
 
     <record id="payment_provider_aps" model="payment.provider">
         <field name="name">Amazon Payment Services</field>
-        <field name="image_128" type="base64" file="payment_aps/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_aps/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_aps"/>
         <!-- https://paymentservices.amazon.com/docs/EN/24.html -->
         <field name="payment_method_ids"
@@ -93,7 +93,7 @@
 
     <record id="payment_provider_asiapay" model="payment.provider">
         <field name="name">Asiapay</field>
-        <field name="image_128" type="base64" file="payment_asiapay/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_asiapay/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_asiapay"/>
         <!-- See https://www.asiapay.com/payment.html#option -->
         <field name="payment_method_ids"
@@ -158,7 +158,7 @@
     <record id="payment_provider_authorize" model="payment.provider">
         <field name="name">Authorize.net</field>
         <field name="image_128"
-               type="base64"
+               type="bytes"
                file="payment_authorize/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_authorize"/>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
@@ -173,7 +173,7 @@
     <record id="payment_provider_buckaroo" model="payment.provider">
         <field name="name">Buckaroo</field>
         <field name="image_128"
-               type="base64"
+               type="bytes"
                file="payment_buckaroo/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_buckaroo"/>
         <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
@@ -207,13 +207,13 @@
     <record id="payment_provider_demo" model="payment.provider">
         <field name="name">Demo</field>
         <field name="sequence">40</field>
-        <field name="image_128" type="base64" file="payment_demo/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_demo/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_demo"/>
     </record>
 
     <record id="payment_provider_dpo" model="payment.provider">
         <field name="name">DPO Pay</field>
-        <field name="image_128" type="base64" file="payment_dpo/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_dpo/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_dpo"/>
         <!-- https://dpogroup.com/Payment-methods/ -->
         <field
@@ -227,7 +227,7 @@
     <record id="payment_provider_flutterwave" model="payment.provider">
         <field name="name">Flutterwave</field>
         <field name="image_128"
-               type="base64"
+               type="bytes"
                file="payment_flutterwave/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_flutterwave"/>
         <!-- https://developer.flutterwave.com/v3.0.0/docs/payment-methods -->
@@ -247,7 +247,7 @@
 
     <record id="payment_provider_iyzico" model="payment.provider">
         <field name="name">Iyzico</field>
-        <field name="image_128" type="base64" file="payment_iyzico/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_iyzico/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_iyzico"/>
         <field
             name="payment_method_ids"
@@ -261,7 +261,7 @@
     <record id="payment_provider_mercado_pago" model="payment.provider">
         <field name="name">Mercado Pago</field>
         <field name="image_128"
-               type="base64"
+               type="bytes"
                file="payment_mercado_pago/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_mercado_pago"/>
 
@@ -279,7 +279,7 @@
 
     <record id="payment_provider_mollie" model="payment.provider">
         <field name="name">Mollie</field>
-        <field name="image_128" type="base64" file="payment_mollie/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_mollie/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_mollie"/>
         <!-- https://www.mollie.com/en/payments -->
         <field name="payment_method_ids"
@@ -309,7 +309,7 @@
 
     <record id="payment_provider_nuvei" model="payment.provider">
         <field name="name">Nuvei</field>
-        <field name="image_128" type="base64" file="payment_nuvei/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_nuvei/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_nuvei"/>
         <field name="payment_method_ids"
                eval="[Command.set([
@@ -328,7 +328,7 @@
 
     <record id="payment_provider_paymob" model="payment.provider">
         <field name="name">Paymob</field>
-        <field name="image_128" type="base64" file="payment_paymob/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_paymob/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_paymob"/>
         <!-- For each country available payment methods are different but card is common for all-->
         <!-- https://developers.paymob.com/egypt/payment-methods -->
@@ -359,7 +359,7 @@
 
     <record id="payment_provider_paypal" model="payment.provider">
         <field name="name">PayPal</field>
-        <field name="image_128" type="base64" file="payment_paypal/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_paypal/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_paypal"/>
         <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
         <field name="payment_method_ids"
@@ -371,7 +371,7 @@
 
     <record id="payment_provider_razorpay" model="payment.provider">
         <field name="name">Razorpay</field>
-        <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_razorpay/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_razorpay"/>
         <!-- https://razorpay.com/docs/payments/payment-methods/#supported-payment-methods -->
         <field name="payment_method_ids"
@@ -390,7 +390,7 @@
 
     <record id="payment_provider_redsys" model="payment.provider">
         <field name="name">Redsys</field>
-        <field name="image_128" type="base64" file="payment_redsys/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_redsys/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_redsys"/>
         <field name="payment_method_ids"
                eval="[Command.set([
@@ -404,7 +404,7 @@
         <field name="name">SEPA Direct Debit</field>
         <field name="sequence">20</field>
         <field name="image_128"
-               type="base64"
+               type="bytes"
                file="base/static/img/icons/payment_sepa_direct_debit.png"/>
         <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
         <field name="payment_method_ids"
@@ -416,7 +416,7 @@
 
     <record id="payment_provider_stripe" model="payment.provider">
         <field name="name">Stripe</field>
-        <field name="image_128" type="base64" file="payment_stripe/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_stripe/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_stripe"/>
         <!--
             See https://stripe.com/payments/payment-methods-guide
@@ -462,7 +462,7 @@
 
     <record id="payment_provider_toss_payments" model="payment.provider">
         <field name="name">Toss Payments</field>
-        <field name="image_128" type="base64" file="payment_toss_payments/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_toss_payments/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_toss_payments"/>
         <field name="payment_method_ids"
                eval="[Command.set([
@@ -476,13 +476,13 @@
     <record id="payment_provider_transfer" model="payment.provider">
         <field name="name">Wire Transfer</field>
         <field name="sequence">30</field>
-        <field name="image_128" type="base64" file="payment_custom/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_custom/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_custom"/>
     </record>
 
     <record id="payment_provider_worldline" model="payment.provider">
         <field name="name">Worldline</field>
-        <field name="image_128" type="base64" file="payment_worldline/static/description/icon.png"/>
+        <field name="image_128" type="bytes" file="payment_worldline/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_worldline"/>
         <!-- https://docs.direct.worldline-solutions.com/en/payment-methods-and-features/index -->
         <field name="payment_method_ids"
@@ -510,7 +510,7 @@
     <record id="payment_provider_xendit" model="payment.provider">
         <field name="name">Xendit</field>
         <field name="image_128"
-               type="base64"
+               type="bytes"
                file="payment_xendit/static/description/icon.png"
         />
         <field name="module_id" ref="base.module_payment_xendit"/>

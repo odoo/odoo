@@ -3,7 +3,7 @@
     <data>
         <record id="face_certificate_demo" model="certificate.certificate">
             <field name="name">ES Facturae Demo Certificate</field>
-            <field name="content" type="base64" file="l10n_es_edi_facturae/demo/certificate_demo.pfx"/>
+            <field name="content" type="bytes" file="l10n_es_edi_facturae/demo/certificate_demo.pfx"/>
             <field name="pkcs12_password">test</field>
             <field name="scope">facturae</field>
             <field name="company_id" eval="ref('base.demo_company_es')"/>

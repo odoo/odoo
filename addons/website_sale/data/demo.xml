@@ -144,56 +144,56 @@
         <record id="public_category_desks" model="product.public.category">
           <field name="name">Desks</field>
           <field name="sequence">15</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desks.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/desks.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/desks.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/desks.jpg"/>
         </record>
         <record id="public_category_furnitures" model="product.public.category">
           <field name="name">Furnitures</field>
           <field name="sequence">22</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/furnitures.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/furnitures.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/furnitures.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/furnitures.jpg"/>
         </record>
         <record id="public_category_boxes" model="product.public.category">
             <field name="name">Boxes</field>
             <field name="sequence">29</field>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/boxes.jpg"/>
-            <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/boxes.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/boxes.jpg"/>
+            <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/boxes.jpg"/>
         </record>
         <record id="public_category_drawers" model="product.public.category">
           <field name="name">Drawers</field>
           <field name="sequence">35</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/drawers.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/drawers.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/drawers.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/drawers.jpg"/>
         </record>
         <record id="public_category_cabinets" model="product.public.category">
           <field name="name">Cabinets</field>
           <field name="sequence">40</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/cabinets.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/cabinets.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/cabinets.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/cabinets.jpg"/>
         </record>
         <record id="public_category_bins" model="product.public.category">
           <field name="name">Bins</field>
           <field name="sequence">45</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/bins.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/bins.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/bins.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/bins.jpg"/>
         </record>
         <record id="public_category_lamps" model="product.public.category">
           <field name="name">Lamps</field>
           <field name="sequence">49</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/lamps.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/lamps.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/lamps.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/lamps.jpg"/>
         </record>
         <record id="public_category_services" model="product.public.category">
           <field name="name">Services</field>
           <field name="sequence">55</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
         </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
           <field name="sequence">59</field>
-          <field name="image_1920" type="base64" file="product/static/img/product_product_43-image.jpg"/>
-          <field name="cover_image" type="base64" file="product/static/img/product_product_43-image.jpg"/>
+          <field name="image_1920" type="bytes" file="product/static/img/product_product_43-image.jpg"/>
+          <field name="cover_image" type="bytes" file="product/static/img/product_product_43-image.jpg"/>
         </record>
 
         <!-- subcategories -->
@@ -203,8 +203,8 @@
           <field name="parent_id" eval="ref('public_category_desks')"/>
           <field name="name">Components</field>
           <field name="sequence">16</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/categories/desk_components.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/categories/desk_components.jpg"/>
+          <field name="image_1920" type="bytes" file="website_sale/static/src/img/categories/desk_components.jpg"/>
+          <field name="cover_image" type="bytes" file="website_sale/static/src/img/categories/desk_components.jpg"/>
         </record>
         <record id="public_category_desks_office" model="product.public.category">
           <field name="parent_id" eval="ref('public_category_desks')"/>
@@ -868,7 +868,7 @@
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="invoice_policy">delivery</field>
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.public_category_services')])]"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
         </record>
 
         <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">
@@ -994,133 +994,133 @@
             <field name="name">Office Chair - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_delivery_01"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
         </record>
 
         <record id="product_delivery_01_extra_image_2" model="product.image">
             <field name="name">Office Chair - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_delivery_01"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_3-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_3-image_02.jpg"/>
         </record>
 
         <record id="product_product_16_extra_image" model="product.image">
             <field name="name">Drawer Black - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_16"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_16-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_16-image_02.jpg"/>
         </record>
 
         <record id="product_delivery_02_extra_image" model="product.image">
             <field name="name">Office Lamp - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_delivery_02"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_lamp_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_lamp_02.jpg"/>
         </record>
 
         <record id="product_product_4_extra_image" model="product.image">
             <field name="name">Customizable Desk Steel - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_4"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
         </record>
 
         <record id="product_product_1_product_template_extra_image" model="product.image">
             <field name="name">Chair floor protection - Context View</field>
             <field name="sequence">10</field>
             <field name="product_tmpl_id" ref="sale.product_product_1_product_template"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/floor_protection-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/floor_protection-image_02.jpg"/>
         </record>
 
         <record id="consu_delivery_03_extra_image" model="product.image">
             <field name="name">Four Person Desk - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.consu_delivery_03"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_d03_image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_d03_image_02.jpg"/>
         </record>
 
         <record id="desk_organizer_extra_image" model="product.image">
             <field name="name">Desk Organizer - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.desk_organizer"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/desk_organizer_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/desk_organizer_02.jpg"/>
         </record>
 
         <record id="product_product_24_extra_image" model="product.image">
             <field name="name">Individual Workplace - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_24"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_24-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_24-image_02.jpg"/>
         </record>
 
         <record id="product_product_12_extra_image" model="product.image">
             <field name="name">Office Chair Black - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_12"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_12-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_12-image_02.jpg"/>
         </record>
 
         <record id="product_product_27_extra_image" model="product.image">
             <field name="name">Drawer - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_27"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_27-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_27-image_02.jpg"/>
         </record>
 
         <record id="consu_delivery_02_extra_image" model="product.image">
             <field name="name">Large Meeting Table - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.consu_delivery_02"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_46-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_46-image_02.jpg"/>
         </record>
 
         <record id="product_product_10_extra_image" model="product.image">
             <field name="name">Cabinet Width Doors - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_10"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_10-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_10-image_02.jpg"/>
         </record>
 
         <record id="product_product_7_extra_image" model="product.image">
             <field name="name">Storage Box - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_7"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_7-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_7-image_02.jpg"/>
         </record>
 
         <record id="product_product_9_extra_image" model="product.image">
             <field name="name">Pedal Bin - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_9"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_9-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_9-image_02.jpg"/>
         </record>
 
         <record id="product_product_6_extra_image" model="product.image">
             <field name="name">Large Cabinet - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_6"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_6-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_6-image_02.jpg"/>
         </record>
 
         <record id="product_product_5_extra_image" model="product.image">
             <field name="name">Corner Desk Right Sit - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_5"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_5-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_5-image_02.jpg"/>
         </record>
 
         <record id="consu_delivery_01_extra_image" model="product.image">
             <field name="name">Two-Seat Sofa - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.consu_delivery_01"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_d01_image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_d01_image_02.jpg"/>
         </record>
 
         <record id="product_product_3_extra_image" model="product.image">
             <field name="name">Desk Combination - Context View</field>
             <field name="sequence">10</field>
             <field name="product_variant_id" ref="product.product_product_3"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/product_product_3-image_02.jpg"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_3-image_02.jpg"/>
         </record>
 
         <!-- Products' tertiary images -->
@@ -1128,6 +1128,6 @@
             <field name="name">Customizable Desk Steel - Detail View</field>
             <field name="sequence">11</field>
             <field name="product_variant_id" ref="product.product_product_4"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/table02_03.webp"/>
+            <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/table02_03.webp"/>
         </record>
 </odoo>

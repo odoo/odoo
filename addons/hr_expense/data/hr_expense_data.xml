@@ -13,7 +13,7 @@
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
             <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
-            <field name="image_1920" type="base64" file="hr_expense/static/img/food.svg"/>
+            <field name="image_1920" type="bytes" file="hr_expense/static/img/food.svg"/>
         </record>
         <record id="expense_product_travel_accommodation" model="product.product">
             <field name="name">Travel &amp; Accommodation</field>
@@ -27,7 +27,7 @@
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
             <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
-            <field name="image_1920" type="base64" file="hr_expense/static/img/transport.svg"/>
+            <field name="image_1920" type="bytes" file="hr_expense/static/img/transport.svg"/>
         </record>
         <record id="uom.product_uom_km" model="uom.uom">
             <field name="active" eval="True"/>
@@ -42,7 +42,7 @@
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
             <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
-            <field name="image_1920" type="base64" file="hr_expense/static/img/mileage.svg"/>
+            <field name="image_1920" type="bytes" file="hr_expense/static/img/mileage.svg"/>
         </record>
         <record id="expense_product_gift" model="product.product">
             <field name="name">Gifts</field>
@@ -55,7 +55,7 @@
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
             <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
-            <field name="image_1920" type="base64" file="hr_expense/static/img/gift.svg"/>
+            <field name="image_1920" type="bytes" file="hr_expense/static/img/gift.svg"/>
         </record>
         <record id="expense_product_communication" model="product.product">
             <field name="name">Communication</field>
@@ -68,7 +68,7 @@
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="True"/>
             <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
-            <field name="image_1920" type="base64" file="hr_expense/static/img/communication.svg"/>
+            <field name="image_1920" type="bytes" file="hr_expense/static/img/communication.svg"/>
         </record>
         <record id="product_product_no_cost" model="product.product">
             <field name="name">Expenses</field>
@@ -78,7 +78,7 @@
             <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
             <field name="can_be_expensed" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="image_1920" type="base64" file="hr_expense/static/img/other.svg"/>
+            <field name="image_1920" type="bytes" file="hr_expense/static/img/other.svg"/>
         </record>
     </data>
     <data>

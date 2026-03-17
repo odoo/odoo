@@ -15,7 +15,7 @@
         <field name="lang_ids" eval="False"/>
         <field name="description" type="html">
             <p>Choose your favourite subject and show how good you are. Ready?</p></field>
-        <field name="background_image" type="base64" file="survey/static/src/img/burger_quiz_background.webp"/>
+        <field name="background_image" type="bytes" file="survey/static/src/img/burger_quiz_background.webp"/>
     </record>
 
     <!-- Page 1: Start -->
@@ -393,13 +393,13 @@
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q2"/>
             <field name="sequence">1</field>
             <field name="value"> </field>
-            <field name="value_image" type="base64" file="survey/static/src/img/burger_quiz_guernica.jpg"/>
+            <field name="value_image" type="bytes" file="survey/static/src/img/burger_quiz_guernica.jpg"/>
         </record>
         <record id="survey_demo_burger_quiz_p5_q2_sug2" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q2"/>
             <field name="sequence">2</field>
             <field name="value"> </field>
-            <field name="value_image" type="base64" file="survey/static/src/img/burger_quiz_cubism_klein.jpg"/>
+            <field name="value_image" type="bytes" file="survey/static/src/img/burger_quiz_cubism_klein.jpg"/>
             <field name="is_correct" eval="True"/>
             <field name="answer_score">10</field>
         </record>
@@ -407,13 +407,13 @@
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q2"/>
             <field name="sequence">3</field>
             <field name="value"> </field>
-            <field name="value_image" type="base64" file="survey/static/src/img/burger_quiz_don_quixote.jpg"/>
+            <field name="value_image" type="bytes" file="survey/static/src/img/burger_quiz_don_quixote.jpg"/>
         </record>
         <record id="survey_demo_burger_quiz_p5_q2_sug4" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q2"/>
             <field name="sequence">4</field>
             <field name="value"> </field>
-            <field name="value_image" type="base64" file="survey/static/src/img/burger_quiz_self_portrait.jpg"/>
+            <field name="value_image" type="bytes" file="survey/static/src/img/burger_quiz_self_portrait.jpg"/>
         </record>
 
     <record id="survey_demo_burger_quiz_p5_q3" model="survey.question">
