@@ -117,8 +117,12 @@ export const formatsSpecs = {
         addStyle: (node, props) => {
             node.style["font-size"] = props.size;
             removeClass(node, ...FONT_SIZE_CLASSES);
+            node.classList.toggle("o_rfs", props.size && props.size.startsWith("clamp("));
         },
-        removeStyle: (node) => removeStyle(node, "font-size"),
+        removeStyle: (node) => {
+            removeStyle(node, "font-size");
+            removeClass(node, "o_rfs");
+        },
     },
     setFontSizeClassName: {
         isFormatted: (node, props) =>
@@ -145,6 +149,7 @@ export const formatsSpecs = {
             ),
         addStyle: (node, props) => {
             node.style.removeProperty("font-size");
+            removeClass(node, "o_rfs");
             node.classList.add(props.className);
         },
         removeStyle: (node) => {

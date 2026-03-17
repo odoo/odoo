@@ -10,7 +10,7 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
 import { useChildRef } from "@web/core/utils/hooks";
 
-const MAX_FONT_SIZE = 144;
+export const MAX_FONT_SIZE = 400;
 
 export class FontSizeSelector extends Component {
     static template = "html_editor.FontSizeSelector";
@@ -32,7 +32,7 @@ export class FontSizeSelector extends Component {
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
-        this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
+        this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 1000);
 
         onMounted(() => {
             const iframeEl = this.iframeContentRef.el;

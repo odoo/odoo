@@ -622,7 +622,8 @@ test("toolbar works: display correct font size on select all", async () => {
 });
 
 test("toolbar works: displays correct font size on input", async () => {
-    const { el } = await setupEditor("<p>[test]</p>");
+    const { el } = await setupEditor("<p>test</p>");
+    setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
     const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
@@ -638,9 +639,12 @@ test("toolbar works: displays correct font size on input", async () => {
 
     await press("8");
     expect(inputEl).toHaveValue("8");
-    await advanceTime(200);
+    await advanceTime(1000);
     expectElementCount(".o_font_size_selector_menu", 1);
-    expect(getContent(el)).toBe(`<p><span style="font-size: 8px;">[test]</span></p>`);
+    // Responsive font-size: check for o_rfs class and clamp() value
+    const rfsSpan = el.querySelector("span.o_rfs");
+    expect(rfsSpan !== null).toBe(true);
+    expect(rfsSpan.style.fontSize.startsWith("clamp(")).toBe(true);
     await expectElementCount(".o-we-toolbar", 1);
 });
 
