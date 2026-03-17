@@ -85,7 +85,19 @@ test("addLink: utility function and special entities", () => {
         // Already encoded url should not be encoded twice
         [
             markup`https://odoo.com/%5B%5D`,
-            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
+            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/%5B%5D</a>`,
+        ],
+        [
+            markup`https://www.odoo.com/appointment/10552?filter_appointment_type_ids=%5B6706%2C%2B6705%2C%2B5292%2C%2B10552%5D`,
+            `<a target="_blank" rel="noreferrer noopener" href="https://www.odoo.com/appointment/10552?filter_appointment_type_ids=%5B6706%2C%2B6705%2C%2B5292%2C%2B10552%5D">https://www.odoo.com/appointment/10552?filter_appointment_type_ids=%5B6706%2C%2B6705%2C%2B5292%2C%2B10552%5D</a>`,
+        ],
+        [
+            markup`www.odoo.com`,
+            `<a target="_blank" rel="noreferrer noopener" href="http://www.odoo.com/">www.odoo.com</a>`,
+        ],
+        [
+            markup`https://odoo.com/?q=ỗ`,
+            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/?q=%E1%BB%97">https://odoo.com/?q=ỗ</a>`,
         ],
     ];
 

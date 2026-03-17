@@ -134,15 +134,15 @@ function linkify(text) {
     while ((match = urlRegexp.exec(text)) !== null) {
         result = htmlJoin([result, text.slice(curIndex, match.index)]);
         // Decode the url first, in case it's already an encoded url
-        const inputUrl = decodeURI(match[0]);
-        const url = !/^https?:\/\//i.test(inputUrl) ? "http://" + inputUrl : inputUrl;
+        const textContent = match[0];
+        const url = new URL(!/^https?:\/\//i.test(match[0]) ? "http://" + match[0] : match[0]);
         const link = document.createElement("a");
         setAttributes(link, {
             target: "_blank",
             rel: "noreferrer noopener",
-            href: encodeURI(url),
+            href: url.href,
         });
-        link.textContent = inputUrl;
+        link.textContent = textContent;
         const messageMatch = messageUrlRegExp.exec(url);
         if (messageMatch !== null) {
             setAttributes(link, {
