@@ -281,20 +281,20 @@ class PosSelfOrderController(http.Controller):
             return {'address': None}
         return AutoCompleteController()._perform_complete_place_search(address, api_key=google_places_api_key, google_place_id=google_place_id)
 
-    def _verify_pos_config(self, access_token, check_active_session=True):
+    def _verify_pos_config(self, access_token):
         """
         Finds the pos.config with the given access_token and returns a record with reduced privileges.
         The record is has no sudo access and is in the context of the record's company and current pos.session's user.
         """
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
-        if self._verify_config_constraint(pos_config_sudo, check_active_session):
+        if self._verify_config_constraint(pos_config_sudo):
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
-    def _verify_config_constraint(self, pos_config_sudo, check_active_session=True):
-        return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk') or (check_active_session and not pos_config_sudo.has_active_session)
+    def _verify_config_constraint(self, pos_config_sudo):
+        return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk')
 
     def _verify_authorization(self, access_token, table_identifier, order):
         """
@@ -315,5 +315,5 @@ class PosSelfOrderController(http.Controller):
 
     @http.route(['/pos-self/ping'], type='jsonrpc', auth='public')
     def pos_ping(self, access_token):
-        self._verify_pos_config(access_token, check_active_session=False)
+        self._verify_pos_config(access_token)
         return {'response': 'pong'}

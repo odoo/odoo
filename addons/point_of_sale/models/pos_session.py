@@ -362,6 +362,19 @@ class PosSession(models.Model):
             not (o.preset_time and o.preset_time.date() > today)
         )
 
+    def get_order_count_by_preset(self):
+        orders = self.order_ids.filtered(lambda o: o.state != 'cancel' and o.preset_id and o.preset_time and o.preset_time > fields.Datetime.now())
+        orders_by_preset = {}
+        for order in orders:
+            if order.preset_id.id not in orders_by_preset:
+                orders_by_preset[order.preset_id.id] = {
+                    'id': order.preset_id.id,
+                    'name': order.preset_id.name,
+                    'count': 0,
+                }
+            orders_by_preset[order.preset_id.id]['count'] += 1
+        return list(orders_by_preset.values())
+
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:

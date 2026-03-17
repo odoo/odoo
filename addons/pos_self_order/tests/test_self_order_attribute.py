@@ -71,6 +71,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
 
         self.start_tour(self_route, "self_multi_attribute_selector")
@@ -150,6 +151,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.pos_config.limit_categories = True
         self.pos_config.iface_available_categ_ids = [(4, pos_categ_misc.id)]
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
 
         self.start_tour(self_route, "self_order_product_info")

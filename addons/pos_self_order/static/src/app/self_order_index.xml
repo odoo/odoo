@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.selfOrderIndex">
-        <div t-if="!this.selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
+        <div t-if="!this.selfOrder.ordering and !this.selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
             We're currently closed.
         </div>
         <div t-if="this.selfOrder.rpcLoading">

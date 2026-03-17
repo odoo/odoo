@@ -11,7 +11,7 @@ import {
     generateQRCodeDataUrl,
     getColorScheme,
 } from "@point_of_sale/utils";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
@@ -2109,11 +2109,25 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (this.session.state === "opening_control") {
-            const data = await this.data.call("pos.session", "delete_opening_control_session", [
-                this.session.id,
-            ]);
-
-            if (data.status === "success") {
+            try {
+                await this.data.call("pos.session", "delete_opening_control_session", [
+                    this.session.id,
+                ]);
+            } catch (error) {
+                if (error instanceof RPCError) {
+                    // If the error is an RPC error, it should be "You can only cancel a session that is in opening control state and has no orders."
+                    // In this case, we still go to the backend without deleting the session.
+                    logPosMessage(
+                        "Store",
+                        "closePos",
+                        "Failed to delete opening control session, redirecting to backend",
+                        CONSOLE_COLOR,
+                        [error]
+                    );
+                } else {
+                    throw error;
+                }
+            } finally {
                 this.redirectToBackend();
             }
         }

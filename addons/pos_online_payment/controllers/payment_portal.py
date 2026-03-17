@@ -25,7 +25,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @staticmethod
     def _ensure_session_open(pos_order_sudo):
-        if pos_order_sudo.session_id.state != 'opened':
+        if pos_order_sudo.session_id.state == 'closed':
             raise AccessError(_("The POS session is not opened."))
 
     def _get_partner_sudo(self, user_sudo):

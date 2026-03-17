@@ -58,7 +58,7 @@ class RestaurantFloor(models.Model):
     def write(self, vals):
         for floor in self:
             for config in floor.pos_config_ids:
-                if config.has_active_session and (vals.get('pos_config_ids') or vals.get('active')):
+                if config.current_session_id and (vals.get('pos_config_ids') or vals.get('active')):
                     raise UserError(
                         self.env._(
                             "Please close and validate the following open PoS Session before modifying this floor.\n"
