@@ -27,6 +27,22 @@ export class ForecastedHeader extends Component {
         return this.action.doAction(action);
     }
 
+    async _onClickTransfers(type) {
+        const action = await this.orm.call(
+            "stock.picking",
+            `get_action_picking_tree_${type === "incoming" ? "incoming" : "outgoing"}`
+        );
+        action.domain = [
+            ["product_id", "in", this.props.docs.product_variants_ids],
+            ["state", "not in", ["draft", "done", "cancel"]],
+            ["picking_type_id.warehouse_id", "in", this.props.selectedWarehouseIds],
+        ];
+        if (action.help) {
+            action.help = markup(action.help);
+        }
+        return this.action.doAction(action);
+    }
+
     get products() {
         return this.props.docs.product;
     }
