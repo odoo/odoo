@@ -511,6 +511,17 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
 
+    @mute_logger('odoo.addons.base.models.ir_actions')
+    def test_55_access_error_message(self):
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+            'code': '1+2',
+        })
+
+        with self.assertRaisesRegex(AccessError, "You don't have enough access rights to run this action."):
+            self.action.with_user(self.user_demo).with_context(active_model="res.country").run()
+
     def test_60_sort(self):
         """ check the actions sorted by sequence """
         Actions = self.env['ir.actions.actions']

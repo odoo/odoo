@@ -1150,12 +1150,12 @@ class IrActionsServer(models.Model):
                  correctly without return action
         """
         res = False
-        for action in self.sudo():
-            eval_context = self._get_eval_context(action)
+        for action in self:
+            eval_context = self._get_eval_context(action.sudo())
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
             action._can_execute_action_on_records(records)
-            res = action._run(records, eval_context)
+            res = action.sudo()._run(records, eval_context)
         return res
 
     def _run(self, records, eval_context):
@@ -1193,31 +1193,32 @@ class IrActionsServer(models.Model):
 
     def _can_execute_action_on_records(self, records):
         self.ensure_one()
+        su_self = self.sudo()
 
-        action_groups = self.group_ids
+        action_groups = su_self.group_ids
         if action_groups:
             if not (action_groups & self.env.user.all_group_ids):
                 raise AccessError(_("You don't have enough access rights to run this action."))
         else:
-            model_name = self.model_id.model
+            model_name = su_self.model_id.model
             try:
                 self.env[model_name].check_access("write")
             except AccessError:
                 _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                    self.name, self.env.user.login, model_name,
+                    su_self.name, self.env.user.login, model_name,
                 )
-                raise
+                raise AccessError(_("You don't have enough access rights to run this action."))
 
-        if not self.group_ids and records.ids:
+        if not su_self.group_ids and records.ids:
             # check access rules on real records only; base automations of
             # type 'onchange' can run server actions on new records
             try:
                 records.check_access('write')
             except AccessError:
                 _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                    self.name, self.env.user.login, records,
+                    su_self.name, self.env.user.login, records,
                 )
-                raise
+                raise AccessError(_("You don't have enough access rights to run this action."))
 
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
