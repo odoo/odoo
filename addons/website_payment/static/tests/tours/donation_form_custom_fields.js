@@ -13,6 +13,11 @@ function addNewField() {
             run: "click",
         },
         {
+            content: "Select the 'Field' option",
+            trigger: "span.o-dropdown-item:contains('Field')",
+            run: "click",
+        },
+        {
             content: "Wait until the new field type options are displayed",
             trigger: "[data-label='Type'] button:contains('text')",
         },
