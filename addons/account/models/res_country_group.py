@@ -9,4 +9,4 @@ class ResCountryGroup(models.Model):
     exclude_state_ids = fields.Many2many(
         comodel_name='res.country.state',
         string="Fiscal Exceptions",
-        help="Those states are ignored by the fiscal positions")
+        help="States/provinces ignored by the fiscal positions")

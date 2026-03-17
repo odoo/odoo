@@ -25,7 +25,7 @@ export class Razorpay {
     handleRazorpayResponse(response) {
         if (response?.error) {
             this.payment_stopped
-                ? this.errorCallback(new RazorpayError("Transaction canceled due to inactivity"))
+                ? this.errorCallback(new RazorpayError("Transaction cancelled due to inactivity"))
                 : this.errorCallback(new RazorpayError(response.error));
             this.removePaymentHandler(["p2pRequestId"]);
             return false;

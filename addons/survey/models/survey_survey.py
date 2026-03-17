@@ -151,7 +151,7 @@ class SurveySurvey(models.Model):
     session_state = fields.Selection([
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
-        ], string="Session State", copy=False)
+        ], string="Session Status", copy=False)
     session_code = fields.Char('Session Code', copy=False, compute="_compute_session_code",
                                precompute=True, store=True, readonly=False,
         help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!")

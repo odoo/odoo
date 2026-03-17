@@ -127,7 +127,7 @@
                     || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value d-contents mb-3 mb-sm-0">
                     <label t-att-for="getUniqueDomID('default')" class="o_form_label align-self-center text-900">
-                        <t t-if="state.propertyDefinition.type === 'boolean'">Default State</t>
+                        <t t-if="state.propertyDefinition.type === 'boolean'">Default Status</t>
                         <t t-else="">Default Value</t>
                     </label>
                     <PropertyValue
@@ -174,7 +174,7 @@
                 <div t-elif="state.propertyDefinition.type === 'separator'" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <t t-set="separatorId" t-value="getUniqueDomID('separator')"/>
                     <label t-att-for="separatorId" class="o_form_label align-self-center text-900">
-                        Default State
+                        Default Status
                     </label>
                     <div class="o_field_property_definition_fold text-nowrap d-inline-flex w-100 align-items-baseline">
                         <label class="form-check o_radio_item p-0">

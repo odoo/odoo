@@ -102,8 +102,8 @@ export class PaymentMercadoPago extends PaymentInterface {
         if ("error" in canceling_status) {
             const message =
                 canceling_status.status === 409
-                    ? _t("Payment has to be canceled on terminal")
-                    : _t("Payment not found (canceled/finished on terminal)");
+                    ? _t("Payment has to be cancelled on the terminal")
+                    : _t("Payment not found (cancelled/finished on the terminal)");
             this._showMsg(message, "info");
             return canceling_status.status !== 409;
         }
@@ -126,7 +126,7 @@ export class PaymentMercadoPago extends PaymentInterface {
 
         const handleFinishedPayment = async (paymentIntent) => {
             if (paymentIntent.state === "CANCELED") {
-                return showMessageAndResolve(_t("Payment has been canceled"), "info", false);
+                return showMessageAndResolve(_t("Payment has been cancelled"), "info", false);
             }
             if (["FINISHED", "PROCESSED"].includes(paymentIntent.state)) {
                 const payment = await this.getPayment(paymentIntent.payment.id);

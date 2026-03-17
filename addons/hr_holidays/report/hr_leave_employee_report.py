@@ -30,7 +30,7 @@ class HrLeaveEmployeeReport(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved'),
         ('cancel', 'Cancelled'),
-    ])
+    ], string="Status")
     color = fields.Integer(string="Color", related='work_entry_type_id.color')
 
     @property

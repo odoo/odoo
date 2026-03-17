@@ -107,7 +107,7 @@ class MailActivity(models.Model):
         ('overdue', 'Overdue'),
         ('today', 'Today'),
         ('planned', 'Planned'),
-        ('done', 'Done')], 'State',
+        ('done', 'Done')], string='Status',
         compute='_compute_state')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
     # access

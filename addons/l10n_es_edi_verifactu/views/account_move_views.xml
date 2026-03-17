@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account.view_account_move_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='status']" position="inside">
-                    <filter string="Veri*Factu State"
+                    <filter string="Veri*Factu Status"
                             name="l10n_es_edi_verifactu_state"
                             context="{'group_by': 'l10n_es_edi_verifactu_state'}"/>
                 </xpath>
@@ -21,7 +21,7 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='status']" position="inside">
-                    <filter string="Veri*Factu State"
+                    <filter string="Veri*Factu Status"
                             name="l10n_es_edi_verifactu_state"
                             context="{'group_by': 'l10n_es_edi_verifactu_state'}"/>
                 </xpath>

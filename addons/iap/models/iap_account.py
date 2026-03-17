@@ -49,7 +49,7 @@ class IapAccount(models.Model):
         help="Once you have this many credits or less, the system will automatically notify the following recipients by email. Set to 0 to disable email warnings.",
     )
     warning_user_ids = fields.Many2many('res.users', string="Email Alert Recipients")
-    state = fields.Selection([('banned', 'Banned'), ('registered', "Registered"), ('unregistered', "Unregistered")], readonly=True)
+    state = fields.Selection([('banned', 'Banned'), ('registered', "Registered"), ('unregistered', "Unregistered")], string="Status", readonly=True)
 
     # Auto-refill
     auto_refill_threshold = fields.Float(

@@ -372,7 +372,7 @@ class PaymentTransaction(models.Model):
         payment_state = payment_data.get("resultCode")
         refusal_reason = payment_data.get("refusalReason") or payment_data.get("reason")
         if not payment_state:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(_("Received data with missing payment status."))
         elif payment_state in const.RESULT_CODES_MAPPING["pending"]:
             self._set_pending()
         elif payment_state in const.RESULT_CODES_MAPPING["done"]:

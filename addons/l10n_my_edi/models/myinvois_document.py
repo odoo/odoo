@@ -13,7 +13,7 @@ from lxml import etree
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config, date_utils, split_every
+from odoo.tools import config, date_utils, format_list, split_every
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.account.tools import dict_to_xml
@@ -86,8 +86,8 @@ class MyInvoisDocument(models.Model):
     )
     # Odoo Implementation fields
     myinvois_state = fields.Selection(
-        string='MyInvois State',
-        help='State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.',
+        string='MyInvois Status',
+        help='Status of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.',
         selection=[
             ('in_progress', 'Validation In Progress'),
             ('valid', 'Valid'),
@@ -340,7 +340,10 @@ class MyInvoisDocument(models.Model):
         # Documents linked to an invoice, and whose invoice is cancelled or draft, shouldn't be sent.
         invalid_documents = documents.filtered(lambda d: d.invoice_ids and any(invoice.state in ('draft', 'cancel') for invoice in d.invoice_ids))
         if invalid_documents and allow_raising:
-            raise UserError(self.env._('You cannot send this document to MyInvois because the related invoice(s) %s are in draft or canceled state.', ','.join(invalid_documents.mapped('name'))))
+            raise UserError(self.env._(
+                "You cannot send this document to MyInvois because the related invoice(s) (%s) have a status of 'Draft' or 'Cancelled'.",
+                format_list(self.env, invalid_documents.mapped('name')),
+            ))
 
         # Required for the file, this is the exact date at which the consolidated invoice was sent to MyInvois.
         documents.filtered(lambda d: not d.myinvois_issuance_date).myinvois_issuance_date = fields.Date.context_today(documents)
@@ -560,7 +563,7 @@ class MyInvoisDocument(models.Model):
             ),
             # You cannot cancel an invoice that has been rejected or that is invalid
             "update_incorrect_state": self.env._(
-                "You can only update the status of invoices in the valid state.",
+                "You can only update the status of invoices with a status of 'Valid'.",
             ),
             "update_period_over": self.env._(
                 "It has been more than 72h since the invoice validation, you can no longer update it.\n"
@@ -1182,7 +1185,7 @@ class MyInvoisDocument(models.Model):
             raise UserError(self.env._('It has been more than 72h since the document validation, you can no longer cancel it.\n'
                                        'Instead, you should issue a debit or credit note.'))
         if self.myinvois_state not in ['valid', 'rejected']:
-            raise UserError(self.env._('You can only change the state of a document in the valid or rejected states.'))
+            raise UserError(self.env._("You can only change the status of a document that has a status of 'Valid' or 'Rejected'."))
 
     def _action_myinvois_update_document(self, new_status='cancelled'):
         """

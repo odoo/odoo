@@ -281,7 +281,7 @@ class MaintenanceRequest(models.Model):
         ('approved', 'Approved'),
         ('done', 'Done'),
         ('cancelled', 'Cancelled'),
-    ], string='State', required=True, default='normal', tracking=True, copy=False)
+    ], string='Status', required=True, default='normal', tracking=True, copy=False)
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     schedule_end = fields.Datetime(

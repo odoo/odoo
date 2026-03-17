@@ -283,7 +283,7 @@ class AccountMove(models.Model):
             100: ('sent', self.env._("KSeF Status: Invoice accepted for further processing (Code: 100).")),
             150: ('sent', self.env._("KSeF Status: Processing in progress (Code: 150).")),
             200: ('accepted', self.env._("KSeF Status: Success (Code: 200). Invoice accepted.")),
-            405: ('rejected', self.env._("KSeF Status: Rejected (Code: 405). Processing canceled.")),
+            405: ('rejected', self.env._("KSeF Status: Rejected (Code: 405). Processing cancelled.")),
             410: ('rejected', self.env._("KSeF Status: Rejected (Code: 410). Incorrect scope of permissions.")),
             415: ('rejected', self.env._("KSeF Status: Rejected (Code: 415). It is not possible to send an invoice with an attachment.")),
             430: ('rejected', self.env._("KSeF Status: Rejected (Code: 430). Invoice file verification error.")),

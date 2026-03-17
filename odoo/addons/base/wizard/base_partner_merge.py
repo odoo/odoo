@@ -60,7 +60,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         ('option', 'Option'),
         ('selection', 'Selection'),
         ('finished', 'Finished')
-    ], readonly=True, required=True, string='State', default='option')
+    ], readonly=True, required=True, string='Status', default='option')
 
     number_group = fields.Integer('Group of Contacts', readonly=True)
     current_line_id = fields.Many2one('base.partner.merge.line', string='Current Line')

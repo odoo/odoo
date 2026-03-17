@@ -57,7 +57,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_it_edi_state = fields.Selection(
-        string="SDI State",
+        string="SDI Status",
         selection=[
             ('being_sent', 'Being Sent To SdI'),
             ('requires_user_signature', 'Requires user signature'),  # TODO: remove in master

@@ -28,8 +28,8 @@ class AccountMove(models.Model):
         export_string_translation=False,
     )
     l10n_my_edi_state = fields.Selection(
-        string='MyInvois State',
-        help='State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.',
+        string='MyInvois Status',
+        help='Status of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.',
         selection=[
             ('in_progress', 'Validation In Progress'),
             ('valid', 'Valid'),
@@ -226,7 +226,7 @@ class AccountMove(models.Model):
             except UserError as e:
                 move.with_context(no_new_invoice=True).message_post(
                     body=self.env._(
-                        'The invoice has been canceled on MyInvois, '
+                        'The invoice has been cancelled on MyInvois, '
                         'But the cancellation in Odoo failed with error: %(error)s\n'
                         'Please resolve the problem manually, and then cancel the invoice.',
                         error=e,

@@ -390,8 +390,8 @@ class SaleOrder(models.Model):
     )
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
-        help="Sum of transactions made in through the online payment form that are in the state"
-        " 'done' or 'authorized' and linked to this order.",
+        help="Sum of transactions made through the online payment form that have the status"
+        " 'done' or 'authorized' and are linked to this order.",
         compute="_compute_amount_paid",
         compute_sudo=True,
     )
@@ -1504,7 +1504,7 @@ class SaleOrder(models.Model):
         """Return whether order can be confirmed or not if not then returm error message."""
         self.ensure_one()
         if self.state not in {"draft", "sent"}:
-            return _("Some orders are not in a state requiring confirmation.")
+            return _("Some orders do not have a status requiring confirmation.")
         if any(
             not line.display_type and not line.is_downpayment and not line.product_id
             for line in self.order_line
@@ -1619,7 +1619,7 @@ class SaleOrder(models.Model):
             orders_name = ", ".join(draft_orders.mapped("name"))
             raise UserError(
                 self.env._(
-                    "Cannot close %(orders_name)s: must be in 'Sales Order' state.",
+                    "Cannot close %(orders_name)s: must have a status of 'Sales Order'.",
                     orders_name=orders_name,
                 )
             )

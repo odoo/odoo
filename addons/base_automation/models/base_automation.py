@@ -168,7 +168,7 @@ class BaseAutomation(models.Model):
             ('on_stage_set', "Stage is set to"),
             ('on_user_set', "User is set"),
             ('on_tag_set', "Tag is added"),
-            ('on_state_set', "State is set to"),
+            ('on_state_set', "Status is set to"),
             ('on_priority_set', "Priority is set to"),
             ('on_archive', "On archived"),
             ('on_unarchive', "On unarchived"),

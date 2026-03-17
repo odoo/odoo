@@ -72,7 +72,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             ('accepted', "Accepted"),
             ('rejected', "Rejected"),
         ],
-        string="status",
+        string="Status",
         default='to_send',
         copy=False,
         readonly=True,

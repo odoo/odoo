@@ -53,7 +53,7 @@ class AccountMove(models.Model):
             ('cancel_pending', 'Cancellation request pending'),
             ('cancelled', 'Cancelled'),
         ],
-        string='NAV 3.0 status',
+        string='NAV 3.0 Status',
         copy=False,
         index='btree_not_null',
     )

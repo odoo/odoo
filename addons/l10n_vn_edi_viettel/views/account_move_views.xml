@@ -44,7 +44,7 @@
             <filter name="late" position="after">
                 <separator/>
                 <field name="l10n_vn_edi_invoice_state"/>
-                <filter string="Need payment state update" name="pay_state_to_update" domain="[('l10n_vn_edi_invoice_state', '=', 'payment_state_to_update')]"/>
+                <filter string="Need payment status update" name="pay_state_to_update" domain="[('l10n_vn_edi_invoice_state', '=', 'payment_state_to_update')]"/>
             </filter>
         </field>
     </record>
@@ -84,7 +84,7 @@
         <field name="binding_view_types">form</field>
         <field name="state">code</field>
         <field name="code">
-            for record in records:    
+            for record in records:
                 record.l10n_vn_edi_fetch_files_with_tax_code()
         </field>
     </record>

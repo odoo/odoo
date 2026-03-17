@@ -978,7 +978,7 @@ class CustomerPortal(Controller):
             raise UserError(_("The attachment does not exist or you do not have the rights to access it."))
 
         if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:
-            raise UserError(_("The attachment %s cannot be removed because it is not in a pending state.", attachment_sudo.name))
+            raise UserError(_("The attachment %s cannot be removed because it does not have a pending status.", attachment_sudo.name))
 
         if attachment_sudo.env['mail.message'].search_count([('attachment_ids', 'in', attachment_sudo.ids)], limit=1):
             raise UserError(_("The attachment %s cannot be removed because it is linked to a message.", attachment_sudo.name))

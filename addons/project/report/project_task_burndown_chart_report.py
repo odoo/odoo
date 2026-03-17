@@ -26,7 +26,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         ('03_approved', 'Approved'),
         ('1_canceled', 'Cancelled'),
         ('02_changes_requested', 'Changes Requested'),
-    ], string='State', readonly=True)
+    ], string='Status', readonly=True)
     is_closed = fields.Selection([('closed', 'Closed tasks'), ('open', 'Open tasks')], string="Closing Stage", readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)

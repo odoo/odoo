@@ -70,7 +70,7 @@
                             <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="state.stateId" t-att-disabled="this.partnerIsSelected">
                                 <option value="">
                                     <t t-if="this.partnerIsSelected">*************</t>
-                                    <t t-else="">Select a state</t>
+                                    <t t-else="">Select a state/province</t>
                                 </option>
                                 <t t-foreach="availableState" t-as="state" t-key="state.id">
                                     <option t-att-value="state.id" t-out="state.name" />

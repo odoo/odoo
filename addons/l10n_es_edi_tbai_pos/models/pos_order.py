@@ -10,7 +10,7 @@ class PosOrder(models.Model):
             ('to_send', 'To Send'),
             ('sent', 'Sent'),
         ],
-        string='TicketBAI status',
+        string='TicketBAI Status',
         compute='_compute_l10n_es_tbai_state',
     )
     l10n_es_tbai_chain_index = fields.Integer(

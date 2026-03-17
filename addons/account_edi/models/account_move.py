@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
-import zipfile
-from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import format_list
 
 
 class AccountMove(models.Model):
@@ -20,10 +17,10 @@ class AccountMove(models.Model):
         string="Electronic invoicing",
         store=True,
         compute='_compute_edi_state',
-        help='The aggregated state of all the EDIs with web-service of this move')
+        help='The aggregated status of all the EDIs with web-service for this invoice')
     edi_error_count = fields.Integer(
         compute='_compute_edi_error_count',
-        help='How many EDIs are in error for this move?')
+        help='Number of EDIs in error for this invoice')
     edi_blocking_level = fields.Selection(
         selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')],
         compute='_compute_edi_error_message')
@@ -269,7 +266,10 @@ class AccountMove(models.Model):
         """
         for move in self:
             to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
-            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
+            move.message_post(body=_(
+                "This invoice was cancelled while the EDIs %(document_names)s still had a pending cancellation request.",
+                document_names=format_list(move.env, to_cancel_edi_documents.mapped('edi_format_id.name')),
+            ))
         self.button_cancel()
 
     def button_cancel(self):

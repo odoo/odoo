@@ -608,7 +608,7 @@ class IrActionsServer(models.Model):
              "- 'Execute Code': a block of Python code that will be executed\n"
              "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
              "- 'Multi Actions': define an action that triggers several other server actions\n")
-    allowed_states = fields.Json(string='Allowed states', compute="_compute_allowed_states")
+    allowed_states = fields.Json(string='Allowed types', compute="_compute_allowed_states")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "

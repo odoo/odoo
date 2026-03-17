@@ -25,7 +25,7 @@ class PurchaseBillLineMatch(models.Model):
     account_move_id = fields.Many2one(comodel_name='account.move', readonly=True)
     line_amount_untaxed = fields.Monetary(readonly=True)
     currency_id = fields.Many2one(comodel_name='res.currency', readonly=True)
-    state = fields.Char(readonly=True)
+    state = fields.Char(string="Status", readonly=True)
 
     product_uom_id = fields.Many2one(comodel_name='uom.uom', related='product_id.uom_id')
     product_uom_qty = fields.Float(compute='_compute_product_uom_qty', inverse='_inverse_product_uom_qty', readonly=False)

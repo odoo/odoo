@@ -33,7 +33,7 @@ class BaseLanguageExport(models.TransientModel):
     domain = fields.Char(string="Model Domain", default='[]')
     data = fields.Binary('File', readonly=True, attachment=False)
     state = fields.Selection([('choose', 'choose'), ('get', 'get')],  # choose language or get the file
-                             default='choose')
+                             string="Mode", default='choose')
 
     def act_getfile(self):
         self.ensure_one()

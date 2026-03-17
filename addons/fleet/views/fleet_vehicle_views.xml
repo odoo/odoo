@@ -184,7 +184,7 @@
         <field name="name">fleet.vehicle.list</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <list string="Vehicle" 
+            <list string="Vehicle"
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
@@ -491,7 +491,7 @@
         <field name="name">fleet.vehicle.state.list</field>
         <field name="model">fleet.vehicle.state</field>
         <field name="arch" type="xml">
-            <list string="State" editable="bottom">
+            <list string="State/Province" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name" />
                 <field name="fold"/>

@@ -26,7 +26,7 @@ class ResPartner(models.Model):
             ('not_valid', 'Not on Nemhandel'),  # Is not on Nemhandel
             ('valid', 'Valid'),
         ],
-        string='Nemhandel endpoint verification',
+        string='Nemhandel Endpoint Verification',
         company_dependent=True,
     )
 

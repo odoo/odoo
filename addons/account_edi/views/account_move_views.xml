@@ -74,7 +74,7 @@
                     <filter string="Electronic invoicing state" name="edi_state" groups="base.group_no_one"
                             context="{'group_by': 'edi_state'}"/>
                     <separator/>
-                    <filter string="Electronic invoicing processing needed" name="edi_to_process" groups="base.group_no_one" 
+                    <filter string="Electronic invoicing processing needed" name="edi_to_process" groups="base.group_no_one"
                             domain="[('edi_state', 'in', [('to_send'), ('to_cancel')])]"/>
                 </xpath>
             </field>
@@ -119,7 +119,7 @@
                                 string="Force Cancel"
                                 type="object"
                                 groups="account.group_account_invoice"
-                                confirm="Are you sure you want to cancel this invoice without waiting for the EDI document to be canceled?"
+                                confirm="Are you sure you want to cancel this invoice without waiting for the EDI document to be cancelled?"
                                 invisible="not edi_show_force_cancel_button" />
                             <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
                             <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />

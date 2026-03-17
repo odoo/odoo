@@ -785,7 +785,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <select name="state_id" class="form-select state_id">
-                                                    <option>States...</option>
+                                                    <option>States/Provinces...</option>
                                                     <t t-foreach="states or []" t-as="state">
                                                         <option class="state" t-att-value="state.id" t-att-country="state.country_id.id" t-att-selected="state.id == opportunity.state_id.id">
                                                             <t t-out="state.name"/>

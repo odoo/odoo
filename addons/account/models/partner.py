@@ -72,10 +72,10 @@ class AccountFiscalPosition(models.Model):
     is_domestic = fields.Boolean(compute='_compute_is_domestic', store=True)
     country_group_id = fields.Many2one('res.country.group', string='Country Group', inverse='_inverse_foreign_vat',
         help="Apply only if delivery country matches the group.")
-    state_ids = fields.Many2many('res.country.state', string='Federal States')
+    state_ids = fields.Many2many('res.country.state', string='States/Provinces')
     zip_from = fields.Char(string='Zip Range From')
     zip_to = fields.Char(string='Zip Range To')
-    # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
+    # To be used in hiding the 'States/Provinces' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
     foreign_vat = fields.Char(string="Foreign Tax ID", inverse="_inverse_foreign_vat", help="The tax ID of your company in the region mapped by this fiscal position.")
 
@@ -138,7 +138,7 @@ class AccountFiscalPosition(models.Model):
                 if record.country_id == record.company_id.account_fiscal_country_id:
                     if not record.state_ids:
                         if record.company_id.account_fiscal_country_id.state_ids:
-                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
+                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state/province."))
                 if record.country_group_id and record.country_id:
                     if record.country_id not in record.country_group_id.country_ids:
                         raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))

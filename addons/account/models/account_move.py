@@ -3852,7 +3852,7 @@ class AccountMove(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         if any('state' in vals and vals.get('state') == 'posted' for vals in vals_list):
-            raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
+            raise UserError(_("You cannot create a journal entry with a status of 'Posted'. Please create a draft entry first, then post it."))
         self._check_user_access(vals_list)
         container = {'records': self}
         with self._check_balanced(container):

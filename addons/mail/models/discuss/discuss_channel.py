@@ -512,7 +512,7 @@ class DiscussChannel(models.Model):
         ):
             raise UserError(
                 self.env._(
-                    "You do not have the rights to change the read-only state of: %(channels)s.",
+                    "You do not have the rights to change the read-only status of: %(channels)s.",
                     channels=failing_channels.mapped("display_name"),
                 ),
             )
@@ -541,7 +541,7 @@ class DiscussChannel(models.Model):
                 ):
                     raise UserError(
                         self.env._(
-                            "Cannot change the active state of the following channels: %(channels)s. "
+                            "Cannot (un)archive the following channels: %(channels)s. "
                             "You must be the owner or a system administrator to change it.",
                             channels=", ".join(failing_channels.mapped("name")),
                         )

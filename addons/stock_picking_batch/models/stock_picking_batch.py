@@ -44,7 +44,7 @@ class StockPickingBatch(models.Model):
         ('in_progress', 'In progress'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
-        store=True, compute='_compute_state',
+        string="Status", store=True, compute='_compute_state',
         copy=False, tracking=True, required=True, readonly=True, index=True)
     priority = fields.Selection(PROCUREMENT_PRIORITIES, string='Priority', default='0')
     picking_type_id = fields.Many2one(
@@ -340,7 +340,7 @@ class StockPickingBatch(models.Model):
         if len(set(self.mapped('is_wave'))) > 1:
             raise UserError(_('Batch transfers cannot be merged with wave transfers and vice versa.'))
         if len(set(self.mapped('state'))) > 1:
-            raise UserError(_('Batch/Wave transfers with different states cannot be merged.'))
+            raise UserError(_('Batch/Wave transfers with different statuses cannot be merged.'))
         if self[0].state in ['done', 'cancel']:
             raise UserError(_('You cannot merge done or cancelled batch/wave transfers.'))
 
@@ -431,7 +431,7 @@ class StockPickingBatch(models.Model):
                 erroneous_pickings = batch.picking_ids - batch.allowed_picking_ids
                 raise UserError(_(
                     "The following transfers cannot be added to batch transfer %(batch)s. "
-                    "Please check their states and operation types.\n\n"
+                    "Please check their statuses and operation types.\n\n"
                     "Incompatibilities: %(incompatible_transfers)s",
                     batch=batch.name,
                     incompatible_transfers=erroneous_pickings.mapped('name')))

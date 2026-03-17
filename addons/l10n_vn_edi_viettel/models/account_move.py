@@ -44,7 +44,7 @@ class AccountMove(models.Model):
             ('sent', 'Sent'),
             # Set when we write on the payment status
             ('payment_state_to_update', 'Payment status to update'),
-            ('canceled', 'Canceled'),
+            ('canceled', 'Cancelled'),
             ('adjusted', 'Adjusted'),
             ('replaced', 'Replaced'),
         ],
@@ -569,11 +569,11 @@ class AccountMove(models.Model):
             self.button_cancel()
 
             self.message_post(
-                body=_('The invoice has been canceled for reason: %(reason)s', reason=reason),
+                body=_('The invoice has been cancelled for reason: %(reason)s', reason=reason),
             )
         except UserError as e:
             self.message_post(
-                body=_('The invoice has been canceled on sinvoice for reason: %(reason)s'
+                body=_('The invoice has been cancelled in SInvoice for reason: %(reason)s'
                        'But the cancellation in Odoo failed with error: %(error)s', reason=reason, error=e),
             )
 

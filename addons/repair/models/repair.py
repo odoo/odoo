@@ -157,7 +157,7 @@ class RepairOrder(models.Model):
     parts_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
-        ('late', 'Late')], compute='_compute_parts_availability')
+        ('late', 'Late')], string="Parts Availability Status", compute='_compute_parts_availability')
     is_parts_available = fields.Boolean(
         'All Parts are available',
         default=False, store=True, compute='_compute_availability_boolean')

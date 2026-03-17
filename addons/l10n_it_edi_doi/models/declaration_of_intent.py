@@ -17,12 +17,12 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
          ('revoked', 'Revoked'),
          ('terminated', 'Terminated'),
         ],
-        string="State",
+        string="Status",
         tracking=True,
         default='draft',
         required=True,
         readonly=True,
-        help="The state of this Declaration of Intent. \n"
+        help="The status of this Declaration of Intent. \n"
         "- 'Draft' means that the Declaration of Intent still needs to be confirmed before being usable. \n"
         "- 'Active' means that the Declaration of Intent is usable. \n"
         "- 'Terminated' designates that the Declaration of Intent has been marked as not to use anymore without invalidating usages of it. \n"

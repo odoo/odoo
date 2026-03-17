@@ -521,7 +521,7 @@ class Picking(models.Model):
 
                 missing_field_names = []
                 if not partner.state_id:
-                    missing_field_names.append(_("State"))
+                    missing_field_names.append(_("State/Province"))
                 if not partner.city:
                     missing_field_names.append(_("City"))
                 if not partner.street:

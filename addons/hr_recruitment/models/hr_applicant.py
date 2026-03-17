@@ -129,7 +129,7 @@ class HrApplicant(models.Model):
         ('normal', 'In Progress'),
         ('done', 'Ready'),
         ('waiting', 'Waiting'),
-        ('blocked', 'Blocked')], string='Kanban State',
+        ('blocked', 'Blocked')], string='Kanban Status',
         copy=False, default='normal', required=True)
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
     meeting_ids = fields.One2many('calendar.event', 'applicant_id', 'Meetings')

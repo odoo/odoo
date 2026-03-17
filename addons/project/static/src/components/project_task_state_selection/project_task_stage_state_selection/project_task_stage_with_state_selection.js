@@ -41,7 +41,7 @@ export const taskStageWithStateSelection = {
     component: TaskStageWithStateSelection,
     supportedOptions: [
         {
-            label: _t("State readonly"),
+            label: _t("Status readonly"),
             name: "state_readonly",
             type: "boolean",
             default: true,

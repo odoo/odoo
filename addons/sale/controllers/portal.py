@@ -354,7 +354,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return {"error": _("Invalid order.")}
 
         if not order_sudo._has_to_be_signed():
-            return {"error": _("The order is not in a state requiring customer signature.")}
+            return {"error": _("The order does not have a status requiring customer signature.")}
         if not signature:
             return {"error": _("Signature is missing.")}
 

@@ -421,7 +421,7 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
-            raise UserError(_("Changing the product is only allowed in 'Draft' state."))
+            raise UserError(_("Changing the product is only allowed when in a 'Draft' status."))
 
         if ('lot_id' in vals or 'quant_id' in vals) and len(self.product_id) > 1:
             raise UserError(_("Changing the Lot/Serial number for move lines with different products is not allowed."))

@@ -19,9 +19,9 @@
                         invisible="context.get('default_job_id') or not context.get('default_talent_pool_ids')"
                         type="object"
                     />
-                    <button type="object" 
-                        name="archive_applicant" 
-                        string="Refuse" class="btn btn-secondary" 
+                    <button type="object"
+                        name="archive_applicant"
+                        string="Refuse" class="btn btn-secondary"
                         invisible="context.get('default_talent_pool_ids', False)"
                     />
                 </header>
@@ -34,7 +34,7 @@
                 <field name="partner_phone" widget="phone" readonly="1" optional="show"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="stage_id" widget="rotting" optional="hide" column_invisible="context.get('default_talent_pool_ids')" options="{'no_open': True}"/>
-                <field name="kanban_state" widget="state_selection" string="State" optional="hide"/> 
+                <field name="kanban_state" widget="state_selection" string="State/Province" optional="hide"/>
                 <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="show"/>
                 <field name="recruiter_id" widget="many2one_avatar_employee" optional="show"/>
@@ -372,7 +372,7 @@
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1" 
+            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1"
                 js_class="rotting_kanban">
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="date_closed"/>

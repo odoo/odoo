@@ -61,7 +61,7 @@ class SaleReport(models.Model):
     )
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
     state_id = fields.Many2one(
-        comodel_name="res.country.state", string="Customer State", readonly=True
+        comodel_name="res.country.state", string="Customer State/Province", readonly=True
     )
     partner_tag_ids = fields.Many2many(
         string="Customer Tags", related="partner_id.category_id", readonly=True

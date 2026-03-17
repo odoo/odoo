@@ -39,9 +39,9 @@ class ProjectTaskType(models.Model):
         string='Rating Email Template',
         domain=[('model', '=', 'project.task')])
     auto_validation_state = fields.Boolean('Automatic Kanban Status', default=False,
-        help="Automatically modify the state when the customer replies to the feedback for this stage.\n"
-            " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
-            " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
+        help="Automatically modify the status when the customer replies to the feedback for this stage.\n"
+            " * Good feedback from the customer will update the status to 'Approved' (green bullet).\n"
+            " * Neutral or bad feedback will set the kanban status to 'Changes Requested' (orange bullet).\n")
     rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before tasks in this stage become stale. Set to 0 to disable \
         Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
 

@@ -34,7 +34,7 @@ class ResPartner(models.Model):
             required_fields = {
                 _("Street"): record.street,
                 _("City"): record.city,
-                _("State"): record.state_id,
+                _("State/Province"): record.state_id,
                 _("Country"): record.country_id,
             }
 

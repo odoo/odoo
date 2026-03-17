@@ -314,7 +314,7 @@ class PosOrder(models.Model):
         return moves._get_price_unit()
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
+    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed status of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Employee',
