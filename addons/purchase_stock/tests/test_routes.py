@@ -68,3 +68,42 @@ class TestRoutes(TransactionCase):
         wh.reception_steps = 'two_steps'
         self.assertEqual(wh.reception_steps, 'two_steps')
 
+    def test_po_final_location(self):
+        """
+        When confirming PO with Operation Type is a sublocation, computation
+        of the final location should take that into account so as to not
+        interfere with forecasted quantity.
+        """
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        sub_location = self.env['stock.location'].create({
+            'name': 'test sub location',
+            'location_id': warehouse.lot_stock_id.id,
+        })
+
+        warehouse.in_type_id.default_location_dest_id = sub_location
+
+        product = self.env['product.product'].create({
+            'name': 'test product',
+            'is_storable': True,
+        })
+
+        partner = self.env['res.partner'].create({'name': 'test vendor'})
+
+        po = self.env['purchase.order'].create({
+            'partner_id': partner.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 10.0,
+                'price_unit': 20.0,
+            })],
+        })
+        po.button_confirm()
+
+        move = po.picking_ids.move_ids
+        self.assertEqual(move.location_dest_id, sub_location, "destination on move should be the sub-location")
+        self.assertEqual(move.location_final_id, sub_location, "location_final_id should be the sub-location")
+
+        forecast = product.with_context(location=sub_location.id).virtual_available
+        self.assertEqual(forecast, 10.0, "forecasted quantity should increment to 10.0 units")
