@@ -542,6 +542,7 @@ class AccountEdiCommon(models.AbstractModel):
         logs = []
         xpaths = self._get_document_allowance_charge_xpaths()
         line_vals = []
+        tax_cache = {}
         for allow_el in tree.iterfind(xpaths['root']):
             name = allow_el.findtext(xpaths['reason']) or ""
             # Charge indicator factor: -1 for discount, 1 for charge
@@ -560,12 +561,17 @@ class AccountEdiCommon(models.AbstractModel):
             tax_ids = []
             for tax_percent_node in allow_el.iterfind(xpaths['tax_percentage']):
                 tax_amount = float(tax_percent_node.text)
-                tax = self.env['account.tax'].search([
-                    *self.env['account.tax']._check_company_domain(record.company_id),
-                    ('amount', '=', tax_amount),
-                    ('amount_type', '=', 'percent'),
-                    ('type_tax_use', '=', tax_type),
-                ], limit=1)
+                if (tax_type, tax_amount) in tax_cache:
+                    tax = tax_cache[tax_type, tax_amount]
+                else:
+                    tax = self.env['account.tax'].search([
+                        *self.env['account.tax']._check_company_domain(record.company_id),
+                        ('amount', '=', tax_amount),
+                        ('amount_type', '=', 'percent'),
+                        ('type_tax_use', '=', tax_type),
+                    ], limit=1)
+                    if tax:
+                        tax_cache[tax_type, tax_amount] = tax
                 if tax:
                     tax_ids += tax.ids
                 elif name:
@@ -652,13 +658,19 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
         logs = []
         lines_values = []
+        tax_cache = {}
+        product_cache = {}
         for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
+            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(
+                tree=line_tree,
+                document_type=invoice.move_type,
+                qty_factor=qty_factor,
+                product_cache=product_cache,
+            )
             if line_values is None:
                 continue
-
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(
-                invoice, line_values, invoice.journal_id.type,
+                record=invoice, line_values=line_values, tax_type=invoice.journal_id.type, tax_cache=tax_cache,
             )
             logs += tax_logs
             if not line_values['product_uom_id']:
@@ -667,7 +679,7 @@ class AccountEdiCommon(models.AbstractModel):
             lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
         return lines_values, logs
 
-    def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
+    def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1, product_cache=None):
         # Start and End date (enterprise fields)
         xpath_dict = self._get_invoice_line_xpaths(document_type, qty_factor)
         deferred_values = {}
@@ -682,8 +694,7 @@ class AccountEdiCommon(models.AbstractModel):
                 'deferred_start_date': start_date,
                 'deferred_end_date': end_date,
             }
-
-        line_vals = self._retrieve_line_vals(tree, document_type, qty_factor)
+        line_vals = self._retrieve_line_vals(tree, document_type, qty_factor, product_cache)
         if not line_vals.get('price_subtotal'):
             return None
 
@@ -726,7 +737,7 @@ class AccountEdiCommon(models.AbstractModel):
                 discount_amount += amount
         return discount_amount, charges
 
-    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1, product_cache=None):
         """
         Read the xml invoice, extract the invoice line values, compute the odoo values
         to fill an invoice line form: quantity, price_unit, discount, product_uom_id.
@@ -783,9 +794,15 @@ class AccountEdiCommon(models.AbstractModel):
             net_price_unit = float(net_price_unit_node.text)
 
         # delivered_qty (mandatory)
+        if product_cache is None:
+            product_cache = {}
         delivered_qty = 1
         product_vals = {k: self._find_value(v, tree) for k, v in xpath_dict['product'].items()}
-        product = self._import_product(**product_vals)
+        product_cache_key = tuple(sorted(product_vals.items()))
+        product = product_cache.get(product_cache_key)
+        if product is None:
+            product = self._import_product(**product_vals)
+            product_cache[product_cache_key] = product
         product_uom = self.env['uom.uom']
         quantity_node = tree.find(xpath_dict['delivered_qty'])
         if quantity_node is not None:
@@ -888,7 +905,7 @@ class AccountEdiCommon(models.AbstractModel):
                     return tax
         return self.env['account.tax']
 
-    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False):
+    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False, tax_cache=None):
         """
         Retrieve the taxes on the document line at import.
 
@@ -897,10 +914,18 @@ class AccountEdiCommon(models.AbstractModel):
         """
         # Taxes: all amounts are tax excluded, so first try to fetch price_include=False taxes,
         # if no results, try to fetch the price_include=True taxes. If results, need to adapt the price_unit.
+        if tax_cache is None:
+            tax_cache = {}
         logs = []
         taxes = []
         for tax_node in line_values.pop('tax_nodes'):
             amount = float(tax_node.text)
+            if (tax_type, amount) in tax_cache:
+                tax = tax_cache[tax_type, amount]
+                taxes.append(tax.id)
+                if tax.price_include:
+                    line_values['price_unit'] *= (1 + tax.amount / 100)
+                continue
             domain = [
                 *self.env['account.journal']._check_company_domain(record.company_id),
                 ('amount_type', '=', 'percent'),
@@ -933,6 +958,7 @@ class AccountEdiCommon(models.AbstractModel):
                     line=line_values['name']),
                 )
             else:
+                tax_cache[tax_type, amount] = tax
                 taxes.append(tax.id)
                 if tax.price_include:
                     line_values['price_unit'] *= (1 + tax.amount / 100)
