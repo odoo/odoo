@@ -102,7 +102,14 @@ class RecurrenceRule(models.Model):
         super()._write_from_microsoft(microsoft_event, vals)
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
         # Edge case:  if the base event was deleted manually in 'self_only' update, skip applying recurrence.
-        if self._has_base_event_time_fields_changed(new_event_values) and (new_event_values['start'] >= self.base_event_id.start):
+        # Also skip when the base event is an exception (follow_recurrence=False), because its
+        # modified time will differ from the seriesMaster pattern without the master having changed,
+        # and entering the destructive path would clear all Microsoft IDs
+        if (
+            self._has_base_event_time_fields_changed(new_event_values) and
+            (new_event_values['start'] >= self.base_event_id.start) and
+            self.base_event_id.follow_recurrence
+        ):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
             # We archive the old events to recompute the recurrence. These events are already deleted on Microsoft side.
