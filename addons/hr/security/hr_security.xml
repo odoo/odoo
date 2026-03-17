@@ -59,6 +59,30 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
+    <!-- Bypass base.res_partner_rule_write_self -->
+    <record id="res_partner_rule_write_self" model="ir.rule">
+        <field name="name">HR: Allow HR officers to edit partners linked to employees</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain_force">[('employee_ids', '!=', False)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Bypass base.res_users_rule_write_self -->
+    <record id="res_users_rule_write_self" model="ir.rule">
+        <field name="name">HR: Allow HR officers to edit users linked to employees</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="domain_force">[('employee_ids', '!=', False)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="ir_rule_res_partner_bank_internal_users" model="ir.rule">
         <field name="name">HR: Prevent non HR officers from accessing employee bank accounts</field>
         <field name="model_id" ref="base.model_res_partner_bank"/>
