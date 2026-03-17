@@ -236,6 +236,8 @@
                     <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object" data-hotkey="c"/>
                     <button name="do_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                    <button name="action_reset_component_quantity" type="object" string="Reset Quantity" data-hotkey="o"
+                            invisible="state in ('done', 'cancel') or not move_raw_ids or qty_producing in (0, product_qty)"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
                             confirm="Are you sure you want to cancel this manufacturing order?&#10;This action cannot be undone."

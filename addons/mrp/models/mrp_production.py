@@ -3147,6 +3147,11 @@ class MrpProduction(models.Model):
         self.qty_producing = 0
         self._set_qty_producing(False)
 
+    def action_reset_component_quantity(self):
+        self.ensure_one()
+        for move in self.move_raw_ids.filtered(lambda m: not m.picked and m.quantity != m.product_uom_qty):
+            move.quantity = move.product_uom_qty
+
     def _track_execute(self, track_init_values, trackings, track_records=None):
         """
            Extend tracking behavior to manage the `previous_date_start` field
