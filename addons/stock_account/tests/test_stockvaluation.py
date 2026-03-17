@@ -3057,16 +3057,25 @@ class TestStockValuation(TestStockValuationCommon):
         product = self.product_standard_auto
         self._use_inventory_location_accounting()
         past_accounting_date = Date.today() - timedelta(days=7)
-        inventory_quant = self.env['stock.quant'].create({
-            'location_id': self.stock_location.id,
-            'product_id': product.id,
-            'inventory_quantity': 10,
-            'accounting_date': past_accounting_date,
-        })
-        inventory_quant.action_apply_inventory()
+        inventory_quants = self.env['stock.quant'].create([
+            {
+                'location_id': self.stock_location.id,
+                'product_id': product.id,
+                'inventory_quantity': 10,
+                'quantity': 0 if i == 0 else 10,
+                'accounting_date': past_accounting_date,
+            }
+            for i in range(2)
+        ])
+        inventory_quants[0].action_apply_inventory()
         self.assertEqual(
             self._get_stock_valuation_move_lines().move_id.date,
             past_accounting_date
+        )
+        inventory_quants[1].action_apply_inventory()
+        self.assertEqual(
+            len(self._get_stock_valuation_move_lines()), 1,
+            "No entry should be created for the second inventory apply",
         )
 
     def test_journal_entry_with_packaging_uom_cogs(self):
