@@ -1411,11 +1411,13 @@
                                         <field name="debit"
                                                sum="Total Debit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
-                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"/>
+                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
+                                               decoration-muted="debit == 0"/>
                                         <field name="credit"
                                                sum="Total Credit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
-                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"/>
+                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
+                                               decoration-muted="credit == 0"/>
                                         <field name="balance" column_invisible="True"/>
                                         <field name="discount_date"
                                                string="Discount Date"
