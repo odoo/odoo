@@ -2220,7 +2220,8 @@ class AccountMove(models.Model):
             return {'sdi_state': sdi_state}
 
         decrypted_update_content = etree.fromstring(xml_content)
-        outcome = get_text(decrypted_update_content, './/Esito')
+        outcome = get_text(decrypted_update_content, './/EsitoCommittente/Esito')
+        outcome_description = get_text(decrypted_update_content, './/EsitoCommittente/Descrizione')
         date_arrival = get_datetime(decrypted_update_content, './/DataOraRicezione') or fields.Date.today()
         errors = [(
             get_text(error_element, '//Codice'),
@@ -2232,6 +2233,7 @@ class AccountMove(models.Model):
             'sdi_state': sdi_state,
             'errors': errors,
             'outcome': outcome,
+            'outcome_description': outcome_description,
             'date': date_arrival,
             'filename': filename,
         }
@@ -2347,8 +2349,9 @@ class AccountMove(models.Model):
                     "The e-invoice file %(file)s has been refused by %(partner)s (Public Administration).\n"
                     "You have 5 days from now to issue a full refund for this invoice, "
                     "then contact the PA partner to create a new one according to their "
-                    "requests and submit it.",
-                    file=filename, partner=partner_name)),
+                    "requests and submit it.\n%(outcome_description)s",
+                    file=filename, partner=partner_name,
+                    outcome_description=transformed_notification.get('outcome_description', ''))),
                 'accepted_by_pa_partner': _(
                     "The e-invoice file %(file)s has been accepted by %(partner)s (Public Administration), a payment will be issued soon",
                     file=filename, partner=partner_name),
