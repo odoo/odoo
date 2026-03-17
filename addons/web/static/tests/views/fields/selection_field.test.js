@@ -159,32 +159,6 @@ test("[Offline] SelectionField on many2one field", async () => {
     expect(".o_field_widget[name='product_id']").toHaveText("xphone");
 });
 
-test("unset selection field with 0 as key", async () => {
-    // The server doesn't make a distinction between false value (the field
-    // is unset), and selection 0, as in that case the value it returns is
-    // false. So the client must convert false to value 0 if it exists.
-    Partner._fields.selection = fields.Selection({
-        selection: [
-            [0, "Value O"],
-            [1, "Value 1"],
-        ],
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ '<form edit="0"><field name="selection" /></form>',
-    });
-
-    expect(".o_field_widget").toHaveText("Value O", {
-        message: "the displayed value should be 'Value O'",
-    });
-    expect(".o_field_widget").not.toHaveClass("o_field_empty", {
-        message: "should not have class o_field_empty",
-    });
-});
-
 test("unset selection field with string keys", async () => {
     // The server doesn't make a distinction between false value (the field
     // is unset), and selection 0, as in that case the value it returns is

@@ -493,11 +493,6 @@ export function parseServerValue(field, value) {
             return value ? deserializeDateTime(value) : false;
         }
         case "selection": {
-            if (value === false) {
-                // process selection: convert false to 0, if 0 is a valid key
-                const hasKey0 = field.selection.find((option) => option[0] === 0);
-                return hasKey0 ? 0 : value;
-            }
             return value;
         }
         case "reference": {
