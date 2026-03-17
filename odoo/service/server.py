@@ -565,18 +565,21 @@ class ThreadedServer(CommonServer):
                 for db_name in db_names:
                     thread = threading.current_thread()
                     thread.start_time = time.time()
-                    try:
-                        IrCron._process_jobs(db_name)
-                    except Exception:  # noqa: BLE001
-                        cron_logger.warning("Uncaught error for database %s", db_name, exc_info=True)
+                    IrCron._process_jobs(db_name)
                     thread.start_time = None
 
         while True:
-            conn = sql_db.db_connect(config['db_system'])
-            with contextlib.closing(conn.cursor()) as cr:
-                _run_cron(cr)
-                cr._cnx.close()
-            cron_logger.info("Max age (%ss) reached, releasing connection.", config['limit_time_worker_cron'])
+            try:
+                conn = sql_db.db_connect(config['db_system'])
+                with contextlib.closing(conn.cursor()) as cr:
+                    _run_cron(cr)
+                    cr._cnx.close()
+                cron_logger.info("Max age (%ss) reached, recycling pg connection", config['limit_time_worker_cron'])
+            except SystemExit:
+                raise
+            except BaseException:  # noqa: BLE001
+                cron_logger.critical("Uncaught error in main loop. Retrying in 5 seconds...", exc_info=True)
+                time.sleep(5)
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
