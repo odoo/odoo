@@ -18,6 +18,7 @@
                     <field name="date" readonly="state in ['cancel', 'paid']"/>
                     <field name="name"/>
                     <field name="journal_id"/>
+                    <field name="transaction_uuid" optional="hide"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                     <field name="payment_method_line_id" context="{'hide_payment_journal_id': 1}"/>
                     <field name="partner_id" string="Customer"/>
