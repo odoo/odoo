@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_standard_chart_import_wizard_form" model="ir.ui.view">
+        <field name="name">qbo.standard.chart.import.wizard.form</field>
+        <field name="model">qbo.standard.chart.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Standard Chart">
+                <sheet>
+                    <group invisible="state == 'done'">
+                        <group>
+                            <field name="import_source"/>
+                            <field name="import_file" widget="binary" filename="filename"
+                                   invisible="import_source != 'upload'"/>
+                            <field name="filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group invisible="state != 'done'" string="Result">
+                        <field name="result_message" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_import" string="Import"
+                            type="object" class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_qbo_standard_chart_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Standard Chart</field>
+        <field name="res_model">qbo.standard.chart.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

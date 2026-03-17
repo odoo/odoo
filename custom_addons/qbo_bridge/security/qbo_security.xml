@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="module_category_qbo_bridge" model="ir.module.category">
+            <field name="name">QBO Bridge</field>
+            <field name="sequence">90</field>
+        </record>
+
+        <!-- User: can trigger syncs, view logs, resolve conflicts -->
+        <record id="group_qbo_bridge_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_qbo_bridge"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Manager: full configuration access including realm credentials -->
+        <record id="group_qbo_bridge_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_qbo_bridge"/>
+            <field name="implied_ids" eval="[(4, ref('group_qbo_bridge_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

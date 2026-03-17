@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form — shows both versions side by side -->
+    <record id="view_qbo_conflict_form" model="ir.ui.view">
+        <field name="name">qbo.conflict.form</field>
+        <field name="model">qbo.conflict</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_resolve_wizard"
+                            string="Resolve conflict"
+                            type="object"
+                            class="btn-primary"
+                            invisible="status != 'pending'"/>
+                    <button name="action_open_odoo_record"
+                            string="Open Odoo record"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not odoo_record_id"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="pending,resolved_odoo,resolved_qbo,skipped"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Context">
+                            <field name="mapping_id"/>
+                            <field name="entity_type"/>
+                            <field name="qbo_id"/>
+                        </group>
+                        <group string="Timestamps">
+                            <field name="odoo_write_date"/>
+                            <field name="qbo_last_updated"/>
+                            <field name="resolved_date" invisible="status == 'pending'"/>
+                            <field name="resolved_by" invisible="status == 'pending'"/>
+                        </group>
+                    </group>
+                    <group string="Changed fields">
+                        <field name="diff_summary" readonly="1" nolabel="1"/>
+                    </group>
+                    <group>
+                        <group string="Odoo version">
+                            <field name="odoo_data" widget="ace" options="{'mode': 'json'}"
+                                   readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="QBO version">
+                            <field name="qbo_data" widget="ace" options="{'mode': 'json'}"
+                                   readonly="1" nolabel="1"/>
+                        </group>
+                    </group>
+                    <group string="Resolution notes" invisible="status == 'pending'">
+                        <field name="resolution_notes" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="view_qbo_conflict_list" model="ir.ui.view">
+        <field name="name">qbo.conflict.list</field>
+        <field name="model">qbo.conflict</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="status == 'pending'"
+                  decoration-success="status in ('resolved_odoo','resolved_qbo')"
+                  decoration-muted="status == 'skipped'">
+                <field name="create_date" string="Detected"/>
+                <field name="company_id"/>
+                <field name="realm_id"/>
+                <field name="entity_type"/>
+                <field name="qbo_id"/>
+                <field name="diff_summary"/>
+                <field name="odoo_write_date"/>
+                <field name="qbo_last_updated"/>
+                <field name="status"/>
+                <field name="resolved_by"/>
+                <button name="action_open_resolve_wizard" type="object"
+                        string="Resolve" icon="fa-check"
+                        invisible="status != 'pending'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_qbo_conflict_search" model="ir.ui.view">
+        <field name="name">qbo.conflict.search</field>
+        <field name="model">qbo.conflict</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="qbo_id"/>
+                <field name="company_id"/>
+                <field name="entity_type"/>
+                <filter string="Pending" name="pending"
+                        domain="[('status','=','pending')]"/>
+                <filter string="Resolved" name="resolved"
+                        domain="[('status','in',['resolved_odoo','resolved_qbo'])]"/>
+                <group expand="0" string="Group by">
+                    <filter string="Entity type" name="group_entity"
+                            context="{'group_by':'entity_type'}"/>
+                    <filter string="Company" name="group_company"
+                            context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_qbo_conflict" model="ir.actions.act_window">
+        <field name="name">Conflicts</field>
+        <field name="res_model">qbo.conflict</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status','=','pending')]</field>
+        <field name="context">{'search_default_pending': 1}</field>
+    </record>
+</odoo>

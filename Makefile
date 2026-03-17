@@ -79,9 +79,10 @@ CONFIG_FIND_CMD = find . \
 	probe certbot certbot-renew \
 	db-init db-check db-list db-manager \
 	stop ports-clean \
-	refresh-safe \
+	refresh-safe safe-refresh \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
-	dev-host-config \
+	dev-host-config dev dev-stop dev-logs dev-status \
+	dev-safe dev-safe-stop dev-safe-logs dev-safe-status \
 	up-home down-home logs-home smoke-home troubleshoot-home \
 	up-cowork down-cowork logs-cowork smoke-cowork troubleshoot-cowork \
 	up-dev down-dev logs-dev smoke-dev troubleshoot-dev \
@@ -106,6 +107,8 @@ CONFIG_FIND_CMD = find . \
 help:
 	@echo "Targets:"
 	@echo "Modes:"
+	@echo "  make dev            # Run Odoo natively on host with database manager over Docker PostgreSQL"
+	@echo "  make dev-safe       # Run Odoo natively on host with database manager over local PostgreSQL"
 	@echo "  make up-home        # Switch to the normal home stack (same as up, after down-tunnel)"
 	@echo "  make up-cowork      # Switch to cowork stack (tunnel + local URL)"
 	@echo "  make up-dev         # Switch to localhost-only dev stack"
@@ -160,6 +163,7 @@ help:
 	@echo "  make clean-all      # Deep clean: caches, logs, node_modules, and build artifacts"
 	@echo "  make prod-config    # Generate $(PROD_CONFIG) from local secrets"
 	@echo "  make refresh-safe   # Regenerate active configs and reload only the Odoo process"
+	@echo "  make safe-refresh   # Alias for make refresh-safe"
 
 	@echo "  make dev-host-config # Generate $(DEV_HOST_CONFIG) from local secrets"
 	@echo "  make dev-project-config # Generate $(DEV_PROJECT_CONFIG) from local secrets"
@@ -188,6 +192,14 @@ help:
 	@echo "  make dev-host-stop  # Stop local host-run Odoo"
 	@echo "  make dev-host-logs  # Tail local host-run Odoo log"
 	@echo "  make dev-host-status # Check local host-run Odoo status"
+	@echo "  make dev            # Run host Odoo with database manager against Docker PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)"
+	@echo "  make dev-stop       # Stop the shared-DB native Odoo without stopping Docker PostgreSQL"
+	@echo "  make dev-logs       # Tail shared-DB native Odoo log"
+	@echo "  make dev-status     # Check shared-DB native Odoo and Docker PostgreSQL status"
+	@echo "  make dev-safe       # Run host Odoo with database manager against local PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"
+	@echo "  make dev-safe-stop  # Stop the local-DB native Odoo database-manager mode"
+	@echo "  make dev-safe-logs  # Tail local-DB native Odoo database-manager log"
+	@echo "  make dev-safe-status # Check local-DB native Odoo database-manager status"
 	@echo "  make dev-project-db-setup # Start Docker PostgreSQL and ensure $(DEV_PROJECT_DB) exists (shares Docker DB service)"
 	@echo "  make dev-project-db-init # Initialize local Odoo schema in $(DEV_PROJECT_DB)"
 	@echo "  make dev-project-up # Run Odoo on host against Docker PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT) (maintenance path)"
@@ -498,6 +510,9 @@ build:
 refresh-safe:
 	@./scripts/refresh-safe.sh
 
+safe-refresh:
+	@$(MAKE) refresh-safe
+
 stop:
 	@echo "Stopping all compose modes..."
 	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
@@ -577,6 +592,83 @@ up-dev:
 	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
 	@$(MAKE) dev-project-stop >/dev/null 2>&1 || true
 	@$(MAKE) up-local
+
+dev:
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true
+	@$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"
+	@$(MAKE) dev-project-db-setup
+	@$(MAKE) dev-project-config
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(DEV_PROJECT_CONFIG)" \
+	ODOO_DEV_DB="" \
+	ODOO_DEV_LOG_PATH="$(DEV_PROJECT_LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
+	./scripts/dev-host-start.sh
+	@$(MAKE) dev-logs
+
+dev-stop:
+	@ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" ./scripts/dev-host-stop.sh
+
+dev-logs:
+	@mkdir -p "$(dir $(DEV_PROJECT_LOG_PATH))"
+	@touch "$(DEV_PROJECT_LOG_PATH)"
+	@if command -v lnav >/dev/null 2>&1; then \
+		echo "Launching lnav on $(DEV_PROJECT_LOG_PATH)"; \
+		lnav "$(DEV_PROJECT_LOG_PATH)"; \
+	elif command -v ccze >/dev/null 2>&1; then \
+		echo "lnav not found. Falling back to tail -f | ccze"; \
+		tail -f "$(DEV_PROJECT_LOG_PATH)" | ccze -A; \
+	else \
+		echo "Neither lnav nor ccze found. Falling back to tail -f"; \
+		tail -f "$(DEV_PROJECT_LOG_PATH)"; \
+	fi
+
+dev-status:
+	@set -e; \
+	if [ -f "$(DEV_PROJECT_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_PROJECT_PID_FILE)")" 2>/dev/null; then \
+	  echo "Shared-DB native Odoo is running with PID $$(cat "$(DEV_PROJECT_PID_FILE)")"; \
+	  echo "URL: http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)"; \
+	  echo "Database manager: http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)/web/database/manager"; \
+	else \
+	  echo "Shared-DB native Odoo is not running."; \
+	fi; \
+	docker inspect -f '{{.State.Status}}' kodoo-db 2>/dev/null | sed 's/^/Docker PostgreSQL: /' || echo "Docker PostgreSQL: not running"; \
+	echo "Database endpoint: $(DOCKER_DB_BIND_HOST):$(DOCKER_DB_HOST_PORT)"
+
+dev-safe:
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
+	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-config
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(DEV_HOST_CONFIG)" \
+	ODOO_DEV_DB="" \
+	ODOO_DEV_LOG_PATH="$(DEV_HOST_LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
+	./scripts/dev-host-start.sh
+
+dev-safe-stop:
+	@$(MAKE) dev-host-stop
+
+dev-safe-logs:
+	@$(MAKE) dev-host-logs
+
+dev-safe-status:
+	@set -e; \
+	if [ -f "$(DEV_HOST_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_HOST_PID_FILE)")" 2>/dev/null; then \
+	  echo "Local-DB native Odoo is running with PID $$(cat "$(DEV_HOST_PID_FILE)")"; \
+	  echo "URL: http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"; \
+	  echo "Database manager: http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)/web/database/manager"; \
+	else \
+	  echo "Local-DB native Odoo is not running."; \
+	fi; \
+	if command -v systemctl >/dev/null 2>&1; then \
+	  systemctl is-active "$(PG_LOCAL_SERVICE)" >/dev/null 2>&1 && echo "PostgreSQL service $(PG_LOCAL_SERVICE): active" || echo "PostgreSQL service $(PG_LOCAL_SERVICE): inactive"; \
+	fi; \
+	echo "Database endpoint: $(PG_LOCAL_HOST):$(PG_LOCAL_PORT)"
 
 down-dev:
 	@$(MAKE) down-local

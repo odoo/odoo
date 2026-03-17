@@ -7,7 +7,7 @@ cd "$ROOT_DIR"
 PYTHON_BIN="${PYTHON_BIN:-venv/bin/python3}"
 ODOO_BIN_PATH="${ODOO_BIN_PATH:-./odoo-bin}"
 ODOO_DEV_CONFIG="${ODOO_DEV_CONFIG:-deploy/odoo/kodoo.dev-host.local.conf}"
-ODOO_DEV_DB="${ODOO_DEV_DB:-kodoo}"
+ODOO_DEV_DB="${ODOO_DEV_DB-kodoo}"
 ODOO_DEV_LOG_PATH="${ODOO_DEV_LOG_PATH:-logs/odoo-dev-host.log}"
 ODOO_DEV_PID_FILE="${ODOO_DEV_PID_FILE:-logs/odoo-dev-host.pid}"
 ODOO_DEV_HTTP_PORT="${ODOO_DEV_HTTP_PORT:-8070}"
@@ -28,13 +28,22 @@ if [ ! -x "$PYTHON_BIN" ]; then
     exit 1
 fi
 
-echo "[dev-host-start] starting Odoo locally on database '$ODOO_DEV_DB'..."
-nohup "$PYTHON_BIN" "$ODOO_BIN_PATH" \
-    -c "$ODOO_DEV_CONFIG" \
-    -d "$ODOO_DEV_DB" \
-    --logfile="$ODOO_DEV_LOG_PATH" \
-    --log-level=info \
-    >/dev/null 2>&1 &
+odoo_args=(
+    "$PYTHON_BIN"
+    "$ODOO_BIN_PATH"
+    -c "$ODOO_DEV_CONFIG"
+    --logfile="$ODOO_DEV_LOG_PATH"
+    --log-level=info
+)
+
+if [ -n "$ODOO_DEV_DB" ]; then
+    echo "[dev-host-start] starting Odoo locally on database '$ODOO_DEV_DB'..."
+    odoo_args+=(-d "$ODOO_DEV_DB")
+else
+    echo "[dev-host-start] starting Odoo locally with database manager enabled..."
+fi
+
+nohup "${odoo_args[@]}" >/dev/null 2>&1 &
 
 odoo_pid="$!"
 echo "$odoo_pid" > "$ODOO_DEV_PID_FILE"
@@ -49,3 +58,8 @@ fi
 
 echo "[dev-host-start] Odoo running with PID $odoo_pid."
 echo "[dev-host-start] Local URL: http://127.0.0.1:$ODOO_DEV_HTTP_PORT"
+if [ -n "$ODOO_DEV_DB" ]; then
+    echo "[dev-host-start] Default database: $ODOO_DEV_DB"
+else
+    echo "[dev-host-start] Database manager: http://127.0.0.1:$ODOO_DEV_HTTP_PORT/web/database/manager"
+fi

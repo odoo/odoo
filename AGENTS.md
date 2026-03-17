@@ -7,21 +7,33 @@
 - `doc/` and `debian/`: documentation and packaging assets.
 - `frontend/odoo-next-dummy/`: Next.js/Vitest frontend scaffold and integration docs.
 - `scripts/`: local helper scripts (for example `start-with-lnav.ps1`).
-- `docker-compose.yml`: local/production-like stack (Odoo + PostgreSQL + Ollama).
+- `docker-compose.yml`: stable Docker stack for the production-like runtime (Odoo + PostgreSQL + Ollama).
 
 ## Build, Test, and Development Commands
-- Install Python deps:
+- Install local native deps for development/tests:
 ```bash
-pip install -r requirements.txt -r requirements-gov-general.txt
+python -m pip install -r requirements.txt -r requirements-gov-runtime.txt
 ```
-- Run Odoo locally:
+- Install optional AI deps locally only when an AI feature/test explicitly needs them:
 ```bash
-./odoo-bin -c kodoo.conf -d kodoo --addons-path=addons,custom_addons
+python -m pip install -r requirements-gov-ai.txt
 ```
-- Start Docker stack:
+- Run Odoo natively with database manager over the Docker PostgreSQL service:
+```bash
+make dev
+```
+- Run Odoo natively with database manager over fully local PostgreSQL:
+```bash
+make dev-safe
+```
+- Run Odoo natively against fully local PostgreSQL:
+```bash
+make dev-host-up
+```
+- Start/update the stable Docker stack:
 ```bash
 docker compose up -d
-docker compose logs -f odoo
+make refresh-safe
 ```
 - Lint Python code:
 ```bash
@@ -29,15 +41,20 @@ ruff check .
 ```
 
 ## Coding Style & Naming Conventions
-- Python target is 3.10 (`ruff.toml`); follow Odoo coding guidelines.
+- Local development uses the repo's `.venv`/`pyenv` Python 3.12; `ruff.toml` still targets `py310` for compatibility checks. Follow Odoo coding guidelines.
 - Use 4-space indentation, `snake_case` for Python identifiers, and clear method names.
 - Keep module folders in `snake_case` (example: `gov_account_move_template`).
 - Prefer small, isolated changes; avoid refactoring vendor modules in `addons/` without need.
 
 ## Testing Guidelines
+- Run module tests, AI tests, and exploratory validation on the native/local Python instance (`.venv`), not inside the stable Docker Odoo container.
+- Prefer `make dev` when you need fast database switching through the Odoo database manager while reusing the Docker PostgreSQL data/service.
+- Prefer `make dev-safe` when you need the same database-manager workflow but want isolation from the Docker database and stable stack.
+- Use `make dev-host-up` only when you intentionally want a fully local PostgreSQL workflow separated from the Docker data.
+- Treat Docker as the stable/public-like runtime; refresh that environment with `make refresh-safe` after validating changes locally.
 - Prefer module-scoped Odoo tests:
 ```bash
-./odoo-bin -d test_kodoo --test-enable -i <module_name> --stop-after-init
+./odoo-bin -c deploy/odoo/kodoo.dev-host.local.conf -d ktest --test-enable -i <module_name> --stop-after-init
 ```
 - Put tests under each module’s `tests/` directory.
 - Name test files with `test_*.py`; keep fixtures deterministic and database-safe.

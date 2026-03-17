@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_standard_account_sync_wizard_form" model="ir.ui.view">
+        <field name="name">qbo.standard.account.sync.wizard.form</field>
+        <field name="model">qbo.standard.account.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sync Standard Account">
+                <sheet>
+                    <group invisible="state == 'done'">
+                        <group string="Canonical account">
+                            <field name="standard_account_id"/>
+                            <field name="entry_type" readonly="1"/>
+                            <field name="odoo_account_type" readonly="1"/>
+                        </group>
+                        <group string="How to apply it">
+                            <field name="mapping_ids" widget="many2many_tags"/>
+                            <field name="push_to_qbo"/>
+                            <field name="update_existing"/>
+                        </group>
+                    </group>
+                    <group invisible="state != 'done'" string="Result">
+                        <field name="result_message" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_sync" string="Apply"
+                            type="object" class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

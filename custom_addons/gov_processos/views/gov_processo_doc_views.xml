@@ -16,6 +16,15 @@
                     decoration-info="state == 'aprovado'"
                     widget="badge"
                 />
+                <field
+                    name="render_state"
+                    widget="badge"
+                    decoration-success="render_state == 'done'"
+                    decoration-warning="render_state == 'queued'"
+                    decoration-info="render_state == 'running'"
+                    decoration-danger="render_state == 'error'"
+                    optional="show"
+                />
                 <field name="ai_generated" string="Assistido" optional="show"/>
                 <field name="signed_at" optional="show"/>
                 <field name="pdf_file" widget="binary" string="PDF" optional="show"/>
@@ -43,6 +52,13 @@
                         type="object"
                         class="btn-secondary"
                         invisible="state == 'assinado'"
+                    />
+                    <button
+                        name="action_enqueue_structured_render"
+                        string="🧱 Gerar PDF Estruturado"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state == 'assinado' or render_mode != 'structured_typst'"
                     />
                     <button
                         name="action_sync_template_parameters"
@@ -118,8 +134,19 @@
                         <group string="Controle">
                             <field name="version"/>
                             <field name="ai_generated" widget="boolean_toggle"/>
+                            <field name="render_mode"/>
+                            <field name="template_ref" invisible="render_mode != 'structured_typst'"/>
+                            <field
+                                name="render_state"
+                                widget="badge"
+                                decoration-success="render_state == 'done'"
+                                decoration-warning="render_state == 'queued'"
+                                decoration-info="render_state == 'running'"
+                                decoration-danger="render_state == 'error'"
+                            />
                             <field name="xlsx_profile"/>
                             <field name="timbre_id" help="Se vazio, usa o timbre padrão da UG."/>
+                            <field name="last_render_job_id" readonly="1" invisible="not last_render_job_id"/>
                             <field name="ai_provider_used" readonly="1" invisible="not ai_provider_used"/>
                             <field name="ai_model_used" readonly="1" invisible="not ai_model_used"/>
                             <field name="ai_last_run_id" readonly="1" invisible="not ai_last_run_id"/>
@@ -334,6 +361,95 @@
                                     <field name="value_text"/>
                                 </list>
                             </field>
+                        </page>
+
+                        <page string="Render Estruturado">
+                            <div class="alert alert-info mb-2" role="alert">
+                                Este fluxo separa dados congelados e template Typst versionado. O job gera o PDF em background sem depender do estado vivo do banco durante a compilação.
+                            </div>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_enqueue_structured_render"
+                                    string="🧱 Gerar PDF Estruturado"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado' or render_mode != 'structured_typst'"
+                                />
+                                <button
+                                    name="action_open_render_jobs"
+                                    string="Abrir Jobs de Render"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <button
+                                    name="action_sync_template_parameters"
+                                    string="🔄 Sincronizar Variáveis"
+                                    type="object"
+                                    class="btn-secondary"
+                                    invisible="state == 'assinado'"
+                                />
+                            </div>
+                            <group>
+                                <group string="Configuração">
+                                    <field name="render_mode"/>
+                                    <field name="template_ref" invisible="render_mode != 'structured_typst'"/>
+                                    <field
+                                        name="render_state"
+                                        widget="badge"
+                                        decoration-success="render_state == 'done'"
+                                        decoration-warning="render_state == 'queued'"
+                                        decoration-info="render_state == 'running'"
+                                        decoration-danger="render_state == 'error'"
+                                    />
+                                    <field name="render_job_count" readonly="1"/>
+                                    <field name="last_render_job_id" readonly="1" invisible="not last_render_job_id"/>
+                                </group>
+                                <group string="Artefatos">
+                                    <field name="render_attachment_id" readonly="1" invisible="not render_attachment_id"/>
+                                    <field name="template_sha256" readonly="1" invisible="not template_sha256"/>
+                                    <field name="hash_sha256" readonly="1" invisible="not hash_sha256"/>
+                                </group>
+                            </group>
+                            <group string="Snapshots">
+                                <field
+                                    name="dados_snapshot"
+                                    widget="ace"
+                                    options="{'mode': 'text'}"
+                                    readonly="1"
+                                    nolabel="1"
+                                    invisible="not dados_snapshot"
+                                    style="min-height: 220px; font-family: monospace;"
+                                />
+                                <field
+                                    name="template_snapshot"
+                                    widget="ace"
+                                    options="{'mode': 'text'}"
+                                    readonly="1"
+                                    nolabel="1"
+                                    invisible="not template_snapshot"
+                                    style="min-height: 220px; font-family: monospace;"
+                                />
+                            </group>
+                            <group string="Histórico do Render">
+                                <field name="render_job_ids" readonly="1" nolabel="1">
+                                    <list create="false" delete="false">
+                                        <field name="name"/>
+                                        <field name="template_ref" optional="show"/>
+                                        <field
+                                            name="state"
+                                            widget="badge"
+                                            decoration-success="state == 'done'"
+                                            decoration-warning="state == 'pending'"
+                                            decoration-info="state == 'running'"
+                                            decoration-danger="state == 'error'"
+                                        />
+                                        <field name="requested_by" optional="show"/>
+                                        <field name="finished_at" optional="show"/>
+                                        <field name="pdf_filename" optional="show"/>
+                                        <field name="pdf_file" widget="binary" filename="pdf_filename" optional="show"/>
+                                    </list>
+                                </field>
+                            </group>
                         </page>
 
                         <page string="Fonte Typst">

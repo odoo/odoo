@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_account_bridge_rule_form_standard" model="ir.ui.view">
+        <field name="name">qbo.account.bridge.rule.form.standard</field>
+        <field name="model">qbo.account.bridge.rule</field>
+        <field name="inherit_id" ref="qbo_bridge.view_qbo_account_bridge_rule_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@string='Normalize into this canonical account']/field[@name='canonical_code']" position="before">
+                <field name="standard_account_id"
+                       options="{'no_create_edit': False, 'no_open': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_qbo_account_bridge_rule_list_standard" model="ir.ui.view">
+        <field name="name">qbo.account.bridge.rule.list.standard</field>
+        <field name="model">qbo.account.bridge.rule</field>
+        <field name="inherit_id" ref="qbo_bridge.view_qbo_account_bridge_rule_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='canonical_code']" position="before">
+                <field name="standard_account_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

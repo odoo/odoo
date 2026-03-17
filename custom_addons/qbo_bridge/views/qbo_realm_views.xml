@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form -->
+    <record id="view_qbo_realm_form" model="ir.ui.view">
+        <field name="name">qbo.realm.form</field>
+        <field name="model">qbo.realm</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_get_authorization_url"
+                            string="Authorize with QBO"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state == 'connected'"/>
+                    <button name="action_test_connection"
+                            string="Test connection"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'connected'"/>
+                    <button name="action_disconnect"
+                            string="Disconnect"
+                            type="object"
+                            class="btn-danger"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,connected"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Realm name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identity">
+                            <field name="realm_id"/>
+                            <field name="is_sandbox"/>
+                            <field name="last_sync_date" readonly="1"/>
+                        </group>
+                        <group string="OAuth2 credentials">
+                            <field name="client_id"/>
+                            <field name="client_secret" password="True"/>
+                            <field name="redirect_uri"/>
+                            <field name="token_expiry" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Company mappings">
+                            <field name="mapping_ids">
+                                <list>
+                                    <field name="company_id"/>
+                                    <field name="sync_enabled"/>
+                                    <field name="last_sync_date"/>
+                                    <field name="conflict_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Errors" invisible="state != 'error'">
+                            <field name="last_error" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="view_qbo_realm_list" model="ir.ui.view">
+        <field name="name">qbo.realm.list</field>
+        <field name="model">qbo.realm</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="realm_id"/>
+                <field name="state" decoration-success="state == 'connected'"
+                       decoration-danger="state == 'error'"
+                       decoration-muted="state == 'draft'"/>
+                <field name="token_expiry"/>
+                <field name="last_sync_date"/>
+                <field name="is_sandbox"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_qbo_realm" model="ir.actions.act_window">
+        <field name="name">QBO Realms</field>
+        <field name="res_model">qbo.realm</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

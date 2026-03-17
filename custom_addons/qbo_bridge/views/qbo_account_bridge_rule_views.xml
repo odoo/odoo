@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_account_bridge_rule_form" model="ir.ui.view">
+        <field name="name">qbo.account.bridge.rule.form</field>
+        <field name="model">qbo.account.bridge.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_view_linked_accounts" icon="fa-sitemap"
+                                invisible="linked_account_count == 0">
+                            <field name="linked_account_count" widget="statinfo" string="Accounts"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="When a QBO account matches">
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="match_acct_num"/>
+                            <field name="match_name"/>
+                            <field name="match_account_type"/>
+                            <field name="match_account_subtype"/>
+                        </group>
+                        <group string="Normalize into this canonical account">
+                            <field name="canonical_code"/>
+                            <field name="canonical_name"/>
+                            <field name="canonical_account_type"/>
+                            <field name="notes" placeholder="Why this rule exists or which companies use it"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qbo_account_bridge_rule_list" model="ir.ui.view">
+        <field name="name">qbo.account.bridge.rule.list</field>
+        <field name="model">qbo.account.bridge.rule</field>
+        <field name="arch" type="xml">
+            <list default_order="sequence asc, canonical_code asc">
+                <field name="sequence" widget="handle"/>
+                <field name="active"/>
+                <field name="match_acct_num"/>
+                <field name="match_name"/>
+                <field name="match_account_type"/>
+                <field name="match_account_subtype"/>
+                <field name="canonical_code"/>
+                <field name="canonical_name"/>
+                <field name="canonical_account_type"/>
+                <field name="linked_account_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qbo_account_bridge_rule_search" model="ir.ui.view">
+        <field name="name">qbo.account.bridge.rule.search</field>
+        <field name="model">qbo.account.bridge.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="match_name"/>
+                <field name="match_acct_num"/>
+                <field name="match_account_type"/>
+                <field name="canonical_code"/>
+                <field name="canonical_name"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <group expand="0" string="Group by">
+                    <filter string="Canonical type" name="group_type"
+                            context="{'group_by': 'canonical_account_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qbo_account_bridge_rule" model="ir.actions.act_window">
+        <field name="name">Chart Bridge Rules</field>
+        <field name="res_model">qbo.account.bridge.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

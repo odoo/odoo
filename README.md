@@ -37,18 +37,28 @@ For a standard installation, follow the [Setup instructions](https://www.odoo.co
 For AI development and Kodoo-specific workflows:
 1.  **Read the Guidelines:** Consult `AGENTS.md` for coding standards, testing patterns, and agent interaction protocols.
 2.  **Setup Dependencies:** See `GOV_ENV_DEPENDENCIES.md` for system-level requirements (OCR, LaTeX, AI libraries).
-3.  **Local Environment:** Use the provided `docker-compose.yml` to spin up the full stack including local AI models.
+3.  **Choose the runtime mode that matches the job:**
+    - `make dev` for native Odoo with database manager over Docker PostgreSQL
+    - `make dev-safe` for native Odoo with database manager over local PostgreSQL
+    - Docker for the stable/public-like stack refreshed with `make refresh-safe`
 
 ```bash
-pip install -r requirements.txt -r requirements-gov-general.txt
-./odoo-bin -c kodoo.conf -d kodoo --addons-path=addons,custom_addons
+python -m pip install -r requirements.txt -r requirements-gov-runtime.txt
+make dev-safe
 ```
 
-For Docker deployments:
+Optional AI extras for native/local tests:
+
+```bash
+python -m pip install -r requirements-gov-ai.txt
+```
+
+For the stable Docker stack:
 
 ```bash
 docker compose build odoo
 docker compose up -d
+make refresh-safe
 ```
 
 To include the optional AI/embedding stack inside the AGI Gov image:
@@ -56,6 +66,13 @@ To include the optional AI/embedding stack inside the AGI Gov image:
 ```bash
 AGI_GOV_INSTALL_AI_EXTRAS=1 docker compose build odoo
 ```
+
+Recommended workflow split:
+
+- `make dev`: native Odoo, database manager, shared Docker PostgreSQL data
+- `make dev-safe`: native Odoo, database manager, isolated local PostgreSQL data
+- `make dev-host-up`: native Odoo pinned to the default local database
+- Docker: stable/public-like runtime
 
 If you want a plain Odoo image without the AGI Gov runtime extras:
 

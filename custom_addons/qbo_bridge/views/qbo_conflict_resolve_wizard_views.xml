@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_conflict_resolve_wizard_form" model="ir.ui.view">
+        <field name="name">qbo.conflict.resolve.wizard.form</field>
+        <field name="model">qbo.conflict.resolve.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Resolve conflict">
+                <sheet>
+                    <group>
+                        <group string="Conflict">
+                            <field name="entity_type" readonly="1"/>
+                            <field name="qbo_id" readonly="1"/>
+                            <field name="odoo_record_ref" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Odoo version (your data)">
+                            <field name="odoo_preview" nolabel="1" readonly="1"
+                                   widget="text" style="font-family: monospace; font-size: 12px;"/>
+                        </group>
+                        <group string="QBO version (QuickBooks data)">
+                            <field name="qbo_preview" nolabel="1" readonly="1"
+                                   widget="text" style="font-family: monospace; font-size: 12px;"/>
+                        </group>
+                    </group>
+                    <group string="Your decision">
+                        <field name="resolution" widget="radio"/>
+                        <field name="notes" placeholder="Optional notes for audit trail"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_resolve" string="Apply resolution"
+                            type="object" class="btn-primary"
+                            confirm="This will apply your chosen resolution. Are you sure?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

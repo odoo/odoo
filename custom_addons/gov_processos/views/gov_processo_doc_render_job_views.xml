@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_doc_render_job_list" model="ir.ui.view">
+        <field name="name">gov.processo.doc.render.job.list</field>
+        <field name="model">gov.processo.doc.render.job</field>
+        <field name="arch" type="xml">
+            <list string="Jobs de Render Typst" create="false" delete="false">
+                <field name="name"/>
+                <field name="processo_id"/>
+                <field name="doc_id"/>
+                <field name="template_ref" optional="show"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'pending'"
+                    decoration-info="state == 'running'"
+                    decoration-danger="state == 'error'"
+                />
+                <field name="requested_by" optional="show"/>
+                <field name="duration_secs" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="pdf_filename" optional="hide" column_invisible="True"/>
+                <field name="pdf_file" widget="binary" filename="pdf_filename" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_doc_render_job_form" model="ir.ui.view">
+        <field name="name">gov.processo.doc.render.job.form</field>
+        <field name="model">gov.processo.doc.render.job</field>
+        <field name="arch" type="xml">
+            <form string="Job de Render Typst">
+                <header>
+                    <button
+                        name="action_process_now"
+                        string="Processar Agora"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state not in ('pending', 'error')"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="pending,running,done,error"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Identificação">
+                            <field name="name" readonly="1"/>
+                            <field name="processo_id" readonly="1"/>
+                            <field name="doc_id" readonly="1"/>
+                            <field name="template_ref" readonly="1"/>
+                            <field name="requested_by" readonly="1"/>
+                        </group>
+                        <group string="Controle">
+                            <field name="started_at" readonly="1"/>
+                            <field name="finished_at" readonly="1"/>
+                            <field name="duration_secs" readonly="1"/>
+                            <field name="pdf_sha256" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Erro" invisible="not error_message">
+                        <field name="error_message" nolabel="1" readonly="1"/>
+                    </group>
+
+                    <group string="PDF" invisible="not pdf_file">
+                        <field name="pdf_file" widget="binary" filename="pdf_filename" readonly="1"/>
+                        <field name="pdf_filename" invisible="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Payload">
+                            <field name="payload_json" widget="ace" options="{'mode': 'json'}" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="dados.typ">
+                            <field name="dados_frozen" widget="ace" options="{'mode': 'text'}" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="template.typ">
+                            <field name="template_snapshot" widget="ace" options="{'mode': 'text'}" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Log">
+                            <field name="render_log" widget="ace" options="{'mode': 'text'}" nolabel="1" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root menu entry -->
+    <menuitem id="menu_qbo_bridge_root"
+              name="QBO Bridge"
+              sequence="90"
+              groups="qbo_bridge.group_qbo_bridge_user"/>
+
+    <!-- Realms & Mappings -->
+    <menuitem id="menu_qbo_bridge_config"
+              name="Configuration"
+              parent="menu_qbo_bridge_root"
+              sequence="10"/>
+
+    <menuitem id="menu_qbo_realm"
+              name="QBO Realms"
+              parent="menu_qbo_bridge_config"
+              action="action_qbo_realm"
+              sequence="10"/>
+
+    <menuitem id="menu_qbo_company_mapping"
+              name="Company Mappings"
+              parent="menu_qbo_bridge_config"
+              action="action_qbo_company_mapping"
+              sequence="20"/>
+
+    <menuitem id="menu_qbo_account_bridge_rule"
+              name="Chart Bridge Rules"
+              parent="menu_qbo_bridge_config"
+              action="action_qbo_account_bridge_rule"
+              sequence="30"/>
+
+    <!-- Operations -->
+    <menuitem id="menu_qbo_bridge_ops"
+              name="Operations"
+              parent="menu_qbo_bridge_root"
+              sequence="20"/>
+
+    <menuitem id="menu_qbo_import"
+              name="Import from file"
+              parent="menu_qbo_bridge_ops"
+              action="action_qbo_import_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_qbo_conflicts"
+              name="Conflicts"
+              parent="menu_qbo_bridge_ops"
+              action="action_qbo_conflict"
+              sequence="20"/>
+
+    <menuitem id="menu_qbo_sync_log"
+              name="Sync log"
+              parent="menu_qbo_bridge_ops"
+              action="action_qbo_sync_log"
+              sequence="30"/>
+</odoo>

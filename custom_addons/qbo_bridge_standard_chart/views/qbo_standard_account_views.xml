@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_standard_account_form" model="ir.ui.view">
+        <field name="name">qbo.standard.account.form</field>
+        <field name="model">qbo.standard.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_sync_wizard"
+                            string="Sync to Mappings / QBO"
+                            type="object"
+                            class="btn-primary"
+                            invisible="entry_type != 'detail'"/>
+                    <button name="action_open_import_wizard"
+                            string="Import / Refresh Chart"
+                            type="object"
+                            class="btn-secondary"/>
+                    <field name="entry_type" widget="statusbar" statusbar_visible="header,detail"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_view_bridge_rules" icon="fa-random"
+                                invisible="bridge_rule_count == 0">
+                            <field name="bridge_rule_count" widget="statinfo" string="Bridge Rules"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="action_view_linked_accounts" icon="fa-sitemap"
+                                invisible="linked_account_count == 0">
+                            <field name="linked_account_count" widget="statinfo" string="Company Accounts"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Canonical account">
+                            <field name="active"/>
+                            <field name="code"/>
+                            <field name="description"/>
+                            <field name="entry_type"/>
+                            <field name="odoo_account_type"/>
+                            <field name="normal_balance"/>
+                        </group>
+                        <group string="Reporting structure">
+                            <field name="category"/>
+                            <field name="subcategory"/>
+                            <field name="fs_mapping"/>
+                            <field name="parent_code"/>
+                            <field name="parent_id"/>
+                            <field name="cash_flow_classification"/>
+                            <field name="cost_center"/>
+                            <field name="gaap_classification"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Narrative">
+                            <group>
+                                <field name="long_description" nolabel="1"/>
+                                <field name="detailed_description" nolabel="1"/>
+                                <field name="notes" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Controls">
+                            <group>
+                                <field name="tags"/>
+                                <field name="default_vendors"/>
+                                <field name="regulatory_mapping"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                        </page>
+                        <page string="Bridge Rules">
+                            <field name="bridge_rule_ids" readonly="1">
+                                <list>
+                                    <field name="match_acct_num"/>
+                                    <field name="match_name"/>
+                                    <field name="match_account_type"/>
+                                    <field name="match_account_subtype"/>
+                                    <field name="canonical_code"/>
+                                    <field name="canonical_name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Company Accounts">
+                            <field name="linked_account_ids" readonly="1">
+                                <list>
+                                    <field name="company_id"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="account_type"/>
+                                    <field name="qbo_id"/>
+                                    <field name="qbo_realm_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qbo_standard_account_list" model="ir.ui.view">
+        <field name="name">qbo.standard.account.list</field>
+        <field name="model">qbo.standard.account</field>
+        <field name="arch" type="xml">
+            <list default_order="code asc, entry_type asc"
+                  decoration-muted="entry_type == 'header'">
+                <field name="code"/>
+                <field name="description"/>
+                <field name="entry_type"/>
+                <field name="category"/>
+                <field name="subcategory"/>
+                <field name="odoo_account_type"/>
+                <field name="normal_balance"/>
+                <field name="bridge_rule_count"/>
+                <field name="linked_account_count"/>
+                <button name="action_open_sync_wizard"
+                        type="object"
+                        string="Sync"
+                        icon="fa-cloud-upload"
+                        invisible="entry_type != 'detail'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qbo_standard_account_search" model="ir.ui.view">
+        <field name="name">qbo.standard.account.search</field>
+        <field name="model">qbo.standard.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="category"/>
+                <field name="subcategory"/>
+                <field name="odoo_account_type"/>
+                <filter string="Detail" name="detail" domain="[('entry_type','=','detail')]"/>
+                <filter string="Headers" name="header" domain="[('entry_type','=','header')]"/>
+                <filter string="Mapped to Rules" name="mapped"
+                        domain="[('bridge_rule_ids','!=',False)]"/>
+                <filter string="Linked to Companies" name="linked"
+                        domain="[('linked_account_ids','!=',False)]"/>
+                <group expand="0" string="Group by">
+                    <filter string="Category" name="group_category"
+                            context="{'group_by':'category'}"/>
+                    <filter string="Subcategory" name="group_subcategory"
+                            context="{'group_by':'subcategory'}"/>
+                    <filter string="Type" name="group_type"
+                            context="{'group_by':'entry_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qbo_standard_account" model="ir.actions.act_window">
+        <field name="name">Standard Accounts</field>
+        <field name="res_model">qbo.standard.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_detail': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Import the master chart of accounts to start standardizing umbrella-company reporting.</p>
+        </field>
+    </record>
+</odoo>

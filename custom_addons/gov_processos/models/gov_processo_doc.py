@@ -73,6 +73,20 @@ class GovProcessoDoc(models.Model):
              WHERE ingest_target_format IS NULL
             """
         )
+        self.env.cr.execute(
+            """
+            UPDATE gov_processo_doc
+               SET render_mode = 'manual_source'
+             WHERE render_mode IS NULL
+            """
+        )
+        self.env.cr.execute(
+            """
+            UPDATE gov_processo_doc
+               SET render_state = 'idle'
+             WHERE render_state IS NULL
+            """
+        )
         return result
 
     processo_id = fields.Many2one(
@@ -130,8 +144,64 @@ class GovProcessoDoc(models.Model):
     )
     typst_source = fields.Text(string="Fonte Typst")
     latex_source = fields.Text(string="Fonte LaTeX")
+    render_mode = fields.Selection(
+        [
+            ("manual_source", "Fonte manual"),
+            ("structured_typst", "Render estruturado Typst"),
+        ],
+        string="Modo de Render",
+        default="manual_source",
+        required=True,
+        tracking=True,
+    )
+    dados_snapshot = fields.Text(
+        string="Snapshot dados.typ",
+        readonly=True,
+        help="Snapshot congelado do payload do render estruturado.",
+    )
+    template_ref = fields.Many2one(
+        "gov.ai.template",
+        string="Template Typst Estruturado",
+        domain=[("output_format", "=", "typst")],
+        ondelete="restrict",
+    )
+    template_snapshot = fields.Text(
+        string="Snapshot do Template",
+        readonly=True,
+        help="Copia congelada do template Typst usado no enqueue.",
+    )
+    template_sha256 = fields.Char(
+        string="SHA-256 do Template",
+        readonly=True,
+        size=64,
+    )
+    render_state = fields.Selection(
+        [
+            ("idle", "Aguardando"),
+            ("queued", "Na fila"),
+            ("running", "Renderizando"),
+            ("done", "Concluido"),
+            ("error", "Erro"),
+        ],
+        string="Estado do Render",
+        default="idle",
+        readonly=True,
+        tracking=True,
+    )
     pdf_file = fields.Binary(string="PDF", attachment=True)
     pdf_filename = fields.Char(string="Nome do PDF")
+    render_attachment_id = fields.Many2one(
+        "ir.attachment",
+        string="PDF Estruturado",
+        readonly=True,
+        ondelete="set null",
+    )
+    last_render_job_id = fields.Many2one(
+        "gov.processo.doc.render.job",
+        string="Ultimo Job de Render",
+        readonly=True,
+        ondelete="set null",
+    )
     upload_externo = fields.Binary(
         string="Upload Externo (PDF/DOCX)",
         attachment=True,
@@ -248,6 +318,15 @@ class GovProcessoDoc(models.Model):
         string="Jobs de Conversão",
         compute="_compute_ingest_job_count",
     )
+    render_job_ids = fields.One2many(
+        "gov.processo.doc.render.job",
+        "doc_id",
+        string="Jobs de Render",
+    )
+    render_job_count = fields.Integer(
+        string="Jobs de Render",
+        compute="_compute_render_job_count",
+    )
 
     @api.depends("versao_ids")
     def _compute_versao_count(self):
@@ -268,6 +347,11 @@ class GovProcessoDoc(models.Model):
     def _compute_ingest_job_count(self):
         for rec in self:
             rec.ingest_job_count = len(rec.ingest_job_ids)
+
+    @api.depends("render_job_ids")
+    def _compute_render_job_count(self):
+        for rec in self:
+            rec.render_job_count = len(rec.render_job_ids)
 
     @api.depends(
         "ai_template_id",
@@ -591,6 +675,12 @@ class GovProcessoDoc(models.Model):
         else:
             order = "is_checklist asc, process_scope desc, fase asc, id asc"
         return self.env["gov.ai.template"].search(domain, order=order, limit=1)
+
+    def _get_structured_typst_template(self):
+        self.ensure_one()
+        candidates = self.template_ref | self.ai_template_id
+        template = candidates.filtered(lambda item: item.output_format == "typst")[:1]
+        return template or self.env["gov.ai.template"]
 
     def _plain_text_from_html(self, html_text):
         text = self._HTML_TAG_RE.sub(" ", html_text or "")
@@ -922,6 +1012,25 @@ class GovProcessoDoc(models.Model):
             },
         }
 
+    def action_enqueue_structured_render(self):
+        self.ensure_one()
+        if self.state == "assinado":
+            raise UserError("Documento assinado nao pode receber novo render estruturado.")
+        if self.render_mode != "structured_typst":
+            raise UserError("Ative o modo de render estruturado antes de enfileirar o PDF.")
+
+        job = self.env["gov.processo.doc.render.job"].create_from_doc(self)
+        self.last_render_job_id = job.id
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Render estruturado enfileirado",
+                "message": f"Job criado: {job.name}",
+                "type": "success",
+            },
+        }
+
     def action_enqueue_xlsx_worker(self):
         self.ensure_one()
         if self.state == "assinado":
@@ -999,6 +1108,20 @@ class GovProcessoDoc(models.Model):
             "type": "ir.actions.act_window",
             "name": f"Conversões de Upload - {self.name}",
             "res_model": "gov.processo.doc.ingest.job",
+            "view_mode": "list,form",
+            "domain": [("doc_id", "=", self.id)],
+            "context": {
+                "default_doc_id": self.id,
+                "default_processo_id": self.processo_id.id,
+            },
+        }
+
+    def action_open_render_jobs(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": f"Jobs de Render - {self.name}",
+            "res_model": "gov.processo.doc.render.job",
             "view_mode": "list,form",
             "domain": [("doc_id", "=", self.id)],
             "context": {

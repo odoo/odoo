@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_qbo_standard_chart_root"
+              name="Standard Chart"
+              parent="qbo_bridge.menu_qbo_bridge_root"
+              sequence="15"
+              action="action_qbo_standard_account"/>
+
+    <menuitem id="menu_qbo_standard_accounts"
+              name="Standard Accounts"
+              parent="menu_qbo_standard_chart_root"
+              sequence="10"
+              action="action_qbo_standard_account"/>
+
+    <menuitem id="menu_qbo_standard_chart_import"
+              name="Import / Refresh"
+              parent="menu_qbo_standard_chart_root"
+              sequence="20"
+              action="action_qbo_standard_chart_import_wizard"/>
+</odoo>

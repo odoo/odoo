@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qbo_import_wizard_form" model="ir.ui.view">
+        <field name="name">qbo.import.wizard.form</field>
+        <field name="model">qbo.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import from QBO file">
+                <sheet>
+                    <group invisible="state == 'done'">
+                        <group string="Target">
+                            <field name="mapping_id"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="realm_id" readonly="1"/>
+                        </group>
+                        <group string="File">
+                            <field name="entity_type"/>
+                            <field name="file_type"/>
+                            <field name="import_file" widget="binary" filename="filename"/>
+                            <field name="filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group invisible="state != 'done'" string="Result">
+                        <field name="result_message" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_import" string="Import"
+                            type="object" class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <button string="Close" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_qbo_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import from QBO file</field>
+        <field name="res_model">qbo.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
