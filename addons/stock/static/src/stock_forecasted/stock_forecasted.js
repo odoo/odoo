@@ -8,7 +8,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
-import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, markup, onWillStart, proxy, useProps } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 export class StockForecasted extends Component {
@@ -196,7 +196,9 @@ export class StockForecasted extends Component {
     }
 
     get graphInfo() {
-        return { noContentHelp: _t("Try to add some incoming or outgoing transfers.") };
+        return {
+            noContentHelp: markup(`<span class="text-muted">${_t("No History Yet")}</span>`),
+        };
     }
 
     async openView(resModel, view, resId=false, domain = false) {
