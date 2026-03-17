@@ -56,22 +56,37 @@ class ProductPricelistReport(models.AbstractModel):
 
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities, date):
         product = product.with_context(display_default_code=False)
-        data = {
-            'id': product.id,
-            'name': (is_product_tmpl and product.name) or product.display_name,
-            'price': dict.fromkeys(quantities, 0.0),
-            'uom': product.uom_id.name,
-            'default_code': product.default_code,
-            'barcode': product.barcode,
-            'category': product.categ_id.name,
-        }
-        for qty in quantities:
-            data['price'][qty] = pricelist._get_product_price(product, qty, date=date)
+        has_multiple_variants = is_product_tmpl and product.product_variant_count > 1
 
-        if is_product_tmpl and product.product_variant_count > 1:
-            data['variants'] = [
+        # Determine applicable UoMs
+        if product._has_multiple_uoms() and not has_multiple_variants:
+            product_uoms = pricelist._get_related_uoms(product) + product.uom_id
+        else:
+            product_uoms = product.uom_id
+
+        data = {
+            "id": product.id,
+            "name": product.name if is_product_tmpl else product.display_name,
+            "price": {uom.id: {qty: {} for qty in quantities} for uom in product_uoms},
+            "uoms": product_uoms.read(["id", "name"]),
+            "default_code": product.default_code,
+            "barcode": product.barcode,
+            "category": product.categ_id.name,
+            "show_product_data": not has_multiple_variants,
+        }
+
+        if has_multiple_variants:
+            # Expand variants when template has multiple variants
+            data["variants"] = [
                 self._get_product_data(False, variant, pricelist, quantities, date)
                 for variant in product.product_variant_ids
             ]
+        else:
+            # Compute prices only when we actually show product data
+            for uom in product_uoms:
+                for qty in quantities:
+                    data["price"][uom.id][qty] = pricelist._get_product_price(
+                        product, qty, date=date, uom=uom
+                    )
 
         return data

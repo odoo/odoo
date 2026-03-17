@@ -212,6 +212,14 @@
                                     />
                                     <field name="min_quantity" optional="show"/>
                                     <field
+                                        name="uom_id"
+                                        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []"
+                                        groups="uom.group_uom"
+                                        widget="many2one_uom"
+                                        options="{'no_create': 1, 'product_field': 'product_tmpl_id'}"
+                                        optional="show"
+                                    />
+                                    <field
                                         name="date_start"
                                         string="Validity"
                                         widget="daterange"
@@ -220,7 +228,7 @@
                                     />
                                     <field
                                         name="fixed_price"
-                                        string="Price"
+                                        string="Unit Price"
                                         widget="monetary"
                                         options="{'currency_field': 'currency_id'}"
                                     />

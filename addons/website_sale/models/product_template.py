@@ -636,6 +636,19 @@ class ProductTemplate(models.Model):
             # the product
             combination_info["compare_list_price"] = 0
 
+        if product_or_template._has_multiple_uoms():
+            # for packaging pricings
+            combination_info["packaging_prices"] = {}
+            for product_uom in product_or_template._get_available_uoms():
+                uom_price = pricelist._get_product_price(  # unit price in packaging UOM
+                    product=product_or_template, quantity=quantity, uom=product_uom
+                )
+                base_uom_price = product_uom._compute_price(  # convert packaging prices to base UOM
+                    price=uom_price, to_unit=product_or_template.uom_id
+                )
+
+                combination_info["packaging_prices"][product_uom.id] = base_uom_price
+
         return combination_info
 
     def _get_dynamic_attribute_images(self, combination_ids, website_id):

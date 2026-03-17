@@ -166,7 +166,8 @@ class ProductPricelist(models.Model):
         self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
         **kwargs
     ):
-        """ Low-level method - Mono pricelist, multi products
+        """Low-level method - Mono pricelist, multi products.
+
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
         Note: self and self.ensure_one()
@@ -196,26 +197,18 @@ class ProductPricelist(models.Model):
             # Used to fetch pricelist rules and currency rates
             date = fields.Datetime.now()
 
-        # Fetch all rules potentially matching specified products/templates/categories and date
-        rules = self._get_applicable_rules(products, date, **kwargs)
+        # Fetch all rules potentially matching specified products/templates/categories/uom and date
+        rules = self._get_applicable_rules(products, quantity, date, uom=uom, **kwargs)
 
         results = {}
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
+            # If no uom is specified, fallback on the product uom
             quantity_uom = uom or product.uom_id
-            qty_to_consider = self._compute_qty_to_consider(
-                product,
-                quantity,
-                quantity_uom,
-                currency=currency,
-                date=date,
-                compute_price=compute_price,
-                **kwargs,
-            )
 
             for rule in rules:
-                if rule._is_applicable_for(product, qty_to_consider):
+                if rule._is_applicable_for(product, quantity, uom=quantity_uom, **kwargs):
                     suitable_rule = rule
                     break
 
@@ -232,16 +225,18 @@ class ProductPricelist(models.Model):
         return results
 
     # Split methods to ease (community) overrides
-    def _get_applicable_rules(self, products, date, **kwargs):
+    def _get_applicable_rules(self, products, quantity, date, *, uom=None, **kwargs):
         self and self.ensure_one()  # self is at most one record
         if not self:
             return self.env['product.pricelist.item']
 
         return self.env['product.pricelist.item'].search(
-            self._get_applicable_rules_domain(products=products, date=date, **kwargs)
+            self._get_applicable_rules_domain(
+                products=products, date=date, quantity=quantity, uom=uom, **kwargs
+            )
         )
 
-    def _get_applicable_rules_domain(self, products, date, **kwargs):
+    def _get_applicable_rules_domain(self, products, date, *, quantity=None, uom=None, **kwargs):
         self and self.ensure_one()  # self is at most one record
         if products._name == 'product.template':
             templates_domain = ('product_tmpl_id', 'in', products.ids)
@@ -250,7 +245,7 @@ class ProductPricelist(models.Model):
             templates_domain = ('product_tmpl_id', 'in', products.product_tmpl_id.ids)
             products_domain = ('product_id', 'in', products.ids)
 
-        return [
+        domain = [
             ('pricelist_id', '=', self.id),
             '|', ('categ_id', '=', False), ('categ_id', 'parent_of', products.categ_id.ids),
             '|', ('product_tmpl_id', '=', False), templates_domain,
@@ -259,13 +254,14 @@ class ProductPricelist(models.Model):
             '|', ('date_end', '=', False), ('date_end', '>=', date),
         ]
 
-    def _compute_qty_to_consider(self, product, quantity, uom, **_kwargs):
-        """Compute quantity in product UoM because the min quantity on pricelist rules are specified
-        w.r.t. product default UoM."""
-        product_uom = product.uom_id
-        if uom != product_uom:
-            return uom._compute_quantity(quantity, product_uom, raise_if_failure=False)
-        return quantity
+        if uom:
+            domain.extend(['|', ('uom_id', '=', False), ('uom_id', '=', uom.id)])
+        elif quantity:
+            # ONLY if no uom is given, pre-handle min_qty check as quantity will be in product uom
+            # already.
+            domain.extend(['|', ('min_quantity', '=', 0), ('min_quantity', '<=', quantity)])
+
+        return domain
 
     # Multi pricelists price|rule computation
     def _price_get(self, product, quantity, **kwargs):
@@ -414,3 +410,18 @@ class ProductPricelist(models.Model):
             'type': 'ir.actions.client',
             'tag': 'generate_pricelist_report',
         }
+
+    def _get_related_uoms(self, product):
+        """Return UoMs from applicable pricelist rules for the given product.
+
+        The method retrieves pricelist items matching the product and current date
+        using ``_get_applicable_rules_domain``, then filters out rules without a UoM.
+
+        :param product: Product template or product variant.
+        :return: UoMs defined on matching pricelist items.
+        :rtype: uom.uom
+        """
+        domain = self._get_applicable_rules_domain(product, fields.Datetime.now())
+        # filter out pricelist items without UoM
+        domain += [('uom_id', '!=', False)]
+        return self.env['product.pricelist.item'].search_fetch(domain, ['uom_id']).uom_id

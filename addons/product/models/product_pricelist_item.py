@@ -69,6 +69,7 @@ class ProductPricelistItem(models.Model):
         required=True,
         help="Pricelist Item applicable on selected option")
 
+    # Product Related Fields
     categ_id = fields.Many2one(
         comodel_name='product.category',
         string="Category",
@@ -87,7 +88,10 @@ class ProductPricelistItem(models.Model):
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
+    uom_id = fields.Many2one(string="Packaging", comodel_name='uom.uom')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
 
+    # Price Related Fields
     base = fields.Selection(
         selection=[
             ('list_price', 'Sales Price'),
@@ -157,7 +161,7 @@ class ProductPricelistItem(models.Model):
         compute='_compute_name',
         help="Explicit rule name for this pricelist line.")
     price = fields.Char(
-        string="Price",
+        string="Unit Price",
         compute='_compute_price_label',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
@@ -180,6 +184,11 @@ class ProductPricelistItem(models.Model):
                 or item.company_id.currency_id
                 or item.env.company.currency_id
             )
+
+    @api.depends('product_tmpl_id', 'product_tmpl_id.uom_id', 'product_tmpl_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for item in self:
+            item.allowed_uom_ids = item.product_tmpl_id.uom_id | item.product_tmpl_id.uom_ids
 
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
@@ -487,7 +496,7 @@ class ProductPricelistItem(models.Model):
             if applied_on == '3_global':
                 values.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
             elif applied_on == '2_product_category':
-                values.update({'product_id': None, 'product_tmpl_id': None})
+                values.update({'product_id': None, 'product_tmpl_id': None, 'uom_id': False})
             elif applied_on == '1_product':
                 values.update({'product_id': None, 'categ_id': None})
             elif applied_on == '0_product_variant':
@@ -501,7 +510,7 @@ class ProductPricelistItem(models.Model):
             if applied_on == '3_global':
                 vals.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
             elif applied_on == '2_product_category':
-                vals.update({'product_id': None, 'product_tmpl_id': None})
+                vals.update({'product_id': None, 'product_tmpl_id': None, 'uom_id': False})
             elif applied_on == '1_product':
                 vals.update({'product_id': None, 'categ_id': None})
             elif applied_on == '0_product_variant':
@@ -510,13 +519,15 @@ class ProductPricelistItem(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _is_applicable_for(self, product, qty_in_product_uom):
-        """Check whether the current rule is valid for the given product & qty.
+    def _is_applicable_for(self, product, quantity, *, uom=None, qty_in_product_uom=False, **kwargs):
+        """Check whether the current rule is valid for the given product, qty and uom.
 
         Note: self.ensure_one()
 
         :param product: product record (product.product/product.template)
-        :param float qty_in_product_uom: quantity, expressed in product UoM
+        :param float quantity: quantity of products requested (in given uom)
+        :param float qty_in_product_uom: quantity of products requested (in product's base uom)
+        :param uom: Selected unit of measure (uom.uom record)
         :returns: Whether rules is valid or not
         :rtype: bool
         """
@@ -525,9 +536,21 @@ class ProductPricelistItem(models.Model):
         res = True
 
         is_product_template = product._name == 'product.template'
-        if self.min_quantity and qty_in_product_uom < self.min_quantity:
-            res = False
+        product_uom = product.uom_id
+        uom = uom or product_uom
 
+        # Filter the rules restricted to specific units of measure.
+        if self.uom_id and uom != self.uom_id:
+            return False
+
+        qty_to_consider = quantity
+        if uom not in product_uom + self.uom_id:
+            # Convert the quantity to consider to the product base uom if the requested uom is not
+            # in the rule allowed unit of measures.
+            qty_to_consider = uom._compute_quantity(quantity, product_uom)
+
+        if self.min_quantity and qty_to_consider < self.min_quantity:
+            res = False
         elif self.applied_on == "2_product_category":
             if not product.categ_id or (
                 product.categ_id != self.categ_id

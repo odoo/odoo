@@ -77,13 +77,19 @@
                                     <field name="name" string="Apply on"/>
                                     <field name="min_quantity"/>
                                     <field
+                                        name="uom_id"
+                                        invisible="display_applied_on != '1_product'"
+                                        groups="uom.group_uom"
+                                        colspan="4"
+                                    />
+                                    <field
                                         name="date_start"
                                         string="Validity"
                                         widget="daterange"
                                         options="{'end_date_field': 'date_end'}"
                                         optional="show"
                                     />
-                                    <field name="price" string="Price"/>
+                                    <field name="price"/>
                                     <field name="base" column_invisible="True"/>
                                     <field name="price_discount" column_invisible="True"/>
                                     <field name="applied_on" column_invisible="True"/>

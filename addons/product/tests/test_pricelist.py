@@ -543,3 +543,51 @@ class TestPricelist(ProductVariantsCommon):
         self.assertEqual(pricelist.item_ids.applied_on, "1_product")
         # check that product_id is cleared
         self.assertFalse(pricelist.item_ids.product_id)
+
+    def test_pricelist_packaging_rules(self):
+        self.product_template_sofa.uom_ids = [Command.link(self.uom_dozen.id)]
+        packaging_pricelist = self.env["product.pricelist"].create({
+            "name": "Packaging Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "compute_price": "fixed",
+                    "fixed_price": 10.0,
+                    "product_tmpl_id": self.product_template_sofa.id,
+                    "min_quantity": 6,
+                })
+            ],
+        })
+        packaging_rule_1 = self.env["product.pricelist.item"].create({
+            "applied_on": "1_product",
+            "compute_price": "fixed",
+            "fixed_price": 10.0,
+            "product_tmpl_id": self.product_template_sofa.id,
+            "min_quantity": 6,
+            "pricelist_id": packaging_pricelist.id,
+            "uom_id": self.uom_unit.id,
+        })
+        packaging_rule_2 = self.env["product.pricelist.item"].create({
+            "applied_on": "1_product",
+            "compute_price": "fixed",
+            "fixed_price": 10.0,
+            "product_tmpl_id": self.product_template_sofa.id,
+            "min_quantity": 6,
+            "pricelist_id": packaging_pricelist.id,
+            "uom_id": self.uom_dozen.id,
+        })
+
+        self.assertEqual(
+            packaging_pricelist._get_product_rule(
+                self.product_template_sofa, 6.0, uom=self.uom_unit
+            ),
+            packaging_rule_1.id,
+            "Packaging rule with uom_unit should be applied",
+        )
+        self.assertEqual(
+            packaging_pricelist._get_product_rule(
+                self.product_template_sofa, 6.0, uom=self.uom_dozen
+            ),
+            packaging_rule_2.id,
+            "Packaging rule with uom_dozen should be applied",
+        )
