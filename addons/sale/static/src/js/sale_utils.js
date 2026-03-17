@@ -38,6 +38,7 @@ export function getLinkedSaleOrderLines(saleOrderLine) {
 export function serializeComboItem(comboItem) {
     return {
         combo_item_id: comboItem.id,
+        qty: comboItem.selected_qty || 1,
         product_id: comboItem.product.id,
         no_variant_attribute_value_ids: comboItem.product.selectedNoVariantPtavIds,
         product_custom_attribute_values: comboItem.product.selectedCustomPtavs.map(

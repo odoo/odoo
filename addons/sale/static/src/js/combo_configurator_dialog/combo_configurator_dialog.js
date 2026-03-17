@@ -45,10 +45,12 @@ export class ComboConfiguratorDialog extends Component {
         this.dialog = useService('dialog');
         this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
         this.state = useState({
-            // Maps combo ids to selected combo items.
+            // Maps combo item ids to selected combo items.
             // Note that selected combo items can be modified (i.e. their `no_variant` PTAVs can be
             // updated), so this map stores deep copies to avoid modifying the props.
             selectedComboItems: new Map(),
+            // Maps combo item ids to selected quantities.
+            selectedComboItemQuantities: new Map(),
             quantity: this.props.quantity,
             basePrice: this.props.price,
             isLoading: false,
@@ -65,14 +67,23 @@ export class ComboConfiguratorDialog extends Component {
      * Select the provided combo item, and open the product configurator iff the combo item's
      * product is configurable.
      *
-     * @param {Number} comboId The id of the combo to which the combo item belongs.
+     * @param {ProductCombo} combo The combo to which the combo item belongs.
      * @param {ProductComboItem} comboItem The combo item to select.
      */
-    async selectComboItem(comboId, comboItem) {
+    async selectComboItem(combo, comboItem) {
+        const comboId = combo.id;
+        let selectedQty = this.getComboItemQuantity(comboItem.id);
+        if (combo.qty_free === 1 && !selectedQty && this.totalQuantityForCombo(comboId) >= 1) {
+            this.clearComboSelection(combo);
+            selectedQty = this.getComboItemQuantity(comboItem.id);
+        }
         // Use up-to-date selected PTAVs and custom values to populate the product configurator.
-        comboItem = this.getSelectedOrProvidedComboItem(comboId, comboItem);
+        comboItem = this.getSelectedOrProvidedComboItem(comboItem);
         let product = comboItem.product;
         if (comboItem.is_configurable) {
+            if (selectedQty > 0 && this.totalQuantityForCombo(comboId) < combo.qty_free) {
+                return this.setComboItemQuantity(combo, comboItem, selectedQty + 1);
+            }
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
@@ -95,13 +106,14 @@ export class ComboConfiguratorDialog extends Component {
                     selectedComboItem.product.ptals = configuredProduct.attribute_lines.map(
                         ProductTemplateAttributeLine.fromProductConfiguratorPtal
                     );
-                    this.state.selectedComboItems.set(comboId, selectedComboItem);
+                    this.state.selectedComboItems.set(comboItem.id, selectedComboItem);
+                    this.state.selectedComboItemQuantities.set(comboItem.id, selectedQty || 1);
                 },
                 discard: () => {},
                 ...this._getAdditionalDialogProps(),
             });
         } else {
-            this.state.selectedComboItems.set(comboId, comboItem.deepCopy());
+            this.setComboItemQuantity(combo, comboItem, selectedQty + 1);
         }
     }
 
@@ -131,18 +143,113 @@ export class ComboConfiguratorDialog extends Component {
      * selected PTAVs, custom values), and we should rely on the data in `state.selectedComboItems`
      * instead. Otherwise, the data in the provided combo item is up-to-date and can be used.
      *
-     * @param {Number} comboId The id of the combo to which the combo item belongs.
      * @param {ProductComboItem} comboItem The provided combo item.
      * @return {ProductComboItem} The selected or provided combo item.
      */
-    getSelectedOrProvidedComboItem(comboId, comboItem) {
-        const selectedComboItem = this.state.selectedComboItems.get(comboId);
-        const isComboItemAlreadySelected = selectedComboItem?.id === comboItem.id;
-        return isComboItemAlreadySelected ? selectedComboItem : comboItem;
+    getSelectedOrProvidedComboItem(comboItem) {
+        return this.state.selectedComboItems.get(comboItem.id) || comboItem;
+    }
+
+    /**
+     * Return the selected quantity of the provided combo item.
+     *
+     * @param {Number} comboItemId The combo item id.
+     * @return {Number} The selected quantity.
+     */
+    getComboItemQuantity(comboItemId) {
+        return this.state.selectedComboItemQuantities.get(comboItemId) || 0;
+    }
+
+    /**
+     * Set the selected quantity of the provided combo item.
+     *
+     * @param {ProductCombo} combo The combo to which the combo item belongs.
+     * @param {ProductComboItem} comboItem The combo item.
+     * @param {Number} quantity The new quantity.
+     * @return {Boolean} Whether the quantity was updated.
+     */
+    setComboItemQuantity(combo, comboItem, quantity) {
+        const comboId = combo.id;
+        const currentQty = this.getComboItemQuantity(comboItem.id);
+        const maxQtyAvailable = combo.qty_free - this.totalQuantityForCombo(comboId) + currentQty;
+        quantity = Math.floor(quantity || 0);
+        quantity = Math.max(0, Math.min(quantity, maxQtyAvailable));
+        if (quantity === currentQty) {
+            return false;
+        }
+        if (quantity === 0) {
+            this.state.selectedComboItemQuantities.delete(comboItem.id);
+            this.state.selectedComboItems.delete(comboItem.id);
+        } else {
+            this.state.selectedComboItemQuantities.set(comboItem.id, quantity);
+            this.state.selectedComboItems.set(
+                comboItem.id,
+                this.getSelectedOrProvidedComboItem(comboItem)
+            );
+        }
+        return true;
+    }
+
+    /**
+     * Return the total selected quantity for the provided combo.
+     *
+     * @param {Number} comboId The combo id.
+     * @return {Number} The total selected quantity for this combo.
+     */
+    totalQuantityForCombo(comboId) {
+        const combo = this.props.combos.find(combo => combo.id === comboId);
+        return combo?.combo_items.reduce(
+            (totalQty, comboItem) => totalQty + this.getComboItemQuantity(comboItem.id),
+            0,
+        ) || 0;
+    }
+
+    /**
+     * Clear all selected items for the provided combo.
+     *
+     * @param {ProductCombo} combo The combo.
+     */
+    clearComboSelection(combo) {
+        for (const comboItem of combo.combo_items) {
+            this.state.selectedComboItemQuantities.delete(comboItem.id);
+            this.state.selectedComboItems.delete(comboItem.id);
+        }
+    }
+
+    /**
+     * Check whether quantity buttons should be displayed for the provided combo item.
+     *
+     * @param {ProductCombo} combo The combo to which the combo item belongs.
+     * @param {ProductComboItem} comboItem The combo item.
+     * @return {Boolean} Whether quantity buttons should be shown.
+     */
+    showQuantityButtons(combo, comboItem) {
+        return this.getComboItemQuantity(comboItem.id) > 0 && combo.qty_free > 1;
     }
 
     get totalMessage() {
         return _t("Total: %s", this.formattedTotalPrice);
+    }
+
+    /**
+     * Return the selected quantity for the provided combo.
+     *
+     * @param {Number} comboId The combo id.
+     * @return {Number} The selected quantity for this combo.
+     */
+    getSelectedComboItemsCount(comboId) {
+        return this.totalQuantityForCombo(comboId);
+    }
+
+    /**
+     * Return the selected quantity text for the provided combo.
+     *
+     * @param {ProductCombo} combo The combo.
+     * @return {String} The selected quantity text.
+     */
+    getSelectedComboItemsText(combo) {
+        const selectedQty = this.getSelectedComboItemsCount(combo.id);
+        return `${Math.min(selectedQty, combo.qty_free)}/${combo.qty_free}`;
     }
 
     /**
@@ -160,7 +267,9 @@ export class ComboConfiguratorDialog extends Component {
      * @return {Boolean} Whether a combo item has been selected for each combo.
      */
     get areAllCombosSelected() {
-        return this.state.selectedComboItems.size === this.props.combos.length;
+        return this.props.combos.every(
+            combo => this.totalQuantityForCombo(combo.id) >= combo.qty_free
+        );
     }
 
     async confirm(options) {
@@ -183,9 +292,11 @@ export class ComboConfiguratorDialog extends Component {
      */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
-            const comboItem = combo.selectedComboItem;
-            if (comboItem) {
-                this.state.selectedComboItems.set(combo.id, comboItem.deepCopy());
+            for (const comboItem of combo.combo_items) {
+                if (comboItem.selected_qty > 0) {
+                    this.state.selectedComboItems.set(comboItem.id, comboItem.deepCopy());
+                    this.state.selectedComboItemQuantities.set(comboItem.id, comboItem.selected_qty);
+                }
             }
         }
     }
@@ -201,8 +312,10 @@ export class ComboConfiguratorDialog extends Component {
      * @return {Number} The total price.
      */
     get _comboPrice() {
-        const extraPrice = Array.from(this.state.selectedComboItems.values()).reduce(
-            (price, item) => price + item.totalExtraPrice, 0
+        const extraPrice = Array.from(this.state.selectedComboItemQuantities.entries()).reduce(
+            (price, [comboItemId, quantity]) =>
+                price + (this.state.selectedComboItems.get(comboItemId)?.totalExtraPrice || 0) * quantity,
+            0,
         );
         return this.state.basePrice + extraPrice;
     }
@@ -222,12 +335,19 @@ export class ComboConfiguratorDialog extends Component {
      * @return {ProductComboItem[]} The sorted selected combo items.
      */
     get _selectedComboItems() {
-        const sortedItems = new Map([...this.state.selectedComboItems.entries()].sort(
-            (entry1, entry2) =>
-                this.props.combos.findIndex(combo => combo.id === entry1[0])
-                - this.props.combos.findIndex(combo => combo.id === entry2[0])
-        ));
-        return Array.from(sortedItems.values());
+        const selectedItems = [];
+        for (const combo of this.props.combos) {
+            for (const comboItem of combo.combo_items) {
+                const selectedQty = this.getComboItemQuantity(comboItem.id);
+                if (!selectedQty) {
+                    continue;
+                }
+                const selectedComboItem = this.getSelectedOrProvidedComboItem(comboItem).deepCopy();
+                selectedComboItem.selected_qty = selectedQty;
+                selectedItems.push(selectedComboItem);
+            }
+        }
+        return selectedItems;
     }
 
     /**

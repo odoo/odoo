@@ -31,6 +31,7 @@ class SaleComboConfiguratorController(Controller):
         :param list(dict) selected_combo_items: The selected combo items, in the following format:
             {
                 'id': int,
+                'qty': int,
                 'no_variant_ptav_ids': list(int),
                 'custom_ptavs': list({
                     'id': int,
@@ -48,7 +49,14 @@ class SaleComboConfiguratorController(Controller):
         currency = request.env["res.currency"].browse(currency_id)
         pricelist = request.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
-        selected_combo_item_dict = {item["id"]: item for item in selected_combo_items or []}
+        selected_combo_item_dict = {}
+        selected_combo_item_qty_dict = {}
+        for selected_combo_item in selected_combo_items or []:
+            selected_combo_item_id = selected_combo_item["id"]
+            selected_combo_item_qty_dict[selected_combo_item_id] = selected_combo_item_qty_dict.get(
+                selected_combo_item_id, 0
+            ) + selected_combo_item.get("qty", 1)
+            selected_combo_item_dict.setdefault(selected_combo_item_id, selected_combo_item)
 
         return {
             "product_tmpl_id": product_tmpl_id,
@@ -61,11 +69,13 @@ class SaleComboConfiguratorController(Controller):
                 {
                     "id": combo.id,
                     "name": combo.name,
+                    "qty_free": combo.qty_free,
                     "combo_items": [
                         self._get_combo_item_data(
                             combo,
                             combo_item,
                             selected_combo_item_dict.get(combo_item.id, {}),
+                            selected_combo_item_qty_dict.get(combo_item.id, 0),
                             date,
                             currency,
                             pricelist,
@@ -122,7 +132,15 @@ class SaleComboConfiguratorController(Controller):
         )[0]
 
     def _get_combo_item_data(
-        self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
+        self,
+        combo,
+        combo_item,
+        selected_combo_item,
+        selected_combo_item_qty,
+        date,
+        currency,
+        pricelist,
+        **kwargs,
     ):
         """Return the price of the specified combo product.
 
@@ -146,12 +164,14 @@ class SaleComboConfiguratorController(Controller):
         # A combo item can be preselected if its combo choice has only one combo item, and that
         # combo item isn't configurable.
         is_preselected = len(combo.combo_item_ids) == 1 and not is_configurable
+        selected_qty = selected_combo_item_qty or (combo.qty_free if is_preselected else 0)
 
         return {
             "id": combo_item.id,
             "extra_price": combo_item.extra_price,
             "is_preselected": is_preselected,
-            "is_selected": bool(selected_combo_item) or is_preselected,
+            "is_selected": bool(selected_qty),
+            "selected_qty": selected_qty,
             "is_configurable": is_configurable,
             "product": {
                 "id": combo_item.product_id.id,

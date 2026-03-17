@@ -1233,15 +1233,42 @@ class SaleOrder(models.Model):
                     ]
             elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
-                if selected_combo_items and len(selected_combo_items) != len(
-                    line.product_template_id.sudo().combo_ids
-                ):
-                    raise ValidationError(
-                        _(
-                            "The number of selected combo items must match the number of available"
-                            " combo choices."
+                if selected_combo_items:
+                    combo_choices = line.product_template_id.sudo().combo_ids
+                    combo_items_by_id = {
+                        combo_item.id: combo_item for combo_item in combo_choices.combo_item_ids
+                    }
+                    selected_combo_items_qty_by_combo = defaultdict(int)
+                    for selected_combo_item in selected_combo_items:
+                        selected_combo_item_qty = int(selected_combo_item.get("qty", 1))
+                        if selected_combo_item_qty <= 0:
+                            raise ValidationError(
+                                _("Selected combo item quantities must be positive.")
+                            )
+                        combo_item = combo_items_by_id.get(selected_combo_item["combo_item_id"])
+                        if not combo_item:
+                            raise ValidationError(_("Some selected combo items are invalid."))
+                        selected_combo_items_qty_by_combo[combo_item.combo_id.id] += (
+                            selected_combo_item_qty
                         )
+
+                    invalid_combo_choice = next(
+                        (
+                            combo_choice
+                            for combo_choice in combo_choices
+                            if selected_combo_items_qty_by_combo[combo_choice.id]
+                            != combo_choice.qty_free
+                        ),
+                        False,
                     )
+                    if invalid_combo_choice:
+                        raise ValidationError(
+                            _(
+                                "You must select exactly %(required)s item(s) for '%(combo)s'.",
+                                required=invalid_combo_choice.qty_free,
+                                combo=invalid_combo_choice.name,
+                            )
+                        )
 
                 # Delete any existing combo item lines.
                 delete_commands = [
@@ -1251,7 +1278,7 @@ class SaleOrder(models.Model):
                 create_commands = [
                     Command.create({
                         "product_id": combo_item["product_id"],
-                        "product_uom_qty": line.product_uom_qty,
+                        "product_uom_qty": line.product_uom_qty * int(combo_item.get("qty", 1)),
                         "combo_item_id": combo_item["combo_item_id"],
                         "product_no_variant_attribute_value_ids": [
                             Command.set(combo_item["no_variant_attribute_value_ids"])
@@ -1274,7 +1301,7 @@ class SaleOrder(models.Model):
                 # come first.
                 update_commands = [
                     Command.update(
-                        order_line.id, {"sequence": order_line.sequence + len(selected_combo_items)}
+                        order_line.id, {"sequence": order_line.sequence + len(create_commands)}
                     )
                     for order_line in self.order_line
                     if order_line.sequence > line.sequence
@@ -1288,10 +1315,23 @@ class SaleOrder(models.Model):
                 # Only update the combo item lines if the line's combo choices haven't changed.
                 and combo_item_lines.combo_item_id.combo_id == line.product_template_id.combo_ids
             ):
-                combo_item_lines.update({
-                    "product_uom_qty": line.product_uom_qty,
-                    "discount": line.discount,
-                })
+                for combo_choice in line.product_template_id.combo_ids:
+                    combo_choice_lines = combo_item_lines.filtered(
+                        lambda combo_item_line: (
+                            combo_item_line.combo_item_id.combo_id == combo_choice
+                        )
+                    )
+                    if not combo_choice_lines:
+                        continue
+                    previous_combo_qty = (
+                        sum(combo_choice_lines.mapped("product_uom_qty")) / combo_choice.qty_free
+                    )
+                    for combo_item_line in combo_choice_lines:
+                        combo_item_ratio = combo_item_line.product_uom_qty / (
+                            previous_combo_qty or 1
+                        )
+                        combo_item_line.product_uom_qty = line.product_uom_qty * combo_item_ratio
+                        combo_item_line.discount = line.discount
 
     # === CRUD METHODS ===#
 

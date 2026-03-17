@@ -12,6 +12,7 @@ class ProductCombo(models.Model):
     name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(default=10, copy=False)
     company_id = fields.Many2one(string="Company", comodel_name='res.company', index=True)
+    qty_free = fields.Integer(string="Free quantity", default=1, help="Number of free items included in the combo.")
     combo_item_ids = fields.One2many(
         comodel_name='product.combo.item',
         inverse_name='combo_id',
@@ -77,3 +78,8 @@ class ProductCombo(models.Model):
         templates = self.env['product.template'].sudo().search([('combo_ids', 'in', self.ids)])
         templates._check_company(fnames=['combo_ids'])
         self.combo_item_ids._check_company(fnames=['product_id'])
+
+    @api.constrains('qty_free')
+    def _check_qty_free(self):
+        if any(combo.qty_free < 1 for combo in self):
+            raise ValidationError(_("The free quantity of a combo must be greater or equal to 1."))

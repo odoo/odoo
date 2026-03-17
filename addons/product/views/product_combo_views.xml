@@ -17,31 +17,35 @@
                         />
                     </h1>
                 </div>
-                <group>
-                    <field
-                        name="company_id"
-                        placeholder="Visible to all"
-                        groups="base.group_multi_company"
-                        options="{'no_create': True}"
-                        class="oe_inline"
-                    />
+                <group col="2">
+                    <group>
+                        <field name="qty_free" string="Includes"/>
+                    </group>
+                    <group>
+                        <field
+                            name="company_id"
+                            placeholder="Visible to all"
+                            groups="base.group_multi_company"
+                            options="{'no_create': True}"
+                            class="oe_inline"
+                        />
+                    </group>
                 </group>
-                <field name="combo_item_ids">
-                    <list editable="bottom">
-                        <field name="currency_id" column_invisible="True"/>
-                        <field name="product_id"/>
-                        <field
-                            name="lst_price"
-                            widget="monetary"
-                            options="{'field_digits': True}"
-                        />
-                        <field
-                            name="extra_price"
-                            widget="monetary"
-                            options="{'field_digits': True}"
-                        />
-                    </list>
-                </field>
+                <notebook>
+                    <page string="Options">
+                        <field name="combo_item_ids">
+                            <list editable="bottom">
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="product_id"/>
+                                <field
+                                    name="extra_price"
+                                    widget="monetary"
+                                    options="{'field_digits': True}"
+                                />
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
             </form>
         </field>
     </record>
@@ -54,7 +58,6 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
                 <field name="combo_item_count"/>
             </list>
         </field>
@@ -65,5 +68,6 @@
         <field name="res_model">product.combo</field>
         <field name="path">combo-choices</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'from_sale': True}</field>
     </record>
 </odoo>

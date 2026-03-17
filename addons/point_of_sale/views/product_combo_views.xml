@@ -9,21 +9,12 @@
                 <attribute name="context">{'default_available_in_pos': True}</attribute>
             </field>
 
-            <xpath expr="//field[@name='company_id']" position="replace">
+            <xpath expr="//field[@name='qty_free']" position="replace">
                 <group>
-                    <field name="qty_max" string="Maximum items" />
-                    <field name="qty_free" string="Includes free" invisible="is_upsell"/>
-                    <field name="is_upsell" widget="boolean_toggle"/>
-                </group>
-                <group>
-                    <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
-                    <field
-                        name="company_id"
-                        placeholder="Visible to all"
-                        groups="base.group_multi_company"
-                        options="{'no_create': True}"
-                        class="oe_inline"
-                    />
+                    <field name="qty_max" string="Maximum items" invisible="from_sale"/>
+                    <field name="qty_free" string="Includes" invisible="is_upsell"/>
+                    <p invisible="not (is_upsell == True and from_sale == True)">You must disable the <strong>Is Upsell</strong> setting in the <strong>Point of Sale</strong> module in order to select the included quantity.</p>
+                    <field name="is_upsell" widget="boolean_toggle" invisible="from_sale"/>
                 </group>
             </xpath>
         </field>

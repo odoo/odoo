@@ -295,9 +295,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     async _openComboConfigurator(edit = false, hasOptionalProducts = false) {
         const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
+        const comboLineQuantity = comboLineRecord.data.product_uom_qty || 1;
         const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord).filter(record => !!record.data.combo_item_id);
         const selectedComboItems = await Promise.all(comboItemLineRecords.map(async record => ({
             id: record.data.combo_item_id.id,
+            qty: Math.max(1, Math.round(record.data.product_uom_qty / comboLineQuantity)),
             no_variant_ptav_ids: edit ? this._getNoVariantPtavIds(record.data) : [],
             custom_ptavs: edit ? await this._getCustomPtavs(record.data) : [],
         })));
@@ -313,10 +315,15 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         });
 
         const comboChoices = combos.map(combo => new ProductCombo(combo));
-        const preselectedComboItems = comboChoices
-            .map(combo => combo.preselectedComboItem)
-            .filter(Boolean);
-        if (preselectedComboItems.length === comboChoices.length) {
+        const allCombosPreselected = comboChoices.every(combo => !!combo.preselectedComboItem);
+        const preselectedComboItems = allCombosPreselected
+            ? comboChoices.map(combo => {
+                const comboItem = combo.preselectedComboItem.deepCopy();
+                comboItem.selected_qty = combo.qty_free;
+                return comboItem;
+            })
+            : [];
+        if (allCombosPreselected) {
             return this.handleComboSave(
                 { 'quantity' : remainingData.quantity },
                 preselectedComboItems,
