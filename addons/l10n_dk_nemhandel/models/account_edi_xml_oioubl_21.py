@@ -160,15 +160,16 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 },
             })
         if partner.nemhandel_identifier_type and partner.nemhandel_identifier_value:
-            prefix = 'DK' if partner.nemhandel_identifier_type == '0184' else ''
+            prefix = 'DK' if partner.nemhandel_identifier_type in {'0184', '0198'} else ''
             party_node['cbc:EndpointID'] = {
                 '_text': f'{prefix}{partner.nemhandel_identifier_value}',
                 'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
             }
         if partner.nemhandel_identifier_value or partner.ref:
+            prefix = 'DK' if partner.nemhandel_identifier_type in {'0184', '0198'} else ''
             party_node['cac:PartyIdentification'] = {
                 'cbc:ID': {
-                    '_text': partner.nemhandel_identifier_value or partner.ref,
+                    '_text': f'{prefix}{partner.nemhandel_identifier_value or partner.ref}',
                     'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
                 }
             }
