@@ -263,9 +263,10 @@ class PosOrder(models.Model):
             max_free = combo.qty_free
 
             for line in child_lines:
+                qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
                 qty_free = max(0, max_free - free_count)
-                free_qty = min(line.qty, qty_free)
-                extra_qty = line.qty - free_qty
+                free_qty = min(qty_per_line, qty_free)
+                extra_qty = qty_per_line - free_qty
 
                 if free_qty > 0:
                     child_line_free.append(line)
@@ -282,7 +283,7 @@ class PosOrder(models.Model):
             combo = combo_item.combo_id
             unit_devision_factor = original_total or 1
             price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
-            remaining_total -= price_unit * child.qty
+            remaining_total -= price_unit * (child.qty / child.combo_parent_id.qty if child.combo_parent_id.qty else child.qty)
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total
