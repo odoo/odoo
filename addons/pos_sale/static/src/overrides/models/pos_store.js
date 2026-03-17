@@ -320,8 +320,6 @@ patch(PosStore.prototype, {
         );
 
         // We need one unique line for the fixed amount taxes
-        let fixed_taxes_downpayment = 0;
-        const fixed_taxes_tab = [];
         const down_payment_line_to_create = [];
 
         Object.keys(grouped).forEach(async (key) => {
@@ -329,12 +327,6 @@ patch(PosStore.prototype, {
 
             // We compute the values for the fixed taxes downpayment
             const fixed_taxes = group[0].tax_id.filter((tax) => tax.amount_type === "fixed");
-            const total_qty = group.reduce((total, line) => (total += line.product_uom_qty), 0);
-            fixed_taxes.forEach((tax) => {
-                fixed_taxes_downpayment += tax.amount * total_qty * percentage;
-                fixed_taxes_tab.push(group);
-            });
-
             // We need to remove the amount of the fixed tax as they will have a separate line
             const fixed_tax_total_amount = fixed_taxes.reduce(
                 (total, tax) => total + tax.amount,
@@ -363,19 +355,6 @@ patch(PosStore.prototype, {
                 tax_ids: taxes_to_apply,
             });
         });
-        if (fixed_taxes_downpayment !== 0) {
-            // We try to merge the fixed taxes in one line that has no tax if possible
-            const line = down_payment_line_to_create.find((line) => !line.tax_ids.length);
-            if (line) {
-                line.price += fixed_taxes_downpayment;
-            } else {
-                down_payment_line_to_create.push({
-                    price: fixed_taxes_downpayment,
-                    tab: fixed_taxes_tab.flat(),
-                    tax_ids: [],
-                });
-            }
-        }
         for (const down_payment_line of down_payment_line_to_create) {
             const matchedSaleOrderLines = [];
             for (const line of sale_order.order_line.filter((soLine) => !soLine.display_type)) {
