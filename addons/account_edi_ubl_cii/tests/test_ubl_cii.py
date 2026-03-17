@@ -88,7 +88,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             }, {
                 'product_id': self.displace_prdct.id,
                 'name': 'Displacement',
-                'product_uom_id': self.uom_units.id,
+                'product_uom_id': False,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
@@ -136,6 +136,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         })]
 
         company.partner_id.with_company(company).invoice_edi_format = 'facturx'
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
 
         invoice = self.env['account.move'].create({
             'company_id': company.id,

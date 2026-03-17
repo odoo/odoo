@@ -1,5 +1,8 @@
 from odoo import _, models, Command
+from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account_edi_ubl_cii.tools import CrossIndustryInvoice
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
+from odoo.tools.misc import str2bool
 from lxml import etree
 
 from datetime import datetime
@@ -24,8 +27,8 @@ PAYMENT_MEAN_CODES = {
 
 class AccountEdiXmlCii(models.AbstractModel):
     _name = 'account.edi.xml.cii'
-    _inherit = ['account.edi.common']
-    _description = "Factur-x/XRechnung CII 2.2.0"
+    _inherit = ['account.edi.cii']
+    _description = "Factur-x/ZUGFeRD CII 2.2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):
         # EXTENDS account.edi.common
@@ -258,6 +261,12 @@ class AccountEdiXmlCii(models.AbstractModel):
         return template_values
 
     def _export_invoice(self, invoice):
+        if str2bool(
+            self.env['ir.config_parameter'].sudo().get_bool('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True),
+            default=True,
+        ):
+            return self._export_invoice_new(invoice)
+
         vals = self._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang))
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
@@ -415,3 +424,73 @@ class AccountEdiXmlCii(models.AbstractModel):
                 return 'refund', -1
             return 'invoice', 1
         return None, None
+
+    # -------------------------------------------------------------------------
+    # NEW EXPORT : helpers
+    # -------------------------------------------------------------------------
+
+    def _export_invoice_new(self, invoice):
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice.invoice_line_ids.tax_ids)
+
+        vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
+        document_node = self._get_invoice_node(vals)
+
+        errors = [constraint for constraint in self._export_invoice_constraints_new(invoice, vals).values() if constraint]
+
+        nsmap = self._get_document_nsmap()
+
+        xml_content = dict_to_xml(document_node, nsmap=nsmap, template=CrossIndustryInvoice)
+
+        return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
+
+    def _export_invoice_constraints_new(self, invoice, vals):
+        constraints = self._invoice_constraints_common(invoice)
+        constraints.update(
+            self._cii_constraints(invoice, vals)
+        )
+        return constraints
+
+    def _get_document_nsmap(self):
+        return {
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+            'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+            'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        }
+
+    def _get_invoice_node(self, vals):
+        self._cii_add_invoice_config_vals(vals)
+
+        vals['document_node'] = document_node = {}
+        self._cii_add_exchanged_document_context_node(vals)
+        self._cii_add_exchanged_document_node(vals)
+        self._cii_add_supply_chain_trade_transaction_node(vals)
+
+        return document_node
+
+    # -------------------------------------------------------------------------
+    # NEW IMPORT : helpers
+    # -------------------------------------------------------------------------
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        """
+        :param account.move invoice:
+        """
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+        return self._cii_import_invoice(invoice, file_data, new=new)
+
+    def _import_prepare_missing_customer_create_values(self, collected_values):
+        partner_create_values = super()._import_prepare_missing_customer_create_values(collected_values)
+
+        customer_values = collected_values['customer_values']
+        if (
+                (routing_scheme := customer_values.get('routing_scheme'))
+                and (routing_endpoint := customer_values.get('routing_endpoint'))
+        ):
+            partner_create_values['routing_scheme'] = routing_scheme
+            partner_create_values['routing_endpoint'] = routing_endpoint
+
+        return partner_create_values
