@@ -31,20 +31,17 @@ export class CountedQuantityWidgetField extends FloatField {
     }
 
     onInput(ev) {
-        return this.props.record.update({ inventory_quantity_set: true });
+        //TODO remove in master
     }
 
     updateValue(ev){
         try {
-           const val = this.parse(ev.target.value);
-            this.props.record.update({ [this.props.name]: val });
+            const val = this.parse(ev.target.value);
+            this.props.record.update({ [this.props.name]: val, inventory_quantity_set: true });
         } catch {} // ignore since it will be handled later
     }
 
     onBlur(ev) {
-         if (!this.props.record.data.inventory_quantity_set) {
-           return;
-        }
         this.updateValue(ev);
     }
 
