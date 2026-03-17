@@ -63,7 +63,7 @@ class TestCIIUS(TestUBLCommon):
             invoice_vals={
                 'amount_total': 100,
                 'amount_tax': 0,
-                'invoice_lines': [{'price_subtotal': x} for x in (-5, 10, 60, 30, 5)],
+                'invoice_lines': [{'price_subtotal': x} for x in (10.0, -5.0, 60.0, 30.0, 5.0)],
             },
             move_type='in_refund'
         )
