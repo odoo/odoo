@@ -184,3 +184,83 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_product_dont_display_all_variants")
+
+    def test_self_order_combo_multiple_qty(self):
+        """
+        Tests that when having a combo with multiple qty, the price in the backend
+        is correctly computed based on the combo product's price.
+        """
+        water, orange_juice, water2, orange_juice2 = self.env['product.product'].create([
+            {
+                'name': 'Water',
+                'available_in_pos': True,
+                'list_price': 0.0,
+                'taxes_id': [],
+            },
+            {
+                'name': 'Orange Juice',
+                'available_in_pos': True,
+                'list_price': 0.0,
+            },
+            {
+                'name': 'Water 2',
+                'available_in_pos': True,
+                'list_price': 2.0,
+                'taxes_id': [],
+            },
+            {
+                'name': 'Orange Juice 2',
+                'available_in_pos': True,
+                'list_price': 2.0,
+            }
+
+        ])
+        drinks_combo, drinks_combo_with_price = self.env['product.combo'].create([
+            {
+                'name': 'Drinks',
+                'combo_item_ids': [
+                    Command.create({'product_id': water.id, 'extra_price': 0}),
+                    Command.create({'product_id': orange_juice.id, 'extra_price': 0}),
+                ],
+            },
+            {
+                'name': 'Drinks2',
+                'combo_item_ids': [
+                    Command.create({'product_id': water2.id, 'extra_price': 0}),
+                    Command.create({'product_id': orange_juice2.id, 'extra_price': 0}),
+                ],
+            }
+        ])
+        self.env['product.product'].create([
+            {
+                'name': 'Combo Drinks',
+                'type': 'combo',
+                'available_in_pos': True,
+                'list_price': 12.0,
+                'combo_ids': [
+                    Command.set([drinks_combo.id]),
+                ],
+            },
+            {
+                'name': 'Price for drinks',
+                'type': 'combo',
+                'available_in_pos': True,
+                'list_price': 12.0,
+                'combo_ids': [
+                    Command.set([drinks_combo_with_price.id]),
+                ],
+            }
+        ])
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_combo_multiple_qty")
+        orders = self.env['pos.order'].search([], order='id desc', limit=2)
+        self.assertEqual(orders[1].amount_total, 24)
+        self.assertEqual(orders[0].amount_total, 36)
