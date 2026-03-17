@@ -365,6 +365,12 @@
                                 <kanban class="o_kanban_mobile">
                                      <field name="display_type"/>
                                      <field name="tax_calculation_rounding_method"/>
+                                     <control>
+                                        <create name="add_product_control" string="Add product"/>
+                                        <create name="add_section_control" string="Add section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add note" context="{'default_display_type': 'line_note'}"/>
+                                        <button name="action_add_from_catalog" string="Catalog" type="object" context="{'order_id': parent.id}"/>
+                                     </control>
                                      <templates>
                                          <t t-name="card">
                                             <t t-if="!record.display_type.raw_value">
