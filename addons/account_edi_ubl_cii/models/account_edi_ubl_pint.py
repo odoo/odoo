@@ -398,3 +398,20 @@ class AccountEdiUBLPint(models.AbstractModel):
         AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
 
         return vals
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _import_prepare_missing_customer_create_values(self, collected_values):
+        partner_create_values = super()._import_prepare_missing_customer_create_values(collected_values)
+
+        customer_values = collected_values['customer_values']
+        if (
+                (peppol_eas := customer_values.get('peppol_eas'))
+                and (peppol_endpoint := customer_values.get('peppol_endpoint'))
+        ):
+            partner_create_values['peppol_eas'] = peppol_eas
+            partner_create_values['peppol_endpoint'] = peppol_endpoint
+
+        return partner_create_values
