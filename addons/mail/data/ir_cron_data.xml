@@ -92,5 +92,13 @@
             <field name="code">model._cleanup_expired_mutes()</field>
             <field name="state">code</field>
         </record>
+        <record id="ir_cron_notify_missed_messages" model="ir.cron">
+            <field name="name">Mail: Notify about missed messages</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_discuss_channel"/>
+            <field name="code">model._notify_missed_messages_cron()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

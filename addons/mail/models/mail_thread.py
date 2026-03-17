@@ -21,6 +21,7 @@ from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
+from zoneinfo import ZoneInfo
 
 from lxml import etree, html
 from markupsafe import Markup, escape
@@ -46,6 +47,7 @@ from odoo.tools.mail import (
     email_normalize, email_normalize_all, email_split,
     email_split_and_format, email_split_and_format_normalize, email_split_and_normalize,
     formataddr, html_sanitize,
+    html_to_inner_content,
     generate_tracking_message_id,
     unfold_references,
 )
@@ -5275,3 +5277,178 @@ class MailThread(models.AbstractModel):
         ).has_access(mode):
             return thread
         return self.browse()
+
+    @api.model
+    def _get_messages_by_inactive_partner(self, inactive_partners_ids):
+        # custom sql since impossible to link mail_message.partner_ids
+        # and notification_ids.partner_id through ORM
+        self.env.cr.execute(SQL("""
+            SELECT partner_ids.res_partner_id, MIN(mm.id) as mail_message_id
+              FROM mail_notification notif
+              JOIN mail_message mm ON mm.id = notif.mail_message_id
+              JOIN mail_message_res_partner_rel partner_ids
+                ON partner_ids.mail_message_id = mm.id
+               AND partner_ids.res_partner_id = notif.res_partner_id
+             WHERE partner_ids.res_partner_id in %(inactive_partners_ids)s
+               AND notif.is_read IS NULL
+               AND mm.message_type = 'comment' --might not be what we want
+               AND mm.create_date > timezone('utc', NOW()) - INTERVAL '8 days'
+               AND mm.create_date < timezone('utc', NOW()) - INTERVAL '1 day'
+               AND notif.notification_type = 'inbox'
+               AND mm.model != 'discuss.channel'
+          GROUP BY partner_ids.res_partner_id, mm.res_id, mm.model
+        """, inactive_partners_ids=tuple(inactive_partners_ids)))
+        res = self.env.cr.fetchall()
+        message_by_partner = defaultdict(self.env["mail.message"].browse)
+        for partner_id, message_id in res:
+            message_by_partner[partner_id] |= self.env["mail.message"].browse(message_id)
+        return message_by_partner
+
+    @api.model
+    def _notify_missed_messages_cron(self):
+        inactive_partners_ids = {
+            p["id"] for p in self.env["res.partner"]._get_inactive_partners_data()
+        }
+        if not inactive_partners_ids:
+            return
+        # prefetching threads, partners and messages to avoid fetching in the mail generation loop
+        messages_by_partner = self._get_messages_by_inactive_partner(inactive_partners_ids)
+        if not messages_by_partner:
+            return
+        all_messages = self.env["mail.message"]
+        all_threads = {}
+        inactive_partners_to_notify = self.env["res.partner"].browse(messages_by_partner.keys())
+        all_partners = inactive_partners_to_notify
+        for messages in messages_by_partner.values():
+            all_messages |= messages
+        all_messages.fetch(("author_id", "body", "create_date", "partner_ids", "model", "res_id"))
+        all_partners |= all_messages.author_id
+        all_partners.fetch()
+        for message in all_messages:
+            if message.model not in all_threads:
+                all_threads[message.model] = self.env[message.model].browse(message.res_id)
+            else:
+                all_threads[message.model] |= self.env[message.model].browse(message.res_id)
+        for thread_model, threads in all_threads.items():
+            threads.fetch(("display_name",))
+
+        def derive_mail_value(partner_id, messages):
+            """Derive mail data for the given partner
+            with all its related members having new messages to notify."""
+            partner = self.env["res.partner"].browse(partner_id)
+            email_from = (
+                messages[0].author_id.email
+                if len(messages) == 1
+                else partner.main_user_id.company_id.catchall_formatted
+                or partner.main_user_id.company_id.email_formatted
+            )
+            email_to = partner.email
+            if not email_to:
+                return None
+            messages_mentioned = messages.filtered(lambda m: partner in m.partner_ids)
+            messages_not_mentioned = messages - messages_mentioned
+
+            def get_messages_groups(messages):
+                """ Group messages by model and format them for the qweb template.
+
+                :returns: A dict of {module: {model: [message_data]}}
+                where message_data is a dict containing the following keys:
+                    author: the author of the message;
+                    thread_name: the name of the thread the message belongs to;
+                    date: the date of the message, formatted in the user's timezone;
+                    mail_message_body: the body of the message, shortened to 190 characters
+                        and stripped of html tags;
+                    partner_avatar_url: the URL of the author's avatar;
+                    url: the URL to access the message in Odoo.
+                """
+                messages_by_model = messages.grouped("model")
+                modules = self.env["ir.module.module"].search_fetch(
+                    [
+                        (
+                            "name",
+                            "in",
+                            {self.env[model]._original_module for model in messages_by_model},
+                        )
+                    ]
+                )
+                messages_groups = defaultdict(dict)
+                for model, messages in messages_by_model.items():
+                    module_name = self.env[model]._original_module
+                    module = modules.filtered(lambda m: m.name == module_name)
+                    messages_groups[module][self.env[model]] = messages.mapped(
+                        lambda m: {
+                            "author": m.author_id,
+                            "thread_name": self.env[model].browse(m.res_id).display_name,
+                            "date": fields.Datetime.to_string(
+                                m.create_date.astimezone(ZoneInfo(partner.tz or "UTC"))
+                            ),
+                            "mail_message_body": textwrap.shorten(
+                                html_to_inner_content(m.body or ""),
+                                190,
+                            ),
+                            "partner_avatar_url": "/web/image/res.partner"
+                                f"/{m.author_id.id}/avatar_128"
+                                f"?access_token={m.author_id._get_avatar_128_access_token()}",
+                            "url": f"/mail/message/{m.id}",
+                        }
+                    )
+                return messages_groups
+
+            messages_data = (
+                get_messages_groups(messages_mentioned),
+                get_messages_groups(messages_not_mentioned),
+            )
+            body = (
+                self.env["ir.qweb"]
+                .with_context(lang=partner.lang or self.env.lang)
+                ._render(
+                    "mail.email_template_missed_message_notification",
+                    {
+                        "base_url": self.env["ir.config_parameter"].get_base_url(),
+                        "company": partner.company_id,
+                        "messages_data": messages_data,
+                        "user": partner.main_user_id,
+                    },
+                    minimal_qcontext=True,
+                )
+            )
+            body = self.env["mail.render.mixin"]._replace_local_links(body)
+            body_html = (
+                self.env["mail.render.mixin"]
+                .with_context(lang=partner.lang or self.env.lang)
+                ._render_encapsulate(
+                    "mail.mail_notification_layout",
+                    body,
+                    add_context={
+                        "email_notification_force_header": True,
+                        "email_notification_force_footer": True,
+                        "has_button_access": True,
+                        "button_access": {
+                            "url": "/odoo/discuss",
+                            "title": self.env._("Open Discuss"),
+                        },
+                        "subtitles": [
+                            self.env._("You have unread messages since your last visit."),
+                        ],
+                    },
+                )
+            )
+            return {
+                "body": body,
+                "body_html": body_html,
+                "email_from": email_normalize(email_from),
+                "email_to": email_normalize(email_to),
+                "message_type": "user_notification",
+                "subject": self.env._("You have unread messages in Discuss"),
+            }
+
+        mails = (
+            self.env["mail.mail"]
+            .create([
+                val
+                for partner, messages in messages_by_partner.items()
+                if (val := derive_mail_value(partner, messages)) is not None
+            ])
+        )
+        mails.send()
+        inactive_partners_to_notify.user_ids.last_notified = fields.Datetime.now()

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="email_template_missed_message_notification">
+            <div style="padding: 16px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; color: #454748; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="max-width: 590px; width: 100%; background-color: #ffffff; border-radius: 8px; padding: 20px; margin: 20px; display: flex; flex-direction: column; align-items: center;">
+                    <t t-set="mentioned_messages" t-value="messages_data[0]"/>
+                    <t t-set="other_messages" t-value="messages_data[1]"/>
+                    <t t-if="mentioned_messages">
+                        <h2 style="color: {{company.email_secondary_color or '#875A7B'}}; text-align: center;">You were mentioned in the following messages</h2>
+                        <t t-foreach="mentioned_messages" t-as="module">
+                            <t t-set="messages_by_model" t-value="mentioned_messages[module]"/>
+                            <t t-foreach="messages_by_model" t-as="model">
+                                <h4 style="padding: 8px;">
+                                    <img
+                                        t-att-src="module.icon"
+                                        t-attf-alt="{{module.name}}:"/>
+                                    <t t-out="model._description"/>
+                                </h4>
+                                <t t-set="messages" t-value="messages_by_model[model]"/>
+                                <t t-foreach="messages" t-as="message">
+                                    <div style="width: 100%; font-size: 14px; line-height: 1.5; text-align: left; border-top: 1px solid #E0E0E0;">
+                                        <p style="padding: 8px;">
+                                            <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                <img
+                                                    t-attf-src="{{base_url}}{{message['partner_avatar_url']}}"
+                                                    t-attf-alt="Avatar of {{message['author'].display_name}}"
+                                                    style="heigh: 24px; width: 24px; margin-right: 12px"
+                                                    />
+                                                <b><t t-out="message['author'].display_name"/></b> in <t t-out="message['thread_name']"/>
+                                            </p>
+                                            On <t t-out="message['date']"/><br/>
+                                            <p style="border-left: 1px solid lightgray; margin: 24px; padding-left: 16px;"><t t-out="message['mail_message_body']"/></p><br/>
+                                            <a
+                                                t-attf-href="{{base_url}}{{message['url']}}"
+                                                t-attf-style="margin-top: 16px; padding: 10px 20px; background-color: {{company.email_secondary_color or '#875A7B'}}; color: {{company.email_primary_color or '#FFFFFF'}}; border: none; border-radius: 4px; text-decoration: none !important; font-size: 14px;"
+                                             >View Message
+                                            </a>
+                                        </p>
+                                    </div>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                    <t t-if="other_messages">
+                        <h2 style="color: {{company.email_secondary_color or '#875A7B'}}; text-align: center;">Messages you might have missed</h2>
+                        <t t-foreach="other_messages" t-as="module">
+                            <t t-set="messages_by_model" t-value="other_messages[module]"/>
+                            <t t-foreach="messages_by_model" t-as="model">
+                                <h4 style="padding: 8px;">
+                                    <img
+                                        t-att-src="module.icon"
+                                        t-attf-alt="{{module.name}}:"/>
+                                    <t t-out="model._description"/>
+                                </h4>
+                                <t t-set="messages" t-value="messages_by_model[model]"/>
+                                <t t-foreach="messages" t-as="message">
+                                    <div style="width: 100%; font-size: 14px; line-height: 1.5; text-align: left; border-top: 1px solid #E0E0E0; justify-content: space-between; display: flex;">
+                                        <p style="padding: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <t t-out="message['thread_name']"/>
+                                        </p>
+                                        <p style="padding: 8px; white-space: nowrap;">
+                                            <a
+                                                t-attf-href="{{base_url}}{{message['url']}}"
+                                                t-attf-style="margin-top: 16px; padding: 10px 20px; background-color: {{company.email_secondary_color or '#875A7B'}}; color: {{company.email_primary_color or '#FFFFFF'}}; border: none; border-radius: 4px; text-decoration: none !important; font-size: 14px;"
+                                             >View Message
+                                            </a>
+                                        </p>
+                                    </div>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

@@ -7,6 +7,7 @@ from odoo.fields import Domain
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
+from odoo.tools.sql import SQL
 
 
 class ResPartner(models.Model):
@@ -323,3 +324,23 @@ class ResPartner(models.Model):
             query = self._search(Domain('id', 'not in', partners.ids) & domain, limit=remaining_limit)
             partners |= self.browse(query)
         return partners
+
+    @api.model
+    def _get_inactive_partners_data(self):
+        self.env.cr.execute(SQL(
+            """
+            SELECT res_partner.id, res_users.id as user_id
+              FROM res_partner
+              JOIN res_users ON res_partner.id = res_users.partner_id
+              JOIN mail_presence ON mail_presence.user_id = res_users.id
+             WHERE mail_presence.status = 'offline'
+                -- 1 week - 8 hours (avoid cron sync issues)
+               AND (
+                    res_users.last_notified < timezone('utc', NOW()) - INTERVAL '160 hours'
+                    OR res_users.last_notified IS NULL
+                )
+          GROUP BY res_partner.id, res_users.id
+            HAVING MAX(mail_presence.last_poll) < timezone('utc', NOW()) - INTERVAL '72 hours'
+            """
+        ))
+        return self.env.cr.dictfetchall()

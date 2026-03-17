@@ -1676,3 +1676,61 @@ class DiscussChannel(models.Model):
         else:
             msg = _("You are alone in this channel.")
         self.env.user._bus_send_transient_message(self, msg)
+
+    def _get_messages_by_inactive_partner(self, inactive_partners_ids):
+        self.env.cr.execute(SQL("""
+                SELECT dm.partner_id,
+                       MIN(mm.id) AS first_unseen_message_in_range
+                  FROM discuss_channel dc
+                  JOIN discuss_channel_member dm ON dc.id = dm.channel_id
+                  JOIN res_partner rp ON rp.id = dm.partner_id
+                  JOIN res_users ru ON ru.partner_id = rp.id
+                   AND ru.active
+             LEFT JOIN res_users_settings rus ON rus.user_id = ru.id
+                  JOIN mail_message mm ON mm.model = 'discuss.channel'
+                   AND mm.res_id = dm.channel_id
+             LEFT JOIN mail_message_res_partner_rel mp ON mp.mail_message_id = mm.id
+                   AND mp.res_partner_id = dm.partner_id
+                 WHERE (
+                       dm.mute_until_dt IS NULL
+                       OR dm.mute_until_dt < timezone('utc', NOW())
+                   )
+                   AND NOT (
+                       dc.channel_type = 'channel'
+                       AND
+                       COALESCE(
+                           dm.custom_notifications,
+                           rus.channel_notifications,
+                           'mentions'
+                       ) = 'no_notif'
+                   )
+                   AND rp.id IN %(partner_ids)s
+                   AND (
+                       (
+                            dc.channel_type != 'group' AND (
+                                dc.channel_type != 'channel' OR
+                                COALESCE(
+                                     dm.custom_notifications,
+                                     rus.channel_notifications,
+                                     'mentions'
+                                 ) != 'mentions'
+                            )
+                       )
+                       OR mp.mail_message_id IS NOT NULL
+                   )
+                   AND mm.create_date > (timezone('utc', NOW()) - INTERVAL '8 days')
+                   AND mm.create_date < (timezone('utc', NOW()) - INTERVAL '1 day')
+                   AND mm.message_type = 'comment'
+                   AND (dm.seen_message_id IS NULL OR mm.id > dm.seen_message_id)
+                   AND mm.author_id != dm.partner_id
+              GROUP BY dm.partner_id, dm.channel_id
+            """,
+            partner_ids=tuple(inactive_partners_ids)
+        ))
+        res = self.env.cr.dictfetchall()
+        message_by_partner = super()._get_messages_by_inactive_partner(inactive_partners_ids)
+        for member_data in res:
+            message_by_partner[member_data["partner_id"]] |= self.env["mail.message"].browse(
+                member_data["first_unseen_message_in_range"]
+            )
+        return message_by_partner

@@ -61,6 +61,10 @@ class ResUsers(models.Model):
         default='default',
     )
     has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server', compute_sudo=True)
+    last_notified = fields.Datetime(
+        help="Date and time of the last notification sent to the user."
+            " Used to avoid sending too many notifications in a short period of time."
+    )
 
     def _compute_has_external_mail_server(self):
         self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_str(

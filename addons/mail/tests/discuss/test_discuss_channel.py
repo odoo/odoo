@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
+from lxml import html
 from markupsafe import Markup
 
 from odoo import Command, fields
@@ -11,7 +12,7 @@ from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
-from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user, freeze_all_time
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, users
@@ -1050,3 +1051,159 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+
+class TestDiscussChannelNotifyMissedMessages(MailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.registry_enter_test_mode_cls()
+        # remove current data to avoid interferences with the test
+        cls.env["discuss.channel.member"].search([
+            ("partner_id", "=", cls.partner_employee.id),
+        ]).unlink()
+        date_past = fields.Datetime.now() - timedelta(days=5)
+        cls.env["mail.presence"].sudo().create(
+            {
+                "user_id": cls.user_employee.id,
+                "last_poll": fields.Datetime.to_datetime(date_past),
+                "status": "offline",
+            }
+        )
+        with freeze_all_time(date_past):
+            cls.channel = cls.env["discuss.channel"].create({"name": "test channel"})
+            members = cls.channel._add_members(users=cls.user_employee)
+            cls.employee_member = members.filtered(lambda m: m.partner_id == cls.partner_employee)
+
+            cls.message = cls.channel.message_post(
+                body="Message 1",
+                message_type="comment",
+            )
+        with freeze_all_time(date_past + timedelta(minutes=1)):
+            cls.message_with_mention = cls.channel.message_post(
+                body="Message 2 with mention",
+                message_type="comment",
+                partner_ids=(cls.partner_employee | cls.env.user.partner_id).ids,
+            )
+        with freeze_all_time(date_past + timedelta(minutes=2)):
+            cls.channel.message_post(
+                body="Message 3 with mention",
+                message_type="comment",
+                partner_ids=cls.partner_employee.ids,
+            )
+        cls.env.user.partner_id.active = True
+
+    def test_notify_missed_messages_no_message_when_present(self):
+        self.env["mail.presence"].search([]).write({"status": "online"})
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()
+
+    def test_notify_missed_messages(self):
+        self.assertFalse(
+            self.user_employee.last_notified,
+            "The employee member should not be marked as notified",
+        )
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertMailMailWEmails(
+            [self.partner_employee.email],
+            email_values={
+                "email_from": self.env.user.email,
+            },
+            status="sent",
+        )
+        mail = self.env["mail.mail"].search_fetch([("email_from", "=", self.env.user.email)])
+        body_html = html.fromstring(mail.body_html)
+        body_subtitle_0 = body_html.xpath(
+            '//span[contains(., "You have unread messages since your last visit.")]'
+        )
+        self.assertTrue(body_subtitle_0, "The email should contain the correct subtitle")
+        view_link = body_html.xpath('//a[normalize-space(text())="View Message"]')
+        self.assertTrue(view_link, "The email should contain a link to view the message")
+        self.assertEqual(
+            view_link[0].get("href"),
+            f"{self.env['ir.config_parameter'].get_base_url()}/mail/message/{self.message_with_mention.id}",
+            "The view message link should point to the correct message",
+        )
+        mentioned_text = body_html.xpath(
+            '//h2[contains(normalize-space(.), "You were mentioned")]'
+        )
+        self.assertTrue(mentioned_text, "The email should show that the user was mentioned")
+        unread_text = body_html.xpath(
+            '//h2[contains(normalize-space(.), "Messages you might have missed")]'
+        )
+        self.assertFalse(unread_text, "The email should not specify that there are unread messages")
+        message_metadata = body_html.xpath(
+            '//p[contains(normalize-space(.), "OdooBot in test channel")]'
+        )
+        self.assertTrue(message_metadata, "The email should contain the message metadata")
+        message_html = body_html.xpath('//p[normalize-space(text())="Message 2 with mention"]')
+        self.assertTrue(message_html, "Mentioned messages should show the message body")
+        self.assertTrue(
+            self.user_employee.last_notified > fields.Datetime.now() - timedelta(minutes=1),
+            "The employee member should be marked as notified",
+        )
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()
+
+    def test_notify_missed_messages_all_messages(self):
+        self.employee_member.write({"custom_notifications": "all"})
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertMailMailWEmails(
+            [self.partner_employee.email],
+            email_values={
+                "email_from": self.env.user.email,
+            },
+            status="sent",
+        )
+        mail = self.env["mail.mail"].search_fetch([("email_from", "=", self.env.user.email)])
+        body_html = html.fromstring(mail.body_html)
+        message_html = body_html.xpath('//p[contains(normalize-space(.), "test channel")]')
+        self.assertTrue(message_html, "The email should contain channel name")
+        mentioned_text = body_html.xpath(
+            '//h2[contains(normalize-space(.), "You were mentioned")]'
+        )
+        self.assertFalse(mentioned_text, "The email should not specify the mention information")
+        unread_text = body_html.xpath(
+            '//h2[contains(normalize-space(.), "Messages you might have missed")]'
+        )
+        self.assertTrue(unread_text, "The email should specify that there are unread messages")
+
+    def test_notify_missed_messages_mention_only(self):
+        self.user_employee.res_users_settings_id.write({"channel_notifications": "all"})
+        self.employee_member.write({"custom_notifications": "mentions"})
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertMailMailWEmails(
+            [self.partner_employee.email],
+            author=self.env.user.partner_id,
+            email_values={
+                "email_from": self.env.user.email,
+            },
+            status="sent",
+        )
+        mail = self.env["mail.mail"].search_fetch([("email_from", "=", self.env.user.email)])
+        body_html = html.fromstring(mail.body_html)
+        message_html = body_html.xpath('//p[normalize-space(text())="Message 2 with mention"]')
+        self.assertTrue(message_html, "The email should contain the first message body")
+
+    def test_notify_missed_messages_no_notification(self):
+        self.employee_member.write({"custom_notifications": "no_notif"})
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()
+
+    def test_notify_missed_messages_muted(self):
+        self.employee_member.write(
+            {
+                "mute_until_dt": fields.Datetime.to_datetime(
+                    datetime.now() + timedelta(minutes=1)
+                )
+            },
+        )
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()

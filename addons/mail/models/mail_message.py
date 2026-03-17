@@ -300,6 +300,7 @@ class MailMessage(models.Model):
 
     _model_res_id_idx = models.Index("(model, res_id)")
     _model_res_id_id_idx = models.Index("(model, res_id, id)")
+    _create_date_message_type_idx = models.Index("(create_date, message_type)")
 
     @api.depends('body')
     def _compute_preview(self):
