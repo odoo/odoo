@@ -1546,6 +1546,15 @@ class TestMailgateway(MailGatewayCommon):
                 date=False,
                 parent_id=reply1.id,
             )
+
+        self.env.cr.execute("""
+            UPDATE mail_message
+            SET date = NULL, create_date = NULL
+            WHERE id = %s
+        """, (old_disturbing_msg.id,))
+        self.env.invalidate_all()
+
+        self.assertFalse(old_disturbing_msg.create_date)
         self.assertFalse(old_disturbing_msg.date)
 
         with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
