@@ -532,7 +532,7 @@ class Store:
             return frozenset(Store._deep_freeze(i) for i in obj)
         return obj
 
-    class Stores(dict):
+    class Stores(dict[object | tuple, "Store"]):
         """Lazy mapping to manage a list of Store indexed by bus target.
         Store methods are forwarded to all contained Store instances."""
 
