@@ -12,9 +12,9 @@ export class FloatTimeSelectionPopover extends Component {
         timeValues: {
             type: Object,
             shape: {
-                hours: "00",
-                minutes: "00",
-                floatValue: 0,
+                hours: String,
+                minutes: String,
+                floatValue: Number,
             },
         },
     };

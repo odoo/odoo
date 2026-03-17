@@ -13,11 +13,11 @@ export class OptionsContainer extends BaseOptionComponent {
         snippetModel: { type: Object },
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
-        isRemovable: false,
+        isRemovable: { type: Boolean, optional: true },
         toggleFold: { type: Function, optional: true },
         folded: { type: Boolean, optional: true },
         removeDisabledReason: { type: String, optional: true },
-        isClonable: false,
+        isClonable: { type: Boolean, optional: true },
         cloneDisabledReason: { type: String, optional: true },
         optionTitleComponents: { type: Array, optional: true },
         containerTopButtons: { type: Array },
@@ -28,6 +28,8 @@ export class OptionsContainer extends BaseOptionComponent {
         containerTitle: {},
         headerMiddleButtons: [],
         optionTitleComponents: [],
+        isRemovable: false,
+        isClonable: false,
     };
 
     setup() {

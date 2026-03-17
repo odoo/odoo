@@ -16,7 +16,10 @@ export class FloatTimeField extends Component {
         ...standardFieldProps,
         showSeconds: { type: Boolean, optional: true },
         numeric: { type: Boolean, optional: true },
-        unit: { type: ["hours", "minutes", "seconds"], optional: true },
+        unit: {
+            type: [{ value: "hours" }, { value: "minutes" }, { value: "seconds" }],
+            optional: true,
+        },
     };
     static defaultProps = {
         numeric: false,
@@ -41,11 +44,14 @@ export class FloatTimeField extends Component {
 
     onValueChange(ev) {
         const currentInput = ev.target.value;
-        this.state.formattedResult = formatFloatTime(parseFloatTime(currentInput, this.props.unit), {
-            showSeconds: this.props.showSeconds,
-            numeric: this.props.numeric,
-            unit: this.props.unit,
-        });
+        this.state.formattedResult = formatFloatTime(
+            parseFloatTime(currentInput, this.props.unit),
+            {
+                showSeconds: this.props.showSeconds,
+                numeric: this.props.numeric,
+                unit: this.props.unit,
+            }
+        );
         if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
             this.resultPopover.close();
         } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
@@ -73,13 +79,11 @@ export class FloatTimeField extends Component {
 
     get formattedValue() {
         const value = this.props.record.data[this.props.name];
-        return formatFloatTime(value,
-            {
-                showSeconds: this.props.showSeconds,
-                numeric: this.props.numeric,
-                unit: this.props.unit,
-            },
-        );
+        return formatFloatTime(value, {
+            showSeconds: this.props.showSeconds,
+            numeric: this.props.numeric,
+            unit: this.props.unit,
+        });
     }
 }
 
