@@ -639,3 +639,31 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': '2023-12-25'
         })
         self.assertEqual(1, self.work_entry_type.allocation_count)
+
+    def test_negative_allocation_open_end_overlap_limit(self):
+        """Ensure ValidationError is raised when overlapping negative allocations exceed max limit
+        """
+        self.work_entry_type.write({
+            'allows_negative': True,
+            'max_allowed_negative': 5,
+        })
+        allocation_1 = self.env['hr.leave.allocation'].create({
+            'name': 'Negative Allocation 1',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'number_of_days': -3,
+            'allocation_type': 'regular',
+            'date_from': date(2024, 1, 1),
+        })
+        allocation_1.action_approve()
+        with self.assertRaises(ValidationError):
+            allocation_2 = self.env['hr.leave.allocation'].create({
+                'name': 'Negative Allocation 2',
+                'employee_id': self.employee.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'number_of_days': -3,
+                'allocation_type': 'regular',
+                'date_from': date(2024, 6, 1),
+                'date_to': date(2024, 6, 30),
+            })
+            allocation_2.action_approve()

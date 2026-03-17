@@ -303,18 +303,37 @@ class HrLeaveAllocation(models.Model):
 
     @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
     def _check_negative_allocation(self):
-        for allocation in self:
-            if allocation.number_of_days >= 0:
-                continue
+        for allocation in self.filtered(lambda allocation: allocation.number_of_days < 0):
             if not allocation.work_entry_type_id.allows_negative:
                 raise ValidationError(self.env._("Negative allocations are not allowed for this time type."))
-            allocation_unit = allocation.type_request_unit
-            if allocation_unit != 'hour' and abs(allocation.number_of_days_display) > allocation.work_entry_type_id.max_allowed_negative:
-                raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s day(s).",
-                      max=allocation.work_entry_type_id.max_allowed_negative))
-            if allocation_unit == 'hour' and abs(allocation.number_of_hours_display) > allocation.work_entry_type_id.max_allowed_negative:
-                raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s hour(s).",
-                      max=allocation.work_entry_type_id.max_allowed_negative))
+            domain = [
+                ('id', '!=', allocation.id),
+                ('employee_id', '=', allocation.employee_id.id),
+                ('work_entry_type_id', '=', allocation.work_entry_type_id.id),
+                ('state', 'in', ('confirm', 'validate', 'validate1')),
+                ('number_of_days', '<', 0),
+            ]
+            if allocation.date_to:
+                domain += [('date_from', '<=', allocation.date_to)]
+            domain += [
+                '|',
+                ('date_to', '=', False),
+                ('date_to', '>=', allocation.date_from),
+            ]
+            is_hour_allocation = allocation.type_request_unit == 'hour'
+            aggregate_field = 'number_of_hours_display' if is_hour_allocation else 'number_of_days'
+            current_amount = allocation.number_of_hours_display if is_hour_allocation else allocation.number_of_days
+            negative_total, = self.env['hr.leave.allocation']._read_group(domain, aggregates=[f'{aggregate_field}:sum'])[0]
+            total_negative = -(current_amount + (negative_total or 0))
+            max_negative = allocation.work_entry_type_id.max_allowed_negative
+
+            if total_negative > max_negative:
+                raise ValidationError(self.env._(
+                    "The total negative allocation within this validity period "
+                    "cannot exceed %(max)s %(unit)s.",
+                    max=max_negative,
+                    unit='hours' if is_hour_allocation else 'days',
+                ))
 
     @api.depends('allocation_type')
     def _compute_accrual_plan_id(self):
