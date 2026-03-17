@@ -66,7 +66,7 @@ class IrFilters(models.Model):
         try:
             return ast.literal_eval(self.domain)
         except ValueError as e:
-            raise ValueError("Invalid domain: {self.domain}") from e
+            raise ValueError(f"Invalid domain: {self.domain}") from e
 
     @api.model
     def _get_action_domain(self, action_id=None, embedded_action_id=None, embedded_parent_res_id=None):

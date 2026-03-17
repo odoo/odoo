@@ -70,8 +70,8 @@ class IrRule(models.Model):
                     domain = safe_eval(rule.domain_force, eval_context)
                     model = self.env[rule.model_id.model].sudo()
                     Domain(domain).validate(model)
-                except Exception as e:
-                    raise ValidationError(_('Invalid domain: %s', e))
+                except Exception as e:  # noqa: BLE001
+                    raise ValidationError(_('Invalid domain %(domain)s: %(error)s', domain=rule.domain_force, error=e))
 
     def _compute_domain_keys(self):
         """ Return the list of context keys to use for caching ``_compute_domain``. """
