@@ -165,14 +165,17 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_warehouses(self):
         return self.env['stock.warehouse'].search_fetch([('company_id', 'in', self.env.companies.ids)], ['lot_stock_id', 'view_location_id'])
 
+    def _get_warehouse_locations(self, warehouses):
+        return self.env['stock.location'].search_fetch(
+            [('id', 'child_of', warehouses.view_location_id.ids)],
+            ['warehouse_id'],
+        )
+
     def _get_report_data(self, product_template_ids=False, product_ids=False):
         assert product_template_ids or product_ids
 
         warehouses = self._get_warehouses()
-        locations = self.env['stock.location'].search_fetch(
-            [('id', 'child_of', warehouses.view_location_id.ids)],
-            ['warehouse_id'],
-        )
+        locations = self._get_warehouse_locations(warehouses)
         locations_by_warehouse = locations.grouped('warehouse_id')
         lines = []
         for warehouse in warehouses:
@@ -529,6 +532,24 @@ class StockForecasted_Product_Product(models.AbstractModel):
         if move_ids:
             move_ids._do_unreserve()
         return move_ids
+
+    @api.model
+    def action_open_forecast_moves(self, product_ids, warehouse_ids, move_type):
+        warehouses = self.env['stock.warehouse'].browse(warehouse_ids)
+        locations_by_warehouse = self._get_warehouse_locations(warehouses).grouped('warehouse_id')
+        domains = []
+        for warehouse in warehouses:
+            wh_location_ids = locations_by_warehouse.get(warehouse, self.env['stock.location']).ids
+            in_domain, out_domain = self._move_confirmed_domain(False, product_ids, wh_location_ids)
+            domains.append(in_domain if move_type == 'incoming' else out_domain)
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Inventory Moves (%s)", move_type.capitalize()),
+            'res_model': 'stock.move',
+            'views': [(self.env.ref('stock.stock_move_view_list_from_forecast').id, 'list')],
+            'domain': list(Domain.OR(domains)),
+        }
 
 
 class StockForecasted_Product_Template(models.AbstractModel):
