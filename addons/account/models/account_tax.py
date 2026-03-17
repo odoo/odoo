@@ -711,11 +711,6 @@ class AccountTax(models.Model):
                 if rep_line.repartition_type == 'tax' and not rep_line.use_in_tax_closing
             )
 
-    @api.onchange('amount')
-    def onchange_amount(self):
-        if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.invoice_label:
-            self.invoice_label = "{0:.4g}%".format(self.amount)
-
     @api.onchange('amount_type')
     def onchange_amount_type(self):
         if self.amount_type != 'group':
