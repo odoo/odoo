@@ -9,6 +9,14 @@
             t-esc="this.serverUrl.length > slicingLength ? this.serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + this.serverUrl.slice((-slicingLength / 2) + 1) : this.serverUrl"
         />
     </xpath>
+    <xpath expr="//InputBox" position="after">
+        <t t-if="isTranslatable">
+            <TranslationButton
+                fieldName="props.name"
+                record="props.record"
+            />
+        </t>
+    </xpath>
 </t>
 
 <t t-name="website.FieldImageRadio">

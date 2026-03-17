@@ -116,11 +116,15 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _inverse_is_homepage(self):
         self.ensure_one()
         url = self.url
+        self._update_homepage(url)
+
+    def _update_homepage(self, url):
         if self.is_homepage:
             if url and url != '/':
                 self.website_id.homepage_url = url
         else:
             self.website_id.homepage_url = False
+
 
     @api.depends('target_model_id')
     def _compute_can_publish(self):
@@ -224,9 +228,17 @@ class WebsitePageProperties(models.TransientModel):
         accessed route's url.
         """
         for record in self:
-            url = record.url
+            website_default_lang = record.website_id.default_lang_id.code
+            # The following line makes it buggy when the website default langage is not english
+            url = record.with_context(lang=website_default_lang).url
             current_homepage_url = record.website_id.homepage_url or '/'
             record.is_homepage = url == current_homepage_url
+
+    def _inverse_is_homepage(self):
+        self.ensure_one()
+        website_default_lang = self.website_id.default_lang_id.code
+        url = self.with_context(lang=website_default_lang).url
+        self._update_homepage(url)
 
     @api.depends('parent_id')
     def _compute_has_parent_page(self):
