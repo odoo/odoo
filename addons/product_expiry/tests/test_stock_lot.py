@@ -519,6 +519,14 @@ class TestStockLot(TestStockCommon):
         When assigning a lot to a SML, if the lot has an expiration date,
         the latter should be applied on the SML
         """
+        self.apple_product.use_expiration_date = False
+        # Create a lot without expiration date to be sure that the date applied on the SML is the one of the lot and not a default one
+        lot_without_expiration = self.env['stock.lot'].create({
+            'name': 'Lot 2',
+            'product_id': self.apple_product.id,
+        })
+        self.assertFalse(lot_without_expiration.expiration_date)
+        self.apple_product.use_expiration_date = True
         exp_date = fields.Datetime.today() + relativedelta(days=15)
         sml_exp_date = fields.Datetime.today() + relativedelta(days=10)
 
@@ -548,6 +556,8 @@ class TestStockLot(TestStockCommon):
 
         sml.lot_id = lot
         self.assertEqual(sml.expiration_date, exp_date)
+        sml.lot_id = lot_without_expiration
+        self.assertFalse(sml.expiration_date)
 
     def test_apply_same_date_on_expiry_fields(self):
         expiration_time = 10
