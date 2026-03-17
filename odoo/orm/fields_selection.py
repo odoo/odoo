@@ -66,9 +66,10 @@ class Selection(Field[str | typing.Literal[False]]):
     validate: bool = True       # whether validating upon write
     ondelete: dict[str, OnDeletePolicy] | None = None  # {value: policy} (what to do when value is deleted)
 
+    _selection: dict[str, str] | None = None
+
     def __init__(self, selection=SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
         super().__init__(selection=selection, string=string, **kwargs)
-        self._selection = dict(selection) if isinstance(selection, list) else None
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
@@ -83,8 +84,9 @@ class Selection(Field[str | typing.Literal[False]]):
 
     def _get_attrs(self, model_class, name):
         attrs = super()._get_attrs(model_class, name)
-        # arguments 'selection' and 'selection_add' are processed below
+        # arguments 'selection' and 'selection_add' are processed in _setup_attrs__ below
         attrs.pop('selection_add', None)
+        attrs.pop('selection', None)
         # Selection fields have an optional default implementation of a group_expand function
         if attrs.get('group_expand') is True:
             attrs['group_expand'] = self._default_group_expand
@@ -92,18 +94,17 @@ class Selection(Field[str | typing.Literal[False]]):
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
-        if not self._base_fields__:
-            return
 
         # determine selection (applying 'selection_add' extensions) as a dict
         values = None
 
-        for field in self._base_fields__:
+        for field in (*self._base_fields__, self):
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs__``.
             if 'selection' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
+                    continue
                 selection = field._args__['selection']
                 if isinstance(selection, (list, tuple)):
                     if values is not None and list(values) != [kv[0] for kv in selection]:
@@ -117,16 +118,17 @@ class Selection(Field[str | typing.Literal[False]]):
                 else:
                     raise ValueError(f"{self!r}: selection={selection!r} should be a list, a callable or a method name")
 
-            if 'selection_add' in field._args__:
+            if self._base_fields__ and 'selection_add' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
+                    continue
                 selection_add = field._args__['selection_add']
                 assert isinstance(selection_add, list), \
                     "%s: selection_add=%r must be a list" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
-                values_add = {kv[0]: (kv[1] if len(kv) > 1 else None) for kv in selection_add}
+                values_add = {kv[0]: (kv[1] if len(kv) > 1 else values[kv[0]]) for kv in selection_add}
                 ondelete = field._args__.get('ondelete') or {}
                 new_values = [key for key in values_add if key not in values]
                 for key in new_values:
@@ -164,15 +166,15 @@ class Selection(Field[str | typing.Literal[False]]):
                         )
 
                 values = {
-                    key: values_add.get(key) or values[key]
+                    key: values_add[key] if key in values_add else values[key]
                     for key in merge_sequences(values, values_add)
                 }
                 self.ondelete.update(ondelete)
 
         if values is not None:
             self.selection = list(values.items())
-            assert all(isinstance(key, str) for key in values), \
-                "Field %s with non-str value in selection" % self
+            assert all(isinstance(key, str) and isinstance(val, str) for key, val in values.items()), \
+                "Field %s with non-str key or value in selection" % self
 
         self._selection = values
 
@@ -203,7 +205,6 @@ class Selection(Field[str | typing.Literal[False]]):
         selection = self.selection
         if isinstance(selection, str) or callable(selection):
             selection = determine(selection, env[self.model_name])
-            # force all values to be strings (check _get_year_selection)
             return [(str(key), str(label)) for key, label in selection]
 
         translations = dict(env['ir.model.fields'].get_field_selection(self.model_name, self.name))
@@ -221,18 +222,14 @@ class Selection(Field[str | typing.Literal[False]]):
         return [value for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        if validate and self.validate:
-            value = self.convert_to_cache(value, record)
-        return super().convert_to_column(value, record, values, validate)
+        return self.convert_to_cache(value, record, validate=validate)
 
     def convert_to_cache(self, value, record, validate=True):
-        if not validate or self._selection is None:
-            return value or None
-        if value in self._selection:
-            return value
-        if not value:
+        if value is False or value is None:
             return None
-        raise ValueError("Wrong value for %s: %r" % (self, value))
+        if self.validate and validate and self._selection is not None and str(value) not in self._selection:
+            raise ValueError("Wrong value for %s: %r" % (self, value))
+        return str(value)
 
     def convert_to_export(self, value, record):
         for item in self._description_selection(record.env):
