@@ -1,5 +1,8 @@
 from odoo import _, models, Command
+from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account_edi_ubl_cii.tools import CrossIndustryInvoice
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
+from odoo.tools.misc import str2bool
 from lxml import etree
 
 from datetime import datetime
@@ -24,8 +27,8 @@ PAYMENT_MEAN_CODES = {
 
 class AccountEdiXmlCII(models.AbstractModel):
     _name = "account.edi.xml.cii"
-    _inherit = 'account.edi.common'
-    _description = "Factur-x/XRechnung CII 2.2.0"
+    _inherit = 'account.edi.cii'
+    _description = "Factur-x/ZUGFeRD CII 2.2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):
         # EXTENDS account.edi.common
@@ -263,6 +266,12 @@ class AccountEdiXmlCII(models.AbstractModel):
         return template_values
 
     def _export_invoice(self, invoice):
+        if str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True),
+            default=True,
+        ):
+            return self._export_invoice_new(invoice)
+
         vals = self._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang))
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
@@ -410,3 +419,154 @@ class AccountEdiXmlCII(models.AbstractModel):
                 return 'refund', -1
             return 'invoice', 1
         return None, None
+
+    # -------------------------------------------------------------------------
+    # NEW EXPORT : helpers
+    # -------------------------------------------------------------------------
+
+    def _export_invoice_new(self, invoice):
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice.invoice_line_ids.tax_ids)
+
+        vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
+        document_node = self._get_invoice_node(vals)
+
+        errors = [constraint for constraint in self._export_invoice_constraints_new(invoice, vals).values() if constraint]
+
+        nsmap = self._get_document_nsmap()
+
+        xml_content = dict_to_xml(document_node, nsmap=nsmap, template=CrossIndustryInvoice)
+
+        return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
+
+    def _export_invoice_constraints_new(self, invoice, vals):
+        constraints = self._invoice_constraints_common(invoice)
+        constraints.update(
+            self._cii_constraints(invoice, vals)
+        )
+        return constraints
+
+    def _get_document_nsmap(self):
+        return {
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
+            'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+            'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        }
+
+    def _get_invoice_node(self, vals):
+        self._add_invoice_config_vals(vals)
+        self._cii_add_values_invoice_base_lines(vals)
+        self._cii_add_values_invoice_currency(vals)
+        self._cii_add_values_invoice_tax_grouping_function(vals)
+        self._cii_setup_base_lines(vals)
+        self._cii_add_values_invoice_tax_details(vals)
+        self._cii_add_values_total_amount(vals)
+
+        document_node = {}
+        self._add_exchanged_document_context_node(document_node, vals)
+        self._add_exchanged_document_node(document_node, vals)
+        self._add_supply_chain_trade_transaction_node(document_node, vals)
+
+        return document_node
+
+    def _add_invoice_config_vals(self, vals):
+        invoice = vals['invoice']
+        self._cii_add_values_currency(vals, invoice.currency_id, invoice.company_id.currency_id)
+        self._cii_add_values_supplier(vals, invoice.company_id.partner_id.commercial_partner_id)
+        self._cii_add_values_customer(vals, invoice.partner_id)
+        self._cii_add_values_partner_shipping(vals, invoice.partner_shipping_id or invoice.partner_id)
+        if invoice.is_purchase_document():
+            vals['supplier'], vals['customer'] = vals['customer'], vals['supplier']
+            vals['partner_shipping'] = vals['customer']
+        self._cii_add_values_use_company_currency(vals, False)
+        self._cii_add_values_fixed_taxes_as_allowance_charges(vals, True)
+        self._cii_add_values_intracom_delivery(vals, False)
+
+        self._cii_add_values_buyer_reference(
+            vals,
+            invoice.buyer_reference if 'buyer_reference' in invoice._fields and invoice.buyer_reference else invoice.commercial_partner_id.ref
+        )
+
+        if 'siret' in invoice.company_id._fields and invoice.company_id.siret:
+            seller_siret = invoice.company_id.siret
+        else:
+            seller_siret = invoice.company_id.company_registry
+
+        if 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret:
+            buyer_siret = invoice.commercial_partner_id.siret
+        else:
+            buyer_siret = invoice.commercial_partner_id.company_registry
+
+        self._cii_add_values_seller_and_buyer_siret(vals, seller_siret, buyer_siret)
+
+        seller_vat = None
+        if invoice.fiscal_position_id.foreign_vat:
+            seller_vat = invoice.fiscal_position_id.foreign_vat
+        elif invoice.company_id.vat:
+            seller_vat = invoice.company_id.vat
+
+        self._cii_add_values_seller_and_buyer_vat(vals, seller_vat, vals['customer'].vat)
+        self._cii_add_values_purchase_order_reference(
+            vals,
+            invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference else invoice.ref or invoice.name
+        )
+        self._cii_add_values_contract_reference(
+            vals,
+            invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else ''
+        )
+        self._cii_add_values_delivery_date(vals, invoice.delivery_date or invoice.invoice_date)
+        self._cii_add_values_gln(vals, 'global_location_number' in invoice.partner_shipping_id._fields and invoice.partner_shipping_id.global_location_number)
+
+        if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.reconciled_payment_ids.sdd_mandate_id:
+            payment_means_code = PAYMENT_MEAN_CODES['SEPA direct debit']
+        else:
+            payment_means_code = PAYMENT_MEAN_CODES['Payment to bank account']
+        self._cii_add_values_payment_means_code(vals, payment_means_code)
+
+        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
+        billing_start_dates += [move_line.deferred_start_date for move_line in invoice.invoice_line_ids if move_line.deferred_start_date]
+        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
+        billing_end_dates += [move_line.deferred_end_date for move_line in invoice.invoice_line_ids if move_line.deferred_end_date]
+        start_date = end_date = None
+        if billing_start_dates:
+            start_date = min(billing_start_dates)
+        if billing_end_dates:
+            end_date = max(billing_end_dates)
+        self._cii_add_values_billing_dates(vals, start_date, end_date)
+
+    def _add_exchanged_document_context_node(self, node, vals):
+        sub_vals = {
+            **vals,
+            'document_node': node,
+        }
+        self._cii_add_exchanged_document_context(sub_vals)
+
+    def _add_exchanged_document_node(self, node, vals):
+        sub_vals = {
+            **vals,
+            'document_node': node,
+        }
+        self._cii_add_exchanged_document_node(sub_vals)
+
+    def _add_supply_chain_trade_transaction_node(self, document_node, vals):
+        node = document_node['rsm:SupplyChainTradeTransaction'] = {}
+        sub_vals = {
+            **vals,
+            'supply_chain_node': node,
+        }
+        self._cii_add_line_item_nodes(sub_vals)
+        self._cii_add_applicable_header_trade_agreement_node(sub_vals)
+        self._cii_add_trade_delivery_node(sub_vals)
+        self._cii_add_applicable_header_trade_settlement_node(sub_vals)
+
+    # -------------------------------------------------------------------------
+    # NEW IMPORT : helpers
+    # -------------------------------------------------------------------------
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        """
+        :param account.move invoice:
+        """
+        return self._cii_import_invoice(invoice, file_data, new=new)

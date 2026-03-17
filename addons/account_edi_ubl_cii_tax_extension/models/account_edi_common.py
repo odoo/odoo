@@ -111,7 +111,7 @@ class AccountEdiCommon(models.AbstractModel):
     _inherit = "account.edi.common"
 
     def _get_tax_unece_codes(self, customer, supplier, tax):
-        if tax.ubl_cii_tax_category_code:
+        if tax and tax.ubl_cii_tax_category_code:
             reason_code = tax.ubl_cii_tax_exemption_reason_code
             reason_code = FIX_WRONG_CODES_MAPPING.get(reason_code, reason_code)
 

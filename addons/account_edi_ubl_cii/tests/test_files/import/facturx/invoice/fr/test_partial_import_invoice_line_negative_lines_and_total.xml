@@ -1,0 +1,42 @@
+<rsm:CrossIndustryInvoice  xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+  <rsm:ExchangedDocument>
+    <ram:TypeCode>380</ram:TypeCode>
+  </rsm:ExchangedDocument>
+
+  <rsm:SupplyChainTradeTransaction>
+    <ram:IncludedSupplyChainTradeLineItem>
+        <ram:SpecifiedLineTradeAgreement>
+            <ram:NetPriceProductTradePrice>
+                <ram:ChargeAmount>400.00</ram:ChargeAmount>
+            </ram:NetPriceProductTradePrice>
+        </ram:SpecifiedLineTradeAgreement>
+        <ram:SpecifiedLineTradeDelivery>
+            <ram:BilledQuantity unitCode="DAY">-7.0</ram:BilledQuantity>
+        </ram:SpecifiedLineTradeDelivery>
+        <ram:SpecifiedLineTradeSettlement>
+            <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                <ram:LineTotalAmount>-2800.00</ram:LineTotalAmount>
+            </ram:SpecifiedTradeSettlementLineMonetarySummation>
+        </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+
+    <ram:IncludedSupplyChainTradeLineItem>
+        <ram:SpecifiedLineTradeAgreement>
+            <ram:NetPriceProductTradePrice>
+                <ram:ChargeAmount>500.00</ram:ChargeAmount>
+            </ram:NetPriceProductTradePrice>
+        </ram:SpecifiedLineTradeAgreement>
+        <ram:SpecifiedLineTradeDelivery>
+            <ram:BilledQuantity unitCode="DAY">3.0</ram:BilledQuantity>
+        </ram:SpecifiedLineTradeDelivery>
+        <ram:SpecifiedLineTradeSettlement>
+            <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                <ram:LineTotalAmount>1500.00</ram:LineTotalAmount>
+            </ram:SpecifiedTradeSettlementLineMonetarySummation>
+        </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+    <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+        <ram:TaxBasisTotalAmount>-1300.00</ram:TaxBasisTotalAmount>
+    </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+  </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>
