@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
-from odoo.tools import OrderedSet
+from odoo.tools import float_is_zero, OrderedSet
 from odoo.exceptions import UserError
 
 VALUATION_DICT = {
@@ -623,6 +623,7 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.product_id.is_storable and self.is_valued\
         and (self.location_dest_id.valuation_account_id or self.location_id.valuation_account_id)\
+        and not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding)\
         and self.product_id.valuation == 'real_time'
 
     def _should_exclude_for_valuation(self):
