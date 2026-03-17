@@ -623,11 +623,13 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         commercial_partner_phone = self.commercial_partner_id.phone and self._l10n_vn_edi_format_phone_number(self.commercial_partner_id.phone)
+        buyer_address = self.partner_id._display_address(without_company=True)
+        formatted_address = ', '.join(part.strip() for part in buyer_address.splitlines() if part.strip())
         buyer_information = {
             'buyerName': self.partner_id.name,
             'buyerLegalName': self.commercial_partner_id.name,
             'buyerTaxCode': self.commercial_partner_id.vat or '',
-            'buyerAddressLine': self.partner_id.street,
+            'buyerAddressLine': formatted_address,
             'buyerPhoneNumber': commercial_partner_phone or '',
             'buyerEmail': self.commercial_partner_id.email or '',
             'buyerCityName': self.partner_id.city or self.partner_id.state_id.name,
@@ -647,10 +649,12 @@ class AccountMove(models.Model):
         """ Create and return the seller information for the current invoice. """
         self.ensure_one()
         company_phone = self.company_id.phone and self._l10n_vn_edi_format_phone_number(self.company_id.phone)
+        seller_address = self.company_id.partner_id._display_address(without_company=True)
+        formatted_address = ', '.join(part.strip() for part in seller_address.splitlines() if part.strip())
         seller_information = {
             'sellerLegalName': self.company_id.name,
             'sellerTaxCode': self.company_id.vat,
-            'sellerAddressLine': self.company_id.street,
+            'sellerAddressLine': formatted_address,
             'sellerPhoneNumber': company_phone or '',
             'sellerEmail': self.company_id.email,
             'sellerDistrictName': self.company_id.state_id.name,
