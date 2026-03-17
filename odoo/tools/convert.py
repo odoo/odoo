@@ -142,6 +142,7 @@ def _eval_xml(self, node, env):
                 with file_open(node_file, 'rb', env=env) as f:
                     return BinaryBytes(f.read())
             if t == 'base64':
+                warnings.warn("Since 20.0, use type=bytes instead of type=base64", DeprecationWarning)
                 with file_open(node_file, 'rb', env=env) as f:
                     return BinaryBytes(f.read()).to_base64()
 
