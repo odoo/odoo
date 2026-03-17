@@ -879,6 +879,19 @@ class ResourceCalendar(models.Model):
             week_type = str(self.env['resource.calendar.attendance'].get_week_type(date))
         return sum(attendances_per_week_type[week_type].mapped('duration_hours'))
 
+    def _get_nb_working_day(self, start_date, stop_date):
+        self.ensure_one()
+        schedule = self._get_working_hours()
+        nb_of_work_days = 0
+        if not self.two_weeks_calendar:
+            for day in rrule(DAILY, dtstart=start_date, until=stop_date):
+                nb_of_work_days += int(schedule[False][str(day.weekday())])
+        else:
+            for day in rrule(DAILY, dtstart=start_date, until=stop_date):
+                week_type = str(self.env['resource.calendar.attendance'].get_week_type(day))
+                nb_of_work_days += int(schedule[week_type][str(day.weekday())])
+        return nb_of_work_days
+
     @ormcache('self.id')
     def _get_working_hours(self):
         self.ensure_one()
