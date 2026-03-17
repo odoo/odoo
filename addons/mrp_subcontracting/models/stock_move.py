@@ -155,6 +155,7 @@ class StockMove(models.Model):
                 move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
                 or company.subcontracting_location_id
             move.write({
+                'production_group_id': False,
                 'is_subcontract': True,
                 'location_id': subcontracting_location.id
             })
