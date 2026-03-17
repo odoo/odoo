@@ -82,6 +82,9 @@ export class ResPartner extends Record {
     offline_since = fields.Datetime();
     presenceChannel = fields.Attr(null, {
         compute() {
+            if (!this.id) {
+                return null;
+            }
             const channel = `odoo-presence-res.partner_${this.id}`;
             if (this.im_status_access_token) {
                 return channel + `-${this.im_status_access_token}`;
