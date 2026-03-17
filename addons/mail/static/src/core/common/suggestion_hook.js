@@ -1,72 +1,118 @@
 import { useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
-import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
-import { rightPos } from "@html_editor/utils/position";
-import {
-    generatePartnerMentionElement,
-    generateRoleMentionElement,
-    generateSpecialMentionElement,
-    generateChannelMentionElement,
-} from "@mail/utils/common/format";
 import { status } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { createTextNode } from "@web/core/utils/xml";
 
 export const DELAY_FETCH = 250;
 
-export class UseSuggestion {
-    constructor(comp) {
-        this.comp = comp;
-        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
-        useLayoutEffect(
-            () => {
-                this.update();
-                if (this.search.position === undefined || !this.search.delimiter) {
-                    return; // nothing else to fetch
-                }
-                if (!this.composer.store.self_user) {
-                    return; // guests cannot access fetch suggestion method
-                }
-                if (
-                    this.lastFetchedSearch?.count === 0 &&
-                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
-                ) {
-                    return; // no need to fetch since this is more specific than last and last had no result
-                }
-                this.fetchSuggestions();
-            },
-            () => [this.search.delimiter, this.search.position, this.search.term]
-        );
-        useLayoutEffect(
-            () => {
-                this.detect();
-            },
-            () => [
-                this.composer.selection.start,
-                this.composer.selection.end,
-                this.composer.composerText,
-                this.composer.composerHtml,
-            ]
-        );
+export function prepareSuggestionListOptions(items, thread) {
+    const suggestions = items.suggestions;
+    switch (items.type) {
+        case "Partner":
+            return {
+                optionTemplate: "mail.Composer.suggestionPartner",
+                options: suggestions.map((suggestion) => {
+                    if (suggestion.isSpecial) {
+                        return {
+                            ...suggestion,
+                            group: 1,
+                            optionTemplate: "mail.Composer.suggestionSpecial",
+                            classList: "o-mail-Composer-suggestion",
+                        };
+                    }
+                    if (suggestion.Model.getName() === "res.role") {
+                        return {
+                            label: suggestion.name,
+                            role: suggestion,
+                            thread,
+                            optionTemplate: "mail.Composer.suggestionRole",
+                            classList: "o-mail-Composer-suggestion",
+                        };
+                    }
+                    return {
+                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        thread,
+                        partner: suggestion,
+                        classList: "o-mail-Composer-suggestion",
+                    };
+                }),
+            };
+        case "discuss.channel":
+            return {
+                optionTemplate: "mail.Composer.suggestionChannel",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.fullNameWithParent,
+                    channel: suggestion,
+                    classList: "o-mail-Composer-suggestion",
+                })),
+            };
+        case "ChannelCommand":
+            return {
+                optionTemplate: "mail.Composer.suggestionChannelCommand",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.name,
+                    help: suggestion.help,
+                    classList: "o-mail-Composer-suggestion",
+                })),
+            };
+        case "mail.canned.response":
+            return {
+                optionTemplate: "mail.Composer.suggestionCannedResponse",
+                options: suggestions.map((suggestion) => ({
+                    cannedResponse: suggestion,
+                    label: suggestion.substitution,
+                    source: suggestion.source,
+                    title: suggestion.substitution,
+                    classList: "o-mail-Composer-suggestion",
+                })),
+            };
+        case "emoji":
+            return {
+                optionTemplate: "mail.Composer.suggestionEmoji",
+                options: suggestions.map((suggestion) => ({
+                    emoji: suggestion,
+                    label: suggestion.codepoints,
+                })),
+            };
+        default:
+            return {
+                optionTemplate: undefined,
+                options: [],
+            };
     }
-    /** @type {import("@mail/core/common/composer").Composer} */
-    comp;
-    get composer() {
-        return this.comp.props.composer;
-    }
-    suggestionService = useService("mail.suggestion");
-    state = useState({
-        count: 0,
-        items: undefined,
-        isFetching: false,
-    });
-    search = {
-        delimiter: undefined,
-        position: undefined,
-        term: "",
-    };
+}
+
+export class SuggestionCore {
+    state;
+    search;
+    suggestionService;
     lastFetchedSearch;
+
+    get thread() {
+        return undefined;
+    }
+
+    get isDestroyed() {
+        return false;
+    }
+
+    get canFetchSuggestions() {
+        return true;
+    }
+
+    getSupportedDelimiters() {
+        return this.suggestionService.getSupportedDelimiters(this.thread, this.env);
+    }
+
+    getSearchContext() {
+        return { start: 0, end: 0, text: "", isValid: false };
+    }
+
+    requestFetchSuggestions() {
+        this.fetchSuggestions();
+    }
+
     get isSearchMoreSpecificThanLastFetch() {
         return (
             this.lastFetchedSearch.delimiter === this.search.delimiter &&
@@ -74,14 +120,7 @@ export class UseSuggestion {
             this.lastFetchedSearch.position >= this.search.position
         );
     }
-    clearRawMentions() {
-        this.composer.mentionedChannels.length = 0;
-        this.composer.mentionedPartners.length = 0;
-        this.composer.mentionedRoles.length = 0;
-    }
-    clearCannedResponses() {
-        this.composer.cannedResponses = [];
-    }
+
     clearSearch() {
         Object.assign(this.search, {
             delimiter: undefined,
@@ -90,29 +129,28 @@ export class UseSuggestion {
         });
         this.state.items = undefined;
     }
-    detect() {
-        let start = 0;
-        let end = 0;
-        let text = "";
-        if (this.comp.composerService.htmlEnabled) {
-            const selection = this.comp.editor.shared.selection.getEditableSelection();
-            if (
-                !isTextNode(selection.startContainer) ||
-                !isContentEditable(selection.startContainer) ||
-                !selection.isCollapsed
-            ) {
-                this.clearSearch();
-                return;
-            }
-            start = selection.startOffset;
-            end = selection.endOffset;
-            text = selection.anchorNode.textContent;
-        } else {
-            start = this.composer.selection.start;
-            end = this.composer.selection.end;
-            text = this.composer.composerText;
+
+    onSearchChange() {
+        this.update();
+        if (this.search.position === undefined || !this.search.delimiter) {
+            return; // nothing else to fetch
         }
-        if (start !== end) {
+        if (!this.canFetchSuggestions) {
+            return; // guests cannot access fetch suggestion method
+        }
+        if (
+            this.lastFetchedSearch?.count === 0 &&
+            (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
+        ) {
+            return; // no need to fetch since this is more specific than last and last had no result
+        }
+        this.requestFetchSuggestions();
+    }
+
+    detect() {
+        const searchContext = this.getSearchContext();
+        const { start, end, text, isValid } = searchContext;
+        if (!isValid || start !== end) {
             // avoid interfering with multi-char selection
             this.clearSearch();
             return;
@@ -137,10 +175,7 @@ export class UseSuggestion {
         if (this.search.position !== undefined && this.search.position < start) {
             candidatePositions.push(this.search.position);
         }
-        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
-            this.thread,
-            this.comp.env
-        );
+        const supportedDelimiters = this.getSupportedDelimiters();
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
@@ -180,63 +215,18 @@ export class UseSuggestion {
         }
         this.clearSearch();
     }
-    get thread() {
-        return this.composer.thread || this.composer.message?.thread;
-    }
-    insert(option) {
+
+    getInsertPosition({ isHtmlEditor = false } = {}) {
         let position = this.search.position + 1;
         if (
             [":", "::"].includes(this.search.delimiter) ||
-            (this.comp.composerService.htmlEnabled && this.search.delimiter !== "/")
+            (isHtmlEditor && this.search.delimiter !== "/")
         ) {
             position = this.search.position;
         }
-        if (this.comp.composerService.htmlEnabled) {
-            const { startContainer, endContainer, endOffset } =
-                this.comp.editor.shared.selection.getEditableSelection();
-            this.comp.editor.shared.selection.setSelection({
-                anchorNode: startContainer,
-                anchorOffset: position,
-                focusNode: endContainer,
-                focusOffset: endOffset,
-            });
-        }
-        if (option.partner) {
-            this.composer.mentionedPartners.add({ id: option.partner.id });
-        } else if (option.role) {
-            this.composer.mentionedRoles.add(option.role);
-        } else if (option.channel) {
-            this.composer.mentionedChannels.add(option.channel.id);
-        } else if (option.cannedResponse) {
-            this.composer.cannedResponses.push(option.cannedResponse);
-        }
-        if (this.comp.composerService.htmlEnabled) {
-            let inlineElement;
-            if (option.partner) {
-                inlineElement = generatePartnerMentionElement(option.partner, this.thread);
-            } else if (option.isSpecial) {
-                inlineElement = generateSpecialMentionElement(option.label);
-            } else if (option.role) {
-                inlineElement = generateRoleMentionElement(option.role);
-            } else if (option.channel) {
-                inlineElement = generateChannelMentionElement(option.channel);
-            } else {
-                inlineElement = createTextNode(option.label);
-            }
-            this.comp.editor.shared.dom.insert(inlineElement);
-            const [anchorNode, anchorOffset] = rightPos(inlineElement);
-            this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
-            this.comp.editor.shared.dom.insert("\u00A0");
-            this.comp.editor.shared.history.addStep();
-        } else {
-            // remove the user-typed search delimiter
-            this.composer.composerText =
-                this.composer.composerText.substring(0, position) +
-                this.composer.composerText.substring(this.composer.selection.end);
-            this.clearSearch();
-            this.composer.insertText(`${option.label} `, position);
-        }
+        return position;
     }
+
     update() {
         if (!this.search.delimiter) {
             return;
@@ -256,7 +246,7 @@ export class UseSuggestion {
     }
 
     async fetchSuggestions() {
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.thread || this.isDestroyed) {
             return;
         }
         let resetFetchingState = true;
@@ -280,7 +270,7 @@ export class UseSuggestion {
                 this.state.isFetching = false;
             }
         }
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.thread || this.isDestroyed) {
             return;
         }
         this.update();
@@ -291,6 +281,92 @@ export class UseSuggestion {
         if (!this.state.items?.suggestions.length) {
             this.clearSearch();
         }
+    }
+}
+
+export class UseSuggestion extends SuggestionCore {
+    constructor(comp) {
+        super();
+        this.comp = comp;
+        this.requestFetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
+        useLayoutEffect(
+            () => this.onSearchChange(),
+            () => [this.search.delimiter, this.search.position, this.search.term]
+        );
+        useLayoutEffect(
+            () => {
+                this.detect();
+            },
+            () => [
+                this.composer.selection.start,
+                this.composer.selection.end,
+                this.composer.composerText,
+                this.composer.composerHtml,
+            ]
+        );
+    }
+    /** @type {import("@mail/core/common/composer").Composer} */
+    comp;
+    get composer() {
+        return this.comp.props.composer;
+    }
+    suggestionService = useService("mail.suggestion");
+    get env() {
+        return this.comp.env;
+    }
+    state = useState({
+        count: 0,
+        items: undefined,
+        isFetching: false,
+    });
+    search = {
+        delimiter: undefined,
+        position: undefined,
+        term: "",
+        anchorRef: undefined,
+    };
+    get isDestroyed() {
+        return status(this.comp) === "destroyed";
+    }
+    get canFetchSuggestions() {
+        return Boolean(this.composer.store.self_user);
+    }
+    clearRawMentions() {
+        this.composer.mentionedChannels.length = 0;
+        this.composer.mentionedPartners.length = 0;
+        this.composer.mentionedRoles.length = 0;
+    }
+    clearCannedResponses() {
+        this.composer.cannedResponses = [];
+    }
+    getSearchContext() {
+        return {
+            start: this.composer.selection.start,
+            end: this.composer.selection.end,
+            text: this.composer.composerText,
+            isValid: true,
+        };
+    }
+    get thread() {
+        return this.composer.thread || this.composer.message?.thread;
+    }
+    insert(option) {
+        if (option.partner) {
+            this.composer.mentionedPartners.add({ id: option.partner.id });
+        } else if (option.role) {
+            this.composer.mentionedRoles.add(option.role);
+        } else if (option.channel) {
+            this.composer.mentionedChannels.add(option.channel.id);
+        } else if (option.cannedResponse) {
+            this.composer.cannedResponses.push(option.cannedResponse);
+        }
+        const position = this.getInsertPosition();
+        // remove the user-typed search delimiter
+        this.composer.composerText =
+            this.composer.composerText.substring(0, position) +
+            this.composer.composerText.substring(this.composer.selection.end);
+        this.clearSearch();
+        this.composer.insertText(`${option.label} `, position);
     }
 }
 
