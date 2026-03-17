@@ -125,7 +125,6 @@
             "website_sale/static/src/js/website_sale_utils.js",
             "website_sale/static/src/js/wishlist_utils.js",
             "website_sale/static/src/js/comparison_utils.js",
-            "website_sale/static/src/xml/website_sale_utils.xml",
             "website/static/lib/multirange/multirange_custom.js",
             "website/static/src/interactions/multirange_input.js",
             "website_sale/static/src/xml/website_sale_image_viewer.xml",
@@ -188,7 +187,6 @@
         ],
         "website.assets_editor": [
             "website_sale/static/src/js/systray_items/*.js",
-            "website_sale/static/src/xml/website_sale_utils.xml",
             "website_sale/static/src/xml/website_sale_editor_previews.xml",
         ],
         "website.assets_inside_builder_iframe": [
