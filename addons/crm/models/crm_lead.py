@@ -1773,6 +1773,16 @@ class Lead(models.Model):
 
         return self.with_context(active_test=False).search(domain)
 
+    def _sorting_opportunities(self):
+        self.ensure_one()
+        return (
+            self.type == 'opportunity' or self.active,
+            self.type == 'opportunity',
+            self.stage_id.sequence,
+            self.probability,
+            -self._origin.id
+        )
+
     def _sort_by_confidence_level(self, reverse=False):
         """ Sorting the leads/opps according to the confidence level to it
         being won. It is sorted following this incremental heuristics :
@@ -1788,14 +1798,7 @@ class Lead(models.Model):
           * ID: the higher the better when all other parameters are equal. We
             consider newer leads to be more reliable;
         """
-        def opps_key(opportunity):
-            return opportunity.type == 'opportunity' or opportunity.active,  \
-                opportunity.type == 'opportunity', \
-                opportunity.stage_id.sequence, \
-                opportunity.probability, \
-                -opportunity._origin.id
-
-        return self.sorted(key=opps_key, reverse=reverse)
+        return self.sorted(key=lambda opportunity: opportunity._sorting_opportunities(), reverse=reverse)
 
     # CUSTOMER TOOLS
     # --------------------------------------------------
