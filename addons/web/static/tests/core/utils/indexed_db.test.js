@@ -81,6 +81,109 @@ test("two caches, read (2)", async () => {
     await ensureDbIsAbsent();
 });
 
+test("multiread/multiwrite", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    expect(await indexedDB.read("mytable", ["test", "test2"])).toEqual([
+        { key: "test", value: undefined },
+        { key: "test2", value: undefined },
+    ]);
+
+    await indexedDB.write("mytable", [
+        { key: "test", value: "value for 'test'" },
+        { key: "test2", value: "value for 'test2'" },
+    ]);
+    expect(await indexedDB.read("mytable", ["test", "test2"])).toEqual([
+        { key: "test", value: "value for 'test'" },
+        { key: "test2", value: "value for 'test2'" },
+    ]);
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
+test("search", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    await indexedDB.write("mytable", [
+        { key: "key01", value: "Homer Simpson" },
+        { key: "key02", value: "Marge Simpson" },
+        { key: "key03", value: "Bart Simpson" },
+        { key: "key04", value: "Lisa Simpson" },
+        { key: "key05", value: "Maggie Simpson" },
+        { key: "key06", value: "Abraham Simpson" },
+        { key: "key07", value: "Mona Simpson" },
+        { key: "key08", value: "Patty Bouvier" },
+        { key: "key09", value: "Selma Bouvier" },
+        { key: "key10", value: "Santa's Little Helper" },
+        { key: "key11", value: "Herbert Powell Simpson" },
+        { key: "key12", value: "Amber Simpson" },
+    ]);
+
+    expect(await indexedDB.search("mytable", (value) => value.includes("imps"), 4)).toEqual([
+        {
+            key: "key01",
+            value: "Homer Simpson",
+        },
+        {
+            key: "key02",
+            value: "Marge Simpson",
+        },
+        {
+            key: "key03",
+            value: "Bart Simpson",
+        },
+        {
+            key: "key04",
+            value: "Lisa Simpson",
+        },
+    ]);
+    expect(await indexedDB.search("mytable", (value) => value.includes("imps"))).toEqual([
+        {
+            key: "key01",
+            value: "Homer Simpson",
+        },
+        {
+            key: "key02",
+            value: "Marge Simpson",
+        },
+        {
+            key: "key03",
+            value: "Bart Simpson",
+        },
+        {
+            key: "key04",
+            value: "Lisa Simpson",
+        },
+        {
+            key: "key05",
+            value: "Maggie Simpson",
+        },
+        {
+            key: "key06",
+            value: "Abraham Simpson",
+        },
+        {
+            key: "key07",
+            value: "Mona Simpson",
+        },
+        {
+            key: "key11",
+            value: "Herbert Powell Simpson",
+        },
+    ]);
+    expect(await indexedDB.search("mytable", (value) => value.includes("impz"))).toEqual([]);
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
 test("one cache, invalidate", async () => {
     onError(() => deleteCacheDB());
     await ensureDbIsAbsent();
@@ -118,6 +221,32 @@ test("one cache, invalidate multi-tables", async () => {
     expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
 
     await indexedDB.invalidate(["mytable", "mytable2"]);
+    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
+    expect(await indexedDB.read("mytable2", "test")).toBe(undefined);
+    expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
+test("invalidate multi-tables regex", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    // populate the table
+    await indexedDB.write("mytable", "test", "value for 'test'");
+    await indexedDB.write("mytable", "test2", "value for 'test2'");
+    await indexedDB.write("mytable2", "test", "value for 'test'");
+    await indexedDB.write("mytable2", "test2", "value for 'test2'");
+    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+    expect(await indexedDB.read("mytable2", "test")).toBe("value for 'test'");
+    expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
+
+    await indexedDB.invalidate([/^mytable/]);
     expect(await indexedDB.read("mytable", "test")).toBe(undefined);
     expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
     expect(await indexedDB.read("mytable2", "test")).toBe(undefined);

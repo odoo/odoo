@@ -10,14 +10,18 @@ import {
     defineModels,
     fieldInput,
     fields,
+    getService,
     makeServerError,
+    mockOffline,
     MockServer,
     mockService,
     models,
     mountView,
+    mountWithCleanup,
     onRpc,
     selectFieldDropdownItem,
 } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
 
 class Partner extends models.Model {
     _name = "partner";
@@ -159,6 +163,90 @@ test("Many2ManyTagsField with and without color on desktop", async () => {
     expect(".o_colorlist").toHaveCount(0);
     await contains("[name=timmy] .o_tag").click();
     expect(".o_colorlist").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("[Offline] Many2ManyTagsField", async () => {
+    const setOffline = mockOffline();
+    onRpc("web_save", () => expect.step(`web_save`));
+
+    Partner._fields.partner_ids = fields.Many2many({
+        string: "Partner",
+        relation: "partner",
+    });
+    Partner._fields.color = fields.Integer({ string: "Color index" });
+    Partner._views = {
+        form: `
+          <form>
+              <field name="partner_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+          </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    await contains(".o_field_many2many_selection input").click();
+    await runAllTimers();
+
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "first record",
+        "second record",
+        "aaa",
+        "Search more...",
+    ]);
+
+    //close the dropdown
+    await contains(".o_form_renderer").click();
+
+    //re-render to avoid the memoizedSearch !
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+
+    await setOffline(true);
+    await contains(".o_field_many2many_selection input").click();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "first record",
+        "second record",
+        "aaa",
+    ]);
+
+    // search Offline
+    await contains(".o_field_widget input").edit("record", { confirm: false });
+    await runAllTimers();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "second record"]);
+
+    // select the first one
+    await contains(`.dropdown .dropdown-item:contains(first record)`).click();
+    expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    expect(queryAllTexts(".o_field_many2many_tags .badge")).toEqual(["first record"]);
+
+    // save the record (should do the write RPC with the correct commands)
+    await clickSave();
+
+    // The created record will be save the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "PARTNER",
+        "first record",
+        "Edited",
+        "",
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 });
 
 test.tags("mobile");

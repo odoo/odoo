@@ -923,7 +923,7 @@ export function getScheduleORMExtras(model, records) {
     return extras;
 }
 
-function getOfflineDisplayName(record) {
+export function getOfflineDisplayName(record) {
     return (
         record.data.complete_name ||
         record.data.name ||

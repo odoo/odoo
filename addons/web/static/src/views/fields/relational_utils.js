@@ -1,9 +1,16 @@
-import { render, useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
+import {
+    render,
+    useComponent,
+    useEnv,
+    useLayoutEffect,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import {
     useBus,
@@ -232,6 +239,7 @@ export class Many2XAutocomplete extends Component {
     };
     setup() {
         this.orm = useService("orm");
+        this.offline = useService("offline");
 
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
@@ -346,14 +354,24 @@ export class Many2XAutocomplete extends Component {
     }
 
     async search(name, domain, context) {
-        return await this.orm.call(this.props.resModel, "web_name_search", [], {
-            name,
-            operator: "ilike",
-            domain,
-            limit: this.props.searchLimit + 1,
-            context,
-            specification: this.searchSpecification,
-        });
+        let result;
+        try {
+            result = await this.orm.call(this.props.resModel, "web_name_search", [], {
+                name,
+                operator: "ilike",
+                domain,
+                limit: this.props.searchLimit + 1,
+                context,
+                specification: this.searchSpecification,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                return this.offline.searchMany2XRecords(this.props.resModel, name);
+            }
+            throw e;
+        }
+        this.offline.cacheMany2XSearch(this.props.resModel, result);
+        return result;
     }
 
     async memoizedSearch(name) {
@@ -427,13 +445,18 @@ export class Many2XAutocomplete extends Component {
                 suggestions.push(this.buildNoRecordsSuggestion());
             } else if (this.addStartTypingSuggestion({ request, records })) {
                 suggestions.push(this.buildStartTypingSuggestion());
+            } else if (this.offline.offline) {
+                suggestions.push(this.buildNoRecordsSuggestion());
             }
         }
 
-        for (const action of this.actionSuggestions) {
-            const enabled = action.enabled ?? (() => true);
-            if (enabled({ request, records })) {
-                suggestions.push(action.build(request));
+        // Only add action suggestions if online!
+        if (!this.offline.offline) {
+            for (const action of this.actionSuggestions) {
+                const enabled = action.enabled ?? (() => true);
+                if (enabled({ request, records })) {
+                    suggestions.push(action.build(request));
+                }
             }
         }
 
@@ -570,6 +593,10 @@ export class Many2XAutocomplete extends Component {
                 limit: this.props.searchMoreLimit,
                 context,
             });
+            this.offline.cacheMany2XSearch(
+                resModel,
+                nameGets.map((r) => ({ id: r[0], display_name: r[1] }))
+            );
 
             dynamicFilters = [
                 {
@@ -758,7 +785,9 @@ export class X2ManyFieldDialog extends Component {
             title: this.title,
             withBodyPadding: false,
             modalRef: this.modalRef,
-            contentClass: `${ this.contentClass}  ${ this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""}`,
+            contentClass: `${this.contentClass}  ${
+                this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""
+            }`,
         };
         if (!this.record.isNew) {
             props.onExpand = async () => {

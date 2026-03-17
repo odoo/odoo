@@ -10,6 +10,7 @@ import {
     getBasicEvalContext,
     getFieldContext,
     getFieldsSpec,
+    getOfflineDisplayName,
     getScheduleORMExtras,
     parseServerValue,
 } from "./utils";
@@ -360,7 +361,7 @@ export class Record extends DataPoint {
         if (scheduledORM) {
             this._offlineId = scheduledORM.key;
             this._offlineChanges = markRaw(
-                this._parseServerValues(scheduledORM.value.extras.changes)
+                this._parseOfflineValues(scheduledORM.value.extras.changes)
             );
             this._offlineTimeStamp = scheduledORM.value.extras.timeStamp;
             return this.update(this._offlineChanges);
@@ -596,7 +597,17 @@ export class Record extends DataPoint {
                 context,
                 specification: fieldSpec,
             };
-            const records = await this.model.orm.webRead(resModel, [resId], kwargs);
+            let records;
+            try {
+                records = await this.model.orm.webRead(resModel, [resId], kwargs);
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    // In the case of display_name is not in valie, `Unamed` will be shown, but it will work. (search create dialog case)
+                    records = [value];
+                } else {
+                    throw e;
+                }
+            }
             for (const fieldName in records[0]) {
                 const field = activeField.related?.fields[fieldName];
                 if (field) {
@@ -750,6 +761,37 @@ export class Record extends DataPoint {
         return value;
     }
 
+    _formatOfflineValues(values, { changes } = { changes: true }) {
+        const result = {};
+        for (const [fieldName, value] of Object.entries(values)) {
+            const field = this.fields[fieldName];
+            switch (field.type) {
+                case "many2many": {
+                    if (value) {
+                        result[fieldName] = {};
+                        if (changes) {
+                            result[fieldName].commands = value._getCommands();
+                        }
+                        result[fieldName].display_name = value._currentIds
+                            .map((id) => value._cache[id])
+                            .map((r) => getOfflineDisplayName(r))
+                            .join(", ");
+                    } else {
+                        result[fieldName] = false;
+                    }
+                    break;
+                }
+                case "many2one": {
+                    result[fieldName] = value;
+                    break;
+                }
+                default:
+                    result[fieldName] = this._formatServerValue(field.type, value);
+            }
+        }
+        return result;
+    }
+
     /**
      * @param {RecordType<string, unknown>} [changes]
      * @param {FieldSpecifications} [params]
@@ -759,10 +801,7 @@ export class Record extends DataPoint {
             // Apply the initial changes when the record is new
             changes = { ...this._values, ...changes };
         }
-        return this._formatServerValues(changes, { withReadonly });
-    }
 
-    _formatServerValues(changes, { withReadonly } = {}) {
         const result = {};
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
@@ -989,6 +1028,21 @@ export class Record extends DataPoint {
             }
         }
         return parsedValues;
+    }
+
+    _parseOfflineValues(changes) {
+        const result = {};
+        for (const [fieldName, value] of Object.entries(changes)) {
+            const field = this.fields[fieldName];
+            switch (field.type) {
+                case "many2many":
+                    result[fieldName] = value ? value.commands : false;
+                    break;
+                default:
+                    result[fieldName] = parseServerValue(field.type, value);
+            }
+        }
+        return result;
     }
 
     async _preprocessMany2oneChanges(changes) {
@@ -1315,9 +1369,10 @@ export class Record extends DataPoint {
                 id: this._offlineId,
                 extras: {
                     ...getScheduleORMExtras(this.model, [this]),
-                    changes: this._formatServerValues(this._offlineChanges),
-                    originalValues: this._formatServerValues(
-                        pick(this._values, ...Object.keys(this._offlineChanges))
+                    changes: this._formatOfflineValues(this._offlineChanges),
+                    originalValues: this._formatOfflineValues(
+                        pick(this._values, ...Object.keys(this._offlineChanges)),
+                        { changes: false }
                     ),
                     timeStamp: this._offlineTimeStamp,
                 },

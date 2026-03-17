@@ -46,7 +46,7 @@ export class Many2OneAvatarUserField extends Component {
     }
 
     get uniqueId() {
-        return this.value ? this.value.write_date.toMillis() : undefined;
+        return this.value?.write_date?.toMillis();
     }
 }
 

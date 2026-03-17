@@ -7,10 +7,14 @@ import {
     defineModels,
     editSelectMenu,
     fields,
+    getService,
+    mockOffline,
     models,
     mountView,
+    mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
 
 class Partner extends models.Model {
     display_name = fields.Char({ string: "Displayed name" });
@@ -140,23 +144,60 @@ test("SelectionField, edition and on many2one field", async () => {
 
 test.tags("desktop");
 test("[Offline] SelectionField on many2one field", async () => {
-    onRpc("product", "name_search", () => new Response("", { status: 502 }));
+    const setOffline = mockOffline();
+    onRpc("web_save", () => expect.step(`web_save`));
+
     Partner._onChanges.product_id = () => {};
     Partner._records[0].product_id = 37;
     Partner._records[0].trululu = false;
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ `
+    Partner._views = {
+        form: `
             <form>
                 <field name="product_id" widget="selection" />
             </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
     });
-    expect(".o_field_widget[name='product_id'] span").toHaveCount(1, {
-        message: "field should be readonly",
-    });
-    expect(".o_field_widget[name='product_id']").toHaveText("xphone");
+
+    await contains(".o_field_selection input").click();
+    expect(queryAllTexts(`.o-dropdown-item`)).toEqual(["xphone", "xpad"]);
+
+    //close the dropdown
+    await contains(".o_form_renderer").click();
+
+    setOffline(true);
+
+    await contains(".o_field_selection input").click();
+    expect(queryAllTexts(`.o-dropdown-item`)).toEqual(["xphone", "xpad"]);
+
+    // select the second one
+    await contains(`.dropdown-item:contains(xpad)`).click();
+    expect(`.o_field_selection input`).toHaveValue("xpad");
+
+    // save the record (should do the write RPC with the correct commands)
+    await clickSave();
+
+    // The created record will be save the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "PARTNER",
+        "first record",
+        "Edited",
+        "",
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 });
 
 test("unset selection field with string keys", async () => {

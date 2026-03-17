@@ -3,6 +3,8 @@ import { Mutex } from "./concurrency";
 const VERSION_TABLE = "__DBVersion__";
 const VERSION_KEY = "__version__";
 
+const BATCH_SIZE = 2000;
+
 export class IDBQuotaExceededError extends Error {}
 
 function formatStorageSize(size) {
@@ -30,15 +32,44 @@ export class IndexedDB {
      * Reads data from a given table.
      *
      * @param {string} table
-     * @param {string} key
+     * @param {string|Array} keys
      * @returns {Promise<any>}
      */
-    async read(table, key) {
+    async read(table, keys) {
+        this._tables.add(table);
+        return this.mutex.exec(() =>
+            this._execute(async (db) => {
+                if (db) {
+                    return new Promise((resolve, reject) => {
+                        this._read(db, table, [].concat(keys))
+                            .then((res) => {
+                                if (Array.isArray(keys)) {
+                                    return resolve(res);
+                                } else {
+                                    return resolve(res?.[0].value);
+                                }
+                            })
+                            .catch((error) => reject(error));
+                    });
+                }
+            })
+        );
+    }
+
+    /**
+     * Search data from a given term.
+     *
+     * @param {string} table The name of the table to search.
+     * @param {Function} searchFn The function used to match records (async).
+     * @param {number} limit The maximum number of results to return.
+     * @returns {Promise<any>} The matching records.
+     */
+    async search(table, searchFn, limit = 8) {
         this._tables.add(table);
         return this.mutex.exec(() =>
             this._execute((db) => {
                 if (db) {
-                    return this._read(db, table, key);
+                    return this._search(db, table, searchFn, limit);
                 }
             })
         );
@@ -73,10 +104,10 @@ export class IndexedDB {
     }
 
     /**
-     * Write data into the given table
+     * Write data or multiple data into the given table in the same transaction
      *
      * @param {string} table
-     * @param {string} key
+     * @param {string|Array} key : string|Array if it's an Array, it's an Array of object with key/values
      * @param  {any} value
      * @returns {Promise}
      */
@@ -85,7 +116,8 @@ export class IndexedDB {
         return this.mutex.exec(() =>
             this._execute((db) => {
                 if (db) {
-                    return this._write(db, table, key, value);
+                    const items = Array.isArray(key) ? key : [{ key, value }];
+                    return this._write(db, table, items);
                 }
             })
         );
@@ -112,7 +144,9 @@ export class IndexedDB {
     /**
      * Invalidates a table, or the whole database.
      *
-     * @param {string|Array} [table=null] if not given, the whole database is invalidated
+     * @param {string|RegExp|Array} [table=null] if not given, the whole database is invalidated
+                                    if it's a string it need to be the exact table name.
+                                    if it's a RegExp it will be evalutated.
      * @returns {Promise}
      */
     async invalidate(tables = null) {
@@ -153,22 +187,28 @@ export class IndexedDB {
 
     async _checkVersion(version) {
         return new Promise((resolve) => {
-            this._execute((db) => {
+            this._execute(async (db) => {
                 if (db) {
-                    return this._read(db, VERSION_TABLE, VERSION_KEY);
+                    return new Promise((resolve, reject) => {
+                        this._read(db, VERSION_TABLE, [VERSION_KEY])
+                            .then((res) => resolve(res?.[0].value))
+                            .catch((error) => reject(error));
+                    });
                 }
             }).then((currentVersion) => {
                 if (!currentVersion) {
                     this._execute((db) => {
                         if (db) {
-                            this._write(db, VERSION_TABLE, VERSION_KEY, version);
+                            this._write(db, VERSION_TABLE, [{ key: VERSION_KEY, value: version }]);
                         }
                     }).then(resolve);
                 } else if (currentVersion !== version) {
                     this._deleteDatabase(() => {
                         this._execute((db) => {
                             if (db) {
-                                this._write(db, VERSION_TABLE, VERSION_KEY, version);
+                                this._write(db, VERSION_TABLE, [
+                                    { key: VERSION_KEY, value: version },
+                                ]);
                             }
                         });
                     }).then(resolve);
@@ -221,14 +261,19 @@ export class IndexedDB {
         });
     }
 
-    async _write(db, table, key, record) {
+    async _write(db, table, items) {
         return new Promise((resolve, reject) => {
             // AAB: do we care about write performance?
             // Relaxed durability improves the write performances
             // https://nolanlawson.com/2021/08/22/speeding-up-indexeddb-reads-and-writes/
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/durability
             const transaction = db.transaction(table, "readwrite", { durability: "relaxed" });
-            transaction.objectStore(table).put(record, key); // put to allow updates
+            const store = transaction.objectStore(table);
+
+            for (const item of items) {
+                store.put(item.value, item.key); // put to allow updates
+            }
+
             transaction.onerror = (ev) => reject(ev.target.error); // firefox (DOMException)
             transaction.onabort = (ev) => reject(ev.target.error); // chrome (QuotaExceededError)
             transaction.oncomplete = resolve;
@@ -253,21 +298,36 @@ export class IndexedDB {
         });
     }
 
-    async _invalidate(db, tables) {
+    async _invalidate(db, matchers) {
         return new Promise((resolve, reject) => {
-            const objectStoreNames = [...db.objectStoreNames].filter(
+            const existingTableNames = [...db.objectStoreNames].filter(
                 (table) => table !== VERSION_TABLE
             );
-            tables = tables ? objectStoreNames.filter((t) => tables.includes(t)) : objectStoreNames;
+            let tablesToInvalidate = [];
 
-            if (tables.length === 0) {
+            if (matchers && matchers.length) {
+                tablesToInvalidate = existingTableNames.filter((item) =>
+                    matchers.some((query) => {
+                        if (query instanceof RegExp) {
+                            return query.test(item);
+                        }
+                        return item === query;
+                    })
+                );
+            } else {
+                tablesToInvalidate = existingTableNames;
+            }
+
+            if (tablesToInvalidate.length === 0) {
                 return resolve();
             }
             // Relaxed durability improves the write performances
             // https://nolanlawson.com/2021/08/22/speeding-up-indexeddb-reads-and-writes/
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/durability
-            const transaction = db.transaction(tables, "readwrite", { durability: "relaxed" });
-            const proms = tables.map(
+            const transaction = db.transaction(tablesToInvalidate, "readwrite", {
+                durability: "relaxed",
+            });
+            const proms = tablesToInvalidate.map(
                 (table) =>
                     new Promise((resolve) => {
                         const objectStore = transaction.objectStore(table);
@@ -285,28 +345,72 @@ export class IndexedDB {
         });
     }
 
-    async _read(db, table, key) {
+    async _read(db, table, keys) {
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(table, "readonly");
             const objectStore = transaction.objectStore(table);
-            const r = objectStore.get(key);
-            r.onsuccess = () => resolve(r.result);
+
+            const results = new Array(keys.length);
+            keys.forEach((key, index) => {
+                const request = objectStore.get(key);
+
+                request.onsuccess = () => {
+                    results[index] = { key: key, value: request.result };
+                };
+            });
+            transaction.oncomplete = () => resolve(results);
+
             transaction.onerror = (ev) => reject(ev.target.error);
             transaction.onabort = (ev) => reject(ev.target.error);
         });
     }
 
-    async _getAllEntries(db, table) {
+    async _search(db, table, searchFn, limit) {
+        const results = [];
+        let query = null; // Start with no range (fetch from the beginning)
+
+        // Start first I/O fetch immediately
+        let nextBatchPromise = this._getAllEntries(db, table, query, BATCH_SIZE);
+
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            const records = await nextBatchPromise;
+
+            // Pre-fetch next batch while CPU processes current one (Pipeline)
+            if (records.length === BATCH_SIZE) {
+                query = IDBKeyRange.lowerBound(records.at(-1).key, true);
+                nextBatchPromise = this._getAllEntries(db, table, query, BATCH_SIZE);
+            } else {
+                nextBatchPromise = Promise.resolve([]);
+            }
+
+            for (const record of records) {
+                if (await searchFn(record.value)) {
+                    results.push(record);
+                    if (results.length === limit) {
+                        return results;
+                    }
+                }
+            }
+
+            // Stop if we reached the end of the table
+            if (records.length < BATCH_SIZE) {
+                return results;
+            }
+        }
+    }
+
+    async _getAllEntries(db, table, query, count) {
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(table, "readonly");
             const store = transaction.objectStore(table);
             if ("getAllRecords" in store) {
                 // This is faster but it's not suported by all browsers!
-                const r = store.getAllRecords();
+                const r = store.getAllRecords({ query, count });
                 r.onsuccess = () => resolve(r.result.map(({ key, value }) => ({ key, value })));
             } else {
-                const keysReq = store.getAllKeys();
-                const valuesReq = store.getAll();
+                const keysReq = store.getAllKeys(query, count);
+                const valuesReq = store.getAll(query, count);
                 transaction.oncomplete = () => {
                     const keys = keysReq.result;
                     const values = valuesReq.result;

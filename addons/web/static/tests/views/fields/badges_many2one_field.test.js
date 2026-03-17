@@ -202,7 +202,6 @@ test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode
     // Verify the field doesn't crash and displays the fallback name
     expect(".o_selection_badge").toHaveCount(1);
     expect(".o_selection_badge:contains(xphone)").toHaveCount(1);
-    expect(".o_selection_badge").toHaveClass("pe-none");
 
     expect.verifySteps([
         "name_search", // initial rendering

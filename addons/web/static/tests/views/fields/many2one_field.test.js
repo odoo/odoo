@@ -22,6 +22,7 @@ import {
     getFacetTexts,
     getService,
     makeServerError,
+    mockOffline,
     mockService,
     models,
     mountView,
@@ -337,6 +338,81 @@ test("do not send context in unity spec if field is invisible", async () => {
                 <field name="trululu" invisible="1" context="{'blip': int_field, 'blop': 3}" />
             </form>`,
     });
+});
+
+test("[Offline] many2one", async () => {
+    const setOffline = mockOffline();
+    onRpc("web_save", () => expect.step(`web_save`));
+
+    Partner._views = {
+        form: '<form> <field name="trululu"/> </form>',
+    };
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+
+    await contains(".o_field_many2one input").click();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "first record",
+        "second record",
+        "aaa",
+        "Search more...",
+    ]);
+
+    //close the dropdown
+    await contains(".o_form_renderer").click();
+
+    //re-render to avoid the memorizeSearch !
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "first record",
+        "second record",
+        "aaa",
+    ]);
+
+    //close the dropdown
+    await contains(".o_form_renderer").click();
+
+    // search Offline
+    await contains(".o_field_widget input").edit("record", { confirm: false });
+    await runAllTimers();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "second record"]);
+
+    // select the first one
+    await contains(`.dropdown .dropdown-item:contains(first record)`).click();
+    expect(`.o_field_many2one input`).toHaveValue("first record");
+
+    // save the record (should do the write RPC with the correct commands)
+    await clickSave();
+
+    // The created record will be save the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "PARTNER",
+        "first record",
+        "Edited",
+        "",
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 });
 
 test("editing a many2one (with form view opened with external button)", async () => {

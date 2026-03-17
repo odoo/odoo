@@ -4,6 +4,7 @@ import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 import { markRaw } from "@odoo/owl";
 
@@ -789,7 +790,19 @@ export class StaticList extends DataPoint {
         // Load records and apply changes on the loaded records
         const resIds = recordsToLoad.map((r) => r.resId);
         if (resIds.length) {
-            const recordValues = await this.model._loadRecords({ ...this.config, resIds });
+            let recordValues;
+            try {
+                recordValues = await this.model._loadRecords({ ...this.config, resIds });
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    recordValues = await this.model.offline.readMany2XRecords(
+                        this.resModel,
+                        resIds
+                    );
+                } else {
+                    throw e;
+                }
+            }
             const proms = [];
             for (let i = 0; i < recordsToLoad.length; i++) {
                 const record = recordsToLoad[i];

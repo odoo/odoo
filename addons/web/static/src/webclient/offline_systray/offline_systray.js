@@ -51,11 +51,15 @@ class OfflineSystray extends Component {
             };
             if (value.method === "web_save") {
                 item.status = value.args[0].length ? STATUS.EDITED : STATUS.CREATED;
-                item.tooltip.changes = Object.entries(value.extras.changes);
+                item.tooltip.changes = Object.entries(value.extras.changes).map(([k, v]) => [
+                    k,
+                    v?.display_name ?? v,
+                ]);
                 if (value.args[0].length) {
                     item.tooltip.changes = item.tooltip.changes.map((c) => [
                         c[0],
-                        value.extras.originalValues[c[0]],
+                        value.extras.originalValues[c[0]]?.display_name ??
+                            JSON.stringify(value.extras.originalValues[c[0]]),
                         c[1],
                     ]);
                 }
