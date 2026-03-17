@@ -1,4 +1,5 @@
 from unittest import skip
+from unittest.mock import patch
 
 from odoo.exceptions import UserError
 from odoo.fields import Command, Date, Datetime
@@ -748,3 +749,42 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'product_id': c5.id, 'value': 500.0},
             {'product_id': c6.id, 'value': 0.0},
         ])
+
+    def test_kit_cost_share_is_cached_per_variant(self):
+        """Ensure variant line filtering is computed once per explode call."""
+        product_template = self.env['product.template'].create({
+            'name': "Large Kit",
+            'type': 'consu',
+        })
+        components = self.env['product.product'].create([{
+            'name': f'Comp {index}',
+            'is_storable': True,
+        } for index in range(40)])
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component.id,
+                    'product_qty': 1,
+                })
+                for component in components
+            ],
+        })
+
+        call_count = 0
+        model = self.env.registry['mrp.bom.line']
+        original_skip_bom_line = model._skip_bom_line
+
+        def counted_skip_bom_line(line, product, never_attribute_values=False):
+            nonlocal call_count
+            call_count += 1
+            return original_skip_bom_line(line, product, never_attribute_values)
+
+        with patch.object(model, '_skip_bom_line', counted_skip_bom_line):
+            bom.explode(product_template.product_variant_id, 1.0)
+
+        # Expect 2N calls: base explosion and one cached shared-cost scan.
+        self.assertEqual(call_count, len(components) * 2)

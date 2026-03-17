@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -8,6 +7,11 @@ from odoo.tools import float_is_zero, float_round
 
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
+
+    def explode(self, product, quantity, picking_type=False, never_attribute_values=False):
+        cache = self.env.context.get('purchase_mrp_cost_share_cache')
+        bom = self.with_context(purchase_mrp_cost_share_cache={}) if cache is None else self
+        return super(MrpBom, bom).explode(product, quantity, picking_type=picking_type, never_attribute_values=never_attribute_values)
 
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids', 'byproduct_ids', 'operation_ids')
     def _check_bom_lines(self):
@@ -42,10 +46,22 @@ class MrpBomLine(models.Model):
     def _get_cost_share(self):
         self.ensure_one()
         product = self.env.context.get('bom_variant_id', self.env['product.product'])
-        variant_bom_lines = self.bom_id.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not bl.product_uom_id.is_zero(bl.product_qty))
-        if not float_is_zero(self.cost_share, precision_digits=2) or not len(variant_bom_lines) or not all(float_is_zero(bom_line.cost_share, precision_digits=2) for bom_line in variant_bom_lines):
+        cache = self.env.context.get('purchase_mrp_cost_share_cache')
+        if cache is None:
+            cache = {}
+        variant_key = (self.bom_id.id, product.id)
+        if variant_key not in cache:
+            variant_bom_lines = self.bom_id.bom_line_ids.filtered(
+                lambda bl: not bl._skip_bom_line(product) and not bl.product_uom_id.is_zero(bl.product_qty)
+            )
+            cache[variant_key] = (
+                len(variant_bom_lines),
+                any(not float_is_zero(bom_line.cost_share, precision_digits=2) for bom_line in variant_bom_lines),
+            )
+        variant_bom_line_count, has_non_zero_cost_share = cache[variant_key]
+        if not float_is_zero(self.cost_share, precision_digits=2) or not variant_bom_line_count or has_non_zero_cost_share:
             return self.cost_share / 100
-        return 1 / len(variant_bom_lines)
+        return 1 / variant_bom_line_count
 
     def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
         result = super()._prepare_bom_done_values(quantity, product, original_quantity, boms_done)
