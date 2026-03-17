@@ -158,8 +158,7 @@ class ResCompany(models.Model):
 
         error_message = _(
             "Please enter the mobile number in the correct international format.\n"
-            "For example: +32123456789, where +32 is the country code.\n"
-            "Currently, only European countries are supported.")
+            "For example: +32123456789, where +32 is the country code.")
 
         self._check_phonenumbers_import()
 
@@ -175,8 +174,7 @@ class ResCompany(models.Model):
         except phonenumbers.phonenumberutil.NumberParseException:
             raise ValidationError(error_message)
 
-        country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
-        if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
+        if not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
     def _check_peppol_endpoint_number(self, warning=False):
