@@ -64,6 +64,7 @@ class AccountMove(models.Model):
     l10n_latam_use_documents = fields.Boolean(compute='_compute_l10n_latam_use_documents', search='_search_l10n_latam_use_documents')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
     l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
+    l10n_latam_document_internal_type = fields.Selection(related='l10n_latam_document_type_id.internal_type', string='Internal Type')
 
     @api.depends('l10n_latam_document_type_id')
     def _compute_name(self):
