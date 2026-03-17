@@ -694,6 +694,9 @@ export class PosStore extends WithLazyGetterTrap {
                     );
                     product = productPackaging && productPackaging.product_id;
                 }
+                if (!product && opts.product) {
+                    product = opts.product;
+                }
             } else {
                 product = opts.presetVariant;
             }
@@ -980,6 +983,7 @@ export class PosStore extends WithLazyGetterTrap {
             const payload = await this.openConfigurator(productTemplate, {
                 ...opts,
                 line: props.line,
+                product: values?.product_id,
             });
             if (!payload) {
                 return false;
