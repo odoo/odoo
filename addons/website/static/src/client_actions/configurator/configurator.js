@@ -1,4 +1,12 @@
-import { reactive, useEnv, useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import {
+    reactive,
+    useEnv,
+    useExternalListener,
+    useLayoutEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -238,7 +246,7 @@ export class DescriptionScreen extends Component {
             const res = fuzzyLevenshteinLookup(term, this.dictionarySet);
             correctedSet.add(res[0] || term);
         }
-        let terms = Array.from(correctedSet);
+        const terms = Array.from(correctedSet);
         const limit = 30;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
@@ -276,13 +284,11 @@ export class DescriptionScreen extends Component {
                 matches = matches.slice(0, limit);
             }
         }
-        if (matches.length === 0) {
-            matches = [{ label: term, id: -1 }];
-            terms = [term];
-        }
+
+        matches.push({ label: term, id: -1 });
         return matches.map((match) => ({
-            label: match.label,
-            labelTermOrder: this._getMatchTermOrder(match.label, terms),
+            label: match.id === -1 ? _t('Create "%s"', match.label) : match.label,
+            labelTermOrder: match.id === -1 ? null : this._getMatchTermOrder(match.label, terms),
             onSelect: () => this._setSelectedIndustry(match.label, match.id),
         }));
     }
