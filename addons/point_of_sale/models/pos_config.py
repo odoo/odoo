@@ -358,9 +358,9 @@ class PosConfig(models.Model):
             rescue_sessions = opened_sessions.filtered('rescue')
             session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
             # sessions ordered by id desc
-            pos_config.has_active_session = opened_sessions and True or False
-            pos_config.current_session_id = session and session[0].id or False
-            pos_config.current_session_state = session and session[0].state or False
+            pos_config.has_active_session = bool(opened_sessions.filtered(lambda s: s.state != 'opening_control')) or False
+            pos_config.current_session_id = (session and session[0].id) or False
+            pos_config.current_session_state = (session and session[0].state) or False
             pos_config.number_of_rescue_session = len(rescue_sessions)
 
     def _search_current_session(self, operator, value):
@@ -873,6 +873,13 @@ class PosConfig(models.Model):
         self._check_currencies()
         self._check_profit_loss_cash_journal()
         self._check_payment_method_ids()
+
+    def open_session_if_not_opened(self):
+        if not self.current_session_id:
+            # Acquire an row-level lock on the pos_config record to prevent race conditions
+            # This prevents multiple concurrent processes from creating duplicate POS sessions
+            self.lock_for_update()
+            self.open_ui()
 
     def open_ui(self):
         """Open the pos interface with config_id as an extra argument.

@@ -159,6 +159,10 @@ export class PosSession extends models.ServerModel {
         return [];
     }
 
+    get_order_count_by_preset() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,

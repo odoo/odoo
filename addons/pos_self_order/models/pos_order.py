@@ -3,7 +3,7 @@
 import logging
 
 from odoo import Command, models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError, LockError
 
 _logger = logging.getLogger(__name__)
 
@@ -173,6 +173,17 @@ class PosOrder(models.Model):
 
         if not preset_id and pos_config.use_presets:
             raise UserError(_("Invalid preset"))
+
+        if not order['session_id'] or order['session_id'] != pos_config.current_session_id.id:
+            try:
+                pos_config.open_session_if_not_opened()  # Create a session after doing the necessary checks.
+            except ValidationError as e:
+                _logger.warning("pos_self_order: Error while opening a session for future orders: %s", e.args[0])
+                raise UserError(_("Impossible to create a new order."))
+            except LockError:
+                _logger.warning("pos_self_order: Lock not available while opening a session for future orders.")
+                raise UserError(_("Error while creating the order. Please try again."))
+            order['session_id'] = pos_config.current_session_id.id
 
         existing_order = pos_config.env['pos.order']._get_open_order(order)
         if not existing_order.exists():

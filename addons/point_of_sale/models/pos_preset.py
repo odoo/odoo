@@ -96,7 +96,7 @@ class PosPreset(models.Model):
         usage = defaultdict(int)
         orders = self.env['pos.order'].search([
             ('preset_id', '=', self.id),
-            ('session_id.state', '=', 'opened'),
+            ('session_id.state', '!=', 'closed'),
             ('preset_time', '!=', False),
             ('state', 'in', ['draft', 'paid']),
             ('create_date', '>=', fields.Datetime.now() - timedelta(days=1)),

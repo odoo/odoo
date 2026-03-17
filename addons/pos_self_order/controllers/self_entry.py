@@ -70,7 +70,7 @@ class PosSelfKiosk(http.Controller):
         if not pos_config:
             raise werkzeug.exceptions.NotFound()
 
-        if pos_config and pos_config.has_active_session and pos_config.self_ordering_mode == 'mobile':
+        if pos_config and pos_config.self_ordering_mode == 'mobile':
             table_sudo = table_identifier and (
                 request.env["restaurant.table"]
                 .sudo()

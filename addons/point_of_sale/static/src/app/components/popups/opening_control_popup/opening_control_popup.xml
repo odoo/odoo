@@ -9,8 +9,13 @@
             </t>
             <div class="mb-3" t-if="this.orderCount > 0">
                 <label class="form-label">Orders status</label>
-                <div class="alert alert-info" role="alert">
-                    You still have <span t-out="this.orderCount" /> open orders for the next few days.
+                <div class="alert alert-info d-flex" role="alert">
+                    <span>You have <span t-out="this.orderCount" /> order(s) for the next few days:</span>
+                    <ul class="mb-0 px-2">
+                        <li t-if="this.getOrderCountByPreset.status == 'success'" t-foreach="this.state.ordersByPreset" t-as="preset" t-key="preset_index">
+                            - <span t-out="preset.count" /> <t t-out="preset.name" />
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="opening-cash-section mb-3" t-if="this.cashMethodCount">
