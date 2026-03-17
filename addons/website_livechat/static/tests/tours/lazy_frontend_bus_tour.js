@@ -2,7 +2,7 @@ import { WORKER_STATE } from "@bus/services/worker_service";
 
 import { whenReady } from "@odoo/owl";
 
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
                 if (busService.isActive) {
                     throw new Error("The bus service should not be started at page load.");
                 }
-                patchWithCleanup(busService, {
+                patch(busService, {
                     start() {
                         document.body.classList.add("o-bus-service-started");
                         return super.start(...arguments);
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
                 if (workerService._state !== WORKER_STATE.UNINITIALIZED) {
                     throw new Error("The worker service should not be started at page load.");
                 }
-                patchWithCleanup(workerService, {
+                patch(workerService, {
                     ensureWorkerStarted() {
                         document.body.classList.add("o-worker-service-started");
                         return super.ensureWorkerStarted(...arguments);

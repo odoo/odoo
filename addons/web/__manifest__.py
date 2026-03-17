@@ -417,8 +417,6 @@ This module provides the core of the Odoo Web Client.
 
         'web.assets_tests': [
             # the bundle "assets_tests" is first called in web.
-            'web/static/tests/legacy/helpers/cleanup.js',
-            'web/static/tests/legacy/helpers/utils.js',
             'web/static/tests/tours/**/*',
         ],
         'web.__assets_tests_call__': [

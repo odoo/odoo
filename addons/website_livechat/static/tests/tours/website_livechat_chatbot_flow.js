@@ -1,4 +1,4 @@
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 import { Chatbot } from "@im_livechat/core/common/chatbot_model";
 
@@ -8,7 +8,7 @@ let chatbotDelayProcessingDef;
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => {
-        patchWithCleanup(Chatbot.prototype, {
+        patch(Chatbot.prototype, {
             // Count the number of times this method is called to check whether the chatbot is regularly
             // checking the user's input in the multi line step until the user finishes typing.
             async _delayThenProcessAnswerAgain(message) {
@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 return await super._delayThenProcessAnswerAgain(message);
             },
         });
-        patchWithCleanup(Chatbot, {
+        patch(Chatbot, {
             MESSAGE_DELAY: 0,
             MULTILINE_STEP_DEBOUNCE_DELAY: 2000,
             TYPING_DELAY: 0,

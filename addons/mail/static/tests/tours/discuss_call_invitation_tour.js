@@ -1,12 +1,12 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
 import { registry } from "@web/core/registry";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patch } from "@web/core/utils/patch";
 
 registry.category("web_tour.tours").add("discuss_call_invitation.js", {
     steps: () => {
         // Call invitation is cancelled after 30s. Increase this delay for the test.
-        patchWithCleanup(ChannelMember, { CANCEL_CALL_INVITE_DELAY: 1e6 });
+        patch(ChannelMember, { CANCEL_CALL_INVITE_DELAY: 1e6 });
         return [
             { trigger: ".o-discuss-CallInvitation" },
             {
