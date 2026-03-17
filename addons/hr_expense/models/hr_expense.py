@@ -969,6 +969,7 @@ class HrExpense(models.Model):
             'journal_id': journal.id,
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
