@@ -171,43 +171,44 @@
                             <field name="current_status" class="o_calendar_form_status_selection_badge" string="Going?"
                                 widget="badges_selection" required="should_show_status" readonly="not should_show_status" invisible="not should_show_status"/>
                             <label for="privacy" string="Status"/>
-                            <div class="d-flex">
-                                <field name="show_as" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1"/>
+                            <div class="d-flex gap-2">
+                                <field name="show_as" class="oe_inline" readonly="not user_can_edit" nolabel="1"/>
                                 <field name="privacy_placeholder" invisible="1"/> <!-- Used to generate the privacy field's placeholder. -->
-                                <field name="privacy" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}"
+                                <field name="privacy" class="oe_inline" readonly="not user_can_edit" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}"
                                     help="Set whether you're available for other simultaneous events and the privacy of this event to others. Manage your default privacy in your user preferences."/>
                             </div>
                             <field name="should_show_status" invisible="1"/>
-                            <div class="o_form_label">
-                                <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> guests</span>
-                            </div>
-                            <div class="o_input_box w-100 p-2">
-                                <div class="d-flex text-muted fw-normal w-100 p-3">
-                                    <span invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count">
-                                        <span invisible="not accepted_count" class="me-1">
-                                            <field name="accepted_count" class="w-auto oe_inline" nolabel="1"/> Yes
+                            <label for="partner_ids" class="d-none d-touch-block" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"/>
+                            <div class="o_input_box" colspan="2">
+                                <div class="d-flex justify-content-between justify-content-md-start pb-md-3">
+                                    <div>
+                                        <div class="fw-bold">
+                                            <field name="attendees_count" class="w-auto pe-0" nolabel="1"/> guests
+                                        </div>
+                                        <span class="text-muted fw-normal" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count">
+                                            <span invisible="not accepted_count" class="me-1">
+                                                <field name="accepted_count" class="w-auto pe-0" nolabel="1"/> Yes
+                                            </span>
+                                            <span invisible="not tentative_count" class="me-1">
+                                                <field name="tentative_count" class="w-auto pe-0" nolabel="1"/> Maybe
+                                            </span>
+                                            <span invisible="not declined_count" class="me-1">
+                                                <field name="declined_count" class="w-auto pe-0" nolabel="1"/> No
+                                            </span>
+                                            <span invisible="not awaiting_count" class="w-auto me-1">
+                                                <field name="awaiting_count" class="w-auto pe-0" nolabel="1"/> Awaiting
+                                            </span>
                                         </span>
-                                        <span invisible="not tentative_count" class="me-1">
-                                            <field name="tentative_count" class="w-auto oe_inline" nolabel="1"/> Maybe
-                                        </span>
-                                        <span invisible="not declined_count" class="me-1">
-                                            <field name="declined_count" class="w-auto oe_inline" nolabel="1"/> No
-                                        </span>
-                                        <span invisible="not awaiting_count" class="me-1">
-                                            <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> Awaiting
-                                        </span>
-                                    </span>
-                                    <div name="send_buttons" class="d-flex gap-2 mb-auto ms-4" invisible="not attendees_count">
+                                    </div>
+                                    <div name="send_buttons" class="d-flex flex-column flex-md-row gap-2 mb-auto ms-md-4 mt-1 me-1" invisible="not attendees_count">
                                         <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
                                     </div>
                                 </div>
-                                <label for="partner_ids" class="d-none d-touch-block" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"/>
                                 <field name="partner_ids" widget="many2manyattendee"
                                     placeholder="Select attendees..."
                                     options="{'no_quick_create': True}"
                                     context="{'form_view_ref': 'base.view_partner_simple_form'}"
                                     domain="[('type','!=','private')]"
-                                    class="oe_inline"
                                     readonly="not user_can_edit"
                                 />
                             </div>

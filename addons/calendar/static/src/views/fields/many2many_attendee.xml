@@ -4,6 +4,9 @@
         <xpath expr="//Many2XAutocomplete" position="attributes">
             <attribute name="placeholder">props.placeholder</attribute>
         </xpath>
+        <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="attributes">
+            <attribute name="class" add="flex-basis-100" remove="d-inline-flex w-100" separator=" "/>
+        </xpath>
     </t>
 
     <t t-name="calendar.AttendeeTag" t-inherit="web.AvatarTag" t-inherit-mode="primary">
