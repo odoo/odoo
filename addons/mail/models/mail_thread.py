@@ -2998,7 +2998,7 @@ class MailThread(models.AbstractModel):
                 order='date desc, id desc',
                 limit=200,  # arbitrary, but sometimes loops / spam may creater a long history
             ).sorted(
-                lambda msg: (msg.message_type in ('comment', 'email'), msg.date or msg.create_date, msg.id),
+                lambda msg: (msg.message_type in ('comment', 'email'), msg.date or msg.create_date or datetime.datetime.min, msg.id),
                 reverse=True,
             )
             current_ancestor = current_ancestor[:1]
