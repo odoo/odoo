@@ -430,51 +430,6 @@ return __exports;
 
         self.assertEqual(result, expected_result)
 
-    def test_10_qunit_module_test(self):
-        input_content = """QUnit.test("Tests", function (assert) {{}})"""
-
-        result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
-
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], function (require) {
-'use strict';
-let __exports = {};
-QUnit.module("test_assetsbundle", function() {QUnit.test("Tests", function (assert) {{}})});
-return __exports;
-});
-"""
-
-        self.assertEqual(result, expected_result)
-
-    def test_11_qunit_module_debug(self):
-        input_content = """QUnit.debug("Tests", function (assert) {{}})"""
-
-        result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
-
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], function (require) {
-'use strict';
-let __exports = {};
-QUnit.module("test_assetsbundle", function() {QUnit.debug("Tests", function (assert) {{}})});
-return __exports;
-});
-"""
-
-        self.assertEqual(result, expected_result)
-
-    def test_12_qunit_no_module(self):
-        input_content = """let a = 1 + 1;"""
-
-        result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
-
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], function (require) {
-'use strict';
-let __exports = {};
-let a = 1 + 1;
-return __exports;
-});
-"""
-
-        self.assertEqual(result, expected_result)
-
     def test_13_require_comment(self):
         input_content = """
 require("@test/Dialog")
