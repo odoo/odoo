@@ -43,6 +43,7 @@ class HrJob(models.Model):
     department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True, index='btree_not_null')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)
     employee_type_id = fields.Many2one('hr.employee.type', string='Employee Type', tracking=True)
+    company_country_code = fields.Char(related='company_id.country_id.code', depends=["company_id.country_id"])
 
     _name_company_uniq = models.Constraint(
         'unique(name, company_id, department_id)',
