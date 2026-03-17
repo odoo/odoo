@@ -1019,6 +1019,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         excluded_fields.add('company_currency_pd')
         excluded_fields.add('currency_pd')
         excluded_fields.add('has_tax_groups')
+        excluded_fields.add('is_price_include')
         monetary_fields = {
             'tax_amount_currency': currency,
             'tax_amount': company_currency,
