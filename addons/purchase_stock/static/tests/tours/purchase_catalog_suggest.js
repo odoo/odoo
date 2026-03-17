@@ -13,8 +13,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          */
         { trigger: ".o_purchase_order" },
         ...purchaseForm.createNewPO(),
+        ...purchaseForm.selectVendor("Test Vendor"),
         ...purchaseForm.selectWarehouse("Other Warehouse: Receipts"),
-        ...purchaseForm.selectVendor("Julia Agrolait"),
         ...purchaseForm.openCatalog(),
         {
             content: "Checks suggest is off by default and suggest fields hidden when suggest off",
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...catalogSuggestion.setParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
         ...productCatalog.goBackToOrder(),
-        ...purchaseForm.selectWarehouse("Base Warehouse: Receipts"),
+        ...purchaseForm.selectWarehouse("Inventory Test Company: Receipts"),
         ...purchaseForm.openCatalog(),
         ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" }, // 12 units/week * 4 weeks * 20$/ unit * 50% = 480$
@@ -69,8 +69,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...productCatalog.goBackToOrder(),
         ...purchaseForm.checkLineValues(0, { product: "test_product", quantity: "24.00" }),
         ...purchaseForm.createNewPO(),
-        ...purchaseForm.selectVendor("Julia Agrolait"),
-        ...purchaseForm.selectWarehouse("Base Warehouse: Receipts"),
+        ...purchaseForm.selectVendor("Test Vendor"),
+        ...purchaseForm.selectWarehouse("Inventory Test Company: Receipts"),
         ...purchaseForm.openCatalog(),
         ...catalogSuggestion.assertParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
         /*
@@ -108,7 +108,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         // --- Check with suggest OFF we come back to normal
         ...catalogSuggestion.toggleSuggest(false),
         ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 100, monthly: 24 }),
-        ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0),
+        ...catalogSuggestion.checkKanbanRecordPosition("Other product", 0),
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 24 }), // Should come back to normal monthly demand
         /*
          * -------------------  PART 3 : KANBAN FILTERS ---------------------
@@ -118,14 +118,14 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          */
 
         // ---- Check Adding non suggested product works with suggest
-        ...productCatalog.addProduct("Courage"),
-        ...productCatalog.waitForQuantity("Courage", 1),
+        ...productCatalog.addProduct("Other product"),
+        ...productCatalog.waitForQuantity("Other product", 1),
         ...catalogSuggestion.toggleSuggest(true),
 
         // ---- Check toggling suggest OFF with filters manually removed still works
         ...catalogSuggestion.removeSuggestFilter(),
         ...catalogSuggestion.toggleSuggest(false),
-        ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0), // == suggest is off
+        ...catalogSuggestion.checkKanbanRecordPosition("Other product", 0), // == suggest is off
 
         // --- Turning suggest on with non suggested product works as expected
         // Because Add product can be slow to reach server and because when toggling suggest we filter
@@ -134,7 +134,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...productCatalog.goBackToOrder(),
         ...purchaseForm.openCatalog(),
         ...catalogSuggestion.toggleSuggest(true),
-        ...catalogSuggestion.checkKanbanRecordPosition("Courage", 1), // Courage still shown because in order but after suggested products
+        ...catalogSuggestion.checkKanbanRecordPosition("Other product", 1), // Other product still shown because in order but after suggested products
 
         // Check that categories work well with suggestions
         ...productCatalog.selectSearchPanelCategory("Goods"),

@@ -2268,8 +2268,9 @@ class TestStockValuation(TestStockValuationCommon):
         Create two warehouses and check that the total value and the on hand quantity
         displayed in the stock report accurately depends on the contextual warehouse.
         """
+        self._use_multi_warehouses()
         product = self.product_avco_auto
-        warehouse_1, warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=2)
+        warehouse_1, warehouse_2 = self.warehouse, self.other_warehouse
 
         inventory_adjustment_loc = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1)
         self._make_in_move(product=product, quantity=15.0, location_id=inventory_adjustment_loc.id, location_dest_id=warehouse_1.lot_stock_id.id)
@@ -2290,8 +2291,9 @@ class TestStockValuation(TestStockValuationCommon):
         Create two warehouses and check that the total value and the on hand quantity
         displayed in the stock report accurately depends on the contextual warehouse.
         """
+        self._use_multi_warehouses()
         product = self.product_fifo_auto
-        warehouse_1, warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=2)
+        warehouse_1, warehouse_2 = self.warehouse, self.other_warehouse
 
         inventory_adjustment_loc = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1)
         self._make_in_move(product=product, quantity=15.0, location_id=inventory_adjustment_loc.id, location_dest_id=warehouse_1.lot_stock_id.id)
@@ -2313,12 +2315,13 @@ class TestStockValuation(TestStockValuationCommon):
         Create two warehouses and check that the total value and the on hand quantity
         displayed in the stock report accurately depends on the contextual warehouse.
         """
+        self._use_multi_warehouses()
         product = self.product_avco_auto
         product.write({
             'tracking': 'lot',
             'lot_valuated': True,
         })
-        warehouse_1, warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=2)
+        warehouse_1, warehouse_2 = self.warehouse, self.other_warehouse
         lots = self.env['stock.lot'].create([{
             'name': f'lot{i}',
             'product_id': product.id,
@@ -2360,12 +2363,13 @@ class TestStockValuation(TestStockValuationCommon):
         Create two warehouses and check that the total value and the on hand quantity
         displayed in the stock report accurately depends on the contextual warehouse.
         """
+        self._use_multi_warehouses()
         product = self.product_fifo_auto
         product.write({
             'tracking': 'lot',
             'lot_valuated': True,
         })
-        warehouse_1, warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=2)
+        warehouse_1, warehouse_2 = self.warehouse, self.other_warehouse
         lots = self.env['stock.lot'].create([{
             'name': f'lot{i}',
             'product_id': product.id,
