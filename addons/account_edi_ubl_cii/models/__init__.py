@@ -1,5 +1,6 @@
 from . import account_edi_common
 from . import account_edi_ubl
+from . import account_edi_cii
 from . import account_edi_ubl_cen_en16931
 from . import account_edi_ubl_pint
 from . import account_edi_ubl_pint_eu

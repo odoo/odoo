@@ -1,4 +1,5 @@
 from . import common
+from . import test_cii_export_facturx_fr
 from . import test_flow_lifecycle
 from . import test_messages
 from . import test_partner
