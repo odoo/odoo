@@ -569,12 +569,16 @@ class Users(models.Model):
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
 
+    @property
+    def USER_PRIVATE_FIELDS(self):
+        return list(USER_PRIVATE_FIELDS)
+
     def _fetch_query(self, query, fields):
         records = super()._fetch_query(query, fields)
-        if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
+        if not set(self.USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
             if self.browse().has_access('write'):
                 return records
-            for fname in USER_PRIVATE_FIELDS:
+            for fname in self.USER_PRIVATE_FIELDS:
                 self.env.cache.update(records, self._fields[fname], repeat('********'))
         return records
 
@@ -682,14 +686,14 @@ class Users(models.Model):
         except Exception:
             # may happen if aggregate_spec == '__count', for instance
             fname = None
-        if fname in USER_PRIVATE_FIELDS:
+        if fname in self.USER_PRIVATE_FIELDS:
             raise AccessError(_("Cannot aggregate on %s parameter", fname))
         return super()._read_group_select(aggregate_spec, query)
 
     @api.model
     def _read_group_groupby(self, groupby_spec, query):
         fname, __, __ = models.parse_read_group_spec(groupby_spec)
-        if fname in USER_PRIVATE_FIELDS:
+        if fname in self.USER_PRIVATE_FIELDS:
             raise AccessError(_("Cannot groupby on %s parameter", fname))
         return super()._read_group_groupby(groupby_spec, query)
 
@@ -697,7 +701,7 @@ class Users(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None):
         if not self.env.su and domain:
             domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
-            if domain_fields.intersection(USER_PRIVATE_FIELDS):
+            if domain_fields.intersection(self.USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))
         return super()._search(domain, offset, limit, order)
 
@@ -900,7 +904,7 @@ class Users(models.Model):
     def _get_invalidation_fields(self):
         return {
             'groups_id', 'active', 'lang', 'tz', 'company_id', 'company_ids',
-            *USER_PRIVATE_FIELDS,
+            *self.USER_PRIVATE_FIELDS,
             *self._get_session_token_fields()
         }
 
