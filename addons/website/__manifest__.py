@@ -366,7 +366,6 @@
         ],
         'web.assets_unit_tests_setup': [
             'html_builder/static/src/utils/scrolling.js',
-            'web/static/src/legacy/js/core/class.js',
             'web/static/src/public/utils.js',
             'web/static/src/public/lazyloader.js',
             'web/static/src/public/public_root.js',

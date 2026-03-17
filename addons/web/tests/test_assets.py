@@ -89,7 +89,6 @@ class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
 
     def test_assets_generate_time(self):
         thresholds = {
-            'web.qunit_suite_tests.js': 3.6,
             'project.webclient.js': 2.5,
             'point_of_sale.pos_assets_backend.js': 2.5,
             'web.assets_backend.js': 2.5,

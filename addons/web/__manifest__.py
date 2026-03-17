@@ -221,7 +221,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/src/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            'web/static/src/legacy/js/core/class.js',
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
@@ -420,9 +419,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/tours/**/*',
         ],
         'web.__assets_tests_call__': [
-            'web/static/tests/legacy/ignore_missing_deps_start.js',
+            'web/static/tests/ignore_missing_deps/start.js',
             ('include', 'web.assets_tests'),
-            'web/static/tests/legacy/ignore_missing_deps_stop.js',
+            'web/static/tests/ignore_missing_deps/stop.js',
         ],
         # Assets for test framework and setup
         'web.assets_unit_tests_setup': [
@@ -466,7 +465,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/**/*',
 
             ('remove', 'web/static/tests/tours/**/*'),
-            ('remove', 'web/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
+            ('remove', 'web/static/tests/ignore_missing_deps/**/*'),
         ],
         'web.tests_assets': [
             'web/static/src/module_loader.js',
@@ -511,21 +510,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/l10n/utils/locales.js',
             'web/static/src/core/l10n/utils/format_list.js',
             'web/static/src/core/l10n/utils/normalize.js',
-
-            'web/static/lib/qunit/qunit-2.9.1.css',
-            'web/static/lib/qunit/qunit-2.9.1.js',
-
-            ('include', 'web._assets_jquery'),
-
-            'web/static/tests/legacy/patch_translations.js',
-            'web/static/tests/legacy/helpers/**/*.js',
-            'web/static/tests/legacy/qunit.js',
-            'web/static/tests/legacy/main.js',
-            'web/static/tests/legacy/setup.js',
-        ],
-        'web.qunit_suite_tests': [
-            'web/static/src/legacy/js/core/class.js',
-            'web/static/tests/legacy/legacy_tests/**/*.js',
         ],
         'web.assets_clickbot': [
             'web/static/src/webclient/clickbot/clickbot.js',

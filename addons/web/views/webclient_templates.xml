@@ -229,27 +229,6 @@
         </t>
     </template>
 
-    <template id="web.test_helpers">
-        <t t-call-assets="web.tests_assets" t-js="False"/>
-        <style>
-            body {
-                position: relative; /* bootstrap-datepicker needs this */
-            }
-            body:not(.debug) .modal-backdrop, body:not(.debug) .modal:not(.o_module_error), body:not(.debug) .ui-autocomplete {
-                opacity: 0 !important;
-            }
-            #qunit-testrunner-toolbar label {
-                font-weight: inherit;
-                margin-bottom: inherit;
-            }
-            #qunit-testrunner-toolbar input[type=text] {
-                width: inherit;
-                display: inherit;
-            }
-        </style>
-        <t t-call-assets="web.tests_assets" t-css="False"/>
-    </template>
-
     <template id="web.unit_tests_suite">
         <t t-set="head">
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -265,26 +244,6 @@
             html_data="{'style': 'height: 100%;'}"
             title.translate="Web Unit Tests"
             head="head"/>
-    </template>
-
-    <template id="web.qunit_suite">
-        <t t-set="head">
-            <script type="text/javascript">
-                odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
-            </script>
-
-            <t t-call="web.test_helpers"/>
-
-            <t t-call-assets="web.qunit_suite_tests" t-js="false"/>
-            <t t-call-assets="web.qunit_suite_tests" t-css="false"/>
-        </t>
-        <t t-call="web.layout"
-            html_data="{'style': 'height: 100%;'}"
-            title.translate="Web Tests"
-            head="head">
-            <div id="qunit"/>
-            <div id="qunit-fixture"/>
-        </t>
     </template>
 
     <template id="web.webclient_bootstrap">
