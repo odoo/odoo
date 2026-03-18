@@ -124,10 +124,12 @@ export class QWebPlugin extends Plugin {
     }
 
     normalizeInline(root) {
-        for (const el of selectElements(root, "t")) {
-            if (this.checkAllInline(el)) {
-                el.setAttribute("data-oe-t-inline", "true");
-            }
+        const targets = [...root.querySelectorAll("t")];
+        if (root.matches("t")) {
+            targets.unshift(root);
+        }
+        for (const el of targets.filter((el) => this.checkAllInline(el))) {
+            el.setAttribute("data-oe-t-inline", "true");
         }
     }
 
