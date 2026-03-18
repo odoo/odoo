@@ -178,9 +178,9 @@ class MailRenderMixin(models.AbstractModel):
         html = re.sub(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(re.compile(
             r"""( # Group 1: element up to url in style
-                <[^>]+\bstyle=" # Element with a style attribute
-                [^"]+\burl\( # Style attribute contains "url(" style
-                (?:&\#34;|'|&quot;|&\#39;)?) # url style may start with (escaped) quote: capture it
+                <[^>]+\bstyle=['"] # Element with a style attribute
+                [^'"]+\burl\( # Style attribute contains "url(" style
+                (?:&\#34;|'|&quot;|&\#39;|")?) # url style may start with (escaped) quote: capture it
             ( # Group 2: url itself
                 /(?:[^'")]|(?!&\#34;)|(?!&\#39;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
