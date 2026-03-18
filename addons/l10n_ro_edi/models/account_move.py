@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         self.l10n_ro_edi_state = False
         for move in self:
             # set the state of the move depending on the last document created
-            move.l10n_ro_edi_state = move.l10n_ro_edi_document_ids and move.l10n_ro_edi_document_ids.sorted()[0].state
+            move.l10n_ro_edi_state = move.l10n_ro_edi_document_ids.sorted()[:1].state
 
     @api.depends('l10n_ro_edi_state')
     def _compute_show_reset_to_draft_button(self):
