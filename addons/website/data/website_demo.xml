@@ -473,30 +473,84 @@
                     <t t-call="website.layout">
                         <div id="#wrap" class="oe_structure" style="background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAL/GRikGGF8KOcZWADGAbEZkTkgAQDXKwcebKRDwQAAAABJRU5ErkJggg==) repeat;">
                             <section class="py-1">
-                                <div class="container">
-                                    <div class="d-flex mb-3">
+                                <div class="container-fluid">
+                                    <div class="d-flex my-2">
                                         <div class="card w-100">
-                                            <div class="card-body">
-                                                <table class="table table-borderless">
+                                            <div class="card-body py-0">
+                                                <table class="table table-borderless m-0">
                                                     <tr>
-                                                        <th colspan="2" class="align-middle">Theme Colors</th>
+                                                        <th class="align-middle small text-end w-0 text-nowrap">Theme Colors</th>
                                                         <td t-foreach="[1, 2, 3, 4, 5]" t-as="i">
                                                             <div class="d-flex">
-                                                                <span t-attf-class="border p-3 me-1 bg-o-color-#{i}"></span>
+                                                                <span t-attf-class="border py-2 px-3 me-1 bg-o-color-#{i}"></span>
                                                                 <div class="flex-grow-1 align-self-center">
-                                                                    <h5 class="m-0">o-color-<t t-out="i"/></h5>
+                                                                    <h6 class="small m-0 text-nowrap">o-color-<t t-out="i"/></h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="border-top">
+                                                        <th class="align-middle small text-end">BS Colors</th>
+                                                        <td t-foreach="['primary', 'secondary', 'light']" t-as="i">
+                                                            <div class="d-flex">
+                                                                <span t-attf-class="border py-2 px-3 me-1 bg-#{i}"></span>
+                                                                <div class="flex-grow-1 align-self-center">
+                                                                    <h6 class="small m-0" t-out="i"/>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td/>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <span class="border py-2 px-3 me-1 bg-dark"></span>
+                                                                <div class="flex-grow-1 align-self-center">
+                                                                    <h6 class="small m-0">dark</h6>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th colspan="2" class="align-middle">BTS Base Colors</th>
-                                                        <td t-foreach="['primary', 'secondary', 'light', 'dark']" t-as="i">
+                                                        <th class="align-middle pt-0"/>
+                                                        <td t-foreach="['success', 'danger', 'warning', 'info', 'white', 'black']" t-as="i" class="pt-0">
                                                             <div class="d-flex">
-                                                                <span t-attf-class="border p-3 me-1 bg-#{i}"></span>
+                                                                <span t-attf-class="border py-2 px-3 me-1 bg-#{i}"></span>
                                                                 <div class="flex-grow-1 align-self-center">
-                                                                    <h5 class="m-0" t-out="i"></h5>
+                                                                    <h6 class="small m-0" t-out="i"/>
                                                                 </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="border-top">
+                                                        <th class="small text-end">
+                                                            Grayscale
+                                                        </th>
+
+                                                        <td colspan="7">
+                                                            <div class="w-100 d-flex">
+                                                                <div t-foreach="['100', '200', '300', '400', '500', '600', '700', '800', '900']" t-as="i" class="d-flex flex-column gap-1 flex-grow-1">
+                                                                    <span t-attf-class="py-2 bg-#{i}"/>
+                                                                    <div class="flex-grow-1 align-self-center">
+                                                                        <h6 class="m-0 smaller" t-out="i"/>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="border-top">
+                                                        <th class="small text-end">
+                                                            UI Color (light)
+                                                        </th>
+                                                        <td colspan="7">
+                                                            <div class="w-100 d-flex gap-2">
+                                                                <button type="button" class="btn btn-light">UI Button</button>
+                                                                <div role="search" class="input-group" style="max-width:300px;">
+                                                                    <input type="search" name="search" class="search-query form-control oe_search_box border-0 text-bg-light border-0 bg-light" placeholder="Search..." value=""/>
+                                                                    <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button btn btn-light">
+                                                                        <i class="oi oi-search"/>
+                                                                    </button>
+                                                                </div>
+
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -504,55 +558,65 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-6 mt-3" t-foreach="[1, 2, 3, 4, 5]" t-as="i">
-                                            <div t-attf-class="o_cc o_cc#{i} p-3 border">
-                                                <div class="row">
-                                                    <div class="col-7">
-                                                        <h2>
-                                                            Preset <t t-out="i"/>
-                                                        </h2>
-                                                        <p>Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>. <a class="o_translate_inline" href="#">Link text</a></p>
-                                                        <p class="text-muted">Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur.</p>
-                                                        <p class="small">Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>.</p>
+                                    <div class="row row-cols-md-2 row-cols-xxl-3 g-3 pb-5">
+                                        <div class="mt-3" t-foreach="[null, 1, 2, 3, 4, 5, 'white', 'black', 100, 200, 300, 400, 500, 600, 700, 800, 900, 'success', 'warning', 'danger', 'info', 'light', 'dark']" t-as="i">
+                                            <t t-set="bgClass" t-value="'bg-body' if i == null else ('o_cc o_cc%s' % i if (isinstance(i, int) and i &gt; 0 and i &lt; 6) else 'bg-%s' % i)"/>
+                                            <t t-set="cardName" t-value="'Preset %s' % i if (isinstance(i, int) and i &gt; 0 and i &lt; 6) else 'bg-%s' % i"/>
+                                            <t t-set="cardName" t-value="'Default'" t-if="i == null"/>
+                                            <div t-attf-class="{{bgClass}} p-3 border">
+
+                                                <!-- ── Block 1: Typography + Buttons ───────────────── -->
+                                                <div class="row mb-3">
+                                                    <div class="col-5">
+                                                        <h4><t t-out="cardName"/></h4>
+                                                        <p class="mb-1">Paragraph. <b>Bold</b>, <i>italic</i>. <a href="#">Link text</a></p>
+                                                        <p class="text-muted mb-1">Text muted. Lorem ipsum consectetur.</p>
+                                                        <p class="small mb-1">Small text. Lorem ipsum dolor sit amet.</p>
                                                     </div>
-                                                    <div class="col-5 border-start">
-                                                        <a href="#" class="mb-3 btn btn-primary">btn-primary</a>
-                                                        <a href="#" class="mb-3 btn btn-secondary">btn-secondary</a>
-                                                        <a href="#" class="mb-3 btn btn-outline-primary">btn-outline-primary</a>
-                                                        <a href="#" class="mb-3 btn btn-outline-secondary">btn-outline-secondary</a>
+                                                    <div class="col-7 border-start d-flex flex-column gap-2">
+                                                        <small class="text-muted fw-bold smaller">FILL BUTTONS</small>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <a href="#" class="btn btn-primary">Primary</a>
+                                                            <a href="#" class="btn btn-secondary">Secondary</a>
+                                                        </div>
+                                                        <small class="text-muted fw-bold smaller">OUTLINE BUTTONS</small>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <a href="#" class="btn btn-outline-primary">Primary</a>
+                                                            <a href="#" class="btn btn-outline-secondary">Secondary</a>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                                            <small class="text-muted fw-bold smaller">BTN-CLOSE:</small>
+                                                            <button type="button" class="btn-close" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="d-flex gap-2 align-items-center border-top pt-2 mt-2" >
+                                                            <span class="p-2 border" style="background-color: var(--o-cc-contrast)"/>
+                                                            <span style="color: var(--o-cc-contrast)" class="small">Absolute Contrast Color</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <hr class="my-4"/>
-                                                <div class="row">
-                                                    <div class="col-7">
-                                                        <div class="mb-3 row">
-                                                            <label class="col-2 col-form-label">Label</label>
-                                                            <div class="col-10">
-                                                                <input type="email" class="form-control" placeholder="placeholder"/>
-                                                                <small id="emailHelp" class="form-text text-muted">Form field help text</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card w-100 mb-3">
-                                                        <div class="card-body">
-                                                                <h4 class="card-title">H4 Card title</h4>
-                                                                <h5 class="card-subtitle mb-2 text-muted">H5 Card subtitle</h5>
-                                                                <p class="card-text">Paragraph. <a class="o_translate_inline" href="#">text link</a></p>
 
-                                                                <t t-foreach="['primary','secondary', 'info', 'warning', 'danger', 'success']" t-as="btn">
-                                                                    <a href="#" t-attf-class="mb-2 btn-sm btn btn-#{btn}" t-out="'btn-' + btn"/>
-                                                                </t>
+                                                <hr class="my-3"/>
+
+                                                <nav class="navbar navbar-expand-md px-0 py-0 mb-3 border rounded">
+                                                    <div class="container-fluid px-3">
+                                                        <a class="navbar-brand" href="#">Navbar</a>
+                                                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                                                            <div class="navbar-nav">
+                                                                <a class="nav-link active" aria-current="page" href="#">Current</a>
+                                                                <a class="nav-link" href="#">Clickable</a>
+                                                                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                                                             </div>
                                                         </div>
-                                                        <nav aria-label="breadcrumb">
-                                                            <ol class="breadcrumb">
-                                                                <li class="breadcrumb-item"><a href="#">Breadcrumb</a></li>
-                                                                <li class="breadcrumb-item"><a href="#">Library</a></li>
-                                                                <li class="breadcrumb-item active">Data</li>
-                                                            </ol>
-                                                        </nav>
-                                                        <small>TABS</small>
-                                                        <ul class="nav nav-tabs mb-3">
+                                                    </div>
+                                                </nav>
+
+                                                <hr class="my-3"/>
+
+                                                <!-- ── Block 2: Nav tabs + Nav pills + Dropdown ─────── -->
+                                                <div class="row mb-3">
+                                                    <div class="col-7">
+                                                        <small class="text-muted fw-bold smaller">TABS</small>
+                                                        <ul class="nav nav-tabs mb-2 mt-1">
                                                             <li class="nav-item">
                                                                 <a class="nav-link active" href="#">Active</a>
                                                             </li>
@@ -563,17 +627,201 @@
                                                                 <a class="nav-link disabled" href="#">Disabled</a>
                                                             </li>
                                                         </ul>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" style="width: 25%;">25%</div>
-                                                        </div>
+                                                        <small class="text-muted fw-bold smaller">PILLS</small>
+                                                        <ul class="nav nav-pills mt-1 mb-3">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active" href="#">Active</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="#">Link</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link disabled" href="#">Disabled</a>
+                                                            </li>
+                                                        </ul>
+                                                        <small class="text-muted fw-bold mb-1 smaller">BREADCRUMB</small>
+                                                        <nav aria-label="breadcrumb">
+                                                            <ol class="breadcrumb p-0">
+                                                                <li class="breadcrumb-item"><a href="#">Alpha</a></li>
+                                                                <li class="breadcrumb-item"><a href="#">Beta</a></li>
+                                                                <li class="breadcrumb-item active">Current</li>
+                                                            </ol>
+                                                        </nav>
                                                     </div>
                                                     <div class="col-5 border-start">
-                                                        <div t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
-                                                            <a href="#" t-attf-class="mb-2 btn btn-#{btn}" t-out="'btn-' + btn"/>
-                                                            <a href="#" t-attf-class="mb-3 btn btn-outline-#{btn}" t-out="'btn-outline-' + btn"/>
+                                                        <small class="text-muted fw-bold smaller">DROPDOWN</small>
+                                                        <ul class="dropdown-menu mt-1" style="position:static;display:block;float:none;">
+                                                            <li><h6 class="dropdown-header">Header</h6></li>
+                                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                                            <li><a class="dropdown-item active" href="#">Active item</a></li>
+                                                            <li><a class="dropdown-item disabled" href="#">Disabled</a></li>
+                                                            <li><hr class="dropdown-divider"/></li>
+                                                            <li><a class="dropdown-item" href="#">Separated action</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-3"/>
+
+                                                <!-- ── Block 3: List group + Accordion ──────────────── -->
+                                                <div class="row mb-3">
+                                                    <div class="col-5">
+                                                        <small class="text-muted fw-bold smaller">LIST GROUP</small>
+                                                        <ul class="list-group mt-1">
+                                                            <li class="list-group-item list-group-item-action active">Active item</li>
+                                                            <li class="list-group-item list-group-item-action">Item two</li>
+                                                            <li class="list-group-item list-group-item-action">Item three</li>
+                                                            <li class="list-group-item list-group-item-action disabled">Disabled</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-7 border-start">
+                                                        <small class="text-muted fw-bold smaller">ACCORDION</small>
+                                                        <div t-attf-id="acc#{i}" class="accordion mt-1">
+                                                            <div class="accordion-item">
+                                                                <h2 t-attf-id="accH1#{i}" class="accordion-header">
+                                                                    <button class="accordion-button" type="button"
+                                                                            data-bs-toggle="collapse"
+                                                                            t-attf-data-bs-target="#accC1#{i}"
+                                                                            aria-expanded="true"
+                                                                            t-attf-aria-controls="accC1#{i}">
+                                                                        Open item
+                                                                    </button>
+                                                                </h2>
+                                                                <div t-attf-id="accC1#{i}"
+                                                                     class="accordion-collapse collapse show"
+                                                                     t-attf-aria-labelledby="accH1#{i}"
+                                                                     t-attf-data-bs-parent="#acc#{i}">
+                                                                    <div class="accordion-body">
+                                                                        Accordion body. Visible on load.
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="accordion-item">
+                                                                <h2 t-attf-id="accH2#{i}" class="accordion-header">
+                                                                    <button class="accordion-button collapsed" type="button"
+                                                                            data-bs-toggle="collapse"
+                                                                            t-attf-data-bs-target="#accC2#{i}"
+                                                                            aria-expanded="false"
+                                                                            t-attf-aria-controls="accC2#{i}">
+                                                                        Collapsed item
+                                                                    </button>
+                                                                </h2>
+                                                                <div t-attf-id="accC2#{i}"
+                                                                     class="accordion-collapse collapse"
+                                                                     t-attf-aria-labelledby="accH2#{i}"
+                                                                     t-attf-data-bs-parent="#acc#{i}">
+                                                                    <div class="accordion-body">Hidden content.</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <hr class="my-3"/>
+
+                                                <!-- ── Block 4: Table + Pagination ──────────────────── -->
+                                                <small class="text-muted fw-bold smaller">TABLE</small>
+                                                <table class="table table-striped table-sm mt-1 mb-3">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Name</th>
+                                                            <th>Value</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr><td>1</td><td>Alpha</td><td>10</td></tr>
+                                                        <tr><td>2</td><td>Beta</td><td>20</td></tr>
+                                                        <tr><td>3</td><td>Gamma</td><td>30</td></tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <small class="text-muted fw-bold smaller">PAGINATION</small>
+                                                        <nav aria-label="Page navigation" class="mt-3 mb-3">
+                                                            <ul class="pagination pagination-sm justify-content-center">
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#">&#171;</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="#">1</a>
+                                                                </li>
+                                                                <li class="page-item active">
+                                                                    <a class="page-link" href="#">2</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="#">3</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="#">&#187;</a>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
+                                                        <div class="flex-column mb-3">
+                                                            <div class="form-check mb-1">
+                                                                <input type="checkbox" class="form-check-input" value="something" checked="True"/>
+                                                                <label class="form-check-label fw-normal">Checked</label>
+                                                            </div>
+                                                            <div class="form-check mb-1">
+                                                                <input type="checkbox" class="form-check-input" value="else"/>
+                                                                <label class="form-check-label fw-normal">Not checked</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 border-start">
+                                                        <small class="text-muted fw-bold smaller">FORM</small>
+                                                        <div class="mt-1">
+                                                            <label class="form-label">Label</label>
+                                                            <input type="email" class="form-control" placeholder="placeholder"/>
+                                                            <div class="form-text">Help text for the field.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-3"/>
+
+                                                <!-- ── Block 5: Form + Card ──────────────────────────── -->
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        <small class="text-muted fw-bold smaller">CARD (current, o_cc<t t-out="i"/>)</small>
+                                                        <div class="card w-100 mt-1">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">Card title</h5>
+                                                                <h6 class="card-subtitle mb-2 text-muted">Subtitle muted</h6>
+                                                                <p class="card-text">Some text. <a href="#">A link</a></p>
+                                                                <a href="#" class="btn btn-primary btn-sm">Primary</a>
+                                                                <a href="#" class="btn btn-secondary btn-sm">Secondary</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 border-start">
+                                                        <small class="text-muted fw-bold smaller">CARD (o_cc1)</small>
+                                                        <div class="o_cc o_cc1 card w-100 mt-1">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">Card title</h5>
+                                                                <h6 class="card-subtitle mb-2 text-muted">Subtitle muted</h6>
+                                                                <p class="card-text">Some text. <a href="#">A link</a></p>
+                                                                <a href="#" class="btn btn-primary btn-sm">Primary</a>
+                                                                <a href="#" class="btn btn-secondary btn-sm">Secondary</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <hr class="my-3"/>
+
+                                                <!-- ── Block 6: Contextual buttons + Progress ────────── -->
+                                                <small class="text-muted fw-bold smaller">CONTEXTUAL</small>
+                                                <div class="d-flex flex-wrap gap-1 mt-1 mb-3">
+                                                    <t t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
+                                                        <a href="#" t-attf-class="btn btn-sm btn-#{btn}" t-out="'btn-' + btn"/>
+                                                    </t>
+                                                </div>
+                                                <small class="text-muted fw-bold smaller">PROGRESS BAR</small>
+                                                <div class="progress" style="height:16px;">
+                                                    <div class="progress-bar" style="width:40%;"/>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
