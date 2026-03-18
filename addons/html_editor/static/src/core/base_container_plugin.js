@@ -212,11 +212,7 @@ export class BaseContainerPlugin extends Plugin {
             return;
         }
         const newBaseContainers = [];
-        const divSelector = `div:not(.${BASE_CONTAINER_CLASS})`;
-        const targets = [...element.querySelectorAll(divSelector)];
-        if (element.matches(divSelector)) {
-            targets.unshift(element);
-        }
+        const targets = selectElements(element, `div:not(.${BASE_CONTAINER_CLASS})`);
         for (const div of targets) {
             if (
                 // Ensure that newly created `div` baseContainers are never themselves
@@ -232,7 +228,10 @@ export class BaseContainerPlugin extends Plugin {
             ) {
                 div.classList.add(BASE_CONTAINER_CLASS);
                 newBaseContainers.push(div);
-                fillEmpty(div);
+                if (!div.hasChildNodes()) {
+                    const br = document.createElement("br");
+                    div.appendChild(br);
+                }
             }
         }
     }
