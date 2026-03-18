@@ -230,7 +230,7 @@
                 <field string="Status" name="state_id"/>
                 <field string="Properties" name="vehicle_properties"/>
                 <filter string="Available" name="available"
-                    domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', ('plan_to_change_vehicle', '=', True)]"/>
+                    domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), ('plan_to_change_vehicle', '=', True)]"/>
                 <filter name="planned" string="Planned for Change" domain="[('plan_to_change_vehicle', '=', True)]"/>
                 <separator/>
                 <filter string="Bikes" name="bikes" domain="[('vehicle_type', '=', 'bike')]"/>
