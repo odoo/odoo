@@ -35,7 +35,6 @@ import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_po
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
-import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
@@ -498,6 +497,34 @@ export class PosStore extends WithLazyGetterTrap {
                 );
             }
         }
+
+        const categories = this.models["pos.category"].getAll();
+        const categoryMapping = {};
+        for (const cat of categories) {
+            categoryMapping[cat.id] = [];
+        }
+        categoryMapping["0"] = []; // Without category
+
+        // One-pass pre-calculation for performance on 15k+ products
+        for (const product of this.models["product.template"].getAll()) {
+            // Pre-calculate to avoid expensive getters in loops
+            product._sortKey = (product.name || "").toLowerCase();
+            product._searchStr = product.searchString;
+            product._normName = product.normalizedName;
+
+            if (product.pos_categ_ids.length) {
+                for (const cat of product.pos_categ_ids) {
+                    categoryMapping[cat.id]?.push(product);
+                }
+            } else {
+                categoryMapping["0"].push(product);
+            }
+        }
+
+        for (const catId in categoryMapping) {
+            categoryMapping[catId] = this.orderProductBySequenceAndFav(categoryMapping[catId]);
+        }
+        this.categoryMapping = categoryMapping;
 
         productModel.forEach((product) => {
             if (
@@ -2713,7 +2740,9 @@ export class PosStore extends WithLazyGetterTrap {
                   } else if (a.pos_sequence !== b.pos_sequence) {
                       return a.pos_sequence - b.pos_sequence;
                   }
-                  return a.name.localeCompare(b.name);
+                  const nameA = a._sortKey || (a._sortKey = (a.name || "").toLowerCase());
+                  const nameB = b._sortKey || (b._sortKey = (b.name || "").toLowerCase());
+                  return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
               });
     }
 
@@ -2781,58 +2810,40 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get productToDisplayByCateg() {
-        const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
+            const sortedProducts = this.productsToDisplay;
             return sortedProducts.length ? [["0", sortedProducts]] : [];
         }
 
         const results = [];
         const searchWord = this.searchProductWord.trim();
-        const byCateg = this.models["product.template"].toRaw().getAllBy("pos_categ_ids");
         const selectedCategoryIds = !this.selectedCategory
             ? this.models["pos.category"].map((c) => c.id)
             : this.selectedCategory.getAllChildren().map((c) => c.id);
 
-        // Sorting in place the categories according to their sequence in the database
-        selectedCategoryIds.sort((a, b) => {
-            const categA = this.models["pos.category"].get(a);
-            const categB = this.models["pos.category"].get(b);
-
-            // All category with a parent will be at the end
-            if (categA.parent_id && !categB.parent_id) {
-                return 1;
-            } else if (!categA.parent_id && categB.parent_id) {
-                return -1;
-            }
-
-            return categA.sequence - categB.sequence;
-        });
-
         if (!this.selectedCategory) {
-            // In case of no category selected, we want to display products without category in
-            // a "Without category" category at the end of the list.
-            // We use the default sortedProducts order to keep the same order as in the non
-            // group by category mode.
-            const productWithoutCategory = sortedProducts.filter((p) => !p.pos_categ_ids.length);
-            byCateg["0"] = productWithoutCategory;
             selectedCategoryIds.push("0");
         }
 
+        // Standard categories
         for (const catId of selectedCategoryIds) {
-            const products = byCateg[catId] || [];
+            const products = this.categoryMapping[catId] || [];
+            if (products.length === 0) {
+                continue;
+            }
             const filtered = searchWord
                 ? this.getProductsBySearchWord(searchWord, products)
                 : products;
 
             if (filtered.length) {
-                // Its advised to not use group by categ with too much products in differents
-                // categories, but in case of we end up with too much products, we slice them in
-                // group of 100 to avoid freezing the browser tab.
-                // We cannot just slice the products to display and keep the same category, because
-                // we want to avoid having categories with only few products displayed and others
-                // with a lot of products not displayed.
-                const sorted = this.orderProductBySequenceAndFav(filtered);
-                results.push([catId, sorted.splice(0, 100)]);
+                if (searchWord) {
+                    results.push([
+                        catId,
+                        this.orderProductBySequenceAndFav(filtered).slice(0, 100),
+                    ]);
+                } else {
+                    results.push([catId, filtered.slice(0, 100)]);
+                }
             }
         }
 
@@ -2840,14 +2851,14 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getProductsBySearchWord(searchWord, products) {
-        const query = normalize(searchWord);
+        const query = (searchWord || "").toLowerCase();
         const matches = [];
 
         for (const product of products) {
-            const searchStr = product.searchString;
+            const searchStr = product._searchStr || product.searchString;
 
             if (searchStr.includes(query)) {
-                const normName = product.normalizedName;
+                const normName = product._normName || product.normalizedName;
                 matches.push({
                     product: product,
                     index: normName.indexOf(query),

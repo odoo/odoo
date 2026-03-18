@@ -55,15 +55,51 @@ class ResPartner(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data, config):
-        # Collect partner IDs from loaded orders
-        loaded_order_partner_ids = {order['partner_id'] for order in data['pos.order']}
+        return [('company_id', 'in', [config.company_id.id, False])]
 
-        # Extract partner IDs from the tuples returned by get_limited_partners_loading
-        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading()}
+    @api.model
+    def _load_pos_data_fields_to_exclude(self, config, record_count):
+        """Skip slow computed/property fields when bulk-loading partners.
 
-        limited_partner_ids.add(self.env.user.partner_id.id)  # Ensure current user is included
-        partner_ids = limited_partner_ids.union(loaded_order_partner_ids)
-        return [('id', 'in', list(partner_ids))]
+        These fields are simulated in _process_pos_ui_data instead.
+        """
+        if record_count > 500:
+            return [
+                'pos_contact_address', 'invoice_emails', 'fiscal_position_id',
+                'property_product_pricelist', 'property_account_receivable_id',
+            ]
+        return []
+
+    @api.model
+    def _process_pos_ui_data(self, records, config):
+        """Simulate partner computed and property fields.
+
+        Avoids expensive per-record ORM computations (fiscal position lookup,
+        ir.property resolution) by using config/company-level defaults.
+        """
+        super()._process_pos_ui_data(records, config)
+        if len(records) <= 500:
+            return
+
+        default_fp = config.default_fiscal_position_id.id or False
+        default_pricelist = config.pricelist_id.id or False
+        default_receivable = (
+            config.company_id.account_default_pos_receivable_account_id.id
+            or self.env.user.partner_id.property_account_receivable_id.id
+        )
+
+        for record in records:
+            # Simulate pos_contact_address from address components
+            parts = [record.get('street'), record.get('street2'), record.get('city'), record.get('zip')]
+            record['pos_contact_address'] = ", ".join(filter(None, parts))
+
+            # Simplified invoice_emails (full compute requires child_ids traversal)
+            record['invoice_emails'] = record.get('email') or ""
+
+            # Apply defaults for excluded fields
+            record.setdefault('fiscal_position_id', default_fp)
+            record.setdefault('property_product_pricelist', default_pricelist)
+            record.setdefault('property_account_receivable_id', default_receivable)
 
     def _compute_fiscal_position_id(self):
         for partner in self:

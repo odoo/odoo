@@ -155,15 +155,21 @@ class PosSession(models.Model):
         ]
 
     def load_data(self, models_to_load):
+        import time
         response = {}
+        
+        start_session = time.time()
         response['pos.session'] = self._load_pos_data_search_read(response, self.config_id)
+        _logger.info("PoS Load: pos.session took %.2f seconds", time.time() - start_session)
 
         for model in self._load_pos_data_models(self.config_id):
             if models_to_load and model not in models_to_load:
                 continue
 
             try:
+                start_model = time.time()
                 response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
+                _logger.info("PoS Load: %s took %.2f seconds", model, time.time() - start_model)
             except AccessError as e:
                 response[model] = []
                 _logger.info("Could not load model %s due to AccessError: %s", model, e)

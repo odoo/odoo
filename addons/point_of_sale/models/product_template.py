@@ -161,6 +161,149 @@ class ProductTemplate(models.Model):
         }
 
     @api.model
+    def _load_pos_data_fields_to_exclude(self, config, record_count):
+        """Skip slow M2M/O2M fields when bulk-loading templates.
+
+        These are fetched via direct SQL in _process_pos_ui_data instead.
+        """
+        if record_count > 1000:
+            return [
+                'all_product_tag_ids', 'product_tag_ids', 'pos_categ_ids',
+                'taxes_id', 'combo_ids', 'pos_optional_product_ids',
+                'product_variant_ids', 'standard_price', 'barcode',
+            ]
+        return []
+
+    @api.model
+    def _process_pos_ui_data(self, records, config):
+        """Batch-simulate template fields that were excluded from the ORM read.
+
+        Uses direct SQL to fetch M2M relations and O2M variants in bulk,
+        avoiding N+1 queries on large catalogs.
+        """
+        super()._process_pos_ui_data(records, config)
+
+        # SQL batch simulation only needed when fields were excluded (large loads)
+        if len(records) > 1000:
+            self._batch_simulate_template_fields(records)
+
+        # These MUST always run regardless of batch size
+        self._add_archived_combinations(records)
+        self._apply_product_processing(records, config)
+
+    @api.model
+    def _batch_simulate_template_fields(self, records):
+        """Fetch excluded M2M/O2M fields via direct SQL for large catalogs."""
+        tmpl_ids = [r['id'] for r in records]
+        tmpl_id_tuple = tuple(tmpl_ids)
+
+        # --- Batch fetch M2M relations via SQL ---
+        pos_categs = self._batch_fetch_m2m(
+            'pos_category_product_template_rel', 'product_template_id', 'pos_category_id', tmpl_id_tuple)
+        taxes = self._batch_fetch_m2m(
+            'product_taxes_rel', 'prod_id', 'tax_id', tmpl_id_tuple)
+        tags = self._batch_fetch_m2m(
+            'product_tag_product_template_rel', 'product_template_id', 'product_tag_id', tmpl_id_tuple)
+        optional = self._batch_fetch_m2m(
+            'pos_product_optional_rel', 'src_id', 'dest_id', tmpl_id_tuple)
+
+        # --- Batch fetch O2M attribute lines ---
+        self.env.cr.execute(
+            "SELECT product_tmpl_id, id FROM product_template_attribute_line WHERE product_tmpl_id IN %s",
+            [tmpl_id_tuple])
+        attr_lines = defaultdict(list)
+        for tid, alid in self.env.cr.fetchall():
+            attr_lines[tid].append(alid)
+
+        # --- Batch fetch O2M variants + barcodes ---
+        self.env.cr.execute(
+            "SELECT product_tmpl_id, id, barcode FROM product_product WHERE product_tmpl_id IN %s",
+            [tmpl_id_tuple])
+        variants = defaultdict(list)
+        variant_barcodes = {}
+        for tid, vid, bcode in self.env.cr.fetchall():
+            variants[tid].append(vid)
+            if bcode:
+                variant_barcodes[vid] = bcode
+
+        # --- Assign fetched data to each record ---
+        for record in records:
+            tid = record['id']
+            record['pos_categ_ids'] = pos_categs.get(tid, [])
+            record['taxes_id'] = taxes.get(tid, [])
+            record['product_tag_ids'] = tags.get(tid, [])
+            record['pos_optional_product_ids'] = optional.get(tid, [])
+            record['combo_ids'] = []
+            record['attribute_line_ids'] = attr_lines.get(tid, [])
+            record['product_variant_ids'] = variants.get(tid, [])
+            record['barcode'] = next(
+                (variant_barcodes[vid] for vid in record['product_variant_ids'] if vid in variant_barcodes),
+                False)
+            if 'standard_price' not in record:
+                record['standard_price'] = 0.0
+
+
+    @api.model
+    def _batch_fetch_m2m(self, table, src_col, dest_col, id_tuple):
+        """Fetch a many2many relation in a single SQL query.
+
+        Returns a dict mapping source IDs to lists of destination IDs.
+        """
+        self.env.cr.execute(
+            f"SELECT {src_col}, {dest_col} FROM {table} WHERE {src_col} IN %s",
+            [id_tuple])
+        result = defaultdict(list)
+        for src_id, dest_id in self.env.cr.fetchall():
+            result[src_id].append(dest_id)
+        return result
+
+    @api.model
+    def _apply_product_processing(self, records, config):
+        """Shared processing for product templates and variants.
+
+        - Currency conversion when PoS currency differs from company currency
+        - Search string pre-computation
+        - Tax filtering by company hierarchy
+        """
+        different_currency = config.currency_id != self.env.company.currency_id
+
+        taxes_by_company = defaultdict(set)
+        taxes = self.env['account.tax'].search(
+            self.env['account.tax']._check_company_domain(self.env.company))
+        for tax in taxes:
+            taxes_by_company[tax.company_id.id].add(tax.id)
+
+        if different_currency:
+            today = fields.Date.today()
+            currency = self.env.company.currency_id
+            rate = currency._get_conversion_rate(currency, config.currency_id, self.env.company, today)
+
+        company_hierarchy = []
+        curr_company = self.env.company
+        while curr_company:
+            company_hierarchy.append(curr_company.id)
+            curr_company = curr_company.parent_id
+
+        for record in records:
+            if different_currency:
+                for price_field in ['list_price', 'lst_price', 'standard_price']:
+                    if price_field in record:
+                        record[price_field] = config.currency_id.round(record[price_field] * rate)
+
+            # Pre-compute search string for fast client-side filtering
+            name = record.get('display_name') or record.get('name') or ''
+            search_parts = [name, record.get('default_code'), record.get('barcode')]
+            record['search_string'] = " ".join(filter(None, search_parts)).lower() + "\n"
+
+            # Filter taxes: keep only the most specific company's taxes
+            if len(taxes_by_company) > 1 and 'taxes_id' in record and len(record['taxes_id']) > 1:
+                for comp_id in company_hierarchy:
+                    filtered = [tid for tid in record['taxes_id'] if tid in taxes_by_company[comp_id]]
+                    if filtered:
+                        record['taxes_id'] = filtered
+                        break
+
+    @api.model
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
@@ -177,26 +320,26 @@ class ProductTemplate(models.Model):
             query = self._search(self._load_pos_data_domain(data, config), bypass_access=True)
             sql = SQL(
                 """
-                    WITH pm AS (
+                    SELECT product_template.id
+                        FROM %(from_clause)s
+                    LEFT JOIN (
                         SELECT pp.product_tmpl_id,
                             MAX(sml.write_date) date
                         FROM stock_move_line sml
                         JOIN product_product pp ON sml.product_id = pp.id
+                        WHERE pp.product_tmpl_id IN (SELECT id FROM %(from_clause)s WHERE %(where_clause)s)
                         GROUP BY pp.product_tmpl_id
-                    )
-                    SELECT product_template.id
-                        FROM %s
-                    LEFT JOIN pm ON product_template.id = pm.product_tmpl_id
-                        WHERE %s
+                    ) pm ON product_template.id = pm.product_tmpl_id
+                        WHERE %(where_clause)s
                     ORDER BY product_template.is_favorite DESC NULLS LAST,
                         CASE WHEN product_template.type = 'service' THEN 1 ELSE 0 END DESC,
                         pm.date DESC NULLS LAST,
                         product_template.write_date DESC
-                    LIMIT %s
+                    LIMIT %(limit)s
                 """,
-                query.from_clause,
-                query.where_clause or SQL("TRUE"),
-                limit_count,
+                from_clause=query.from_clause,
+                where_clause=query.where_clause or SQL("TRUE"),
+                limit=limit_count,
             )
             product_tmpl_ids = [r[0] for r in self.env.execute_query(sql)]
             products = self._load_product_with_domain([('id', 'in', product_tmpl_ids)])
@@ -205,33 +348,32 @@ class ProductTemplate(models.Model):
             products = self._load_product_with_domain(domain)
 
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
-        products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
+        additional_products = product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
 
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
                                     or product.sudo().company_id == self.env.company
                 )
-        products += special_products.product_tmpl_id
+        additional_products |= special_products.product_tmpl_id
+
         if config.tip_product_id:
             tip_company_id = config.tip_product_id.sudo().company_id
             if not tip_company_id or tip_company_id == self.env.company:
-                products += config.tip_product_id.product_tmpl_id
+                additional_products |= config.tip_product_id.product_tmpl_id
 
         # Ensure optional products are loaded when configured.
-        if products.filtered(lambda p: p.pos_optional_product_ids):
-            products |= products.mapped("pos_optional_product_ids")
+        optional_products = products.filtered(lambda p: p.pos_optional_product_ids).pos_optional_product_ids
+        additional_products |= optional_products
 
         # Ensure products from loaded orders are loaded
         if data.get('pos.order.line'):
-            products += self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+            order_products = self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+            additional_products |= order_products
+
+        products |= additional_products
 
         return self._load_pos_data_read(products, config)
 
-    @api.model
-    def _load_pos_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
-        self._process_pos_ui_product_product(read_records, config)
-        return read_records
 
     def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived, 'bin_size': True}
@@ -243,54 +385,53 @@ class ProductTemplate(models.Model):
             limit=limit if limit else False
         )
 
-    def _process_pos_ui_product_product(self, products, config_id):
-
-        def filter_taxes_on_company(product_taxes, taxes_by_company):
-            """
-            Filter the list of tax ids on a single company starting from the current one.
-            If there is no tax in the result, it's filtered on the parent company and so
-            on until a non empty result is found.
-            """
-            taxes, comp = None, self.env.company
-            while not taxes and comp:
-                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
-                comp = comp.parent_id
-            return taxes
-
-        taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(self.env.company))
-        # group all taxes by company in a dict where:
-        # - key: ID of the company
-        # - values: list of tax ids
-        taxes_by_company = defaultdict(set)
-        if self.env.company.parent_id:
-            for tax in taxes:
-                taxes_by_company[tax.company_id.id].add(tax.id)
-
-        different_currency = config_id.currency_id != self.env.company.currency_id
-
-        self._add_archived_combinations(products)
-        for product in products:
-            if different_currency:
-                product['list_price'] = self.env.company.currency_id._convert(product['list_price'], config_id.currency_id, self.env.company, fields.Date.today())
-                product['standard_price'] = self.env.company.currency_id._convert(product['standard_price'], config_id.currency_id, self.env.company, fields.Date.today())
-
-            product['image_128'] = bool(product['image_128'])
-
-            if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
-                product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
     def _add_archived_combinations(self, products):
-        """ Add archived combinations to the product template data. """
-        product_data = {product['id']: product for product in products}
-        for product_tmpl in self.browse(product_data.keys()):
-            product = product_data[product_tmpl.id]
-            attribute_exclusions = product_tmpl._get_attribute_exclusions()
-            product['_archived_combinations'] = attribute_exclusions['archived_combinations']
-            excluded = {}
-            for ptav_id, ptav_ids in attribute_exclusions['exclusions'].items():
-                for ptav_id2 in set(ptav_ids) - excluded.keys():
-                    excluded[ptav_id] = ptav_id2
-            product['_archived_combinations'].extend(excluded.items())
+        """ Add archived combinations to the product template data in batch. """
+        product_ids = [p['id'] for p in products]
+        templates = self.browse(product_ids)
+        
+        # Only templates with attributes can have archived combinations
+        templates_with_attr = templates.filtered('attribute_line_ids')
+        if not templates_with_attr:
+            for p in products:
+                p['_archived_combinations'] = []
+            return
+
+        # Map products by ID for easy access
+        product_map = {p['id']: p for p in products}
+        for p in products:
+            p['_archived_combinations'] = []
+
+        # Batch fetch variants (active and archived) for relevant templates
+        all_variants = self.env['product.product'].with_context(active_test=False).search([
+            ('product_tmpl_id', 'in', templates_with_attr.ids)
+        ])
+        
+        variants_by_tmpl = defaultdict(lambda: {'active': set(), 'archived': set()})
+        for v in all_variants:
+            combination = tuple(sorted(v.product_template_attribute_value_ids.ids))
+            if v.active:
+                variants_by_tmpl[v.product_tmpl_id.id]['active'].add(combination)
+            else:
+                variants_by_tmpl[v.product_tmpl_id.id]['archived'].add(combination)
+
+        for tmpl_id, counts in variants_by_tmpl.items():
+            archived_only = counts['archived'] - counts['active']
+            if archived_only and tmpl_id in product_map:
+                product_map[tmpl_id]['_archived_combinations'] = [list(c) for c in archived_only]
+
+        # Add exclusions from product.template.attribute.exclusion
+        # These are already loaded in JS, but PoS expects them in _archived_combinations too for some logic
+        exclusions = self.env['product.template.attribute.exclusion'].search([
+            ('product_tmpl_id', 'in', templates_with_attr.ids)
+        ])
+        for excl in exclusions:
+            tmpl_id = excl.product_tmpl_id.id
+            if tmpl_id in product_map:
+                ptav_id = excl.product_template_attribute_value_id.id
+                for val in excl.value_ids:
+                    product_map[tmpl_id]['_archived_combinations'].append([ptav_id, val.id])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
