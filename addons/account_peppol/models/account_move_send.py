@@ -119,7 +119,7 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol':
-            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state != 'rejected'
+            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state not in ('not_registered', 'in_verification', 'rejected')
         else:
             return super()._is_applicable_to_company(method, company)
 
