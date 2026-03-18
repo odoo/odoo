@@ -280,6 +280,30 @@ class WebsiteForum(WebsiteProfile):
     # Questions
     # --------------------------------------------------
 
+<<<<<<< ecaca5733ea2f147257ae46f7011b2c64eb46904:addons/website_forum/controllers/website_forum.py
+||||||| cf641dc0c89f5ee7c4d80da11476780e2fa4574d:addons/website_forum/controllers/main.py
+    @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
+    def get_url_title(self, **kwargs):
+        try:
+            req = requests.get(kwargs.get('url'))
+            req.raise_for_status()
+            arch = lxml.html.fromstring(req.content)
+            return arch.find(".//title").text
+        except IOError:
+            return False
+
+=======
+    @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
+    def get_url_title(self, **kwargs):
+        try:
+            req = requests.get(kwargs.get('url'), timeout=10)
+            req.raise_for_status()
+            arch = lxml.html.fromstring(req.content)
+            return arch.find(".//title").text
+        except IOError:
+            return False
+
+>>>>>>> ce98bc58b62c6d6f05822883da36b4fcfbb0d342:addons/website_forum/controllers/main.py
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
