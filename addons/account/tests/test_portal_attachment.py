@@ -4,8 +4,9 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.tests.common import tagged
 
 import json
+from freezegun import freeze_time
 
-from odoo import http
+from odoo import Command, http
 from odoo.tools import mute_logger
 
 
@@ -285,3 +286,47 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(len(self.out_invoice.message_ids), 3)
         self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 3</p>")
         self.assertEqual(len(self.out_invoice.message_ids[0].attachment_ids), 1)
+
+    @freeze_time('2026-01-01')
+    def test_preview_early_discount_draft_invoice(self):
+        """
+        Ensures that loading the preview of a draft invoice with an early discount
+        payment term does not result in an error, and that today is used a default
+        date to compute the early discount limit
+        """
+        early_discount_payment_terms = self.env['account.payment.term'].create({
+            'name': 'Early Discount Payment Terms',
+            'company_id': self.env.company.id,
+            'early_discount': True,
+            'discount_percentage': 10,
+            'discount_days': 5,
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 10,
+                'value_amount': 100,
+            })]
+        })
+        no_date_invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'invoice_payment_term_id': early_discount_payment_terms.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 10.0,
+            })]
+        }])
+        self.authenticate(None, None)  # Authenticate as an anonymous user
+        res = self.url_open(
+            url=f'{no_date_invoice.get_base_url()}/my/invoices/{no_date_invoice.id}',
+            data={
+                'res_model': 'account.move',
+                'res_id': no_date_invoice.id,
+                'csrf_token': http.Request.csrf_token(self),
+                'access_token': no_date_invoice._portal_ensure_token(),
+            }
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(
+            early_discount_payment_terms._get_last_discount_date_formatted(False),
+            '01/06/2026',  # today + 5 (discount_days)
+            'Last discount date should use today as a start date when no invoice date is given.'
+        )

@@ -72,6 +72,13 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickTrash(),
             Chrome.confirmPopup(),
 
+            //add new floor
+            FloorScreen.clickAddFloor(),
+            TextInputPopup.isShown(),
+            TextInputPopup.checkConfirmDisabled(),
+            TextInputPopup.inputText("New Floor"),
+            TextInputPopup.clickConfirm(),
+
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.hasTable("2"),
             FloorScreen.hasTable("4"),

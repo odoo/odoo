@@ -27,3 +27,22 @@ export function isShown() {
         },
     ];
 }
+
+export function clickCancel() {
+    return [
+        {
+            content: "discard text input popup",
+            trigger: ".modal-dialog .cancel",
+        },
+    ];
+}
+
+export function checkConfirmDisabled() {
+    return [
+        {
+            content: "confirm button disabled",
+            trigger: ".modal-dialog .confirm.disabled",
+            isCheck: true,
+        },
+    ];
+}

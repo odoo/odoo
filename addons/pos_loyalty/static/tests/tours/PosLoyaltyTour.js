@@ -4,6 +4,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/tours/helpers/utils";
 
@@ -613,7 +614,7 @@ registry.category("web_tour.tours").add("test_number_buffer_popup", {
                     window.dispatchEvent(ev);
                 },
             },
-            Chrome.confirmPopup(),
+            TextInputPopup.clickCancel(),
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.0"),
             ProductScreen.totalAmountIs("3.52"),
             Chrome.endTour(),

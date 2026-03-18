@@ -275,9 +275,7 @@ class AccountPaymentTerm(models.Model):
 
     def _get_last_discount_date_formatted(self, date_ref):
         self.ensure_one()
-        if not date_ref:
-            return None
-        return format_date(self.env, self._get_last_discount_date(date_ref))
+        return format_date(self.env, self._get_last_discount_date(date_ref or fields.Date.context_today(self)))
 
     def copy(self, default=None):
         default = dict(default or {})
