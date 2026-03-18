@@ -514,9 +514,9 @@ class IrHttp(models.AbstractModel):
             self.env.cr.cache['translation_data'] = translation_cache
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True, default=json_default).encode()).hexdigest()
 
-    @classmethod
-    def _is_allowed_cookie(cls, cookie_type):
-        return True if cookie_type == 'required' else bool(request.env.user)
+    @api.model
+    def _is_allowed_cookie(self, cookie_type):
+        return True if cookie_type == 'required' else bool(self.env.user)
 
     @api.model
     def _verify_request_recaptcha_token(self, action: str):

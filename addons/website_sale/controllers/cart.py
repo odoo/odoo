@@ -253,7 +253,7 @@ class Cart(PaymentPortal):
         values.update(self._get_updated_cart_page_values(order_sudo))
         # If the cart was empty, no cart summary was rendered on the page. However, we just
         # added a product, so render it now.
-        values["website_sale.shorter_cart_summary"] = IrUiView._render_template(
+        values["website_sale.shorter_cart_summary"] = request.website._render_template(
             "website_sale.shorter_cart_summary",
             {
                 "website_sale_order": order_sudo,
@@ -264,7 +264,7 @@ class Cart(PaymentPortal):
         )
         # Products already in the cart should not appear in quick reorder suggestions.
         # We just added one, so refresh the quick reorder view.
-        values["website_sale.quick_reorder_history"] = IrUiView._render_template(
+        values["website_sale.quick_reorder_history"] = request.website._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
@@ -331,7 +331,7 @@ class Cart(PaymentPortal):
         values.update(self._get_updated_cart_page_values(order_sudo))
         # Products already in the cart should not appear in quick reorder suggestions.
         # Since we might have cleared the line (quantity == 0), we need to refresh the view.
-        values["website_sale.quick_reorder_history"] = request.env["ir.ui.view"]._render_template(
+        values["website_sale.quick_reorder_history"] = request.website._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )

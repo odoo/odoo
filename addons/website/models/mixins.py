@@ -873,7 +873,8 @@ class WebsiteSearchableMixin(models.AbstractModel):
         parts, has_highlight = self._split_for_highlight(value, term)
 
         if has_highlight:
-            value = self.env['ir.ui.view'].sudo()._render_template(
+            website = self.env["website"].get_current_website()
+            value = website._render_template(
                 "website.search_text_with_highlight",
                 {'parts': parts}
             )
@@ -903,7 +904,8 @@ class WebsiteSearchableMixin(models.AbstractModel):
                 highlighted_tags.append(tag)
 
         if highlighted_tags:
-            value = self.env['ir.ui.view'].sudo()._render_template(
+            website = self.env["website"].get_current_website()
+            value = website.sudo()._render_template(
                 "website.search_tags_highlight",
                 {'tags': highlighted_tags}
             )

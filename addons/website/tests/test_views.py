@@ -1321,6 +1321,34 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
 
+    def test_view_to_translate_tag_render_template(self):
+        fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.base_view.with_context(lang='en_US').arch_db = '<t><div>hello</div> <div>world</div></t>'
+        self.assertFalse(self.base_view.website_id)
+
+        website = self.env['website'].search([], limit=1)
+        website.default_lang_id = fr_BE
+        self.base_view.with_context(website_id=website.id).write({'active': True})
+        specific_view = self.base_view._get_specific_views() - self.base_view
+
+        def render(view_id, website_id, lang, edit_translations):
+            return self.base_view.with_context(website_id=website_id, lang=lang, edit_translations=edit_translations)._render_template(view_id)
+
+        # generic view without website_id but with website in context
+        self.assertIn('to_translate', render(self.base_view.id, website.id, 'en_US', True))
+        self.assertIn('translated', render(self.base_view.id, website.id, 'fr_BE', True))
+
+        # generic view without website_id
+        self.assertIn('translated', render(self.base_view.id, None, 'en_US', True))
+        self.assertIn('to_translate', render(self.base_view.id, None, 'fr_BE', True))
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+        self.assertIn('translated', render(self.base_view.id, None, 'en_US', True))
+        self.assertIn('translated', render(self.base_view.id, None, 'fr_BE', True))
+
+        # specific view with website_id
+        self.assertIn('to_translate', render(specific_view.id, website.id, 'en_US', True))
+        self.assertIn('translated', render(specific_view.id, website.id, 'fr_BE', True))
+
     def test_load_module_terms_preserve_delayed_translation(self):
         self.env['res.lang']._activate_lang('fr_BE')
         base_footer = self.env['ir.ui.view'].search([

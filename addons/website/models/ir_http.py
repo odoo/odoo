@@ -316,7 +316,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_editor_context(cls):
         ctx = super()._get_editor_context()
-        if request.is_frontend_multilang and request.lang == cls._get_default_lang():
+        if request.is_frontend_multilang and request.lang == request.env['ir.http']._get_default_lang():
             ctx['edit_translations'] = False
         return ctx
 
@@ -359,11 +359,11 @@ class IrHttp(models.AbstractModel):
     def _post_dispatch(cls, response):
         super()._post_dispatch(response)
 
-    @classmethod
-    def _get_default_lang(cls):
-        if getattr(request, 'is_frontend', True):
-            website = request.env['website'].sudo().get_current_website()
-            return request.env['res.lang']._get_data(id=website.default_lang_id.id)
+    @api.model
+    def _get_default_lang(self):
+        website = self.env['website'].sudo().get_current_website()
+        if website:
+            return self.env['res.lang']._get_data(id=website.default_lang_id.id)
         return super()._get_default_lang()
 
     @classmethod
@@ -385,15 +385,19 @@ class IrHttp(models.AbstractModel):
 
         # redirect without trailing /
         if not page_info and req_page != "/" and req_page.endswith("/"):
-            # mimick `_postprocess_args()` redirect
+            # mimick `_pre_dispatch()` redirect
             path = request.httprequest.path[:-1]
-            if request.lang != cls._get_default_lang():
+            if request.lang != request.env['ir.http']._get_default_lang():
                 path = '/' + request.lang.url_code + path
             if request.httprequest.query_string:
                 path += '?' + request.httprequest.query_string.decode('utf-8')
             return request.redirect(path, code=301)
 
         if page_info:
+            if not WebsitePage.env.context.get('website_id'):
+                website_id = page_info['website_id'] or request.env['website'].get_current_website(fallback=True).id
+                WebsitePage = WebsitePage.with_context(website_id=website_id)
+                request.update_context(website_id=website_id)
             return WebsitePage.browse(page_info['id'])._get_response(request)
 
         return False
@@ -471,11 +475,13 @@ class IrHttp(models.AbstractModel):
         values['editable'] = request.env.uid and request.env.user.has_group('website.group_website_designer')
         return values
 
-    @classmethod
-    def _get_error_html(cls, env, code, values):
+    @api.model
+    def _get_error_html(self, code, values):
+        irHttp = self
         if code in ('page_404', 'protected_403'):
-            return code.split('_')[1], env['ir.ui.view']._render_template('website.%s' % code, values)
-        return super()._get_error_html(env, code, values)
+            website = self.env["website"].get_current_website(fallback=True)
+            return code.split('_')[1], website._render_template('website.%s' % code, values)
+        return super(IrHttp, irHttp)._get_error_html(code, values)
 
     @api.model
     def get_frontend_session_info(self):
@@ -496,11 +502,11 @@ class IrHttp(models.AbstractModel):
         session_info['bundle_params']['website_id'] = request.website.id
         return session_info
 
-    @classmethod
-    def _is_allowed_cookie(cls, cookie_type):
+    @api.model
+    def _is_allowed_cookie(self, cookie_type):
         result = super()._is_allowed_cookie(cookie_type)
         if result and cookie_type == 'optional':
-            if not request.env['website'].get_current_website().cookies_bar:
+            if not self.env["website"].get_current_website().cookies_bar:
                 # Cookies bar is disabled on this website
                 return True
             accepted_cookie_types = json_scriptsafe.loads(request.cookies.get('website_cookies_bar', '{}'))

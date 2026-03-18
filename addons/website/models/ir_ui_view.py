@@ -445,13 +445,8 @@ class IrUiView(models.Model):
         return True
 
     def _render_template(self, template, values=None):
-        """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        view = self._get_template_view(template).sudo()
-        view._handle_visibility(do_raise=True)
-        if values is None:
-            values = {}
-        if 'main_object' not in values:
-            values['main_object'] = view
+        if website_id := self.env.context.get('website_id'):
+            return self.env['website'].browse(website_id)._render_template(template, values)
         return super()._render_template(template, values=values)
 
     @api.model
