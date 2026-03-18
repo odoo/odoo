@@ -600,7 +600,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=52, employee=52):
+        with self.assertQueryCount(admin=54, employee=53):
             composer._action_send_mail()
 
         # notifications
@@ -1017,7 +1017,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_suggested_subject_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=4):  # tm: 4
+        with self.assertQueryCount(employee=5):  # tm: 5
             _recipients = records._message_get_suggested_subject_batch()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
