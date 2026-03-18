@@ -87,7 +87,6 @@ class Response(werkzeug.wrappers.Response):
 
     def render(self) -> typing.Any:
         """ Renders the Response's template, returns the result. """
-        self.qcontext['request'] = request
         return request.env["ir.ui.view"]._render_template(self.template, self.qcontext)
 
     def flatten(self) -> None:

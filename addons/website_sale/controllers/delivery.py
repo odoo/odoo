@@ -24,7 +24,8 @@ class Delivery(WebsiteSale):
             "order": order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
-        return self.env["ir.ui.view"]._render_template("website_sale.delivery_form", values)
+        website = self.env["website"].get_current_website()
+        return website._render_template("website_sale.delivery_form", values)
 
     def _get_additional_delivery_context(self):
         """Update values used for rendering the website_sale.delivery_form template."""
@@ -69,7 +70,8 @@ class Delivery(WebsiteSale):
         """
         Monetary = self.env["ir.qweb.field.monetary"]
         currency = order.currency_id
-        rendered_tax_lines = self.env["ir.ui.view"]._render_template(
+        website = self.env["website"].get_current_website()
+        rendered_tax_lines = website._render_template(
             "website_sale.order_tax_lines", {"website_sale_order": order}
         )
         return {

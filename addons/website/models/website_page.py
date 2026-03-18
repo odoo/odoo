@@ -518,6 +518,7 @@ class WebsitePage(models.Model):
             return {
                 'id': page.id,
                 'url': page.url,
+                'website_id': page.website_id.id,
                 'view_id': page.view_id.id,
                 'group_ids': page.group_ids.ids,
             }

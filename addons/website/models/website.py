@@ -28,7 +28,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import Query
 from odoo.modules.module import get_manifest
-from odoo.tools import BinaryBytes, file_open
+from odoo.tools import BinaryBytes, file_open, lazy
 from odoo.tools.image import image_process
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.translate import _
@@ -209,7 +209,7 @@ class Website(models.CachedModel):
     plausible_shared_key = fields.Char()
     plausible_site = fields.Char()
 
-    user_id = fields.Many2one('res.users', string='Public User', required=True)
+    user_id = fields.Many2one('res.users', string='Public User', required=True)  # TODO to rename user_id into public_user_id
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
@@ -1497,17 +1497,89 @@ class Website(models.CachedModel):
         return self.env['ir.ui.view'].sudo().with_context(active_test=False)._get_template_view(view_id, raise_if_not_found=raise_if_not_found)
 
     @api.model
+    def _render_template(self, template, values=None):
+        """ Render the template. If website is enabled on request, then extend rendering context with website values. """
+        self.ensure_one()
+
+        user = self.env.user
+        IrUiView = self.env['ir.ui.view'].with_context(website_id=self.id)
+        IrHttp = self.env['ir.http'].with_context(website_id=self.id)
+
+        view = IrUiView._get_template_view(template).sudo()
+        if isinstance(template, int) and view.key:
+            view = IrUiView._get_template_view(view.key).sudo()
+        view._handle_visibility(do_raise=True)
+
+        if values is None:
+            values = {}
+        if 'main_object' not in values:
+            values['main_object'] = view
+
+        editable = user.has_group('website.group_website_designer')
+        has_group_restricted_editor = user.has_group('website.group_website_restricted_editor')
+        if not editable and has_group_restricted_editor and 'main_object' in values:
+            try:
+                main_object = values['main_object'].with_user(user.id)
+                self._check_user_can_modify(main_object)
+                editable = True
+            except AccessError:
+                pass
+        translatable = has_group_restricted_editor and self.env.context.get('lang') != IrHttp._get_default_lang().code
+        editable = editable and not translatable
+
+        if has_group_restricted_editor and user.has_group('website.group_multi_website'):
+            values['multi_website_websites_current'] = self.name
+            values['multi_website_websites'] = [
+                {'website_id': website.id, 'name': website.name, 'domain': website.domain}
+                for website in self.get_all() if website != self
+            ]
+
+            cur_company = self.env.company
+            values['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
+            values['multi_website_companies'] = lazy(lambda: [
+                {'company_id': comp.id, 'name': comp.name}
+                for comp in user.company_ids if comp != cur_company
+            ])
+
+        # update values
+
+        values.update(dict(
+            website=self,
+            is_view_active=self.is_view_active,
+            translatable=translatable,
+            editable=editable,
+        ))
+
+        if editable:
+            # form editable object, add the backend configuration link
+            if 'main_object' in values and has_group_restricted_editor:
+                func = getattr(values['main_object'], 'get_backend_menu_id', False)
+                values['backend_menu_id'] = lazy(lambda: func and func() or self.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration'))
+
+        # update context
+
+        # Avoid cache inconsistencies: if the cookies have been accepted, the
+        # DOM structure should reflect it after a reload and not be stuck in its
+        # previous state (see the part related to cookies in
+        # `_post_processing_att`).
+        is_allowed_optional_cookies = self.env['ir.http']._is_allowed_cookie('optional')
+        context = {'website_id': self.id, 'cookies_allowed': is_allowed_optional_cookies}
+        if 'inherit_branding' not in self.env.context and not self.env.context.get('rendering_bundle'):
+            if editable:
+                # in edit mode add branding on ir.ui.view tag nodes
+                context['inherit_branding'] = True
+            elif has_group_restricted_editor:
+                # will add the branding on fields (into values)
+                context['inherit_branding_auto'] = True
+
+        return self.env['ir.qweb'].with_context(**context)._render(view.id, values)
+
+    @api.model
     def is_view_active(self, key):
         """
             Return True if active, False if not active, None if not found
         """
         return self.env['ir.ui.view'].with_context(active_test=False)._get_cached_template_info(key).get('active')
-
-    @api.model
-    def get_template(self, template):
-        if isinstance(template, str) and '.' not in template:
-            template = 'website.%s' % template
-        return self.env['ir.ui.view']._get_template_view(template).sudo()
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
