@@ -3,8 +3,8 @@
 
     <t t-name="web.PhoneField">
         <div class="o_input_box">
-            <t t-if="props.readonly">
-                <a t-if="props.record.data[props.name]" t-att-href="this.phoneHref" class="o_form_uri" t-custom-click.prevent.stop="() => this.onLinkClicked()" t-out="props.record.data[props.name]"/>
+            <t t-if="this.props.readonly">
+                <a t-if="this.props.record.data[this.props.name]" t-att-href="this.phoneHref" class="o_form_uri" t-custom-click.prevent.stop="() => this.onLinkClicked()" t-out="this.props.record.data[this.props.name]"/>
                 <t t-foreach="this.inlineButtons" t-as="btn" t-key="btn.name">
                     <button t-attf-class="btn btn-link o_input_box_overlay_end" t-on-click.stop="btn.onSelected" t-att-data-tooltip="btn.name">
                         <i t-attf-class="i fa {{ btn.icon }}" />
@@ -17,8 +17,8 @@
                     placeholder="this.props.placeholder"
                     overlayButtons="_overlayButtons"
                     type="'tel'"
-                    id="props.id"
-                    input="input"
+                    id="this.props.id"
+                    input="this.input"
                 />
             </t>
         </div>

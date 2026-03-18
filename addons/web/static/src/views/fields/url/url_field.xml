@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="web.UrlField">
-        <t t-if="props.readonly">
-            <a class="o_field_widget o_form_uri" t-on-click.stop="" t-on-auxclick.stop="" t-att-href="formattedHref" t-out="props.text || props.record.data[props.name] || ''" target="_blank"/>
+        <t t-if="this.props.readonly">
+            <a class="o_field_widget o_form_uri" t-on-click.stop="" t-on-auxclick.stop="" t-att-href="this.formattedHref" t-out="this.props.text || this.props.record.data[this.props.name] || ''" target="_blank"/>
         </t>
         <t t-else="">
             <t t-set="_overlayButtons" t-value="this.props.record.data[this.props.name] ? this.overlayButtons : []" />
             <InputBox
                 placeholder="this.props.placeholder"
                 overlayButtons="_overlayButtons"
-                id="props.id"
-                input="input"
+                id="this.props.id"
+                input="this.input"
             />
         </t>
     </t>

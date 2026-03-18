@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
     <t t-name="website.AutoCompleteBuilderUrlPicker" t-inherit="web.AutoComplete">
-        <xpath expr="//div[@t-custom-ref='root']" position="attributes">
-            <attribute name="t-att-data-action-id">info.actionId</attribute>
-            <attribute name="t-att-data-action-param">info.actionParam</attribute>
-            <attribute name="t-att-data-action-value">info.actionValue</attribute>
-            <attribute name="t-att-data-class-action">info.classAction</attribute>
-            <attribute name="t-att-data-style-action">info.styleAction</attribute>
-            <attribute name="t-att-data-style-action-value">info.styleActionValue</attribute>
-            <attribute name="t-att-data-attribute-action">info.attributeAction</attribute>
-            <attribute name="t-att-data-attribute-action-value">info.attributeActionValue</attribute>
+        <xpath expr="//div[@t-custom-ref='this.root']" position="attributes">
+            <attribute name="t-att-data-action-id">this.info.actionId</attribute>
+            <attribute name="t-att-data-action-param">this.info.actionParam</attribute>
+            <attribute name="t-att-data-action-value">this.info.actionValue</attribute>
+            <attribute name="t-att-data-class-action">this.info.classAction</attribute>
+            <attribute name="t-att-data-style-action">this.info.styleAction</attribute>
+            <attribute name="t-att-data-style-action-value">this.info.styleActionValue</attribute>
+            <attribute name="t-att-data-attribute-action">this.info.attributeAction</attribute>
+            <attribute name="t-att-data-attribute-action-value">this.info.attributeActionValue</attribute>
         </xpath>
-        <xpath expr="//input[@t-custom-ref='input']" position="attributes">
-            <attribute name="t-attf-class" add="{{props.inputClass}}" separator=" "/>
+        <xpath expr="//input[@t-custom-ref='this.input']" position="attributes">
+            <attribute name="t-attf-class" add="{{this.props.inputClass}}" separator=" "/>
         </xpath>
     </t>
 

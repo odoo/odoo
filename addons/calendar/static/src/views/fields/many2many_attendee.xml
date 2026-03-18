@@ -2,7 +2,7 @@
 <templates>
     <t t-name="calendar.Many2ManyAttendee" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
         <xpath expr="//Many2XAutocomplete" position="attributes">
-            <attribute name="placeholder">props.placeholder</attribute>
+            <attribute name="placeholder">this.props.placeholder</attribute>
         </xpath>
     </t>
 

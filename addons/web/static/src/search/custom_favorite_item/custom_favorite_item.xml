@@ -7,18 +7,18 @@
                 <input type="text"
                     class="o_input my-1"
                     t-custom-ref="description"
-                    t-custom-model.trim="state.description"
-                    t-on-keydown="onInputKeydown"
+                    t-custom-model.trim="this.state.description"
+                    t-on-keydown="this.onInputKeydown"
                     />
-                <CheckBox value="state.isDefault" onChange.bind="(checked) => this.state.isDefault = checked">
+                <CheckBox value="this.state.isDefault" onChange.bind="(checked) => this.state.isDefault = checked">
                     <span data-tooltip="Use this filter by default when opening this view">Default filter</span>
                 </CheckBox>
             </div>
             <div class="px-3 pb-2 d-flex gap-2">
-                <button class="o_save_favorite btn btn-primary w-100" t-on-click="saveFavorite">
+                <button class="o_save_favorite btn btn-primary w-100" t-on-click="this.saveFavorite">
                     Save
                 </button>
-                <button class="o_edit_favorite btn btn-secondary w-100" t-on-click="editFavorite">
+                <button class="o_edit_favorite btn btn-secondary w-100" t-on-click="this.editFavorite">
                     Edit
                 </button>
             </div>

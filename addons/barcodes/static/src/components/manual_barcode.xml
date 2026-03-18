@@ -18,7 +18,7 @@
         </Dialog>
         <Dialog position="inside">
             <t t-set-slot="footer">
-                <BarcodeInput onSubmit="props.onResult" placeholder="props.placeholder"/>
+                <BarcodeInput onSubmit="this.props.onResult" placeholder="this.props.placeholder"/>
             </t>
         </Dialog>
     </t>

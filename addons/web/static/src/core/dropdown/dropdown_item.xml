@@ -3,10 +3,10 @@
 
   <t t-name="web.DropdownItem">
     <t
-      t-tag="props.tag ?? (props.attrs and props.attrs.href ? 'a' : 'span')"
+      t-tag="this.props.tag ?? (this.props.attrs and this.props.attrs.href ? 'a' : 'span')"
       class="o-dropdown-item dropdown-item o-navigable"
-      t-att-class="props.class"
-      t-on-click.stop="onClick"
+      t-att-class="this.props.class"
+      t-on-click.stop="this.onClick"
       t-on-mouseenter="() => this.dropdownControl.closeChildren()"
       role="menuitem"
       tabindex="0"
@@ -21,7 +21,7 @@
   <t t-name="web.CheckboxItem" t-inherit="web.DropdownItem" t-inherit-mode="primary">
     <xpath expr="//t[@role='menuitem']" position="attributes">
       <attribute name="role">menuitemcheckbox</attribute>
-      <attribute name="t-att-aria-checked">props.checked ? 'true' : 'false'</attribute>
+      <attribute name="t-att-aria-checked">this.props.checked ? 'true' : 'false'</attribute>
     </xpath>
   </t>
 

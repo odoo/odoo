@@ -3,8 +3,8 @@
     <!-- Many2one -->
     <t t-inherit="web.PropertyValue" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_field_property_many2one_value')]//img" position="attributes">
-            <attribute name="t-on-click.prevent.stop">_onAvatarClicked</attribute>
-            <attribute name="t-att-comodel">props.comodel</attribute>
+            <attribute name="t-on-click.prevent.stop">this._onAvatarClicked</attribute>
+            <attribute name="t-att-comodel">this.props.comodel</attribute>
         </xpath>
     </t>
 </templates>

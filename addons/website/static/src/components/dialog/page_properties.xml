@@ -89,8 +89,8 @@
 
 <t t-name="website.PagePropertiesDialogButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
     <xpath expr="//button[hasclass('o_form_button_cancel')]" position="after">
-        <button class="btn btn-link order-last ms-auto" t-on-click="props.clonePage"><i class="fa fa-fw fa-clone"/>Duplicate Page</button>
-        <button class="btn btn-link order-last" t-on-click="props.deletePage"><i class="fa fa-fw fa-trash"/>Delete Page</button>
+        <button class="btn btn-link order-last ms-auto" t-on-click="this.props.clonePage"><i class="fa fa-fw fa-clone"/>Duplicate Page</button>
+        <button class="btn btn-link order-last" t-on-click="this.props.deletePage"><i class="fa fa-fw fa-trash"/>Delete Page</button>
     </xpath>
 </t>
 

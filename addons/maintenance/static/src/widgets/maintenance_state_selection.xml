@@ -1,11 +1,11 @@
 <templates>
     <t t-name="maintenance.MaintenanceRequestStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary">
         <xpath expr="//Dropdown/button/div" position="replace">
-            <div t-if="isKanbanOrMobileView" class="d-flex align-items-center" t-att-title="label">
-                <i t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}"/>
+            <div t-if="this.isKanbanOrMobileView" class="d-flex align-items-center" t-att-title="this.label">
+                <i t-attf-class="{{ this.stateIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }}"/>
             </div>
             <div t-else="" class="d-flex align-items-center">
-                <span class="o_status_label" t-out="label"/>
+                <span class="o_status_label" t-out="this.label"/>
             </div>
         </xpath>
 
@@ -14,15 +14,15 @@
         </xpath>
 
         <xpath expr="//Dropdown/button" position="attributes">
-            <attribute name="class" remove="p-0" add="shadow-none" separator=" "/>
-            <attribute name="t-att-class">getTogglerClass(currentValue)</attribute>
+            <attribute name="class" remove="p-0" add="this.shadow-this.none" separator=" "/>
+            <attribute name="t-att-class">this.getTogglerClass(this.currentValue)</attribute>
         </xpath>
 
         <xpath expr="//CheckboxItem/span[1]" position="attributes">
-            <attribute name="t-attf-class" separator=" " add="{{ stateIcon(option[0]) }}" remove="o_status"/>
+            <attribute name="t-attf-class" separator=" " add="{{ this.stateIcon(option[0]) }}" remove="o_status"/>
         </xpath>
         <xpath expr="//CheckboxItem/span[2]" position="attributes">
-            <attribute name="t-attf-class">{{ statusColor(option[0]) }}</attribute>
+            <attribute name="t-attf-class">{{ this.statusColor(option[0]) }}</attribute>
         </xpath>
         <!-- Dropdown divider -->
         <xpath expr="//CheckboxItem" position="before">

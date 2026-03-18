@@ -3,28 +3,28 @@
 
     <t t-name="web.OfflineSystray">
         <Dropdown
-            t-if="offlineService.offline or offlineService.hasScheduledCalls"
+            t-if="this.offlineService.offline or this.offlineService.hasScheduledCalls"
             navigationOptions="{ 'shouldFocusChildInput': false }"
-            disabled="!offlineService.hasScheduledCalls">
+            disabled="!this.offlineService.hasScheduledCalls">
             <div
-                t-if="env.isSmall"
+                t-if="this.env.isSmall"
                 t-on-click="() => this.offlineService.checkConnection()"
                 class="o_nav_entry o_offline_systray">
-                    <i t-attf-class="{{ labelIcon }} {{ labelColor }}"
+                    <i t-attf-class="{{ this.labelIcon }} {{ this.labelColor }}"
                     role="img"
-                    t-att-aria-label="labelText"
-                    t-att-data-tooltip="labelText"/>
+                    t-att-aria-label="this.labelText"
+                    t-att-data-tooltip="this.labelText"/>
             </div>
             <button t-else=""
-                t-attf-class="o_nav_entry px-2 o_tag {{ labelColor }} o_offline_systray"
+                t-attf-class="o_nav_entry px-2 o_tag {{ this.labelColor }} o_offline_systray"
                 data-available-offline=""
                 t-on-click="() => this.offlineService.checkConnection()"
                 data-tooltip="Click to check connection and Sync">
-                <i t-attf-class="{{ labelIcon }} me-1"/><t t-esc="labelText"></t><i t-if="offlineService.hasScheduledCalls" class="fa fa-caret-down ms-2"/>
+                <i t-attf-class="{{ this.labelIcon }} me-1"/><t t-esc="this.labelText"></t><i t-if="this.offlineService.hasScheduledCalls" class="fa fa-caret-down ms-2"/>
             </button>
             <t t-set-slot="content">
                 <div class="o_offline_systray_content px-2">
-                    <t t-foreach="groupEntries" t-as="entry" t-key="entry[0]">
+                    <t t-foreach="this.groupEntries" t-as="entry" t-key="entry[0]">
                         <div class="o_horizontal_separator text-uppercase fw-bolder small mb-1">
                             <span t-esc="entry[0]"/> 
                         </div>
@@ -37,7 +37,7 @@
                                     'px-0': true,
                                     'd-flex': true,
                                     'o_cursor_auto': !element.clickable,
-                                    'o_disabled_while_sync': offlineService.syncingORM,
+                                    'o_disabled_while_sync': this.offlineService.syncingORM,
                                     'mb-2': element_last,
                                  }">
                                 <div t-attf-class="text-truncate {{element.error ? 'text-danger': ''}} {{ element.clickable ? '' : 'text-muted'}}">
@@ -71,9 +71,9 @@
 
     <t t-name="web.OfflineSystrayTooltip">
         <div>
-            On <t t-esc="timeStamp"/>
+            On <t t-esc="this.timeStamp"/>
         </div>
-        <t t-foreach="details" t-as="entry" t-key="entry[0]">
+        <t t-foreach="this.details" t-as="entry" t-key="entry[0]">
             <div>
                 - <t t-esc="entry[0]"/>: <t t-esc="entry[1]"/><t t-if="entry[2]"> → <t t-esc="entry[2]"/></t>
             </div>

@@ -9,7 +9,7 @@
     </t>
 
     <t t-name="web.CopyClipboardButtonField">
-        <CopyButton t-if="this.props.record.data[props.name]" className="this.copyButtonClassName" content="this.props.record.data[this.props.name]" copyText="this.copyText" disabled="disabled" successText="this.successText"/>
+        <CopyButton t-if="this.props.record.data[this.props.name]" className="this.copyButtonClassName" content="this.props.record.data[this.props.name]" copyText="this.copyText" disabled="this.disabled" successText="this.successText"/>
     </t>
 
 </templates>

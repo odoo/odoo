@@ -3,43 +3,43 @@
 
     <t t-name="web.ProgressBarField">
         <div class="o_progressbar d-flex align-items-center gap-2 w-100 px-2" t-custom-ref="numpadDecimal">
-            <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="props.title"/></div>
-            <div class="progress" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-on-click="onProgressClick" t-att-style="isEditable ? 'cursor: pointer' : ''">
-                <div t-attf-class="{{ progressBarColorClass }}" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
+            <div t-if="this.props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="this.props.title"/></div>
+            <div class="progress" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-on-click="this.onProgressClick" t-att-style="this.isEditable ? 'cursor: pointer' : ''">
+                <div t-attf-class="{{ this.progressBarColorClass }}" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
             </div>
             <div class="o_progressbar_value o_input_box w-25">
-                <t t-if="isPercentage">
+                <t t-if="this.isPercentage">
                     <input
-                        t-if="isEditable"
+                        t-if="this.isEditable"
                         t-custom-ref="currentValue"
                         class="o_input h-100"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-att-required="props.required"
-                        t-on-focus="onInputFocus"
-                        t-on-blur="onInputBlur"
+                        t-att-required="this.props.required"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
                     />
-                    <div t-attf-class="d-flex {{ isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
-                        <t t-if="!isEditable" t-out="formatCurrentValue(true)"/>
+                    <div t-attf-class="d-flex {{ this.isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
+                        <t t-if="!this.isEditable" t-out="this.formatCurrentValue(true)"/>
                         %
                     </div>
                 </t>
                 <t t-else="">
                     <input
-                        t-if="isEditable"
+                        t-if="this.isEditable"
                         t-custom-ref="currentValue"
                         class="o_input h-100"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
-                        t-on-focus="onInputFocus"
-                        t-on-blur="onInputBlur"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
                     />
-                    <div t-attf-class="d-flex {{ isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
-                        <span t-if="!isEditable" t-out="formatCurrentValue(true)"/>
+                    <div t-attf-class="d-flex {{ this.isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
+                        <span t-if="!this.isEditable" t-out="this.formatCurrentValue(true)"/>
                         /
-                        <span t-out="formatMaxValue(true)"/>
+                        <span t-out="this.formatMaxValue(true)"/>
                     </div>
                 </t>
             </div>

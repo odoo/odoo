@@ -3,7 +3,7 @@
 
     <t t-name="web.InternalLinkButton">
         <button class="o_input_box_overlay_end o_external_button btn btn-link" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="this.props.onClick">
-            <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+            <i class="oi" t-att-class="this.env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
         </button>
     </t>
 

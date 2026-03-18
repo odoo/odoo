@@ -35,18 +35,18 @@
     </t>
 
     <t t-name="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
-        <xpath expr="//t[@t-foreach='getColumns(record)']" position="replace">
+        <xpath expr="//t[@t-foreach='this.getColumns(record)']" position="replace">
             <t t-set="data" t-value="record.data"/>
             <td class="o_resume_timeline_cell position-relative pe-lg-2">
                 <div class="rounded-circle bg-info position-relative"/>
             </td>
             <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
-                <div t-attf-class="o_resume_line" t-att-data-id="id">
+                <div t-attf-class="o_resume_line" t-att-data-id="this.id">
                     <small class="o_resume_line_dates fw-bold">
-                        <t t-out="formatDate(data.date_start)"/>
+                        <t t-out="this.formatDate(data.date_start)"/>
                         <t t-if="!data.is_course">
                             -
-                            <t t-if="data.date_end" t-out="formatDate(data.date_end)"/>
+                            <t t-if="data.date_end" t-out="this.formatDate(data.date_end)"/>
                             <t t-else="">
                                 Current
                             </t>

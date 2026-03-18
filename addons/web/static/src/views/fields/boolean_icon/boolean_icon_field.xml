@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BooleanIconField">
-        <button t-attf-class="btn {{props.record.data[props.name] ? 'btn-primary' : 'btn-outline-primary'}}" t-att-data-tooltip="props.label" t-on-click.prevent.stop="update" data-available-offline="">
-            <i t-attf-class="fa {{props.icon}}" />
+        <button t-attf-class="btn {{this.props.record.data[this.props.name] ? 'btn-primary' : 'btn-outline-primary'}}" t-att-data-tooltip="this.props.label" t-on-click.prevent.stop="this.update" data-available-offline="">
+            <i t-attf-class="fa {{this.props.icon}}" />
         </button>
     </t>
 

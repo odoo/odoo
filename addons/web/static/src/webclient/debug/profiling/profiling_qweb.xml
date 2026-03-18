@@ -4,10 +4,10 @@
 <t t-name="web.ProfilingQwebView">
     <div class="oe_form_field o_ace_view_editor oe_ace_open o_profiling_qweb_view">
         <div class="o_select_view_profiling" t-custom-ref="selector">
-            <a role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#"><MenuItem view="state.view" t-if="state.view"/></a>
+            <a role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#"><MenuItem view="this.state.view" t-if="this.state.view"/></a>
             <div class="dropdown-menu" role="menu">
-                <t t-foreach="viewObjects" t-as="view" t-key="view_index">
-                    <a role="menuitem" href="#" t-att-data-id="view.id" t-on-click.prevent="_onSelectView">
+                <t t-foreach="this.viewObjects" t-as="view" t-key="view_index">
+                    <a role="menuitem" href="#" t-att-data-id="view.id" t-on-click.prevent="this._onSelectView">
                         <MenuItem view="view"/>
                     </a>
                 </t>
@@ -24,10 +24,10 @@
     </div>
 </t>
 <t t-name="web.ProfilingQwebView.menuitem">
-    <div class="o_delay"><t t-if="props.view.delay" t-out="props.view.delay"/> ms</div>
-    <div class="o_query"><t t-if="props.view.delay" t-out="props.view.query"/> query</div>
-    <t t-out="props.view.display_name"/>
-    <div class="o_key text-muted">(<t t-out="props.view.id"/>, <t t-out="props.view.key"/>)</div>
+    <div class="o_delay"><t t-if="this.props.view.delay" t-out="this.props.view.delay"/> ms</div>
+    <div class="o_query"><t t-if="this.props.view.delay" t-out="this.props.view.query"/> query</div>
+    <t t-out="this.props.view.display_name"/>
+    <div class="o_key text-muted">(<t t-out="this.props.view.id"/>, <t t-out="this.props.view.key"/>)</div>
 </t>
 <t t-name="web.ProfilingQwebView.hover">
     <div class="o_info o_detail">

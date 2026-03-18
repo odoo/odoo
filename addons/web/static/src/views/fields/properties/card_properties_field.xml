@@ -3,7 +3,7 @@
     <t t-name="web.CardPropertiesField">
         <div t-custom-ref="properties" class="w-100 fw-normal text-muted">
             <div class="o_card_property_field o_input_box"
-                t-foreach="propertiesList"
+                t-foreach="this.propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
                 t-if="propertyConfiguration.value and propertyConfiguration.view_in_cards">
@@ -13,12 +13,12 @@
                 <div class="text-truncate"
                     t-att-class="{'border rounded-3 ps-2' : propertyConfiguration.type === 'boolean'}">
                     <PropertyValue
-                        id="generateUniqueDomID()"
-                        canChangeDefinition="state.canChangeDefinition"
+                        id="this.generateUniqueDomID()"
+                        canChangeDefinition="this.state.canChangeDefinition"
                         comodel="propertyConfiguration.comodel || ''"
-                        context="props.context"
+                        context="this.props.context"
                         domain="propertyConfiguration.domain || '[]'"
-                        readonly="props.readonly"
+                        readonly="this.props.readonly"
                         selection="propertyConfiguration.selection"
                         string="propertyConfiguration.string"
                         tags="propertyConfiguration.tags"
@@ -26,7 +26,7 @@
                         value="propertyConfiguration.value"
                         onChange.bind="() => {}"
                         onTagsChange.bind="() => {}"
-                        record="props.record"
+                        record="this.props.record"
                     />
                 </div>
                 <span class="o_input_box_overlay_end" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>

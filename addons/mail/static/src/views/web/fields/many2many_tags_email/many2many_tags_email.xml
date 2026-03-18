@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="FieldMany2ManyTagsEmailTags" t-inherit="web.Many2ManyTagsField">
         <xpath expr="//Many2XAutocomplete" position="attributes">
-            <attribute name="autofocus">props.context.forward_mode</attribute>
-            <attribute name="quickCreate">quickCreate</attribute>
+            <attribute name="autofocus">this.props.context.forward_mode</attribute>
+            <attribute name="quickCreate">this.quickCreate</attribute>
         </xpath>
     </t>
 </templates>

@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.EmailField">
-        <t t-if="props.readonly">
+        <t t-if="this.props.readonly">
             <div class="d-grid">
-                <a class="o_form_uri o_text_overflow" t-on-click.stop="" t-att-href="props.record.data[props.name] ? 'mailto:'+props.record.data[props.name] : undefined" t-out="props.record.data[props.name] || ''"/>
+                <a class="o_form_uri o_text_overflow" t-on-click.stop="" t-att-href="this.props.record.data[this.props.name] ? 'mailto:'+this.props.record.data[this.props.name] : undefined" t-out="this.props.record.data[this.props.name] || ''"/>
             </div>
         </t>
         <t t-else="">
@@ -13,9 +13,9 @@
                 placeholder="this.props.placeholder"
                 overlayButtons="_overlayButtons"
                 type="'email'"
-                id="props.id"
-                input="input"
-                required="props.required"
+                id="this.props.id"
+                input="this.input"
+                required="this.props.required"
             />
         </t>
     </t>

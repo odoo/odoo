@@ -3,8 +3,8 @@
 
     <t t-name="stock.StockListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <ActionHelper position="replace">
-            <t t-if="showNoContentHelper">
-                <StockActionHelper noContentHelp="props.noContentHelp"/>
+            <t t-if="this.showNoContentHelper">
+                <StockActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
         </ActionHelper>
     </t>

@@ -7,10 +7,10 @@
     >
         <xpath expr="//div[hasclass('o_cp_buttons')]/*" position="before">
             <UploadButton
-                formData="formData"
-                allowedMIMETypes="allowedMIMETypes"
+                formData="this.formData"
+                allowedMIMETypes="this.allowedMIMETypes"
                 load.bind="() => this.props.record.load()"
-                uploadRoute="uploadRoute"
+                uploadRoute="this.uploadRoute"
             />
         </xpath>
     </t>

@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.MonetaryField">
-        <span t-if="props.readonly" t-out="formattedValue" />
+        <span t-if="this.props.readonly" t-out="this.formattedValue" />
         <div t-else="" class="o_input_box">
-            <span t-if="!props.hideSymbol and currency" t-attf-class="o_input_box_overlay_{{ currency.position === 'before' ? 'start' : 'end' }}" t-out="currencySymbol"/>
-            <input t-custom-ref="numpadDecimal" t-on-input="onInput" t-att-id="props.id" t-att-type="props.inputType" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
+            <span t-if="!this.props.hideSymbol and this.currency" t-attf-class="o_input_box_overlay_{{ this.currency.position === 'before' ? 'start' : 'end' }}" t-out="this.currencySymbol"/>
+            <input t-custom-ref="numpadDecimal" t-on-input="this.onInput" t-att-id="this.props.id" t-att-type="this.props.inputType" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
         </div>
     </t>
 

@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.X2ManyMediaViewer" t-inherit="web.X2ManyField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_x2m_control_panel')]" position="before">
-           <KanbanRenderer t-if="props.viewMode" t-props="rendererProps"/>
+           <KanbanRenderer t-if="this.props.viewMode" t-props="this.rendererProps"/>
         </xpath>
         <xpath expr="//KanbanRenderer[last()]" position="replace"/>
     </t>

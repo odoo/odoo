@@ -3,9 +3,9 @@
 
   <t t-name="web.BurgerUserMenu">
     <div class="o_user_menu_mobile mt-2 px-3">
-      <t t-foreach="getElements()" t-as="element" t-key="element_index">
+      <t t-foreach="this.getElements()" t-as="element" t-key="element_index">
           <t t-if="!element.hide">
-              <a t-if="element.type == 'item'" class="d-block text-body py-3 fs-4" t-att-href="element.href or ''" t-out="element.description" t-on-click.stop.prevent="_onItemClicked(element.callback)"/>
+              <a t-if="element.type == 'item'" class="d-block text-body py-3 fs-4" t-att-href="element.href or ''" t-out="element.description" t-on-click.stop.prevent="this._onItemClicked(element.callback)"/>
               <t t-if="element.type === 'component'" t-component="element.contentComponent"/>
               <CheckBox
                   t-if="element.type == 'switch'"
