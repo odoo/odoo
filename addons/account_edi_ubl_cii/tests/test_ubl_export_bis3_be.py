@@ -878,6 +878,25 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             self._generate_invoice_ubl_file(invoice)
             self._assert_invoice_ubl_file(invoice, f'test_invoice_tax_subtotal_exempt_amount_{rounding_method}')
 
+    def test_invoice_tax_out_of_scope(self):
+        """ [BR-O-06] A Document level allowance (BG-20) where VAT category code (BT-95)
+            is "Not subject to VAT" shall not contain a Document level allowance VAT rate (BT-96)
+            [BR-O-02] An Invoice that contains an Invoice line (BG-25) where the Invoiced item
+            VAT category code (BT-151) is "Not subject to VAT" shall not contain the Seller VAT
+            identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the
+            Buyer VAT identifier (BT-48).
+        """
+        self.ensure_installed('account_edi_ubl_cii_tax_extension')
+        out_of_scope_tax = self.percent_tax(0.0, ubl_cii_tax_category_code='O', ubl_cii_tax_exemption_reason_code='VATEX-EU-O')
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            tax_ids=out_of_scope_tax,
+            partner_id=self.partner_be,
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_out_of_scope')
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestBeExport(TestUblExportBis3BE):
