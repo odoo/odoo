@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2026-01-24 12:28+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -68,6 +68,11 @@ msgstr "Connect"
 #: code:addons/payment_razorpay/controllers/onboarding.py:0
 msgid "Could not find Razorpay provider with id %s"
 msgstr "Tidak dapat menemukan provider Razorpay dengan id %s"
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Disconnect"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__display_name
@@ -151,6 +156,11 @@ msgid "Razorpay Account ID"
 msgstr "ID Akun Razorpay"
 
 #. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
+msgid "Razorpay Is Oauth Supported"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "Razorpay Key Id"
 msgstr "Razorpay Key Id"
@@ -179,10 +189,16 @@ msgstr "Razorpay Webhook Secret"
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid ""
-"Razorpay credentials are missing. Click the \"Connect\" button to set up "
-"your account."
+"Razorpay credentials are missing. Please fill them to set up your account."
 msgstr ""
-"Kredensial Razorpay kurang. Klik tombol \"Connect\" untuk setup akun Anda."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Please set the state back to 'Disabled' "
+"and click the \"Connect\" button to set up your account."
+msgstr ""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -217,11 +233,6 @@ msgstr "Menerima data tanpa status."
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received incomplete refund data."
 msgstr "Menerima data refund yang tidak lengkap."
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-msgid "Reset Your Razorpay Account"
-msgstr "Reset Akun Razorpay Anda"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -268,14 +279,10 @@ msgstr "Webhook Secret"
 msgid ""
 "You are currently connected to Razorpay through the credentials method, "
 "which is\n"
-"                    deprecated. Click the \"Connect\" button below to use "
+"                    deprecated. Click the \"Connect\" button above to use "
 "the recommended OAuth\n"
 "                    method."
 msgstr ""
-"Anda saat ini terhubung ke Razorpay melalui metode kredensial, yang sudah\n"
-"                    deprecated. Klik tombol \"Connect\" di bawah untuk "
-"menggunakan metode OAuth\n"
-"                    yang direkomendasikan."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -284,8 +291,8 @@ msgid ""
 "You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
 "this payment method"
 msgstr ""
-"Anda tidak dapat membayar jumlah lebih besar dari %(currency_symbol)s "
-"%(max_amount)s dengan metode pembayaran ini"
+"Anda tidak dapat membayar jumlah lebih besar dari %(currency_symbol)s %"
+"(max_amount)s dengan metode pembayaran ini"
 
 #. module: payment_razorpay
 #. odoo-python

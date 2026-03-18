@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-11-28 10:55+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
@@ -41,6 +41,12 @@ msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">Verkauf</span>"
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr ""
+
+#. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
@@ -48,6 +54,14 @@ msgstr "<span class=\"o_stat_text\">Verkauf</span>"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/product_template.py:0
+msgid ""
+"Each time you sell this product through a SO, a RfQ is automatically created "
+"to buy the product. Tip: don't forget to set a vendor on the product."
+msgstr ""
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -80,19 +94,6 @@ msgstr "Generierte Einkaufspositionen"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_purchase
-#: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid ""
-"If ticked, each time you sell this product through a SO, a RfQ is "
-"automatically created to buy the product. Tip: don't forget to set a vendor "
-"on the product."
-msgstr ""
-"Wenn diese Option aktiviert ist, wird jedes Mal, wenn Sie dieses Produkt "
-"über einen Verkaufsauftrag verkaufen, automatisch eine Angebotsanfrage "
-"erstellt, um das Produkt zu kaufen. Tipp: Vergessen Sie nicht, einen "
-"Anbieter für das Produkt festzulegen."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -141,13 +142,6 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: sale_purchase
-#. odoo-python
-#: code:addons/sale_purchase/models/product_template.py:0
-msgid "Product that is not a service can not create RFQ."
-msgstr ""
-"Produkt, das keine Dienstleistung ist, kann keine Angebotsanfrage erstellen."
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "Purchase"
 msgstr "Einkauf"
@@ -178,11 +172,6 @@ msgstr ""
 "oder bei der Erhöhung der Menge erzeugt wird."
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
-msgid "Reordering"
-msgstr "Nachbestellung"
-
-#. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
 msgid "Sale Order"
 msgstr "Verkaufsauftrag"
@@ -204,10 +193,9 @@ msgid "Sources Sale Orders %s"
 msgstr "Referenz-Verkaufsaufträge von %s"
 
 #. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Subcontract Service"
-msgstr "Subunternehmer-Service"
+#: model:ir.model.fields.selection,name:sale_purchase.selection__product_template__service_tracking__subcontract
+msgid "Subcontracting RFQ"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order

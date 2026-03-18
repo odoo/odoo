@@ -4,21 +4,27 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Abe Manyo (abem)" <abem@odoo.com>, 2026.
+# "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2026-01-07 02:13+0000\n"
-"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-04-18 13:42+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
 "account_fleet/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.report_invoice_document
+msgid "1-ABC-123"
+msgstr ""
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -43,11 +49,14 @@ msgid ""
 "                                <span class=\"o_stat_text\">Service's Bill</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_value\">Tagihan</span>\n"
+"                                <span class=\"o_stat_text\">Layanan Baru</"
+"span>"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_account
 msgid "Account"
-msgstr ""
+msgstr "Akun"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
@@ -57,7 +66,7 @@ msgstr "Account Move"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr "Baris Pergerakkan Akun"
+msgstr "Baris Pergerakan Akun"
 
 #. module: account_fleet
 #. odoo-python
@@ -81,6 +90,8 @@ msgid ""
 "Check this box if a vehicle has to be linked to the account, when creating a "
 "bill for an expense or when creating an asset."
 msgstr ""
+"Centang kotak ini jika kendaraan harus terhubung ke akun saat membuat "
+"tagihan untuk pengeluaran atau saat membuat aset."
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
@@ -102,6 +113,7 @@ msgstr "Tanggal Pembuatan"
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:account_fleet.field_account_tax__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__display_name
 msgid "Display Name"
@@ -112,6 +124,7 @@ msgstr "Nama Tampilan"
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__id
+#: model:ir.model.fields,field_description:account_fleet.field_account_tax__id
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__id
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__id
 msgid "ID"
@@ -135,7 +148,7 @@ msgstr "Butuh Kendaraan"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_account__is_vehicle_account
 msgid "Requires vehicle"
-msgstr ""
+msgstr "Perlu kendaraan"
 
 #. module: account_fleet
 #. odoo-python
@@ -161,6 +174,11 @@ msgstr "Layanan untuk Kendaraaan"
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
 msgid "Status"
 msgstr "Statu"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_tax
+msgid "Tax"
+msgstr ""
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle
@@ -191,6 +209,8 @@ msgid ""
 "You cannot modify the amount of services linked to a journal item. Do it on "
 "the related accounting entry instead."
 msgstr ""
+"Anda tidak dapat mengubah jumlah layanan yang terhubung ke item jurnal. "
+"Lakukan pada entri akuntansi terkait."
 
 #. module: account_fleet
 #. odoo-python

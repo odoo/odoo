@@ -6,21 +6,22 @@
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 15:21+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-05-08 04:45+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-19/bus/zh_Hans/>\n"
+"projects/odoo-s19-3/bus/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_groups
@@ -38,7 +39,7 @@ msgstr "附件"
 msgid ""
 "Bus logs contain confidential information and must only be shared with "
 "trusted recipients."
-msgstr ""
+msgstr "总线日志包含机密信息，仅可向可信接收方共享。"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_listener_mixin
@@ -81,6 +82,7 @@ msgstr "创建日期"
 #: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:bus.field_ir_http__display_name
 #: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:bus.field_res_groups__display_name
 #: model:ir.model.fields,field_description:bus.field_res_partner__display_name
@@ -105,7 +107,7 @@ msgstr "下载日志"
 #. odoo-javascript
 #: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
 msgid "Enable Bus Logging"
-msgstr "启用总线记录"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_http
@@ -118,6 +120,7 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,field_description:bus.field_ir_attachment__id
 #: model:ir.model.fields,field_description:bus.field_ir_http__id
 #: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_qweb__id
 #: model:ir.model.fields,field_description:bus.field_ir_websocket__id
 #: model:ir.model.fields,field_description:bus.field_res_groups__id
 #: model:ir.model.fields,field_description:bus.field_res_partner__id
@@ -147,8 +150,12 @@ msgid "Model"
 msgstr ""
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_qweb
+msgid "Qweb"
+msgstr ""
+
+#. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
@@ -156,7 +163,6 @@ msgstr "刷新"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid ""
 "Save your work and refresh to get the latest updates and avoid potential "
@@ -171,7 +177,6 @@ msgstr "‎该页面似乎已过期。‎"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid "The page is out of date"
 msgstr "该页面已过期"

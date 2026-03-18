@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -108,11 +108,6 @@ msgid "Discount & Loyalty"
 msgstr "折扣及會員計劃"
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.reduction_coupon_code
-msgid "Discount code or gift card"
-msgstr ""
-
-#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__display_name
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__display_name
@@ -132,6 +127,16 @@ msgstr "完成"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Expired Date:"
 msgstr "使用期限："
+
+#. module: website_sale_loyalty
+#: model:loyalty.program,name:website_sale_loyalty.free_shipping_promotion
+msgid "Free Shipping"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model:loyalty.reward,description:website_sale_loyalty.free_shipping_promotion_reward
+msgid "Free shipping"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
@@ -203,6 +208,11 @@ msgstr "會員規則"
 #. odoo-python
 #: code:addons/website_sale_loyalty/tests/test_shop_sale_coupon.py:0
 msgid "No reward to claim with this coupon"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model:loyalty.program,portal_point_name:website_sale_loyalty.free_shipping_promotion
+msgid "Points"
 msgstr ""
 
 #. module: website_sale_loyalty

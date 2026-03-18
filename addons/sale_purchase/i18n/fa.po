@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -39,12 +39,26 @@ msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">فروش</span>"
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr ""
+
+#. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/product_template.py:0
+msgid ""
+"Each time you sell this product through a SO, a RfQ is automatically created "
+"to buy the product. Tip: don't forget to set a vendor on the product."
 msgstr ""
 
 #. module: sale_purchase
@@ -78,18 +92,6 @@ msgstr "سطرهای خرید ایجادشده"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
 msgid "ID"
 msgstr ""
-
-#. module: sale_purchase
-#: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid ""
-"If ticked, each time you sell this product through a SO, a RfQ is "
-"automatically created to buy the product. Tip: don't forget to set a vendor "
-"on the product."
-msgstr ""
-"اگر تیک زده شود، هر بار که این محصول را از طریق سفارش فروش می فروشید، یک "
-"استعلام قیمت به طور خودکار برای خرید محصول ایجاد می شود. نکته: فراموش نکنید "
-"که یک فروشنده برای محصول تعیین کنید."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -136,12 +138,6 @@ msgid "Product"
 msgstr "محصول"
 
 #. module: sale_purchase
-#. odoo-python
-#: code:addons/sale_purchase/models/product_template.py:0
-msgid "Product that is not a service can not create RFQ."
-msgstr "محصولی که سرویس نیست نمی تواند پیش‌فاکتور ایجاد کند."
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "Purchase"
 msgstr ""
@@ -172,11 +168,6 @@ msgstr ""
 "افزایش یافته است."
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
-msgid "Reordering"
-msgstr "سفارش مجدد"
-
-#. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
 msgid "Sale Order"
 msgstr "سفارش فروش"
@@ -198,10 +189,9 @@ msgid "Sources Sale Orders %s"
 msgstr "منابع سفارشات فروش %s"
 
 #. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Subcontract Service"
-msgstr "خدمات پیمانکاری"
+#: model:ir.model.fields.selection,name:sale_purchase.selection__product_template__service_tracking__subcontract
+msgid "Subcontracting RFQ"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order

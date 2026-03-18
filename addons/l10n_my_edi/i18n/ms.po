@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:15+0000\n"
+"POT-Creation-Date: 2026-05-10 18:12+0000\n"
 "PO-Revision-Date: 2025-07-23 07:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -629,10 +629,7 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
-msgid ""
-"Error when generating the documents' files:\n"
-"\n"
-"- %(errors)s"
+msgid "Error when generating the file."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -798,6 +795,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
 msgid "Invoice(s)"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "Invoices Requiring Attention"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1392,8 +1395,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
 msgid ""
-"The api request limit has been reached. Please wait until "
-"%(limit_reset_datetime)s to try again."
+"The api request limit has been reached. Please wait until %"
+"(limit_reset_datetime)s to try again."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1432,8 +1435,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
 msgid ""
-"The following partner's identification type or number is missing: "
-"%(partner_name)s"
+"The following partner's identification type or number is missing: %"
+"(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1446,8 +1449,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
 msgid ""
-"The following partner's phone number should follow the E.164 format: "
-"%(partner_name)s"
+"The following partner's phone number should follow the E.164 format: %"
+"(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1644,6 +1647,12 @@ msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "View Invoices"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -1758,6 +1767,19 @@ msgid ""
 "You must set a tax on the line : %(line_name)s.\n"
 "If taxes are not applicable, please set a 0%% tax with a tax type 'Not "
 "Applicable'."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid ""
+"You selected %(total)s invoices for submission.\n"
+"\n"
+"%(count)s invoices contain incomplete details or incorrect formatting "
+"required for LHDN e-Invoicing.\n"
+"\n"
+"Please click \"View Invoices\" below to review and update the information "
+"for these specific invoices."
 msgstr ""
 
 #. module: l10n_my_edi

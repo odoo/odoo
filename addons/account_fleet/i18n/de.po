@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2026-03-07 14:30+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-03-14 12:47+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "account_fleet/de/>\n"
@@ -18,7 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.report_invoice_document
+msgid "1-ABC-123"
+msgstr ""
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -83,6 +88,9 @@ msgid ""
 "Check this box if a vehicle has to be linked to the account, when creating a "
 "bill for an expense or when creating an asset."
 msgstr ""
+"Aktivieren Sie dieses Kontrollkästchen, wenn ein Fahrzeug mit dem Konto "
+"verknüpft werden muss, eine Rechnung für eine Ausgabe erstellt wird oder ein "
+"Vermögenswert angelegt wird."
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
@@ -104,6 +112,7 @@ msgstr "Erstellungsdatum"
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:account_fleet.field_account_tax__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__display_name
 msgid "Display Name"
@@ -114,6 +123,7 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__id
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__id
+#: model:ir.model.fields,field_description:account_fleet.field_account_tax__id
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__id
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__id
 msgid "ID"
@@ -165,6 +175,11 @@ msgid "Status"
 msgstr "Status"
 
 #. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__vehicle_id
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__vehicle_id
@@ -193,6 +208,9 @@ msgid ""
 "You cannot modify the amount of services linked to a journal item. Do it on "
 "the related accounting entry instead."
 msgstr ""
+"Sie können die Anzahl der mit einer Buchungszeile verknüpften "
+"Dienstleistungen nicht ändern. Nehmen Sie diese Änderung stattdessen im "
+"entsprechenden Buchungsposten vor."
 
 #. module: account_fleet
 #. odoo-python

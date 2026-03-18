@@ -5,24 +5,24 @@
 # Translators:
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:07+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-04-11 14:19+0000\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
-"odoo-19/bus/sr_Latn/>\n"
+"odoo-s19-2/bus/sr_Latn/>\n"
 "Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_groups
@@ -83,6 +83,7 @@ msgstr "Kreirano"
 #: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:bus.field_ir_http__display_name
 #: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:bus.field_res_groups__display_name
 #: model:ir.model.fields,field_description:bus.field_res_partner__display_name
@@ -95,7 +96,7 @@ msgstr "Naziv za prikaz"
 #. odoo-javascript
 #: code:addons/bus/static/src/debug/bus_logs_menu_item.js:0
 msgid "Download"
-msgstr ""
+msgstr "Preuzmi"
 
 #. module: bus
 #. odoo-javascript
@@ -120,6 +121,7 @@ msgstr "HTTP rutiranje"
 #: model:ir.model.fields,field_description:bus.field_ir_attachment__id
 #: model:ir.model.fields,field_description:bus.field_ir_http__id
 #: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_qweb__id
 #: model:ir.model.fields,field_description:bus.field_ir_websocket__id
 #: model:ir.model.fields,field_description:bus.field_res_groups__id
 #: model:ir.model.fields,field_description:bus.field_res_partner__id
@@ -149,8 +151,12 @@ msgid "Model"
 msgstr ""
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_qweb
+msgid "Qweb"
+msgstr ""
+
+#. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
@@ -158,7 +164,6 @@ msgstr "Osveži"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid ""
 "Save your work and refresh to get the latest updates and avoid potential "
@@ -173,7 +178,6 @@ msgstr ""
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid "The page is out of date"
 msgstr ""

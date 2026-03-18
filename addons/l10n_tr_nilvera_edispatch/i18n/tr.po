@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:16+0000\n"
+"POT-Creation-Date: 2026-05-10 18:13+0000\n"
 "PO-Revision-Date: 2025-10-09 11:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -39,6 +39,27 @@ msgstr ""
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
 msgid "%s's"
 msgstr "%s ait."
+
+#. module: l10n_tr_nilvera_edispatch
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.view_picking_type_form_inherit_l10n_tr_nilvera_edispatch
+msgid ""
+".\n"
+"                        <br/>Please verify that the prefix is correct."
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.view_picking_type_form_inherit_l10n_tr_nilvera_edispatch
+msgid ""
+".\n"
+"                        <br/>The system will send"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.view_picking_type_form_inherit_l10n_tr_nilvera_edispatch
+msgid ""
+"<span>Odoo could not detect a GIB e-Dispatch prefix. Please update the "
+"Sequence Prefix.</span>"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.constraint,message:l10n_tr_nilvera_edispatch.constraint_l10n_tr_nilvera_trailer_plate_name_uniq
@@ -196,12 +217,6 @@ msgid "Error"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
-#. odoo-javascript
-#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
-msgid "Error occured in reading following XML file(s): %s"
-msgstr "Aşağıdaki XML dosyaları okunurken bir hata oluştu: %s"
-
-#. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
 msgid ""
@@ -210,6 +225,17 @@ msgid ""
 msgstr ""
 "Aşağıdaki kayıtlar için XML oluşturulurken bir hata oluştu:\n"
 "- %s"
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
+msgid "Error occurred in reading following XML file(s): %s"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking_type__l10n_tr_nilvera_gib_sequence_code
+msgid "GIB Sequence Prefix"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.view_picking_form_inherit_l10n_tr_nilvera_edispatch
@@ -314,16 +340,26 @@ msgid "Not sent"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking_type.py:0
+msgid ""
+"Odoo extracts the last 3 letters of the Sequence Prefix as the GIB prefix "
+"for e-Dispatch orders.\n"
+"\n"
+"Valid examples:\n"
+"OUT/\n"
+"OUT-\n"
+"WH/OUT\n"
+"WH-OUT\n"
+"WH/OUT/\n"
+"\n"
+"Please update the Sequence Code so the last 3 characters form a valid prefix."
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_edispatch.selection__stock_picking__l10n_tr_nilvera_dispatch_type__sevk
 msgid "Online"
 msgstr "Çevrimiçi"
-
-#. module: l10n_tr_nilvera_edispatch
-#. odoo-python
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking_type.py:0
-msgid "Only 3 characters are allowed in the Sequence Prefix by GİB"
-msgstr ""
-"GİB kurallarına göre, sıra ön ekinde en fazla 3 karakter kullanılabilir."
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
@@ -510,6 +546,11 @@ msgid ""
 msgstr "Hedef ülkeye sevkiyat için kullanılan gümrük ofisinin posta kodu."
 
 #. module: l10n_tr_nilvera_edispatch
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.view_picking_type_form_inherit_l10n_tr_nilvera_edispatch
+msgid "The system detected the E-Dispatch GIB prefix as"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_trailer_plate_ids
 msgid "Trailer Plates"
 msgstr "Römork Plakaları"
@@ -528,7 +569,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.xml:0
 msgid "Upload e-Receipt (XML)"
-msgstr "Gelen e-İrsaliye Yükle (XML)"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_driver_ids
@@ -680,6 +721,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
 msgid "id"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.view_picking_type_form_inherit_l10n_tr_nilvera_edispatch
+msgid "to Nilvera instead of"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch

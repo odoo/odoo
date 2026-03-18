@@ -3,21 +3,22 @@
 # * website_sale_loyalty
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 06:27+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-05-05 23:47+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/website_sale_loyalty/es_419/>\n"
+"odoo-s19-3/website_sale_loyalty/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_sale_loyalty
 #. odoo-python
@@ -105,11 +106,6 @@ msgid "Discount & Loyalty"
 msgstr "Descuentos y programas de lealtad"
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.reduction_coupon_code
-msgid "Discount code or gift card"
-msgstr "Código de descuento o tarjeta de regalo"
-
-#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__display_name
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__display_name
@@ -129,6 +125,16 @@ msgstr "Listo"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Expired Date:"
 msgstr "Fecha de vencimiento:"
+
+#. module: website_sale_loyalty
+#: model:loyalty.program,name:website_sale_loyalty.free_shipping_promotion
+msgid "Free Shipping"
+msgstr "Envío gratis"
+
+#. module: website_sale_loyalty
+#: model:loyalty.reward,description:website_sale_loyalty.free_shipping_promotion_reward
+msgid "Free shipping"
+msgstr "Envío gratis"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
@@ -200,7 +206,12 @@ msgstr "Regla de lealtad"
 #. odoo-python
 #: code:addons/website_sale_loyalty/tests/test_shop_sale_coupon.py:0
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "No hay recompensas a obtener con este cupón"
+
+#. module: website_sale_loyalty
+#: model:loyalty.program,portal_point_name:website_sale_loyalty.free_shipping_promotion
+msgid "Points"
+msgstr "Puntos"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_product_product

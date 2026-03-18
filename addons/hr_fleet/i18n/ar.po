@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 13:38+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/hr_fleet/"
@@ -37,12 +37,6 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_value\">موظف</span>\n"
 "                        <span class=\"o_stat_text\">واحد</span>"
-
-#. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
-msgid "<span>Unassign Company Car</span>"
-msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_ir_attachment
@@ -94,7 +88,6 @@ msgstr "حذف"
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_departure__display_name
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__display_name
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
@@ -126,11 +119,6 @@ msgid "Employee"
 msgstr "الموظف"
 
 #. module: hr_fleet
-#: model:ir.model,name:hr_fleet.model_hr_version
-msgid "Employee Contract"
-msgstr ""
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_departure
 msgid "Employee Departure"
 msgstr ""
@@ -147,12 +135,6 @@ msgid "Employee has been removed from %(car)s future driver list"
 msgstr ""
 
 #. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
-msgid "Fleet"
-msgstr ""
-
-#. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
 msgstr "السائق المستقبلي (الموظف)"
@@ -166,7 +148,6 @@ msgstr "السائق المستقبلي (الموظف)"
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_departure__id
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__id
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
 msgid "ID"
 msgstr "المُعرف"
@@ -187,6 +168,12 @@ msgid "Odometer log for a vehicle"
 msgstr "سجل عداد المسافات لمركبة"
 
 #. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/fleet_vehicle_assignation_log.py:0
+msgid "Ongoing"
+msgstr ""
+
+#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
 msgid "Public Employee"
 msgstr "موظف في القطاع العام"
@@ -199,13 +186,6 @@ msgid "Related Employee"
 msgstr "الموظف ذو الصلة"
 
 #. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__departure_do_unassign_company_car
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_departure__do_unassign_company_car
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_version__departure_do_unassign_company_car
-msgid "Release Company Car"
-msgstr "إطلاق سيارة الشركة"
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
 msgstr "الخدمات للمركبات"
@@ -214,8 +194,8 @@ msgstr "الخدمات للمركبات"
 #. odoo-python
 #: code:addons/hr_fleet/models/hr_employee_departure.py:0
 msgid ""
-"The future driver has been removed due to the end of collaboration with "
-"%(employee)s"
+"The future driver has been removed due to the end of collaboration with %"
+"(employee)s"
 msgstr ""
 
 #. module: hr_fleet
@@ -232,10 +212,18 @@ msgid ""
 msgstr ""
 
 #. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/fleet_vehicle_assignation_log.py:0
+msgid ""
+"This assignment overlaps with an existing assignment for %(vehicle)s "
+"(Driver: %(driver)s, Period: %(start)s to %(end)s)"
+msgstr ""
+
+#. module: hr_fleet
 #. odoo-javascript
 #: code:addons/hr_fleet/static/src/views/hr_fleet_kanban/hr_fleet_kanban_controller.xml:0
 msgid "Upload"
-msgstr "رفع"
+msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle

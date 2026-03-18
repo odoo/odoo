@@ -4,62 +4,47 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2025-10-16 01:46+0000\n"
-"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-04-11 14:18+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
 "base_install_request/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base_install_request
-#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello,\n"
-"        <br/><br/>\n"
-"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
-"has requested to activate the <span style=\"font-weight: bold;\" t-"
-"out=\"object.module_id.shortdesc\"/> module.\n"
-"        <br/><br/>\n"
-"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
-"quote=\"1\">\n"
-"            <t t-out=\"object.body_html\"/>\n"
-"        </blockquote>\n"
-"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
-"        <a t-attf-style=\"background-color: {{object.user_id.company_id."
-"email_secondary_color or '#875A7B'}}; padding:8px 16px 8px 16px; text-"
-"decoration:none; color: {{object.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id."
-"id }}/action-base_install_request.action_base_module_install_review?"
-"menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
-"        <br/><br/>\n"
-"        Thanks,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    \n"
-"</div>\n"
-"            "
+",\n"
+"                <br/><br/>"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid ""
+".\n"
+"                <br/><br/>"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "<span> They added the following comment: </span>"
 msgstr ""
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
-msgid "Activation Request of \"%s\""
-msgstr "Permintaan Pengaktifan \"%s\""
+msgid "Activation Request for %(module_desc)s"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -77,6 +62,11 @@ msgstr "Dibuat oleh"
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
 msgid "Created on"
 msgstr "Dibuat pada"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "Dear"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
@@ -115,11 +105,6 @@ msgid "Last Updated on"
 msgstr "Terakhir Diperbarui pada"
 
 #. module: base_install_request
-#: model:mail.template,name:base_install_request.mail_template_base_install_request
-msgid "Mail: Install Request"
-msgstr "Email: Permintaan Penginstalan"
-
-#. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
@@ -132,10 +117,10 @@ msgid "Module Activation Request"
 msgstr "Permintaan Pengaktifan Modul"
 
 #. module: base_install_request
-#: model:mail.template,subject:base_install_request.mail_template_base_install_request
-msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Module Activation Request for \"%(module_desc)s\""
 msgstr ""
-"Permintaan Pengaktifan Modul untuk \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
@@ -159,15 +144,30 @@ msgid "Request Access"
 msgstr "Minta Akses"
 
 #. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Request sent"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "Review Request"
+msgstr ""
+
+#. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
-msgid "Request Activation"
-msgstr "Minta Pengaktifan"
+msgid "Send"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Send to:"
 msgstr "Kirim ke:"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__qweb_template_xmlid
+msgid "Template Id"
+msgstr ""
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
@@ -179,6 +179,11 @@ msgstr "App-app berikut akan diinstal:"
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 msgid "The module is already installed."
 msgstr "Modul ini sudah diinstal."
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "To:"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -196,17 +201,6 @@ msgid "You are about to install an extra application"
 msgstr "Anda akan menginstal aplikasi ekstra"
 
 #. module: base_install_request
-#. odoo-python
-#: code:addons/base_install_request/wizard/base_module_install_request.py:0
-msgid "Your request has been successfully sent"
-msgstr "Permintaan Anda telah berhasil dikirim"
-
-#. module: base_install_request
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
-msgid ""
-"e.g. I'd like to use the SMS Marketing module to organize the promotion of "
-"our internal events, and exhibitions. I need access for 3 people of my team."
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "has requested access to"
 msgstr ""
-"misalnya saya ingin menggunakan modul SMS Marketing untuk mengatur promosi "
-"dari acara internal dan exhibition kami. Saya butuh akses untuk 3 orang "
-"dalam tim saya."

@@ -3,23 +3,23 @@
 # * sale_project
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2025-12-05 16:30+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-04-11 14:30+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "sale_project/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_project
 #. odoo-python
@@ -46,16 +46,7 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Actual Margins"
-msgstr ""
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-dollar text-success\" "
-"invisible=\"actual_margin &lt; 0\" title=\"On Track\"/>\n"
-"                    <i class=\"fa fa-fw o_button_icon fa-dollar text-"
-"danger\" invisible=\"actual_margin &gt;= 0\" title=\"Off Track\"/>"
+msgid "%(name)s's Real Margins"
 msgstr ""
 
 #. module: sale_project
@@ -106,17 +97,6 @@ msgstr ""
 "                        </span>"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
-"<span class=\"o_stat_text\">\n"
-"                            Sales Orders\n"
-"                        </span>"
-msgstr ""
-"<span class=\"o_stat_text\">\n"
-"                            Commandes clients\n"
-"                        </span>"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Projects</span>"
 msgstr "<span class=\"o_stat_text\"> Projets</span>"
@@ -128,13 +108,8 @@ msgstr "<span class=\"o_stat_text\">Tâches</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid "<span class=\"o_stat_text\">Actual Margin</span>"
-msgstr ""
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr "<span class=\"o_stat_text\">Aperçu</span>"
+msgid "<span class=\"o_stat_text\">Customer View</span>"
+msgstr "<span class=\"o_stat_text\">Vue client</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -144,18 +119,23 @@ msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Commande client</span>"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
+msgid "<span>)</span>"
+msgstr "<span>)</span>"
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
 "A project must be defined on the quotation %(order)s or on the form of "
 "products creating a task on order.\n"
-"The following product need a project in which to put its task: "
-"%(product_name)s"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
 "Un projet doit être défini sur le devis %(order)s ou sur le formulaire des "
 "produits créant une tâche lors de la commande.\n"
-"Le produit suivant nécessite un projet dans lequel enregistrer sa tâche : "
-"%(product_name)s"
+"Le produit suivant nécessite un projet dans lequel enregistrer sa tâche : %"
+"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -182,21 +162,15 @@ msgid ""
 msgstr ""
 
 #. module: sale_project
-#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
-#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
-msgid "Actual Margins"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model,name:sale_project.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Ligne analytique"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
-msgid "Based on Delivered Quantity (Manual)"
-msgstr "Basé sur la quantité livrée (manuelle)"
+msgid "Based on Delivery (Manual)"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
@@ -214,33 +188,23 @@ msgstr "Facturable"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
 msgid "Billable Type"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
-msgid "Billed Manually"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
-msgid "Billed at a Fixed price"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
-msgid "Billed on Milestones"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
-msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Type facturable"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Cancelled"
 msgstr "Annulé"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.sale_project_line_search
+msgid "Category"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__category_report
+msgid "Category Report"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
@@ -256,6 +220,11 @@ msgid ""
 msgstr ""
 "Convertir ce modèle en projet classique le dissociera de ses produits "
 "associés."
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__costs
+msgid "Costs"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -505,11 +474,6 @@ msgid "New project"
 msgstr "Nouveau projet"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
-msgid "Non-Billable"
-msgstr ""
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -527,14 +491,14 @@ msgid "Office Furniture Set (task)"
 msgstr "Mobilier de bureau (tâche)"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_other_costs
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__30_other_costs
 msgid "Other Costs"
-msgstr ""
+msgstr "Autres coûts"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__11_other_revenues
 msgid "Other Revenues"
-msgstr ""
+msgstr "Autres revenus"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -658,29 +622,55 @@ msgid "Quotation Template Line"
 msgstr "Ligne de modèle de devis"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
-msgid "Revenues Fixed Price"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Real Costs"
 msgstr ""
+
+#. module: sale_project
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
+msgid "Real Margin"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
+#: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
+msgid "Real Margins"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
+msgid "Revenues"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
+msgid "Revenues (Fixed Price)"
+msgstr "Revenus (prix fixe)"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
-msgid "Revenues Manual"
-msgstr ""
+msgid "Revenues (Manual)"
+msgstr "Revenus (manuel)"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
-msgid "Revenues Milestones"
-msgstr ""
+msgid "Revenues (Milestones)"
+msgstr "Revenus (jalons)"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__03_timesheet_revenues
-msgid "Revenues Timesheets"
-msgstr ""
+msgid "Revenues (Time & Material)"
+msgstr "Revenus (temps et matériel)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
 msgstr "Rôle pour les utilisateurs"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Sales"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -691,6 +681,11 @@ msgstr "Ventes & Facturation"
 #: model:ir.model,name:sale_project.model_sale_report
 msgid "Sales Analysis Report"
 msgstr "Rapport d'analyse des ventes"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Sales Items"
+msgstr "Articles de vente"
 
 #. module: sale_project
 #. odoo-python
@@ -748,7 +743,6 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items_dashboard
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales Order Items"
 msgstr "Articles de la commande client"
 
@@ -816,7 +810,7 @@ msgstr "Politique de facturation du service"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__10_service_revenues
 msgid "Service Revenues"
-msgstr ""
+msgstr "Revenus de services"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
@@ -901,17 +895,40 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid ""
-"The project couldn't be created as the Sales Order must be confirmed or is "
-"already linked to a project."
+"The project couldn't be created because you don't have the right to create a "
+"project"
 msgstr ""
-"Le projet n’a pas pu être créé car la commande client doit être confirmée ou "
-"est déjà liée à un projet."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
 msgstr "Cette tâche a été créée depuis : %(order_link)s (%(product_name)s)"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
+msgid "Timesheets (Fixed Price)"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
+msgid "Timesheets (Non-Billable)"
+msgstr "Feuilles de temps (non facturable)"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
+msgid "Timesheets (Manual) "
+msgstr "Feuilles de temps (manuel)"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
+msgid "Timesheets (Milestones)"
+msgstr "Feuilles de temps (jalons)"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
+msgid "Timesheets (Time & Materials)"
+msgstr "Feuilles de temps (temps & matériaux)"
 
 #. module: sale_project
 #. odoo-python
@@ -962,6 +979,7 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_vendor_bill
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Vendor Bills"
 msgstr "Factures fournisseurs"
@@ -988,8 +1006,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"Vous ne pouvez pas lier la ligne de la commande %(order_id)s - "
-"%(product_id)s à cette tâche car il s'agit d'une dépense refacturée."
+"Vous ne pouvez pas lier la ligne de la commande %(order_id)s - %"
+"(product_id)s à cette tâche car il s'agit d'une dépense refacturée."
 
 #. module: sale_project
 #. odoo-python

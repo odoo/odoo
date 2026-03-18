@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2026-01-24 12:34+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -147,10 +147,20 @@ msgid "Carrier name"
 msgstr "Nome Vettore"
 
 #. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
 msgstr "Costo: %(price).2f %(currency)s"
+
+#. module: stock_delivery
+#: model:ir.model,website_form_label:stock_delivery.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
@@ -183,6 +193,7 @@ msgstr "Paese di destinazione"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
@@ -191,7 +202,6 @@ msgstr "Paese di destinazione"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
@@ -241,6 +251,7 @@ msgstr "Codice SA"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
@@ -249,7 +260,6 @@ msgstr "Codice SA"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr "ID"
@@ -308,6 +318,12 @@ msgid "Package too heavy!"
 msgstr "Collo troppo pesante!"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
+#: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
+msgid "Pickup Location Data"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
@@ -342,11 +358,6 @@ msgstr "Costo reale"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
 msgstr "Etichetta di reso"
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_stock_return_picking
-msgid "Return Picking"
-msgstr "Prelievo di reso"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
@@ -392,11 +403,11 @@ msgstr "Inviare al mittente"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
-"Spedizione inviata al vettore %(carrier_name)s con numero di tracciabilità "
-"%(ref)s"
+"Spedizione inviata al vettore %(carrier_name)s con numero di tracciabilità %"
+"(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -446,6 +457,14 @@ msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
 "Campo tecnico che indica se l'unità di misura del carico è in kg o meno "
 "(cioè lb)"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_res_partner__pickup_location_data
+#: model:ir.model.fields,help:stock_delivery.field_res_users__pickup_location_data
+msgid ""
+"Technical field: information needed by delivery providers in case of pickup "
+"point addresses."
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code

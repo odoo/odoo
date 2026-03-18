@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-01-24 12:33+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-05-06 06:26+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_loyalty/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -118,6 +118,11 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Discount %(desc)s%(tax_str)s"
@@ -129,6 +134,7 @@ msgid "Discount & Loyalty"
 msgstr "値引 & ロイヤリティ"
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
@@ -189,6 +195,7 @@ msgid "How much point this reward costs on the loyalty card."
 msgstr "ロイヤリティカードでこの特典はいくつのポイントが必要か"
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
@@ -228,6 +235,11 @@ msgstr "発行済"
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
 msgstr "発行済 :"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr "仕訳明細"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -304,7 +316,7 @@ msgstr "特典が選択されていません。"
 #. odoo-python
 #: code:addons/sale_loyalty/tests/common.py:0
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "本クーポンによるリワードの請求はできません"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -576,6 +588,8 @@ msgid ""
 "You don't have enough coupon points to proceed. Please check your applied "
 "rewards and coupon balance. "
 msgstr ""
+"続行するにはクーポンポイントが不足しています。適用済みの特典とクーポンの残高"
+"をご確認ください。 "
 
 #. module: sale_loyalty
 #. odoo-python

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 10:03+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
@@ -117,7 +117,7 @@ msgstr "Mapowanie bazowego importu"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr "Partia"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -153,11 +153,11 @@ msgstr "Kolumna %(column)s zawiera nieprawidłowe wartości (wartość: %(value)
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"Kolumna %(column)s zawiera nieprawidłowe wartości. Błąd w wierszu %(line)d: "
-"%(error)s"
+"Kolumna %(column)s zawiera nieprawidłowe wartości. Błąd w wierszu %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -305,8 +305,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Błąd podczas importowania rekordów: wszystkie rzędy powinny być tej samej "
 "wielkości, ale rząd tytułowy ma %(title_row_entries)d wpisów, a pierwszy "
@@ -371,7 +371,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr "Finalizowanie obecnej partii przed przerwaniem..."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -437,10 +437,6 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"Jeżeli plik zawiera\n"
-"nazwy kolumn, Odoo może spróbować automatycznie wykryć\n"
-"pole odpowiadające kolumnie. To czyni importy\n"
-"prostszymi, zwłaszcza, gdy plik ma wiele kolumn."
 
 #. module: base_import
 #. odoo-python
@@ -475,7 +471,7 @@ msgstr "Plik importowy nie ma zawartości lub jest uszkodzony"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr "Podgląd importu nie powiódł się z powodu: \""
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -496,17 +492,17 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"Nieprawidłowy format komórki w rzędzie %(row)s, kolumna %(col)s: "
-"%(cell_value)s, z formatem: %(cell_format)s, ponieważ format "
-"(%(format_type)s) nie jest obsługiwany."
+"Nieprawidłowy format komórki w rzędzie %(row)s, kolumna %(col)s: %"
+"(cell_value)s, z formatem: %(cell_format)s, ponieważ format (%"
+"(format_type)s) nie jest obsługiwany."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
-"Nieprawidłowa wartość komórki w wierszu %(row)s, kolumnie %(col)s : "
-"%(cell_value)s"
+"Nieprawidłowa wartość komórki w wierszu %(row)s, kolumnie %(col)s : %"
+"(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -547,7 +543,7 @@ msgstr "Model"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr "Wystąpiło wiele błędów"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -577,7 +573,7 @@ msgstr "Nie wybrano żadnego pliku"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr "Nie znaleziono pasujących rekordów dla następującej nazwy"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -660,7 +656,7 @@ msgstr "Wyszukaj pole..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr "Zobacz możliwe wartości"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -872,7 +868,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr "Używaj pierwszego wiersza jako nagłówka"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -921,19 +917,19 @@ msgstr "Musisz skonfigurować co najmniej jedno pole do importu"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr "w wielu wierszach"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr "w wierszu"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr "w polu"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -945,7 +941,7 @@ msgstr "minuty"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr "więcej"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -957,7 +953,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr "poza"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

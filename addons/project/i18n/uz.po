@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-07 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -134,17 +134,10 @@ msgid "(due"
 msgstr "(muddati"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-#, fuzzy
-msgid "(last project update),"
-msgstr "(loyihaning so‘nggi yangilanishi),"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
-#, fuzzy
 msgid "(other) tasks to which you do not have access."
-msgstr "(boshqa) siz kira olmaydigan vazifalar."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -201,8 +194,9 @@ msgid ""
 "            Please take a moment to rate our services related to the <strong "
 "t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator()."
-"name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -223,25 +217,22 @@ msgid ""
 "top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/5\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Happy\" src=\"/rating/static/"
 "src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/3\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Neutral\" src=\"/rating/"
 "static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Unhappy\" src=\"/rating/"
 "static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
@@ -261,9 +252,10 @@ msgid ""
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">This satisfaction survey is sent <b t-out=\"object."
-"stage_id.rating_status_period or ''\">weekly</b> as long as the task is in "
-"the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"color: #454748;\">This satisfaction survey is sent <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">weekly</b> as long as the "
+"task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage."
+"</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Best regards,</td></tr>\n"
@@ -275,14 +267,16 @@ msgid ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id."
-"email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -290,56 +284,59 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div> <t t-set=\"access_token\" t-value=\"object."
-"_rating_get_access_token()\"/> <t t-set=\"partner\" t-value=\"object."
-"_rating_get_partner()\"/> <table border=\"0\" cellpadding=\"0\" "
-"cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\"> "
-"<tbody> <tr><td valign=\"top\" style=\"font-size: 13px;\"> <t t-if=\"partner."
-"name\"> Assalomu alaykum, <t t-out=\"partner.name or ''\">Brandon Freeman</"
-"t>,<br/><br/> </t> <t t-else=\"\"> Assalomu alaykum,<br/><br/> </t> Iltimos, "
-"<strong t-out=\"object.name or ''\">Rejalashtirish va budjet</strong> "
-"vazifasi bilan bog‘liq xizmatlarimizni baholash uchun bir daqiqa ajrating. "
-"<t t-if=\"object._rating_get_operator().name\"> Bu vazifa <strong t-"
+"<div> <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()"
+"\"/> <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/> <table "
+"border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\"> <tbody> <tr><td valign=\"top\" "
+"style=\"font-size: 13px;\"> <t t-if=\"partner.name\"> Assalomu alaykum, <t t-"
+"out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/> </t> <t t-"
+"else=\"\"> Assalomu alaykum,<br/><br/> </t> Iltimos, <strong t-"
+"out=\"object.name or ''\">Rejalashtirish va budjet</strong> vazifasi bilan "
+"bog‘liq xizmatlarimizni baholash uchun bir daqiqa ajrating. <t t-"
+"if=\"object._rating_get_operator().name\"> Bu vazifa <strong t-"
 "out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>ga "
 "topshirilgan.<br/> </t> <t t-else=\"\"> .<br/> </t> </td></tr> <tr><td "
 "style=\"text-align: center;\"> <table border=\"0\" cellpadding=\"0\" "
 "cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px "
-"0px; display: inline-table;\"> <tr><td style=\"font-size: 13px;text-align:"
-"center;\"> <strong>Xizmatlarimiz haqida fikringizni bildiring</strong><br/> "
-"<span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(quyidagi "
-"smayliklardan birini tanlang)</span> </td></tr> <tr><td style=\"font-size: "
-"13px;\"> <table style=\"width:100%;text-align:center;margin-top:2rem;\"> "
-"<tr> <td> <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-"
-"none' if object._rating_get_operator() else ''\"> <img alt=\"Xursand\" "
-"src=\"/rating/static/src/img/rating_5.png\" title=\"Xursand\"/> </a> </td> "
-"<td> <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' "
-"if object._rating_get_operator() else ''\"> <img alt=\"Neytral\" src=\"/"
-"rating/static/src/img/rating_3.png\" title=\"Neytral\"/> </a> </td> <td> <a "
-"t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\"> <img alt=\"Norozi\" src=\"/rating/static/"
-"src/img/rating_1.png\" title=\"Norozi\"/> </a> </td> </tr> </table> </td></"
-"tr> </table> </td></tr> <tr><td valign=\"top\" style=\"font-size: 13px;\"> "
-"Fikr-mulohazalaringiz uchun tashakkur. Bu bizga doimiy ravishda "
+"0px; display: inline-table;\"> <tr><td style=\"font-size: 13px;text-"
+"align:center;\"> <strong>Xizmatlarimiz haqida fikringizni bildiring</"
+"strong><br/> <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">(quyidagi smayliklardan birini tanlang)</span> </td></tr> <tr><td "
+"style=\"font-size: 13px;\"> <table style=\"width:100%;text-"
+"align:center;margin-top:2rem;\"> <tr> <td> <a t-attf-href=\"/rate/"
+"{{ access_token }}/5\" t-att-class=\"'pe-none' if "
+"object._rating_get_operator() else ''\"> <img alt=\"Xursand\" src=\"/rating/"
+"static/src/img/rating_5.png\" title=\"Xursand\"/> </a> </td> <td> <a t-attf-"
+"href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if "
+"object._rating_get_operator() else ''\"> <img alt=\"Neytral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neytral\"/> </a> </td> <td> <a t-attf-"
+"href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if "
+"object._rating_get_operator() else ''\"> <img alt=\"Norozi\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Norozi\"/> </a> </td> </tr> </table> </"
+"td></tr> </table> </td></tr> <tr><td valign=\"top\" style=\"font-size: 13px;"
+"\"> Fikr-mulohazalaringiz uchun tashakkur. Bu bizga doimiy ravishda "
 "takomillashishga yordam beradi. <t t-if=\"object.stage_id.rating_status == "
 "'stage'\"> <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">Ushbu qoniqish so‘rovnomasi vazifangiz <b t-out=\"object."
-"stage_id.name or ''\">Jarayonda</b> bosqichiga o‘tkazilganligi sababli "
-"yuborildi</span> </t> <t t-if=\"object.stage_id.rating_status == "
+"color: #454748;\">Ushbu qoniqish so‘rovnomasi vazifangiz <b t-"
+"out=\"object.stage_id.name or ''\">Jarayonda</b> bosqichiga o‘tkazilganligi "
+"sababli yuborildi</span> </t> <t t-if=\"object.stage_id.rating_status == "
 "'periodic'\"> <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">Ushbu qoniqish so‘rovnomasi vazifa <b t-out=\"object."
-"stage_id.name or ''\">Jarayonda</b> bosqichida bo‘lgan muddatda <b t-"
-"out=\"object.stage_id.rating_status_period or ''\">har hafta</b> yuboriladi."
-"</span> </t> </td></tr> <tr><td><br/>Hurmat bilan,</td></tr> <tr><td> <t t-"
-"out=\"object.project_id.company_id.name or ''\">Sizning kompaniyangiz</t> </"
-"td></tr> <tr><td style=\"opacity: 0.5;\"> <t t-out=\"object.project_id."
-"company_id.phone or ''\">1 650-123-4567</t> <t t-if=\"object.project_id."
-"company_id.email\"> | <a t-attf-href=\"mailto:{{ object.project_id."
-"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a> </"
-"t> <t t-if=\"object.project_id.company_id.website\"> | <a t-attf-"
-"href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:"
-"none; color: #454748;\" t-out=\"object.project_id.company_id.website or "
-"''\">http://www.example.com</a> </t> </td></tr> </tbody> </table> </div>"
+"color: #454748;\">Ushbu qoniqish so‘rovnomasi vazifa <b t-"
+"out=\"object.stage_id.name or ''\">Jarayonda</b> bosqichida bo‘lgan muddatda "
+"<b t-out=\"object.stage_id.rating_status_period or ''\">har hafta</b> "
+"yuboriladi.</span> </t> </td></tr> <tr><td><br/>Hurmat bilan,</td></tr> "
+"<tr><td> <t t-out=\"object.project_id.company_id.name or ''\">Sizning "
+"kompaniyangiz</t> </td></tr> <tr><td style=\"opacity: 0.5;\"> <t t-"
+"out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t> <t t-"
+"if=\"object.project_id.company_id.email\"> | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a> </t> <t t-"
+"if=\"object.project_id.company_id.website\"> | <a t-attf-"
+"href=\"{{ object.project_id.company_id.website }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a> </t> </td></tr> </tbody> </table> </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -387,6 +384,34 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2 fa fa-envelope\" "
+"title=\"Email\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2 fa fa-phone\" "
+"title=\"Phone\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2 fa fa-tag\" "
+"title=\"Tags\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2\" title=\"Customer\" "
+"name=\"partner_id\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, fuzzy
 msgid ""
@@ -406,6 +431,12 @@ msgstr ""
 "title=\"Xafa\"/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+msgid "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Info\"/>"
+msgstr "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Ma'lumot\"/>"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 #, fuzzy
 msgid "<i class=\"fa fa-lock\"/> Private"
@@ -413,47 +444,29 @@ msgstr "<i class=\"fa fa-lock\"/> Shaxsiy"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
+msgstr "<i class=\"fa fa-warning pe-2\" title=\"Ogohlantirish\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
 msgid ""
-"<i class=\"fa o_button_icon fa-check text-success\" "
-"invisible=\"next_milestone_status == 'off_track'\" title=\"On Track\"/>\n"
+"<i class=\"fa o_button_icon fa-check\" invisible=\"next_milestone_status == "
+"False or next_milestone_status != 'on_track'\" title=\"On Track\"/>\n"
 "                            <i class=\"fa o_button_icon fa-check text-"
-"danger\" invisible=\"next_milestone_status == 'on_track'\" title=\"Off "
+"success\" invisible=\"next_milestone_status != 'next_track'\" title=\"On "
+"Track\"/>\n"
+"                            <i class=\"fa o_button_icon fa-check text-"
+"danger\" invisible=\"next_milestone_status != 'off_track'\" title=\"Off "
 "Track\"/>"
 msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"o_input_box_overlay_start fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-lightbulb-o\" title=\"Info\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"o_input_box_overlay_start fa fa-phone\" title=\"Phone\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"o_input_box_overlay_start fa fa-tag\" title=\"Tags\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-user\" title=\"Customer\" "
-"name=\"partner_id\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-warning\" title=\"Warning\"/>"
-msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"Xursand\"/> <i class=\"fa fa-fw "
+"o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or "
+"rating_avg &gt;= 3.66\" title=\"Betaraf\"/> <i class=\"fa fa-fw "
+"o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" "
+"title=\"Xafa\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -522,28 +535,55 @@ msgid "<span class=\"fw-normal\"> Tasks</span>"
 msgstr "<span class=\"fw-normal\"> Vazifalar</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">days</"
+"<span class=\"o_field_widget ps-1\" invisible=\"closed_task_count == 0\">(</"
 "span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"o_input_box_overlay_start\">@</span>"
+#, fuzzy
+msgid "<span class=\"o_field_widget ps-1\">(</span>"
+msgstr "<span class=\"o_stat_text\">Kichik vazifalar</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"o_field_widget\" invisible=\"closed_task_count == 0\"> ) </"
+"span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"o_stat_text\">Average Rating</span>"
-msgstr ""
+#, fuzzy
+msgid "<span class=\"o_field_widget\"> / 5 </span>"
+msgstr "<span class=\"o_stat_text\">So‘nggi baholash</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+msgid "<span class=\"o_field_widget\"> / </span>"
+msgstr "<span class=\"o_stat_text\">So‘nggi baholash</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+msgid "<span class=\"o_field_widget\">%)</span>"
+msgstr "<span class=\"o_stat_text\">Kichik vazifalar</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
 msgstr "<span class=\"o_stat_text\">To‘xtatilgan vazifalar</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"o_stat_text\">Burndown</span>\n"
+"                                <span class=\"o_stat_text\">Chart</span>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -562,6 +602,17 @@ msgstr ""
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
 msgstr "<span class=\"o_stat_text\">Asosiy vazifa</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Rating</span>"
+msgstr "<span class=\"o_stat_text\">So‘nggi baholash</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_stat_text\">Status</span>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -600,6 +651,12 @@ msgid "<span>View</span>"
 msgstr "<span>Ko‘rish</span>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "<span>days</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #, fuzzy
 msgid "<strong>Deadline:</strong>"
@@ -628,12 +685,6 @@ msgstr "<strong>Loyiha:</strong>"
 #, fuzzy
 msgid "<u>Milestones</u>"
 msgstr "<u>Muhim bosqichlar</u>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-#, fuzzy
-msgid "=&gt;"
-msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -668,9 +719,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
-#, fuzzy
-msgid "A private task cannot have a parent."
-msgstr "Shaxsiy vazifaning yuqori darajadagi vazifasi bo‘lishi mumkin emas."
+msgid "A private (non-template) task cannot have a parent."
+msgstr ""
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -800,9 +850,8 @@ msgstr "Faoliyat turi"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
-#, fuzzy
 msgid "Add Sub-task"
-msgstr "Kichik vazifa qo‘shish"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -942,6 +991,12 @@ msgid "All"
 msgstr "Hammasi"
 
 #. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
+msgid "All Projects"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
 #: model:ir.ui.menu,name:project.menu_project_management_all_tasks
 #, fuzzy
@@ -991,14 +1046,6 @@ msgstr ""
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr "Loyihalaringiz jarayoni va xodimlaringiz faoliyatini tahlil qiling."
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_share_wizard__share_link
-#, fuzzy
-msgid "Anyone with this link can access the project in read mode."
-msgstr ""
-"Ushbu havolaga ega bo‘lgan har qanday kishi loyihaga faqat o‘qish rejimida "
-"kira oladi."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -1164,13 +1211,10 @@ msgstr "Xavf ostida"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
-"Barcha hujjatlar yoki havolalarni to‘g‘ridan-to‘g‘ri vazifaga biriktiring, "
-"shunda barcha tadqiqot ma'lumotlari bir joyda bo‘ladi."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1217,15 +1261,15 @@ msgstr "Avtomatik Kanban holati"
 msgid ""
 "Automatically modify the state when the customer replies to the feedback for "
 "this stage.\n"
-" * Good feedback from the customer will update the state to "
-"'Approved' (green bullet).\n"
-" * Neutral or bad feedback will set the kanban state to 'Changes "
-"Requested' (orange bullet).\n"
+" * Good feedback from the customer will update the state to 'Approved' "
+"(green bullet).\n"
+" * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
+"(orange bullet).\n"
 msgstr ""
 "Mijoz ushbu bosqich bo‘yicha fikr-mulohaza bildirganida holatni avtomatik "
-"o‘zgartirish.  * Mijozdan olingan ijobiy fikr holatni "
-"\"Tasdiqlangan\" (yashil belgi) ga o‘zgartiradi.  * Neytral yoki salbiy fikr "
-"Kanban holatini \"O‘zgarishlar so‘raldi\" (to‘q sariq belgi) ga o‘zgartiradi."
+"o‘zgartirish.  * Mijozdan olingan ijobiy fikr holatni \"Tasdiqlangan\" "
+"(yashil belgi) ga o‘zgartiradi.  * Neytral yoki salbiy fikr Kanban holatini "
+"\"O‘zgarishlar so‘raldi\" (to‘q sariq belgi) ga o‘zgartiradi."
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -1346,7 +1390,6 @@ msgstr "Xato"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_burndown_chart
 #: model:ir.embedded.actions,name:project.project_embedded_action_update_burndown_chart
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1357,6 +1400,7 @@ msgstr "Ishni bajarish grafigi"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_canceled
@@ -1364,9 +1408,18 @@ msgstr "Ishni bajarish grafigi"
 #: model:project.task.type,name:project.project_personal_stage_admin_6
 #: model:project.task.type,name:project.project_personal_stage_demo_6
 #: model:project.task.type,name:project.project_stage_3
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #, fuzzy
 msgid "Cancelled"
 msgstr "Bekor qilindi"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid ""
+"Cannot convert back to regular task because the task has no project defined "
+"but has a parent or sub-tasks."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1439,29 +1492,11 @@ msgid "Closed On"
 msgstr "Yopilgan"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#, fuzzy
-msgid "Closed Tasks"
-msgstr "Yopiq vazifalar"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 #, fuzzy
 msgid "Closed state"
 msgstr "Yopiq holat"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
-#, fuzzy
-msgid "Closed tasks"
-msgstr "Yopiq vazifalar"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
-#, fuzzy
-msgid "Closing Stage"
-msgstr "Yakunlash bosqichi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__partner_id
@@ -1510,15 +1545,11 @@ msgstr "Rang"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo "
 "designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
-"Elektron pochta shlyuzi orqali vazifa bo‘yicha mijozlar bilan muloqot "
-"qiling. Vazifaga logotip dizaynlarini biriktiring, shunda ma'lumotlar "
-"dizaynerlardan futbolkani chop etuvchi ishchilarga yetib boradi."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1556,12 +1587,6 @@ msgstr "Sozlamalarni moslash"
 #, fuzzy
 msgid "Configuration"
 msgstr "Konfiguratsiya"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-#, fuzzy
-msgid "Configure Stages"
-msgstr "Bosqichlarni sozlash"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1854,6 +1879,7 @@ msgstr "Mijoz portali URL manzili"
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, fuzzy
 msgid "Customer Ratings"
 msgstr "Mijoz baholashlari"
@@ -1867,15 +1893,11 @@ msgstr "Mijoz baholashlari holati"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and "
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
-"Mijozlar elektron pochta orqali fikr-mulohazalarini yuborishadi; Odoo "
-"vazifalarni avtomatik tarzda yaratadi va siz bevosita vazifa bo‘yicha "
-"muloqot qila olasiz."
 
 #. module: project
 #. odoo-python
@@ -2223,6 +2245,7 @@ msgstr "Ko‘rsatiladigan nom"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_done
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_done
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_done
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_done
@@ -2230,6 +2253,7 @@ msgstr "Ko‘rsatiladigan nom"
 #: model:project.task.type,name:project.project_personal_stage_admin_5
 #: model:project.task.type,name:project.project_personal_stage_demo_5
 #: model:project.task.type,name:project.project_stage_2
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #, fuzzy
 msgid "Done"
 msgstr "Bajarildi"
@@ -2362,10 +2386,8 @@ msgstr "Xatolik! Vazifalarning rekursiv ierarxiyasini yaratib bo‘lmaydi."
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
 msgstr ""
-"Hamma g‘oya taklif qilishi mumkin, va Muharrir eng yaxshilarini belgilaydi"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_02
@@ -2434,9 +2456,8 @@ msgstr "Yig‘ilgan"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
-#, fuzzy
 msgid "Follow"
-msgstr "Kuzatish"
+msgstr ""
 
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
@@ -2559,13 +2580,10 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
 msgstr ""
-"Yangi Loyihangizning vazifalari doirasida g‘oyalaringizni to‘plang va ularni "
-"vazifalar muhokamasi qismida muhokama qiling."
 
 #. module: project
 #. odoo-javascript
@@ -2589,6 +2607,11 @@ msgstr "tabassum"
 #, fuzzy
 msgid "Has Message"
 msgstr "Xabar mavjud"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__has_project_template
+msgid "Has Project Template"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
@@ -2873,12 +2896,6 @@ msgid "Invited internal users"
 msgstr "Taklif qilingan ichki foydalanuvchilar"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#, fuzzy
-msgid "Is Closed (Burn-up Chart)"
-msgstr "Yopiq (O‘sish diagrammasi)"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
@@ -3150,9 +3167,8 @@ msgstr "Logotip dizayni"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "Look for the"
-msgstr "Qidirish"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -3164,14 +3180,11 @@ msgstr "Past muhimlik darajasi"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
 "acquired projects,\n"
 "      assign them and use the"
 msgstr ""
-"Kanban ko‘rinishi yordamida loyihangizning hayotiy siklini boshqaring. Yangi "
-"qo‘shilgan loyihalarni qo‘shing, ularni tayinlang va foydalaning"
 
 #. module: project
 #. odoo-javascript
@@ -3710,6 +3723,8 @@ msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr "Faqat jpeg, png, bmp va tiff formatidagi rasmlarni biriktirish mumkin."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_open
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Open"
@@ -3717,7 +3732,6 @@ msgstr "Ochiq"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #, fuzzy
 msgid "Open Tasks"
 msgstr "Ochiq topshiriqlar"
@@ -3728,12 +3742,6 @@ msgstr "Ochiq topshiriqlar"
 #, fuzzy
 msgid "Open sub-tasks notebook section"
 msgstr "Quyi topshiriqlar daftari bo‘limini ochish"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
-#, fuzzy
-msgid "Open tasks"
-msgstr "Ochiq topshiriqlar"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3750,10 +3758,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "Organize priorities amongst orders using the"
 msgstr ""
-"Buyurtmalar orasidagi ustuvorliklarni quyidagilar yordamida tashkil qiling:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3949,9 +3955,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr "Muhim vazifalarni belgilash orqali vazifalaringizga ustuvorlik bering"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -3974,28 +3979,18 @@ msgid "Private"
 msgstr "Shaxsiy"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid ""
+"Private (non-template) tasks cannot be converted into sub-tasks. Please set "
+"a project on the task to gain access to this feature."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, fuzzy
 msgid "Private Tasks"
 msgstr "Shaxsiy vazifalar"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-#, fuzzy
-msgid ""
-"Private tasks cannot be converted into sub-tasks. Please set a project on "
-"the task to gain access to this feature."
-msgstr ""
-"Shaxsiy vazifalarni quyi vazifalarga aylantirish mumkin emas. Bu funksiyadan "
-"foydalanish uchun vazifaga loyiha belgilang"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-#, fuzzy
-msgid "Private tasks cannot be converted into templates"
-msgstr "Shaxsiy vazifalarni andozalarga aylantirish mumkin emas"
 
 #. module: project
 #: model:project.project,name:project.project_template_1
@@ -4242,6 +4237,11 @@ msgid "Project description..."
 msgstr "Loyiha tavsifi..."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Project name"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_project_template_role_to_users_map
 #, fuzzy
 msgid "Project role to users mapping"
@@ -4356,12 +4356,6 @@ msgstr ""
 #, fuzzy
 msgid "Properties"
 msgstr "Xususiyatlar"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
-#, fuzzy
-msgid "Public Link"
-msgstr "Ochiq havola"
 
 #. module: project
 #. odoo-javascript
@@ -4743,9 +4737,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
-#, fuzzy
 msgid "SAVE"
-msgstr "SAQLASH"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4970,6 +4963,11 @@ msgid "Settings"
 msgstr "Sozlamalar"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
+msgid "Share Link"
+msgstr ""
+
+#. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
@@ -4982,6 +4980,7 @@ msgstr "Loyihani ulashish"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
+#: model:ir.actions.server,name:project.action_server_share_task
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 #, fuzzy
 msgid "Share Task"
@@ -4990,15 +4989,15 @@ msgstr "Vazifani ulashish"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-msgid "Sharing is not available for this project visibility setting."
+#: code:addons/project/models/project_task.py:0
+msgid "Sharing is not available with this project visibility setting."
 msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
-#, fuzzy
 msgid "Show Sub-Tasks"
-msgstr "Quyi vazifalarni ko‘rsatish"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -5034,12 +5033,6 @@ msgid "Show to all companies"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-#, fuzzy
-msgid "Since"
-msgstr "...dan boshlab"
-
-#. module: project
 #: model:project.tags,name:project.project_tags_12
 #, fuzzy
 msgid "Social"
@@ -5065,8 +5058,8 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Tanlangan tahliliy hisoblarning ba'zilari loyiha bilan bog‘liq: "
-"%(accountList)s.  Bu hisoblarni arxivlash ularning tegishli loyihalari uchun "
+"Tanlangan tahliliy hisoblarning ba'zilari loyiha bilan bog‘liq: %"
+"(accountList)s.  Bu hisoblarni arxivlash ularning tegishli loyihalari uchun "
 "vaqt jadvallarini kiritish imkoniyatini yo‘qotadi. Davom etishni xohlaysizmi?"
 
 #. module: project
@@ -5080,17 +5073,12 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "Sort your tasks by sprint using milestones, tags, or a dedicated property. "
 "At the end of each sprint, just pick the remaining tasks in your list and "
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"Vazifalaringizni bosqichlar, teglar yoki maxsus xususiyat yordamida sprint "
-"bo‘yicha tartiblang. Har bir sprint oxirida ro‘yxatingizdagi qolgan "
-"vazifalarni tanlang va ularni bosqich, teg yoki xususiyatni tahrirlash "
-"orqali bir vaqtning o‘zida keyingi sprintga o‘tkazing."
 
 #. module: project
 #. odoo-javascript
@@ -5128,17 +5116,12 @@ msgstr "Sprint davom etmoqda"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, fuzzy
 msgid "Stage"
 msgstr "Bosqich"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#, fuzzy
-msgid "Stage (Burndown Chart)"
-msgstr "Bosqich (Burndown diagrammasi)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -5429,7 +5412,6 @@ msgstr "Vazifa bosqichlari"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
-#: model_terms:ir.ui.view,arch_db:project.view_task_template_search_form
 #, fuzzy
 msgid "Task Templates"
 msgstr "Vazifa andozalari"
@@ -5495,6 +5477,12 @@ msgid "Task done"
 msgstr "Vazifa bajarildi"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "Task templates cannot be shared."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 #, fuzzy
 msgid "Task:"
@@ -5554,6 +5542,12 @@ msgstr "Vazifalarni boshqarish"
 #, fuzzy
 msgid "Tasks Stages"
 msgstr "Vazifa bosqichlari"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
+msgid "Tasks Templates"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -5636,12 +5630,6 @@ msgstr "Burndown diagrammasi sana bo‘yicha guruhlanishi kerak"
 #, fuzzy
 msgid "The current user's personal stage."
 msgstr "Joriy foydalanuvchining shaxsiy bosqichi"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
-#, fuzzy
-msgid "The current user's personal task stage."
-msgstr "Joriy foydalanuvchining shaxsiy vazifa bosqichi"
 
 #. module: project
 #. odoo-python
@@ -5758,13 +5746,8 @@ msgstr "O‘sha paytda vazifa tavsifi bo‘sh edi."
 #. module: project
 #. odoo-python
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
-#, fuzzy
-msgid ""
-"The view must be grouped by date and by Stage - Burndown chart or Is Closed "
-"- Burnup chart"
+msgid "The view must be grouped by date and by Stage - Burndown chart"
 msgstr ""
-"Ko‘rish sana va Bosqich - Burndown diagrammasi yoki Yopilgan - Burnup "
-"diagrammasi bo‘yicha guruhlanishi kerak"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -5886,8 +5869,8 @@ msgid ""
 "stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
-"Bu loyiha %(project_company)s bilan bog‘langan, tanlangan bosqich esa "
-"%(stage_company)s ga tegishli. Ko‘rib chiqish uchun bir nechta variant "
+"Bu loyiha %(project_company)s bilan bog‘langan, tanlangan bosqich esa %"
+"(stage_company)s ga tegishli. Ko‘rib chiqish uchun bir nechta variant "
 "mavjud: loyihadan yoki bosqichdan kompaniya nomini olib tashlash. Yoki ushbu "
 "yozuvlarni bir xil kompaniyaga moslashtirish uchun kompaniya ma'lumotlarini "
 "yangilashingiz mumkin."
@@ -5947,9 +5930,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
-#, fuzzy
 msgid "This task is currently blocked by"
-msgstr "Bu vazifa hozirda quyidagi tufayli to‘xtatib qo‘yilgan"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -6088,9 +6070,8 @@ msgstr "Bugungi faoliyatlar"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
-#, fuzzy
 msgid "Top Menu"
-msgstr "Yuqori menyu"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -6182,9 +6163,8 @@ msgstr "Bekor qilish"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
-#, fuzzy
 msgid "Unfollow"
-msgstr "Obunani bekor qilish"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -6304,9 +6284,8 @@ msgstr "Vazifalaringizni turkumlash uchun teglardan foydalaning."
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "Use the"
-msgstr "... dan foydalanish"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -6369,6 +6348,12 @@ msgstr "Foydalanuvchi xodimlaringiz jadvalidan foydalanishi mumkin"
 #, fuzzy
 msgid "View"
 msgstr "Ko‘rish"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
+msgid "View More"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -6542,6 +6527,12 @@ msgstr "Bu bosqichlardagi barcha vazifalarni arxivdan chiqarishni xohlaysizmi?"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
+msgid "Write a message…"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 #, fuzzy
 msgid "Write a task name"
@@ -6573,8 +6564,8 @@ msgstr "Yillar"
 #, fuzzy
 msgid ""
 "You are not able to switch the company of this stage to %(company_name)s "
-"since it currently includes projects associated with "
-"%(project_company_name)s. Please ensure that this stage exclusively consists "
+"since it currently includes projects associated with %"
+"(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
 "Bu bosqichdagi kompaniyani %(company_name)s ga o‘zgartira olmaysiz, chunki u "
@@ -6704,9 +6695,15 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "Your managers decide which feedback is accepted"
-msgstr "Qaysi fikr-mulohaza qabul qilinishini menejerlaringiz hal qiladi"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
+#: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
+msgid "\\t- ${"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -6723,18 +6720,16 @@ msgstr "tahliliy"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "and"
-msgstr "va"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
-msgstr "va qaysi fikr-mulohazalar \"Rad etilgan\" ustuniga ko‘chirilishini."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -6745,9 +6740,8 @@ msgstr "tayinlanganlar"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "button."
-msgstr "tugmasi."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_list
@@ -6828,28 +6822,22 @@ msgstr "masalan: Mahsulotni ishga tushirish"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "icon to organize your daily activities."
-msgstr "belgisi kundalik faoliyatingizni tashkil qilish uchun."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
-"belgisi boshqa vazifalarni kutayotgan vazifalarni ko‘rish uchun. Vazifa "
-"bajarilgan yoki bekor qilingan deb belgilanganda, uning barcha "
-"bog‘liqliklari ochiladi."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "icon."
-msgstr "belgisi."
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6873,42 +6861,34 @@ msgstr "erishildi deb belgilashga tayyor"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
-"holati vazifani o‘zgartirish yoki muhokama qilish zarurligini ko‘rsatadi."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
-"holati hamkasblaringizga vazifa keyingi bosqich uchun tasdiqlangani haqida "
-"xabar beradi."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "state to mark the task as cancelled."
-msgstr "holati vazifani bekor qilingan deb belgilaydi."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "state to mark the task as complete."
-msgstr "holati vazifani bajarilgan deb belgilaydi."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
-#, fuzzy
 msgid "sub-tasks)"
-msgstr "kichik vazifalar)"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -6918,32 +6898,18 @@ msgid "task"
 msgstr "vazifa"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-#, fuzzy
-msgid "the deadline for the following milestone has been updated:"
-msgstr "quyidagi muhim bosqichning muddati yangilandi:"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-#, fuzzy
-msgid "the deadline for the following milestones has been updated:"
-msgstr "quyidagi muhim bosqichlarning muddatlari yangilandi:"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid ""
 "to define if the project is\n"
 "      ready for the next step."
-msgstr "loyiha keyingi qadamga tayyor yoki yo‘qligini aniqlash uchun."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#, fuzzy
 msgid "to signalize what is the current status of your Idea."
-msgstr "g‘oyangizning joriy holatini ko‘rsatish uchun."
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6976,8 +6942,8 @@ msgid "👤 Unassigned"
 msgstr "👤 Tayinlanmagan"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 #, fuzzy
 msgid "🔒 Private"
 msgstr "🔒 Shaxsiy"

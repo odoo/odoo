@@ -3,22 +3,22 @@
 # * mail_group
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2025-11-28 14:27+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-04-30 09:37+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "mail_group/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -75,9 +75,9 @@ msgid ""
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hallo,<br/><br/>\n"
-"                Sie möchten sich auf die Mailingliste <strong t-out=\"object."
-"name or ''\"/> setzen lassen.\n"
+"                Guten Tag,<br/><br/>\n"
+"                Sie möchten sich auf die Mailingliste <strong t-"
+"out=\"object.name or ''\"/> setzen lassen.\n"
 "                <br/><br/>\n"
 "                Bestätigen Sie dies über den folgenden Link: <strong t-"
 "if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
@@ -106,7 +106,7 @@ msgid ""
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hallo,<br/><br/>\n"
+"                Guten Tag,<br/><br/>\n"
 "                Sie möchten von der Mailingliste <strong t-out=\"object.name "
 "or ''\"/> entfernt werden.\n"
 "                <br/><br/>\n"
@@ -124,15 +124,16 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-out=\"object."
-"mail_group_id.name\"/> mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"                <p>Hallo <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Guten Tag <t t-out=\"object.partner_id.name or ''\"/>,</"
+"p>\n"
 "                <p>Unten finden Sie die Richtlinien der Mailingliste <t t-"
 "out=\"object.mail_group_id.name\"/>.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
@@ -689,7 +690,7 @@ msgstr "Richtlinien der Gruppe {{ object.mail_group_id.name }}"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Hello"
-msgstr "Hallo"
+msgstr "Guten Tag"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
@@ -701,7 +702,7 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
-"Hallo,\n"
+"Guten Tag,\n"
 "    <br/><br/>\n"
 "    die Mailingliste, die Sie erreichen möchten, wurde geschlossen und nimmt "
 "keine neuen Nachrichten mehr an.\n"
@@ -1583,11 +1584,6 @@ msgstr "Sie können keine Anweisungen für eine geschlossene Gruppe versenden"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
 msgstr "Sie haben Nachrichten zu moderieren, bitte fahren Sie fort."
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
-msgid "_______________________________________________"
-msgstr "_______________________________________________"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form

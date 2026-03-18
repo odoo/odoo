@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-05-07 17:35+0000\n"
 "PO-Revision-Date: 2025-11-15 14:15+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/repair/"
@@ -249,8 +249,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. "
-"%(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
+"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. %"
+"(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
 "želite promijeniti, arhivirajte proizvod i stvorite novi."
 
 #. module: repair
@@ -689,6 +689,8 @@ msgid "My Activity Deadline"
 msgstr "Rok za moju aktivnost"
 
 #. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -915,11 +917,6 @@ msgstr "Praćenje proizvoda"
 #: model:ir.model,name:repair.model_product_product
 msgid "Product Variant"
 msgstr "Varijanta proizvoda"
-
-#. module: repair
-#: model:ir.ui.menu,name:repair.repair_menu_product_product
-msgid "Product Variants"
-msgstr "Varijante proizvoda"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id

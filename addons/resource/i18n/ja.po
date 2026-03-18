@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 12:30+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-04-30 07:41+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "resource/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -40,6 +40,12 @@ msgstr "%s (コピー)"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "2 Week's Calendar"
 msgstr "2 週間カレンダー"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/res_company.py:0
+msgid "40 hours/week"
+msgstr "週40時間"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -64,7 +70,7 @@ msgstr "<span> 時間/週</span>"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__count_as__absence
 msgid "Absence"
-msgstr ""
+msgstr "欠勤"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -151,17 +157,17 @@ msgstr "会社"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__count_as
 msgid "Count As"
-msgstr ""
+msgstr "以下としてカウント"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_id
 msgid "Country"
-msgstr ""
+msgstr "国"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "国コード"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
@@ -233,7 +239,7 @@ msgstr "表示名"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_based
 msgid "Duration Based"
-msgstr ""
+msgstr "所要時間ベース"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
@@ -313,7 +319,7 @@ msgstr "時間"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__hours_per_day
 #: model:ir.model.fields,field_description:resource.field_resource_resource__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "1日あたりの時間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
@@ -565,12 +571,6 @@ msgid "Share User"
 msgstr "共有ユーザ"
 
 #. module: resource
-#. odoo-python
-#: code:addons/resource/models/res_company.py:0
-msgid "Standard 40 hours/week"
-msgstr "標準40時間/週"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 msgid "Start Date"
 msgstr "開始日"
@@ -615,6 +615,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"2文字のISO国コードです。 \n"
+"この項目は、クイック検索に使用できます。"
 
 #. module: resource
 #. odoo-python
@@ -622,21 +624,21 @@ msgstr ""
 msgid ""
 "The average hours per day is too high compared to the number of hours per "
 "week"
-msgstr ""
+msgstr "1日あたりの平均時間が、週あたりの時間数と比べて大きすぎます"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_resource.py:0
 msgid ""
 "The average hours per day is too low compared to the number of hours per week"
-msgstr ""
+msgstr "1日あたりの平均時間が、週あたりの時間数と比べて小さすぎます"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid ""
-"The current week (from %(first_day)s to %(last_day)s) corresponds to "
-"%(number)s week."
+"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
+"(number)s week."
 msgstr ""
 "現在の週(%(first_day)s から %(last_day)s まで)は、第 %(number)s 週にあたりま"
 "す。"
@@ -722,7 +724,6 @@ msgid "User"
 msgstr "ユーザ"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "全員に表示"
@@ -842,7 +843,7 @@ msgstr "勤務スケジュール 第2週"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "You cannot compute the intervals without a calendar on no resource."
-msgstr ""
+msgstr "リソースにカレンダーがない場合、間隔を計算することはできません。"
 
 #. module: resource
 #. odoo-python
@@ -850,6 +851,8 @@ msgstr ""
 msgid ""
 "You cannot define hours and duration based attendances for the same day."
 msgstr ""
+"同じ日に、時間ベースの出勤と所要時間ベースの出勤を同時に設定することはできま"
+"せん。"
 
 #. module: resource
 #. odoo-python
