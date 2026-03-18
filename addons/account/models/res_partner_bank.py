@@ -4,7 +4,6 @@ from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
-from odoo.tools.bank_account_number import format_account_number
 
 
 class ResPartnerBank(models.Model):
@@ -335,9 +334,6 @@ class ResPartnerBank(models.Model):
             vals['allow_out_payment'] = False
 
         for vals in vals_list:
-            if vals.get('account_number'):
-                vals['account_number'] = format_account_number(self.env, vals['account_number'])
-
             if (partner_id := vals.get('partner_id')) and (account_number := vals.get('account_number')):
                 archived_res_partner_bank = self.env['res.partner.bank'].search([('active', '=', False), ('partner_id', '=', partner_id), ('account_number', '=', account_number)])
                 if archived_res_partner_bank:
@@ -356,9 +352,6 @@ class ResPartnerBank(models.Model):
 
     def write(self, vals):
         # EXTENDS base res.partner.bank
-        if vals.get('account_number'):
-            vals['account_number'] = format_account_number(self.env, vals['account_number'])
-
         # track and log changes on partner_id
         track_fnames = [fname for fname in self._track_get_fields() if fname in vals]
         if track_fnames:
