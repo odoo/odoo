@@ -100,7 +100,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "SPC\n"
             "0200\n"
             "1\n"
-            f"{invoice.partner_bank_id.sanitized_account_number}\n"  # IBAN
+            f"{invoice.partner_bank_id.account_number}\n"  # IBAN
             "S\n"
             "company_1_data\n"
             "Route de Berne\n"

@@ -56,7 +56,7 @@ class ResPartnerBank(models.Model):
         accessible_accounts = self._filtered_access('read')
         restricted_accounts = self - accessible_accounts
         for account in restricted_accounts:
-            acc_num = account.sudo().sanitized_account_number or ''
+            acc_num = account.sudo().account_number or ''
             if len(acc_num) == 0:
                 account.display_name = ""
             elif len(acc_num) <= 6:
