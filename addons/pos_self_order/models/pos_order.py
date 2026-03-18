@@ -329,9 +329,27 @@ class PosOrder(models.Model):
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
 
-        for child in child_line_extra:
+        extra_original_total = 0
+        if remaining_total and child_line_extra:
+            extra_original_total = sum(
+                line.combo_item_id.combo_id.base_price * line.qty
+                for line in child_line_extra
+            ) or 1
+
+        for index, child in enumerate(child_line_extra):
             combo_item = child.combo_item_id
             price_unit = currency.round(combo_item.combo_id.base_price)
+
+            if extra_original_total:
+                remaining_proportion = currency.round(
+                    combo_item.combo_id.base_price * parent_lst_price / extra_original_total
+                )
+                price_unit += remaining_proportion
+                remaining_total -= remaining_proportion * child.qty
+
+                if index == len(child_line_extra) - 1:
+                    price_unit += remaining_total / child.qty
+
             selected_attributes = child.attribute_value_ids
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
