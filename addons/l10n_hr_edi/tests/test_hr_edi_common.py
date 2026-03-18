@@ -75,4 +75,4 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
         # when importing an invoice with the same partner / account number combination
         self.env['res.partner.bank'].sudo() \
             .search([('account_number', '=', 'HR4725000091769592233')]) \
-            .write({'account_number': 'HR8223600000012345678'})
+            .write({'formatted_account_number': 'HR8223600000012345678'})
