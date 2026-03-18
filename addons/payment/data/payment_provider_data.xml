@@ -369,6 +369,20 @@
         />
     </record>
 
+    <record id="payment_provider_qfpay" model="payment.provider">
+        <field name="name">QFPay</field>
+        <field name="image_128" type="base64" file="payment_qfpay/static/description/qfpay.jpeg"/>
+        <field name="module_id" ref="base.module_payment_qfpay"/>
+        <field name="payment_method_ids" eval="[Command.set([
+            ref('payment.payment_method_wechat_pay'),
+            ref('payment.payment_method_alipay'),
+            ref('payment.payment_method_unionpay'),
+            ref('payment.payment_method_fps'),
+            ref('payment.payment_method_payme'),
+            ref('payment.payment_method_card'),
+        ])]"/>
+    </record>
+
     <record id="payment_provider_razorpay" model="payment.provider">
         <field name="name">Razorpay</field>
         <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>

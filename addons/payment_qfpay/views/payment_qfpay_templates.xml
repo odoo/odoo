@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="redirect_form">
+        <div id="o_qfpay_redirect_data"
+             t-att-data-api-url="api_url"
+             class="d-none"/>
+             
+        <form t-att-action="api_url" method="post" class="d-none"/>
+    </template>
+</odoo>
