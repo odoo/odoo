@@ -3158,7 +3158,7 @@ test("delete a column in grouped on m2o", async () => {
     await validateKanbanColumn();
 
     expect.verifySteps(["name_create", "web_resequence"]);
-    expect(resequencedIDs).toEqual([3, 4], {
+    expect(resequencedIDs).toEqual([3, 6], {
         message: "creating a column should trigger a resequence",
     });
 
@@ -3166,7 +3166,7 @@ test("delete a column in grouped on m2o", async () => {
         queryAll(".o_kanban_group")[2]
     );
 
-    expect(resequencedIDs).toEqual([3, 4], {
+    expect(resequencedIDs).toEqual([3, 6], {
         message: "moving the Undefined column should not affect order of other columns",
     });
 
@@ -3175,7 +3175,7 @@ test("delete a column in grouped on m2o", async () => {
         queryAll(".o_kanban_group")[2]
     );
     expect.verifySteps(["web_resequence"]);
-    expect(resequencedIDs).toEqual([4, 3], {
+    expect(resequencedIDs).toEqual([6, 3], {
         message: "moved column should be resequenced accordingly",
     });
 });
