@@ -263,6 +263,7 @@ class AccountMove(models.Model):
             'correction_info': correction_info,
             'special_transactions': {'OSS_Base', 'OSS_Tax', 'Triangular Sale'} & invoice_tag_names,
             'triangular_transaction': '1' if 'Triangular Sale' in invoice_tag_names else '2',
+            'intra_community_reverse_charge': '1' if 'K_12' in invoice_tag_names else '2',
         }
 
     def _l10n_pl_edi_render_xml(self):
