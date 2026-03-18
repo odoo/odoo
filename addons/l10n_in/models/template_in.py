@@ -139,8 +139,8 @@ class AccountChartTemplate(models.AbstractModel):
             # We call these helper methods again in _post_load_data to ensure all payment method lines
             # are correctly assigned once all COA data is fully available.
             bank_journals = company.bank_journal_ids
-            bank_journals._update_payment_method_lines("inbound")
-            bank_journals._update_payment_method_lines("outbound")
+            bank_journals._update_payment_method_lines_account_for_bank_journals("inbound", "in")
+            bank_journals._update_payment_method_lines_account_for_bank_journals("outbound", "in")
 
     def _load(self, template_code, company, install_demo, force_create=True):
         res = super()._load(template_code, company, install_demo, force_create)
