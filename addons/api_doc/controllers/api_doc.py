@@ -12,6 +12,7 @@ from http import HTTPStatus
 from typing import Self
 
 import docutils.core
+from docutils.writers.html4css1 import Writer as HtmlWriter
 from werkzeug.exceptions import NotFound
 from werkzeug.http import is_resource_modified, parse_cache_control_header
 
@@ -652,7 +653,7 @@ class _DocUtils:
         root.append(tree)
         html = docutils.core.publish_from_doctree(
             root,
-            writer_name='html',
+            writer=HtmlWriter(),
             settings=cls._settings_html,
         )
         head = b'\n</head>\n<body>\n<div class="document">'
