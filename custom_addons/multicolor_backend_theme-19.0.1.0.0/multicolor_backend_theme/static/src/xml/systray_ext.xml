@@ -2,18 +2,11 @@
 <templates>
     <!--    Systray view-->
     <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
-        <!-- <xpath expr="//div[@class='o_menu_systray d-flex flex-shrink-0 ms-auto']//t[@t-foreach='systrayItems']" position="before"> -->
         <xpath expr="//div[hasclass('o_menu_systray')]//t[@t-foreach='systrayItems']" position="before">
-        <!-- <xpath expr="//div[contains(@class, 'o_menu_systray')]" position="inside"> -->
-            <Dropdown state="dropdown">
-                <t t-log="'insidethe dropdown'"/>
-                <a data-display="static" aria-expanded="false" title="Themes"
-                   role="button">
-                    <t t-if="this.isThemeManager">    
-                        <i class="fa fa-paint-brush" role="img"
-                            aria-label="Themes Configuration" />
-                    </t>
-                </a>
+            <Dropdown t-if="this.isThemeManager">
+                <button title="Themes">
+                    <i class="fa fa-paint-brush" role="img" aria-label="Themes Configuration"/>
+                </button>
                 <t t-set-slot="content">
                     <div class="themes_selector dropdown-menu-right" role="menu">
                     <div class="row">

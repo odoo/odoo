@@ -16,9 +16,11 @@ make dev-project-up
 That will:
 
 1. start Docker PostgreSQL on `127.0.0.1:5433`
-2. ensure `ktest` exists
-3. generate `deploy/odoo/kodoo.dev-project.local.conf`
-4. start Odoo on the host at `http://127.0.0.1:8069`
+2. generate `deploy/odoo/kodoo.dev-project.local.conf`
+3. start Odoo on the host at `http://127.0.0.1:8071`
+4. expose Odoo's database manager at `http://127.0.0.1:8071/web/database/manager`
+
+Use `make dev-project-db-init` when you want the same flow with an explicit reminder to create or restore `ktest` from the database manager UI.
 
 ## Main targets
 

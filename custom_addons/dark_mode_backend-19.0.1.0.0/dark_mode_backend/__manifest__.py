@@ -22,7 +22,7 @@
 {
     "name": "Dark Mode Backend Theme",
     "version": "19.0.1.0.0",
-    "category": "Theme/Backend",
+    "category": "Customization/Backend",
     "summary": "Dark Mode Backend Theme for Odoo 19 community edition",
     "description": "Minimalist and elegant backend theme for Odoo 19,"
                    "Backend Theme, Theme",
@@ -35,11 +35,11 @@
             'dark_mode_backend/static/src/scss/theme_accent.scss',
             'dark_mode_backend/static/src/scss/datetimepicker.scss',
             'dark_mode_backend/static/src/scss/theme.scss',
-            'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet',
+            'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap',
         ],
         'web.assets_frontend': [
             'dark_mode_backend/static/src/scss/login.scss',
-            'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet',
+            'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap',
         ],
     },
     'images': [
@@ -49,7 +49,6 @@
     'license': 'AGPL-3',
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application': False,
 }
-
 

@@ -22,7 +22,7 @@
 {
     "name": "Chameleon Multi Color Backend Theme",
     "version": "19.0.1.0.0",
-    "category": "Themes/Backend",
+    "category": "Customization/Backend",
     "summary": "Configurable multi color backend theme for Odoo 19",
     "description": """
         Configurable multi color backend theme for Odoo 19, 
@@ -38,6 +38,7 @@
         'security/ir.model.access.csv',
         'data/theme_data.xml',
         'views/login_templates.xml',
+        'views/theme_config_views.xml',
     ],
     "assets": {
         'web.assets_backend': [
@@ -64,5 +65,5 @@
     'license': 'LGPL-3',
     'installable': True,
     'auto_install': False,
-    'application': False,
+    'application': True,
 }

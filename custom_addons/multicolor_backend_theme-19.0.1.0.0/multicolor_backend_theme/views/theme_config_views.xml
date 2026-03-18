@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_theme_config_tree" model="ir.ui.view">
+        <field name="name">theme.config.tree</field>
+        <field name="model">theme.config</field>
+        <field name="arch" type="xml">
+            <list string="Multicolor Backend Themes">
+                <field name="name"/>
+                <field name="is_theme_active"/>
+                <field name="theme_main_color" widget="color"/>
+                <field name="theme_font_color" widget="color"/>
+                <field name="view_font_color" widget="color"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_theme_config_form" model="ir.ui.view">
+        <field name="name">theme.config.form</field>
+        <field name="model">theme.config</field>
+        <field name="arch" type="xml">
+            <form string="Multicolor Backend Theme">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="is_theme_active"/>
+                    </group>
+                    <group string="Colors" col="3">
+                        <field name="theme_main_color" widget="color"/>
+                        <field name="theme_font_color" widget="color"/>
+                        <field name="view_font_color" widget="color"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_theme_config_search" model="ir.ui.view">
+        <field name="name">theme.config.search</field>
+        <field name="model">theme.config</field>
+        <field name="arch" type="xml">
+            <search string="Multicolor Backend Themes">
+                <field name="name"/>
+                <filter name="filter_active_theme" string="Active" domain="[('is_theme_active', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_theme_config" model="ir.actions.act_window">
+        <field name="name">Multicolor Themes</field>
+        <field name="res_model">theme.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_theme_config_search"/>
+    </record>
+
+    <menuitem
+        id="menu_multicolor_backend_theme_root"
+        name="Backend Themes"
+        parent="base.menu_custom"
+        sequence="60"
+        groups="multicolor_backend_theme.multicolor_theme_manager_access"/>
+
+    <menuitem
+        id="menu_theme_config"
+        name="Multicolor Themes"
+        parent="menu_multicolor_backend_theme_root"
+        action="action_theme_config"
+        sequence="10"
+        groups="multicolor_backend_theme.multicolor_theme_manager_access"/>
+</odoo>

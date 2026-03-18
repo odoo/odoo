@@ -10,6 +10,7 @@ PYTHON_CANDIDATES := $(wildcard .venv/bin/python3 .venv/bin/python venv/bin/pyth
 PYTHON ?= $(if $(PYTHON_CANDIDATES),$(firstword $(PYTHON_CANDIDATES)),python3)
 ODOO_BIN ?= ./odoo-bin
 LOG_PATH ?= logs/odoo-lnav.log
+PID_FILE ?= logs/odoo-manager.pid
 DOMAIN ?= kodoo.online
 EMAIL ?= [EMAIL_ADDRESS]
 OLLAMA_MODEL ?= qwen3.5:0.8b
@@ -26,6 +27,7 @@ PUBLIC_HTTP_PORT ?= 80
 PUBLIC_HTTPS_PORT ?= 443
 LOCAL_BIND_HOST ?= 127.0.0.1
 LOCAL_HTTP_PORT ?= 8069
+HTTP_PORT ?= $(DEV_HOST_HTTP_PORT)
 INSECURE_HTTP_PORT ?= 8069
 INSECURE_EVENTED_PORT ?= 8072
 STOP_PORTS ?= $(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT) $(LOCAL_HTTP_PORT) $(INSECURE_EVENTED_PORT)
@@ -63,6 +65,9 @@ PG_LOCAL_USER ?= kodoo
 PG_LOCAL_PASSWORD ?=
 BACKUP_DIR ?= backups/postgres
 CONFIG ?= $(DEV_HOST_CONFIG)
+DB_SETUP ?= none
+PRECREATE_DB ?= 0
+PREBOOT_TEST_DB ?= $(DEV_HOST_TEST_DB)
 COMPOSE_LOCAL := $(COMPOSE) -f docker-compose.yml -f deploy/local/docker-compose.local.yml
 COMPOSE_INSECURE := $(COMPOSE) -f docker-compose.yml -f deploy/insecure/docker-compose.insecure.yml
 COMPOSE_GPU := $(COMPOSE) -f docker-compose.yml -f deploy/ollama/docker-compose.gpu.yml
@@ -81,6 +86,7 @@ CONFIG_FIND_CMD = find . \
 	stop ports-clean \
 	refresh-safe safe-refresh \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
+	odoo-start odoo-manager odoo-stop odoo-status \
 	dev-host-config dev dev-stop dev-logs dev-status \
 	dev-safe dev-safe-stop dev-safe-logs dev-safe-status \
 	up-home down-home logs-home smoke-home troubleshoot-home \
@@ -170,7 +176,7 @@ help:
 	@echo "  make odoo-fix-url   # Force Odoo base URL to https://$(DOMAIN)"
 	@echo ""
 	@echo "Database:"
-	@echo "  make db-init        # Initialize Odoo schema in DB ($(DB))"
+	@echo "  make db-init        # Open Odoo database manager over Docker PostgreSQL to create/use DB ($(DB))"
 	@echo "  make db-check       # Check if base module exists in DB"
 	@echo "  make db-list        # List reachable PostgreSQL databases and tags"
 	@echo "  make db-manager     # Open the interactive database manager"
@@ -180,14 +186,18 @@ help:
 	@echo "  make status         # Show compose status"
 	@echo "  make logs           # Tail odoo + nginx logs"
 	@echo "  make stop           # Stop all modes and free service ports ($(STOP_PORTS))"
+	@echo "  make odoo-start CONFIG=... DB=... HTTP_PORT=... # Generic host boot pinned to one DB"
+	@echo "  make odoo-manager CONFIG=... DB_SETUP=local|docker|none DB=... HTTP_PORT=... # Generic host boot with database manager"
+	@echo "  make odoo-stop PID_FILE=... # Stop a host-run Odoo started with odoo-start/odoo-manager"
+	@echo "  make odoo-status PID_FILE=... HTTP_PORT=... # Check a host-run Odoo started with odoo-start/odoo-manager"
 	@echo "  make odoo-tui       # Open interactive terminal inside Odoo container"
 	@echo "  make odoo-shell     # Open Odoo interactive shell (DB=$(DB))"
 	@echo ""
 	@echo "Dev Host:"
 	@echo "  make dev-host-db-setup # Prepare local PostgreSQL with $(DEV_HOST_DB) and $(DEV_HOST_TEST_DB)"
-	@echo "  make dev-host-db-init  # Initialize local Odoo schema in $(DEV_HOST_DB)"
-	@echo "  make dev-host-test-init # Initialize local Odoo schema in $(DEV_HOST_TEST_DB)"
-	@echo "  make dev-host-up    # Run Odoo on host using local PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"
+	@echo "  make dev-host-db-init  # Open Odoo database manager on local PostgreSQL to create/use $(DEV_HOST_DB)"
+	@echo "  make dev-host-test-init # Open Odoo database manager on local PostgreSQL to create/use $(DEV_HOST_TEST_DB)"
+	@echo "  make dev-host-up    # Run Odoo on host using local PostgreSQL with database manager on $(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"
 	@echo "  make dev-host-upgrade # Upgrade $(DEV_MODULES) on $(DEV_UPGRADE_DB) without opening HTTP"
 	@echo "  make dev-host-stop  # Stop local host-run Odoo"
 	@echo "  make dev-host-logs  # Tail local host-run Odoo log"
@@ -201,8 +211,8 @@ help:
 	@echo "  make dev-safe-logs  # Tail local-DB native Odoo database-manager log"
 	@echo "  make dev-safe-status # Check local-DB native Odoo database-manager status"
 	@echo "  make dev-project-db-setup # Start Docker PostgreSQL and ensure $(DEV_PROJECT_DB) exists (shares Docker DB service)"
-	@echo "  make dev-project-db-init # Initialize local Odoo schema in $(DEV_PROJECT_DB)"
-	@echo "  make dev-project-up # Run Odoo on host against Docker PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT) (maintenance path)"
+	@echo "  make dev-project-db-init # Open Odoo database manager over Docker PostgreSQL to create/use $(DEV_PROJECT_DB)"
+	@echo "  make dev-project-up # Run Odoo on host against Docker PostgreSQL with database manager on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)"
 	@echo "  make dev-project-stop # Stop host-run Odoo and Docker PostgreSQL"
 	@echo "  make dev-project-logs # Tail host-run Odoo log for project mode"
 	@echo "  make dev-project-status # Check host-run Odoo and Docker PostgreSQL status"
@@ -503,6 +513,85 @@ odoo-lnav:
 		tail -f "$(LOG_PATH)"; \
 	fi
 
+odoo-start:
+	@case "$(DB_SETUP)" in \
+	  none) ;; \
+	  local) \
+	    PG_SERVICE="$(PG_LOCAL_SERVICE)" \
+	    PG_SUPERUSER="$(PG_LOCAL_SUPERUSER)" \
+	    APP_DB_USER="$(PG_LOCAL_USER)" \
+	    APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	    APP_DB_NAME="$(DB)" \
+	    TEST_DB_NAME="$(PREBOOT_TEST_DB)" \
+	    CREATE_APP_DATABASES="$(PRECREATE_DB)" \
+	    ./scripts/dev-host-db-setup.sh ;; \
+	  docker) \
+	    echo "WARNING: odoo-start with DB_SETUP=docker shares the Docker DB service."; \
+	    COMPOSE_BIN='$(COMPOSE_PROJECT_DB)' \
+	    DB_USER="$(PROD_DB_USER)" \
+	    DB_PASSWORD="$(PROD_DB_PASSWORD)" \
+	    DB_NAME="$(DB)" \
+	    CREATE_APP_DATABASE="$(PRECREATE_DB)" \
+	    ./scripts/dev-project-db-setup.sh ;; \
+	  *) echo "ERROR: DB_SETUP must be one of none, local, docker."; exit 1 ;; \
+	esac
+	@$(MAKE) ports-clean PORTS="$(HTTP_PORT)"
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(CONFIG)" \
+	ODOO_DEV_DB="$(DB)" \
+	ODOO_DEV_LOG_PATH="$(LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(HTTP_PORT)" \
+	./scripts/dev-host-start.sh
+
+odoo-manager:
+	@case "$(DB_SETUP)" in \
+	  none) ;; \
+	  local) \
+	    PG_SERVICE="$(PG_LOCAL_SERVICE)" \
+	    PG_SUPERUSER="$(PG_LOCAL_SUPERUSER)" \
+	    APP_DB_USER="$(PG_LOCAL_USER)" \
+	    APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	    APP_DB_NAME="$(DB)" \
+	    TEST_DB_NAME="$(PREBOOT_TEST_DB)" \
+	    CREATE_APP_DATABASES="$(PRECREATE_DB)" \
+	    ./scripts/dev-host-db-setup.sh ;; \
+	  docker) \
+	    echo "WARNING: odoo-manager with DB_SETUP=docker shares the Docker DB service."; \
+	    COMPOSE_BIN='$(COMPOSE_PROJECT_DB)' \
+	    DB_USER="$(PROD_DB_USER)" \
+	    DB_PASSWORD="$(PROD_DB_PASSWORD)" \
+	    DB_NAME="$(DB)" \
+	    CREATE_APP_DATABASE="$(PRECREATE_DB)" \
+	    ./scripts/dev-project-db-setup.sh ;; \
+	  *) echo "ERROR: DB_SETUP must be one of none, local, docker."; exit 1 ;; \
+	esac
+	@$(MAKE) ports-clean PORTS="$(HTTP_PORT)"
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(CONFIG)" \
+	ODOO_DEV_DB="" \
+	ODOO_DEV_LOG_PATH="$(LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(HTTP_PORT)" \
+	./scripts/dev-host-start.sh
+	@if [ -n "$(DB)" ]; then \
+	  echo "Database manager ready for '$$(printf "%s" "$(DB)")': http://$(LOCAL_BIND_HOST):$(HTTP_PORT)/web/database/manager"; \
+	fi
+
+odoo-stop:
+	@ODOO_DEV_PID_FILE="$(PID_FILE)" ./scripts/dev-host-stop.sh
+
+odoo-status:
+	@set -e; \
+	if [ -f "$(PID_FILE)" ] && kill -0 "$$(cat "$(PID_FILE)")" 2>/dev/null; then \
+	  echo "Generic host Odoo is running with PID $$(cat "$(PID_FILE)")"; \
+	  echo "URL: http://$(LOCAL_BIND_HOST):$(HTTP_PORT)"; \
+	  echo "Config: $(CONFIG)"; \
+	  echo "Log: $(LOG_PATH)"; \
+	else \
+	  echo "Generic host Odoo is not running."; \
+	fi
+
 build:
 	@$(MAKE) prod-config
 	@$(COMPOSE) build
@@ -597,7 +686,7 @@ dev:
 	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
 	@ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true
 	@$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"
-	@$(MAKE) dev-project-db-setup
+	@$(MAKE) dev-project-db-setup DEV_PROJECT_PRECREATE_DATABASE=0
 	@$(MAKE) dev-project-config
 	@PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_PROJECT_CONFIG)" \
@@ -640,7 +729,7 @@ dev-status:
 dev-safe:
 	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
 	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
-	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-db-setup DEV_HOST_PRECREATE_DATABASES=0
 	@$(MAKE) dev-host-config
 	@PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_HOST_CONFIG)" \
@@ -799,10 +888,7 @@ certbot-renew:
 	@exit 1
 
 db-init:
-	@$(MAKE) prod-config
-	@echo "Initializing Odoo database '$(DB)' (this may take a few minutes)..."
-	@$(COMPOSE) run --rm odoo odoo -c /etc/odoo/odoo.conf -d "$(DB)" -i base --without-demo=all --stop-after-init
-	@echo "Database '$(DB)' initialized."
+	@$(MAKE) dev-project-db-init DEV_PROJECT_DB="$(DB)"
 
 db-check:
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "SELECT name, state FROM ir_module_module WHERE name='base';" || true
@@ -833,25 +919,24 @@ dev-host-db-setup:
 	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
 	APP_DB_NAME="$(DEV_HOST_DB)" \
 	TEST_DB_NAME="$(DEV_HOST_TEST_DB)" \
+	CREATE_APP_DATABASES="$(or $(DEV_HOST_PRECREATE_DATABASES),1)" \
 	./scripts/dev-host-db-setup.sh
 
 dev-host-db-init:
-	@$(MAKE) dev-host-db-setup
-	@$(MAKE) dev-host-config
-	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_HOST_CONFIG)" -d "$(DEV_HOST_DB)" -i base --without-demo=all --stop-after-init
+	@echo "Opening Odoo database manager on local PostgreSQL. Create or restore '$(DEV_HOST_DB)' at http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)/web/database/manager"
+	@$(MAKE) dev-host-up DEV_HOST_PRECREATE_DATABASES=0
 
 dev-host-test-init:
-	@$(MAKE) dev-host-db-setup
-	@$(MAKE) dev-host-config
-	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_HOST_CONFIG)" -d "$(DEV_HOST_TEST_DB)" -i base --without-demo=all --stop-after-init
+	@echo "Opening Odoo database manager on local PostgreSQL. Create or restore '$(DEV_HOST_TEST_DB)' at http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)/web/database/manager"
+	@$(MAKE) dev-host-up DEV_HOST_PRECREATE_DATABASES=0
 
 dev-host-up:
 	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
-	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-db-setup DEV_HOST_PRECREATE_DATABASES=0
 	@$(MAKE) dev-host-config
 	@PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_HOST_CONFIG)" \
-	ODOO_DEV_DB="$(DEV_HOST_DB)" \
+	ODOO_DEV_DB="" \
 	ODOO_DEV_LOG_PATH="$(DEV_HOST_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" \
 	ODOO_DEV_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
@@ -870,6 +955,7 @@ dev-host-status:
 	if [ -f "$(DEV_HOST_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_HOST_PID_FILE)")" 2>/dev/null; then \
 	  echo "Odoo host dev is running with PID $$(cat "$(DEV_HOST_PID_FILE)")"; \
 	  echo "URL: http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"; \
+	  echo "Database manager: http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)/web/database/manager"; \
 	else \
 	  echo "Odoo host dev is not running."; \
 	fi; \
@@ -888,21 +974,21 @@ dev-project-db-setup:
 	DB_USER="$(PROD_DB_USER)" \
 	DB_PASSWORD="$(PROD_DB_PASSWORD)" \
 	DB_NAME="$(DEV_PROJECT_DB)" \
+	CREATE_APP_DATABASE="$(or $(DEV_PROJECT_PRECREATE_DATABASE),1)" \
 	./scripts/dev-project-db-setup.sh
 
 dev-project-db-init:
-	@$(MAKE) dev-project-db-setup
-	@$(MAKE) dev-project-config
-	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_PROJECT_CONFIG)" -d "$(DEV_PROJECT_DB)" -i base --without-demo=all --stop-after-init
+	@echo "Opening Odoo database manager over Docker PostgreSQL. Create or restore '$(DEV_PROJECT_DB)' at http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)/web/database/manager"
+	@$(MAKE) dev-project-up DEV_PROJECT_PRECREATE_DATABASE=0
 
 dev-project-up:
 	@echo "WARNING: dev-project-up shares the Docker DB service. Avoid while the public tunnel stack is serving traffic."
 	@$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"
-	@$(MAKE) dev-project-db-setup
+	@$(MAKE) dev-project-db-setup DEV_PROJECT_PRECREATE_DATABASE=0
 	@$(MAKE) dev-project-config
 	@PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_PROJECT_CONFIG)" \
-	ODOO_DEV_DB="$(DEV_PROJECT_DB)" \
+	ODOO_DEV_DB="" \
 	ODOO_DEV_LOG_PATH="$(DEV_PROJECT_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" \
 	ODOO_DEV_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
@@ -922,6 +1008,7 @@ dev-project-status:
 	if [ -f "$(DEV_PROJECT_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_PROJECT_PID_FILE)")" 2>/dev/null; then \
 	  echo "Project mode Odoo is running with PID $$(cat "$(DEV_PROJECT_PID_FILE)")"; \
 	  echo "URL: http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)"; \
+	  echo "Database manager: http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)/web/database/manager"; \
 	else \
 	  echo "Project mode Odoo is not running."; \
 	fi; \

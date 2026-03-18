@@ -37,19 +37,27 @@ make dev-host-config
 make dev-host-db-setup
 ```
 
-4. Inicializar a base principal, se ainda estiver vazia:
+4. Abrir o Odoo em modo database manager:
 
 ```bash
 make dev-host-db-init
 ```
 
-5. Subir Odoo local:
+5. Criar ou restaurar a base desejada em:
+
+```text
+http://127.0.0.1:8070/web/database/manager
+```
+
+Use normalmente `kodoo` para desenvolvimento principal ou `ktest` para restauracao e testes.
+
+6. Se quiser apenas subir o servidor local com database manager, sem o atalho de init:
 
 ```bash
 make dev-host-up
 ```
 
-6. Fazer backup e renovar `ktest`:
+7. Fazer backup e renovar `ktest`:
 
 ```bash
 make dev-host-backup

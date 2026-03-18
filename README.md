@@ -71,7 +71,7 @@ Recommended workflow split:
 
 - `make dev`: native Odoo, database manager, shared Docker PostgreSQL data
 - `make dev-safe`: native Odoo, database manager, isolated local PostgreSQL data
-- `make dev-host-up`: native Odoo pinned to the default local database
+- `make dev-host-up`: native Odoo, database manager, isolated local PostgreSQL data
 - Docker: stable/public-like runtime
 
 If you want a plain Odoo image without the AGI Gov runtime extras:
