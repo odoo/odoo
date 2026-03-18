@@ -55,8 +55,10 @@ class TestUiSEPA(TestPosQrCommon):
         """
 
         # Set info that were wrong in test_01
+        self.bank_account.allow_out_payment = False
         self.bank_account.write({
             'account_number': 'BE15001559627230',
+            'allow_out_payment': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
