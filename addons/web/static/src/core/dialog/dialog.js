@@ -1,7 +1,7 @@
 import { useChildSubEnv, useExternalListener, useState } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { Component, onWillDestroy } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
@@ -117,6 +117,7 @@ export class Dialog extends Component {
             }
         });
         this.bodyTabIndex = hasTouch() ? "0" : undefined;
+        useBackButton(() => this.dismiss());
     }
 
     get size() {
