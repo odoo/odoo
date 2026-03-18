@@ -90,6 +90,11 @@ const InstagramPage = publicWidget.Widget.extend({
             // Instagram iframe.
             return;
         }
+        if (typeof ev.data === 'object') {
+            // Ignore messages that have object data instead of string (eg. internal
+            // iOS chrome message)
+            return;
+        }
         const evDataJSON = JSON.parse(ev.data);
         if (evDataJSON.type !== "MEASURE") {
             // It's not a measure message.
