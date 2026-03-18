@@ -137,15 +137,17 @@ registry.category("web_tour.tours").add("test_sync_lines_qty_update_ticket_scree
             ProductScreen.clickCustomer("A powerful Pos man!"),
 
             Chrome.clickOrders(),
+            Chrome.waitForOrdersSync(),
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
+            Chrome.waitForOrdersSync(),
 
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Coca-Cola", "1"),
             ProductScreen.clickNumpad("3"),
             ProductScreen.selectedOrderlineHas("Coca-Cola", "3"),
-            Chrome.waitForOrdersSync(),
             Chrome.clickOrders(),
+            Chrome.waitForOrdersSync(),
             TicketScreen.selectOrder("001"),
             Order.hasLine({
                 productName: "Coca-Cola",
