@@ -33,7 +33,9 @@ test("orderline_note_button.js", async () => {
     expect(order.lines[0].qty).toBe(4);
     expect(order.lines[1].qty).toBe(8);
     expect(order.lines[2].qty).toBe(4);
-    const comp = await mountWithCleanup(InternalNoteButton, { props: { label: "" } });
+    const comp = await mountWithCleanup(InternalNoteButton, {
+        props: { label: "", icon: "fa fa-pencil" },
+    });
     await comp.setChanges(line, '[{"1":"Test","colorIndex":0}]');
     order.updateLastOrderChange();
     orderSummary._setValue(9);
