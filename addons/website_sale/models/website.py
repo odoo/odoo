@@ -110,6 +110,7 @@ class Website(models.Model):
     shop_page_container = fields.Selection(
         selection=[("regular", "Regular"), ("fluid", "Full-width")], default="regular"
     )
+    shop_border_color = fields.Char(string="Picked Border Color", default="")
     shop_ppg = fields.Integer(string="Number of products in the grid on the shop", default=21)
     shop_ppr = fields.Integer(string="Number of grid columns on the shop", default=3)
 

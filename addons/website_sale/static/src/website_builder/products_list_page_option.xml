@@ -22,7 +22,6 @@
         </BuilderButtonGroup>
     </BuilderRow>
 
-
     <BuilderContext applyTo="'#o_wsale_products_grid'">
         <ProductsDesignPanel
             recordName="'shop_opt_products_design_classes'"
@@ -158,6 +157,12 @@
                 />
             </BuilderSelectItem>
         </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Borders">
+        <BuilderColorPicker action="'setBorderColor'" actionParam="{ previewClass: 'o_wsale_custom_border'}"
+            enabledTabs="['solid', 'custom']"
+        />
     </BuilderRow>
 
     <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">

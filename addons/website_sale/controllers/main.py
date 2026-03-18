@@ -1944,6 +1944,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Restrict options we can write to.
         writable_fields = {
             "shop_page_container",
+            "shop_border_color",
             "shop_ppg",
             "shop_ppr",
             "shop_default_sort",

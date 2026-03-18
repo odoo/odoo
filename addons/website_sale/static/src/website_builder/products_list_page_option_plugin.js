@@ -10,12 +10,14 @@ export class ProductsListPageOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetShopContainerAction,
+            SetBorderColor,
             SetPpgAction,
             SetPprAction,
             SetDefaultSortAction,
         },
     };
 }
+
 export class SetShopContainerAction extends PreviewableWebsiteConfigAction {
     static id = "setShopContainer";
 
@@ -68,6 +70,29 @@ export class SetDefaultSortAction extends BuilderAction {
     }
     apply({ value }) {
         return rpc("/shop/config/website", { shop_default_sort: value });
+    }
+}
+
+export class SetBorderColor extends PreviewableWebsiteConfigAction {
+    static id = "setBorderColor";
+
+    async apply({ editingElement: shopContainerEl, isPreviewing, params, value }) {
+        await super.apply({ editingElement: shopContainerEl, isPreviewing, params, value });
+        shopContainerEl.style.setProperty("--o-wsale-border-color", value);
+
+        if (!isPreviewing) {
+            await rpc("/shop/config/website", { 'shop_border_color': value });
+        }
+    }
+
+    clean({ editingElement: shopContainerEl, isPreviewing, params }) {
+        super.clean({ editingElement: shopContainerEl, isPreviewing, params });
+        shopContainerEl.style.removeProperty("--o-wsale-border-color");
+    }
+
+    // so the picker shows the currently-applied color when re-opened
+    getValue({ editingElement: shopContainerEl }) {
+        return shopContainerEl.style.getPropertyValue("--o-wsale-border-color");
     }
 }
 

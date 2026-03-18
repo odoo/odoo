@@ -3,7 +3,10 @@
 
     <template id="website_sale.product_compare" name="Comparator Page">
         <t t-call="website.layout" additional_title.translate="Shop Comparator">
-            <div id="wrap" class="o_wsale_comparison_page">
+            <div
+                id="wrap"
+                t-attf-class="o_wsale_comparison_page {{website.shop_border_color and 'o_wsale_custom_border'}}" t-attf-style="--o-wsale-border-color: {{website.shop_border_color}};"
+            >
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
                 <div t-attf-class="oe_website_sale pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                     <h1 class="h4 mt-4 mb-3">Compare Products</h1>
@@ -223,7 +226,7 @@
                 </div>
                 <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_2"/>
                 <div class="align-items-end bottom-0 d-flex end-0 justify-content-end o_not_editable p-0 position-absolute top-0 start-0 pe-none">
-                    <div class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto">
+                    <div t-attf-class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto bg-danger">
                         <div t-attf-class="d-flex align-items-center py-3 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                             <a
                                 href="/shop"
