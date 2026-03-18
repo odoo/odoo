@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from datetime import datetime
+from freezegun import freeze_time
+from pytz import timezone
 
-from odoo.fields import Date, Domain
+from odoo.fields import Domain
 from odoo.tests import tagged, TransactionCase
 
 
@@ -409,7 +412,9 @@ class TestRecruitment(TransactionCase):
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
 
+    @freeze_time('2026-01-01 12:30:00')
     def test_job_overdue_activities(self):
+        self.env.user.tz = 'Europe/Brussels'
         job = self.env["hr.job"].create({
             "name": "Test Job",
         })
@@ -430,7 +435,7 @@ class TestRecruitment(TransactionCase):
         })
         activity = self.env["mail.activity"].create({
             "activity_type_id": persistent_activity_type.id,
-            "date_deadline": Date.today(),
+            "date_deadline": datetime.now(tz=timezone(self.env.user.tz)).date(),
             "res_id": applicant.id,
             "res_model_id": self.env["ir.model"]._get_id("hr.applicant"),
             "user_id": self.env.user.id,
