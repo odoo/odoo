@@ -70,7 +70,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='in_contract']" position="before">
+            <xpath expr="//filter[@name='permanent_contract']" position="before">
                 <filter name="at_work" string="Present" domain="[('is_absent', '=', False)]"/>
                 <separator/>
             </xpath>

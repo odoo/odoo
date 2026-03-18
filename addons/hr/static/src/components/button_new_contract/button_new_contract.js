@@ -30,7 +30,12 @@ export class ButtonNewContractWidget extends Component {
     }
 
     async onClickNewContractBtn() {
-        await this.props.record.save();
+        this.props.record._skipContractEndDialog = true;
+        try {
+            await this.props.record.save();
+        } finally {
+            this.props.record._skipContractEndDialog = false;
+        }
         await this.orm.call("hr.version", "check_contract_finished", [
             [this.props.record.data.version_id.id],
         ]);

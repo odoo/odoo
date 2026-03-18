@@ -502,6 +502,17 @@ class HrEmployee(models.Model):
         if not self.contract_date_start:
             self.contract_date_end = False
 
+    @api.onchange('contract_date_end')
+    def _onchange_contract_date_end(self):
+        for version in self:
+            if not version.contract_date_end:
+                version.fixed_term = False
+            elif (
+                version._origin.contract_date_start != version.contract_date_start
+                and version._origin.contract_date_end != version.contract_date_end
+            ):
+                version.fixed_term = True
+
     @api.onchange("private_state_id")
     def _onchange_private_state_id(self):
         if self.private_state_id:
@@ -788,6 +799,7 @@ class HrEmployee(models.Model):
             'employee_id': employee_id,
             'contract_date_start': contract_date_start,
             'contract_date_end': contract_date_end,
+            'fixed_term': bool(contract_date_end),
         }
         if 'active' in values:
             copy_vals['active'] = values['active']
@@ -808,6 +820,11 @@ class HrEmployee(models.Model):
         new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
         with self.env.protecting([f for f_name, f in version_fields.items() if f_name not in new_version_vals and f.copy], new_version):
             new_version.write(new_version_vals)
+        if template_id := values.get('contract_template_id'):
+            template = self.env['hr.version'].browse(template_id)
+            template_vals = new_version.get_values_from_contract_template(template)
+            if template_vals:
+                new_version.write(template_vals)
         return new_version
 
     def create_contract(self, date):

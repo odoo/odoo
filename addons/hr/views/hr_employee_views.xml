@@ -29,13 +29,17 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                     <separator/>
-                    <filter string="In Contract" name="in_contract"
+                    <filter string="Permanent Contract" name="permanent_contract"
                             domain="[
                                 ('contract_date_start', '!=', False),
-                                ('contract_date_start', '&lt;=', 'today'),
-                                '|',
-                                    ('contract_date_end', '=', False),
-                                    ('contract_date_end', '>=', 'today')
+                                ('contract_date_end', '=', False)
+                            ]"
+                            groups="hr.group_hr_manager"/>
+                    <filter string="Fixed-term Contract" name="fixed_term_contract"
+                            domain="[
+                                ('contract_date_start', '!=', False),
+                                ('contract_date_end', '!=', False),
+                                ('departure_reason_id', '=', False)
                             ]"
                             groups="hr.group_hr_manager"/>
                     <filter string="Notice Period" name="notice_period"
@@ -374,10 +378,10 @@
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>
                                             <span invisible="not contract_date_start">to</span>
                                             <field name="contract_date_end" string="End Date" placeholder="Indefinite" widget="date_dynamic_min" options="{'min_date_field': 'contract_date_start'}"
-                                                class="o_hr_narrow_field ms-3" invisible="not contract_date_start" required="fixed_term"/>
+                                                class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
                                             <widget name="button_new_contract"/>
                                         </div>
-                                        <field name="fixed_term" string="Fixed Term"/>
+                                        <field name="fixed_term" string="Fixed Term" invisible="1"/>
                                         <label for="wage"/>
                                         <div class="o_row" name="wage">
                                             <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
