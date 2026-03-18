@@ -195,10 +195,10 @@ class Docker():
         self.container_name = None
         self.exposed_port = None
         docker_templates = {
-            'tgz': os.path.join(args.build_dir, 'setup/package.dfsrc'),
-            'deb': os.path.join(args.build_dir, 'setup/package.dfdebian'),
-            'rpm': os.path.join(args.build_dir, 'setup/package.dffedora'),
-            'win': os.path.join(args.build_dir, 'setup/package.dfwine'),
+            'tgz': os.path.join(args.build_dir, 'setup/docker/package.dfsrc'),
+            'deb': os.path.join(args.build_dir, 'setup/docker/package.dfdebian'),
+            'rpm': os.path.join(args.build_dir, 'setup/docker/package.dffedora'),
+            'win': os.path.join(args.build_dir, 'setup/docker/package.dfwine'),
         }
         self.docker_template = Path(docker_templates[self.arch]).read_text(encoding='utf-8').replace('USER odoo', DOCKERUSER)
         self.test_log_file = '/data/src/test-%s.log' % self.arch
