@@ -639,10 +639,7 @@ class MrpWorkorder(models.Model):
                     best_date_start = from_date
                     best_date_finished = to_date
                     best_workcenter = workcenter
-                    vals = {
-                        'workcenter_id': workcenter.id,
-                        'duration_expected': duration_expected,
-                    }
+                    best_duration = duration_expected
             # If none of the workcenter are available, raise
             if best_date_finished == datetime.max:
                 raise UserError(_('Impossible to plan the workorder. Please check the workcenter availabilities.'))
@@ -652,6 +649,8 @@ class MrpWorkorder(models.Model):
                 **vals,
                 'date_start': best_date_start,
                 'date_finished': best_date_finished,
+                'workcenter_id': best_workcenter.id,
+                'duration_expected': best_duration,
                 'leave_id': [Command.create({
                     'name': wo.display_name,
                     'calendar_id': best_workcenter.resource_calendar_id.id,
