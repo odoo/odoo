@@ -13,56 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 12:50+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-05-06 14:29+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_sale_stock/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: website_sale_stock
-#. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
-msgid ""
-"%(product_name)s has not been added to your cart since it is not available."
-msgstr ""
-"%(product_name)s is niet toegevoegd aan je winkelwagentje omdat het product "
-"niet beschikbaar is."
-
-#. module: website_sale_stock
-#. odoo-python
-#: code:addons/website_sale_stock/models/product_product.py:0
-msgid "%(product_name)s is back in stock"
-msgstr "%(product_name)s is weer op voorraad"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_wishlist
-msgid ""
-"<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
-"                    Out of stock"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr "<span invisible=\"not default_show_availability\">eenheden</span>"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Add to wishlist"
-msgstr ""
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Added to your wishlist"
-msgstr ""
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -76,19 +37,43 @@ msgid "All warehouses"
 msgstr "Alle magazijnen"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
-msgid "Assign"
-msgstr "Toewijzen"
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__publish_on
+msgid "Auto publish on"
+msgstr "Automatisch publiceren op"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
-msgid "Back in stock Notifications"
-msgstr "Meldingen Terug in voorraad"
+#: model:ir.model.fields,help:website_sale_stock.field_delivery_carrier__publish_on
+msgid "Automatically publish the page on the chosen date and time."
+msgstr "De pagina automatisch publiceren op de gekozen datum en tijd."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Below"
-msgstr "Onder"
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__can_publish
+msgid "Can Publish"
+msgstr "Kan publiceren"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.pickup_delivery_method
+msgid "Change location"
+msgstr "Locatie wijzigen"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Choose a pick-up point"
+msgstr "Kies een ophaalpunt"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/website_sale_stock/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Choose this location"
+msgstr "Deze locatie kiezen"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_schedule/location_schedule.js:0
+msgid "Closed"
+msgstr "Gesloten"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -96,126 +81,92 @@ msgid "Config Settings"
 msgstr "Configuratie-instellingen"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Continue Selling"
-msgstr "Doorgaan met verkopen"
+#: model:ir.model,name:website_sale_stock.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
-msgid "Continue selling when out-of-stock"
-msgstr "Doorgaan met verkopen indien niet op voorraad"
+#: model:ir.model,website_form_label:website_sale_stock.model_res_partner
+msgid "Create a Customer"
+msgstr "Een klant aanmaken"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid ""
-"Default availability mode set on newly created storable products. This can "
-"be changed at the product level."
-msgstr ""
-"Standaard beschikbaarheidsmode ingesteld op nieuw aangemaakte "
-"voorraadproducten. Dit kan worden gewijzigd op productniveau."
+#: model:ir.model,name:website_sale_stock.model_delivery_carrier
+msgid "Delivery Method"
+msgstr "Leveringsmethode"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
-msgid ""
-"Defines how this ribbon is assigned to products:\n"
-"- Manually: You assign the ribbon manually to products.\n"
-"- Sale: Applied when the product is visibly on sale.\n"
-"- New: Applied based on the New period you will define.\n"
-"- Out Of Stock: Applied when the product is out of stock."
-msgstr ""
-"Bepaalt hoe dit lint aan producten wordt toegewezen:\n"
-"- Handmatig: Je wijst het lint handmatig toe aan producten.\n"
-"- Uitverkoop: Toegewezen wanneer een product zichtbaar in uitverkoop is.\n"
-"- Nieuw: Toegewezen op basis van de 'Nieuwe periode' die je instelt.\n"
-"- Niet op voorraad: Toegewezen wanneer het product niet op voorraad is."
+#: model:ir.model,name:website_sale_stock.model_choose_delivery_carrier
+msgid "Delivery Method Selection Wizard"
+msgstr "Wizard voor het selecteren van de leveringsmethode"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "Desk Combination"
-msgstr "Bureaucombinatie"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__display_name
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__display_name
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
 msgid "Display Name"
 msgstr "Weergavenaam"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Get notified when back in stock"
-msgstr "Ontvang een bericht wanneer er opnieuw voorraad is"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "Hello"
-msgstr "Hallo"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__id
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__id
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_partner__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_stock
-#. odoo-python
-#: code:addons/website_sale_stock/controllers/main.py:0
-msgid "Invalid Email"
-msgstr "Ongeldige e-mail"
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__is_published
+msgid "Is Published"
+msgstr "Is gepubliceerd"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Invalid email"
-msgstr "Ongeldige e-mail"
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "List view"
+msgstr "Lijstweergave"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Inventory"
-msgstr "Voorraad"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Loading..."
+msgstr "Laden..."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Inventory Defaults"
-msgstr "Standaard voorraadinstellingen"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Map view"
+msgstr "Kaartweergave"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "Logo"
-msgstr "Logo"
+#. odoo-python
+#: code:addons/website_sale_stock/models/delivery_carrier.py:0
+msgid "No pick-up points are available for this delivery address."
+msgstr "Er zijn geen afhaalpunten beschikbaar voor dit afleveradres."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "Mitchell Admin"
-msgstr "Mitchell Admin"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "No result"
+msgstr "Geen resultaat"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "Order Now"
-msgstr "Bestel nu"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location/location.js:0
+#: code:addons/website_sale_stock/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Opening hours"
+msgstr "Openingsuren"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
 msgstr "Niet op voorraad"
 
@@ -226,57 +177,45 @@ msgid "Out of stock"
 msgstr "Niet op voorraad"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Out-of-Stock"
-msgstr "Niet op voorraad"
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_partner__pickup_delivery_method_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_users__pickup_delivery_method_id
+msgid "Pickup Delivery Method"
+msgstr "Ophalen Leveringsmethode"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
-msgid "Out-of-Stock Message"
-msgstr "Bericht bij niet op voorraad"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Pickup Location"
+msgstr "Ophaallocatie"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_choose_delivery_carrier__partner_shipping_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.choose_delivery_carrier_view_form_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.sale_order_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.view_picking_form_inherit_website_sale
+msgid "Pickup Point"
+msgstr "Ophaalpunt"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.pickup_address_on_checkout
+msgid "Pickup point"
+msgstr "Ophaalpunt"
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/product_product.py:0
-#: model:ir.model,name:website_sale_stock.model_product_template
-msgid "Product"
-msgstr "Product"
+#: code:addons/website_sale_stock/wizard/choose_delivery_carrier.py:0
+msgid "Please select a pickup point before adding a delivery method"
+msgstr "Selecteer een ophaalpunt voordat je een leveringsmethode toevoegt"
 
 #. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_combo
-msgid "Product Combo"
-msgstr "Productcombinatie"
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__published_date
+msgid "Published date"
+msgstr "Publicatiedatum"
 
 #. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_feed
-msgid "Product Feed"
-msgstr "Productfeed"
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_product
-msgid "Product Variant"
-msgstr "Productvariant"
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_wishlist
-msgid "Product Wishlist"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "Product image"
-msgstr "Productafbeelding"
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_ribbon
-msgid "Product ribbon"
-msgstr "Productlint"
-
-#. module: website_sale_stock
-#: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
-msgid "Product: send email regarding products availability"
-msgstr "Product: stuur een e-mail over de beschikbaarheid van producten"
+#: model:ir.model.fields,help:website_sale_stock.field_delivery_carrier__website_id
+msgid "Restrict to a specific website."
+msgstr "Beperken tot een specifieke website."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
@@ -284,64 +223,59 @@ msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Verkooporderregel"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Search"
+msgstr "Zoeken"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
-msgid "Sell when Out-of-Stock"
-msgstr "Ook verkopen indien niet op voorraad"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.pickup_delivery_method
+msgid "Select a location"
+msgstr "Een locatie selecteren"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Show Available Qty"
-msgstr "Beschikbare hoeveelheid weergeven"
+#: model:ir.model.fields,field_description:website_sale_stock.field_choose_delivery_carrier__is_pickup_required
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__support_pickup_locations
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__is_pickup_required
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__is_pickup_required
+msgid "Support Pickup Locations"
+msgstr "Ophaallocaties ondersteunen"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Show Available Quantity"
-msgstr "Beschikbare hoeveelheid weergeven"
+#: model:ir.model.fields,help:website_sale_stock.field_res_partner__pickup_delivery_method_id
+#: model:ir.model.fields,help:website_sale_stock.field_res_users__pickup_delivery_method_id
+msgid "The delivery method that generated this pickup point."
+msgstr "De leveringsmethode die dit ophaalpunt heeft gegenereerd."
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_available_threshold
-msgid "Show Threshold"
-msgstr "Drempel tonen"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_show_availability
-msgid "Show availability Qty"
-msgstr "Beschikbaarheid hoeveelheid weergeven"
-
-#. module: website_sale_stock
-#. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
-msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry "
-"for the inconvenience."
+#: model:ir.model.fields,help:website_sale_stock.field_delivery_carrier__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
 msgstr ""
-"Sommige producten zijn ondertussen onbeschikbaar en je winkelmandje is "
-"bijgewerkt. Onze excuses voor het ongemak."
+"De volledige absolute URL om toegang te krijgen tot het document via de "
+"website."
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_wishlist__stock_notification
-msgid "Stock Notification"
+#: model:ir.model.fields,help:website_sale_stock.field_delivery_carrier__website_url
+msgid "The full relative URL to access the document through the website."
 msgstr ""
+"De volledige relatieve URL om toegang te krijgen tot het document via de "
+"website."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
-msgid "The product you were waiting for is now back in stock!"
-msgstr "Het product waar je op zat te wachten is nu weer op voorraad!"
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/location_selector/map_container/map_container.js:0
+msgid "There was an error loading the map"
+msgstr "Er is een fout opgetreden bij het laden van de kaart"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Verplaatsing"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__website_published
+msgid "Visible on current website"
+msgstr "Zichtbaar op de huidige website"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -351,16 +285,21 @@ msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "We'll notify you once the product is back in stock"
-msgstr "We informeren je zodra het product weer op voorraad is"
-
-#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__website_id
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
 msgstr "Website"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__website_absolute_url
+msgid "Website Absolute URL"
+msgstr "Absolute URL van de website"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__website_url
+msgid "Website URL"
+msgstr "Website-URL"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
@@ -368,58 +307,13 @@ msgid "Website where this order has been placed, for eCommerce orders."
 msgstr "Website waar deze order is geplaatst, voor E-commerce orders."
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added all the available product in your cart"
-msgstr "Je hebt alle beschikbare producten al aan je winkelmand toegevoegd"
-
-#. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order_line.py:0
-msgid ""
-"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
-"available"
-msgstr ""
-"Je wenst %(desired_qty)s %(product_name)s maar er zijn er maar %(new_qty)s "
-"beschikbaar"
-
-#. module: website_sale_stock
-#. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
-msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is available."
-msgstr ""
-"Je wenst %(desired_qty)s maar er zijn maar %(available_qty)s beschikbaar."
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "e.g. 'Will be back soon'"
-msgstr "bv. 'Komt binnenkort terug'"
+#: code:addons/website_sale_stock/models/stock_picking.py:0
+msgid "You must select a pickup address with this delivery method."
+msgstr "Je moet een ophaaladres selecteren bij deze leveringsmethode."
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "in stock"
-msgstr "in voorraad"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "in your cart)"
-msgstr "in je winkelmandje)"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "only if below"
-msgstr "alleen als onder de"
-
-#. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
-msgid "when out of stock"
-msgstr "wanneer het niet op voorraad is"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "youremail@gmail.com"
-msgstr "youremail@gmail.com"
+#: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Your postal code"
+msgstr "Je postcode"

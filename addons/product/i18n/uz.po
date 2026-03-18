@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-10 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,18 +23,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_product.py:0
-#, fuzzy
-msgid ""
-"\n"
-"\n"
-"Note: products that you don't have access to will not be shown above."
-msgstr ""
-"Eslatma: siz kirishga ruxsatingiz bo‘lmagan mahsulotlar yuqorida "
-"ko‘rsatilmaydi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -51,24 +39,14 @@ msgid "# Products"
 msgstr "# Mahsulotlar"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr ""
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, fuzzy
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
 "%(base)s ga %(discount)s %% %(discount_type)s va %(surcharge)s qo‘shimcha "
 "to‘lov bilan. Misol: %(amount)s * %(discount_charge)s + %(price_surcharge)s "
@@ -79,11 +57,11 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, fuzzy
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
 msgstr ""
-"%(item_name)s: tugash sanasi (%(end_date)s) boshlanish sanasidan "
-"(%(start_date)s) keyin bo‘lishi kerak"
+"%(item_name)s: tugash sanasi (%(end_date)s) boshlanish sanasidan (%"
+"(start_date)s) keyin bo‘lishi kerak"
 
 #. module: product
 #. odoo-python
@@ -119,7 +97,6 @@ msgstr "%s (nusxa)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12
-#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12_noprice
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 #, fuzzy
@@ -140,6 +117,12 @@ msgid "(e.g: product description, ebook, legal notice, ...)."
 msgstr ""
 "(masalan: mahsulot tavsifi, elektron kitob, huquqiy bildirishnoma va "
 "boshqalar)."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid ")^FS"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -196,40 +179,10 @@ msgid "1 year"
 msgstr "1 yil"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr ""
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, fuzzy
 msgid "10 Units"
 msgstr "10 dona"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_100
-msgid "100"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_120
-msgid "120"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_140
-msgid "140"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_160
-msgid "160"
-msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -238,21 +191,15 @@ msgid "160x80cm, with large legs"
 msgstr "160x80 sm, katta oyoqli"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
-#, fuzzy
-msgid "2 x 7 with price"
-msgstr "2 x 7 narx bilan"
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7
+msgid "2 x 7"
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_2
 #, fuzzy
 msgid "2 years"
 msgstr "2 yil"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "2025-05-25"
-msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
@@ -267,11 +214,6 @@ msgid "3 years"
 msgstr "3 yil"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_39
-msgid "39"
-msgstr ""
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 #, fuzzy
 msgid "3XL"
@@ -284,40 +226,8 @@ msgid "4 x 12"
 msgstr "4 x 12"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
-#, fuzzy
-msgid "4 x 12 with price"
-msgstr "4 x 12 narx bilan"
-
-#. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
-#, fuzzy
-msgid "4 x 7 with price"
-msgstr "4 x 7 narx bilan"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_40
-msgid "40"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_41
-msgid "41"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_42
-msgid "42"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_43
-msgid "43"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_45
-msgid "45"
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7
+msgid "4 x 7"
 msgstr ""
 
 #. module: product
@@ -337,11 +247,6 @@ msgstr "5XL"
 #, fuzzy
 msgid "6 months"
 msgstr "6 oy"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_85
-msgid "85"
-msgstr ""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -380,18 +285,6 @@ msgstr ""
 "title=\"Currency\"/>"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">days</"
-"span>"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span class=\"o_input_box_overlay_end\">%</span>"
-msgstr ""
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 #, fuzzy
 msgid "<span class=\"o_stat_text\"> Products</span>"
@@ -410,6 +303,13 @@ msgid "<span class=\"o_stat_text\">Products</span>"
 msgstr "<span class=\"o_stat_text\">Mahsulotlar</span>"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid ""
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
+"on variants</span>"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<span> - </span>"
 msgstr ""
@@ -419,13 +319,6 @@ msgstr ""
 #, fuzzy
 msgid "<span>%</span>"
 msgstr "<span>%</span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-#, fuzzy
-msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
-"<span>Ushbu mahsulot haqidagi barcha umumiy sozlamalar boshqariladi</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -443,18 +336,6 @@ msgstr ""
 #, fuzzy
 msgid "<strong>Qty: </strong>"
 msgstr "<strong>Miqdor: </strong>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
-#, fuzzy
-msgid ""
-"<strong>Warning</strong>: adding or deleting attributes\n"
-"                        will delete and recreate existing variants and lead\n"
-"                        to the loss of their possible customizations."
-msgstr ""
-"<strong>Ogohlantirish</strong>: atributlarni qo‘shish yoki o‘chirish mavjud "
-"variantlarni o‘chirib tashlaydi va qayta yaratadi hamda ularning mumkin "
-"bo‘lgan moslamalarini yo‘qotishga olib keladi."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
@@ -606,12 +487,6 @@ msgid "Active"
 msgstr "Faol"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
-#, fuzzy
-msgid "Active Products"
-msgstr "Faol mahsulotlar"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_ids
@@ -653,16 +528,14 @@ msgstr "Faoliyat turi belgisi"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
 msgid "Add"
-msgstr "Qo‘shish"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid "Add Products"
-msgstr "Mahsulotlar qo‘shish"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -687,13 +560,10 @@ msgstr "Miqdor qo‘shish"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
-"Mahsulotlarni hisobotga kiritish uchun yuqori o‘ng burchakdagi \"Mahsulotlar "
-"qo‘shish\" tugmasidan foydalaning."
 
 #. module: product
 #. odoo-python
@@ -801,6 +671,16 @@ msgid "Allow customers to set their own value"
 msgstr "Mijozlarga o‘z qiymatini belgilashga ruxsat berish"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__alternative
+msgid "Alternative (2.00\" x 1.00\")"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
 #, fuzzy
 msgid "Aluminium"
@@ -842,13 +722,16 @@ msgstr "Qo‘llash"
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 #, fuzzy
 msgid "Archived"
 msgstr "Arxivlangan"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Archived Products"
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
@@ -953,6 +836,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #, fuzzy
@@ -964,6 +848,19 @@ msgstr "Xususiyatlar"
 #, fuzzy
 msgid "Attributes & Variants"
 msgstr "Xususiyatlar va variantlar"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__free_qty
+msgid ""
+"Available quantity (computed as Quantity On Hand - reserved quantity - "
+"quantity to remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -1010,6 +907,22 @@ msgstr "Shtrix-kod(lar) allaqachon belgilangan: %s"
 #, fuzzy
 msgid "Barcodes"
 msgstr "Shtrix-kodlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_name
+msgid "Base Unit Name"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_show_uom_price
+msgid "Base Unit Price"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.base_unit_action
+msgid "Base Units"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -1143,13 +1056,13 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, fuzzy
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"Mahsulotingiz uchun o‘lchov birligini o‘zgartirish 1 %(old_uom_name)s = 1 "
-"%(new_uom_name)s konvertatsiyani qo‘llaydi. Ushbu mahsulotdan foydalanilgan "
+"Mahsulotingiz uchun o‘lchov birligini o‘zgartirish 1 %(old_uom_name)s = 1 %"
+"(new_uom_name)s konvertatsiyani qo‘llaydi. Ushbu mahsulotdan foydalanilgan "
 "barcha mavjud yozuvlar (Sotish buyurtmalari, Xarid buyurtmalari va "
 "boshqalar) birlik nomini almashtirish orqali yangilanadi."
 
@@ -1176,12 +1089,6 @@ msgstr "Yorliqlarni chop etish uchun varaq tartibini tanlang"
 #, fuzzy
 msgid "Coca-Cola"
 msgstr "Coca-Cola"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-#, fuzzy
-msgid "Codes"
-msgstr "Kodlar"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_colgate
@@ -1418,8 +1325,6 @@ msgid "Create a new product category"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.actions.act_window,help:product.product_normal_action
-#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 #, fuzzy
 msgid "Create a new product variant"
@@ -1448,6 +1353,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_base_unit__create_uid
 #: model:ir.model.fields,field_description:product.field_product_category__create_uid
 #: model:ir.model.fields,field_description:product.field_product_combo__create_uid
 #: model:ir.model.fields,field_description:product.field_product_combo_item__create_uid
@@ -1471,6 +1377,7 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_base_unit__create_date
 #: model:ir.model.fields,field_description:product.field_product_category__create_date
 #: model:ir.model.fields,field_description:product.field_product_combo__create_date
 #: model:ir.model.fields,field_description:product.field_product_combo_item__create_date
@@ -1543,6 +1450,12 @@ msgstr ""
 #, fuzzy
 msgid "Custom"
 msgstr "Maxsus"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_id
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_id
+msgid "Custom Unit of Measure"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
@@ -1618,6 +1531,13 @@ msgstr "Standart qo‘shimcha narx o‘zgartirildi"
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
 "Barcha ombor operatsiyalari uchun ishlatiladigan standart o‘lchov birligi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_base_unit__name
+#: model:ir.model.fields,help:product.field_product_product__base_unit_id
+#: model:ir.model.fields,help:product.field_product_template__base_unit_id
+msgid "Define a custom unit to display in the price per unit of measure field."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -1743,6 +1663,7 @@ msgstr "Qo‘llanilgan ko‘rsatkich"
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_base_unit__display_name
 #: model:ir.model.fields,field_description:product.field_product_catalog_mixin__display_name
 #: model:ir.model.fields,field_description:product.field_product_category__display_name
 #: model:ir.model.fields,field_description:product.field_product_combo__display_name
@@ -1761,9 +1682,9 @@ msgstr "Qo‘llanilgan ko‘rsatkich"
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12noprice__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_zpl__display_name
 #: model:ir.model.fields,field_description:product.field_res_company__display_name
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
@@ -1782,6 +1703,20 @@ msgstr "Ko‘rsatish nomi"
 #, fuzzy
 msgid "Display Type"
 msgstr "Ko‘rsatish turi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__base_unit_count
+#: model:ir.model.fields,help:product.field_product_template__base_unit_count
+msgid "Display base unit price. Set to 0 to hide it for this product."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__base_unit_name
+#: model:ir.model.fields,help:product.field_product_template__base_unit_name
+msgid ""
+"Displays the custom unit for the products if defined or the selected unit of "
+"measure otherwise."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1817,13 +1752,6 @@ msgstr "Kabutar"
 #, fuzzy
 msgid "Download"
 msgstr "Yuklab olish"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_template.py:0
-#, fuzzy
-msgid "Download examples"
-msgstr "Misollarni yuklab olish"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1967,10 +1895,9 @@ msgid "Extra Fee"
 msgstr "Qo‘shimcha to‘lov"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-#, fuzzy
-msgid "Extra Info"
-msgstr "Qo‘shimcha ma'lumot"
+#: model:ir.model.fields,field_description:product.field_product_product__extra_uom_ids
+msgid "Extra Packagings"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
@@ -2127,6 +2054,16 @@ msgstr "Formula"
 #, fuzzy
 msgid "Four Person Desk"
 msgstr "To‘rt kishilik ish stoli"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template__free_qty
+msgid "Free To Use"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__free_qty
+msgid "Free To Use Quantity "
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
@@ -2299,6 +2236,7 @@ msgstr "Mehmonxonada yashash"
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_product_base_unit__id
 #: model:ir.model.fields,field_description:product.field_product_catalog_mixin__id
 #: model:ir.model.fields,field_description:product.field_product_category__id
 #: model:ir.model.fields,field_description:product.field_product_combo__id
@@ -2317,9 +2255,9 @@ msgstr "Mehmonxonada yashash"
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12noprice__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_zpl__id
 #: model:ir.model.fields,field_description:product.field_res_company__id
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
@@ -2466,6 +2404,7 @@ msgstr "Rasm havola"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 #, fuzzy
 msgid "Inactive"
@@ -2604,10 +2543,21 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__jewelry
+msgid "Jewelry (2.20\" x 0.50\")"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 #, fuzzy
 msgid "Kilograms (kg)"
 msgstr "Kilogramm (kg)"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_l
+#, fuzzy
+msgid "L"
+msgstr "LG"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2652,6 +2602,7 @@ msgstr "Katta majlis stoli"
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_base_unit__write_uid
 #: model:ir.model.fields,field_description:product.field_product_category__write_uid
 #: model:ir.model.fields,field_description:product.field_product_combo__write_uid
 #: model:ir.model.fields,field_description:product.field_product_combo_item__write_uid
@@ -2675,6 +2626,7 @@ msgstr "Oxirgi yangilagan"
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_base_unit__write_date
 #: model:ir.model.fields,field_description:product.field_product_category__write_date
 #: model:ir.model.fields,field_description:product.field_product_combo__write_date
 #: model:ir.model.fields,field_description:product.field_product_combo_item__write_date
@@ -2792,7 +2744,6 @@ msgstr "Mahalliy qo‘lda yasalgan"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 #, fuzzy
 msgid "Logistics"
 msgstr "Logistika"
@@ -2806,6 +2757,11 @@ msgid ""
 msgstr ""
 "Mavjud mebelga mos keladigan maxsus bambuk bo‘yoq izlayapsizmi? Narx taklifi "
 "uchun biz bilan bog‘laning."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_m
+msgid "M"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__excluded_value_ids
@@ -2971,6 +2927,7 @@ msgstr "Faoliyatim muddati"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
+#: model:ir.model.fields,field_description:product.field_product_base_unit__name
 #: model:ir.model.fields,field_description:product.field_product_category__name
 #: model:ir.model.fields,field_description:product.field_product_combo__name
 #: model:ir.model.fields,field_description:product.field_product_document__name
@@ -3078,16 +3035,14 @@ msgstr ""
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
-#, fuzzy
 msgid "No products could be found."
-msgstr "Hech qanday mahsulot topilmadi."
+msgstr ""
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid "No products found in the report"
-msgstr "Hisobotda hech qanday mahsulot topilmadi"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -3109,12 +3064,23 @@ msgid "Noise-reducing panels for open spaces"
 msgstr "Ochiq joylar uchun shovqinni kamaytiruvchi panellar"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__normal
+msgid "Normal (2.25\" x 1.25\")"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, fuzzy
 msgid "Note:"
 msgstr "Eslatma:"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "Note: Some products may be hidden due to access restrictions."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
@@ -3239,8 +3205,8 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, fuzzy
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "%(product)s mahsulotida %(attribute_src)s xususiyatini %(attribute_dest)s "
 "xususiyatiga o‘zgartira olmaysiz."
@@ -3320,6 +3286,11 @@ msgid "Package Type A"
 msgstr "A turdagi qadoq"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__uom_id
+msgid "Packaging"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
@@ -3375,11 +3346,6 @@ msgstr "Pedalli chiqindi qutisi"
 #, fuzzy
 msgid "Pepsi"
 msgstr "Pepsi"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Per"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
@@ -3474,10 +3440,7 @@ msgstr ""
 "tik turish balandligigacha oson ko‘tarilishini kuzating."
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #, fuzzy
 msgid "Price"
 msgstr "Narx"
@@ -3487,6 +3450,12 @@ msgstr "Narx"
 #, fuzzy
 msgid "Price Discount"
 msgstr "Narx chegirmasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_price
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_price
+msgid "Price Per Unit"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
@@ -3599,12 +3568,6 @@ msgid "Prices"
 msgstr "Narxlar"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-#, fuzzy
-msgid "Pricing"
-msgstr "Narxlash"
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -3620,6 +3583,11 @@ msgstr "Chop etish"
 #, fuzzy
 msgid "Print Labels"
 msgstr "Yorliqlarni chop etish"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__with_price
+msgid "Print With Price"
+msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
@@ -3745,6 +3713,11 @@ msgid "Product Label (PDF)"
 msgstr "Mahsulot yorlig‘i (PDF)"
 
 #. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_zpl
+msgid "Product Label (ZPL)"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 #, fuzzy
 msgid "Product Label 2x7 (PDF)"
@@ -3755,12 +3728,6 @@ msgstr "Mahsulot yorlig‘i 2x7 (PDF)"
 #, fuzzy
 msgid "Product Label 4x12 (PDF)"
 msgstr "Mahsulot yorlig‘i 4x12 (PDF)"
-
-#. module: product
-#: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
-#, fuzzy
-msgid "Product Label 4x12 No Price (PDF)"
-msgstr "Mahsulot yorlig‘i 4x12 narxsiz (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
@@ -3787,16 +3754,15 @@ msgid "Product Label Report 4x12"
 msgstr "Mahsulot yorlig‘i hisoboti 4x12"
 
 #. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
-#, fuzzy
-msgid "Product Label Report 4x12 No Price"
-msgstr "Mahsulot yorlig‘i hisoboti 4x12 narxsiz"
-
-#. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 #, fuzzy
 msgid "Product Label Report 4x7"
 msgstr "Mahsulot yorlig‘i hisoboti 4x7"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_zpl
+msgid "Product Label Report ZPL"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
@@ -3820,6 +3786,7 @@ msgstr "Mahsulot tegi"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
+#: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 #, fuzzy
 msgid "Product Tags"
@@ -3830,7 +3797,6 @@ msgstr "Mahsulot teglari"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
-#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 #, fuzzy
 msgid "Product Template"
@@ -3901,13 +3867,10 @@ msgid "Product Variant"
 msgstr "Mahsulot varianti"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
-#: model_terms:ir.ui.view,arch_db:product.product_product_view_tree_tag
 #, fuzzy
 msgid "Product Variants"
 msgstr "Mahsulot variantlari"
@@ -4011,9 +3974,8 @@ msgstr "Siyoh rang"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid "Quantities"
-msgstr "Miqdorlar"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -4072,6 +4034,11 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_template__free_qty
+msgid "Quantity on hand minus outgoing quantity."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 #, fuzzy
 msgid "Radio"
@@ -4110,6 +4077,12 @@ msgid "Reference"
 msgstr "Havola"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_count
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_count
+msgid "Reference Unit"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 #, fuzzy
 msgid ""
@@ -4140,9 +4113,8 @@ msgstr "Bog‘liq ilova"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
 msgid "Remove"
-msgstr "Olib tashlash"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -4150,6 +4122,16 @@ msgstr "Olib tashlash"
 #, fuzzy
 msgid "Remove quantity"
 msgstr "Miqdorni olib tashlash"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_access_read
+msgid "Res Access Read"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_access_write
+msgid "Res Access Write"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
@@ -4225,12 +4207,17 @@ msgid "Rules"
 msgstr ""
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_size_s
+#, fuzzy
+msgid "S"
+msgstr "XS"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 #, fuzzy
 msgid "Sales"
 msgstr "Sotuvlar"
@@ -4246,7 +4233,7 @@ msgstr "Sotuv tavsifi"
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
 #: model:ir.model.fields,field_description:product.field_product_template__list_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__list_price
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #, fuzzy
 msgid "Sales Price"
@@ -4379,6 +4366,11 @@ msgid "Size"
 msgstr "O‘lcham"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__small
+msgid "Small (1.25\" x 1.00\")"
+msgstr ""
+
+#. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 #, fuzzy
 msgid "Soft-close pedal bin for office use"
@@ -4442,6 +4434,12 @@ msgstr "Asosiy narxdan yuqori bo‘lgan marjaning maksimal miqdorini ko‘rsatin
 #, fuzzy
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "Asosiy narxdan yuqori bo‘lgan marjaning minimal miqdorini ko‘rsating."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid "Specify unit"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
@@ -4587,8 +4585,8 @@ msgstr "'%s' ma'lumotnomasi allaqachon mavjud."
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, fuzzy
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr ""
 "%(attribute)s atributi %(product)s mahsuloti uchun kamida bitta qiymatga ega "
 "bo‘lishi kerak."
@@ -4636,8 +4634,8 @@ msgstr "Mahsulot konfiguratorida ishlatiladigan ko‘rsatish turi."
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
-"\"%(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
 msgstr ""
 
 #. module: product
@@ -4749,6 +4747,14 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
+"per unit on this product."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, fuzzy
 msgid "There are no possible combination."
@@ -4857,6 +4863,12 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+msgid "Total Free To Use"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total On Hand"
 msgstr ""
@@ -4900,6 +4912,11 @@ msgstr "Qaydnomalardagi istisno faoliyat turi"
 #, fuzzy
 msgid "UOM"
 msgstr "O‘lchov birligi"
+
+#. module: product
+#: model:res.groups,name:product.group_show_uom_price
+msgid "UOM price display"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4966,15 +4983,23 @@ msgid "Unit Name"
 msgstr "Birlik nomi"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #, fuzzy
 msgid "Unit Price"
 msgstr "Birlik narxi"
 
 #. module: product
+#: model:ir.model,name:product.model_product_base_unit
+msgid "Unit of Measure for price per unit on products."
+msgstr ""
+
+#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_model.js:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 #, fuzzy
 msgid "Units"
@@ -5030,9 +5055,8 @@ msgstr "Mavjud mahsulotlarga qo‘shimcha narxni yangilash"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
-#, fuzzy
 msgid "Upload"
-msgstr "Yuklash"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -5110,15 +5134,11 @@ msgstr "Yaroqli mahsulot xususiyatlari qatorlari"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #, fuzzy
 msgid "Validity"
 msgstr "Amal qilish muddati"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid "Validity Start"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -5209,12 +5229,6 @@ msgid "Variant Image 512"
 msgstr "Variant rasmi 512"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-#, fuzzy
-msgid "Variant Information"
-msgstr "Variant haqida ma'lumot"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 #, fuzzy
 msgid "Variant Price Extra"
@@ -5234,11 +5248,17 @@ msgid "Variant Tags"
 msgstr "Variant teglari"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 #, fuzzy
 msgid "Variant Values"
 msgstr "Variant qiymatlari"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__extra_uom_ids
+msgid ""
+"Variant-specific additional packagings for this product which can be used "
+"for sales"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -5525,9 +5545,17 @@ msgstr ""
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
 msgid "You can't edit this product in the catalog."
-msgstr "Bu mahsulotni katalogda tahrirlay olmaysiz."
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is part of a combo. Please remove it from "
+"the following combos first: %s"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -5567,8 +5595,8 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, fuzzy
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
 "%(product)s mahsulotiga o‘rnatilgan %(value)s qiymatining mahsulotini "
 "o‘zgartira olmaysiz."
@@ -5578,8 +5606,8 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, fuzzy
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
 "%(product)s mahsulotiga o‘rnatilgan %(value)s qiymatini o‘zgartira olmaysiz."
 
@@ -5645,18 +5673,13 @@ msgstr ""
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
-#, fuzzy
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or "
 "a service."
 msgstr ""
-"Siz sotadigan yoki xarid qiladigan har bir narsa uchun, u saqlanadigan "
-"mahsulot, iste'mol qilinadigan mahsulot yoki xizmat bo‘lishidan qat'i nazar, "
-"mahsulotni belgilashingiz kerak."
 
 #. module: product
-#: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #, fuzzy
 msgid ""
@@ -5686,25 +5709,6 @@ msgstr ""
 "va boshqalar."
 
 #. module: product
-#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
-#, fuzzy
-msgid ""
-"You must define a product for everything you sell, whether it's a physical "
-"product,\n"
-"                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale "
-"process:\n"
-"                price, notes in the quotation, accounting data, procurement "
-"methods, etc."
-msgstr ""
-"Siz sotadigan har bir narsa uchun, u jismoniy mahsulot, iste'mol qilinadigan "
-"mahsulot yoki mijozlarga taklif qiladigan xizmat bo‘lishidan qat'i nazar, "
-"mahsulotni belgilashingiz kerak. Mahsulot shakli sotish jarayonini "
-"soddalashtirish uchun ma'lumotlarni o‘z ichiga oladi: narx, "
-"taklifnomalardagi izohlar, buxgalteriya ma'lumotlari, xarid qilish usullari "
-"va boshqalar."
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, fuzzy
@@ -5719,10 +5723,117 @@ msgid "You need to set a positive quantity."
 msgstr "Ijobiy miqdorni belgilashingiz kerak."
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__zpl
+msgid "ZPL Labels"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__zpl_preview
+msgid "ZPL Preview"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__zpl_template
+msgid "ZPL Template"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_brand_zara
 #, fuzzy
 msgid "Zara"
 msgstr "Zara"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FO150,165 ^A0N,25^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FO150,210 ^A0N,25^FH ^FD("
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FO160,185 ^A0N,18^FH ^FD("
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FO290,165 ^A0N,30^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+msgid "^FO290,50 ^A0N,30^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FO300,200 ^A0N,40^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FS"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+msgid "^FT210,30^A0N,25^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FT35,30^A0N,15^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FT35,30^A0N,20^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FT35,40^A0N,25^FD"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -5744,6 +5855,7 @@ msgid "csv"
 msgstr "csv"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 #, fuzzy
 msgid "days"
@@ -5782,12 +5894,6 @@ msgid "e.g. Lamps"
 msgstr "masalan, Chiroqlar"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-#, fuzzy
-msgid "e.g. Odoo Enterprise Subscription"
-msgstr "masalan, Odoo Enterprise obunasi"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #, fuzzy
 msgid "e.g. Starter - Meal - Desert"
@@ -5821,6 +5927,7 @@ msgstr "pdf"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #, fuzzy
 msgid "per"
 msgstr "uchun"
@@ -5853,12 +5960,6 @@ msgstr "10.00 gacha yaxlitlang va -0.01 da qo‘shimcha qiymat o‘rnating"
 #, fuzzy
 msgid "sales price"
 msgstr "sotish narxi"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-#, fuzzy
-msgid "the product template."
-msgstr "mahsulot shabloni"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

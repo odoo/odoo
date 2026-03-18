@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -82,6 +82,11 @@ msgstr "Ulanish"
 #, fuzzy
 msgid "Could not find Razorpay provider with id %s"
 msgstr "%s identifikatorli Razorpay provayderi topilmadi"
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Disconnect"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__display_name
@@ -180,6 +185,11 @@ msgid "Razorpay Account ID"
 msgstr "Razorpay hisob raqami"
 
 #. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
+msgid "Razorpay Is Oauth Supported"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
 #, fuzzy
 msgid "Razorpay Key Id"
@@ -212,13 +222,17 @@ msgstr "Razorpay veb-ilmoq siri"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
-#, fuzzy
 msgid ""
-"Razorpay credentials are missing. Click the \"Connect\" button to set up "
-"your account."
+"Razorpay credentials are missing. Please fill them to set up your account."
 msgstr ""
-"Razorpay hisob ma'lumotlari mavjud emas. Hisobingizni sozlash uchun "
-"\"Ulanish\" tugmasini bosing."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Please set the state back to 'Disabled' "
+"and click the \"Connect\" button to set up your account."
+msgstr ""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -258,12 +272,6 @@ msgstr "Holat ma'lumotlari yetishmayotgan ma'lumotlar qabul qilindi."
 #, fuzzy
 msgid "Received incomplete refund data."
 msgstr "To‘liq bo‘lmagan qaytarish ma'lumotlari qabul qilindi."
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-#, fuzzy
-msgid "Reset Your Razorpay Account"
-msgstr "Razorpay hisobingizni qayta tiklash"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -314,17 +322,13 @@ msgstr "Veb-ilmoq siri"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-#, fuzzy
 msgid ""
 "You are currently connected to Razorpay through the credentials method, "
 "which is\n"
-"                    deprecated. Click the \"Connect\" button below to use "
+"                    deprecated. Click the \"Connect\" button above to use "
 "the recommended OAuth\n"
 "                    method."
 msgstr ""
-"Siz hozirda Razorpayga eskirgan hisob ma'lumotlari usuli orqali ulangansiz. "
-"Tavsiya etilgan OAuth usulidan foydalanish uchun quyidagi \"Ulanish\" "
-"tugmasini bosing."
 
 #. module: payment_razorpay
 #. odoo-python

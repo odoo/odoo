@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2026-03-07 14:35+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -38,12 +38,6 @@ msgstr ""
 #: code:addons/hr_maintenance/models/hr_employee_departure.py:0
 msgid "1 equipment has been unassigned from %s"
 msgstr "1 equipamento foi desatribuído de %s"
-
-#. module: hr_maintenance
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
-msgid "<span>Unassign Equipment</span>"
-msgstr "<span>Desatribuir equipamento</span>"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__department_id
@@ -78,7 +72,6 @@ msgstr "Departamento"
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__display_name
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__display_name
 msgid "Display Name"
@@ -95,11 +88,6 @@ msgid "Employee"
 msgstr "Funcionário"
 
 #. module: hr_maintenance
-#: model:ir.model,name:hr_maintenance.model_hr_version
-msgid "Employee Contract"
-msgstr "Contrato do Funcionário"
-
-#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_hr_employee_departure
 msgid "Employee Departure"
 msgstr "Saída de funcionário"
@@ -108,7 +96,6 @@ msgstr "Saída de funcionário"
 #: model:ir.actions.act_window,name:hr_maintenance.equipment_action
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
 msgid "Equipment"
@@ -127,17 +114,9 @@ msgid "Equipment unassigned due to the end of collaboration with %s"
 msgstr "Equipamento não atribuído devido ao fim da colaboração com %s"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__departure_do_unassign_equipment
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__do_unassign_equipment
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__departure_do_unassign_equipment
-msgid "Free Equiments"
-msgstr "Liberar equipamentos"
-
-#. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__id
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__id
 msgid "ID"
@@ -162,13 +141,6 @@ msgstr "Minhas manutenções"
 #: model:ir.model,name:hr_maintenance.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Empregado Público"
-
-#. module: hr_maintenance
-#: model:ir.model.fields,help:hr_maintenance.field_hr_employee__departure_do_unassign_equipment
-#: model:ir.model.fields,help:hr_maintenance.field_hr_employee_departure__do_unassign_equipment
-#: model:ir.model.fields,help:hr_maintenance.field_hr_version__departure_do_unassign_equipment
-msgid "Unassign Employee from Equipments"
-msgstr "Desatribuir funcionário do equipamento"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__equipment_assign_to

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-10-15 07:21+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -220,8 +220,8 @@ msgstr ""
 "les participants doivent avoir une adresse e-mail. Cependant, certains "
 "événements ne respectent pas cette condition. Tant que les événements sont "
 "incorrects, les calendriers ne seront pas synchronisés.\n"
-"Mettez à jour les événements et les participants ou archivez ces événements "
-"%(details)s :\n"
+"Mettez à jour les événements et les participants ou archivez ces événements %"
+"(details)s :\n"
 "%(invalid_events)s"
 
 #. module: microsoft_calendar
@@ -334,6 +334,11 @@ msgid "Microsoft Recurrence Master Id"
 msgstr "Master Id récurrence Microsoft"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_sync_active
+msgid "Microsoft Sync Active"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Microsoft Synchronization Paused"
 msgstr "Synchronisation de Microsoft interrompue"
@@ -406,6 +411,16 @@ msgstr "Outlook : synchronisation"
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
 msgstr "Interrompre la synchronisation"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_microsoft_calendar_event_form
+msgid "Recurring events can only be edited from Outlook."
+msgstr ""
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_microsoft_calendar_event_form
+msgid "Recurring events must be created directly in Outlook Calendar."
+msgstr ""
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form

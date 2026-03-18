@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -43,6 +43,12 @@ msgstr "%s (nusxa)"
 #, fuzzy
 msgid "2 Week's Calendar"
 msgstr "2 haftalik taqvim"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/res_company.py:0
+msgid "40 hours/week"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -660,13 +666,6 @@ msgid "Share User"
 msgstr "Foydalanuvchini ulashish"
 
 #. module: resource
-#. odoo-python
-#: code:addons/resource/models/res_company.py:0
-#, fuzzy
-msgid "Standard 40 hours/week"
-msgstr "Standart 40 soat/hafta"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 #, fuzzy
 msgid "Start Date"
@@ -739,8 +738,8 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar.py:0
 #, fuzzy
 msgid ""
-"The current week (from %(first_day)s to %(last_day)s) corresponds to "
-"%(number)s week."
+"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
+"(number)s week."
 msgstr ""
 "Joriy hafta (%(first_day)s dan %(last_day)s gacha) %(number)s haftaga "
 "to‘g‘ri keladi."
@@ -840,7 +839,6 @@ msgid "User"
 msgstr "Foydalanuvchi"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #, fuzzy
 msgid "Visible to all"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-08 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -77,6 +77,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 yoki 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
@@ -102,8 +107,6 @@ msgstr "Kontakt"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_country
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
-#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
 #, fuzzy
 msgid "Country"
 msgstr "Davlat"
@@ -129,12 +132,6 @@ msgstr "DE123456788 yoki 12/345/67890"
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "Error while checking the VAT number '%s' against the VIES service."
-msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -218,6 +215,12 @@ msgstr "Hamjamiyat ichida amal qiluvchi"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "Eslatma: kutilayotgan format: %(expected_format)s"
@@ -230,19 +233,12 @@ msgid "Perform Vies Validation"
 msgstr "VIES tekshiruvini bajarish"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
-#, fuzzy
-msgid "Tax ID"
-msgstr "Soliq ID"
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
 "%(vat_label)s raqami [%(wrong_vat)s] to‘g‘ri ko‘rinmaydi. %(expected_note)s"
 
@@ -258,17 +254,22 @@ msgstr ""
 "ko‘rinmaydi. %(expected_note)s"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-#, fuzzy
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
 msgstr ""
-"Soliq identifikatsiya raqami. Bu yerda kiritilgan qiymatlar davlat formatiga "
-"asosan tekshiriladi. Hamkor soliqqa tortilmasligini ko‘rsatish uchun '/' "
-"belgisidan foydalanishingiz mumkin."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -299,6 +300,12 @@ msgstr "Yevropa VIES xizmatidan foydalanib QQS raqamlarini tekshirish"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits]"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
@@ -308,9 +315,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-#, fuzzy
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "CPF uchun 11 ta raqam yoki CNPJ uchun 14 ta raqam"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python

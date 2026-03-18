@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -118,26 +118,17 @@ msgstr "Vazifa"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
-#, fuzzy
 msgid ""
 "The default project used when automatically generating timesheets via time "
-"off requests. You can specify another project on each time off type "
-"individually."
+"off requests. You can specify another project on each time type individually."
 msgstr ""
-"Ta'til so‘rovlari orqali vaqt jadvallarini avtomatik yaratishda "
-"ishlatiladigan standart loyiha. Har bir ta'til turida alohida boshqa "
-"loyihani ko‘rsatishingiz mumkin."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
-#, fuzzy
 msgid ""
 "The default task used when automatically generating timesheets via time off "
-"requests. You can specify another task on each time off type individually."
+"requests. You can specify another task on each time type individually."
 msgstr ""
-"Ta'til so‘rovlari orqali vaqt jadvallarini avtomatik yaratishda "
-"ishlatiladigan standart vazifa. Har bir ta'til turida alohida boshqa "
-"vazifani belgilashingiz mumkin."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -166,9 +157,28 @@ msgstr "Ta'til vazifasi"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
-#, fuzzy
-msgid "Time Off Types Count"
-msgstr "Ta'til turlari soni"
+msgid "Time Types Count"
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be deleted."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be modified."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"Timesheets related to time off cannot be created or modified. Please manage "
+"your requests in the Time Off app instead."
+msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -205,41 +215,11 @@ msgstr "Ta'tilni ko‘rish"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, fuzzy
 msgid ""
-"You cannot create timesheets for a task that is linked to a time off type. "
-"Please use the Time Off application to request new time off instead."
-msgstr ""
-"Ta'til turiga bog‘langan vazifa uchun vaqt jadvallarini yarata olmaysiz. "
-"Iltimos, yangi ta'til so‘rovi uchun Ta'til ilovasidan foydalaning."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-#, fuzzy
-msgid "You cannot delete timesheets that are linked to global time off."
-msgstr "Umumiy ta'tilga bog‘langan vaqt jadvallarini o‘chira olmaysiz."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-#, fuzzy
-msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
 "Ta'til so‘rovlariga bog‘langan vaqt jadvallarini o‘chira olmaysiz. Iltimos, "
 "buning o‘rniga Ta'til ilovasidan ta'til so‘rovingizni bekor qiling."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-#, fuzzy
-msgid ""
-"You cannot modify timesheets that are linked to time off requests. Please "
-"use the Time Off application to modify your time off requests instead."
-msgstr ""
-"Ta'til so‘rovlariga bog‘langan vaqt jadvallarini o‘zgartira olmaysiz. "
-"Iltimos, ta'til so‘rovlaringizni o‘zgartirish uchun Ta'til ilovasidan "
-"foydalaning."
 
 #. module: project_timesheet_holidays
 #. odoo-python

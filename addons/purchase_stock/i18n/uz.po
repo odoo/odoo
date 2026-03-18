@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -161,9 +161,8 @@ msgstr "Harakat"
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
-#, fuzzy
 msgid "Add All"
-msgstr "Hammasini qo‘shish"
+msgstr ""
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -394,7 +393,6 @@ msgstr "Belgilangan joy turi"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
@@ -569,7 +567,6 @@ msgstr "Guruhli narx so‘rovi"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
@@ -819,8 +816,8 @@ msgstr "Buyurtma nuqtasi"
 #, fuzzy
 msgid ""
 "Over the past x days; the number of products received on time divided by the "
-"number of ordered products.x is either the System Parameter purchase_stock."
-"on_time_delivery_days or the default 365"
+"number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "O‘tgan x kun davomida; o‘z vaqtida qabul qilingan mahsulotlar sonining "
 "buyurtma qilingan mahsulotlar soniga nisbati. Bu yerda x - tizim parametri "
@@ -1013,21 +1010,14 @@ msgstr "Yetkazib beruvchilardan mijozlarga yetkazib berishni so‘rang"
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "Requests for quotation :"
-msgstr "Narx so‘rovlari:"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
 #, fuzzy
 msgid "Reservation"
 msgstr "Band qilish"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_return_picking
-#, fuzzy
-msgid "Return Picking"
-msgstr "Qaytarish jarayoni"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -1236,8 +1226,8 @@ msgid ""
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
 "Operatsiya turi ombori (%(operation_type)s) %(product)s mahsuloti uchun "
-"qayta buyurtma qilish qoidasining (%(reordering_rule)s) joylashuvi "
-"(%(location)s) bilan mos emas. Operatsiya turini o‘zgartiring yoki narx "
+"qayta buyurtma qilish qoidasining (%(reordering_rule)s) joylashuvi (%"
+"(location)s) bilan mos emas. Operatsiya turini o‘zgartiring yoki narx "
 "so‘rovini bekor qiling."
 
 #. module: purchase_stock
@@ -1336,6 +1326,12 @@ msgstr "Vaqt oralig‘ini tanlash"
 #, fuzzy
 msgid "To Order"
 msgstr "Buyurtma berish"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+msgid "Total"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -1466,10 +1462,9 @@ msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase_order.py:0
-#, fuzzy
-msgid "You must set a Vendor Location for this partner %s"
-msgstr "%s hamkor uchun ta'minotchi manzilini belgilashingiz zarur"
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+msgid "You must set a Vendor Location for partner %(partner_name)s"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
@@ -1511,4 +1506,10 @@ msgstr "bu mahsulot qo‘lda to‘ldirilishi kerak."
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "units"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+msgid "x"
 msgstr ""

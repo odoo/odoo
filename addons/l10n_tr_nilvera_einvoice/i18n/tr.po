@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:16+0000\n"
+"POT-Creation-Date: 2026-05-10 18:13+0000\n"
 "PO-Revision-Date: 2026-01-17 12:51+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
@@ -18,21 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.14.3\n"
-
-#. module: l10n_tr_nilvera_einvoice
-#: model:res.partner.category,name:l10n_tr_nilvera_einvoice.partner_demo_company_tr_tag
-msgid "0-123456780100019"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#: model:res.partner.category,name:l10n_tr_nilvera_einvoice.l10n_tr_res_partner_1_tag
-msgid "0-123456780200020"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#: model:res.partner.category,name:l10n_tr_nilvera_einvoice.l10n_tr_res_partner_2_tag
-msgid "0-424519348000017"
-msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_316
@@ -193,6 +178,12 @@ msgstr ""
 msgid "Check Tax ID, City, Street, State, and Country or Partner(s)"
 msgstr ""
 "Vergi Numarası, Şehir, Adres, Eyalet ve Ülke veya Ortak(lar)ı Kontrol Edin"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid "Check VAT on Partner(s)"
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -468,8 +459,8 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__percentage
 msgid ""
-"Enter the applicable withholding tax rate for this code as a whole number (e."
-"g., 40 for 40%). \n"
+"Enter the applicable withholding tax rate for this code as a whole number "
+"(e.g., 40 for 40%). \n"
 "This field is used specifically for withholding tax codes and defines the "
 "percentage to be withheld from the total amount."
 msgstr ""
@@ -543,6 +534,14 @@ msgstr ""
 msgid ""
 "For 0% EX VAT on sales invoices, an exemption reason is required. Odoo has "
 "set the default as \"351 - Other Non-Exempt VAT\""
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid ""
+"For Public Sector e-Invoices, the Public Spending Unit must have a valid "
+"address and Tax ID defined."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -654,6 +653,12 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
 msgid "Invoice Type"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "Invoices in Error"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -933,6 +938,12 @@ msgid "Public Sector"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_public_spending_unit_id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_public_spending_unit_id
+msgid "Public Spending Unit"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_shipping_type__2
 msgid "Railway Transportation"
 msgstr ""
@@ -1066,6 +1077,15 @@ msgid "Shuttle Transportation Service"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Some PDFs could not be retrieved because the Nilvera Status is not "
+"successful yet or is in error. Please try again once the status becomes "
+"successful."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_res_partner__l10n_tr_nilvera_customer_alias_id
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_res_users__l10n_tr_nilvera_customer_alias_id
 msgid ""
@@ -1115,6 +1135,11 @@ msgstr "Başarılı"
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_602
 msgid "Survey, Plan-Project, Consultancy, Audit and Similar Services"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "Synchronize with Nilvera"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1201,6 +1226,14 @@ msgid ""
 msgstr ""
 "Aşağıdaki E-Fatura ortaklarının referans alanı vergi dairesi adı olarak "
 "ayarlanmalıdır."
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"The PDF could not be retrieved because the Nilvera Status is not successful "
+"yet or is in error. Please try again once the status becomes successful."
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -1440,6 +1473,7 @@ msgstr "Şirket(ler)i Görüntüle"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "View Invoice(s)"
 msgstr "Fatura(ları) Görüntüle"

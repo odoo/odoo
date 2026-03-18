@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -232,28 +232,6 @@ msgid "Cash on Delivery"
 msgstr "Yetkazib berilganda naqd to‘lov"
 
 #. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "Choose a pick-up point"
-msgstr "Olib ketish nuqtasini tanlang"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
-#, fuzzy
-msgid "Choose this location"
-msgstr "Bu joyni tanlang"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
-#, fuzzy
-msgid "Closed"
-msgstr "Yopiq"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 #, fuzzy
@@ -265,6 +243,16 @@ msgstr "Kompaniya"
 #, fuzzy
 msgid "Condition"
 msgstr "Shart"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -387,7 +375,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
-#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 #, fuzzy
 msgid "Delivery Methods"
 msgstr "Yetkazib berish usullari"
@@ -480,6 +467,7 @@ msgstr "Ko‘rsatish tartibini belgilash"
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
+#: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
@@ -561,6 +549,11 @@ msgid ""
 msgstr ""
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 #, fuzzy
 msgid "Fixed Margin"
@@ -613,6 +606,7 @@ msgstr "HTTP yo‘naltirish"
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
+#: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
@@ -685,13 +679,6 @@ msgid "Invoicing Policy"
 msgstr "Hisob-faktura siyosati"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_res_partner__is_pickup_location
-#: model:ir.model.fields,field_description:delivery.field_res_users__is_pickup_location
-#, fuzzy
-msgid "Is Pickup Location"
-msgstr "Olib ketish joyi"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 #, fuzzy
 msgid "Is a Delivery"
@@ -716,20 +703,6 @@ msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
 
 #. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "List view"
-msgstr "Ro‘yxat ko‘rinishi"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "Loading..."
-msgstr "Yuklanmoqda..."
-
-#. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #, fuzzy
 msgid "Local Delivery"
@@ -746,13 +719,6 @@ msgstr "Nosozliklarni tuzatishni osonlashtirish uchun so‘rovlarni qayd etish"
 #, fuzzy
 msgid "Manage delivery zip prefixes"
 msgstr "Yetkazib berish indeks prefikslarini boshqarish"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "Map view"
-msgstr "Xarita ko‘rinishi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -817,32 +783,10 @@ msgstr "Yangi provayderlar"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/sale_order.py:0
-#, fuzzy
-msgid "No pick-up points are available for this delivery address."
-msgstr "Bu yetkazib berish manzili uchun olib ketish punktlari mavjud emas."
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "No result"
-msgstr "Natija yo‘q"
-
-#. module: delivery
-#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, fuzzy
 msgid "Not available for current order"
 msgstr "Joriy buyurtma uchun mavjud emas"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
-#, fuzzy
-msgid "Opening hours"
-msgstr "Ish vaqti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -867,19 +811,6 @@ msgstr "To‘lov provayderi"
 #, fuzzy
 msgid "Payment Transaction"
 msgstr "To‘lov operatsiyasi"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "Pickup Location"
-msgstr "Olib ketish joyi"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
-#, fuzzy
-msgid "Pickup Location Data"
-msgstr "Olib ketish joyi ma'lumotlari"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -992,13 +923,6 @@ msgid "Sales Order Line"
 msgstr "Savdo buyurtmasi satri"
 
 #. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
-#, fuzzy
-msgid "Search"
-msgstr "Qidirish"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
 #, fuzzy
@@ -1047,6 +971,11 @@ msgstr "Standart yetkazib berish"
 #, fuzzy
 msgid "States"
 msgstr "Shtatlar"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_cash_on_delivery
+msgid "Supports Cash On Delivery"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -1114,13 +1043,6 @@ msgstr "Yuk tashish sug‘urtasi 0 dan 100 gacha foiz oralig‘ida bo‘lishi sh
 #, fuzzy
 msgid "The shipping is free since the order amount exceeds %.2f."
 msgstr "Buyurtma miqdori %.2f dan oshganligi sababli yetkazib berish bepul."
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
-#, fuzzy
-msgid "There was an error loading the map"
-msgstr "Xaritani yuklashda xatolik yuz berdi"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1285,13 +1207,6 @@ msgstr "To‘lovingiz bekor qilindi."
 #, fuzzy
 msgid "Your payment has been processed."
 msgstr "To‘lovingiz qayta ishlandi."
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#, fuzzy
-msgid "Your postal code"
-msgstr "Pochta indeksingiz"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

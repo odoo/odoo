@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -25,25 +25,19 @@ msgid "An unknown error occurred: %s"
 msgstr ""
 
 #. module: pos_imin
-#: model:ir.model,name:pos_imin.model_res_config_settings
-msgid "Config Settings"
+#. odoo-javascript
+#: code:addons/pos_imin/static/src/backend/test_imin/test_imin.js:0
+msgid "Cannot reach the iMin printer."
 msgstr ""
 
 #. module: pos_imin
 #: model:ir.model.fields,field_description:pos_imin.field_pos_printer__display_name
-#: model:ir.model.fields,field_description:pos_imin.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: pos_imin
 #: model:ir.model.fields,field_description:pos_imin.field_pos_printer__id
-#: model:ir.model.fields,field_description:pos_imin.field_res_config_settings__id
 msgid "ID"
-msgstr ""
-
-#. module: pos_imin
-#: model:ir.model.fields.selection,name:pos_imin.selection__pos_printer__printer_type__imin
-msgid "IMIN"
 msgstr ""
 
 #. module: pos_imin
@@ -84,4 +78,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_imin/static/src/app/utils/imin_printer.js:0
 msgid "The printer is not connected or not powered on"
+msgstr ""
+
+#. module: pos_imin
+#: model:ir.model.fields.selection,name:pos_imin.selection__pos_printer__printer_type__imin
+msgid "iMin"
+msgstr ""
+
+#. module: pos_imin
+#. odoo-python
+#: code:addons/pos_imin/models/pos_printer.py:0
+msgid "iMin printers can only be used as Receipt printers."
 msgstr ""

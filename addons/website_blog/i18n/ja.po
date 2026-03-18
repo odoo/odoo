@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 12:36+0000\n"
+"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"PO-Revision-Date: 2026-04-30 07:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_blog/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_blog
 #. odoo-python
@@ -194,17 +194,6 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"ウェブサイト\"/>"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
-msgid ""
-"<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
-"Demo</span> • <span>Mar 13, 2025</span> •"
-msgstr ""
-"<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
-"Demo</span> • <span>2025年3月13日</span> •"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 msgid "<small class=\"text-muted\">Mar 13, 2025</small>"
 msgstr "<small class=\"text-muted\">2025年3月13日</small>"
@@ -245,22 +234,19 @@ msgstr "<span class=\"nav-link disabled ps-0\">ブログ:</span>"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data
 msgid ""
 "<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
-"                    <span class=\"badge text-bg-primary\">NEW</span>\n"
-"                    <strong>Sierra Tarahumara</strong>\n"
-"                    <span class=\"text-muted\">Marc Demo in Travel</span>\n"
-"                    <span class=\"text-primary\">Read Now <i class=\"fa fa-"
-"long-arrow-right\" role=\"presentation\"/></span>\n"
+"center flex-wrap gap-3 my-3 border rounded py-2 rounded-pill\">\n"
+"                    <span class=\"d-flex align-items-center gap-2\">\n"
+"                        <span class=\"badge text-bg-primary\">NEW</span>\n"
+"                        <strong>Sierra Tarahumara</strong>\n"
+"                    </span>\n"
+"                    <span class=\"d-flex align-items-center gap-2\">\n"
+"                        <span class=\"text-muted\">Marc Demo in Travel</"
+"span>\n"
+"                        <span class=\"text-primary\">Read Now <i class=\"fa "
+"fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"                    </span>\n"
 "                </span>"
 msgstr ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
-"                    <span class=\"badge text-bg-primary\">新着</span>\n"
-"                    <strong>Sierra Tarahumara</strong>\n"
-"                    <span class=\"text-muted\">Marc Demo(旅行)</span>\n"
-"                    <span class=\"text-primary\">今すぐ読む<i class=\"fa fa-"
-"long-arrow-right\" role=\"presentation\"/></span>\n"
-"                </span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
@@ -277,6 +263,53 @@ msgstr ""
 "arrow-right\"/></span>"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"fa fa-user-circle-o me-2\" "
+"role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">Mar 13, 2025</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                                <span><i class=\"fa fa-user-circle-o me-2\" "
+"role=\"presentation\"/> Marc Demo</span>\n"
+"                            </span>\n"
+"                            <span class=\"d-none d-sm-inline text-muted\">•</"
+"span>\n"
+"                            <span class=\"text-muted \">Mar 13, 2025 • </"
+"span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                        <span><i class=\"fa fa-user-circle-o me-2\"/> Marc "
+"Demo</span>\n"
+"                    </span>\n"
+"                    <span class=\"d-none d-sm-inline text-muted\">•</span>\n"
+"                    <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                    <span class=\"text-muted mx-2\">•</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                    <span><i class=\"fa fa-user-circle-o me-2\" "
+"role=\"presentation\"/> Marc Demo</span>\n"
+"                </span>\n"
+"                <span class=\"d-none d-sm-inline text-muted mx-sm-2\">•</"
+"span>\n"
+"                <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                <span class=\"text-muted mx-2\">•</span>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:web_tour.tour,rainbow_man_message:website_blog.blog
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr "<span><b>Good job!</b> このツアーの全ステップを終了しました。</span>"
@@ -290,17 +323,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc "
 "Demo</span>"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/>Marc "
-"Demo</span>\n"
-"                    <span class=\"text-muted\"> • Mar 13, 2025</span>"
-msgstr ""
-"<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/>Marc "
-"Demo</span>\n"
-"                    <span class=\"text-muted\"> • 2025年3月13日</span>"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_2
@@ -387,12 +409,6 @@ msgstr "すべて"
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "All Blogs"
-msgstr "すべてのブログ"
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
-msgid "All blogs"
 msgstr "すべてのブログ"
 
 #. module: website_blog
@@ -529,6 +545,12 @@ msgid "Author Name"
 msgstr "著者名"
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+msgid "Authors"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__publish_on
 msgid "Auto publish on"
 msgstr "自動公開日"
@@ -610,10 +632,8 @@ msgid "Beyond The Eye"
 msgstr "視界の向こう"
 
 #. module: website_blog
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_blog/models/website.py:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root_global
@@ -627,6 +647,12 @@ msgid "Blog"
 msgstr "ブログ"
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_blog.py:0
+msgid "Blog Articles"
+msgstr ""
+
+#. module: website_blog
 #: model:res.groups,name:website_blog.group_website_blog_manager
 msgid "Blog Manager"
 msgstr "ブログ管理者"
@@ -638,7 +664,7 @@ msgstr "ブログ名"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Blog Page"
 msgstr "ブログページ"
 
@@ -672,6 +698,8 @@ msgstr "ブログ投稿タイトル"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_res_users__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog Posts"
@@ -702,7 +730,7 @@ msgstr "タグ"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Teaser"
-msgstr ""
+msgstr "ブログの概要"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
@@ -719,6 +747,7 @@ msgstr "ブログタイトル"
 #. odoo-python
 #: code:addons/website_blog/controllers/main.py:0
 #: code:addons/website_blog/static/src/website_builder/blog_searchbar_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
@@ -735,7 +764,7 @@ msgstr "ブログリスト"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option_plugin.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Blogs Page"
 msgstr "ブログページ"
 
@@ -883,6 +912,11 @@ msgid "Comments/Views Stats"
 msgstr "コメント/ビューステータス"
 
 #. module: website_blog
+#: model:ir.model,name:website_blog.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__content
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -923,6 +957,11 @@ msgid "Cover Properties"
 msgstr "カバー性質"
 
 #. module: website_blog
+#: model:ir.model,website_form_label:website_blog.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__create_uid
@@ -958,12 +997,6 @@ msgstr "日付（旧→新）"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "説明"
-
-#. module: website_blog
-#. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Dexter"
 msgstr "デクスター"
@@ -973,10 +1006,16 @@ msgstr "デクスター"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "表示名"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.index
+msgid "Drag blocks here to add them on all blogs"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1216,6 +1255,7 @@ msgstr "正しいホテルの選び方"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__id
 #: model:ir.model.fields,field_description:website_blog.field_website__id
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
@@ -1865,12 +1905,6 @@ msgid "Promote a post"
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
-msgid "Publication Date"
-msgstr "公開日"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publish on"
 msgstr "公開日"
@@ -1929,6 +1963,11 @@ msgid "Read Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 msgstr "今すぐ読む<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid "Read Now <i class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Read more <i class=\"oi oi-chevron-right ms-2\"/>"
 msgstr "続きを読む<i class=\"oi oi-chevron-right ms-2\"/>"
@@ -1977,7 +2016,7 @@ msgstr "SEO最適化済"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_sms_error
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_big_picture
@@ -2079,6 +2118,11 @@ msgstr ""
 "ます。"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
+msgid "Share"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Share Links"
@@ -2092,7 +2136,7 @@ msgstr "このポストを共有"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Shown as a preview on the /blog page"
-msgstr ""
+msgstr "/blog ページにプレビューとして表示されます"
 
 #. module: website_blog
 #. odoo-javascript
@@ -2262,6 +2306,11 @@ msgstr ""
 "せん。"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
+msgid "Social Media"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
 #: model_terms:blog.post,content:website_blog.blog_post_3
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -2341,6 +2390,7 @@ msgstr "タグ名がすでに存在します！"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_tags_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__tag_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
@@ -2740,19 +2790,9 @@ msgid "Views"
 msgstr "ビュー"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.index
-msgid "Visible in all blogs' pages"
-msgstr "すべてのブログページで閲覧可能"
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "現在のサイトに表示"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
-msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
-msgstr "ここに書き込むか、ブロックをドラッグ"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -2961,3 +3001,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 msgid "| No comments yet"
 msgstr "| まだコメントがありません"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Astronomy"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Travel"
+msgstr ""

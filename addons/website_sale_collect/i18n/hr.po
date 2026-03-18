@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-07 17:37+0000\n"
 "PO-Revision-Date: 2025-11-12 11:25+0000\n"
 "Last-Translator: Zvonimir Galić <zvonimir.galic@viavista.ba>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
@@ -40,30 +40,16 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
-msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
-"your products."
-msgstr ""
-"<i>Vaša narudžba je potvrđena.</i><br>Molimo dođite u trgovinu da preuzmete "
-"Vaše proizvode."
-
-#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "<span class=\"small\">|</span>"
 msgstr ""
-
-#. module: website_sale_collect
-#: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
-msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr "<span class=\"text-muted\"> (Preuzimanje u trgovini)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Available"
-msgstr "Dostupno"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -96,7 +82,7 @@ msgstr "Prilagođeni način rada"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Delivery"
-msgstr "Isporuka"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
@@ -147,7 +133,7 @@ msgstr "Metoda isporuke u trgovini"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Not available"
-msgstr "Nije dostupno"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -158,7 +144,7 @@ msgstr "Radno vrijeme"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Out of stock"
-msgstr "Nema na zalihi"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
@@ -201,6 +187,7 @@ msgstr "Proizvod"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__delivery_type
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__delivery_type
 msgid "Provider"
 msgstr "Pružatelj"
 
@@ -310,6 +297,18 @@ msgstr ""
 "preuzimanjem u trgovini."
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_transaction.py:0
+msgid "Your order will be ready on %d."
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_transaction.py:0
+msgid "Your order will be ready soon."
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been authorized."
 msgstr "Vaše je plaćanje odobreno."
@@ -318,6 +317,11 @@ msgstr "Vaše je plaćanje odobreno."
 #: model_terms:payment.provider,cancel_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been cancelled."
 msgstr "Vaše plaćanje je otkazano."
+
+#. module: website_sale_collect
+#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
+msgid "Your payment has been processed but is waiting for approval."
+msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site

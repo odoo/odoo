@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:14+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/base_import/"
@@ -100,7 +100,7 @@ msgstr "การแมปการนำเข้าฐาน"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr "ชุด"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -136,8 +136,8 @@ msgstr "คอลัมน์ %(column)s มีค่าไม่ถูกต้
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr "คอลัมน์ %(column)s มีค่าไม่ถูกต้อง เกิดข้อผิดพลาดในบรรทัด %(line)d: %(error)s"
 
 #. module: base_import
@@ -284,11 +284,11 @@ msgstr "เกิดข้อผิดพลาดขณะนำเข้าบ
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"เกิดข้อผิดพลาดขณะนำเข้าบันทึก: แถวทั้งหมดควรมีขนาดเท่ากัน แต่แถวหัวเรื่องมี "
-"%(title_row_entries)d รายการในขณะที่แถวแรกมี %(first_row_entries)d รายการ "
+"เกิดข้อผิดพลาดขณะนำเข้าบันทึก: แถวทั้งหมดควรมีขนาดเท่ากัน แต่แถวหัวเรื่องมี %"
+"(title_row_entries)d รายการในขณะที่แถวแรกมี %(first_row_entries)d รายการ "
 "คุณอาจต้องเปลี่ยนตัวอักษรตัวคั่น"
 
 #. module: base_import
@@ -350,7 +350,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr "กำลังสรุปชุดปัจจุบันก่อนที่จะขัดจังหวะ..."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -414,10 +414,6 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"หากไฟล์มี\n"
-"                   ชื่อคอลัมน์ Odoo สามารถลองตรวจหา\n"
-"                   ฟิลด์ที่สอดคล้องกับคอลัมน์ได้โดยอัตโนมัติ ทำให้การนำเข้า\n"
-"                   ง่ายขึ้นโดยเฉพาะเมื่อไฟล์มีหลายคอลัมน์"
 
 #. module: base_import
 #. odoo-python
@@ -450,7 +446,7 @@ msgstr "ไฟล์ที่นำเข้าไม่มีเนื้อห
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr "การแสดงตัวอย่างการนำเข้าล้มเหลวเนื่องจาก: \""
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -471,8 +467,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"รูปแบบเซลล์ไม่ถูกต้องที่แถว %(แถว)s คอลัมน์ %(col)s: %(cell_value)s โดยมีรูปแบบ: "
-"%(cell_format)s เนื่องจากไม่รองรับรูปแบบ (%(format_type)s)"
+"รูปแบบเซลล์ไม่ถูกต้องที่แถว %(แถว)s คอลัมน์ %(col)s: %(cell_value)s โดยมีรูปแบบ: %"
+"(cell_format)s เนื่องจากไม่รองรับรูปแบบ (%(format_type)s)"
 
 #. module: base_import
 #. odoo-python
@@ -519,7 +515,7 @@ msgstr "โมเดล"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr "เกิดข้อผิดพลาดหลายอย่าง"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -549,7 +545,7 @@ msgstr "ไม่มีไฟล์ที่เลือก"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr "ไม่พบบันทึกที่ตรงกันสำหรับชื่อต่อไปนี้"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -632,7 +628,7 @@ msgstr "ค้นหาช่อง..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr "ดูค่าที่เป็นไปได้"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -840,7 +836,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr "ใช้แถวแรกเป็นส่วนหัว"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -885,19 +881,19 @@ msgstr "คุณต้องกำหนดค่าอย่างน้อย
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr "ในหลายแถว"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr "ที่แถว"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr "ในฟิลด์"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -909,7 +905,7 @@ msgstr "นาที"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr "เพิ่มเติม"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -921,7 +917,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr "ออกจาก"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
