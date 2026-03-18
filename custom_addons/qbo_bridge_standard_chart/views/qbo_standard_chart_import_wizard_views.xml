@@ -13,6 +13,11 @@
                                    invisible="import_source != 'upload'"/>
                             <field name="filename" invisible="1"/>
                         </group>
+                        <group string="Publish Native Chart">
+                            <field name="publish_after_import"/>
+                            <field name="publish_company_id" invisible="not publish_after_import"/>
+                            <field name="update_existing_company_accounts" invisible="not publish_after_import"/>
+                        </group>
                     </group>
                     <group invisible="state != 'done'" string="Result">
                         <field name="result_message" readonly="1" nolabel="1"/>

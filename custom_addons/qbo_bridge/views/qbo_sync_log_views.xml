@@ -5,7 +5,7 @@
         <field name="name">qbo.sync.log.list</field>
         <field name="model">qbo.sync.log</field>
         <field name="arch" type="xml">
-            <list create="false" delete="false" editable="false"
+            <list create="false" delete="false"
                   decoration-danger="status == 'error'"
                   decoration-warning="status == 'conflict'"
                   decoration-muted="status == 'skipped'"
@@ -38,16 +38,15 @@
                         domain="[('status','=','conflict')]"/>
                 <filter string="Today" name="today"
                         domain="[('sync_date','&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
-                <group expand="0" string="Group by">
-                    <filter string="Entity type" name="group_entity"
-                            context="{'group_by':'entity_type'}"/>
-                    <filter string="Direction" name="group_direction"
-                            context="{'group_by':'direction'}"/>
-                    <filter string="Status" name="group_status"
-                            context="{'group_by':'status'}"/>
-                    <filter string="Company" name="group_company"
-                            context="{'group_by':'company_id'}"/>
-                </group>
+                <separator/>
+                <filter string="Entity type" name="group_entity"
+                        context="{'group_by':'entity_type'}"/>
+                <filter string="Direction" name="group_direction"
+                        context="{'group_by':'direction'}"/>
+                <filter string="Status" name="group_status"
+                        context="{'group_by':'status'}"/>
+                <filter string="Company" name="group_company"
+                        context="{'group_by':'company_id'}"/>
             </search>
         </field>
     </record>

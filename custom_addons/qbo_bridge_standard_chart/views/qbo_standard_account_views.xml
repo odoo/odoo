@@ -85,8 +85,8 @@
                         <page string="Company Accounts">
                             <field name="linked_account_ids" readonly="1">
                                 <list>
-                                    <field name="company_id"/>
-                                    <field name="code"/>
+                                    <field name="company_ids" widget="many2many_tags"/>
+                                    <field name="placeholder_code" string="Code"/>
                                     <field name="name"/>
                                     <field name="account_type"/>
                                     <field name="qbo_id"/>
@@ -140,14 +140,13 @@
                         domain="[('bridge_rule_ids','!=',False)]"/>
                 <filter string="Linked to Companies" name="linked"
                         domain="[('linked_account_ids','!=',False)]"/>
-                <group expand="0" string="Group by">
-                    <filter string="Category" name="group_category"
-                            context="{'group_by':'category'}"/>
-                    <filter string="Subcategory" name="group_subcategory"
-                            context="{'group_by':'subcategory'}"/>
-                    <filter string="Type" name="group_type"
-                            context="{'group_by':'entry_type'}"/>
-                </group>
+                <separator/>
+                <filter string="Category" name="group_category"
+                        context="{'group_by':'category'}"/>
+                <filter string="Subcategory" name="group_subcategory"
+                        context="{'group_by':'subcategory'}"/>
+                <filter string="Type" name="group_type"
+                        context="{'group_by':'entry_type'}"/>
             </search>
         </field>
     </record>

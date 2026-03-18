@@ -32,7 +32,6 @@
         'security/qbo_security.xml',
         'security/ir.model.access.csv',
         'data/qbo_cron.xml',
-        'views/menu.xml',
         'views/qbo_realm_views.xml',
         'views/qbo_company_mapping_views.xml',
         'views/qbo_account_bridge_rule_views.xml',
@@ -40,6 +39,7 @@
         'views/qbo_sync_log_views.xml',
         'views/qbo_import_wizard_views.xml',
         'views/qbo_conflict_resolve_wizard_views.xml',
+        'views/menu.xml',
     ],
     'external_dependencies': {
         'python': ['requests', 'openpyxl'],

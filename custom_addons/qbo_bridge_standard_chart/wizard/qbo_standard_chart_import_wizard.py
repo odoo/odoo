@@ -18,6 +18,19 @@ class QboStandardChartImportWizard(models.TransientModel):
     )
     import_file = fields.Binary(string="CSV file")
     filename = fields.Char()
+    publish_after_import = fields.Boolean(
+        string="Publish detail accounts to a company chart",
+        default=True,
+    )
+    publish_company_id = fields.Many2one(
+        "res.company",
+        string="Publish to company",
+        default=lambda self: self.env.company,
+    )
+    update_existing_company_accounts = fields.Boolean(
+        string="Update existing company accounts",
+        default=True,
+    )
     result_message = fields.Text(readonly=True)
     state = fields.Selection(
         [("ready", "Ready"), ("done", "Done")],
@@ -34,12 +47,34 @@ class QboStandardChartImportWizard(models.TransientModel):
                 raise UserError(_("Upload the CSV file before importing."))
             stats = StandardAccount.import_chart_from_bytes(base64.b64decode(self.import_file))
 
-        self.result_message = _(
+        publish_stats = None
+        if self.publish_after_import:
+            if not self.publish_company_id:
+                raise UserError(_("Choose the company that should receive the native chart."))
+            publish_stats = StandardAccount.sync_detail_accounts_to_company(
+                self.publish_company_id,
+                update_existing=self.update_existing_company_accounts,
+            )
+
+        message = _(
             "Import complete.\n"
             "Created: %(created)s\n"
             "Updated: %(updated)s\n"
             "Parents linked: %(parents_linked)s",
         ) % stats
+        if publish_stats:
+            message += _(
+                "\n\nNative chart publish complete for %(company)s.\n"
+                "Company accounts created: %(created)s\n"
+                "Company accounts updated: %(updated)s\n"
+                "Company accounts skipped: %(skipped)s",
+            ) % {
+                "company": self.publish_company_id.display_name,
+                "created": publish_stats["created"],
+                "updated": publish_stats["updated"],
+                "skipped": publish_stats["skipped"],
+            }
+        self.result_message = message
         self.state = "done"
         return self._stay_open()
 

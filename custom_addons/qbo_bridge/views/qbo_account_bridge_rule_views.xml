@@ -67,10 +67,9 @@
                 <field name="canonical_code"/>
                 <field name="canonical_name"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
-                <group expand="0" string="Group by">
-                    <filter string="Canonical type" name="group_type"
-                            context="{'group_by': 'canonical_account_type'}"/>
-                </group>
+                <separator/>
+                <filter string="Canonical type" name="group_type"
+                        context="{'group_by': 'canonical_account_type'}"/>
             </search>
         </field>
     </record>

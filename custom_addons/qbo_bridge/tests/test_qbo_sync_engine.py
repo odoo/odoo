@@ -57,9 +57,9 @@ class TestQBOSyncEngineAccounts(TransactionCase):
         ]
         engine._upsert_accounts(qbo_accounts, direction="pull")
 
-        acc = self.env["account.account"].search([
+        acc = self.env["account.account"].with_company(self.company).search([
             ("qbo_id", "=", "QBO-ACC-001"),
-            ("company_id", "=", self.company.id),
+            ("company_ids", "=", self.company.id),
         ])
         self.assertTrue(acc, "Expected account.account to be created from QBO pull")
         self.assertEqual(acc.name, "Operating Cash")
@@ -71,7 +71,7 @@ class TestQBOSyncEngineAccounts(TransactionCase):
             "code": "1001",
             "account_type": "asset_cash",
             "qbo_id": "QBO-ACC-002",
-            "company_id": self.company.id,
+            "company_ids": [(4, self.company.id)],
         })
         engine = self._make_engine()
         qbo_accounts = [
@@ -100,7 +100,7 @@ class TestQBOSyncEngineAccounts(TransactionCase):
             "code": "1002",
             "account_type": "asset_cash",
             "qbo_id": "QBO-ACC-003",
-            "company_id": self.company.id,
+            "company_ids": [(4, self.company.id)],
         })
         # Force write_date > last_sync
         self.env.cr.execute(
@@ -159,7 +159,7 @@ class TestQBOSyncEngineAccounts(TransactionCase):
             "name": "New Kodoo Account",
             "code": "9001",
             "account_type": "expense",
-            "company_id": self.company.id,
+            "company_ids": [(4, self.company.id)],
             # No qbo_id — will be pushed
         })
         engine._push_accounts()
@@ -190,9 +190,9 @@ class TestQBOSyncEngineAccounts(TransactionCase):
             },
         ], direction="pull")
 
-        acc = self.env["account.account"].search([
+        acc = self.env["account.account"].with_company(self.company).search([
             ("qbo_id", "=", "QBO-ACC-005"),
-            ("company_id", "=", self.company.id),
+            ("company_ids", "=", self.company.id),
         ])
         self.assertTrue(acc)
         self.assertEqual(acc.code, "110000")
@@ -211,7 +211,7 @@ class TestQBOSyncEngineAccounts(TransactionCase):
             "name": "Payroll Clearing",
             "code": "210500",
             "account_type": "liability_current",
-            "company_id": self.company.id,
+            "company_ids": [(4, self.company.id)],
         })
         engine = self._make_engine()
 
@@ -226,8 +226,8 @@ class TestQBOSyncEngineAccounts(TransactionCase):
             },
         ], direction="pull")
 
-        updated = self.env["account.account"].search([
-            ("company_id", "=", self.company.id),
+        updated = self.env["account.account"].with_company(self.company).search([
+            ("company_ids", "=", self.company.id),
             ("code", "=", "210500"),
         ])
         self.assertEqual(len(updated), 1)

@@ -127,7 +127,7 @@ class TestQboStandardAccount(TransactionCase):
 
         account = self.env["account.account"].search(
             [
-                ("company_id", "=", self.env.company.id),
+                ("company_ids", "=", self.env.company.id),
                 ("qbo_standard_account_id", "=", standard.id),
             ],
             limit=1,
@@ -136,3 +136,31 @@ class TestQboStandardAccount(TransactionCase):
         self.assertEqual(account.code, "61010")
         self.assertEqual(account.name, "Office Supplies")
         push_account.assert_called_once()
+
+    def test_sync_detail_accounts_to_company_creates_native_chart_accounts(self):
+        standard = self.env["qbo.standard.account"].create(
+            {
+                "code": "12010",
+                "description": "Accounts Receivable",
+                "entry_type": "detail",
+                "category": "Asset",
+                "normal_balance": "debit",
+                "odoo_account_type": "asset_receivable",
+            },
+        )
+
+        stats = self.env["qbo.standard.account"].sync_detail_accounts_to_company(
+            self.env.company,
+            update_existing=True,
+        )
+
+        account = self.env["account.account"].search(
+            [
+                ("company_ids", "=", self.env.company.id),
+                ("qbo_standard_account_id", "=", standard.id),
+            ],
+            limit=1,
+        )
+        self.assertTrue(account)
+        self.assertEqual(stats["created"], 1)
+        self.assertEqual(account.name, "Accounts Receivable")

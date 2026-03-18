@@ -53,7 +53,7 @@ class QboStandardAccountSyncWizard(models.TransientModel):
                 account_model = self.env["account.account"].with_company(mapping.company_id)
                 account = account_model.search(
                     [
-                        ("company_id", "=", mapping.company_id.id),
+                        ("company_ids", "=", mapping.company_id.id),
                         ("qbo_standard_account_id", "=", standard_account.id),
                     ],
                     limit=1,
@@ -61,7 +61,7 @@ class QboStandardAccountSyncWizard(models.TransientModel):
                 if not account:
                     account = account_model.search(
                         [
-                            ("company_id", "=", mapping.company_id.id),
+                            ("company_ids", "=", mapping.company_id.id),
                             ("code", "=", standard_account.code),
                         ],
                         limit=1,

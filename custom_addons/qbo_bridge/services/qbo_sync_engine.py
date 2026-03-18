@@ -18,9 +18,10 @@ structure, journal types, and partner categories.
 """
 import json
 import logging
+import re
 import time
 from contextlib import suppress
-from datetime import datetime
+from datetime import datetime, timezone
 
 from odoo import fields
 
@@ -164,12 +165,16 @@ class QBOSyncEngine:
             try:
                 odoo_vals = self._map_account_to_odoo(rec)
                 existing = AccountAccount.search(
-                    [("qbo_id", "=", qbo_id)], limit=1,
+                    [
+                        ("qbo_id", "=", qbo_id),
+                        ("company_ids", "=", self.mapping.company_id.id),
+                    ],
+                    limit=1,
                 ) if qbo_id else None
                 if not existing and odoo_vals.get("code"):
                     existing = AccountAccount.search(
                         [
-                            ("company_id", "=", self.mapping.company_id.id),
+                            ("company_ids", "=", self.mapping.company_id.id),
                             ("code", "=", odoo_vals["code"]),
                             ("qbo_id", "=", False),
                         ],
@@ -281,7 +286,7 @@ class QBOSyncEngine:
     def _push_accounts(self, since=None):
         """Push Odoo accounts modified after ``since`` that have no qbo_id yet,
         or whose write_date > last QBO update (conflict already resolved)."""
-        domain = [("company_id", "=", self.mapping.company_id.id), ("qbo_id", "=", False)]
+        domain = [("company_ids", "=", self.mapping.company_id.id), ("qbo_id", "=", False)]
         if since:
             domain.append(("write_date", ">=", since))
         accounts = self.env["account.account"].search(domain)
@@ -312,9 +317,14 @@ class QBOSyncEngine:
         bridge_rule = self._match_account_bridge_rule(rec)
         qbo_type = rec.get("AccountType", "")
         account_type = _QBO_ACCOUNT_TYPE_MAP.get(qbo_type, "asset_current")
+        code = (
+            bridge_rule.canonical_code
+            if bridge_rule
+            else self._normalize_account_code(rec.get("AcctNum"), rec.get("Id"))
+        )
         vals = {
             "name": bridge_rule.canonical_name if bridge_rule else rec.get("Name", ""),
-            "code": bridge_rule.canonical_code if bridge_rule else rec.get("AcctNum") or rec.get("Id", ""),
+            "code": code,
             "account_type": bridge_rule.canonical_account_type if bridge_rule else account_type,
             "note": rec.get("Description", ""),
             "active": rec.get("Active", True),
@@ -325,7 +335,7 @@ class QBOSyncEngine:
             "qbo_source_account_number": rec.get("AcctNum", ""),
             "qbo_source_account_type": qbo_type,
             "qbo_source_account_subtype": rec.get("AccountSubType", ""),
-            "company_id": self.mapping.company_id.id,
+            "company_ids": [(4, self.mapping.company_id.id)],
         }
         if (
             bridge_rule
@@ -475,9 +485,8 @@ class QBOSyncEngine:
         qbo_updated_str = meta.get("LastUpdatedTime", "")
         if not qbo_updated_str:
             return False
-        try:
-            qbo_updated = datetime.fromisoformat(qbo_updated_str.replace("Z", "+00:00"))
-        except ValueError:
+        qbo_updated = self._parse_qbo_datetime(qbo_updated_str)
+        if not qbo_updated:
             return False
 
         odoo_write = getattr(odoo_record, "write_date", None)
@@ -485,11 +494,12 @@ class QBOSyncEngine:
             return False
 
         # Both sides changed after last sync → conflict
-        return odoo_write > last_sync and qbo_updated.replace(tzinfo=None) > last_sync
+        return odoo_write > last_sync and qbo_updated > last_sync
 
     def _create_conflict(self, odoo_record, qbo_record, entity_type):
         """Create a qbo.conflict record for manual review."""
         meta = qbo_record.get("MetaData", {})
+        qbo_last_updated = self._parse_qbo_datetime(meta.get("LastUpdatedTime"))
 
         # Build a lightweight Odoo snapshot (only conflict-relevant fields)
         odoo_snapshot = {}
@@ -506,7 +516,7 @@ class QBOSyncEngine:
             "odoo_data": json.dumps(odoo_snapshot),
             "qbo_data": json.dumps({k: qbo_record.get(k) for k in _CONFLICT_FIELDS.get(entity_type, [])}),
             "odoo_write_date": getattr(odoo_record, "write_date", False),
-            "qbo_last_updated": meta.get("LastUpdatedTime"),
+            "qbo_last_updated": fields.Datetime.to_string(qbo_last_updated) if qbo_last_updated else False,
         })
         self._stats["conflicts"] += 1
         QboSyncLog.log(
@@ -541,6 +551,26 @@ class QBOSyncEngine:
             duration_ms=duration_ms,
         )
         self._stats[status if status in self._stats else "skipped"] += 1
+
+    def _normalize_account_code(self, raw_code, qbo_id):
+        for candidate in (raw_code, qbo_id):
+            if not candidate:
+                continue
+            sanitized = re.sub(r"[^A-Za-z0-9.]+", "", str(candidate)).strip(".")
+            if sanitized:
+                return sanitized[:64]
+        return False
+
+    def _parse_qbo_datetime(self, value):
+        if not value:
+            return None
+        try:
+            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        if parsed.tzinfo:
+            parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+        return parsed
 
 
 # ── Account type translation tables ──────────────────────────────────────────

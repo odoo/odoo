@@ -93,12 +93,11 @@
                         domain="[('status','=','pending')]"/>
                 <filter string="Resolved" name="resolved"
                         domain="[('status','in',['resolved_odoo','resolved_qbo'])]"/>
-                <group expand="0" string="Group by">
-                    <filter string="Entity type" name="group_entity"
-                            context="{'group_by':'entity_type'}"/>
-                    <filter string="Company" name="group_company"
-                            context="{'group_by':'company_id'}"/>
-                </group>
+                <separator/>
+                <filter string="Entity type" name="group_entity"
+                        context="{'group_by':'entity_type'}"/>
+                <filter string="Company" name="group_company"
+                        context="{'group_by':'company_id'}"/>
             </search>
         </field>
     </record>

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.modules.module import get_module_resource
+from odoo.modules.module import get_module_path
 
 NORMAL_BALANCE_SELECTION = [
     ("debit", "Debit"),
@@ -143,10 +143,11 @@ class QboStandardAccount(models.Model):
 
     @api.model
     def import_bundled_chart(self):
-        csv_path = get_module_resource(
-            "qbo_bridge_standard_chart",
-            "data",
-            "standard_chart_seed.csv",
+        module_path = get_module_path("qbo_bridge_standard_chart")
+        csv_path = (
+            Path(module_path) / "data" / "standard_chart_seed.csv"
+            if module_path
+            else None
         )
         if not csv_path:
             raise UserError(_("Could not locate the bundled standard chart seed file."))
@@ -294,7 +295,44 @@ class QboStandardAccount(models.Model):
             "name": self.description,
             "code": self.code,
             "account_type": self.odoo_account_type,
+            "description": self.detailed_description or self.long_description or False,
             "note": note,
-            "company_id": company.id,
+            "active": self.active,
+            "company_ids": [(4, company.id)],
             "qbo_standard_account_id": self.id,
         }
+
+    @api.model
+    def sync_detail_accounts_to_company(self, company, update_existing=True):
+        account_model = self.env["account.account"].with_company(company)
+        stats = {"created": 0, "updated": 0, "skipped": 0}
+        detail_accounts = self.search([("entry_type", "=", "detail")], order="code")
+        for standard_account in detail_accounts:
+            account = account_model.search(
+                [
+                    ("company_ids", "=", company.id),
+                    ("qbo_standard_account_id", "=", standard_account.id),
+                ],
+                limit=1,
+            )
+            if not account:
+                account = account_model.search(
+                    [
+                        ("company_ids", "=", company.id),
+                        ("code", "=", standard_account.code),
+                    ],
+                    limit=1,
+                )
+
+            vals = standard_account.prepare_company_account_vals(company)
+            if account:
+                if not update_existing:
+                    stats["skipped"] += 1
+                    continue
+                account.write(vals)
+                stats["updated"] += 1
+            else:
+                account_model.create(vals)
+                stats["created"] += 1
+
+        return stats

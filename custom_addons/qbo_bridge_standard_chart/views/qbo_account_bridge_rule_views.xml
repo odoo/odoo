@@ -5,7 +5,7 @@
         <field name="model">qbo.account.bridge.rule</field>
         <field name="inherit_id" ref="qbo_bridge.view_qbo_account_bridge_rule_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@string='Normalize into this canonical account']/field[@name='canonical_code']" position="before">
+            <xpath expr="//field[@name='canonical_code']" position="before">
                 <field name="standard_account_id"
                        options="{'no_create_edit': False, 'no_open': False}"/>
             </xpath>
