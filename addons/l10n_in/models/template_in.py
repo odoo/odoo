@@ -136,8 +136,8 @@ class AccountChartTemplate(models.AbstractModel):
             # We call these helper methods again in _post_load_data to ensure all payment method lines
             # are correctly assigned once all COA data is fully available.
             bank_journals = company.bank_journal_ids
-            bank_journals._update_payment_method_lines("inbound")
-            bank_journals._update_payment_method_lines("outbound")
+            bank_journals._assign_outsanding_account_to_payment_method_lines("inbound", payment_method_codes=['manual'], chart_template="in")
+            bank_journals._assign_outsanding_account_to_payment_method_lines("outbound", payment_method_codes=['manual'], chart_template="in")
 
             # Load journals for Indian branch having different GSTIN than parent company.
             # Process only Indian branches with GST and a parent company.
