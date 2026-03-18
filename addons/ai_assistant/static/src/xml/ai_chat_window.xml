@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Systray Icon -->
+    <t t-name="ai_assistant.ChatWindowSystray" owl="1">
+        <div class="o_ai_assistant_systray">
+            <button class="btn btn-link" t-on-click="onClick" title="AI Assistant">
+                <i class="fa fa-robot fa-lg"/>
+            </button>
+            <AIChatWindow t-ref="chatWindow"/>
+        </div>
+    </t>
+
+    <!-- Chat Window -->
+    <t t-name="ai_assistant.ChatWindow" owl="1">
+        <div class="o_ai_chat_window" t-if="state.isOpen">
+            <div class="o_ai_chat_container" t-att-class="{'o_minimized': state.isMinimized}">
+                <!-- Header -->
+                <div class="o_ai_chat_header">
+                    <div class="o_ai_chat_title">
+                        <i class="fa fa-robot me-2"/>
+                        <span>AI Assistant</span>
+                    </div>
+                    <div class="o_ai_chat_buttons">
+                        <button class="btn btn-link btn-sm" t-on-click="viewConversations" title="View All Conversations">
+                            <i class="fa fa-list"/>
+                        </button>
+                        <button class="btn btn-link btn-sm" t-on-click="toggleMinimize" title="Minimize">
+                            <i t-if="!state.isMinimized" class="fa fa-window-minimize"/>
+                            <i t-else="" class="fa fa-window-maximize"/>
+                        </button>
+                        <button class="btn btn-link btn-sm" t-on-click="closeChat" title="Close">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="o_ai_chat_messages" t-if="!state.isMinimized">
+                    <!-- Error Message -->
+                    <div t-if="state.error" class="alert alert-danger m-2" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        <t t-esc="state.error"/>
+                    </div>
+
+                    <!-- Messages -->
+                    <div class="o_ai_messages_list">
+                        <t t-foreach="state.messages" t-as="message" t-key="message.id || message_index">
+                            <div class="o_ai_message" t-att-class="'o_ai_message_' + message.role">
+                                <div class="o_ai_message_avatar">
+                                    <i t-if="message.role === 'user'" class="fa fa-user"/>
+                                    <i t-elif="message.role === 'assistant'" class="fa fa-robot"/>
+                                    <i t-else="" class="fa fa-cog"/>
+                                </div>
+                                <div class="o_ai_message_content">
+                                    <div class="o_ai_message_text" t-att-class="{'text-danger': message.is_error}">
+                                        <t t-esc="message.content"/>
+                                    </div>
+                                    <div class="o_ai_message_time text-muted small">
+                                        <t t-esc="formatTime(message.create_date)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Loading indicator -->
+                        <div t-if="state.isLoading" class="o_ai_message o_ai_message_assistant">
+                            <div class="o_ai_message_avatar">
+                                <i class="fa fa-robot"/>
+                            </div>
+                            <div class="o_ai_message_content">
+                                <div class="o_ai_typing">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div t-ref="messagesEnd"/>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="o_ai_chat_input" t-if="!state.isMinimized">
+                    <div class="input-group">
+                        <textarea
+                            class="form-control"
+                            placeholder="Type your message..."
+                            t-model="state.inputMessage"
+                            t-on-keydown="onInputKeyPress"
+                            t-ref="messageInput"
+                            rows="1"
+                            t-att-disabled="state.isLoading"
+                        />
+                        <button
+                            class="btn btn-primary"
+                            t-on-click="sendMessage"
+                            t-att-disabled="!state.inputMessage.trim() || state.isLoading"
+                        >
+                            <i class="fa fa-paper-plane"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
