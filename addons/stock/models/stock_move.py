@@ -1672,8 +1672,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         return quantities
 
     def _get_partner_id(self):
+        self.ensure_one()
         if self.location_id == self.env.company.internal_transit_location_id:
-            return False
+            return self.location_dest_id.warehouse_id.partner_id.id
         return self.partner_id.id
 
     def _prepare_procurement_values(self):
