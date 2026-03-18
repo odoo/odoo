@@ -201,7 +201,6 @@ class TestQweb(TransactionCaseWithUserDemo):
             self.assertEqual(env.cr.sql_log_count - init, queries, f'Maximum queries: {queries}')
 
         def check_website(template, name, queries):
-            queries += 1
             init = env.cr.sql_log_count
             with MockRequest(env, website=website) as request:
                 value = str(request.env['ir.qweb']._render(template, {'doc': name}))

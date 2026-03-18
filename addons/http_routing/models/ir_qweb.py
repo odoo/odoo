@@ -2,7 +2,6 @@
 
 import logging
 from odoo import models
-from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 BAD_REQUEST = """Missing request.is_frontend attribute.
@@ -38,16 +37,6 @@ class IrQweb(models.AbstractModel):
         irQweb = super()._prepare_environment(values)
         values['slug'] = self.env['ir.http']._slug
         values['unslug_url'] = self.env['ir.http']._unslug_url
-
-        if not irQweb.env.context.get('minimal_qcontext') and request:
-            if not hasattr(request, 'is_frontend'):
-                _logger.warning(BAD_REQUEST, stack_info=True)
-            elif request.is_frontend:
-                return irQweb._prepare_frontend_environment(values)
-
-        return irQweb
-
-    def _prepare_frontend_environment(self, values):
         values['url_for'] = self.env['ir.http']._url_for
         values['url_localized'] = self.env['ir.http']._url_localized
-        return self
+        return irQweb

@@ -311,8 +311,9 @@ class ForumForum(models.Model):
         return res
 
     def _set_default_faq(self):
+        website = self.env["website"].get_current_website()
         for forum in self:
-            forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+            forum.faq = website._render_template('website_forum.faq_accordion', {"forum": forum})
 
     # ----------------------------------------------------------------------
     # TOOLS
