@@ -196,7 +196,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                         [(0, 0, {'name': 'Q2-Answer1'}),
                          (0, 0, {'name': 'Q2-Answer2'}),
                         ],
-                        'question_type': 'simple_choice',
+                        'question_type': 'radio',
                         'once_per_order': False,
                         'title': 'Question2',
                        }
@@ -204,6 +204,15 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                 (0, 0, {'question_type': 'text_box',
                         'once_per_order': True,
                         'title': 'Question3',
+                       }
+                ),
+                (0, 0, {'answer_ids':
+                        [(0, 0, {'name': 'Q4-Answer1'}),
+                         (0, 0, {'name': 'Q4-Answer2'}),
+                        ],
+                        'question_type': 'checkbox',
+                        'once_per_order': True,
+                        'title': 'Question4',
                        }
                 ),
             ],
