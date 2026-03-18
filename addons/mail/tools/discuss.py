@@ -47,7 +47,7 @@ def add_guest_to_context(func):
 
 
 class StoreVersionInternal:
-    """Internal state used by the `@store_version` decorator."""
+    """Internal state used by the `@Store.with_versioning` decorator."""
     def __init__(self):
         self._pending_bus_sends = []
         self._snapshot_data = None
@@ -55,7 +55,7 @@ class StoreVersionInternal:
         self._written_fields_by_record = defaultdict(lambda: defaultdict(OrderedSet))
 
     def enqueue_bus_notification(self, bus_channel, notification_type, payload):
-        """Enqueue a bus notification to be sent when the `@store_version` decorator
+        """Enqueue a bus notification to be sent when the `@Store.with_versioning` decorator
         finishes, ensuring it includes the version metadata.
         """
         self._pending_bus_sends.append([bus_channel, notification_type, payload])
@@ -138,52 +138,6 @@ class StoreVersionInternal:
         self._pending_bus_sends.clear()
 
 
-def store_version(func):
-    """Decorator to manage versioned updates in the store.
-
-    Store data is received from RPC and from the bus, and is applied directly to the
-    store. Without versioning, the order of arrival can cause outdated data to overwrite
-    newer data, leading to incorrect store state.
-
-    On the client side, we should be able to determine whether a field represents a newer
-    version of what is already known. This is directly linked to PostgreSQL snapshots and
-    isolation level, in our case, REPEATABLE READ.
-
-    For fields that were read, what matters is what the snapshot could see at the time.
-    For writes, what matters is whether the snapshot of the version we know could see the
-    write transaction. The combination of xmin, xmax, xip and the current transaction id
-    is enough to deduce it.
-
-    This decorator injects version metadata into the return value of `Store.get_result()`,
-    both in the value returned by the decorated function and in any bus notifications
-    emitted during its execution.
-
-    """
-    @wraps(func)
-    def store_version__wrapper(self, *args, **kwargs):
-        manager = self.env.context.get("mail_store")
-        should_cleanup = False
-        if not manager:
-            manager = StoreVersionInternal()
-            if isinstance(self, models.BaseModel):
-                self = self.with_context(mail_store=manager)
-            else:
-                # Clean up only if we inserted the manager in the request context;
-                # otherwise, the original decorator will handle it.
-                should_cleanup = True
-                req = request or wsrequest
-                req.update_context(mail_store=manager)
-        response = func(self, *args, **kwargs)
-        version = manager._get_formatted_version(self.env)
-        manager._add_version_to_response(version, response)
-        manager._send_bus_notifications(self.env, version)
-        if should_cleanup:
-            # Clean context to prevent side effects based on the presence of `mail_store`.
-            req.update_context(mail_store=None)
-        return response
-    return store_version__wrapper
-
-
 def mail_route(*route_args, **route_kwargs):
     """Thin wrapper around `route` that adds guest context and enables versioning.
     HTTP route results that return a non-Response object will automatically be converted
@@ -191,7 +145,7 @@ def mail_route(*route_args, **route_kwargs):
 
     This decorator is equivalent to applying, in order:
         @route(*route_args, **route_kwargs)
-        @store_version
+        @Store.with_versioning
         @add_guest_to_context
     """
     if "type" not in route_kwargs:
@@ -199,7 +153,7 @@ def mail_route(*route_args, **route_kwargs):
 
     def decorator(func):
         wrapped_func = add_guest_to_context(func)
-        wrapped_func = store_version(wrapped_func)
+        wrapped_func = Store.with_versioning(wrapped_func)
 
         @wraps(func)
         def mail_route__wrapper(*args, **kwargs):
@@ -277,6 +231,53 @@ class Store:
     It supports merging of data from multiple sources, either through list extend or dict update.
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
+
+    @staticmethod
+    def with_versioning(func):
+        """Decorator to manage versioned updates in the store.
+
+        Store data is received from RPC and from the bus, and is applied directly to the
+        store. Without versioning, the order of arrival can cause outdated data to overwrite
+        newer data, leading to incorrect store state.
+
+        On the client side, we should be able to determine whether a field represents a newer
+        version of what is already known. This is directly linked to PostgreSQL snapshots and
+        isolation level, in our case, REPEATABLE READ.
+
+        For fields that were read, what matters is what the snapshot could see at the time.
+        For writes, what matters is whether the snapshot of the version we know could see the
+        write transaction. The combination of xmin, xmax, xip and the current transaction id
+        is enough to deduce it.
+
+        This decorator injects version metadata into the return value of `Store.get_result()`,
+        both in the value returned by the decorated function and in any bus notifications
+        emitted during its execution.
+
+        """
+        @wraps(func)
+        def with_versioning__wrapper(self, *args, **kwargs):
+            manager = self.env.context.get("mail_store")
+            should_cleanup = False
+            if not manager:
+                manager = StoreVersionInternal()
+                if isinstance(self, models.BaseModel):
+                    self = self.with_context(mail_store=manager)
+                else:
+                    # Clean up only if we inserted the manager in the request context;
+                    # otherwise, the original decorator will handle it.
+                    should_cleanup = True
+                    req = request or wsrequest
+                    req.update_context(mail_store=manager)
+            response = func(self, *args, **kwargs)
+            version = manager._get_formatted_version(self.env)
+            manager._add_version_to_response(version, response)
+            manager._send_bus_notifications(self.env, version)
+            if should_cleanup:
+                # Clean context to prevent side effects based on the presence of `mail_store`.
+                req.update_context(mail_store=None)
+            return response
+
+        return with_versioning__wrapper
 
     def __init__(self, bus_channel=None, bus_subchannel=None):
         self.add_depth = 0
@@ -602,7 +603,7 @@ class Store:
     class Result(dict):
         """Marker class for dictionaries returned by `Store.get_result()`.
         Used to distinguish store results from arbitrary dicts so version
-        metadata can be added (see `store_version` decorator).
+        metadata can be added (see `Store.with_versioning` decorator).
         """
 
     class Attr:

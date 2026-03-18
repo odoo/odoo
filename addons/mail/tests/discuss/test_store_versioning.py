@@ -9,7 +9,7 @@ from odoo.tests import new_test_user
 from odoo.addons.base.tests.common import HttpCase, TransactionCase
 from odoo.addons.mail.models.discuss.discuss_channel import DiscussChannel
 from odoo.addons.mail.tests.common import MailCase
-from odoo.addons.mail.tools.discuss import Store, mail_route, store_version
+from odoo.addons.mail.tools.discuss import Store, mail_route
 
 
 class TestStoreVersioning(HttpCase, MailCase):
@@ -188,13 +188,13 @@ class TestStoreVersioning(HttpCase, MailCase):
 # (including `HttpCase.setupClass`).
 class TestStoreVersioningTransactionCase(TransactionCase):
     def test_store_version_nested_calls(self):
-        @store_version
+        @Store.with_versioning
         def inner(self, fields_to_read):
             store = Store(bus_channel=self).add(self, fields_to_read)
             store.bus_send()
             return store.get_result()
 
-        @store_version
+        @Store.with_versioning
         def outer(self, fields_to_write, fields_to_read):
             inner_store_data = self.inner(fields_to_read)
             self.write(fields_to_write)
