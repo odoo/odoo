@@ -19,7 +19,7 @@ import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
 
 export class FormRenderer extends Component {
-    static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
+    static template = xml`<t t-call="{{ this.templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
     static components = {
         Field,
         FormLabel,

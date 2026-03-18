@@ -35,21 +35,20 @@ export class Image extends Component {
         svgCheck: true,
     };
     static template = xml`
-        <t t-if="state.loaded">
-            <svg t-if="isSvg(props.src)" t-custom-ref="svg"
-                xmlns="http://www.w3.org/2000/svg"
-                t-att-width="svg.width"
-                t-att-viewBox="svg.viewBox"
-                t-att-fill="svg.fill"
+        <t t-if="this.state.loaded">
+            <svg xmlns="http://www.w3.org/2000/svg" t-if="this.isSvg(this.props.src)" t-custom-ref="svg"
+                t-att-width="this.svg.width"
+                t-att-viewBox="this.svg.viewBox"
+                t-att-fill="this.svg.fill"
                 class="hb-svg d-flex m-auto"
-                t-att-class="props.class"
-                t-att-style="props.style"
+                t-att-class="this.props.class"
+                t-att-style="this.props.style"
                 t-att="props.attrs"/>
             <img t-else=""
-                t-att-src="props.src"
-                t-att-class="props.class"
-                t-att-style="props.style"
-                t-att-alt="props.alt"
+                t-att-src="this.props.src"
+                t-att-class="this.props.class"
+                t-att-style="this.props.style"
+                t-att-alt="this.props.alt"
                 t-att="props.attrs"/>
         </t>
         `;

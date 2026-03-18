@@ -10,7 +10,7 @@ test("Limiting the visible tags displays a counter", async () => {
         static props = ["*"];
         static components = { TagsList };
         static template = xml`
-            <TagsList tags="tags" visibleItemsLimit="state.visibleItemsLimit" t-slot-scope="tag">
+            <TagsList tags="this.tags" visibleItemsLimit="this.state.visibleItemsLimit" t-slot-scope="tag">
                 <span class="o_tag" t-out="tag.text"/>
             </TagsList>
         `;

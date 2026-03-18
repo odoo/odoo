@@ -68,24 +68,24 @@ export class HootTechnicalValue extends Component {
     };
 
     static template = xml`
-        <t t-if="isMarkup">
-            <t t-if="value.type === 'technical'">
-                <pre class="hoot-technical" t-att-class="value.className">
-                    <t t-foreach="value.content" t-as="subValue" t-key="subValue_index">
+        <t t-if="this.isMarkup">
+            <t t-if="this.value.type === 'technical'">
+                <pre class="hoot-technical" t-att-class="this.value.className">
+                    <t t-foreach="this.value.content" t-as="subValue" t-key="subValue_index">
                         <HootTechnicalValue value="subValue" />
                     </t>
                 </pre>
             </t>
             <t t-else="">
-                <t t-if="value.tagName === 't'" t-out="value.content" />
-                <t t-else="" t-tag="value.tagName" t-att-class="value.className" t-out="value.content" />
+                <t t-if="this.value.tagName === 't'" t-out="this.value.content" />
+                <t t-else="" t-tag="this.value.tagName" t-att-class="this.value.className" t-out="this.value.content" />
             </t>
         </t>
-        <t t-elif="isNode(value)">
-            <t t-set="elParts" t-value="toSelector(value, { object: true })" />
+        <t t-elif="this.isNode(this.value)">
+            <t t-set="elParts" t-value="this.toSelector(this.value, { object: true })" />
             <button
                 class="hoot-html"
-                t-on-click.stop="log"
+                t-on-click.stop="this.log"
             >
                 <t>&lt;<t t-out="elParts.tag" /></t>
                 <t t-if="elParts.id">
@@ -97,35 +97,35 @@ export class HootTechnicalValue extends Component {
                 <t>/&gt;</t>
             </button>
         </t>
-        <t t-elif="SPECIAL_SYMBOLS.includes(value)">
+        <t t-elif="this.SPECIAL_SYMBOLS.includes(this.value)">
             <span class="italic">
-                &lt;<t t-out="symbolValue(value)" />&gt;
+                &lt;<t t-out="this.symbolValue(this.value)" />&gt;
             </span>
         </t>
-        <t t-elif="typeof value === 'symbol'">
+        <t t-elif="typeof this.value === 'symbol'">
             <span>
-                Symbol(<span class="hoot-string" t-out="stringify(symbolValue(value))" />)
+                Symbol(<span class="hoot-string" t-out="this.stringify(this.symbolValue(this.value))" />)
             </span>
         </t>
-        <t t-elif="value and typeof value === 'object'">
-            <t t-set="labelSize" t-value="getLabelAndSize()" />
+        <t t-elif="this.value and typeof this.value === 'object'">
+            <t t-set="labelSize" t-value="this.getLabelAndSize()" />
             <pre class="hoot-technical">
                 <button
                     class="hoot-object inline-flex items-center gap-1 me-1"
-                    t-on-click.stop="onClick"
+                    t-on-click.stop="this.onClick"
                 >
                     <t t-if="labelSize[1] > 0">
                         <i
                             class="fa fa-caret-right"
-                            t-att-class="{ 'rotate-90': state.open }"
+                            t-att-class="{ 'rotate-90': this.state.open }"
                         />
                     </t>
                     <t t-out="labelSize[0]" />
-                    <t t-if="state.promiseState">
+                    <t t-if="this.state.promiseState">
                         &lt;
-                        <span class="text-gray" t-out="state.promiseState[0]" />
-                        <t t-if="state.promiseState[0] !== 'pending'">
-                            : <HootTechnicalValue value="state.promiseState[1]" />
+                        <span class="text-gray" t-out="this.state.promiseState[0]" />
+                        <t t-if="this.state.promiseState[0] !== 'pending'">
+                            : <HootTechnicalValue value="this.state.promiseState[1]" />
                         </t>
                         &gt;
                     </t>
@@ -133,14 +133,14 @@ export class HootTechnicalValue extends Component {
                         (<t t-out="labelSize[1]" />)
                     </t>
                 </button>
-                <t t-if="state.open and labelSize[1] > 0">
-                    <t t-if="isIterable(value)">
+                <t t-if="this.state.open and labelSize[1] > 0">
+                    <t t-if="this.isIterable(this.value)">
                         <t>[</t>
                         <ul class="ps-4">
-                            <t t-foreach="value" t-as="subValue" t-key="subValue_index">
+                            <t t-foreach="this.value" t-as="subValue" t-key="subValue_index">
                                 <li class="flex">
                                     <HootTechnicalValue value="subValue" />
-                                    <t t-out="displayComma(subValue)" />
+                                    <t t-out="this.displayComma(subValue)" />
                                 </li>
                             </t>
                         </ul>
@@ -149,12 +149,12 @@ export class HootTechnicalValue extends Component {
                     <t t-else="">
                         <t>{</t>
                         <ul class="ps-4">
-                            <t t-foreach="value" t-as="key" t-key="key">
+                            <t t-foreach="this.value" t-as="key" t-key="key">
                                 <li class="flex">
                                     <span class="hoot-key" t-out="key" />
                                     <span class="me-1">:</span>
-                                    <HootTechnicalValue value="value[key]" />
-                                    <t t-out="displayComma(value[key])" />
+                                    <HootTechnicalValue value="this.value[key]" />
+                                    <t t-out="this.displayComma(this.value[key])" />
                                 </li>
                             </t>
                         </ul>
@@ -164,8 +164,8 @@ export class HootTechnicalValue extends Component {
             </pre>
         </t>
         <t t-else="">
-            <span t-attf-class="hoot-{{ getTypeOf(value) }}">
-                <t t-out="typeof value === 'string' ? stringify(explicitValue) : explicitValue" />
+            <span t-attf-class="hoot-{{ this.getTypeOf(this.value) }}">
+                <t t-out="typeof this.value === 'string' ? this.stringify(this.explicitValue) : this.explicitValue" />
             </span>
         </t>
     `;

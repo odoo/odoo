@@ -37,21 +37,21 @@ export class HootButtons extends Component {
     static props = {};
 
     static template = xml`
-        <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <t t-set="showAll" t-value="env.runner.hasRemovableFilter" />
-        <t t-set="showFailed" t-value="runnerState.failedIds.size" />
+        <t t-set="isRunning" t-value="this.runnerState.status === 'running'" />
+        <t t-set="showAll" t-value="this.env.runner.hasRemovableFilter" />
+        <t t-set="showFailed" t-value="this.runnerState.failedIds.size" />
         <div
             class="${HootButtons.name} relative"
-            t-on-pointerenter="onPointerEnter"
-            t-on-pointerleave="onPointerLeave"
+            t-on-pointerenter="this.onPointerEnter"
+            t-on-pointerleave="this.onPointerLeave"
         >
             <div class="flex rounded gap-px overflow-hidden">
             <button
                 type="button"
                 class="flex items-center bg-btn gap-2 px-2 py-1 transition-colors"
-                t-on-click.stop="onRunClick"
+                t-on-click.stop="this.onRunClick"
                 t-att-title="isRunning ? 'Stop (Esc)' : 'Run'"
-                t-att-disabled="state.disable"
+                t-att-disabled="this.state.disable"
             >
                 <i t-attf-class="fa fa-{{ isRunning ? 'stop' : 'play' }}" />
                 <span t-out="isRunning ? 'Stop' : 'Run'" />
@@ -60,13 +60,13 @@ export class HootButtons extends Component {
                 <button
                     type="button"
                     class="bg-btn px-2 py-1 transition-colors animate-slide-left"
-                    t-on-click.stop="onToggleClick"
+                    t-on-click.stop="this.onToggleClick"
                 >
-                    <i class="fa fa-caret-down transition" t-att-class="{ 'rotate-180': state.open }" />
+                    <i class="fa fa-caret-down transition" t-att-class="{ 'rotate-180': this.state.open }" />
                 </button>
             </t>
             </div>
-            <t t-if="state.open">
+            <t t-if="this.state.open">
                 <div
                     class="
                         w-fit absolute animate-slide-down
@@ -85,16 +85,16 @@ export class HootButtons extends Component {
                         <HootLink
                             class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
                             title="'Run failed tests'"
-                            ids="{ id: runnerState.failedIds }"
-                            onClick="onRunFailedClick"
+                            ids="{ id: this.runnerState.failedIds }"
+                            onClick="this.onRunFailedClick"
                         >
                             Run <strong class="text-rose">failed</strong> tests
                         </HootLink>
                         <HootLink
                             class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
                             title="'Run failed suites'"
-                            ids="{ id: getFailedSuiteIds() }"
-                            onClick="onRunFailedClick"
+                            ids="{ id: this.getFailedSuiteIds() }"
+                            onClick="this.onRunFailedClick"
                         >
                             Run <strong class="text-rose">failed</strong> suites
                         </HootLink>

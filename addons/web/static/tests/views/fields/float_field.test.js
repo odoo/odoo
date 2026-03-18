@@ -424,7 +424,7 @@ test("field with enable_formatting option as false in editable list view", async
 
 test("float field can be updated by another field/widget", async () => {
     class MyWidget extends Component {
-        static template = xml`<button t-on-click="onClick">do it</button>`;
+        static template = xml`<button t-on-click="this.onClick">do it</button>`;
         static props = ["*"];
         onClick() {
             const val = this.props.record.data.float_field;

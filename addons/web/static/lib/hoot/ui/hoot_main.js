@@ -68,10 +68,10 @@ export class HootMain extends Component {
     static props = {};
 
     static template = xml`
-        <t t-if="env.runner.headless">
+        <t t-if="this.env.runner.headless">
             <div style="${HEADLESS_CONTAINER_STYLE}">
                 Running in headless mode
-                <a style="${HEADLESS_LINK_STYLE}" t-att-href="createUrl({ headless: null })">
+                <a style="${HEADLESS_LINK_STYLE}" t-att-href="this.createUrl({ headless: null })">
                     Run with UI
                 </a>
             </div>
@@ -79,7 +79,7 @@ export class HootMain extends Component {
         <t t-else="">
             <main
                 class="${HootMain.name} flex flex-col w-full h-full bg-base relative"
-                t-att-class="{ 'hoot-animations': env.runner.config.fun }"
+                t-att-class="{ 'hoot-animations': this.env.runner.config.fun }"
             >
                 <header class="flex flex-col bg-gray-200 dark:bg-gray-800">
                     <nav class="hoot-controls py-1 px-2">
@@ -107,8 +107,8 @@ export class HootMain extends Component {
                     <HootReporting />
                 </div>
             </main>
-            <t t-if="state.debugTest">
-                <HootDebugToolBar test="state.debugTest" />
+            <t t-if="this.state.debugTest">
+                <HootDebugToolBar test="this.state.debugTest" />
             </t>
         </t>
     `;

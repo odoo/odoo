@@ -293,9 +293,9 @@ test("Tour backward when the pointed element disappear", async () => {
         state = useState({ bool: true });
         static components = {};
         static template = xml`
-            <button class="fool w-100" t-on-click="() => { state.bool = true; }">You fool</button>
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="fool w-100" t-on-click="() => { this.state.bool = true; }">You fool</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -351,9 +351,9 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
         state = useState({ bool: true });
         static components = {};
         static template = xml`
-            <button class="fool" t-on-click="() => { state.bool = true; }">You fool</button>
-            <button class="foo" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar" t-if="!state.bool">Bar</button>
+            <button class="fool" t-on-click="() => { this.state.bool = true; }">You fool</button>
+            <button class="foo" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -400,8 +400,8 @@ test("Tour started by the URL", async () => {
         state = useState({ bool: true });
         static components = {};
         static template = xml`
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -437,8 +437,8 @@ test("Log a warning if step ignored", async () => {
         state = useState({ bool: true });
         static components = {};
         static template = xml`
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -682,9 +682,9 @@ test("Don't backward when action manager is busy", async () => {
         state = useState({ bool: true });
         static components = {};
         static template = xml`
-            <button class="fool w-100" t-on-click="() => { state.bool = true; }">You fool</button>
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="fool w-100" t-on-click="() => { this.state.bool = true; }">You fool</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 

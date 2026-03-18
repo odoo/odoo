@@ -238,41 +238,41 @@ export class HootTestResult extends Component {
             class="${HootTestResult.name}
                 flex flex-col w-full border-b overflow-hidden
                 border-gray-300 dark:border-gray-600"
-            t-att-class="getClassName()"
+            t-att-class="this.getClassName()"
         >
             <button
                 type="button"
                 class="px-3 flex items-center justify-between"
-                t-on-click.stop="toggleDetails"
+                t-on-click.stop="this.toggleDetails"
             >
                 <t t-slot="default" />
             </button>
-            <t t-if="state.showDetails and !props.test.config.skip">
-                <t t-foreach="filteredResults" t-as="indexedResult" t-key="indexedResult[0]">
+            <t t-if="this.state.showDetails and !this.props.test.config.skip">
+                <t t-foreach="this.filteredResults" t-as="indexedResult" t-key="indexedResult[0]">
                     <t t-set="index" t-value="indexedResult[0]" />
                     <t t-set="result" t-value="indexedResult[1]" />
-                    <t t-if="results.length > 1">
+                    <t t-if="this.results.length > 1">
                         <div class="flex justify-between mx-2 my-1">
                             <span t-attf-class="text-{{ result.pass ? 'emerald' : 'rose' }}">
-                                <t t-out="ordinal(index)" /> run:
+                                <t t-out="this.ordinal(index)" /> run:
                             </span>
-                            <t t-set="timestamp" t-value="formatTime(result.duration, 'ms')" />
+                            <t t-set="timestamp" t-value="this.formatTime(result.duration, 'ms')" />
                             <small class="text-gray flex items-center" t-att-title="timestamp">
                                 <t t-out="timestamp" />
                             </small>
                         </div>
                     </t>
                     <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2 animate-slide-down">
-                        <t t-if="!filteredEvents[index].length">
+                        <t t-if="!this.filteredEvents[index].length">
                             <em class="text-gray px-2 py-1">No test event to show</em>
                         </t>
-                        <t t-foreach="filteredEvents[index]" t-as="event" t-key="event_index">
-                            <t t-set="sType" t-value="getTypeName(event.type)" />
-                            <t t-set="eventIcon" t-value="CASE_EVENT_TYPES[sType].icon" />
+                        <t t-foreach="this.filteredEvents[index]" t-as="event" t-key="event_index">
+                            <t t-set="sType" t-value="this.getTypeName(event.type)" />
+                            <t t-set="eventIcon" t-value="this.CASE_EVENT_TYPES[sType].icon" />
                             <t t-set="eventColor" t-value="
                                 'pass' in event ?
                                     (event.pass ? 'emerald' : 'rose') :
-                                    CASE_EVENT_TYPES[sType].color"
+                                    this.CASE_EVENT_TYPES[sType].color"
                             />
                             <t t-if="sType === 'error'">
                                 ${ERROR_TEMPLATE}
@@ -288,9 +288,9 @@ export class HootTestResult extends Component {
                         <button
                             type="button"
                             class="flex items-center px-1 gap-1 text-sm hover:text-primary"
-                            t-on-click.stop="toggleCode"
+                            t-on-click.stop="this.toggleCode"
                         >
-                            <t t-if="state.showCode">
+                            <t t-if="this.state.showCode">
                                 Hide source code
                             </t>
                             <t t-else="">
@@ -298,12 +298,12 @@ export class HootTestResult extends Component {
                             </t>
                         </button>
                     </nav>
-                    <t t-if="state.showCode">
+                    <t t-if="this.state.showCode">
                         <div class="m-2 mt-0 rounded animate-slide-down overflow-auto">
                             <pre
                                 class="language-javascript"
                                 style="margin: 0"
-                            ><code class="language-javascript" t-out="props.test.code" /></pre>
+                            ><code class="language-javascript" t-out="this.props.test.code" /></pre>
                         </div>
                     </t>
                 </div>

@@ -127,7 +127,7 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
         static components = { UIOwnershipTakerComponent };
         static template = xml`
             <main>
-                <UIOwnershipTakerComponent t-if="state.foo" />
+                <UIOwnershipTakerComponent t-if="this.state.foo" />
                 <div t-on-click="() => { this.step('click'); }" accesskey="a">foo</div>
             </main>
         `;
@@ -187,7 +187,7 @@ test("data-hotkey", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b">a</button>
+                <button t-on-click="this.onClick" data-hotkey="b">a</button>
             </div>
         `;
         static props = ["*"];
@@ -216,7 +216,7 @@ test("invisible data-hotkeys are not enabled. ", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b" class="myButton">a</button>
+                <button t-on-click="this.onClick" data-hotkey="b" class="myButton">a</button>
             </div>
         `;
         static props = ["*"];
@@ -298,8 +298,8 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-            <button t-on-click="onClick" data-hotkey="b">b</button>
-            <button t-on-click="onClick" data-hotkey="c">c</button>
+            <button t-on-click="this.onClick" data-hotkey="b">b</button>
+            <button t-on-click="this.onClick" data-hotkey="c">c</button>
             </div>
         `;
         static props = ["*"];
@@ -330,8 +330,8 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b">b</button>
-                <button t-on-click="onClick" data-hotkey="c">c</button>
+                <button t-on-click="this.onClick" data-hotkey="b">b</button>
+                <button t-on-click="this.onClick" data-hotkey="c">c</button>
             </div>
         `;
         static props = ["*"];
@@ -418,7 +418,7 @@ test("MacOS usability", async () => {
 test("[data-hotkey] alt is required", async () => {
     const key = "a";
     class TestComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick" data-hotkey="${key}">a</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick" data-hotkey="${key}">a</button></div>`;
         static props = ["*"];
         onClick() {
             expect.step(key);
@@ -473,7 +473,7 @@ test("registration allows repeat if specified", async () => {
 test("[data-hotkey] never allow repeat", async () => {
     const key = "a";
     class TestComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick" data-hotkey="${key}">a</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick" data-hotkey="${key}">a</button></div>`;
         static props = ["*"];
         onClick() {
             expect.step(key);
@@ -507,7 +507,7 @@ test("hotkeys evil 👹", async () => {
 
 test("component can register many hotkeys", async () => {
     class MyComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick" data-hotkey="c">c</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick" data-hotkey="c">c</button></div>`;
         static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("callback:a"));
@@ -531,8 +531,8 @@ test("many components can register same hotkeys (call order matters)", async () 
         const Comp = class extends Component {
             static template = xml`
                 <div>
-                    <button t-on-click="onClick" data-hotkey="c">c</button>
-                    <button t-on-click="onClick" data-hotkey="z">z</button>
+                    <button t-on-click="this.onClick" data-hotkey="c">c</button>
+                    <button t-on-click="this.onClick" data-hotkey="z">z</button>
                 </div>
             `;
             static props = ["*"];
@@ -578,7 +578,7 @@ test("many components can register same hotkeys (call order matters)", async () 
 
 test("registrations and elements belong to the correct UI owner", async () => {
     class MyComponent1 extends Component {
-        static template = xml`<div><button data-hotkey="b" t-on-click="onClick">b</button></div>`;
+        static template = xml`<div><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
         static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("MyComponent1 subscription"));
@@ -589,7 +589,7 @@ test("registrations and elements belong to the correct UI owner", async () => {
     }
 
     class MyComponent2 extends Component {
-        static template = xml`<div t-ref="active"><button data-hotkey="b" t-on-click="onClick">b</button></div>`;
+        static template = xml`<div t-ref="active"><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
         static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("MyComponent2 subscription"));
@@ -624,7 +624,7 @@ test("replace the overlayModifier for non-MacOs", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b">b</button>
+                <button t-on-click="this.onClick" data-hotkey="b">b</button>
             </div>
         `;
         static props = ["*"];
@@ -651,7 +651,7 @@ test("replace the overlayModifier for MacOs", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-            <button t-on-click="onClick" data-hotkey="b">b</button>
+            <button t-on-click="this.onClick" data-hotkey="b">b</button>
             </div>
         `;
         static props = ["*"];
@@ -851,7 +851,7 @@ test("operating area and UI active element", async () => {
         static components = { UIOwnershipTakerComponent };
         static template = xml`
             <main>
-                <UIOwnershipTakerComponent t-if="state.foo" />
+                <UIOwnershipTakerComponent t-if="this.state.foo" />
                 <div class="one" tabindex="0">one</div>
                 <div class="two" tabindex="0" t-ref="area">two</div>
             </main>

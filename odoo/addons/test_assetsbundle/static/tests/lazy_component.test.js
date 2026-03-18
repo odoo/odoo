@@ -7,7 +7,7 @@ import { Component, xml } from "@odoo/owl";
 test("LazyComponent loads the required bundle", async () => {
     class Test extends Component {
         static template = xml`
-            <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="childProps"/>
+            <LazyComponent bundle="'test_assetsbundle.lazy_test_component'" Component="'LazyTestComponent'" props="this.childProps"/>
         `;
         static components = { LazyComponent };
         static props = ["*"];

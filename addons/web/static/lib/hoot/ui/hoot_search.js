@@ -314,12 +314,12 @@ export class HootSearch extends Component {
     static props = {};
 
     static template = xml`
-        <t t-set="hasIncludeValue" t-value="getHasIncludeValue()" />
-        <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <search class="${HootSearch.name} flex-1" t-ref="root" t-on-keydown="onKeyDown">
-            <form class="relative" t-on-submit.prevent="refresh">
+        <t t-set="hasIncludeValue" t-value="this.getHasIncludeValue()" />
+        <t t-set="isRunning" t-value="this.runnerState.status === 'running'" />
+        <search class="${HootSearch.name} flex-1" t-ref="root" t-on-keydown="this.onKeyDown">
+            <form class="relative" t-on-submit.prevent="this.refresh">
                 <div class="hoot-search-bar flex border rounded items-center bg-base px-1 gap-1 w-full transition-colors">
-                    <t t-foreach="getCategoryCounts()" t-as="count" t-key="count.category">
+                    <t t-foreach="this.getCategoryCounts()" t-as="count" t-key="count.category">
                         <button
                             type="button"
                             class="flex border border-primary rounded"
@@ -339,28 +339,28 @@ export class HootSearch extends Component {
                     <input
                         type="search"
                         class="w-full rounded p-1 outline-none"
-                        t-att-autofocus="!config.manual"
+                        t-att-autofocus="!this.config.manual"
                         placeholder="Filter suites, tests or tags"
                         t-ref="search-input"
-                        t-att-class="{ 'text-gray': !config.filter }"
+                        t-att-class="{ 'text-gray': !this.config.filter }"
                         t-att-disabled="isRunning"
-                        t-att-value="state.query"
-                        t-on-change="onSearchInputChange"
-                        t-on-input="onSearchInputInput"
-                        t-on-keydown="onSearchInputKeyDown"
+                        t-att-value="this.state.query"
+                        t-on-change="this.onSearchInputChange"
+                        t-on-input="this.onSearchInputInput"
+                        t-on-keydown="this.onSearchInputKeyDown"
                     />
                     <label
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use exact match (Alt + X)"
                         tabindex="0"
-                        t-on-keydown="onExactKeyDown"
+                        t-on-keydown="this.onExactKeyDown"
                     >
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="hasExactFilter()"
+                            t-att-checked="this.hasExactFilter()"
                             t-att-disabled="isRunning"
-                            t-on-change="toggleExact"
+                            t-on-change="this.toggleExact"
                         />
                         <i class="fa fa-quote-right text-gray transition-colors" />
                     </label>
@@ -368,35 +368,35 @@ export class HootSearch extends Component {
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use regular expression (Alt + R)"
                         tabindex="0"
-                        t-on-keydown="onRegExpKeyDown"
+                        t-on-keydown="this.onRegExpKeyDown"
                     >
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="hasRegExpFilter()"
+                            t-att-checked="this.hasRegExpFilter()"
                             t-att-disabled="isRunning"
-                            t-on-change="toggleRegExp"
+                            t-on-change="this.toggleRegExp"
                         />
                         <i class="fa fa-asterisk text-gray transition-colors" />
                     </label>
                     <label
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Debug mode (Alt + D)"
-                        t-on-keydown="onDebugKeyDown"
+                        t-on-keydown="this.onDebugKeyDown"
                     >
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="config.debugTest"
+                            t-att-checked="this.config.debugTest"
                             t-att-disabled="isRunning"
-                            t-on-change="toggleDebug"
+                            t-on-change="this.toggleDebug"
                         />
                         <i class="fa fa-bug text-gray transition-colors" />
                     </label>
                 </div>
-                <t t-if="state.showDropdown">
+                <t t-if="this.state.showDropdown">
                     <div class="hoot-dropdown-lg flex flex-col animate-slide-down bg-base text-base absolute mt-1 p-3 shadow rounded z-2">
-                        <t t-if="state.empty">
+                        <t t-if="this.state.empty">
                             ${TEMPLATE_SEARCH_DASHBOARD}
                         </t>
                         <t t-else="">

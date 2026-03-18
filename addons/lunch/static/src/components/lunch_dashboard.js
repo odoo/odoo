@@ -65,7 +65,7 @@ export class LunchOrderLine extends Component {
 
 export class LunchAlert extends Component {
     static props = ["message"];
-    static template = xml`<t t-out="message"/>`;
+    static template = xml`<t t-out="this.message"/>`;
     get message() {
         return markup(this.props.message);
     }

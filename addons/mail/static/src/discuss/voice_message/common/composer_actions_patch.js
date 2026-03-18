@@ -25,9 +25,9 @@ registerComposerAction("voice-recording", {
     component: class VoiceMessageRecordingButton extends Component {
         static props = ["composer", "state"];
         static template = xml`
-            <button class="o-mail-VoiceRecorder d-flex align-items-center btn border-0 o-recording rounded-start-0 rounded-end user-select-none p-0" t-att-title="title" t-att-disabled="props.state.isActionPending or props.composer.voiceAttachment" t-on-click="props.state.onClick">
-                <div class="o-mail-VoiceRecorder-elapsed o-active recording ms-2 me-1" t-att-class="{ 'text-danger': props.state.limitWarning }" style="font-variant-numeric: tabular-nums;">
-                    <span class="d-flex text-truncate" t-out="props.state.elapsed"/>
+            <button class="o-mail-VoiceRecorder d-flex align-items-center btn border-0 o-recording rounded-start-0 rounded-end user-select-none p-0" t-att-title="this.title" t-att-disabled="this.props.state.isActionPending or this.props.composer.voiceAttachment" t-on-click="this.props.state.onClick">
+                <div class="o-mail-VoiceRecorder-elapsed o-active recording ms-2 me-1" t-att-class="{ 'text-danger': this.props.state.limitWarning }" style="font-variant-numeric: tabular-nums;">
+                    <span class="d-flex text-truncate" t-out="this.props.state.elapsed"/>
                 </div>
                 <span class="rounded-circle p-1"><i class="fa fa-fw fa-circle text-danger o-mail-VoiceRecorder-dot"/></span>
             </button>

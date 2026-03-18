@@ -33,19 +33,19 @@ export class HootConfigMenu extends Component {
     static components = { HootCopyButton };
     static props = {};
     static template = xml`
-        <form class="contents" t-on-submit.prevent="refresh">
+        <form class="contents" t-on-submit.prevent="this.refresh">
             <h3 class="pb-1 border-b text-gray border-gray">Behavior</h3>
-            <t t-if="hasPresets()">
+            <t t-if="this.hasPresets()">
                 <div class="flex items-center gap-1">
-                    <t t-set="hasCorrectViewPort" t-value="env.runner.checkPresetForViewPort()" />
+                    <t t-set="hasCorrectViewPort" t-value="this.env.runner.checkPresetForViewPort()" />
                     <t t-set="highlightClass" t-value="hasCorrectViewPort ? 'text-primary' : 'text-amber'" />
                     <span class="me-auto">Preset</span>
-                    <t t-foreach="env.runner.presets" t-as="presetKey" t-key="presetKey">
-                        <t t-set="preset" t-value="env.runner.presets[presetKey]" />
+                    <t t-foreach="this.env.runner.presets" t-as="presetKey" t-key="presetKey">
+                        <t t-set="preset" t-value="this.env.runner.presets[presetKey]" />
                         <button
                             type="button"
                             class="border rounded transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
-                            t-att-class="{ ['border-primary ' + highlightClass]: config.preset === presetKey }"
+                            t-att-class="{ ['border-primary ' + highlightClass]: this.config.preset === presetKey }"
                             t-att-title="presetKey ? preset.label : 'No preset'"
                             t-on-click.stop="() => this.onPresetChange(presetKey)"
                         >
@@ -59,11 +59,11 @@ export class HootConfigMenu extends Component {
                 title="Determines the order of the tests execution"
             >
                 <span class="me-auto">Execution order</span>
-                <t t-foreach="executionOrders" t-as="order" t-key="order.value">
+                <t t-foreach="this.executionOrders" t-as="order" t-key="order.value">
                     <button
                         type="button"
                         class="border rounded transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
-                        t-att-class="{ 'text-primary border-primary': config.order === order.value }"
+                        t-att-class="{ 'text-primary border-primary': this.config.order === order.value }"
                         t-att-title="order.title"
                         t-on-click.stop="() => this.setExecutionOrder(order.value)"
                     >
@@ -71,7 +71,7 @@ export class HootConfigMenu extends Component {
                     </button>
                 </t>
             </div>
-            <t t-if="config.order === 'random'">
+            <t t-if="this.config.order === 'random'">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Seed:</span>
                     <input
@@ -83,11 +83,11 @@ export class HootConfigMenu extends Component {
                     <button
                         type="button"
                         title="Generate new random seed"
-                        t-on-click.stop="resetSeed"
+                        t-on-click.stop="this.resetSeed"
                     >
                         <i class="fa fa-repeat" />
                     </button>
-                    <HootCopyButton text="config.random.toString()" />
+                    <HootCopyButton text="this.config.random.toString()" />
                 </small>
             </t>
             <label
@@ -109,7 +109,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="text"
                     class="outline-none border-b border-primary px-1 w-full"
-                    t-model="config.networkDelay"
+                    t-model="this.config.networkDelay"
                 />
             </label>
             <label
@@ -119,7 +119,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.manual"
+                    t-model="this.config.manual"
                 />
                 <span>Run tests manually</span>
             </label>
@@ -130,12 +130,12 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-att-checked="config.bail"
-                    t-on-change="onBailChange"
+                    t-att-checked="this.config.bail"
+                    t-on-change="this.onBailChange"
                 />
                 <span>Bail</span>
             </label>
-            <t t-if="config.bail">
+            <t t-if="this.config.bail">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Failed tests:</span>
                     <input
@@ -153,12 +153,12 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-att-checked="config.loglevel"
-                    t-on-change="onLogLevelChange"
+                    t-att-checked="this.config.loglevel"
+                    t-on-change="this.onLogLevelChange"
                 />
                 <span>Log level</span>
             </label>
-            <t t-if="config.loglevel">
+            <t t-if="this.config.loglevel">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Level:</span>
                     <select
@@ -166,7 +166,7 @@ export class HootConfigMenu extends Component {
                         class="outline-none w-full bg-base text-base border-b border-primary px-1"
                         t-model.number="config.loglevel"
                     >
-                        <t t-foreach="LOG_LEVELS" t-as="level" t-key="level.value">
+                        <t t-foreach="this.LOG_LEVELS" t-as="level" t-key="level.value">
                             <option
                                 t-att-value="level.value"
                                 t-out="level.label"
@@ -182,7 +182,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.notrycatch"
+                    t-model="this.config.notrycatch"
                 />
                 <span>No try/catch</span>
             </label>
@@ -191,39 +191,39 @@ export class HootConfigMenu extends Component {
             <h3 class="mt-2 pb-1 border-b text-gray border-gray">Display</h3>
             <div class="flex items-center gap-1">
                 <span class="me-auto">Events</span>
-                <t t-foreach="CASE_EVENT_TYPES" t-as="sType" t-key="sType">
-                    <t t-set="isDisplayed" t-value="isEventDisplayed(sType)" />
-                    <t t-set="eventColor" t-value="isDisplayed ? CASE_EVENT_TYPES[sType].color : 'gray'" />
+                <t t-foreach="this.CASE_EVENT_TYPES" t-as="sType" t-key="sType">
+                    <t t-set="isDisplayed" t-value="this.isEventDisplayed(sType)" />
+                    <t t-set="eventColor" t-value="isDisplayed ? this.CASE_EVENT_TYPES[sType].color : 'gray'" />
                     <button
                         type="button"
                         t-attf-class="p-1 border-b-2 transition-color text-{{ eventColor }} border-{{ eventColor }}"
                         t-attf-title="{{ isDisplayed ? 'Hide' : 'Show' }} {{ sType }} events"
                         t-on-click.stop="(ev) => this.toggleEventType(ev, sType)"
                     >
-                        <i class="fa" t-att-class="CASE_EVENT_TYPES[sType].icon" />
+                        <i class="fa" t-att-class="this.CASE_EVENT_TYPES[sType].icon" />
                     </button>
                 </t>
             </div>
             <button
                 type="button"
                 class="flex items-center gap-1"
-                t-on-click.stop="toggleSortResults"
+                t-on-click.stop="this.toggleSortResults"
             >
                 <span class="me-auto">Sort by duration</span>
                 <span
                     class="flex items-center gap-1 transition-colors"
-                    t-att-class="{ 'text-primary': uiState.sortResults }"
+                    t-att-class="{ 'text-primary': this.uiState.sortResults }"
                 >
-                    <t t-if="uiState.sortResults === 'asc'">
+                    <t t-if="this.uiState.sortResults === 'asc'">
                         ascending
                     </t>
-                    <t t-elif="uiState.sortResults === 'desc'">
+                    <t t-elif="this.uiState.sortResults === 'desc'">
                         descending
                     </t>
                     <t t-else="">
                         none
                     </t>
-                    <i t-attf-class="fa fa-sort-numeric-{{ uiState.sortResults or 'desc' }}" />
+                    <i t-attf-class="fa fa-sort-numeric-{{ this.uiState.sortResults or 'desc' }}" />
                 </span>
             </button>
             <label
@@ -233,7 +233,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.headless"
+                    t-model="this.config.headless"
                 />
                 <span>Headless</span>
             </label>
@@ -244,7 +244,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.fun"
+                    t-model="this.config.fun"
                 />
                 <span>Enable incentives</span>
             </label>
@@ -252,16 +252,16 @@ export class HootConfigMenu extends Component {
                 type="button"
                 class="flex items-center gap-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                 title="Toggle the color scheme of the UI"
-                t-on-click.stop="toggleColorScheme"
+                t-on-click.stop="this.toggleColorScheme"
             >
-                <i t-attf-class="fa fa-{{ color.scheme === 'light' ? 'moon' : 'sun' }}-o w-4 h-4" />
+                <i t-attf-class="fa fa-{{ this.color.scheme === 'light' ? 'moon' : 'sun' }}-o w-4 h-4" />
                 Color scheme
             </button>
 
             <!-- Refresh button -->
             <button
                 class="flex bg-btn justify-center rounded mt-1 p-1 transition-colors"
-                t-att-disabled="doesNotNeedRefresh()"
+                t-att-disabled="this.doesNotNeedRefresh()"
             >
                 Apply and refresh
             </button>

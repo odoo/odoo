@@ -7,7 +7,7 @@ import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 test("close popover when component is unmounted", async () => {
     const target = getFixture();
     class Comp extends Component {
-        static template = xml`<div t-att-id="props.id">in popover</div>`;
+        static template = xml`<div t-att-id="this.props.id">in popover</div>`;
         static props = ["*"];
     }
 

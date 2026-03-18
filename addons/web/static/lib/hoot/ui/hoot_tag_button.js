@@ -21,23 +21,23 @@ export class HootTagButton extends Component {
     };
 
     static template = xml`
-        <t t-if="props.inert">
+        <t t-if="this.props.inert">
             <span
                 class="rounded-full px-2"
-                t-att-style="style"
-                t-att-title="title"
+                t-att-style="this.style"
+                t-att-title="this.title"
             >
-                <small class="text-xs font-bold" t-out="props.tag.name" />
+                <small class="text-xs font-bold" t-out="this.props.tag.name" />
             </span>
         </t>
         <t t-else="">
             <HootLink
-                ids="{ tag: props.tag.name }"
+                ids="{ tag: this.props.tag.name }"
                 class="'rounded-full px-2'"
-                style="style"
-                title="title"
+                style="this.style"
+                title="this.title"
             >
-                <small class="text-xs font-bold hidden md:inline" t-out="props.tag.name" />
+                <small class="text-xs font-bold hidden md:inline" t-out="this.props.tag.name" />
                 <span class="md:hidden">&#8205;</span>
             </HootLink>
         </t>

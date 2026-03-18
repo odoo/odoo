@@ -25,7 +25,7 @@ test("ImgGroup's inner Image components should not be blocked before src load", 
         static components = { ImgGroup, Image };
         static template = xml`
             <ImgGroup>
-                <t t-foreach="Object.keys(defs)" t-as="key" t-key="key">
+                <t t-foreach="Object.keys(this.defs)" t-as="key" t-key="key">
                     <Image src="''" class="key"/>
                 </t>
             </ImgGroup>`;

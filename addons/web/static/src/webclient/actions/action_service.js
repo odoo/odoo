@@ -121,7 +121,7 @@ const EMBEDDED_ACTIONS_CTX_KEYS = [
 ];
 
 // only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
+const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
 
 export function makeActionManager(env, router = _router) {
     const breadcrumbCache = {};

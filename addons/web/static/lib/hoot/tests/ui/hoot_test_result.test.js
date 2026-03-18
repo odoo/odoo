@@ -23,7 +23,7 @@ const mountTestResults = async (testFn, props) => {
         static components = { HootTestResult };
         static props = { test: Test, open: [Boolean, { value: "always" }] };
         static template = xml`
-            <HootTestResult test="props.test" open="props.open">
+            <HootTestResult test="this.props.test" open="this.props.open">
                 Toggle
             </HootTestResult>
         `;

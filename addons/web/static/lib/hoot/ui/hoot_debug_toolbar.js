@@ -157,29 +157,29 @@ export class HootDebugToolBar extends Component {
     static template = xml`
         <div
             class="${HootDebugToolBar.name} absolute start-0 bottom-0 max-w-full max-h-full flex p-4 z-4"
-            t-att-class="{ 'w-full': state.open }"
+            t-att-class="{ 'w-full': this.state.open }"
             t-ref="root"
         >
             <div class="flex flex-col w-full overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800">
                 <div class="flex items-center gap-2 px-2">
                     <i
                         class="fa fa-bug text-cyan p-2"
-                        t-att-class="{ 'cursor-move': !state.open }"
+                        t-att-class="{ 'cursor-move': !this.state.open }"
                         t-ref="handle"
                     />
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
                         <button
                             class="bg-btn px-2 py-1"
                             title="Exit debug mode (Ctrl + Esc)"
-                            t-on-click.stop="exitDebugMode"
+                            t-on-click.stop="this.exitDebugMode"
                         >
                             <i class="fa fa-sign-out" />
                         </button>
-                        <t t-if="done">
+                        <t t-if="this.done">
                             <button
                                 class="bg-btn px-2 py-1 animate-slide-left"
                                 title="Restart test (F5)"
-                                t-on-click.stop="refresh"
+                                t-on-click.stop="this.refresh"
                             >
                                 <i class="fa fa-refresh" />
                             </button>
@@ -187,25 +187,25 @@ export class HootDebugToolBar extends Component {
                     </div>
                     <button
                         class="flex flex-1 items-center gap-1 truncate"
-                        t-on-click.stop="toggleOpen"
+                        t-on-click.stop="this.toggleOpen"
                         title="Click to toggle details"
                     >
                         status:
                         <strong
-                            t-attf-class="text-{{ info.className }}"
-                            t-out="info.status"
+                            t-attf-class="text-{{ this.info.className }}"
+                            t-out="this.info.status"
                         />
                         <span class="hidden sm:flex items-center gap-1">
                             <span class="text-gray">-</span>
                             assertions:
                             <span class="contents text-emerald">
-                                <strong t-out="info.passed" />
+                                <strong t-out="this.info.passed" />
                                 passed
                             </span>
-                            <t t-if="info.failed">
+                            <t t-if="this.info.failed">
                                 <span class="text-gray">/</span>
                                 <span class="contents text-rose">
-                                    <strong t-out="info.failed" />
+                                    <strong t-out="this.info.failed" />
                                     failed
                                 </span>
                             </t>
@@ -214,19 +214,19 @@ export class HootDebugToolBar extends Component {
                         time:
                         <span
                             class="text-primary"
-                            t-out="formatTime(props.test.lastResults?.duration, 'ms')"
+                            t-out="this.formatTime(this.props.test.lastResults?.duration, 'ms')"
                         />
                     </button>
-                    <button class="p-2" t-on-click="toggleConfig">
+                    <button class="p-2" t-on-click="this.toggleConfig">
                         <i class="fa fa-cog" />
                     </button>
                 </div>
-                <t t-if="state.open">
+                <t t-if="this.state.open">
                     <div class="flex flex-col w-full sm:flex-row overflow-auto">
-                        <HootTestResult open="'always'" test="props.test" t-key="done">
-                            <HootTestPath canCopy="true" full="true" test="props.test" />
+                        <HootTestResult open="'always'" test="this.props.test" t-key="this.done">
+                            <HootTestPath canCopy="true" full="true" test="this.props.test" />
                         </HootTestResult>
-                        <t t-if="state.configOpen">
+                        <t t-if="this.state.configOpen">
                             <div class="flex flex-col gap-1 p-3 overflow-y-auto">
                                 <HootConfigMenu />
                             </div>

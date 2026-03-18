@@ -90,7 +90,7 @@ export class AssetsLoadingError extends Error {}
  * Utility component that loads an asset bundle before instanciating a component
  */
 export class LazyComponent extends Component {
-    static template = xml`<t t-component="Component" t-props="componentProps"/>`;
+    static template = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
     static props = {
         Component: String,
         bundle: String,

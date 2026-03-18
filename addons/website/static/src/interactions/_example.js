@@ -9,8 +9,8 @@ import { useService } from "@web/core/utils/hooks";
 export class Counter extends Component {
     static selector = "#wrapwrap h1";
     static template = xml`
-        <div class="btn btn-primary" t-on-click="increment">
-            Counter. Value=<t t-out="state.value"/>
+        <div class="btn btn-primary" t-on-click="this.increment">
+            Counter. Value=<t t-out="this.state.value"/>
         </div>`;
     static props = {};
 

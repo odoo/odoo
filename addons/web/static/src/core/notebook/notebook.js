@@ -13,8 +13,8 @@ import { KeepLast } from "@web/core/utils/concurrency";
  *
  *      e.g.:
  *          PageTemplate.template = xml`
-                    <h1 t-out="props.heading" />
-                    <p t-out="props.text" />`;
+                    <h1 t-out="this.props.heading" />
+                    <p t-out="this.props.text" />`;
 
  *      `pages` could be:
  *      [

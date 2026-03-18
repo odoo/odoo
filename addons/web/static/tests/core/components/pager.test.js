@@ -7,7 +7,7 @@ import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_
 import { config as transitionConfig } from "@web/core/transition";
 
 class PagerController extends Component {
-    static template = xml`<Pager t-props="state" />`;
+    static template = xml`<Pager t-props="this.state" />`;
     static components = { Pager };
     static props = ["*"];
     setup() {

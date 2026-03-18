@@ -60,7 +60,7 @@ async function makeDomainSelector(params = {}) {
 
     class Parent extends Component {
         static components = { DomainSelector };
-        static template = xml`<DomainSelector t-props="domainSelectorProps"/>`;
+        static template = xml`<DomainSelector t-props="this.domainSelectorProps"/>`;
         static props = ["*"];
         setup() {
             this.domainSelectorProps = {
@@ -458,9 +458,9 @@ test("multi selection", async () => {
         static template = xml`
             <DomainSelector
                 resModel="'partner'"
-                domain="domain"
+                domain="this.domain"
                 readonly="false"
-                update.bind="update"
+                update.bind="this.update"
             />
         `;
         static props = ["*"];
@@ -504,7 +504,7 @@ test("parse -1", async () => {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`
-            <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
+            <DomainSelector resModel="'partner'" domain="this.domain" readonly="false"/>
         `;
         static props = ["*"];
         setup() {
@@ -519,7 +519,7 @@ test("parse 3-1", async () => {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`
-            <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
+            <DomainSelector resModel="'partner'" domain="this.domain" readonly="false"/>
         `;
         static props = ["*"];
         setup() {
@@ -620,10 +620,10 @@ test("debug input in model field selector popover", async () => {
         static template = xml`
             <DomainSelector
                 resModel="'partner'"
-                domain="domain"
+                domain="this.domain"
                 readonly="false"
                 isDebugMode="true"
-                update.bind="update"
+                update.bind="this.update"
             />
         `;
         static props = ["*"];
@@ -831,7 +831,7 @@ test("support of connector '!' (mode readonly)", async () => {
 
     class Parent extends Component {
         static components = { DomainSelector };
-        static template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
+        static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ domain: `[]` });
@@ -949,7 +949,7 @@ test("support of connector '!' (debug mode)", async () => {
 
     class Parent extends Component {
         static components = { DomainSelector };
-        static template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="state.domain"/>`;
+        static template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="this.state.domain"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ domain: `[]` });
@@ -997,10 +997,10 @@ test("support properties", async () => {
         static template = xml`
             <DomainSelector
                 resModel="'partner'"
-                domain="domain"
+                domain="this.domain"
                 readonly="false"
                 isDebugMode="true"
-                update.bind="update"
+                update.bind="this.update"
             />
         `;
         static components = { DomainSelector };
@@ -1171,7 +1171,7 @@ test("support properties (mode readonly)", async () => {
 
     class Parent extends Component {
         static components = { DomainSelector };
-        static template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
+        static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ domain: `[]` });

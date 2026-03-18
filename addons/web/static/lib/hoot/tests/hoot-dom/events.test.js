@@ -2103,7 +2103,7 @@ describe(parseUrl(import.meta.url), () => {
             class extends Component {
                 static props = {};
                 static template = xml`
-                    <button t-on-click.synthetic="onClick">Click me</button>
+                    <button t-on-click.synthetic="this.onClick">Click me</button>
                 `;
 
                 onClick() {
@@ -2122,7 +2122,7 @@ describe(parseUrl(import.meta.url), () => {
             class extends Component {
                 static props = {};
                 static template = xml`
-                    <button t-on-click.synthetic="onClick">Click me</button>
+                    <button t-on-click.synthetic="this.onClick">Click me</button>
                 `;
 
                 onClick() {

@@ -32,7 +32,7 @@ export function patchWithCleanupImg() {
     const defaultImg =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
     patchWithCleanup(Image, {
-        template: xml`<img t-att-data-src="props.src" t-att-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-att="props.attrs" src="${defaultImg}"/>`,
+        template: xml`<img t-att-data-src="this.props.src" t-att-alt="this.props.alt" t-att-class="this.props.class" t-att-style="this.props.style" t-att="props.attrs" src="${defaultImg}"/>`,
     });
     patchWithCleanup(Image.prototype, {
         loadImage: () => {},
@@ -102,14 +102,14 @@ class BuilderContainer extends Component {
         <div class="d-flex h-100 w-100" t-ref="container">
             <div class="o_website_preview flex-grow-1" t-ref="website_preview">
                 <div class="o_iframe_container">
-                    <iframe class="h-100 w-100" t-ref="iframe" t-on-load="onLoad"/>
+                    <iframe class="h-100 w-100" t-ref="iframe" t-on-load="this.onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
                         <img alt="phone" src="/html_builder/static/img/phone.svg"/>
                     </div>
                 </div>
             </div>
-            <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-            <div t-if="state.isEditing" t-att-class="{'o_builder_sidebar_open': state.isEditing and state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
+            <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+            <div t-if="this.state.isEditing" t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
                 <Builder t-props="this.getBuilderProps()"/>
             </div>
         </div>`;

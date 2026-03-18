@@ -101,10 +101,10 @@ export class HootReporting extends Component {
             ${issueTemplate("globalWarnings", "amber")}
 
             <!-- Test results -->
-            <t t-set="resultStart" t-value="uiState.resultsPage * uiState.resultsPerPage" />
-            <t t-foreach="filteredResults.slice(resultStart, resultStart + uiState.resultsPerPage)" t-as="result" t-key="result.id">
+            <t t-set="resultStart" t-value="this.uiState.resultsPage * this.uiState.resultsPerPage" />
+            <t t-foreach="this.filteredResults.slice(resultStart, resultStart + this.uiState.resultsPerPage)" t-as="result" t-key="result.id">
                 <HootTestResult
-                    open="state.openTests.includes(result.test.id)"
+                    open="this.state.openTests.includes(result.test.id)"
                     test="result.test"
                 >
                     <div class="flex items-center gap-2 overflow-hidden">
@@ -120,10 +120,10 @@ export class HootReporting extends Component {
                                 skipped
                             </t>
                             <t t-else="">
-                                <t t-if="result.test.status === Test.ABORTED">
+                                <t t-if="result.test.status === this.Test.ABORTED">
                                     aborted after
                                 </t>
-                                <t t-out="formatTime(result.test.duration, 'ms')" />
+                                <t t-out="this.formatTime(result.test.duration, 'ms')" />
                             </t>
                         </small>
                         <HootJobButtons job="result.test" />
@@ -132,9 +132,9 @@ export class HootReporting extends Component {
             </t>
 
             <!-- "No test" panel -->
-            <t t-if="!filteredResults.length">
+            <t t-if="!this.filteredResults.length">
                 <div class="flex items-center justify-center h-full">
-                    <t t-set="message" t-value="getEmptyMessage()" />
+                    <t t-set="message" t-value="this.getEmptyMessage()" />
                     <t t-if="message">
                         <em class="p-5 rounded bg-gray-200 dark:bg-gray-800 whitespace-nowrap text-gray">
                             No
@@ -154,16 +154,16 @@ export class HootReporting extends Component {
                             </t>.
                         </em>
                     </t>
-                    <t t-elif="!runnerReporting.tests">
+                    <t t-elif="!this.runnerReporting.tests">
                         <div class="flex flex-col gap-3 p-5 rounded bg-gray-200 dark:bg-gray-800">
                             <h3 class="border-b border-gray pb-1">
                                 Test runner is ready
                             </h3>
                             <div class="flex items-center gap-2">
-                                <t t-if="config.manual">
+                                <t t-if="this.config.manual">
                                     <button
                                         class="bg-btn px-2 py-1 transition-colors rounded"
-                                        t-on-click="onRunClick"
+                                        t-on-click="this.onRunClick"
                                     >
                                         <strong>Start</strong>
                                     </button>
@@ -185,56 +185,56 @@ export class HootReporting extends Component {
                     <t t-else="">
                         <div class="flex flex-col gap-3 p-5 rounded bg-gray-200 dark:bg-gray-800">
                             <h3 class="border-b border-gray pb-1">
-                                <strong class="text-primary" t-out="runnerReporting.tests" />
+                                <strong class="text-primary" t-out="this.runnerReporting.tests" />
                                 /
-                                <span class="text-primary" t-out="runnerState.tests.length" />
+                                <span class="text-primary" t-out="this.runnerState.tests.length" />
                                 tests completed
                             </h3>
                             <ul class="flex flex-col gap-2">
-                                <t t-if="runnerReporting.passed">
+                                <t t-if="this.runnerReporting.passed">
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-emerald"
                                             t-on-click.stop="() => this.filterResults('passed')"
                                         >
                                             <i class="fa fa-check-circle" />
-                                            <strong t-out="runnerReporting.passed" />
+                                            <strong t-out="this.runnerReporting.passed" />
                                         </button>
                                         tests passed
                                     </li>
                                 </t>
-                                <t t-if="runnerReporting.failed">
+                                <t t-if="this.runnerReporting.failed">
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-rose"
                                             t-on-click.stop="() => this.filterResults('failed')"
                                         >
                                             <i class="fa fa-times-circle" />
-                                            <strong t-out="runnerReporting.failed" />
+                                            <strong t-out="this.runnerReporting.failed" />
                                         </button>
                                         tests failed
                                     </li>
                                 </t>
-                                <t t-if="runnerReporting.skipped">
+                                <t t-if="this.runnerReporting.skipped">
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-cyan"
                                             t-on-click.stop="() => this.filterResults('skipped')"
                                         >
                                             <i class="fa fa-pause-circle" />
-                                            <strong t-out="runnerReporting.skipped" />
+                                            <strong t-out="this.runnerReporting.skipped" />
                                         </button>
                                         tests skipped
                                     </li>
                                 </t>
-                                <t t-if="runnerReporting.todo">
+                                <t t-if="this.runnerReporting.todo">
                                     <li class="flex gap-1">
                                         <button
                                             class="flex items-center gap-1 text-purple"
                                             t-on-click.stop="() => this.filterResults('todo')"
                                         >
                                             <i class="fa fa-exclamation-circle" />
-                                            <strong t-out="runnerReporting.todo" />
+                                            <strong t-out="this.runnerReporting.todo" />
                                         </button>
                                         tests to do
                                     </li>

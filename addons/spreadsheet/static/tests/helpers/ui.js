@@ -9,7 +9,7 @@ import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/publ
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 class Parent extends Component {
-    static template = xml`<Spreadsheet model="props.model"/>`;
+    static template = xml`<Spreadsheet model="this.props.model"/>`;
     static components = { Spreadsheet };
     static props = { model: Model };
     setup() {

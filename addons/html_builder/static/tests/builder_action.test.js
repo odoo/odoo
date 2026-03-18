@@ -72,7 +72,7 @@ test("Prepare is triggered on props updated", async () => {
     let prepareDeferred = Promise.withResolvers();
     prepareDeferred.resolve();
     class TestOption extends BaseOptionComponent {
-        static template = xml`<BuilderCheckbox action="'customAction'" actionParam="state.param"/>`;
+        static template = xml`<BuilderCheckbox action="'customAction'" actionParam="this.state.param"/>`;
         setup() {
             super.setup();
             this.state = useState({ param: "old param" });

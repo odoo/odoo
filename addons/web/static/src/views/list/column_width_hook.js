@@ -178,8 +178,8 @@ function computeOptimalDateWidths() {
 
     const template = xml`
         <div class="invisible" style="font-variant-numeric: tabular-nums;">
-            <div t-foreach="Object.keys(values)" t-as="key" t-key="key" t-att-class="key">
-                <div t-foreach="values[key]" t-as="value" t-key="value_index">
+            <div t-foreach="Object.keys(this.values)" t-as="key" t-key="key" t-att-class="key">
+                <div t-foreach="this.values[key]" t-as="value" t-key="value_index">
                     <span t-out="value"/>
                 </div>
             </div>

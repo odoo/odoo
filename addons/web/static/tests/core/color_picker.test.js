@@ -147,7 +147,7 @@ test("keyboard navigation", async () => {
 
 class AdditionalTab extends Component {
     static template = xml`
-        <div class="container" t-on-mouseover="props.onColorPointerOver" t-on-mouseout="props.onColorPointerOut">
+        <div class="container" t-on-mouseover="this.props.onColorPointerOver" t-on-mouseout="this.props.onColorPointerOut">
             <button class="o_color_picker_button btn p-1 m-1" data-color="#FFFF00" style="background-color: #ffff00; width: auto">
                 <div>Hover me</div>
             </button>
@@ -288,7 +288,7 @@ test("should preserve color slider when picking max lightness color", async () =
     class TestColorPicker extends Component {
         static template = xml`
             <div style="width: 222px">
-                <CustomColorPicker selectedColor="state.color" onColorPreview.bind="onColorChange" onColorSelect.bind="onColorChange"/>
+                <CustomColorPicker selectedColor="this.state.color" onColorPreview.bind="this.onColorChange" onColorSelect.bind="this.onColorChange"/>
             </div>`;
         static components = { CustomColorPicker };
         static props = ["*"];

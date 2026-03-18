@@ -21,22 +21,22 @@ export class HootLogCounters extends Component {
         },
     };
     static template = xml`
-        <t t-if="props.logs.error">
+        <t t-if="this.props.logs.error">
             <span
                 class="flex items-center gap-1 text-rose"
-                t-attf-title="{{ props.logs.error }} error log(s) (check the console)"
+                t-attf-title="{{ this.props.logs.error }} error log(s) (check the console)"
             >
                 <i class="fa fa-times-circle" />
-                <strong t-out="props.logs.error" />
+                <strong t-out="this.props.logs.error" />
             </span>
         </t>
-        <t t-if="props.logs.warn">
+        <t t-if="this.props.logs.warn">
             <span
                 class="flex items-center gap-1 text-amber"
-                t-attf-title="{{ props.logs.warn }} warning log(s) (check the console)"
+                t-attf-title="{{ this.props.logs.warn }} warning log(s) (check the console)"
             >
                 <i class="fa fa-exclamation-triangle" />
-                <strong t-out="props.logs.warn" />
+                <strong t-out="this.props.logs.warn" />
             </span>
         </t>
     `;

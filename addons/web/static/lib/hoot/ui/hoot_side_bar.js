@@ -55,19 +55,19 @@ export class HootSideBarSuite extends Component {
     };
 
     static template = xml`
-        <t t-if="props.hasSuites">
+        <t t-if="this.props.hasSuites">
             <i
                 class="fa fa-chevron-right text-xs transition"
                 t-att-class="{
-                    'rotate-90': props.unfolded,
-                    'opacity-25': !props.reporting.failed and !props.reporting.tests
+                    'rotate-90': this.props.unfolded,
+                    'opacity-25': !this.props.reporting.failed and !this.props.reporting.tests
                 }"
             />
         </t>
-        <span t-ref="root" t-att-class="getClassName()" t-out="props.name" />
-        <t t-if="props.multi">
+        <span t-ref="root" t-att-class="this.getClassName()" t-out="this.props.name" />
+        <t t-if="this.props.multi">
             <strong class="text-amber whitespace-nowrap me-1">
-                x<t t-out="props.multi" />
+                x<t t-out="this.props.multi" />
             </strong>
         </t>
     `;
@@ -112,7 +112,7 @@ export class HootSideBarCounter extends Component {
     };
 
     static template = xml`
-        <t t-set="info" t-value="getCounterInfo()" />
+        <t t-set="info" t-value="this.getCounterInfo()" />
         <span
             t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-gray' }} {{ info[1] ? 'font-bold' : '' }}"
             t-out="info[1]"
@@ -147,7 +147,7 @@ export class HootSideBar extends Component {
     static template = xml`
         <div
             class="${HootSideBar.name} flex-col w-64 h-full resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
-            t-on-click.stop="onClick"
+            t-on-click.stop="this.onClick"
         >
             <form class="flex p-2 items-center gap-1">
                 <div class="hoot-search-bar border rounded bg-base w-full">
@@ -156,21 +156,21 @@ export class HootSideBar extends Component {
                         type="search"
                         placeholder="Search suites"
                         t-ref="search-input"
-                        t-model="state.filter"
-                        t-on-keydown="onSearchInputKeydown"
+                        t-model="this.state.filter"
+                        t-on-keydown="this.onSearchInputKeydown"
                     />
                 </div>
-                <t t-if="env.runner.hasFilter">
+                <t t-if="this.env.runner.hasFilter">
                     <button
                         type="button"
                         class="text-primary p-1 transition-colors"
-                        t-att-title="state.hideEmpty ? 'Show all suites' : 'Hide other suites'"
-                        t-on-click.stop="toggleHideEmpty"
+                        t-att-title="this.state.hideEmpty ? 'Show all suites' : 'Hide other suites'"
+                        t-on-click.stop="this.toggleHideEmpty"
                     >
-                        <i t-attf-class="fa fa-{{ state.hideEmpty ? 'eye' : 'eye-slash' }}" />
+                        <i t-attf-class="fa fa-{{ this.state.hideEmpty ? 'eye' : 'eye-slash' }}" />
                     </button>
                 </t>
-                <t t-set="expanded" t-value="unfoldedIds.size === env.runner.suites.size" />
+                <t t-set="expanded" t-value="this.unfoldedIds.size === this.env.runner.suites.size" />
                 <button
                     type="button"
                     class="text-primary p-1 transition-colors"
@@ -181,11 +181,11 @@ export class HootSideBar extends Component {
                 </button>
             </form>
             <ul class="overflow-x-hidden overflow-y-auto" t-ref="suites-list">
-                <t t-foreach="filteredSuites" t-as="suite" t-key="suite.id">
+                <t t-foreach="this.filteredSuites" t-as="suite" t-key="suite.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
                             class="${SUITE_CLASSNAME} flex items-center w-full h-full gap-1 px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
-                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
+                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': this.uiState.selectedSuiteId === suite.id }"
                             t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
                             t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
                             t-on-click.stop="(ev) => this.toggleItem(suite)"
@@ -195,20 +195,20 @@ export class HootSideBar extends Component {
                                 <HootSideBarSuite
                                     multi="suite.config.multi"
                                     name="suite.name"
-                                    hasSuites="hasSuites(suite)"
+                                    hasSuites="this.hasSuites(suite)"
                                     reporting="suite.reporting"
-                                    selected="uiState.selectedSuiteId === suite.id"
-                                    unfolded="unfoldedIds.has(suite.id)"
+                                    selected="this.uiState.selectedSuiteId === suite.id"
+                                    unfolded="this.unfoldedIds.has(suite.id)"
                                 />
                                 <span class="text-gray">
                                     (<t t-out="suite.totalTestCount" />)
                                 </span>
                             </div>
                             <HootJobButtons hidden="true" job="suite" />
-                            <t t-if="env.runner.state.suites.includes(suite)">
+                            <t t-if="this.env.runner.state.suites.includes(suite)">
                                 <HootSideBarCounter
                                     reporting="suite.reporting"
-                                    statusFilter="uiState.statusFilter"
+                                    statusFilter="this.uiState.statusFilter"
                                 />
                             </t>
                         </button>

@@ -12202,7 +12202,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     const def = new Deferred();
 
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="value" t-on-blur="onBlur" t-on-input="onInput"/>`;
+        static template = xml`<input t-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
         static props = {
             ...standardFieldProps,
         };
@@ -16744,7 +16744,7 @@ test(`fieldDependencies support for fields`, async () => {
 
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
-            static template = xml`<span t-out="props.record.data.int_field"/>`;
+            static template = xml`<span t-out="this.props.record.data.int_field"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
@@ -16761,7 +16761,7 @@ test(`fieldDependencies support for fields`, async () => {
 test(`fieldDependencies support for fields: dependence on a relational field`, async () => {
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
-            static template = xml`<span t-out="props.record.data.m2o.id"/>`;
+            static template = xml`<span t-out="this.props.record.data.m2o.id"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "m2o", type: "many2one", relation: "bar" }],
@@ -17128,7 +17128,7 @@ test(`optional field selection do not unselect current row`, async () => {
 
 test(`view widgets are rendered in list view`, async () => {
     class TestWidget extends Component {
-        static template = xml`<div class="test_widget" t-out="props.record.data.bar"/>`;
+        static template = xml`<div class="test_widget" t-out="this.props.record.data.bar"/>`;
         static props = ["*"];
     }
     registry.category("view_widgets").add("test_widget", { component: TestWidget });
@@ -17151,7 +17151,7 @@ test(`view widgets are rendered in list view`, async () => {
 
 test(`view widget with options in list view`, async () => {
     class TestWidget extends Component {
-        static template = xml`<div class="test_widget" t-out="props.x"/>`;
+        static template = xml`<div class="test_widget" t-out="this.props.x"/>`;
         static props = ["*"];
     }
     registry.category("view_widgets").add("test_widget", {

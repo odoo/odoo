@@ -18,13 +18,13 @@ export class HootCopyButton extends Component {
     };
 
     static template = xml`
-        <t t-if="hasClipboard()">
+        <t t-if="this.hasClipboard()">
             <button
                 type="button"
                 class="text-gray-400 hover:text-gray-500"
-                t-att-class="{ 'text-emerald': state.copied }"
+                t-att-class="{ 'text-emerald': this.state.copied }"
                 title="copy to clipboard"
-                t-on-click.stop="onClick"
+                t-on-click.stop="this.onClick"
             >
                 <i class="fa fa-clipboard" />
             </button>

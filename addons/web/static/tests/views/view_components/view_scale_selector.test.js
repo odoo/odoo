@@ -9,7 +9,7 @@ import { ViewScaleSelector } from "@web/views/view_components/view_scale_selecto
 test("basic ViewScaleSelector component usage", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
-        static template = xml`<ViewScaleSelector t-props="compProps" />`;
+        static template = xml`<ViewScaleSelector t-props="this.compProps" />`;
         static props = ["*"];
         setup() {
             this.state = useState({
@@ -72,7 +72,7 @@ test("basic ViewScaleSelector component usage", async () => {
 test("ViewScaleSelector with only one scale available", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
-        static template = xml`<ViewScaleSelector t-props="compProps" />`;
+        static template = xml`<ViewScaleSelector t-props="this.compProps" />`;
         static props = ["*"];
         setup() {
             this.state = useState({
@@ -101,7 +101,7 @@ test("ViewScaleSelector with only one scale available", async () => {
 test("ViewScaleSelector show weekends button is disabled when scale is day", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
-        static template = xml`<ViewScaleSelector t-props="compProps"/>`;
+        static template = xml`<ViewScaleSelector t-props="this.compProps"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({

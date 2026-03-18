@@ -7,8 +7,8 @@ import { useActiveElement } from "@web/core/ui/ui_service";
 
 export class EditorOverlay extends Component {
     static template = xml`
-        <div t-custom-ref="root" class="overlay" t-att-class="props.className" t-on-pointerdown.stop="() => {}">
-            <t t-component="props.Component" t-props="props.props"/>
+        <div t-custom-ref="root" class="overlay" t-att-class="this.props.className" t-on-pointerdown.stop="() => {}">
+            <t t-component="this.props.Component" t-props="this.props.props"/>
         </div>`;
 
     static props = {

@@ -18,22 +18,22 @@ import { useAutofocus, useHootKey, useWindowListener } from "../hoot_utils";
 /** @extends {Component<HootDropdownProps, import("../hoot").Environment>} */
 export class HootDropdown extends Component {
     static template = xml`
-        <div class="${HootDropdown.name} relative" t-att-class="props.className" t-ref="root">
+        <div class="${HootDropdown.name} relative" t-att-class="this.props.className" t-ref="root">
             <button
                 t-ref="toggler"
                 class="flex rounded p-2 transition-colors"
-                t-att-class="props.buttonClassName"
+                t-att-class="this.props.buttonClassName"
             >
                 <t t-slot="toggler" open="state.open" />
             </button>
-            <t t-if="state.open">
+            <t t-if="this.state.open">
                 <div
                     class="
                         hoot-dropdown absolute animate-slide-down
                         flex flex-col end-0 p-3 gap-2
                         bg-base text-base mt-1 shadow rounded z-2"
                 >
-                    <button class="fixed end-2 top-2 p-1 text-rose sm:hidden" t-on-click="() => state.open = false">
+                    <button class="fixed end-2 top-2 p-1 text-rose sm:hidden" t-on-click="() => this.state.open = false">
                         <i class="fa fa-times w-5 h-5" />
                     </button>
                     <t t-slot="menu" open="state.open" />

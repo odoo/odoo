@@ -26,10 +26,10 @@ export const base64Img =
 
 class TestEditor extends Component {
     static template = xml`
-        <t t-if="props.styleContent">
-            <style t-out="props.styleContent"></style>
+        <t t-if="this.props.styleContent">
+            <style t-out="this.props.styleContent"></style>
         </t>
-        <Wysiwyg t-props="wysiwygProps" />`;
+        <Wysiwyg t-props="this.wysiwygProps" />`;
     static components = { Wysiwyg };
     static props = ["wysiwygProps", "content", "styleContent?", "onMounted?", "onWillDestroy?"];
 

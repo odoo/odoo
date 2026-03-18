@@ -22,10 +22,10 @@ export class HootJobButtons extends Component {
     };
 
     static template = xml`
-        <t t-set="type" t-value="getType()" />
-        <div class="${HootJobButtons.name} items-center gap-1" t-att-class="props.hidden ? 'hidden' : 'flex'">
+        <t t-set="type" t-value="this.getType()" />
+        <div class="${HootJobButtons.name} items-center gap-1" t-att-class="this.props.hidden ? 'hidden' : 'flex'">
             <HootLink
-                ids="{ id: props.job.id }"
+                ids="{ id: this.props.job.id }"
                 class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
                 title="'Run this ' + type + ' only'"
             >
@@ -33,7 +33,7 @@ export class HootJobButtons extends Component {
             </HootLink>
             <t t-if="type === 'test'">
                 <HootLink
-                    ids="{ id: props.job.id }"
+                    ids="{ id: this.props.job.id }"
                     options="{ debug: true }"
                     class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
                     title="'Run this ' + type + ' only in debug mode'"
@@ -42,7 +42,7 @@ export class HootJobButtons extends Component {
                 </HootLink>
             </t>
             <HootLink
-                ids="{ id: props.job.id }"
+                ids="{ id: this.props.job.id }"
                 options="{ ignore: true }"
                 class="'hoot-btn-link border border-primary text-rose rounded transition-colors'"
                 title="'Ignore ' + type"

@@ -3,7 +3,7 @@ import { Component, markRaw, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class DialogWrapper extends Component {
-    static template = xml`<t t-component="props.subComponent" t-props="props.subProps" />`;
+    static template = xml`<t t-component="this.props.subComponent" t-props="this.props.subProps" />`;
     static props = ["*"];
     setup() {
         useChildSubEnv({ dialogData: this.props.subEnv });

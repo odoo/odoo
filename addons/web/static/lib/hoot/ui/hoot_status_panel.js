@@ -117,105 +117,105 @@ export class HootStatusPanel extends Component {
     static template = xml`
         <div
             class="${HootStatusPanel.name} flex items-center justify-between gap-3 px-3 py-1 min-h-10 bg-gray-300 dark:bg-gray-700"
-            t-att-class="state.className"
+            t-att-class="this.state.className"
         >
             <div class="flex items-center gap-2 overflow-hidden">
-                <t t-if="runnerState.status === 'ready'">
+                <t t-if="this.runnerState.status === 'ready'">
                     Ready
                 </t>
-                <t t-elif="runnerState.status === 'running'">
-                    <i t-if="state.debug" class="text-cyan fa fa-bug" title="Debugging" />
+                <t t-elif="this.runnerState.status === 'running'">
+                    <i t-if="this.state.debug" class="text-cyan fa fa-bug" title="Debugging" />
                     <div
                         t-else=""
                         class="animate-spin shrink-0 grow-0 w-4 h-4 border-2 border-emerald border-t-transparent rounded-full"
                         role="status"
                         title="Running"
                     />
-                    <strong class="text-primary" t-out="env.runner.totalTime" />
+                    <strong class="text-primary" t-out="this.env.runner.totalTime" />
                 </t>
                 <t t-else="">
                     <span class="hidden md:block">
-                        <strong class="text-primary" t-out="runnerReporting.tests" />
+                        <strong class="text-primary" t-out="this.runnerReporting.tests" />
                         tests completed
-                        (total time: <strong class="text-primary" t-out="env.runner.totalTime" />
-                        <t t-if="env.runner.aborted">, run aborted by user</t>)
+                        (total time: <strong class="text-primary" t-out="this.env.runner.totalTime" />
+                        <t t-if="this.env.runner.aborted">, run aborted by user</t>)
                     </span>
                     <span class="md:hidden flex items-center gap-1">
                         <i class="fa fa-clock-o" />
-                        <strong class="text-primary" t-out="env.runner.totalTime" />
+                        <strong class="text-primary" t-out="this.env.runner.totalTime" />
                     </span>
                 </t>
-                <t t-if="runnerState.currentTest">
-                    <HootTestPath test="runnerState.currentTest" />
+                <t t-if="this.runnerState.currentTest">
+                    <HootTestPath test="this.runnerState.currentTest" />
                 </t>
-                <t t-if="state.timer">
-                    <span class="text-cyan" t-out="formatTime(state.timer, 's')" />
+                <t t-if="this.state.timer">
+                    <span class="text-cyan" t-out="this.formatTime(this.state.timer, 's')" />
                 </t>
             </div>
             <div class="flex items-center gap-1">
-                <t t-if="runnerReporting.passed">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'passed' ? 'emerald' : 'gray'" />
+                <t t-if="this.runnerReporting.passed">
+                    <t t-set="color" t-value="!this.uiState.statusFilter or this.uiState.statusFilter === 'passed' ? 'emerald' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('passed')"
-                        t-attf-title="Show {{ runnerReporting.passed }} passed tests"
+                        t-attf-title="Show {{ this.runnerReporting.passed }} passed tests"
                     >
                         <i class="fa fa-check-circle" />
-                        <t t-out="runnerReporting.passed" />
+                        <t t-out="this.runnerReporting.passed" />
                     </button>
                 </t>
-                <t t-if="runnerReporting.failed">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'failed' ? 'rose' : 'gray'" />
+                <t t-if="this.runnerReporting.failed">
+                    <t t-set="color" t-value="!this.uiState.statusFilter or this.uiState.statusFilter === 'failed' ? 'rose' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('failed')"
-                        t-attf-title="Show {{ runnerReporting.failed }} failed tests"
+                        t-attf-title="Show {{ this.runnerReporting.failed }} failed tests"
                     >
                         <i class="fa fa-times-circle" />
-                        <t t-out="runnerReporting.failed" />
+                        <t t-out="this.runnerReporting.failed" />
                     </button>
                 </t>
-                <t t-if="runnerReporting.skipped">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'skipped' ? 'cyan' : 'gray'" />
+                <t t-if="this.runnerReporting.skipped">
+                    <t t-set="color" t-value="!this.uiState.statusFilter or this.uiState.statusFilter === 'skipped' ? 'cyan' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('skipped')"
-                        t-attf-title="Show {{ runnerReporting.skipped }} skipped tests"
+                        t-attf-title="Show {{ this.runnerReporting.skipped }} skipped tests"
                     >
                         <i class="fa fa-pause-circle" />
-                        <t t-out="runnerReporting.skipped" />
+                        <t t-out="this.runnerReporting.skipped" />
                     </button>
                 </t>
-                <t t-if="runnerReporting.todo">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'todo' ? 'purple' : 'gray'" />
+                <t t-if="this.runnerReporting.todo">
+                    <t t-set="color" t-value="!this.uiState.statusFilter or this.uiState.statusFilter === 'todo' ? 'purple' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('todo')"
-                        t-attf-title="Show {{ runnerReporting.todo }} tests to do"
+                        t-attf-title="Show {{ this.runnerReporting.todo }} tests to do"
                     >
                         <i class="fa fa-exclamation-circle" />
-                        <t t-out="runnerReporting.todo" />
+                        <t t-out="this.runnerReporting.todo" />
                     </button>
                 </t>
-                <t t-if="uiState.totalResults gt uiState.resultsPerPage">
-                    <t t-set="lastPage" t-value="getLastPage()" />
+                <t t-if="this.uiState.totalResults gt this.uiState.resultsPerPage">
+                    <t t-set="lastPage" t-value="this.getLastPage()" />
                     <div class="flex gap-1 animate-slide-left">
                         <button
                             class="px-1 transition-color"
                             title="Previous page"
-                            t-att-disabled="uiState.resultsPage === 0"
-                            t-on-click.stop="previousPage"
+                            t-att-disabled="this.uiState.resultsPage === 0"
+                            t-on-click.stop="this.previousPage"
                         >
                             <i class="fa fa-chevron-left" />
                         </button>
-                        <strong class="text-primary" t-out="uiState.resultsPage + 1" />
+                        <strong class="text-primary" t-out="this.uiState.resultsPage + 1" />
                         <span class="text-gray">/</span>
                         <t t-out="lastPage + 1" />
                         <button
                             class="px-1 transition-color"
                             title="Next page"
-                            t-att-disabled="uiState.resultsPage === lastPage"
-                            t-on-click.stop="nextPage"
+                            t-att-disabled="this.uiState.resultsPage === lastPage"
+                            t-on-click.stop="this.nextPage"
                         >
                             <i class="fa fa-chevron-right" />
                         </button>

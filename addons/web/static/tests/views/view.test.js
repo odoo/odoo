@@ -24,7 +24,7 @@ const viewRegistry = registry.category("views");
 
 class ToyController extends Component {
     static props = ["*"];
-    static template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
+    static template = xml`<div t-attf-class="{{this.class}} {{this.props.className}}"><t t-call="{{ this.template }}"/></div>`;
     setup() {
         this.class = "toy";
         this.template = xml`${this.props.arch.outerHTML}`;
@@ -1133,7 +1133,7 @@ test("react to prop 'domain' changes", async function () {
     viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
     class Parent extends Component {
         static props = ["*"];
-        static template = xml`<View t-props="state"/>`;
+        static template = xml`<View t-props="this.state"/>`;
         static components = { View };
         setup() {
             this.state = useState({

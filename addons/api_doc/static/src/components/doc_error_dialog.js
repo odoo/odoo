@@ -7,23 +7,23 @@ export class DocErrorDialog extends Component {
         <div class="alert error mt-1 d-flex flex-column" role="alert">
             <div class="d-flex align-items-center mb-2">
                 <i class="pe-2 fa fa-exclamation-triangle fa-lg" aria-hidden="true"/>
-                <h5 class="m-0 text-danger">Error while loading models: <strong t-out="props.name"/></h5>
+                <h5 class="m-0 text-danger">Error while loading models: <strong t-out="this.props.name"/></h5>
             </div>
-            <t t-if="props.traceback">
-                <div t-if="state.showTraceback" class="overflow-auto position-relative" style="max-height: 500px;">
+            <t t-if="this.props.traceback">
+                <div t-if="this.state.showTraceback" class="overflow-auto position-relative" style="max-height: 500px;">
                     <button
                         class="btn bg-100 position-absolute top-0 end-0"
                         t-custom-ref="copyButton"
-                        t-on-click="onClickClipboard"
+                        t-on-click="this.onClickClipboard"
                     >
                         <span class="fa fa-clipboard"/>
                     </button>
-                    <pre class="small text-break p-4" t-out="props.traceback"/>
+                    <pre class="small text-break p-4" t-out="this.props.traceback"/>
                 </div>
                 <button
                     class="btn btn-sm mt-2 align-self-center"
-                    t-on-click="toggleTraceback"
-                    t-out="state.showTraceback ? 'Hide Details' : 'Show Technical Details'"
+                    t-on-click="this.toggleTraceback"
+                    t-out="this.state.showTraceback ? 'Hide Details' : 'Show Technical Details'"
                 />
             </t>
         </div>

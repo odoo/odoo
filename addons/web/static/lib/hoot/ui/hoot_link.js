@@ -38,14 +38,14 @@ const {
 export class HootLink extends Component {
     static template = xml`
         <a
-            t-att-class="props.class"
-            t-att-href="state.href"
-            t-att-target="props.target"
-            t-att-title="props.title"
-            t-att-style="props.style"
-            t-on-click.stop="onClick"
-            t-on-focus="updateHref"
-            t-on-pointerenter="updateHref"
+            t-att-class="this.props.class"
+            t-att-href="this.state.href"
+            t-att-target="this.props.target"
+            t-att-title="this.props.title"
+            t-att-style="this.props.style"
+            t-on-click.stop="this.onClick"
+            t-on-focus="this.updateHref"
+            t-on-pointerenter="this.updateHref"
         >
             <t t-slot="default" />
         </a>
