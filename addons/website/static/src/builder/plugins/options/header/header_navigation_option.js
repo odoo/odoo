@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+
 export class HeaderNavigationOption extends BaseOptionComponent {
     static id = "header_navigation_option";
     static template = "website.HeaderNavigationOption";
@@ -9,20 +10,9 @@ export class HeaderNavigationOption extends BaseOptionComponent {
     setup() {
         super.setup();
 
-        this.keys = [
-            "website.template_header_default",
-            "website.template_header_hamburger",
-            "website.template_header_boxed",
-            "website.template_header_stretch",
-            "website.template_header_vertical",
-            "website.template_header_search",
-            "website.template_header_sales_one",
-            "website.template_header_sales_two",
-            "website.template_header_sales_three",
-            "website.template_header_sales_four",
-            "website.template_header_sidebar",
-        ];
-
+        this.headerTemplates = this.getResource("header_templates_providers")
+            .flatMap((provider) => provider())
+            .map((template) => `website.template_header_` + template.key);
         this.currentActiveViews = {};
         onWillStart(async () => {
             this.currentActiveViews = await this.getCurrentActiveViews();
@@ -38,14 +28,24 @@ export class HeaderNavigationOption extends BaseOptionComponent {
         return false;
     }
     async getCurrentActiveViews() {
-        const actionParams = { views: this.keys };
+        const actionParams = { views: this.headerTemplates };
         await this.dependencies.customizeWebsite.loadConfigKey(actionParams);
         const currentActiveViews = {};
-        for (const key of this.keys) {
+        for (const key of this.headerTemplates) {
             const isActive = this.dependencies.customizeWebsite.getConfigKey(key);
             currentActiveViews[key] = isActive;
         }
         return currentActiveViews;
+    }
+
+    getAlignmentView(direction) {
+        if (!direction || direction === "left") {
+            return [];
+        }
+        // We find the active template, and make a corresponding alignment view
+        return this.headerTemplates
+            .filter((view) => this.currentActiveViews[view])
+            .map((template) => template + `_align_${direction}`);
     }
 }
 
