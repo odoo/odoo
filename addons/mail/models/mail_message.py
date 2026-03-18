@@ -489,12 +489,11 @@ class MailMessage(models.Model):
                     comodel_domain_remaining & domain_operation,
                     comodel_domain_remaining & ~domain_operation,
                 )
-                if not comodel.has_access(doc_operation):
+                comodel_rule = comodel._access_domain(doc_operation)
+                if comodel_rule.is_false():
                     continue
                 if doc_operation == 'read':
                     comodel_rule = Domain.TRUE  # covered by the search below
-                else:
-                    comodel_rule = self.env['ir.rule']._compute_domain(comodel._name, doc_operation)
                 comodel_domain |= (domain_operation & comodel_rule)
             if comodel_res_ids is not None:
                 comodel_domain &= Domain('id', 'in', comodel_res_ids)

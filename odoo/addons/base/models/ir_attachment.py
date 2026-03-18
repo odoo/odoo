@@ -618,7 +618,7 @@ class IrAttachment(models.Model):
                 ))
                 comodel_domain = Domain('id', 'in', comodel_res_ids) if comodel_res_ids else Domain.TRUE
                 if operation != 'read':
-                    comodel_domain &= self.env['ir.rule']._compute_domain(res_model_name, operation).optimize_full(comodel.sudo())
+                    comodel_domain &= comodel._access_domain(operation).optimize_full(comodel.sudo())
                 query = comodel._search(comodel_domain)
                 if query.is_empty():
                     continue
