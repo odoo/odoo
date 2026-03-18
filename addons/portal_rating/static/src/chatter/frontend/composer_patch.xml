@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o-mail-Composer-coreMain')]" position="before">
+        <xpath expr="//div[hasclass('o-mail-Composer-coreHeader')]" position="inside">
             <div t-if="env.displayRating and !message" class="o-mail-Composer-starCard d-flex">
                 <div class="o-mail-Composer-stars enabled" t-on-mouseleave="onMouseLeaveStar">
                     <t t-set="index" t-value="0" />
