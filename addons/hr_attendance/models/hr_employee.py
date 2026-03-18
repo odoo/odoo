@@ -114,60 +114,67 @@ class HrEmployee(models.Model):
         """
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
-        for employee in self:
-            tz = ZoneInfo(employee.tz or 'UTC')
+        for timezone, employees in self.grouped('tz').items():
+            tz = ZoneInfo(timezone or 'UTC')
             now_tz = now_utc.astimezone(tz)
             start_tz = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
             start_naive = start_tz.astimezone(datetime.UTC).replace(tzinfo=None)
             end_tz = now_tz
             end_naive = end_tz.astimezone(datetime.UTC).replace(tzinfo=None)
 
-            current_month_attendances = employee.attendance_ids.filtered(
-                lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
-            )
-            hours = 0
-            overtime_hours = 0
-            for att in current_month_attendances:
-                hours += att.worked_hours or 0
-                overtime_hours += att.validated_overtime_hours or 0
-            employee.hours_last_month = round(hours, 2)
-            employee.hours_last_month_display = "%g" % employee.hours_last_month
-            # overtime_adjustments = sum(
-            #     ot.duration or 0
-            #     for ot in employee.overtime_ids.filtered(
-            #         lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
-            #     )
-            # )
-            employee.hours_last_month_overtime = round(overtime_hours, 2)
+            for employee in employees:
+                current_month_attendances = employee.attendance_ids.filtered(
+                    lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
+                )
+                hours = 0
+                overtime_hours = 0
+                for att in current_month_attendances:
+                    hours += att.worked_hours or 0
+                    overtime_hours += att.validated_overtime_hours or 0
+                employee.hours_last_month = round(hours, 2)
+                employee.hours_last_month_display = "%g" % employee.hours_last_month
+                # overtime_adjustments = sum(
+                #     ot.duration or 0
+                #     for ot in employee.overtime_ids.filtered(
+                #         lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
+                #     )
+                # )
+                employee.hours_last_month_overtime = round(overtime_hours, 2)
 
     def _compute_hours_today(self):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
-        for employee in self:
+        for timezone, employees in self.grouped('tz').items():
             # start of day in the employee's timezone might be the previous day in utc
-            tz = ZoneInfo(employee.tz)
-            now_tz = now_utc.astimezone(tz)
-            start_tz = now_tz + relativedelta(hour=0, minute=0)  # day start in the employee's timezone
+            tz = ZoneInfo(timezone or 'UTC')
+            start_tz = now_utc.astimezone(tz) + relativedelta(hour=0, minute=0)  # day start in the employee's timezone
             start_naive = start_tz.astimezone(datetime.UTC).replace(tzinfo=None)
 
-            attendances = self.env['hr.attendance'].search([
-                ('employee_id', 'in', employee.ids),
-                ('check_in', '<=', now),
-                '|', ('check_out', '>=', start_naive), ('check_out', '=', False),
-            ], order='check_in asc')
-            employee.today_attendance_ids = attendances
-            hours_previously_today = 0
-            worked_hours = 0
-            attendance_worked_hours = 0
-            for attendance in attendances:
-                delta = (attendance.check_out or now) - max(attendance.check_in, start_naive)
-                attendance_worked_hours = delta.total_seconds() / 3600.0
-                worked_hours += attendance_worked_hours
-                hours_previously_today += attendance_worked_hours
-            employee.last_attendance_worked_hours = attendance_worked_hours
-            hours_previously_today -= attendance_worked_hours
-            employee.hours_previously_today = hours_previously_today
-            employee.hours_today = worked_hours
+            attendances_by_employee = dict(self.env['hr.attendance']._read_group(
+                [
+                    ('employee_id', 'in', employees.ids),
+                    ('check_in', '<=', now),
+                    '|', ('check_out', '>=', start_naive), ('check_out', '=', False),
+                ],
+                ['employee_id'],
+                ['id:recordset'],
+            ))
+
+            for employee in employees:
+                attendances = attendances_by_employee.get(employee, self.env['hr.attendance'])
+                employee.today_attendance_ids = attendances
+                hours_previously_today = 0
+                worked_hours = 0
+                attendance_worked_hours = 0
+                for attendance in attendances:
+                    delta = (attendance.check_out or now) - max(attendance.check_in, start_naive)
+                    attendance_worked_hours = delta.total_seconds() / 3600.0
+                    worked_hours += attendance_worked_hours
+                    hours_previously_today += attendance_worked_hours
+                employee.last_attendance_worked_hours = attendance_worked_hours
+                hours_previously_today -= attendance_worked_hours
+                employee.hours_previously_today = hours_previously_today
+                employee.hours_today = worked_hours
 
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
