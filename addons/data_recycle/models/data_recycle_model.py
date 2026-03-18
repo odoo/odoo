@@ -80,6 +80,17 @@ class Data_RecycleModel(models.Model):
             if model.recycle_action == 'archive' and 'active' not in self.env[model.res_model_name]:
                 raise UserError(_("This model doesn't manage archived records. Only deletion is possible."))
 
+    @api.onchange('recycle_mode')
+    def _onchange_recycle_mode(self):
+        if self.recycle_mode == 'automatic':
+            return {
+                'warning': {
+                    'title': "Automatic Mode",
+                    'message': "When enabling automatic mode your rules will run periodically without manual validation. "
+                               "Please note that these changes are permanent and cannot be reversed."
+                }
+            }
+
     @api.depends('res_model_id')
     def _compute_domain(self):
         self.domain = '[]'
