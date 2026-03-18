@@ -428,7 +428,11 @@ class AccountEdiCommon(models.AbstractModel):
 
         # Set XML as ubl_cii_xml_file (XML used to import)
         if file_data['attachment']:
-            file_data['attachment'].res_field = 'ubl_cii_xml_file'
+            file_data['attachment'].write({
+                'res_field': 'ubl_cii_xml_file',
+                'res_model': invoice._name,
+                'res_id': invoice.id,
+            })
 
         attachments = self._import_attachments(invoice, tree)
         if attachments:
