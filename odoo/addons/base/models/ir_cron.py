@@ -247,7 +247,7 @@ class IrCron(models.Model):
             SELECT latest_version
             FROM ir_module_module
              WHERE name='base'
-        """)
+        """, log_exceptions=False)
         (version,) = cron_cr.fetchone()
         if version is None:
             raise BadModuleState()

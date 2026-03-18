@@ -363,8 +363,7 @@ def load_modules(
     cr.execute("SET SESSION lock_timeout = '15s'")
     if not modules_db.is_initialized(cr):
         if not update_module:
-            _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
-            return
+            raise ImportError(f"Database {cr.dbname} not initialized, you can force it with `-i base`")
         _logger.info("Initializing database %s", cr.dbname)
         modules_db.initialize(cr)
     elif 'base' in reinit_modules:
