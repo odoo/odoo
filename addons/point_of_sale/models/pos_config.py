@@ -223,9 +223,13 @@ class PosConfig(models.Model):
         self.ensure_one()
         static_records = {}
 
+        dynamic_models = {'pos.order', 'pos.order.line', 'pos.payment', 'pos.pack.operation.lot', 'product.attribute.custom.value'}
+
         for model, ids in records.items():
-            records = self.env[model].browse(ids).exists()
-            static_records[model] = self.env[model]._load_pos_data_read(records, self)
+            if model in dynamic_models:
+                continue
+            model_records = self.env[model].browse(ids).exists()
+            static_records[model] = self.env[model]._load_pos_data_read(model_records, self)
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,

@@ -72,14 +72,48 @@ class PosOrder(models.Model):
         orders = super().action_pos_order_cancel()
         success_orders_ids = [o['id'] for o in orders['pos.order'] if o['state'] == 'cancel']
         orders_ids = self.browse(success_orders_ids)
-        self._send_notification(orders_ids)
+        if orders_ids:
+            self._send_notification(orders_ids)
         return orders
+
+    def _process_saved_order(self, draft):
+        old_state = self.state
+        res = super()._process_saved_order(draft)
+        # Notify other POS about the state change after online payment processing
+        if self.config_id.self_ordering_mode in ['kiosk', 'mobile']:
+            if old_state != self.state and self.state in ('paid', 'done'):
+                self._send_notification(self)
+        return res
 
     def _send_notification(self, order_ids):
         config_ids = order_ids.config_id
+        device_identifier = self.env.context.get('device_identifier', 0)
+
+        # Build records dict with order data for cross-config notifications
+        order_records = {
+            'pos.order': order_ids.ids,
+            'pos.order.line': order_ids.lines.ids,
+        }
+        if order_ids.payment_ids:
+            order_records['pos.payment'] = order_ids.payment_ids.ids
+
         for config in config_ids:
-            config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+            if config.current_session_id:
+                config.notify_synchronisation(config.current_session_id.id, device_identifier)
             config._notify('ORDER_STATE_CHANGED', {})
+
+            # Also notify all other POS configs with active sessions in the same company
+            open_sessions = self.env['pos.session'].search([
+                ('config_id', '!=', config.id),
+                ('config_id.company_id', '=', config.company_id.id),
+                ('state', '!=', 'closed'),
+            ])
+            for session in open_sessions:
+                session.config_id.notify_synchronisation(
+                    session.id,
+                    device_identifier,
+                    order_records,
+                )
 
     def _send_self_order_receipt(self):
         self.ensure_one()
@@ -115,6 +149,7 @@ class PosOrder(models.Model):
             }
         })
         if payment_result == 'Success':
+            self._send_notification(self)
             self._send_self_order_receipt()
             self._send_order()
 
