@@ -2,9 +2,9 @@ import { isEmptyBlock } from "@html_editor/utils/dom_info";
 
 import { fields, Record } from "@mail/model/export";
 import {
-    EMOJI_REGEX,
     convertBrToLineBreak,
     decorateEmojis,
+    EMOJI_REGEX,
     generateEmojisOnHtml,
     getNonEditableMentions,
     htmlToTextContentInline,
@@ -12,7 +12,6 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -20,6 +19,7 @@ import { createDocumentFragmentFromContent, createElementWithContent } from "@we
 import { url } from "@web/core/utils/urls";
 
 import { markup } from "@odoo/owl";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { discussComponentRegistry } from "./discuss_component_registry";
 
 const { DateTime } = luxon;
@@ -45,17 +45,13 @@ export class Message extends Record {
     call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
         compute() {
-            if (!this.store.emojiLoader.loaded) {
-                loadEmoji();
-            }
+            emojiLoader.load();
             return decorateEmojis(this.body) ?? "";
         },
     });
     richTranslationValue = fields.Html("", {
         compute() {
-            if (!this.store.emojiLoader.loaded) {
-                loadEmoji();
-            }
+            emojiLoader.load();
             return decorateEmojis(this.translationValue) ?? "";
         },
     });
@@ -511,9 +507,9 @@ export class Message extends Record {
     get canToggleBookmark() {
         return Boolean(
             !this.is_transient &&
-                !this.isPending &&
-                this.store.self_user?.share === false &&
-                this.persistent
+            !this.isPending &&
+            this.store.self_user?.share === false &&
+            this.persistent
         );
     }
 
@@ -596,9 +592,9 @@ export class Message extends Record {
     canAddReaction(thread) {
         return Boolean(
             !this.is_transient &&
-                !this.isPending &&
-                this.thread?.can_react &&
-                !this.thread.isTransient
+            !this.isPending &&
+            this.thread?.can_react &&
+            !this.thread.isTransient
         );
     }
 
