@@ -129,6 +129,11 @@ export class ControlButtons extends Component {
             ? "btn btn-secondary btn-lg py-5"
             : "btn btn-secondary btn-lg lh-lg";
     }
+
+    onCancelOrder() {
+        this.props.close();
+        this.pos.onDeleteOrder(this.currentOrder);
+    }
 }
 
 export class ControlButtonsPopup extends Component {
