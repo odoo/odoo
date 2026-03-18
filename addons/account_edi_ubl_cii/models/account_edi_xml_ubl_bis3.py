@@ -431,7 +431,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             ):
                 # [BR-CO-09]-The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63)
                 # and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO code ISO 3166-1
-                # alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+                # alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix 'EL'.
                 constraints.update({f'cen_en16931_{role}_vat_country_code': _(
                     "The VAT of the %s should be prefixed with its country code.", role)})
 
@@ -965,11 +965,33 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 constraints.update({'cen_en16931_item_name': _("Each invoice line should have a product or a label.")})
                 break
 
-        for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code') and t.amount >= 0.0)) != 1:
+        tax_category_ids_per_line_node = [
+            (
+                line_node,
+                [
+                    tax_category_node.get('cbc:ID', {}).get('_text')
+                    for tax_category_node in line_node.get('cac:Item', {}).get('cac:ClassifiedTaxCategory', [])
+                ]
+            )
+            for line_node in line_nodes
+        ]
+
+        for line_node, tax_categories in tax_category_ids_per_line_node:
+            if len(tax_categories) != 1 or None in tax_categories:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
-                constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
+                constraints['cen_en16931_tax_line'] = _("Each invoice line shall have one and only one tax.")
+
+        has_service_outside_scope_of_tax = False
+        has_only_service_outside_scope_of_tax = True
+        for line_node, tax_categories in tax_category_ids_per_line_node:
+            if 'O' in tax_categories:
+                has_service_outside_scope_of_tax = True
+            has_only_service_outside_scope_of_tax = set(tax_categories) == {'O'}
+        if has_service_outside_scope_of_tax and not has_only_service_outside_scope_of_tax:
+            # [BR-O-02] and other [BR-XX-02] contradict each other.
+            # taxes of category 'O' should not be mixed with other.
+            constraints['cen_en1691_tax_category_o'] = _("Taxes of category 'Service outside scope of tax' shall not be mixed with tax from other categories. You should split your invoice in two")
 
         for role in ('supplier', 'customer'):
             party_node = vals['document_node']['cac:AccountingCustomerParty'] if role == 'customer' else vals['document_node']['cac:AccountingSupplierParty']
@@ -1345,6 +1367,17 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         # EXTENDS account.edi.ubl
         super()._ubl_add_party_tax_scheme_nodes(vals)
+        # [BR-O-03]/[BR-O-04]/[BR-O-05] no party tax scheme with "Not subject to VAT" VAT Category Code
+        base_lines = vals['base_lines']
+        if (
+            'ubl_cii_tax_category_code' in self.env['account.tax']._fields
+            and any(
+                tax_data['tax'].ubl_cii_tax_category_code == 'O'
+                for base_line in base_lines
+                for tax_data in base_line['tax_details']['taxes_data']
+            )
+        ):
+            return
         nodes = vals['party_node']['cac:PartyTaxScheme']
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
@@ -1583,7 +1616,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 '_text': FloatFmt(sum(corresponding_line_node_amounts), min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             }
-
         return node
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
