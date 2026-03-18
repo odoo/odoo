@@ -1024,6 +1024,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         self.assertEqual(self.env['account.move'].browse(move_id).attachment_ids, attachment)
 
     def test_import_xml_with_embedded_pdf(self):
+        self.ensure_installed('account_edi_ubl_cii')
         with file_open("account/tests/test_files/xml_with_embedded_pdf.xml", 'rb') as file:
             xml_vals = {'name': 'invoice.xml', 'raw': file.read(), 'mimetype': 'application/xml'}
 
@@ -1052,6 +1053,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             expected_invoices={
                 1: {
                     'invoice.xml': {
+                        'on_invoice': True,
                         'on_message': True,
                         'is_decoded': True,
                         'is_new': True,
