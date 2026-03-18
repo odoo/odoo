@@ -280,16 +280,6 @@ class WebsiteForum(WebsiteProfile):
     # Questions
     # --------------------------------------------------
 
-    @http.route('/forum/get_url_title', type='jsonrpc', auth="user", methods=['POST'], website=True)
-    def get_url_title(self, **kwargs):
-        try:
-            req = requests.get(kwargs.get('url'))
-            req.raise_for_status()
-            arch = lxml.html.fromstring(req.content)
-            return arch.find(".//title").text
-        except IOError:
-            return False
-
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
