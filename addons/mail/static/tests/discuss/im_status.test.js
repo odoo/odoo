@@ -1,10 +1,14 @@
+import {
+    defineMailModels,
+    sendPresenceUpdate,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { AWAY_DELAY } from "@mail/core/common/im_status_service";
-import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, freezeTime } from "@odoo/hoot-dom";
 
-import { registry } from "@web/core/registry";
 import {
     makeMockEnv,
     mockService,
@@ -12,6 +16,7 @@ import {
     restoreRegistry,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
 
 defineMailModels();
 beforeEach(freezeTime);
@@ -23,11 +28,7 @@ test("update presence if IM status changes to offline while this device is onlin
     pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
     await start();
     await expect.waitForSteps(["update_presence"]);
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        presence_status: "offline",
-        im_status: "offline",
-        partner_id: serverState.partnerId,
-    });
+    sendPresenceUpdate("res.partner", serverState.partnerId, "offline");
     await expect.waitForSteps(["update_presence"]);
 });
 
@@ -38,11 +39,7 @@ test("update presence if IM status changes to away while this device is online",
     pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
     await start();
     await expect.waitForSteps(["update_presence"]);
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        presence_status: "away",
-        im_status: "away",
-        partner_id: serverState.partnerId,
-    });
+    sendPresenceUpdate("res.partner", serverState.partnerId, "away");
     await expect.waitForSteps(["update_presence"]);
 });
 
@@ -53,11 +50,7 @@ test("do not update presence if IM status changes to away while this device is a
     pyEnv["res.partner"].write(serverState.partnerId, { im_status: "away" });
     await start();
     await expect.waitForSteps(["update_presence"]);
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        presence_status: "away",
-        im_status: "away",
-        partner_id: serverState.partnerId,
-    });
+    sendPresenceUpdate("res.partner", serverState.partnerId, "away");
     await expect.waitForSteps([]);
 });
 
@@ -66,13 +59,10 @@ test("do not update presence if other user's IM status changes to away", async (
     localStorage.setItem("presence.lastPresence", Date.now());
     const pyEnv = await startServer();
     pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", im_status: "online" });
     await start();
     await expect.waitForSteps(["update_presence"]);
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        presence_status: "away",
-        im_status: "away",
-        partner_id: serverState.publicPartnerId,
-    });
+    sendPresenceUpdate("res.partner", bobPartnerId, "away");
     await expect.waitForSteps([]);
 });
 

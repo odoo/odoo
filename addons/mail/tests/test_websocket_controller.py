@@ -18,18 +18,20 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.env["bus.bus"].search([]).unlink()
         self.make_jsonrpc_request("/websocket/on_closed", {})
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        message = self.make_jsonrpc_request(
+        presence_notif, self_notif = self.make_jsonrpc_request(
             "/websocket/peek_notifications",
             {
                 "channels": [f"odoo-presence-res.partner_{self.partner_demo.id}"],
                 "last": 0,
                 "is_first_poll": True,
             },
-        )["notifications"][0]["message"]
-        self.assertEqual(message["type"], "bus.bus/im_status_updated")
-        self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
-        self.assertEqual(message["payload"]["im_status"], "offline")
-        self.assertEqual(message["payload"]["presence_status"], "offline")
+        )["notifications"]
+        self.assertEqual(presence_notif["message"]["type"], "mail.record/insert")
+        self.assertEqual(presence_notif["message"]["payload"]["res.partner"][0]["id"], self.partner_demo.id)
+        self.assertEqual(presence_notif["message"]["payload"]["res.partner"][0]["im_status"], "offline")
+        self.assertEqual(self_notif["message"]["type"], "mail.record/insert")
+        self.assertEqual(self_notif["message"]["payload"]["res.partner"][0]["id"], self.partner_demo.id)
+        self.assertEqual(self_notif["message"]["payload"]["res.partner"][0]["presence_status"], "offline")
 
     def test_receive_missed_presences_on_peek_notifications(self):
         self.authenticate("demo", "demo")
@@ -47,7 +49,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
             },
         )
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        notification = self.make_jsonrpc_request(
+        notif = self.make_jsonrpc_request(
             "/websocket/peek_notifications",
             {
                 "channels": [f"odoo-presence-res.partner_{self.partner_demo.id}"],
@@ -55,14 +57,13 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 "is_first_poll": True,
             },
         )["notifications"][0]
-        bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
+        bus_record = self.env["bus.bus"].search([("id", "=", int(notif["id"]))])
         self.assertEqual(
             bus_record.channel, json_dump(channel_with_db(self.env.cr.dbname, self.user_demo)),
         )
-        self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
-        self.assertEqual(notification["message"]["payload"]["partner_id"], self.partner_demo.id)
-        self.assertEqual(notification["message"]["payload"]["im_status"], "online")
-        self.assertEqual(notification["message"]["payload"]["presence_status"], "online")
+        self.assertEqual(notif["message"]["type"], "mail.record/insert")
+        self.assertEqual(notif["message"]["payload"]["res.partner"][0]["id"], self.partner_demo.id)
+        self.assertEqual(notif["message"]["payload"]["res.partner"][0]["im_status"], "online")
 
     @freeze_time("2026-03-03", as_kwarg='clock')
     def test_do_not_rotate_session_when_updating_presence(self, clock):

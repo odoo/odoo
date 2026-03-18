@@ -18,7 +18,6 @@ export const AWAY_DELAY = 30 * 60 * 1000; // 30 minutes
  */
 export const imStatusService = {
     dependencies: ["bus_service", "presence"],
-    // and cyclic dependecy with "mail.store" (both services should be merged together)
 
     start(env, { bus_service, presence }) {
         let lastSentInactivity;
@@ -38,25 +37,6 @@ export const imStatusService = {
             }
         };
         bus_service.addEventListener("BUS:CONNECT", () => updateBusPresence(), { once: true });
-        bus_service.subscribe(
-            "bus.bus/im_status_updated",
-            async ({ presence_status, im_status, partner_id, guest_id }) => {
-                const store = env.services["mail.store"];
-                const partner = store["res.partner"].get(partner_id);
-                const guest = store["mail.guest"].get(guest_id);
-                if (!partner && !guest) {
-                    return; // Do not store unknown persona's status
-                }
-                partner?.debouncedSetImStatus(im_status);
-                guest?.debouncedSetImStatus(im_status);
-                if (partner?.eq(store.self_user?.partner_id) || guest?.eq(store.self_guest)) {
-                    const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-                    if ((presence_status === "away" && isOnline) || presence_status === "offline") {
-                        updateBusPresence();
-                    }
-                }
-            }
-        );
         presence.bus.addEventListener("presence", () => {
             if (!lastSentInactivity || lastSentInactivity >= AWAY_DELAY) {
                 updateBusPresence();

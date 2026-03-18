@@ -28,30 +28,27 @@ class TestIrWebsocket(WebsocketCase):
         self.env["mail.presence"]._update_presence(bob)
         self.trigger_notification_dispatching([(bob, "presence")])
         message = json.loads(websocket.recv())[0]["message"]
-        self.assertEqual(message["type"], "bus.bus/im_status_updated")
-        self.assertEqual(message["payload"]["im_status"], "online")
-        self.assertEqual(message["payload"]["presence_status"], "online")
-        self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+        self.assertEqual(message["type"], "mail.record/insert")
+        self.assertEqual(message["payload"]["res.partner"][0]["im_status"], "online")
+        self.assertEqual(message["payload"]["res.partner"][0]["id"], bob.partner_id.id)
         # online => away
         away_timer_later = datetime.now() + timedelta(seconds=AWAY_TIMER + 1)
         with freeze_time(away_timer_later):
             self.env["mail.presence"]._update_presence(bob, (AWAY_TIMER + 1) * 1000)
             self.trigger_notification_dispatching([(bob, "presence")])
             message = json.loads(websocket.recv())[0]["message"]
-            self.assertEqual(message["type"], "bus.bus/im_status_updated")
-            self.assertEqual(message["payload"]["im_status"], "away")
-            self.assertEqual(message["payload"]["presence_status"], "away")
-            self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+            self.assertEqual(message["type"], "mail.record/insert")
+            self.assertEqual(message["payload"]["res.partner"][0]["im_status"], "away")
+            self.assertEqual(message["payload"]["res.partner"][0]["id"], bob.partner_id.id)
         # away => online
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
             self.env["mail.presence"]._update_presence(bob)
             self.trigger_notification_dispatching([(bob, "presence")])
             message = json.loads(websocket.recv())[0]["message"]
-            self.assertEqual(message["type"], "bus.bus/im_status_updated")
-            self.assertEqual(message["payload"]["im_status"], "online")
-            self.assertEqual(message["payload"]["presence_status"], "online")
-            self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
+            self.assertEqual(message["type"], "mail.record/insert")
+            self.assertEqual(message["payload"]["res.partner"][0]["im_status"], "online")
+            self.assertEqual(message["payload"]["res.partner"][0]["id"], bob.partner_id.id)
         # online => online, nothing happens
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
@@ -85,7 +82,7 @@ class TestIrWebsocket(WebsocketCase):
             bus_record.channel,
             json_dump(channel_with_db(self.env.cr.dbname, bob)),
         )
-        self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
-        self.assertEqual(notification["message"]["payload"]["im_status"], "online")
-        self.assertEqual(notification["message"]["payload"]["presence_status"], "online")
-        self.assertEqual(notification["message"]["payload"]["partner_id"], bob.partner_id.id)
+        self.assertEqual(notification["message"]["type"], "mail.record/insert")
+        self.assertEqual(notification["message"]["payload"]["res.partner"][0]["im_status"], "online")
+        self.assertEqual(notification["message"]["payload"]["res.partner"][0]["presence_status"], "online")
+        self.assertEqual(notification["message"]["payload"]["res.partner"][0]["id"], bob.partner_id.id)

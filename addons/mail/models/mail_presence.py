@@ -5,6 +5,8 @@ from datetime import timedelta
 from odoo import api, fields, models, tools
 from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
+from odoo.addons.mail.tools.discuss import Store
+
 UPDATE_PRESENCE_DELAY = 60
 DISCONNECTION_TIMER = UPDATE_PRESENCE_DELAY + 5
 AWAY_TIMER = 1800  # 30 minutes
@@ -96,19 +98,22 @@ class MailPresence(models.Model):
 
         :param im_status: 'online', 'away' or 'offline'
         """
+        stores = Store.Stores()
         for presence in self:
             persona = presence.guest_id or presence.user_id
             target = bus_target or (persona, "presence")
-            self.env["bus.bus"]._sendone(
-                target,
-                "bus.bus/im_status_updated",
-                {
-                    "presence_status": im_status or presence.status,
-                    "im_status": im_status or persona.im_status,
-                    "guest_id": presence.guest_id.id,
-                    "partner_id": presence.user_id.partner_id.id,
-                },
+            stores[target].add(
+                presence.guest_id or presence.user_id.partner_id,
+                {"im_status": im_status or persona.im_status},
             )
+            if bus_target is None or persona == bus_target:
+                stores[persona].add(
+                    persona
+                    if isinstance(persona, self.env.registry["mail.guest"])
+                    else persona.partner_id,
+                    {"presence_status": im_status or presence.status},
+                )
+        stores.bus_send()
 
     @api.autovacuum
     def _gc_bus_presence(self):

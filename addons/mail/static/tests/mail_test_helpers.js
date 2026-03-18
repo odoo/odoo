@@ -1045,3 +1045,14 @@ export async function assertChatBubbleAndWindowImStatus(conversationName, count)
     ).toHaveCount(count);
     await click(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
 }
+
+/** Sends an update presence for the given record through the bus. */
+export function sendPresenceUpdate(modelName, id, newPresence) {
+    const env = MockServer.env;
+    env[modelName].write(id, { im_status: newPresence });
+    const store = new mailDataHelpers.Store().add(env[modelName].browse(id), {
+        presence_status: newPresence,
+        im_status: newPresence,
+    });
+    env["bus.bus"]._sendone(serverState.partnerId, "mail.record/insert", store.get_result());
+}

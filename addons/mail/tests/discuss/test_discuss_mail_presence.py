@@ -40,11 +40,13 @@ class TestMailPresence(WebsocketCase, MailCommon):
             bus_record.channel,
             json_dump(channel_with_db(self.env.cr.dbname, (target, "presence"))),
         )
-        self.assertEqual(notifications[0]["message"]["type"], "bus.bus/im_status_updated")
-        self.assertEqual(notifications[0]["message"]["payload"]["im_status"], "online")
-        self.assertEqual(notifications[0]["message"]["payload"]["presence_status"], "online")
+        self.assertEqual(notifications[0]["message"]["type"], "mail.record/insert")
         self.assertEqual(
-            notifications[0]["message"]["payload"]["partner_id" if target_user else "guest_id"],
+            notifications[0]["message"]["payload"][target_channel._name][0]["im_status"],
+            "online",
+        )
+        self.assertEqual(
+            notifications[0]["message"]["payload"][target_channel._name][0]["id"],
             target_channel.id,
         )
 
@@ -81,10 +83,9 @@ class TestMailPresence(WebsocketCase, MailCommon):
             [(bob, "presence")],
             [
                 {
-                    "type": "bus.bus/im_status_updated",
+                    "type": "mail.record/insert",
                     "payload": {
-                        "im_status": "offline",
-                        "partner_id": bob.partner_id.id,
+                        "res.partner": [{"id": bob.partner_id.id, "im_status": "offline"}],
                     },
                 },
             ],
@@ -94,3 +95,37 @@ class TestMailPresence(WebsocketCase, MailCommon):
                 {"status": "offline"},
                 cookies={"session_id": session.sid},
             )
+
+    def test_presence_status_only_sent_to_self(self):
+        bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
+        self._reset_bus()
+        self.env["mail.presence"].with_user(bob)._update_presence(bob)
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        presence_channel_notif, self_channel_notif = self.env["bus.bus"].search([])
+        self.assertEqual(presence_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, (bob, "presence"))))
+        self.assertEqual(self_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, bob)))
+        presence_payload = json.loads(presence_channel_notif.message)["payload"]
+        self.assertEqual(
+            presence_payload,
+            {"res.partner": [{"id": bob.partner_id.id, "im_status": "online"}]},
+        )
+        self_payload = json.loads(self_channel_notif.message)["payload"]
+        self.assertEqual(
+            self_payload,
+            {"res.partner": [{"id": bob.partner_id.id, "presence_status": "online"}]},
+        )
+        other_user = new_test_user(self.env, login="other_user", groups="base.group_user")
+        self._reset_bus()
+        bob_presence = self.env["mail.presence"].search([("user_id", "=", bob.id)])
+        bob_presence._send_presence(bus_target=other_user)
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        notifications = self.env["bus.bus"].search([])
+        self.assertEqual(len(notifications), 1)  # Only im_status notification was dispatched, and only for bus_target.
+        self.assertEqual(
+            notifications.channel,
+            json_dump(channel_with_db(self.env.cr.dbname, other_user)),
+        )
+        self.assertEqual(
+           json.loads(notifications.message)["payload"],
+            {"res.partner": [{"id": bob.partner_id.id, "im_status": "online"}]},
+        )

@@ -75,16 +75,16 @@ export class ImStatus extends Component {
 
     get icon() {
         const data = this.activeImStatusData;
-        return data.icon[this.persona.im_status] || data.icon.default || data.icon;
+        return data.icon[this.persona.imStatusUI] || data.icon.default || data.icon;
     }
 
     get title() {
         const data = this.activeImStatusData;
-        return data.title[this.persona.im_status] || data.title.default || data.title;
+        return data.title[this.persona.imStatusUI] || data.title.default || data.title;
     }
 
     get colorClass() {
-        switch (this.persona.im_status) {
+        switch (this.persona.imStatusUI) {
             case "bot":
             case "online":
                 return "text-success";

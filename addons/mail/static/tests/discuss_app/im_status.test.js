@@ -3,10 +3,11 @@ import {
     contains,
     defineMailModels,
     openDiscuss,
+    sendPresenceUpdate,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { Store } from "@mail/core/common/store_service";
+import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
 import { describe, test } from "@odoo/hoot";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -59,33 +60,18 @@ test("initially away", async () => {
 });
 
 test("change icon on change partner im_status", async () => {
-    patchWithCleanup(Store, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "offline" });
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        partner_id: serverState.partnerId,
-        im_status: "offline",
-        presence_status: "offline",
-    });
+    sendPresenceUpdate("res.partner", serverState.partnerId, "offline");
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']");
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "away" });
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        partner_id: serverState.partnerId,
-        im_status: "away",
-        presence_status: "away",
-    });
+    sendPresenceUpdate("res.partner", serverState.partnerId, "away");
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']");
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        partner_id: serverState.partnerId,
-        im_status: "online",
-        presence_status: "online",
-    });
+    sendPresenceUpdate("res.partner", serverState.partnerId, "online");
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
 });
 

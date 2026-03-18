@@ -2,40 +2,15 @@ import { Thread } from "@mail/core/common/thread";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 const { DateTime } = luxon;
 
 patch(Thread.prototype, {
-    setup() {
-        super.setup(...arguments);
-        this.IM_STATUS_DELAY = 1500;
-        this.state.isVisitorOffline = false; // starting online avoids flickering
-        useLayoutEffect(
-            (im_status) => {
-                if (!im_status) {
-                    return;
-                }
-                clearTimeout(this.imStatusTimeoutId);
-                if (im_status === "offline") {
-                    this.imStatusTimeoutId = setTimeout(
-                        () => (this.state.isVisitorOffline = true),
-                        this.IM_STATUS_DELAY
-                    );
-                } else {
-                    this.state.isVisitorOffline = false;
-                }
-                return () => clearTimeout(this.imStatusTimeoutId);
-            },
-            () => [this.props.thread.channel?.livechatVisitorMember?.im_status]
-        );
-    },
     get showVisitorDisconnected() {
         return (
             this.store.self.notEq(this.channel?.livechatVisitorMember?.persona) &&
             !this.channel?.livechat_end_dt &&
-            this.channel?.livechatVisitorMember &&
-            this.state.isVisitorOffline
+            this.channel?.livechatVisitorMember?.persona?.offline_since
         );
     },
     get disconnectedText() {
