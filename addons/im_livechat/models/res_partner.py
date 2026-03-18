@@ -29,7 +29,8 @@ class ResPartner(models.Model):
             )
         )
         active_livechat_partners = (
-            self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
+            # sudo: im_livechat.channel - checking whether live chat agents are available for invitation in a live chat we are members of is acceptable.
+            self.env["im_livechat.channel"].sudo().search([]).available_operator_ids.partner_id
         )
         for partner in self:
             languages = list(OrderedSet([
