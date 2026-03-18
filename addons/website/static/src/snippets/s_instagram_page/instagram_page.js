@@ -48,6 +48,11 @@ export class InstagramPage extends Interaction {
         if (ev.origin !== "https://www.instagram.com" || this.iframeEl.contentWindow !== ev.source) {
             return;
         }
+        if (typeof ev.data === 'object') {
+            // Ignore messages that have object data instead of string (eg. internal
+            // iOS chrome message)
+            return;
+        }
         const evDataJSON = JSON.parse(ev.data);
         if (evDataJSON.type !== "MEASURE") {
             return;
