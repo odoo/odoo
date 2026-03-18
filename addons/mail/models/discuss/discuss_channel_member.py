@@ -696,9 +696,9 @@ class DiscussChannelMember(models.Model):
     def _get_html_link_title(self):
         return self.partner_id.name if self.partner_id else self.guest_id.name
 
-    def _get_html_link(self, *args, for_persona=False, **kwargs):
-        if not for_persona:
-            return self._get_html_link(*args, **kwargs)
+    def _get_member_html_link(self, *args, **kwargs):
         if self.partner_id:
-            return self.partner_id._get_html_link(title=f"@{self._get_html_link_title()}")
+            return self.partner_id._get_html_link(
+                title=f"@{self._get_html_link_title()}", extra_classes="o_mail_redirect"
+            )
         return Markup("<strong>%s</strong>") % self.guest_id.name

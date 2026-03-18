@@ -100,7 +100,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "author_guest_id": False,
                                         "body": [
                                             "markup",
-                                            f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
+                                            f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}" class="o_mail_redirect">@Test Partner</a> to the channel</div>',
                                         ],
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date,
@@ -910,8 +910,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "body":
                             "<span class='o_mail_notification'>"
                             "You are in a private conversation with "
-                            f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}'>@Mario</a> "
-                            f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}'>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
+                            f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class=o_mail_redirect>@Mario</a> "
+                            f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class=o_mail_redirect>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
                             "<br><br><b>@username</b> to mention someone"
                             "<br><b>@role</b> to notify multiple people"
                             "<br><b>#channel</b> to link a channel"

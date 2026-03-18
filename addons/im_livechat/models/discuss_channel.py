@@ -783,7 +783,7 @@ class DiscussChannel(models.Model):
         if self.channel_type == "livechat":
             if member.is_self:
                 return self.env._("joined the conversation")
-            return self.env._("invited %s to the conversation", member._get_html_link(for_persona=True))
+            return self.env._("invited %s to the conversation", member._get_member_html_link())
         return super()._get_member_join_notification(member)
 
     def _message_post_after_hook(self, message, msg_vals):
