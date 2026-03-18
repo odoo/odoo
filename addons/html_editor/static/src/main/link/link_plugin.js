@@ -8,6 +8,7 @@ import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/posi
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import {
     isElement,
+    isPhrasingContent,
     isProtected,
     isProtecting,
     isVisible,
@@ -742,7 +743,7 @@ export class LinkPlugin extends Plugin {
             // create a font tag inside it, and move the color to the font tag.
             // This ensures the color is applied to the font element instead of
             // the anchor element itself.
-            if (color && childNodes.every((n) => !isBlock(n))) {
+            if (color && childNodes.every(isPhrasingContent)) {
                 anchorEl.style.removeProperty("color");
                 const font = selectElements(anchorEl, "font").next().value;
                 if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
