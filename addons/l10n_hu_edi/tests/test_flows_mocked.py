@@ -434,11 +434,11 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         }])
 
         self.assertRecordValues(moves.partner_id.bank_ids, [{
-            'account_number': 'HU55 1070 0024 7733 4423 2787 4189',
+            'account_number': 'HU55107000247733442327874189',
             'holder_name': 'Goodo Systems Kft.',
         }])
         self.assertRecordValues(self.company.partner_id.bank_ids, [{
-            'account_number': 'HU55 1070 0024 7733 4423 2787 4189',
+            'account_number': 'HU55107000247733442327874189',
             'holder_name': 'company_1_data',
         }])
 

@@ -16,7 +16,7 @@ class ResPartnerBank(models.Model):
             ], limit=1)
 
             qr_code_vals = {
-                'ACC': self.sanitized_account_number,                                                                   # Account Number
+                'ACC': self.account_number,                                                                             # Account Number
                 'AM': amount,                                                                                           # Amount
                 'CC': currency.name,                                                                                    # Currency
                 'DT': invoice.invoice_date_due.strftime('%Y%m%d') if invoice and invoice.invoice_date_due else '',      # Due Date
@@ -53,7 +53,7 @@ class ResPartnerBank(models.Model):
                 error_messages.append(self.env._("The bank account currency must be CZK to generate the QR code."))
             if self.account_type != 'iban':
                 error_messages.append(self.env._("The bank account type must be IBAN to generate the QR code."))
-            if not self.sanitized_account_number:
+            if not self.account_number:
                 error_messages.append(self.env._("An IBAN account number is required to generate the QR code."))
             if len(error_messages) > 0:
                 return '\r\n'.join(error_messages)

@@ -155,7 +155,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
             account.write({'account_number': '1234567890999'})
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
-            account.write({'sanitized_account_number': '1234567890999'})
+            account.write({'formatted_account_number': '1234567890999'})
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
             account.write({'partner_id': self.env['res.partner'].create({'name': 'MyCustomer 2'}).id})
 

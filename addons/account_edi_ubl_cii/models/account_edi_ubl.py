@@ -25,7 +25,6 @@ from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import (
     PEPPOL_INVOICE_OPTIONAL_FIELDS,
     PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS,
 )
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 
 _logger = logging.getLogger(__name__)
 
@@ -1238,14 +1237,14 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_get_payment_means_payee_financial_account_node_from_partner_bank(self, vals, partner_bank):
         return {
-            'cbc:ID': {'_text': sanitize_account_number(partner_bank.account_number)},
+            'cbc:ID': {'_text': partner_bank.account_number},
             'cac:FinancialInstitutionBranch': self._ubl_get_payment_means_payee_financial_account_institution_branch_node_from_partner_bank(vals, partner_bank),
         }
 
     def _ubl_get_payment_means_payer_financial_account_node_from_payer_bank(self, vals, payer_bank):
         return {
             'cbc:ID': {
-                '_text': sanitize_account_number(payer_bank.account_number),
+                '_text': payer_bank.account_number,
             },
         }
 
