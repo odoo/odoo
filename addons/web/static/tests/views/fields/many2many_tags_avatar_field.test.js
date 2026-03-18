@@ -11,7 +11,9 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { KanbanMany2ManyTagsAvatarField } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 
 describe.current.tags("desktop");
 
@@ -207,7 +209,7 @@ test("widget many2many_tags_avatar list view - don't crash on keyboard navigatio
 });
 
 test("widget many2many_tags_avatar in kanban view", async () => {
-    expect.assertions(21);
+    expect.assertions(24);
 
     for (let id = 5; id <= 15; id++) {
         Partner._records.push({
@@ -231,6 +233,19 @@ test("widget many2many_tags_avatar in kanban view", async () => {
     Partner._views = {
         list: '<list><field name="name"/></list>',
     };
+    patchWithCleanup(KanbanMany2ManyTagsAvatarField.prototype, {
+        get specification() {
+            return {
+                ...super.specification,
+                id: {},
+            };
+        },
+    });
+    onRpc("web_name_search", ({ kwargs, model }) => {
+        expect(model).toBe("partner");
+        expect(kwargs.specification).toInclude(["id", {}]);
+        expect(kwargs.specification).toInclude(["display_name", {}]);
+    });
 
     await mountView({
         type: "kanban",
