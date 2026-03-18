@@ -82,7 +82,10 @@ class HrEmployee(models.Model):
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(
             self.env['hr.attendance.overtime.line']._read_group(
-            domain=[('status', '=', 'approved')],
+            domain=[
+                ('status', '=', 'approved'),
+                ('employee_id', 'in', self.ids),
+            ],
             groupby=['employee_id'],
             aggregates=['manual_duration:sum']
         ))
