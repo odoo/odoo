@@ -166,8 +166,16 @@ class MrpUnbuild(models.Model):
         self.ensure_one()
         self._check_company()
         # remove the default_* keys that were only needed in the unbuild wizard
+<<<<<<< 3e7c7dc314c2203e57db29aa605cd9cc73a9fb79
         self = self.with_env(self.env(context=clean_context(self.env)))  # noqa: PLW0642
         if self.product_id.tracking in ['lot', 'serial'] and not self.lot_id.id:
+||||||| 072a8e4fd061ff23902e6e448a577624cb27e188
+        self = self.with_env(self.env(context=clean_context(self.env)))  # noqa: PLW0642
+        if self.product_id.tracking != 'none' and not self.lot_id.id:
+=======
+        self = self.with_env(self.env(context=clean_context(self.env.context)))  # noqa: PLW0642
+        if self.product_id.tracking != 'none' and not self.lot_id.id:
+>>>>>>> a0b4fdd9b4ce3ce155a386b8839c409f95fe2957
             raise UserError(_('You should provide a lot number for the final product.'))
 
         if self.mo_id and self.mo_id.state != 'done':

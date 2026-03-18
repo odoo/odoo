@@ -77,20 +77,49 @@ class ProductTemplate(models.Model):
                 product_template.company_id).property_valuation or self.env.company.inventory_valuation
 
     def write(self, vals):
-        product_to_update = set()
+        product_ids_to_update = set()
+        lot_ids_to_update = set()
         if 'categ_id' in vals:
             category = self.env['product.category'].browse(vals['categ_id'])
-            valuation = category.property_valuation if category else self.env.company.inventory_valuation
+            cost_method = category.property_cost_method if category else self.env.company.cost_method
             for product in self:
-                if product.valuation != valuation:
-                    product_to_update.update(product.product_variant_ids.ids)
+                if product.cost_method != cost_method:
+                    product_ids_to_update.update(product.product_variant_ids.ids)
+
+        if 'lot_valuated' in vals:
+            if vals.get('lot_valuated'):
+                products_to_enable = self.filtered(lambda p: not p.lot_valuated)
+                if products_to_enable:
+                    problematic_quants = self.env['stock.quant'].search([
+                        ('product_id', 'in', products_to_enable.product_variant_ids.ids),
+                        ('lot_id', '=', False),
+                        ('quantity', '!=', 0),
+                        ('location_id.is_valued_internal', '=', True),
+                    ])
+                    if problematic_quants:
+                        raise UserError(self.env._(
+                            "You cannot enable lot valuation because the following products have"
+                            " on-hand quantities without a lot/serial number:\n%s",
+                            problematic_quants.product_id.mapped('display_name'),
+                        ))
+            for product in self:
+                if product.lot_valuated != vals.get('lot_valuated', product.lot_valuated):
+                    product_ids_to_update.update(product.product_variant_ids.ids)
+
+        products_to_update = self.env['product.product'].browse(product_ids_to_update)
+        lot_ids_to_update.update(self.env['stock.lot'].sudo().search([
+            ('product_id', 'in', products_to_update.filtered(lambda p: p.lot_valuated).ids),
+        ]).ids)
+
         res = super().write(vals)
         if 'lot_valuated' in vals:
-            self.env['stock.lot'].search([
+            lot_ids_to_update.update(self.env['stock.lot'].sudo().search([
                 ('product_id', 'in', self.product_variant_ids.ids),
-            ])._update_standard_price()
-        if 'product_to_update':
-            self.env['product.product'].browse(product_to_update)._update_standard_price()
+            ]).ids)
+        if product_ids_to_update:
+            self.env['product.product'].browse(product_ids_to_update)._update_standard_price()
+        if lot_ids_to_update:
+            self.env['stock.lot'].browse(lot_ids_to_update).sudo()._update_standard_price()
         return res
 
     # -------------------------------------------------------------------------
@@ -151,8 +180,160 @@ class ProductProduct(models.Model):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
+<<<<<<< 3e7c7dc314c2203e57db29aa605cd9cc73a9fb79
+||||||| 072a8e4fd061ff23902e6e448a577624cb27e188
+        products = self._with_valuation_context()
+
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        if at_date:
+            at_date = at_date.replace(hour=23, minute=59, second=59)
+            products = self.with_context(at_date=at_date)
+
+        # PERF: Pre-compute:the sum of 'total_value' of lots per product in go
+        std_price_by_product_id = {}
+        total_value_by_product_id = {}
+        lot_valuated_products_ids = {p.id for p in products if p.lot_valuated}
+        if lot_valuated_products_ids:
+            domain = Domain([('product_id', 'in', lot_valuated_products_ids)])
+            if not self.env.context.get('warehouse_id'):
+                domain &= Domain([('product_qty', '!=', 0)])
+            lots_by_product = self.env['stock.lot']._read_group(
+                domain,
+                groupby=['product_id'],
+                aggregates=['id:recordset']
+            )
+            # Collect all lots and trigger batch computation of total_value
+            self.env['stock.lot'].browse(
+                    lot.id
+                    for _, lots in lots_by_product
+                    for lot in lots
+            ).mapped('total_value')
+            for product, lots in lots_by_product:
+                value = sum(lots.mapped('total_value'))
+                std_price_by_product_id[product.id] = value / product.qty_available if product.qty_available else product.standard_price
+                total_value_by_product_id[product.id] = value
+
+        product_ids_grouped_by_cost_method = defaultdict(set)
+        ratio_by_product_id = {}
+        for product in products:
+            if product.lot_valuated:
+                continue
+            product_whole_company_context = product.with_context(warehouse_id=False)
+            if product.uom_id.is_zero(product.qty_available):
+                total_value_by_product_id[product.id] = 0
+                std_price_by_product_id[product.id] = product.standard_price
+                continue
+            if product.uom_id.is_zero(product_whole_company_context.qty_available):
+                total_value_by_product_id[product.id] = product.standard_price * product.qty_available
+                std_price_by_product_id[product.id] = product.standard_price
+                continue
+            if product.uom_id.compare(product.qty_available, product_whole_company_context.qty_available) != 0:
+                ratio = product.qty_available / product_whole_company_context.qty_available
+                ratio_by_product_id[product.id] = ratio
+
+            if product.cost_method == 'standard':
+                product_ids_grouped_by_cost_method['standard'].add(product.id)
+            elif product.cost_method == 'average':
+                product_ids_grouped_by_cost_method['average'].add(product.id)
+            else:
+                product_ids_grouped_by_cost_method['fifo'].add(product.id)
+
+        for cost_method, product_ids in product_ids_grouped_by_cost_method.items():
+            products = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
+            # To remove once price_unit isn't truncate in sql anymore (no need of force_recompute)
+            if cost_method == 'standard':
+                std_prices, total_values = products._run_standard_batch(at_date=at_date)
+            elif cost_method == 'average':
+                std_prices, total_values = products._run_average_batch(at_date=at_date, force_recompute=True)
+            else:
+                std_prices, total_values = products._run_fifo_batch(at_date=at_date)
+
+            std_price_by_product_id.update(std_prices)
+            total_value_by_product_id.update(total_values)
+=======
+        # PERF: Pre-compute:the sum of 'total_value' of lots per product in go
+        std_price_by_company_id = {}
+        total_value_by_company_id = {}
+        lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
+        for company in self.env.companies:
+            std_price_by_product_id = defaultdict(float)
+            total_value_by_product_id = defaultdict(float)
+
+            products = self.with_company(company.id).with_context(allowed_company_ids=company.ids)
+            products = products._with_valuation_context()
+
+            at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+            if at_date:
+                at_date = at_date.replace(hour=23, minute=59, second=59)
+                products = products.with_context(at_date=at_date)
+
+            env = products.env
+
+            if lot_valuated_products_ids:
+                domain = Domain([('product_id', 'in', lot_valuated_products_ids)])
+                if not self.env.context.get('warehouse_id'):
+                    domain &= Domain([('product_qty', '!=', 0)])
+                lots_by_product = env['stock.lot']._read_group(
+                    domain,
+                    groupby=['product_id'],
+                    aggregates=['id:recordset']
+                )
+                # Collect all lots and trigger batch computation of total_value
+                env['stock.lot'].browse(
+                        lot.id
+                        for _, lots in lots_by_product
+                        for lot in lots
+                ).mapped('total_value')
+                for product, lots in lots_by_product:
+                    value = sum(lots.mapped('total_value'))
+                    std_price_by_product_id[product.id] = value / product.qty_available if product.qty_available else product.standard_price
+                    total_value_by_product_id[product.id] = value
+
+            product_ids_grouped_by_cost_method = defaultdict(set)
+            ratio_by_product_id = {}
+            for product in products:
+                if product.lot_valuated:
+                    continue
+                product_whole_company_context = product
+                if 'warehouse_id' in self.env.context:
+                    product_whole_company_context = product.with_context(warehouse_id=False)
+                if product.uom_id.is_zero(product.qty_available):
+                    total_value_by_product_id[product.id] = 0
+                    std_price_by_product_id[product.id] = product.standard_price
+                    continue
+                if product.uom_id.is_zero(product_whole_company_context.qty_available):
+                    total_value_by_product_id[product.id] = product.standard_price * product.qty_available
+                    std_price_by_product_id[product.id] = product.standard_price
+                    continue
+                if product.uom_id.compare(product.qty_available, product_whole_company_context.qty_available) != 0:
+                    ratio = product.qty_available / product_whole_company_context.qty_available
+                    ratio_by_product_id[product.id] = ratio
+
+                product_ids_grouped_by_cost_method[product.cost_method].add(product.id)
+
+            for cost_method, product_ids in product_ids_grouped_by_cost_method.items():
+                products = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
+                # To remove once price_unit isn't truncate in sql anymore (no need of force_recompute)
+                if cost_method == 'standard':
+                    std_prices, total_values = products._run_standard_batch(at_date=at_date)
+                elif cost_method == 'average':
+                    std_prices, total_values = products._run_average_batch(at_date=at_date)
+                else:
+                    std_prices, total_values = products._run_fifo_batch(at_date=at_date)
+
+                std_price_by_product_id.update(std_prices)
+                total_value_by_product_id.update(total_values)
+
+            for product in products:
+                total_value = total_value_by_product_id.get(product.id, 0)
+                total_value_by_product_id[product.id] = total_value * ratio_by_product_id.get(product.id, 1)
+
+            std_price_by_company_id[company.id] = std_price_by_product_id
+            total_value_by_company_id[company.id] = total_value_by_product_id
+>>>>>>> a0b4fdd9b4ce3ce155a386b8839c409f95fe2957
 
         for product in self:
+<<<<<<< 3e7c7dc314c2203e57db29aa605cd9cc73a9fb79
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             if at_date:
                 at_date = at_date.replace(hour=23, minute=59, second=59)
@@ -176,6 +357,13 @@ class ProductProduct(models.Model):
             else:
                 product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
             product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
+||||||| 072a8e4fd061ff23902e6e448a577624cb27e188
+            product.avg_cost = std_price_by_product_id.get(product.id, product.standard_price)
+            product.total_value = total_value_by_product_id.get(product.id, 0) * ratio_by_product_id.get(product.id, 1)
+=======
+            product.total_value = sum(total_value_by_company_id[c.id].get(product.id, 0) for c in self.env.companies)
+            product.avg_cost = product.total_value / product.qty_available if product.qty_available else std_price_by_company_id[self.env.company.id].get(product.id, product.standard_price)
+>>>>>>> a0b4fdd9b4ce3ce155a386b8839c409f95fe2957
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -201,10 +389,15 @@ class ProductProduct(models.Model):
 
     def _change_standard_price(self, old_price):
         product_values = []
+        product_ids_lot_valuated = set()
         date = self.env.context.get('valuation_date') or fields.Datetime.now()
         for product in self:
             if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
                 continue
+
+            if product.lot_valuated:
+                product_ids_lot_valuated.add(product.id)
+
             product_values.append({
                 'product_id': product.id,
                 'value': product.standard_price,
@@ -214,6 +407,10 @@ class ProductProduct(models.Model):
                     old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
         self.env['product.value'].sudo().create(product_values)
+        if product_ids_lot_valuated:
+            for (product, lots) in self.env['stock.lot']._read_group(
+                    [('product_id', 'in', product_ids_lot_valuated)], ['product_id'], ['id:recordset']):
+                lots.with_context(disable_auto_revaluation=True).standard_price = product.standard_price
         return
 
     def _get_standard_price_at_date(self, date=None):
@@ -339,6 +536,7 @@ class ProductProduct(models.Model):
 
         # PERF avoid memoryerror
         moves.move_line_ids.fetch(['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom'])
+<<<<<<< 3e7c7dc314c2203e57db29aa605cd9cc73a9fb79
 
         # TODO Only browse from last product_value
         for move in moves:
@@ -375,8 +573,153 @@ class ProductProduct(models.Model):
                     out_qty = lot_qty
                 avco_total_value -= out_value
                 quantity -= out_qty
+||||||| 072a8e4fd061ff23902e6e448a577624cb27e188
 
+        moves_by_product = moves.grouped(key=lambda m: m.product_id)
+        # Start from last user input values.
+        for manual_value in last_manual_value_by_product.values():
+            product = manual_value.product_id
+            quantity = product.with_context(to_date=manual_value.date).qty_available
+=======
+        moves_by_product = moves.grouped(key=lambda m: m.product_id)
+        # Start from last user input values.
+        for manual_value in last_manual_value_by_product.values():
+            product = manual_value.product_id
+            if lot:
+                quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
+            else:
+                quantity = product.with_context(to_date=manual_value.date).qty_available
+>>>>>>> a0b4fdd9b4ce3ce155a386b8839c409f95fe2957
+
+<<<<<<< 3e7c7dc314c2203e57db29aa605cd9cc73a9fb79
         return avco_value, avco_total_value
+||||||| 072a8e4fd061ff23902e6e448a577624cb27e188
+            std_price_by_product_id[product.id] = manual_value.value
+            quantity_by_product_id[product.id] = quantity
+            value_by_product_id[product.id] = manual_value.value * quantity
+
+            moves = moves_by_product.get(product, self.env['stock.move'])
+            index = bisect(moves, manual_value.date, key=lambda m: m.date)
+            moves = moves[index:]
+            moves_by_product[product] = moves
+
+        # Replay the valuation history
+        for product, moves in moves_by_product.items():
+            # Start from last manual input
+            quantity = quantity_by_product_id.get(product.id, 0)
+            average_cost = std_price_by_product_id.get(product.id, 0)
+            value = value_by_product_id.get(product.id, 0)
+            for move in moves:
+                if move.is_in or move.is_dropship:
+                    in_qty = move._get_valued_qty()
+                    in_value = move.value
+                    if at_date or move.is_dropship:
+                        in_value = move._get_value(at_date=at_date)
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        in_value = (in_value * lot_qty / in_qty) if in_qty else 0
+                        in_qty = lot_qty
+                    previous_qty = quantity
+                    quantity += in_qty
+                    # Regular case, value from accumulation
+                    if previous_qty > 0:
+                        value += in_value
+                        average_cost = value / quantity
+                    # From negative quantity case, value from last_in
+                    elif previous_qty <= 0:
+                        average_cost = in_value / in_qty if in_qty else average_cost
+                        value = average_cost * quantity
+                if move.is_out or move.is_dropship:
+                    out_qty = move._get_valued_qty()
+                    out_value = out_qty * average_cost
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        out_value = (out_value * lot_qty / out_qty) if out_qty else 0
+                        out_qty = lot_qty
+                    value -= out_value
+                    quantity -= out_qty
+
+            std_price_by_product_id[product.id] = average_cost
+            value_by_product_id[product.id] = value
+
+        return std_price_by_product_id, value_by_product_id
+
+    def _run_fifo_batch(self, at_date=None, lot=None, location=None):
+        std_price_by_product_id = {}
+        value_by_product_id = {}
+        for product in self:
+            quantity = product.qty_available
+            value = product._run_fifo(quantity, lot, at_date, location)
+            std_price = value / quantity if quantity else 0
+            std_price_by_product_id[product.id] = std_price
+            value_by_product_id[product.id] = value
+
+        return std_price_by_product_id, value_by_product_id
+=======
+            std_price_by_product_id[product.id] = manual_value.value
+            quantity_by_product_id[product.id] = quantity
+            value_by_product_id[product.id] = manual_value.value * quantity
+
+            moves = moves_by_product.get(product, self.env['stock.move'])
+            index = bisect(moves, manual_value.date, key=lambda m: m.date)
+            moves = moves[index:]
+            moves_by_product[product] = moves
+
+        # Replay the valuation history
+        for product, moves in moves_by_product.items():
+            # Start from last manual input
+            quantity = quantity_by_product_id.get(product.id, 0)
+            average_cost = std_price_by_product_id.get(product.id, 0)
+            value = value_by_product_id.get(product.id, 0)
+            for move in moves:
+                if move.is_in or move.is_dropship:
+                    in_qty = move._get_valued_qty()
+                    in_value = move.value
+                    if at_date or move.is_dropship:
+                        in_value = move._get_value(at_date=at_date)
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        in_value = (in_value * lot_qty / in_qty) if in_qty else 0
+                        in_qty = lot_qty
+                    previous_qty = quantity
+                    quantity += in_qty
+                    # Regular case, value from accumulation
+                    if previous_qty > 0:
+                        value += in_value
+                        average_cost = value / quantity
+                    # From negative quantity case, value from last_in
+                    elif previous_qty <= 0:
+                        average_cost = in_value / in_qty if in_qty else average_cost
+                        value = average_cost * quantity
+                if move.is_out or move.is_dropship:
+                    out_qty = move._get_valued_qty()
+                    out_value = out_qty * average_cost
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        out_value = (out_value * lot_qty / out_qty) if out_qty else 0
+                        out_qty = lot_qty
+                    value -= out_value
+                    quantity -= out_qty
+
+            std_price_by_product_id[product.id] = average_cost
+            value_by_product_id[product.id] = value
+
+        return std_price_by_product_id, value_by_product_id
+
+    def _run_fifo_batch(self, at_date=None, lot=None, location=None):
+        std_price_by_product_id = {}
+        value_by_product_id = {}
+        for product in self:
+            quantity = product.qty_available
+            if lot:
+                quantity = lot.product_qty
+            value = product._run_fifo(quantity, lot, at_date, location)
+            std_price = value / quantity if quantity else 0
+            std_price_by_product_id[product.id] = std_price
+            value_by_product_id[product.id] = value
+
+        return std_price_by_product_id, value_by_product_id
+>>>>>>> a0b4fdd9b4ce3ce155a386b8839c409f95fe2957
 
     def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
@@ -551,4 +894,7 @@ class ProductCategory(models.Model):
         res = super().write(vals)
         if products_to_update:
             products_to_update._update_standard_price()
+        products_lot_valuated = products_to_update.filtered(lambda p: p.lot_valuated)
+        if products_lot_valuated:
+            self.env['stock.lot'].sudo().search([('product_id', 'in', products_lot_valuated.ids)])._update_standard_price()
         return res
