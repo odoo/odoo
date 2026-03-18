@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MailComposerAttachmentSelector" t-inherit-mode="extension">
+        <xpath expr="//FileUploader" position="after">
+            <button t-if="props.record.resModel === 'account.move.send.wizard'"
+                    type="button"
+                    class="btn btn-light w-auto o_account_documents_button ms-1"
+                    title="Add from Documents"
+                    t-on-click="openDocumentsDialog">
+                <i class="o_add_documents_icon"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

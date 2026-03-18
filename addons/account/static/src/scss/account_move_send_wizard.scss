@@ -8,3 +8,31 @@
         max-width: 325px;
     }
 }
+
+.o_field_mail_attachments_selector {
+    display: flex;
+    align-items: center;
+}
+
+.o_account_documents_button {
+    padding: 2px 6px;
+}
+
+.o_account_documents_button .o_add_documents_icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+
+    background-image: url('/documents/static/description/icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    filter: grayscale(1);
+    transition: filter 0.2s ease;
+}
+
+.o_account_documents_button:hover .o_add_documents_icon {
+    filter: none;
+}
