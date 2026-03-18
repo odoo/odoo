@@ -54,7 +54,7 @@ class AccountMove(models.Model):
                                                             move.l10n_sa_invoice_signature, True)
                     qr_code_str = b64encode(qr_code_str).decode()
                 elif zatca_document.state == 'sent' and zatca_document.attachment_id.raw:
-                    document_xml = zatca_document.attachment_id.raw.decode()
+                    document_xml = zatca_document.attachment_id.raw.content
                     root = etree.fromstring(document_xml)
                     qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
                     qr_code_str = qr_node.text

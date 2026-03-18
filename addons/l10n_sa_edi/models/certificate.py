@@ -1,3 +1,5 @@
+import base64
+
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.x509 import ObjectIdentifier
@@ -161,4 +163,4 @@ class CertificateCertificate(models.Model):
         private_key = serialization.load_pem_private_key(journal.company_id.l10n_sa_private_key_id.pem_key, password=None)
         request = builder.sign(private_key, hashes.SHA256())
 
-        return request.public_bytes(serialization.Encoding.PEM)
+        return base64.b64encode(request.public_bytes(serialization.Encoding.PEM))

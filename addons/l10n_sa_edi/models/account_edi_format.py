@@ -482,7 +482,7 @@ class AccountEdiFormat(models.Model):
             _logger.warning("No attachment found for invoice %s", edi_document.move_id.name)
             return
 
-        xml_content = attachment.raw
+        xml_content = attachment.raw.content
         file_name = attachment.name
 
         pdf_writer.add_attachment(file_name, xml_content, subtype='text/xml')

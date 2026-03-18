@@ -233,7 +233,7 @@ class AccountJournal(models.Model):
 
         cert_id = self.env['certificate.certificate'].sudo().create({
             'name': 'CCSID Certificate',
-            'content': BinaryBytes(b64decode(CCSID_data['binarySecurityToken'])),
+            'content': BinaryBytes(b64decode(b64decode(CCSID_data['binarySecurityToken']))),
             'private_key_id': self.company_id.sudo().l10n_sa_private_key_id.id,
             'company_id': self.company_id.id,
         }).id
@@ -272,7 +272,7 @@ class AccountJournal(models.Model):
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
         pcsid_certificate = self_sudo.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',
-            'content': BinaryBytes(b64decode(PCSID_data['binarySecurityToken'])),
+            'content': BinaryBytes(b64decode(b64decode(PCSID_data['binarySecurityToken']))),
         })
         self.l10n_sa_production_csid_certificate_id = pcsid_certificate
 
