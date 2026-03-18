@@ -670,7 +670,12 @@ export function isEmptyBlock(blockEl) {
  * @returns {boolean}
  */
 export function isShrunkBlock(blockEl) {
-    return isEmptyBlock(blockEl) && !blockEl.querySelector("br") && !isSelfClosingElement(blockEl);
+    return (
+        isElement(blockEl) &&
+        !blockEl.querySelector("br") &&
+        !isSelfClosingElement(blockEl) &&
+        isEmptyBlock(blockEl)
+    );
 }
 
 export function isEditorTab(node) {
