@@ -1,13 +1,27 @@
-import { expect, test } from "@odoo/hoot";
-import { click, manuallyDispatchProgrammaticEvent, press, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    click,
+    expect,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    test,
+    waitFor,
+} from "@odoo/hoot";
+import { preloadBundle } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
-import { getContent, setSelection } from "./_helpers/selection";
-import { insertLineBreak, insertText, keydownShiftTab, keydownTab, undo } from "./_helpers/user_actions";
-import { loader } from "@web/core/emoji_picker/emoji_picker";
-import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
+import { getContent, setSelection } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import {
+    insertLineBreak,
+    insertText,
+    keydownShiftTab,
+    keydownTab,
+    undo,
+} from "./_helpers/user_actions";
+import { execCommand } from "./_helpers/userCommands";
+
+preloadBundle("web.assets_emoji");
 
 test("should insert a banner with focus inside followed by a paragraph", async () => {
     const { el, editor } = await setupEditor("<p>Test[]</p>");
@@ -189,7 +203,6 @@ test("Can change an emoji banner", async () => {
     await insertText(editor, "/bannerinfo");
     await press("enter");
     expect("i.o_editor_banner_icon").toHaveText("💡");
-    await loader.loadEmoji();
     await click("i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await click(".o-EmojiPicker .o-Emoji");
@@ -211,7 +224,6 @@ test("toolbar should be closed when you open the emojipicker", async () => {
     setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 2 });
     await waitFor(".o-we-toolbar");
 
-    await loader.loadEmoji();
     await click("i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await animationFrame();
@@ -232,7 +244,6 @@ test("toolbar should be closed when you open the emojipicker (iframe)", async ()
     setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 2 });
     await waitFor(".o-we-toolbar");
 
-    await loader.loadEmoji();
     await click(":iframe i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await animationFrame();

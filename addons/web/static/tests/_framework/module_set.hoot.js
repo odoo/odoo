@@ -519,6 +519,7 @@ const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
+    ["@web/core/emoji_picker/emoji_loader", mockFixedFactory],
     ["@web/core/template_inheritance", mockFixedFactory],
     // Other mocks
     ["@web/core/assets", mockAssetsFactory],

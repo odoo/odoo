@@ -34,7 +34,7 @@ import { click, contains } from "./mail_test_helpers_contains";
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
@@ -42,6 +42,12 @@ import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
 
+import { SoundEffects } from "@mail/core/common/sound_effects_service";
+import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
+import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 import {
     DISCUSS_ACTION_ID,
     authenticateGuest,
@@ -83,12 +89,6 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
-import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
-import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
-import { SoundEffects } from "@mail/core/common/sound_effects_service";
-import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
-import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
 export * from "./mail_test_helpers_contains";
 
@@ -402,8 +402,9 @@ export async function start(options) {
             audio["data-src"] = srcPath;
         },
     });
-    await mountWithCleanup(WebClient, { env, target });
-    await loadEmoji();
+    // Note that loading the emojis cannot be called before setting up the env because
+    // it depends on translations being loaded.
+    await Promise.all([mountWithCleanup(WebClient, { env, target }), emojiLoader.load()]);
     return Object.assign(env, { ...options?.env, target });
 }
 

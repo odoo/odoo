@@ -1,25 +1,38 @@
-import { reactive } from "@web/owl2/utils";
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { reactive } from "@web/owl2/utils";
+
+const STORAGE_KEY = "web.emoji.frequent";
 
 export const frequentEmojiService = {
     start() {
         const state = reactive({
-            all: JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}"),
+            /** @type {Record<string, number>} */
+            all: JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"),
+            /**
+             * @param {string} codepoints
+             */
             incrementEmojiUsage(codepoints) {
-                state.all[codepoints] ??= 0;
+                state.all[codepoints] ||= 0;
                 state.all[codepoints]++;
-                browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(state.all));
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state.all));
             },
+            /**
+             * @param {number} [limit]
+             */
             getMostFrequent(limit) {
-                return Object.entries(state.all)
-                    .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
-                    .slice(0, limit ?? Infinity)
-                    .map(([codepoints]) => codepoints);
+                let entries = Object.entries(state.all).sort(
+                    ([, usage_1], [, usage_2]) => usage_2 - usage_1
+                );
+                if (limit) {
+                    entries = entries.slice(0, limit);
+                }
+                return entries.map(([codepoints]) => codepoints);
             },
         });
-        browser.addEventListener("storage", (ev) => {
-            if (ev.key === "web.emoji.frequent") {
+
+        window.addEventListener("storage", (ev) => {
+            if (ev.key === STORAGE_KEY) {
                 state.all = ev.newValue ? JSON.parse(ev.newValue) : {};
             } else if (ev.key === null) {
                 state.all = {};
@@ -29,4 +42,4 @@ export const frequentEmojiService = {
     },
 };
 
-registry.category("services").add("web.frequent.emoji", frequentEmojiService);
+registry.category("services").add("frequent_emoji", frequentEmojiService);

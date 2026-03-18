@@ -1,12 +1,11 @@
+import { markEventHandled } from "@web/core/utils/misc";
 import {
-    reactive,
     useComponent,
     useExternalListener,
     useLayoutEffect,
     useRef,
     useState,
 } from "@web/owl2/utils";
-import { markEventHandled } from "@web/core/utils/misc";
 
 import {
     App,
@@ -19,75 +18,22 @@ import {
     xml,
 } from "@odoo/owl";
 
-import { loadBundle } from "@web/core/assets";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { fuzzyLookup } from "@web/core/utils/search";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Dialog } from "../dialog/dialog";
 import { getTemplate } from "@web/core/templates";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { range } from "@web/core/utils/numbers";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { Dialog } from "../dialog/dialog";
+import { emojiLoader, useLoadEmoji } from "./emoji_loader";
 
 /**
- * @typedef Emoji
- * @property {string} category
- * @property {string} codepoints the emoji itself to be displayed
- * @property {string[]} emoticons string substitution (eg: ":p")
- * @property {string[]} keywords
- * @property {string} name
- * @property {string[]} shortcodes
+ * @typedef {import("./emoji_loader").Emoji} Emoji
  */
 
 export function useEmojiPicker(...args) {
     return usePicker(EmojiPicker, ...args);
-}
-
-export const loader = reactive({
-    loadEmoji: () => loadBundle("web.assets_emoji"),
-    /** @type {{ emojiValueToShortcodes: Object<string, string[]>, emojiRegex: RegExp, emojiSourceToEmoji: Map<string, Emoji>} }} */
-    loaded: undefined,
-});
-
-/** @returns {Promise<{ categories: Object[], emojis: Emoji[] }>")} */
-export async function loadEmoji() {
-    const res = { categories: [], emojis: [] };
-    try {
-        await loader.loadEmoji();
-        const { getCategories, getEmojis } = odoo.loader.modules.get(
-            "@web/core/emoji_picker/emoji_data"
-        );
-        res.categories = getCategories();
-        res.emojis = getEmojis();
-        return res;
-    } catch {
-        // Could be intentional (tour ended successfully while emoji still loading)
-        return res;
-    } finally {
-        if (!loader.loaded) {
-            const emojiValueToShortcodes = {};
-            const emojiSourceToEmoji = new Map();
-            for (const emoji of res.emojis) {
-                emojiValueToShortcodes[emoji.codepoints] = emoji.shortcodes;
-                for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
-                    emojiSourceToEmoji.set(source, emoji);
-                }
-            }
-            loader.loaded = {
-                emojiValueToShortcodes,
-                emojiSourceToEmoji,
-                emojiRegex: new RegExp(
-                    Object.keys(emojiValueToShortcodes).length
-                        ? Object.keys(emojiValueToShortcodes)
-                              .map((c) => c.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"))
-                              .sort((a, b) => b.length - a.length) // Sort to get composed emojis first
-                              .join("|")
-                        : /(?!)/,
-                    "gu"
-                ),
-            };
-        }
-    }
 }
 
 export const PICKER_PROPS = [
@@ -104,9 +50,6 @@ export class EmojiPicker extends Component {
     static props = [...PICKER_PROPS, "class?", "initialSearchTerm?"];
     static template = "web.EmojiPicker";
 
-    categories = null;
-    /** @type {Emoji[]|null} */
-    emojis = null;
     shouldScrollElem = null;
     lastSearchTerm;
     keyboardNavigated = false;
@@ -120,18 +63,14 @@ export class EmojiPicker extends Component {
             activeEmojiIndex: 0,
             categoryId: null,
             searchTerm: this.props.initialSearchTerm ?? "",
-            /** @type {Emoji|undefined} */
+            /** @type {Emoji | undefined} */
             hoveredEmoji: undefined,
         });
-        this.frequentEmojiService = useService("web.frequent.emoji");
+        this.frequentEmojiService = useService("frequent_emoji");
+        const loadEmoji = useLoadEmoji();
         useAutofocus();
         onWillStart(async () => {
-            const { categories, emojis } = await loadEmoji();
-            this.categories = categories;
-            this.emojis = emojis;
-            this.emojiByCodepoints = Object.fromEntries(
-                this.emojis.map((emoji) => [emoji.codepoints, emoji])
-            );
+            await loadEmoji();
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
@@ -140,10 +79,10 @@ export class EmojiPicker extends Component {
             };
             this.state.categoryId = this.recentEmojis.length
                 ? this.recentCategory.sortId
-                : this.categories[0].sortId;
+                : emojiLoader.categories[0].sortId;
         });
         onMounted(() => {
-            if (this.emojis.length === 0) {
+            if (!emojiLoader.loaded) {
                 return;
             }
             this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
@@ -156,7 +95,7 @@ export class EmojiPicker extends Component {
             this.state.hoveredEmoji = this.activeEmoji;
         });
         onPatched(() => {
-            if (this.emojis.length === 0) {
+            if (!emojiLoader.loaded) {
                 return;
             }
             if (this.shouldScrollElem) {
@@ -239,7 +178,7 @@ export class EmojiPicker extends Component {
         );
         const repr = [];
         let panel = [];
-        const allCategories = this.getAllCategories();
+        const allCategories = this.getAllCategories(this.recentEmojis);
         for (const category of allCategories) {
             if (
                 panel.length === maxAvailableNavbarItemAmountAtOnce - 1 &&
@@ -265,14 +204,8 @@ export class EmojiPicker extends Component {
         this.state.emojiNavbarRepr = repr;
     }
 
-    get currentNavbarPanel() {
-        if (!this.state.emojiNavbarRepr) {
-            return this.getAllCategories().map((c) => c.sortId);
-        }
-        if (this.state.categoryId === null || Number.isNaN(this.state.categoryId)) {
-            return this.state.emojiNavbarRepr[0];
-        }
-        return this.state.emojiNavbarRepr.find((panel) => panel.includes(this.state.categoryId));
+    get emojisLoaded() {
+        return emojiLoader.loaded;
     }
 
     get searchTerm() {
@@ -287,21 +220,14 @@ export class EmojiPicker extends Component {
         }
     }
 
-    get itemsNumber() {
-        return this.recentEmojis.length + this.getEmojis().length;
-    }
-
     get recentEmojis() {
         const recent = Object.entries(this.frequentEmojiService.all)
             .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
-            .map(([codepoints]) => this.emojiByCodepoints[codepoints]);
+            .map(([codepoints]) => emojiLoader.map.get(codepoints));
         if (this.searchTerm && recent.length > 0) {
-            return fuzzyLookup(this.searchTerm, recent, (emoji) => [
-                emoji.name,
-                ...emoji.keywords,
-                ...emoji.emoticons,
-                ...emoji.shortcodes,
-            ]);
+            return fuzzyLookup(this.searchTerm, recent, (emoji) =>
+                [emoji.name].concat(emoji.keywords, emoji.emoticons, emoji.shortcodes)
+            );
         }
         return recent.slice(0, 42);
     }
@@ -310,14 +236,25 @@ export class EmojiPicker extends Component {
         return this.state.hoveredEmoji?.shortcodes.join(" ") ?? _t("Search emoji");
     }
 
+    /**
+     * @param {MouseEvent} ev
+     * @param {Emoji} emoji
+     */
     onMouseenterEmoji(ev, emoji) {
         this.state.hoveredEmoji = emoji;
     }
 
+    /**
+     * @param {MouseEvent} ev
+     * @param {Emoji} emoji
+     */
     onMouseleaveEmoji(ev, emoji) {
         this.state.hoveredEmoji = this.activeEmoji;
     }
 
+    /**
+     * @param {PointerEvent} ev
+     */
     onClick(ev) {
         markEventHandled(ev, "emoji.selectEmoji");
     }
@@ -342,7 +279,7 @@ export class EmojiPicker extends Component {
      * navigation of the emoji picker.
      */
     updateEmojiPickerRepr() {
-        if (this.emojis.length === 0) {
+        if (!emojiLoader.loaded) {
             return;
         }
         const emojiEls = Array.from(this.gridRef.el.querySelectorAll(".o-Emoji"));
@@ -357,6 +294,9 @@ export class EmojiPicker extends Component {
         }
     }
 
+    /**
+     * @param {string} key
+     */
     handleNavigation(key) {
         const currentIdx = this.state.activeEmojiIndex;
         let currentRow = -1;
@@ -416,9 +356,12 @@ export class EmojiPicker extends Component {
         const activeCodepoints = this.gridRef.el.querySelector(
             `.o-EmojiPicker-content .o-Emoji[data-index="${this.state.activeEmojiIndex}"]`
         )?.dataset.codepoints;
-        return activeCodepoints ? this.emojiByCodepoints[activeCodepoints] : undefined;
+        return emojiLoader.map.get(activeCodepoints);
     }
 
+    /**
+     * @param {KeyboardEvent} ev
+     */
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowDown":
@@ -443,41 +386,56 @@ export class EmojiPicker extends Component {
         }
     }
 
-    getAllCategories() {
-        const res = [...this.categories];
-        if (this.recentEmojis.length > 0) {
-            res.unshift(this.recentCategory);
-        }
-        return res;
+    /**
+     * @param {Emoji[]} recentEmojis passed as argument as to not recompute `this.recentEmojis`
+     */
+    getAllCategories(recentEmojis) {
+        return recentEmojis.length
+            ? [this.recentCategory].concat(emojiLoader.categories)
+            : emojiLoader.categories;
     }
 
-    getEmojis() {
-        let emojisToDisplay = [...this.emojis];
-        const recentEmojis = this.recentEmojis;
+    /**
+     * @param {Emoji[]} recentEmojis passed as argument as to not recompute `this.recentEmojis`
+     */
+    getCurrentNavbarPanel(recentEmojis) {
+        if (!this.state.emojiNavbarRepr) {
+            return this.getAllCategories(recentEmojis).map((c) => c.sortId);
+        }
+        if (this.state.categoryId === null || Number.isNaN(this.state.categoryId)) {
+            return this.state.emojiNavbarRepr[0];
+        }
+        return this.state.emojiNavbarRepr.find((panel) => panel.includes(this.state.categoryId));
+    }
+
+    /**
+     * @param {Emoji[]} recentEmojis passed as argument as to not recompute `this.recentEmojis`
+     */
+    getEmojis(recentEmojis) {
+        let emojisToDisplay = emojiLoader.emojis;
         if (recentEmojis.length > 0 && this.searchTerm) {
             emojisToDisplay = emojisToDisplay.filter((emoji) => !recentEmojis.includes(emoji));
         }
         if (this.searchTerm.length > 0) {
-            return fuzzyLookup(this.searchTerm, emojisToDisplay, (emoji) => [
-                emoji.name,
-                ...emoji.keywords,
-                ...emoji.emoticons,
-                ...emoji.shortcodes,
-            ]);
+            return fuzzyLookup(this.searchTerm, emojisToDisplay, (emoji) =>
+                [emoji.name].concat(emoji.keywords, emoji.emoticons, emoji.shortcodes)
+            );
         }
         return emojisToDisplay;
     }
 
-    getEmojisFromSearch() {
-        return [...this.recentEmojis, ...this.getEmojis()];
-    }
-
+    /**
+     * @param {string} categoryId
+     */
     selectCategory(categoryId) {
         this.searchTerm = "";
         this.state.categoryId = categoryId;
         this.shouldScrollElem = true;
     }
 
+    /**
+     * @param {PointerEvent} ev
+     */
     selectEmoji(ev) {
         const codepoints = ev.currentTarget.dataset.codepoints;
         let resetOnSelect = !ev.shiftKey;
@@ -507,13 +465,13 @@ export class EmojiPicker extends Component {
 }
 
 /**
- * @param {() => {}} PickerComponent
+ * @param {import("@odoo/owl").ComponentConstructor} PickerComponent
  * @param {import("@web/core/utils/hooks").Ref} [ref]
  * @param {Object} props
- * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
- * @param {function} [props.onSelect] function that is invoked when an item in picker has been selected.
+ * @param {() => {}} [props.onSelect] function that is invoked when an item in picker has been selected.
  *   When explicit value `false` is returned, this will keep the picker open (= it won't auto-close it)
- * @param {function} [props.onClose]
+ * @param {() => {}} [props.onClose]
+ * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
  */
 export function usePicker(PickerComponent, ref, props, options = {}) {
     const component = useComponent();
@@ -521,6 +479,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     const state = useState({ isOpen: false });
     const ui = useService("ui");
     const dialog = useService("dialog");
+    const loadEmoji = useLoadEmoji();
     let remove;
     const newOptions = {
         ...options,

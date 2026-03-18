@@ -1,11 +1,12 @@
-import { reactive } from "@web/owl2/utils";
-import { Plugin } from "@html_editor/plugin";
-import { EmojiPicker, loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
-import { _t } from "@web/core/l10n/translation";
-import { debounce } from "@web/core/utils/timing";
-import { fuzzyLookup } from "@web/core/utils/search";
-import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { SuggestionList } from "@html_editor/components/suggestion/suggestion_list";
+import { Plugin } from "@html_editor/plugin";
+import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { _t } from "@web/core/l10n/translation";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { debounce } from "@web/core/utils/timing";
+import { reactive } from "@web/owl2/utils";
 
 /**
  * @typedef { Object } EmojiShared
@@ -40,8 +41,12 @@ export class EmojiPlugin extends Plugin {
         ],
     };
 
-    async setup() {
-        await super.setup();
+    /** @type {string | null} */
+    match = null;
+
+    setup() {
+        this.loadEmojiPromise = emojiLoader.load();
+
         this.overlay = this.dependencies.overlay.createOverlay(EmojiPicker, {
             hasAutofocus: true,
             className: "popover",
@@ -49,46 +54,44 @@ export class EmojiPlugin extends Plugin {
         this.emojiListOverlay = this.dependencies.overlay.createOverlay(SuggestionList, {
             className: "popover",
         });
-        this.match = undefined;
-        const { emojis } = await loadEmoji();
-        this.allEmojis = emojis;
         this.emojiListState = reactive({ list: [] });
         this.addDomListener(this.document, "keydown", this.onKeyDown);
     }
 
-    get emojiDict() {
-        return loader.loaded?.emojiSourceToEmoji ?? new Map();
+    destroy() {
+        this.loadEmojiPromise.abort();
     }
 
     handleDeleteBackward() {
         if (this.match) {
             this.dependencies.history.undo();
-            this.match = undefined;
+            this.match = null;
             return true;
         }
     }
 
+    /**
+     * @param {InputEvent} ev
+     */
     onInput(ev) {
+        if (!emojiLoader.loaded) {
+            return;
+        }
         const selection = this.dependencies.selection.getEditableSelection();
         if (
             !isTextNode(selection.startContainer) ||
             !isContentEditable(selection.startContainer) ||
             !selection.isCollapsed
         ) {
-            this.match = undefined;
+            this.match = null;
             return;
         }
         const start = selection.startOffset;
         const text = selection.anchorNode.textContent;
 
         for (let candidatePosition = start - 1; candidatePosition >= 0; candidatePosition--) {
-            let match = null;
-            for (const key of this.emojiDict.keys()) {
-                if (text.substring(candidatePosition) === key) {
-                    match = key;
-                }
-            }
-            if (!match) {
+            const match = text.substring(candidatePosition);
+            if (!emojiLoader.map.has(match)) {
                 continue;
             }
             // Ensure the character before is a space or start of text
@@ -97,7 +100,7 @@ export class EmojiPlugin extends Plugin {
                 continue;
             }
             // Replace the matched text with the emoji
-            const emoji = this.emojiDict.get(match);
+            const emoji = emojiLoader.map.get(match);
             this.dependencies.selection.setSelection({
                 anchorNode: selection.anchorNode,
                 anchorOffset: candidatePosition,
@@ -110,7 +113,7 @@ export class EmojiPlugin extends Plugin {
             this.match = match;
             return;
         }
-        this.match = undefined;
+        this.match = null;
         if (ev.data === ":") {
             this.emojiListOverlay.close();
             const selection = this.dependencies.selection.getEditableSelection();
@@ -125,6 +128,9 @@ export class EmojiPlugin extends Plugin {
         }
     }
 
+    /**
+     * @param {KeyboardEvent} ev
+     */
     onKeyDown(ev) {
         if (ev.key === "Escape") {
             this.emojiListOverlay.close();
@@ -160,17 +166,15 @@ export class EmojiPlugin extends Plugin {
 
     updateEmojiList = debounce(this._updateEmojiList, 100);
     _updateEmojiList() {
-        if (!this.shouldUpdateEmojiList) {
+        if (!this.shouldUpdateEmojiList || !emojiLoader.loaded) {
             return;
         }
 
         const selection = this.dependencies.selection.getEditableSelection();
         const searchTerm = this.searchNode.nodeValue.slice(this.offset, selection.endOffset) || "";
-        const emojis = fuzzyLookup(searchTerm, this.allEmojis, (e) => [
-            e.name,
-            ...e.shortcodes,
-            ...e.keywords,
-        ]).slice(0, 8);
+        const emojis = fuzzyLookup(searchTerm, emojiLoader.emojis, (e) =>
+            [e.name].concat(e.shortcodes, e.keywords)
+        ).slice(0, 8);
         this.emojiListState.list = emojis.map((e) => ({
             value: e.codepoints,
             label: e.shortcodes[0],
@@ -195,6 +199,9 @@ export class EmojiPlugin extends Plugin {
         }
     }
 
+    /**
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
     isSearching(selection) {
         return (
             selection.endContainer === this.searchNode &&
