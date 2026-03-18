@@ -12,12 +12,12 @@ class TestGenericLocalization(TestPointOfSaleHttpCommon):
         super().setUpClass()
         cls.partner_a.name = "AAAA Generic Partner"
         cls.partner_a.vat = "32345678"
-        cls.whiteboard_pen.write({
+        cls.whiteboard_pen.sudo().write({
             'standard_price': 10.0,
             'taxes_id': [Command.link(cls.tax_sale_a.id)]
         })
 
-        cls.wall_shelf.write({
+        cls.wall_shelf.sudo().write({
             'standard_price': 10.0,
             'taxes_id': [Command.link(cls.tax_sale_a.id)]
         })
