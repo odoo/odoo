@@ -31,6 +31,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         })
 
         self.combo_category = self.env['pos.category'].create({'name': 'Combo Category'})
+        self.combo_no_price = self.combo_generator('No Price', [20.0, 30.0, 40.0], [0.0, 0.0, 0.0], 1, 1)
         self.combo1 = self.combo_generator('Green', [0.0, 5.0, 10.0], [50.0, 70.0, 90.0], 2, 1)
         self.combo2 = self.combo_generator('Red', [0.0, 0.0, 0.0], [40.0, 60.0, 80.0], 5, 0)
         self.combo3 = self.combo_generator('Purple', [10.0, 20.0, 30.0], [0, 0, 0], 10, 0)
@@ -39,6 +40,27 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
             'type': 'combo',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'combo_ids': [(6, 0, [self.combo1.id, self.combo2.id, self.combo3.id])],
+            'pos_categ_ids': [(6, 0, [self.combo_category.id])],
+            'available_in_pos': True,
+        })
+
+        self.small_combo = self.env['product.product'].create({
+            'name': 'Small Combo',
+            'type': 'combo',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'combo_ids': [(6, 0, [self.combo_no_price.id, self.combo3.id])],
+            'pos_categ_ids': [(6, 0, [self.combo_category.id])],
+            'available_in_pos': True,
+        })
+
+        self.combo_no_free1 = self.combo_generator('First no Free', [20.0, 30.0, 40.0], [0.0, 5.0, 10.0], 2, 0)
+        self.combo_no_free2 = self.combo_generator('Second no Free', [10.0, 15.0, 3.0], [1.0, 3.0, 2.3], 3, 0)
+        self.combo_no_free3 = self.combo_generator('Third no Free', [1.3, 2.88, 9.43], [10.0, 20.0, 30.0], 4, 0)
+        self.no_free_combo = self.env['product.product'].create({
+            'name': 'No Free Combo',
+            'type': 'combo',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'combo_ids': [(6, 0, [self.combo_no_free1.id, self.combo_no_free2.id, self.combo_no_free3.id])],
             'pos_categ_ids': [(6, 0, [self.combo_category.id])],
             'available_in_pos': True,
         })
