@@ -25,7 +25,7 @@ class Crawler(HttpCaseWithUserDemo):
 
     def setUp(self):
         super(Crawler, self).setUp()
-        self.env.ref('website.default_website').write({
+        self.env.ref('website.default_website').company_id.write({
             'social_facebook': "https://www.facebook.com/Odoo",
             'social_twitter': 'https://twitter.com/Odoo',
             'social_linkedin': 'https://www.linkedin.com/company/odoo',

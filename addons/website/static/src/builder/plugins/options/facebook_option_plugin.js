@@ -45,10 +45,10 @@ export class FacebookOptionPlugin extends Plugin {
             this.setEmptyLink(nodes);
             return;
         }
-        // Fetches the default url for facebook page from website config
+        // Fetches the default url for facebook page from company config
         const res = await this.services.orm.read(
-            "website",
-            [this.services.website.currentWebsite.id],
+            "res.company",
+            [this.services.website.currentWebsite.company_id],
             ["social_facebook"]
         );
         if (res) {

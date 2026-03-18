@@ -63,7 +63,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_countdown', login='admin')
 
     def test_05_social_media(self):
-        self.env.ref('website.default_website').write({
+        self.env.ref('website.default_website').company_id.write({
             'social_facebook': "https://www.facebook.com/Odoo",
             'social_twitter': 'https://twitter.com/Odoo',
             'social_linkedin': 'https://www.linkedin.com/company/odoo',
@@ -75,11 +75,6 @@ class TestSnippets(HttpCase):
         })
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_social_media', login="admin")
-        self.assertEqual(
-            self.env.ref('website.default_website').social_instagram,
-            'https://instagram.com/odoo.official/',
-            'Social media should have been updated'
-        )
 
     def test_06_snippet_popup_add_remove(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_add_remove', login='admin')

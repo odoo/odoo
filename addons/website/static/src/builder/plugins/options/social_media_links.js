@@ -8,33 +8,33 @@ import { useSortable } from "@web/core/utils/sortable_owl";
 export class SocialMediaLinks extends BaseOptionComponent {
     static id = "social_media_links";
     static template = "website.SocialMediaLinks";
-    static dependencies = ["socialMediaOptionPlugin", "history"];
+    static dependencies = ["socialMediaOptionPlugin", "history", "operation"];
 
     setup() {
         super.setup();
 
-        const { getRecordedSocialMediaNames, reorderSocialMediaLink } =
+        const { reorderSocialMediaLink, prefillSocialMediaLinks } =
             this.dependencies.socialMediaOptionPlugin;
-
         onWillStart(async () => {
-            this.recordedSocialMediaNames = await getRecordedSocialMediaNames();
+            // Prefill placeholder social media links for existing static
+            // content (e.g., footer snippets) that are not added via drag and
+            // drop.
+            this.dependencies.operation.next(async () => {
+                const prefilled = await prefillSocialMediaLinks(this.env.getEditingElement());
+                if (prefilled) {
+                    this.dependencies.history.addStep({ extraStepInfos: { prefill: true } });
+                }
+            });
         });
         this.rootRef = useRef("root");
         this.domState = useDomState((editingElement) => ({
-            presentLinks: [...editingElement.querySelectorAll(":scope > a[href]")].map(
-                (element) => ({
-                    element,
-                    media: element.attributes.href.value.split("/website/social/")[1],
-                })
-            ),
+            presentLinks: [...editingElement.querySelectorAll(":scope > a[href]")],
         }));
 
         this.nextId = 1001;
         this.ids = [];
         this.elIdsMap = new Map();
         this.idsElMap = new Map();
-        this.idsMediaMap = new Map();
-        this.mediaIdsMap = new Map();
 
         // hack to trigger the rebuild
         this.reorderTriggered = useState({ trigger: 0 });
@@ -82,12 +82,10 @@ export class SocialMediaLinks extends BaseOptionComponent {
     }
 
     /**
-     * Each item has at least one of `domPosition` or `media`
      * @typedef { Object } SocialMediaLinkItem
      * @property { String } fabricatedKey a key that combines the `id` and the `domPosition` (this is a hack to trigger rebuild when domPosition changes, because `applyTo does not correctly support props updates)
      * @property { int } id An arbitrary number to identify an item
      * @property { int } [domPosition] The position of the link in the children list (if the item has a link in the dom), starting from 1 (to use `:nth-` selector)
-     * @property { string } [media] The name of the recorded social media (if the item is editing a link from the orm)
      */
 
     /**
@@ -95,54 +93,16 @@ export class SocialMediaLinks extends BaseOptionComponent {
      * @returns { SocialMediaLinkItem[] }
      */
     computeItems() {
-        const missingRecordedSocialMediaNames = new Set(this.recordedSocialMediaNames);
-        const idsLookUp = new Map(this.ids.map((id, i) => [id, i]));
-        const idsInDom = new Set();
-        const itemsFromDom = this.domState.presentLinks.map(({ element, media }, domPosition) => {
+        const items = this.domState.presentLinks.map((element, domPosition) => {
             let id = this.elIdsMap.get(element);
-            if (!id) {
-                const idBasedOnMedia = this.mediaIdsMap.get(media);
-                if (!idsInDom.has(idBasedOnMedia)) {
-                    id = idBasedOnMedia;
-                }
-            }
             if (!id) {
                 id = this.nextId++;
             }
-            idsInDom.add(id);
-            if (media) {
-                missingRecordedSocialMediaNames.delete(media);
-            }
-            return { element, media, id, domPosition: domPosition + 1 };
+            return { element, id, domPosition: domPosition + 1 };
         });
-        const items = [];
-        const addRecordedSocialMediaAtStartOfSlice = (slice) => {
-            for (const id of slice) {
-                if (idsInDom.has(id)) {
-                    break;
-                }
-                const media = this.idsMediaMap.get(id);
-                if (media) {
-                    items.push({ id, media });
-                    missingRecordedSocialMediaNames.delete(media);
-                }
-            }
-        };
-        addRecordedSocialMediaAtStartOfSlice(this.ids);
-        for (const item of itemsFromDom) {
-            items.push(item);
-            const start = idsLookUp.get(item.id);
-            if (start !== undefined) {
-                addRecordedSocialMediaAtStartOfSlice(this.ids.slice(start + 1));
-            }
-        }
-        for (const media of missingRecordedSocialMediaNames) {
-            items.push({ id: this.nextId++, media });
-        }
 
         this.ids = [];
         this.elIdsMap = new Map();
-        this.idsMediaMap = new Map();
 
         for (const item of items) {
             this.ids.push(item.id);
@@ -150,18 +110,11 @@ export class SocialMediaLinks extends BaseOptionComponent {
                 this.elIdsMap.set(item.element, item.id);
                 this.idsElMap.set(item.id, item.element);
             }
-            if (item.media) {
-                this.idsMediaMap.set(item.id, item.media);
-                this.mediaIdsMap.set(item.media, item.id);
-            }
         }
-        let elementAfter = null;
         for (let i = items.length - 1; i >= 0; i--) {
-            items[i].nextLink = elementAfter;
             // This fabricated key is a hack. It is used as `t-key` in the component instead of the id in order to force re-creation of the components if the domPosition changes (this re-creation is a workaround for the applyTo that are not correctly updated)
             items[i].fabricatedKey = `${items[i].id}+${items[i].domPosition}`;
             if (items[i].element) {
-                elementAfter = items[i].element;
                 delete items[i].element;
             }
         }

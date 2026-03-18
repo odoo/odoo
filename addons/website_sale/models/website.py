@@ -1174,14 +1174,15 @@ class Website(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        company = self.sudo().company_id
         socials = [
-            self.social_twitter,
-            self.social_facebook,
-            self.social_github,
-            self.social_linkedin,
-            self.social_youtube,
-            self.social_instagram,
-            self.social_tiktok,
+            company.social_twitter,
+            company.social_facebook,
+            company.social_github,
+            company.social_linkedin,
+            company.social_youtube,
+            company.social_instagram,
+            company.social_tiktok,
         ]
         base_url = self.get_base_url()
 

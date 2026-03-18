@@ -3,21 +3,17 @@ import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
 import { fonts } from "@html_editor/utils/fonts";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { renderToFragment } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
  * @typedef { Object } SocialMediaOptionShared
  * @property { SocialMediaOptionPlugin['newLinkElement'] } newLinkElement
- * @property { SocialMediaOptionPlugin['getRecordedSocialMedia'] } getRecordedSocialMedia
- * @property { SocialMediaOptionPlugin['setRecordedSocialMedia'] } setRecordedSocialMedia
- * @property { SocialMediaOptionPlugin['setRecordedSocialMediaAreEdited'] } setRecordedSocialMediaAreEdited
  * @property { SocialMediaOptionPlugin['getAssociatedSocialMedia'] } getAssociatedSocialMedia
  * @property { SocialMediaOptionPlugin['removeSocialMediaClasses'] } removeSocialMediaClasses
  * @property { SocialMediaOptionPlugin['removeIconClasses'] } removeIconClasses
- * @property { SocialMediaOptionPlugin['getRecordedSocialMediaNames'] } getRecordedSocialMediaNames
  * @property { SocialMediaOptionPlugin['reorderSocialMediaLink'] } reorderSocialMediaLink
+ * @property { SocialMediaOptionPlugin['prefillSocialMediaLinks'] } prefillSocialMediaLinks
  */
 
 /**
@@ -118,17 +114,14 @@ const defaultAriaLabel = _t("Other social network");
 
 export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
-    static dependencies = ["history", "animateOption"];
+    static dependencies = ["animateOption"];
     static shared = [
         "newLinkElement",
-        "getRecordedSocialMedia",
-        "setRecordedSocialMedia",
-        "setRecordedSocialMediaAreEdited",
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
-        "getRecordedSocialMediaNames",
         "reorderSocialMediaLink",
+        "prefillSocialMediaLinks",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -136,13 +129,11 @@ export class SocialMediaOptionPlugin extends Plugin {
         builder_actions: {
             ResetSocialMediaIconSizeAction,
             DeleteSocialMediaLinkAction,
-            ToggleRecordedSocialMediaLinkAction,
-            EditRecordedSocialMediaLinkAction,
             EditSocialMediaLinkAction,
             AddSocialMediaLinkAction,
         },
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         normalize_processors: this.normalize.bind(this),
-        on_ready_to_save_document_handlers: this.saveRecordedSocialMedia.bind(this),
         content_not_editable_selectors: [".s_share"],
         content_editable_selectors: [
             ".s_share a > i",
@@ -154,83 +145,78 @@ export class SocialMediaOptionPlugin extends Plugin {
             selector: ".s_social_media > a > *",
             target: ".s_social_media",
         },
+        replace_media_dialog_params_processors: this.applyMediaDialogParams.bind(this),
+        is_step_reversible_predicates: (step) => {
+            if (step.extraStepInfos?.prefill) {
+                return false;
+            }
+        },
     };
 
-    /** The social media's name for which there is an entry in the orm */
-    async getRecordedSocialMediaNames() {
-        await this.fetchRecordedSocialMedia();
-        return this.recordedSocialMedia.keys();
+    async onSnippetDropped({ snippetEl }) {
+        await this.prefillSocialMediaLinks(snippetEl);
     }
 
-    // TODO: a method to give access to the `recordedSocialMedia` for facebook page and instagram page
-
-    setup() {
-        this.recordedSocialMedia = new Map();
+    extractSocialMediaName(el) {
+        return [...el.classList]
+            .find((c) => c.startsWith("s_social_media_"))
+            ?.replace("s_social_media_", "");
     }
 
-    getRecordedSocialMedia(key) {
-        return this.recordedSocialMedia.get(key);
-    }
-    setRecordedSocialMedia(key, value) {
-        this.recordedSocialMedia.set(key, value);
-    }
-    setRecordedSocialMediaAreEdited(value) {
-        this.recordedSocialMediaAreEdited = value;
-    }
-    async fetchRecordedSocialMedia() {
-        if (this.hasStartedLoadingRecordedSocialMedia) {
-            return;
+    /**
+     * Fetches social media links from the company record and pre-fills the
+     * corresponding links in the snippet, replacing internal empty entries.
+     */
+    async prefillSocialMediaLinks(snippetEl) {
+        const socialAnchors = selectElements(snippetEl, ".s_social_media > a[href='#']");
+        if (!socialAnchors.length) {
+            return false;
         }
-        this.hasStartedLoadingRecordedSocialMedia = true;
+        const rawSocialMediaLinks = new Map();
+        const companySocialFields = [];
 
-        const res = await this.services.orm.read(
-            "website",
-            [this.services.website.currentWebsite.id],
-            [
-                ...socialMediaInfo
-                    .entries()
-                    .filter(([name, info]) => info.recorded)
-                    .map(([name, info]) => `social_${name}`),
-            ]
-        );
-        for (const name of socialMediaInfo.keys()) {
-            const key = `social_${name}`;
-            if (key in res[0]) {
-                this.recordedSocialMedia.set(name, res[0][key] || "");
+        for (const el of socialAnchors) {
+            const name = this.extractSocialMediaName(el);
+            if (!name) {
+                continue;
+            }
+            // Store internal links which we need to pre-fill
+            if (!rawSocialMediaLinks.has(name)) {
+                rawSocialMediaLinks.set(name, [el]);
+                if (socialMediaInfo.get(name)?.recorded) {
+                    companySocialFields.push(`social_${name}`);
+                }
+            } else {
+                rawSocialMediaLinks.get(name).push(el);
             }
         }
-        this.config.onChange({ isPreviewing: false });
-    }
 
-    async saveRecordedSocialMedia() {
-        if (!this.recordedSocialMediaAreEdited) {
-            return;
+        if (!rawSocialMediaLinks.size) {
+            return false;
         }
-        await this.services.orm.write(
-            "website",
-            [this.services.website.currentWebsite.id],
-            Object.fromEntries(
-                this.recordedSocialMedia.entries().map(([name, value]) => [`social_${name}`, value])
-            )
+        const [companySocialData = {}] = await this.services.orm.read(
+            "res.company",
+            [this.services.website.currentWebsite.company_id],
+            companySocialFields
         );
+        // Pre-fill company social media links if not already set in the dom
+        for (const [name, elements] of rawSocialMediaLinks.entries()) {
+            const value = companySocialData[`social_${name}`];
+            const link = value ? this.addHttpsIfNeeded(value) : `https://www.${name}.com/your-page`;
 
-        this.recordedSocialMediaAreEdited = false;
+            for (const el of elements) {
+                el.setAttribute("href", link);
+            }
+        }
+        return true;
     }
 
     normalize(root) {
-        // Add https:// if needed, to the links from db, and the links from dom
-        if (this.recordedSocialMediaAreEdited) {
-            for (const [name, value] of this.recordedSocialMedia.entries()) {
-                const newValue = this.addHttpsIfNeeded(value);
-                if (value !== newValue) {
-                    this.recordedSocialMedia.set(name, newValue);
-                }
-            }
-        }
+        // Add https:// if needed, to the links from dom
         for (const element of selectElements(root, ".s_social_media > a[href]")) {
             const value = element.attributes.href.value;
             const newHref = this.addHttpsIfNeeded(value);
-            if (value !== newHref) {
+            if (value !== newHref && value !== "#") {
                 element.href = newHref;
             }
         }
@@ -253,6 +239,15 @@ export class SocialMediaOptionPlugin extends Plugin {
         }
     }
 
+    applyMediaDialogParams(params) {
+        if (
+            params.node?.nodeType === Node.ELEMENT_NODE &&
+            params.node.closest(".s_social_media, .s_share")
+        ) {
+            params.visibleTabs = ["IMAGES", "ICONS"];
+        }
+    }
+
     /**
      * @param { HTMLElement } editingElement The element edited
      * @param { HTMLElement } element The element that is moved (a child of `editingElement`)
@@ -269,29 +264,15 @@ export class SocialMediaOptionPlugin extends Plugin {
 
     /**
      * @param { HTMLElement } [other] a link element to clone to use as base (use the template if none)
-     * @param { String } [socialMediaName] the name of the social media to use if any
      * @returns { HTMLElement } a new link element
      */
-    newLinkElement(other, socialMediaName) {
-        const el =
-            other?.cloneNode(true) ||
-            renderToFragment("website.example_social_media_link").children[0];
+    newLinkElement(other) {
+        const el = other.cloneNode(true);
         this.removeSocialMediaClasses(el);
         this.removeIconClasses(el);
-        el.querySelector(ICON_SELECTOR)?.classList.add(
-            socialMediaInfo.get(socialMediaName)?.iconClass || "fa-pencil"
-        );
-        if (socialMediaName) {
-            el.href = `/website/social/${encodeURIComponent(socialMediaName)}`;
-            el.classList.add(`s_social_media_${socialMediaName}`);
-            el.setAttribute(
-                "aria-label",
-                socialMediaInfo.get(socialMediaName)?.label || defaultAriaLabel
-            );
-        } else {
-            el.href = "https://www.example.com";
-            el.setAttribute("aria-label", "example");
-        }
+        el.querySelector(ICON_SELECTOR)?.classList.add("fa-pencil");
+        el.href = "https://www.example.com";
+        el.setAttribute("aria-label", "example");
         return el;
     }
 
@@ -312,14 +293,15 @@ export class SocialMediaOptionPlugin extends Plugin {
      */
     removeIconClasses(el) {
         const iconEl = el.querySelector(ICON_SELECTOR);
-        if (iconEl) {
-            // Remove every fa classes except fa-x sizes.
-            for (const c of iconEl.classList) {
-                if (/^fa-[^0-9]/.test(c)) {
-                    iconEl.classList.remove(c);
-                }
-            }
+        if (!iconEl) {
+            return;
         }
+        // Remove every fa classes except fa-x sizes.
+        Array.from(iconEl.classList).forEach((c) => {
+            if (/^fa-[^0-9]/.test(c)) {
+                iconEl.classList.remove(c);
+            }
+        });
     }
 
     /**
@@ -384,48 +366,6 @@ export class DeleteSocialMediaLinkAction extends BuilderAction {
         editingElement.remove();
     }
 }
-export class ToggleRecordedSocialMediaLinkAction extends BuilderAction {
-    static id = "toggleRecordedSocialMediaLink";
-    static dependencies = ["socialMediaOptionPlugin"];
-    isApplied({ editingElement, params: { domPosition } }) {
-        return !!domPosition;
-    }
-    apply({ editingElement, params: { media, elementAfter } }) {
-        const el = this.dependencies.socialMediaOptionPlugin.newLinkElement(
-            editingElement.querySelector(":scope > a"),
-            media
-        );
-        if (elementAfter) {
-            elementAfter.before(el);
-        } else {
-            editingElement.append(el);
-        }
-    }
-    clean({ editingElement, params: { domPosition } }) {
-        editingElement.querySelector(`a:nth-of-type(${domPosition})`).remove();
-    }
-}
-export class EditRecordedSocialMediaLinkAction extends BuilderAction {
-    static id = "editRecordedSocialMediaLink";
-    static dependencies = ["socialMediaOptionPlugin", "history"];
-    getValue({ params: { mainParam } }) {
-        return this.dependencies.socialMediaOptionPlugin.getRecordedSocialMedia(mainParam);
-    }
-    apply({ params: { mainParam }, value }) {
-        this.dependencies.socialMediaOptionPlugin.setRecordedSocialMediaAreEdited(true);
-        const oldValue =
-            this.dependencies.socialMediaOptionPlugin.getRecordedSocialMedia(mainParam);
-        this.dependencies.history.applyCustomMutation({
-            apply: () =>
-                this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(mainParam, value),
-            revert: () =>
-                this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(
-                    mainParam,
-                    oldValue
-                ),
-        });
-    }
-}
 export class EditSocialMediaLinkAction extends BuilderAction {
     static id = "editSocialMediaLink";
     static dependencies = ["socialMediaOptionPlugin"];
@@ -449,10 +389,11 @@ export class EditSocialMediaLinkAction extends BuilderAction {
                 .reduce((a, b) => (a.length && a.length <= b.length ? a : b), "");
         }
 
-        if (iconClass) {
-            this.dependencies.socialMediaOptionPlugin.removeIconClasses(editingElement);
-            editingElement.querySelector(ICON_SELECTOR)?.classList.add(iconClass);
+        if (!iconClass) {
+            iconClass = "fa-pencil";
         }
+        this.dependencies.socialMediaOptionPlugin.removeIconClasses(editingElement);
+        editingElement.querySelector(ICON_SELECTOR)?.classList.add(iconClass);
     }
 }
 export class AddSocialMediaLinkAction extends BuilderAction {

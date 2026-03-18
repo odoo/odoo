@@ -40,10 +40,10 @@ export class InstagramOptionPlugin extends Plugin {
             this.setPage(nodes);
             return;
         }
-        // Fetches the default url for instagram page from website config
+        // Fetches the default url for instagram page from company config
         const res = await this.services.orm.read(
-            "website",
-            [this.services.website.currentWebsite.id],
+            "res.company",
+            [this.services.website.currentWebsite.company_id],
             ["social_instagram"]
         );
         if (res && res[0].social_instagram) {
