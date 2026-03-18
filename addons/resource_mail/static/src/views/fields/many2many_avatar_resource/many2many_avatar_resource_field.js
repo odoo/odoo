@@ -129,6 +129,10 @@ export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(K
     get tags() {
         return super.tags.reverse();
     }
+
+    get placeholder() {
+        return _t("Search resources...");
+    }
 }
 export const kanbanMany2ManyAvatarResourceField = {
     ...kanbanMany2ManyTagsAvatarUserField,
