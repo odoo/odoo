@@ -340,12 +340,13 @@ class StockRule(models.Model):
         move_dest_ids = values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or []
 
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
-        if not partner and move_dest_ids:
+        if move_dest_ids:
             move_dest = values['move_dest_ids']
             if location_dest_id == company_id.internal_transit_location_id:
-                partners = move_dest.location_dest_id.warehouse_id.partner_id
-                if len(partners) == 1:
-                    partner = partners.id
+                if not partner:
+                    partners = move_dest.location_dest_id.warehouse_id.partner_id
+                    if len(partners) == 1:
+                        partner = partners.id
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
 
         # If the quantity is negative the move should be considered as a refund
