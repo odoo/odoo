@@ -1,113 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="website.Configurator.SkipButton">
-        <div class="container-fluid py-2 pb-md-3 text-end pe-lg-5">
-            <button class="btn btn-link btn-lg" t-on-click="this.props.skip">Skip and start from scratch</button>
-        </div>
-    </t>
-
-    <t t-name="website.Configurator.WelcomeScreen">
-        <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
-            <div class="o_configurator_screen_content d-flex h-100">
-                <div class="container align-self-center o_configurator_show">
-                    <div class="display-2 mb-2">Ready to build the <br class="d-none d-lg-inline"/>
-                    <b>perfect website?</b>
-                </div>
-                <div class="h1 fw-light mb-4 text-600">We'll set you up and running in <b>4 steps</b>
-                </div>
-                <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="this.goToDescription">Let's do it</button>
-            </div>
-        </div>
-        <SkipButton skip="this.props.skip"/>
+<t t-name="website.Configurator.SkipButton">
+    <div class="container-fluid py-2 pb-md-3 text-end pe-lg-5">
+        <button class="btn btn-lg text-muted" t-on-click="this.props.skip">Skip and start from scratch</button>
     </div>
 </t>
 
 <t t-name="website.Configurator.DescriptionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen"
          t-on-focusin="this.onConfiguratorScreenFocusin">
-        <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
-            <div class="container align-self-center">
-                <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
-                    <span>I want </span>
-                    <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
-                         t-on-focusout="this.onDropdownFocusout">
-                        <button id="selectTypeToggle"
-                                class="o_btn_reset w-100 px-2"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="true"
-                                aria-label="What type of website?"
-                                aria-controls="selectTypeMenu">
-                            <span class="d-flex align-items-center">
-                                <i class="text-primary" t-if="this.state.selectedType">
-                                    <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
-                                </i>
-                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
-                            </span>
-                        </button>
-                        <div id="selectTypeMenu"
-                             t-attf-class="dropdown-menu border-0 shadow-lg {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
-                             role="menu"
-                             aria-labelledby="selectTypeToggle">
-                            <t t-foreach="this.state.getWebsiteTypes()" t-as="type" t-key="type.name">
-                                <button t-att-title="type.name"
-                                        t-on-click="() => this.selectWebsiteType(type.id)"
-                                        class="dropdown-item o_change_website_type"
-                                        role="menuitem"
-                                        t-custom-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
-                                    <t t-out="type.label"/>
-                                </button>
-                            </t>
-                        </div>
-                    </div>
-                    <span t-if="this.state.selectedType" class="me-2 o_configurator_show"> for my</span>
+        <div class="o_configurator_screen_content h-100">
+            <div class="container-fluid px-3 px-xl-5 d-flex flex-column h-100">
+                <div class="o_configurator_typing_text pt-3 mb-4">
+                    Build your perfect <b>website</b>
                 </div>
-                <div t-if="this.state.selectedType" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
-                    <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
-                    <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
-                        <AutoComplete
-                            placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
-                            value="this.state.selectedIndustry?.label ?? ''"
-                            sources="this.sources"
-                            onInput.bind="this.onAutocompleteInput"
-                            inputDebounceDelay="100"
-                            menuPositionOptions="{ position: 'bottom-fit' }"
-                            menuCssClass="'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown'"
-                            selectOnBlur="true"
-                            autoSelect="true"
-                        />
-                    </label>
-                    <span> business</span>
-                    <span t-if="this.state.selectedIndustry" class="o_configurator_show">,</span>
-                </div>
-                <div t-if="this.state.selectedType and this.state.selectedIndustry" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
-                    <span>with the main objective to </span>
-                    <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{this.state.selectedPurpose ? 'o_step_completed' : 'o_step_todo'}}"
-                         t-on-focusout="this.onDropdownFocusout">
-                        <button id="selectPurposeToggle"
-                                class="o_btn_reset w-100 px-2"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="true"
-                                aria-label="To what purpose?"
-                                aria-controls="selectPurposeMenu">
-                            <span class="d-flex align-items-center">
-                                <t t-if="this.state.selectedPurpose">
-                                    <t t-out="this.state.getSelectedPurpose(this.state.selectedPurpose).label"/>
+                <div class="container flex-grow-1 d-flex flex-column justify-content-center mb-5">
+                    <div class="o_configurator_typing_text d-inline d-m  d-block mb-md-2 mb-lg-4 o_configurator_show">
+                        <span>I want </span>
+                        <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
+                            t-on-focusout="this.onDropdownFocusout">
+                            <button id="selectTypeToggle"
+                                    class="o_btn_reset w-100 px-2"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="true"
+                                    aria-label="What type of website?"
+                                    aria-controls="selectTypeMenu">
+                                <span class="d-flex align-items-center">
+                                    <i class="text-primary" t-if="this.state.selectedType">
+                                        <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
+                                    </i>
+                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                </span>
+                            </button>
+                            <div id="selectTypeMenu"
+                                t-attf-class="dropdown-menu border-0 shadow-lg {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
+                                role="menu"
+                                aria-labelledby="selectTypeToggle">
+                                <t t-foreach="this.state.getWebsiteTypes()" t-as="type" t-key="type.name">
+                                    <button t-att-title="type.name"
+                                            t-on-click="() => this.selectWebsiteType(type.id)"
+                                            class="dropdown-item o_change_website_type"
+                                            role="menuitem"
+                                            t-custom-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
+                                        <t t-out="type.label"/>
+                                    </button>
                                 </t>
-                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
-                            </span>
-                        </button>
-                        <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
-                            <t t-foreach="this.state.getWebsitePurpose()" t-as="type" t-key="type.id">
-                                <button t-on-click="() => this.selectWebsitePurpose(type.id)"
-                                        class="dropdown-item o_change_website_purpose"
-                                        role="menuitem"
-                                        t-custom-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
-                                    <t t-out="type.label"/>
-                                </button>
-                            </t>
+                            </div>
+                        </div>
+                        <span t-if="this.state.selectedType" class="me-2 o_configurator_show"> for my</span>
+                    </div>
+                    <div t-att-class="{ 'invisible': !this.state.selectedType }" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
+                        <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
+                        <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
+                            <AutoComplete
+                                placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
+                                value="this.state.selectedIndustry?.label ?? ''"
+                                sources="this.sources"
+                                onInput.bind="this.onAutocompleteInput"
+                                inputDebounceDelay="100"
+                                menuPositionOptions="{ position: 'bottom-fit' }"
+                                menuCssClass="'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown'"
+                                selectOnBlur="true"
+                                autoSelect="true"
+                            />
+                        </label>
+                        <span> business</span>
+                        <span t-if="this.state.selectedIndustry" class="o_configurator_show">,</span>
+                    </div>
+                    <div t-att-class="{ 'invisible': !this.state.selectedType or !this.state.selectedIndustry }" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
+                        <span>with the main objective to </span>
+                        <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{this.state.selectedPurpose ? 'o_step_completed' : 'o_step_todo'}}"
+                            t-on-focusout="this.onDropdownFocusout">
+                            <button id="selectPurposeToggle"
+                                    class="o_btn_reset w-100 px-2"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="true"
+                                    aria-label="To what purpose?"
+                                    aria-controls="selectPurposeMenu">
+                                <span class="d-flex align-items-center">
+                                    <t t-if="this.state.selectedPurpose">
+                                        <t t-out="this.state.getSelectedPurpose(this.state.selectedPurpose).label"/>
+                                    </t>
+                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                </span>
+                            </button>
+                            <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
+                                <t t-foreach="this.state.getWebsitePurpose()" t-as="type" t-key="type.id">
+                                    <button t-on-click="() => this.selectWebsitePurpose(type.id)"
+                                            class="dropdown-item o_change_website_purpose"
+                                            role="menuitem"
+                                            t-custom-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
+                                        <t t-out="type.label"/>
+                                    </button>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -283,6 +272,38 @@
                             </t>
                         </div>
                     </t>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.Configurator.SetupStyleScreen">
+    <div class="o_configurator_screen o_setup_style_screen h-100 d-flex flex-column overflow-hidden">
+        <div class="o_configurator_screen_content h-100 overflow-hidden">
+            <div class="container-fluid p-0 h-100">
+                <div class="row g-0 h-100">
+                    <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden">
+                        <div class="flex-grow-1 overflow-auto pb-4">
+                            <div class="o_configurator_typing_text ps-3 ps-xl-5 pt-3 mb-4">
+                                Set up your <b>style</b>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 p-3 border-top bg-white flex-shrink-0 o_setup_style_screen_buttons">
+                            <button type="button" class="btn btn-light btn-lg flex-fill" t-on-click="this.changeTheme">
+                                <i class="oi oi-chevron-left" role="img"/>
+                                Change Theme
+                            </button>
+                            <button type="button" class="btn btn-primary btn-lg flex-fill" t-on-click="this.startBuilding">
+                                Start Building
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-7 col-xl-8 col-xxl-9 h-100 bg-100">
+                        <div class="p-4 h-100">
+                            <div class="border rounded bg-white h-100"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

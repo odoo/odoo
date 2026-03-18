@@ -94,7 +94,7 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 class TestConfigurator(TestConfiguratorCommon):
 
     def test_configurator_params_step(self):
-        self.start_tour('/website/configurator/3', 'configurator_params_step', login='admin')
+        self.start_tour('/website/configurator/2', 'configurator_params_step', login='admin')
 
     def test_configurator_page_creation(self):
         website = self.env['website'].create({
