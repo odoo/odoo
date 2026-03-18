@@ -65,6 +65,6 @@ class L10nPlAccountPayment(models.Model):
 
             partner_bank = pay.partner_bank_id or partner.bank_ids[:1]
             if partner_bank:
-                pay.l10n_pl_verification_id = bank2verification.get(partner_bank.sanitized_account_number)
+                pay.l10n_pl_verification_id = bank2verification.get(partner_bank.account_number)
             else:
                 pay.l10n_pl_verification_id = partner2verification.get(partner.vat)
