@@ -74,6 +74,7 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     static template = "web.Many2ManyTagsAvatarFieldPopover";
     static props = {
         ...Many2ManyTagsAvatarField.props,
+        specification: Object,
         close: { type: Function },
     };
 
@@ -124,7 +125,7 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     }
 
     get popoverProps() {
-        const props = { ...this.props };
+        const props = { ...this.props, specification: this.specification };
         delete props.isEditable;
         delete props.relation;
         return props;
