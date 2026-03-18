@@ -2,7 +2,6 @@ import { addSectionFromProductCatalog } from "@account/js/tours/tour_utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('sale_catalog', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             content: "Create a new SO",
@@ -32,6 +31,9 @@ registry.category("web_tour.tours").add('sale_catalog', {
             content: "Type 'Restricted' into the search bar",
             trigger: 'input.o_searchview_input',
             run: "edit Restricted",
+        },
+        {
+            trigger: '.fst-italic.text-primary:contains("Restricted"):first',
         },
         {
             content: "Search for the product",
