@@ -193,7 +193,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'partner_bank_id': trusted_bank.id,
         }])
         self.assertEqual(
-            set(supplier.bank_ids.mapped('sanitized_account_number')),
+            set(supplier.bank_ids.mapped('account_number')),
             {'BE00001', 'BE00002', 'BE00003'},
         )
         self.assertEqual(supplier.bank_ids.filtered('allow_out_payment'), trusted_bank)
