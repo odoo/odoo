@@ -291,7 +291,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         """
         # Create a Bank Account for the Company
         bank_acc = self.env['res.partner.bank'].create({
-            'account_number': '12 3456 7890 0000 0000 1234 5678',
+            'formatted_account_number': '12 3456 7890 0000 0000 1234 5678',
             'partner_id': self.partner_pl.id,
             'bank_name': "Test Bank PL",
             'allow_out_payment': True,

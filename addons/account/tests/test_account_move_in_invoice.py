@@ -1144,7 +1144,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.invoice.action_post()
 
         bank1 = self.env['res.partner.bank'].create({
-            'account_number': 'BE43798822936101',
+            'formatted_account_number': 'BE43798822936101',
             'partner_id': self.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })

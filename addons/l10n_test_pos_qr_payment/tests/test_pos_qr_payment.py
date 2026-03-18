@@ -15,7 +15,7 @@ class TestUiSEPA(TestPosQrCommon):
 
         # Set Bank Account on journal
         cls.bank_account = cls.env['res.partner.bank'].create({
-            'account_number': 'BE15001559627230',
+            'formatted_account_number': 'BE15001559627230',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
@@ -40,7 +40,7 @@ class TestUiSEPA(TestPosQrCommon):
         # Set non sepa bank account to make the test failed
         self.bank_account.allow_out_payment = False
         self.bank_account.write({
-            'account_number': 'SA4420000001234567891234',
+            'formatted_account_number': 'SA4420000001234567891234',
             'allow_out_payment': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -53,7 +53,7 @@ class TestUiSEPA(TestPosQrCommon):
 
         # Set info that were wrong in test_01
         self.bank_account.write({
-            'account_number': 'BE15001559627230',
+            'formatted_account_number': 'BE15001559627230',
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
@@ -77,7 +77,7 @@ class TestUiCH(TestPosQrCommon):
 
         # Set Bank Account on journal
         cls.bank_account = cls.env['res.partner.bank'].create({
-            'account_number': 'CH15 3881 5158 3845 3843 7',
+            'formatted_account_number': 'CH15 3881 5158 3845 3843 7',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
@@ -137,7 +137,7 @@ class TestUiHK(TestPosQrCommon):
 
         # Set Bank Account on journal
         cls.bank_account = cls.env['res.partner.bank'].create({
-            'account_number': '123-123456-123',
+            'formatted_account_number': '123-123456-123',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
@@ -192,7 +192,7 @@ class TestUIBR(TestPosQrCommon):
 
         # Set Bank Account on journal
         cls.bank_account = cls.env["res.partner.bank"].create({
-            "account_number": "123456789012345678",
+            "formatted_account_number": "123456789012345678",
             "partner_id": cls.company_data["company"].partner_id.id,
         })
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})

@@ -55,6 +55,12 @@ class ResPartnerBank(models.Model):
                 pass
         return super().retrieve_account_type(account_number)
 
+    @api.depends('account_number')
+    def _compute_formatted_account_number(self):
+        # EXTENDS base res.partner.bank
+        for account in self:
+            account.formatted_account_number = format_account_number(self.env, account.account_number)
+
     @api.constrains('journal_id')
     def _check_journal_id(self):
         for bank in self:
@@ -94,7 +100,7 @@ class ResPartnerBank(models.Model):
             duplicate_record = [x for x in duplicate_record if x]
             bank.duplicate_bank_partner_ids = self.env['res.partner'].browse(duplicate_record) if duplicate_record else False
 
-    @api.depends('allow_out_payment', 'account_type', 'sanitized_account_number', 'partner_id.country_id', 'country_id')
+    @api.depends('allow_out_payment', 'account_type', 'account_number', 'partner_id.country_id', 'country_id')
     def _compute_phishing_warnings(self):
         warnings_common_data = {
             'level': 'danger',
@@ -106,14 +112,14 @@ class ResPartnerBank(models.Model):
             },
         }
         code_to_country_id = dict(self.env['res.country']._read_group(
-            domain=[('code', 'in', iban_accounts.mapped(lambda account: account.sanitized_account_number[:2]))],
+            domain=[('code', 'in', iban_accounts.mapped(lambda account: account.account_number[:2]))],
             groupby=['code'],
             aggregates=['id:recordset'],
         )) if (iban_accounts := self.filtered(lambda account: account.account_type == 'iban')) else {}
         for account in self:
             warnings = {}
-            if not account.allow_out_payment and account.sanitized_account_number:
-                if account.account_type == 'iban' and (bank_institution_code := account.sanitized_account_number[4:7]) and (money_transfer_service := account._get_money_transfer_services().get(bank_institution_code)):
+            if not account.allow_out_payment and account.account_number:
+                if account.account_type == 'iban' and (bank_institution_code := account.account_number[4:7]) and (money_transfer_service := account._get_money_transfer_services().get(bank_institution_code)):
                     warnings['service_not_bank'] = {
                         'message': self.env._(
                             "Phishing risk: %(money_transfer_service)s is a money transfer service and not a bank. Double check if the account can be trusted by calling the vendor.",
@@ -123,7 +129,7 @@ class ResPartnerBank(models.Model):
                     }
 
                 labels_and_countries = [
-                    (self.env._("IBAN"), account.account_type == 'iban' and code_to_country_id.get(account.sanitized_account_number[:2])),
+                    (self.env._("IBAN"), account.account_type == 'iban' and code_to_country_id.get(account.account_number[:2])),
                     (self.env._("CLABE"), account.account_type == 'clabe' and self.env.ref('base.mx')),
                     (self.env._("Account Holder"), account.partner_id.country_id),
                     (self.env._("Bank Account"), account.country_id),
@@ -159,7 +165,7 @@ class ResPartnerBank(models.Model):
             '974': 'PPS EU SA',
         }
 
-    @api.depends('account_number')
+    @api.depends('formatted_account_number')
     @api.depends_context('uid')
     def _compute_user_has_group_validate_bank_account(self):
         for bank in self:
@@ -329,13 +335,13 @@ class ResPartnerBank(models.Model):
             vals['allow_out_payment'] = False
 
         for vals in vals_list:
-            if vals.get('account_number'):
-                vals['account_number'] = format_account_number(self.env, vals['account_number'])
+            if vals.get('formatted_account_number'):
+                vals['formatted_account_number'] = format_account_number(self.env, vals['formatted_account_number'])
 
-            if (partner_id := vals.get('partner_id')) and (account_number := vals.get('account_number')):
-                archived_res_partner_bank = self.env['res.partner.bank'].search([('active', '=', False), ('partner_id', '=', partner_id), ('account_number', '=', account_number)])
+            if (partner_id := vals.get('partner_id')) and (formatted_account_number := vals.get('formatted_account_number')):
+                archived_res_partner_bank = self.env['res.partner.bank'].search([('active', '=', False), ('partner_id', '=', partner_id), ('account_number', '=', formatted_account_number)])
                 if archived_res_partner_bank:
-                    raise UserError(_("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=account_number, partner=archived_res_partner_bank.partner_id.name))
+                    raise UserError(_("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=formatted_account_number, partner=archived_res_partner_bank.partner_id.name))
 
         accounts = super().create(vals_list)
         for account, trust in zip(accounts, to_trust):
@@ -350,8 +356,8 @@ class ResPartnerBank(models.Model):
 
     def write(self, vals):
         # EXTENDS base res.partner.bank
-        if vals.get('account_number'):
-            vals['account_number'] = format_account_number(self.env, vals['account_number'])
+        if vals.get('formatted_account_number'):
+            vals['formatted_account_number'] = format_account_number(self.env, vals['formatted_account_number'])
 
         # track and log changes on partner_id
         track_fnames = [fname for fname in self._track_get_fields() if fname in vals]
@@ -373,7 +379,7 @@ class ResPartnerBank(models.Model):
             # If we were on a trusted account, we only allow changes if the account is moving to untrusted.
             should_allow_changes = self.env.su or ('allow_out_payment' in vals and vals['allow_out_payment'] is False)
 
-        lock_fields = {'account_number', 'sanitized_account_number', 'partner_id', 'account_type'}
+        lock_fields = {'account_number', 'formatted_account_number', 'partner_id', 'account_type'}
         if not should_allow_changes and any(
             account[fname] != account._fields[fname].convert_to_record(
                 account._fields[fname].convert_to_cache(vals[fname], account),
@@ -403,5 +409,9 @@ class ResPartnerBank(models.Model):
         # When create & edit, `name` could be used to pass (in the context) the
         # value input by the user. However, we want to set the default value of
         # `account_number` variable instead.
-        default_account_number = self.env.context.get('default_account_number', False) or self.env.context.get('default_name', False)
+        default_account_number = (
+            self.env.context.get('default_formatted_account_number', False)
+            or self.env.context.get('default_account_number', False)
+            or self.env.context.get('default_name', False)
+        )
         return super(ResPartnerBank, self.with_context(default_account_number=default_account_number)).default_get(fields)

@@ -22,14 +22,14 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
         })
         cls.bank_acc_qriban = cls.env["res.partner.bank"].create(
             {
-                "account_number": QR_IBAN,
+                "formatted_account_number": QR_IBAN,
                 "bank_name": "Alternative Bank Schweiz AG",
                 "bank_bic": "ALSWCH21XXX",
                 "partner_id": cls.partner.id,
             }
         )
         cls.qr_bank_account = cls.env['res.partner.bank'].create({
-            'account_number': "CH4431999123000889012",
+            'formatted_account_number': "CH4431999123000889012",
             'partner_id': cls.partner.id,
         })
 

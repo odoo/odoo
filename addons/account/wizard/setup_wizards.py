@@ -115,10 +115,10 @@ class AccountSetupBankManualConfig(models.TransientModel):
             ('id', '!=', self.default_linked_journal_id(journal_type)),
         ])
 
-    @api.onchange('account_number')
+    @api.onchange('formatted_account_number')
     def _onchange_account_number(self):
         for record in self:
-            record.new_journal_name = record.account_number
+            record.new_journal_name = record.formatted_account_number
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -128,7 +128,7 @@ class AccountSetupBankManualConfig(models.TransientModel):
         """
         for vals in vals_list:
             vals['partner_id'] = self.env.company.partner_id.id
-            vals['new_journal_name'] = vals['account_number']
+            vals['new_journal_name'] = vals['formatted_account_number']
 
         return super().create(vals_list)
 

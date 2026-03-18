@@ -22,7 +22,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'account_number': 'BE15001559627230', 'allow_out_payment': True})],
+            'bank_ids': [(0, 0, {'formatted_account_number': 'BE15001559627230', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -35,7 +35,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'account_number': 'BE90735788866632', 'allow_out_payment': True})],
+            'bank_ids': [(0, 0, {'formatted_account_number': 'BE90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -90,7 +90,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         })
 
         cls.env['res.partner.bank'].sudo().create({
-            'account_number': 'BE15001559627230',
+            'formatted_account_number': 'BE15001559627230',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
 
@@ -289,7 +289,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         and imported in the xml file
         """
         acc_bank = self.env['res.partner.bank'].create({
-            'account_number': 'BE15001559627231',
+            'formatted_account_number': 'BE15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })
@@ -356,7 +356,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
     def test_import_invoice_xml_open_peppol_examples(self):
         self.env['res.partner.bank'].sudo().create({
-            'account_number': 'IBAN32423940',
+            'formatted_account_number': 'IBAN32423940',
             'partner_id': self.company_data['company'].partner_id.id,
         })
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples

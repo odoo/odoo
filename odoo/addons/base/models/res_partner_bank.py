@@ -25,11 +25,13 @@ class ResPartnerBank(models.Model):
         help="Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred from the bank account number.",
         compute='_compute_account_type',
     )
-    account_number = fields.Char('Account Number', required=True, search='_search_account_number')
-    sanitized_account_number = fields.Char(
-        string="Sanitized Account Number",
-        compute='_compute_sanitized_account_number',
-        readonly=True, store=True,
+    account_number = fields.Char(string='Account Number', search='_search_account_number')
+    formatted_account_number = fields.Char(
+        string='Formatted Account Number',
+        compute='_compute_formatted_account_number',
+        inverse='_inverse_formatted_account_number',
+        required=True,
+        search='_search_account_number',
     )
     holder_name = fields.Char(
         string="Holder Name",
@@ -85,7 +87,7 @@ class ResPartnerBank(models.Model):
     color = fields.Integer(compute='_compute_color')
 
     _unique_number = models.Constraint(
-        'unique(sanitized_account_number, partner_id)',
+        'unique(account_number, partner_id)',
         "The combination Account Number/Partner must be unique.",
     )
 
@@ -110,6 +112,22 @@ class ResPartnerBank(models.Model):
         self.ensure_one()
         return self.clearing_label_id.country_code == country_code and self.clearing_number
 
+    def _inverse_formatted_account_number(self):
+        for account in self.with_context(skip_account_number_sanitization=True):
+            account.account_number = sanitize_account_number(account.formatted_account_number)
+
+    @api.depends('account_number')
+    def _compute_formatted_account_number(self):
+        for account in self:
+            account.formatted_account_number = account.account_number
+
+    def _search_account_number(self, operator, value):
+        if operator in ('in', 'not in'):
+            value = [sanitize_account_number(i) for i in value]
+        else:
+            value = sanitize_account_number(value)
+        return [('account_number', operator, value)]
+
     @api.depends('country_id')
     def _compute_clearing_label_id(self):
         country_to_clearing_label = dict(self.env['clearing.label']._read_group(
@@ -129,11 +147,6 @@ class ResPartnerBank(models.Model):
         for account in self:
             account.show_clearing_number = account.country_id not in excluded_countries
 
-    @api.depends('account_number')
-    def _compute_sanitized_account_number(self):
-        for account in self:
-            account.sanitized_account_number = sanitize_account_number(account.account_number)
-
     @api.depends('partner_id.country_id', 'company_id.country_id')
     def _compute_country_id(self):
         for account in self:
@@ -143,23 +156,16 @@ class ResPartnerBank(models.Model):
     def open_linked_partner_id(self):
         return self.partner_id._get_records_action()
 
-    def _search_account_number(self, operator, value):
-        if operator in ('in', 'not in'):
-            value = [sanitize_account_number(i) for i in value]
-        else:
-            value = sanitize_account_number(value)
-        return [('sanitized_account_number', operator, value)]
-
     @api.model
     def retrieve_account_type(self, account_number):
         """ To be overridden by subclasses in order to support other account_types.
         """
         return 'bank'
 
-    @api.depends('account_number')
+    @api.depends('formatted_account_number')
     def _compute_account_type(self):
         for account in self:
-            account.account_type = account.retrieve_account_type(account.account_number)
+            account.account_type = account.retrieve_account_type(account.formatted_account_number)
 
     @api.depends('partner_id')
     def _compute_account_holder_name(self):
@@ -167,10 +173,10 @@ class ResPartnerBank(models.Model):
             if not account.holder_name:
                 account.holder_name = account.partner_id.name
 
-    @api.depends('account_number', 'bank_name')
+    @api.depends('formatted_account_number', 'bank_name')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = f'{account.account_number} - {account.bank_name}' if account.bank_name else account.account_number
+            account.display_name = f'{account.formatted_account_number} - {account.bank_name}' if account.bank_name else account.formatted_account_number
 
     @api.depends('allow_out_payment')
     def _compute_color(self):
@@ -178,10 +184,8 @@ class ResPartnerBank(models.Model):
             account.color = 10 if account.allow_out_payment else 1
 
     def _sanitize_vals(self, vals):
-        if 'sanitized_account_number' in vals:  # do not allow to write on sanitized directly
-            vals['account_number'] = vals.pop('sanitized_account_number')
-        if 'account_number' in vals:
-            vals['sanitized_account_number'] = sanitize_account_number(vals['account_number'])
+        if vals.get('account_number') and not self.env.context.get('skip_account_number_sanitization'):
+            vals['account_number'] = sanitize_account_number(vals['account_number'])
         if vals.get('bank_bic'):
             vals['bank_bic'] = vals['bank_bic'].upper()
 

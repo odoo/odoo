@@ -260,9 +260,9 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         # same kind of search from another model
         Bank = self.env['res.partner.bank'].with_user(self.user_demo)
         bank_top, bank_med, bank_bot = Bank.create([
-            {'account_number': '1', 'partner_id': top.id},
-            {'account_number': '2', 'partner_id': med.id},
-            {'account_number': '3', 'partner_id': bot.id},
+            {'formatted_account_number': '1', 'partner_id': top.id},
+            {'formatted_account_number': '2', 'partner_id': med.id},
+            {'formatted_account_number': '3', 'partner_id': bot.id},
         ])
 
         self.assertEqual(Bank.search([('partner_id', 'in', accessible.ids)]), bank_top + bank_bot)
@@ -1486,9 +1486,9 @@ class TestBypassAccess(TransactionExpressionCase):
         p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'industry_id': industries[0].id, 'state_id': states[0].id})
         p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'industry_id': industries[1].id, 'state_id': states[1].id})
         p_ba = partner_obj.create({'name': 'test__BA', 'parent_id': p_b.id, 'industry_id': industries[0].id, 'state_id': states[0].id})
-        b_aa = bank_obj.create({'account_number': '123', 'partner_id': p_aa.id})
-        b_ab = bank_obj.create({'account_number': '456', 'partner_id': p_ab.id})
-        b_ba = bank_obj.create({'account_number': '789', 'partner_id': p_ba.id})
+        b_aa = bank_obj.create({'formatted_account_number': '123', 'partner_id': p_aa.id})
+        b_ab = bank_obj.create({'formatted_account_number': '456', 'partner_id': p_ab.id})
+        b_ba = bank_obj.create({'formatted_account_number': '789', 'partner_id': p_ba.id})
         p_a.category_id = categories[0]
         p_b.category_id = categories[1]
 
@@ -1499,15 +1499,15 @@ class TestBypassAccess(TransactionExpressionCase):
         name_test = '12'
 
         # Do: one2many without bypass_search_access
-        partners = self._search(partner_obj, [('bank_ids.sanitized_account_number', 'like', name_test)])
+        partners = self._search(partner_obj, [('bank_ids.account_number', 'like', name_test)])
         self.assertEqual(partners, p_aa,
-            "bypass_search_access off: ('bank_ids.sanitized_account_number', 'like', '..'): incorrect result")
+            "bypass_search_access off: ('bank_ids.account_number', 'like', '..'): incorrect result")
 
-        partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.sanitized_account_number', 'like', name_test)])
+        partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.account_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
-            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_account_number', 'like', '..'): incorrect result")
+            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.account_number', 'like', '..'): incorrect result")
         self.assertIn(p_c, partners,
-            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_account_number', 'like', '..'): incorrect result")
+            "bypass_search_access off: '|', ('name', 'like', 'C'), ('bank_ids.account_number', 'like', '..'): incorrect result")
 
         # Do: cascaded one2many without bypass_search_access
         partners = self._search(partner_obj, [('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
@@ -1516,15 +1516,15 @@ class TestBypassAccess(TransactionExpressionCase):
 
         # Do: one2many with bypass_search_access
         patch_bypass_search_access(partner_obj, 'bank_ids', True)
-        partners = self._search(partner_obj, [('bank_ids.sanitized_account_number', 'like', name_test)])
+        partners = self._search(partner_obj, [('bank_ids.account_number', 'like', name_test)])
         self.assertEqual(partners, p_aa,
-            "bypass_search_access on: ('bank_ids.sanitized_account_number', 'like', '..') incorrect result")
+            "bypass_search_access on: ('bank_ids.account_number', 'like', '..') incorrect result")
 
-        partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.sanitized_account_number', 'like', name_test)])
+        partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.account_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
-            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_account_number', 'like', '..'): incorrect result")
+            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.account_number', 'like', '..'): incorrect result")
         self.assertIn(p_c, partners,
-            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_account_number', 'like', '..'): incorrect result")
+            "bypass_search_access on: '|', ('name', 'like', 'C'), ('bank_ids.account_number', 'like', '..'): incorrect result")
 
         # Do: one2many with bypass_search_access, test final leaf is an id
         bank_ids = [b_aa.id, b_ab.id]
@@ -1584,7 +1584,7 @@ class TestBypassAccess(TransactionExpressionCase):
         patch_bypass_search_access(partner_obj, 'child_ids', True)
         patch_bypass_search_access(partner_obj, 'bank_ids', True)
         patch_domain(partner_obj, 'child_ids', lambda self: ['!', ('name', '=', self._name)])
-        patch_domain(partner_obj, 'bank_ids', [('sanitized_account_number', 'like', '2')])
+        patch_domain(partner_obj, 'bank_ids', [('account_number', 'like', '2')])
 
         # Do: 2 cascaded one2many with bypass_search_access, test final leaf is an id
         partners = self._search(partner_obj, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
@@ -2258,16 +2258,16 @@ class TestOne2many(TransactionCase):
         self.partner = self.Partner.create({
             'name': 'Foo',
             'bank_ids': [
-                Command.create({'account_number': '123'}),
-                Command.create({'account_number': '456'}),
-                Command.create({'account_number': '789'}),
+                Command.create({'formatted_account_number': '123'}),
+                Command.create({'formatted_account_number': '456'}),
+                Command.create({'formatted_account_number': '789'}),
             ],
         })
 
     def test_regular(self):
         self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
-        self.Partner.search([('bank_ids.sanitized_account_number', 'like', '12')])
-        self.Partner.search([('child_ids.bank_ids.sanitized_account_number', 'like', '12')])
+        self.Partner.search([('bank_ids.account_number', 'like', '12')])
+        self.Partner.search([('child_ids.bank_ids.account_number', 'like', '12')])
 
         with self.assertQueries(['''
             SELECT "res_partner"."id"
@@ -2287,11 +2287,11 @@ class TestOne2many(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "res_partner_bank"."partner_id" AS __inverse
                 FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                WHERE "res_partner_bank"."account_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
         ''']):
-            self.Partner.search([('bank_ids.sanitized_account_number', 'like', '12')])
+            self.Partner.search([('bank_ids.account_number', 'like', '12')])
 
         with self.assertQueries(['''
             SELECT "res_partner"."id"
@@ -2304,21 +2304,21 @@ class TestOne2many(TransactionCase):
                     AND EXISTS (SELECT FROM (
                         SELECT "res_partner_bank"."partner_id" AS __inverse
                         FROM "res_partner_bank"
-                        WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                        WHERE "res_partner_bank"."account_number" LIKE %s
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND "res_partner"."parent_id" IS NOT NULL
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
         ''']):
-            self.Partner.search([('child_ids.bank_ids.sanitized_account_number', 'like', '12')])
+            self.Partner.search([('child_ids.bank_ids.account_number', 'like', '12')])
 
     def testbypass_search_access(self):
         self.patch(self.Partner._fields['bank_ids'], 'bypass_search_access', True)
         self.patch(self.Partner._fields['child_ids'], 'bypass_search_access', True)
         self.Partner.search([('bank_ids', 'in', self.partner.bank_ids.ids)])
-        self.Partner.search([('bank_ids.sanitized_account_number', 'like', '12')])
-        self.Partner.search([('child_ids.bank_ids.sanitized_account_number', 'like', '12')])
+        self.Partner.search([('bank_ids.account_number', 'like', '12')])
+        self.Partner.search([('child_ids.bank_ids.account_number', 'like', '12')])
 
         with self.assertQueries(['''
             SELECT "res_partner"."id"
@@ -2338,11 +2338,11 @@ class TestOne2many(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "res_partner_bank"."partner_id" AS __inverse
                 FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                WHERE "res_partner_bank"."account_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
         ''']):
-            self.Partner.search([('bank_ids.sanitized_account_number', 'like', '12')])
+            self.Partner.search([('bank_ids.account_number', 'like', '12')])
 
         with self.assertQueries(['''
             SELECT "res_partner"."id"
@@ -2350,18 +2350,18 @@ class TestOne2many(TransactionCase):
             WHERE (EXISTS (SELECT FROM (
                 SELECT "res_partner_bank"."partner_id" AS __inverse
                 FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                WHERE "res_partner_bank"."account_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             AND EXISTS (SELECT FROM (
                 SELECT "res_partner_bank"."partner_id" AS __inverse
                 FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                WHERE "res_partner_bank"."account_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id"))
             ORDER BY ...
         ''']):
             self.Partner.search([
-                ('bank_ids.sanitized_account_number', 'like', '12'),
-                ('bank_ids.sanitized_account_number', 'like', '45'),
+                ('bank_ids.account_number', 'like', '12'),
+                ('bank_ids.account_number', 'like', '45'),
             ])
 
         with self.assertQueries(['''
@@ -2375,18 +2375,18 @@ class TestOne2many(TransactionCase):
                     AND EXISTS (SELECT FROM (
                         SELECT "res_partner_bank"."partner_id" AS __inverse
                         FROM "res_partner_bank"
-                        WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                        WHERE "res_partner_bank"."account_number" LIKE %s
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND "res_partner"."parent_id" IS NOT NULL
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
         ''']):
-            self.Partner.search([('child_ids.bank_ids.sanitized_account_number', 'like', '12')])
+            self.Partner.search([('child_ids.bank_ids.account_number', 'like', '12')])
 
         # check domains on one2many fields
         self.patch(self.Partner._fields['bank_ids'], 'domain',
-                   [('sanitized_account_number', 'like', '2')])
+                   [('account_number', 'like', '2')])
         self.patch(self.Partner._fields['child_ids'], 'domain',
                    lambda self: ['!', ('name', '=', self._name)])
 
@@ -2401,8 +2401,8 @@ class TestOne2many(TransactionCase):
                         SELECT "res_partner_bank"."partner_id" AS __inverse
                         FROM "res_partner_bank"
                         WHERE (
-                            "res_partner_bank"."id" IN %s
-                            AND "res_partner_bank"."sanitized_account_number" LIKE %s
+                            "res_partner_bank"."account_number" LIKE %s
+                            AND "res_partner_bank"."id" IN %s
                         )
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND ("res_partner"."name" NOT IN %s OR "res_partner"."name" IS NULL)
@@ -2448,7 +2448,7 @@ class TestOne2many(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "res_partner_bank"."partner_id" AS __inverse
                 FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
+                WHERE "res_partner_bank"."account_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
         ''']):

@@ -20,7 +20,7 @@ class TestDDT(TestSaleCommon):
                         'city': 'Cremona',
                         })
         cls.env['res.partner.bank'].create({
-            'account_number': 'IT60X0542811101000000123456',
+            'formatted_account_number': 'IT60X0542811101000000123456',
             'partner_id': cls.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })

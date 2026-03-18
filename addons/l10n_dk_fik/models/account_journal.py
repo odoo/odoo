@@ -27,7 +27,7 @@ class AccountJournal(models.Model):
         readonly=False,
     )
 
-    @api.depends('invoice_reference_model', 'company_id.bank_ids.account_number')
+    @api.depends('invoice_reference_model', 'company_id.bank_ids.formatted_account_number')
     def _compute_l10n_dk_fik_creditor_number(self):
         for journal in self:
             if journal.invoice_reference_model not in L10N_DK_FIK_MODELS:

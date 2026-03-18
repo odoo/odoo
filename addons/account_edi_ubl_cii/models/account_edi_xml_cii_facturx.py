@@ -52,8 +52,8 @@ class AccountEdiXmlCii(models.AbstractModel):
                     vals['record'], 'partner_bank_id'
                 ),
                 'seller_payment_instructions_2': self._check_required_fields(
-                    vals['record']['partner_bank_id'], 'sanitized_account_number',
-                    _("The field 'Sanitized Account Number' is required on the Recipient Bank.")
+                    vals['record']['partner_bank_id'], 'account_number',
+                    _("The field 'Account Number' is required on the Recipient Bank."),
                 ),
             })
         constraints.update({

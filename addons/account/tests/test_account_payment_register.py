@@ -561,12 +561,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
     def test_register_payment_multiple_batch_grouped_with_credit_note(self):
         ''' Do not batch payments if multiple partner_bank_id '''
         bank1 = self.env['res.partner.bank'].create({
-            'account_number': 'BE43798822936101',
+            'formatted_account_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
             'allow_out_payment': True,
         })
         bank2 = self.env['res.partner.bank'].create({
-            'account_number': 'BE85812541345906',
+            'formatted_account_number': 'BE85812541345906',
             'partner_id': self.partner_a.id,
             'allow_out_payment': True,
         })
@@ -709,7 +709,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         '''
         partner_b = self.partner_b.copy({'property_account_position_id': False})
         partner_b_bank_account = self.env['res.partner.bank'].create({
-            'account_number': "123454321",
+            'formatted_account_number': "123454321",
             'partner_id': partner_b.id,
         })
         invoice_1 = self.in_invoice_1

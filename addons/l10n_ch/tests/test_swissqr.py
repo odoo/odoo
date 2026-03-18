@@ -66,7 +66,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         """ Generates a test res.partner.bank. """
         return self.env['res.partner.bank'].create(
             {
-                'account_number': number,
+                'formatted_account_number': number,
                 'partner_id': self.env.user.company_id.partner_id.id,
                 'allow_out_payment': True,
             }
@@ -98,7 +98,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "SPC\n"
             "0200\n"
             "1\n"
-            f"{invoice.partner_bank_id.sanitized_account_number}\n"  # IBAN
+            f"{invoice.partner_bank_id.account_number}\n"  # IBAN
             "S\n"
             "company_1_data\n"
             "Route de Berne\n"

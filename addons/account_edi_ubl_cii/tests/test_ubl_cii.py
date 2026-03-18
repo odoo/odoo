@@ -136,7 +136,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         company.phone = '+33499999999'
         company.zip = '78440'
         company.partner_id.bank_ids = [Command.create({
-            'account_number': '999999',
+            'formatted_account_number': '999999',
             'partner_id': company.partner_id.id,
             'holder_name': 'The Chosen One',
             'allow_out_payment': True,
@@ -442,7 +442,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
     def test_import_bill(self):
         self.env['res.partner.bank'].sudo().create({
-            'account_number': 'Test account',
+            'formatted_account_number': 'Test account',
             'partner_id': self.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })
@@ -592,7 +592,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
     def test_payment_means_code_in_facturx_xml(self):
         partner_bank = self.env['res.partner.bank'].create({
-                'account_number': 'BE15001559627230',
+                'formatted_account_number': 'BE15001559627230',
                 'partner_id': self.partner_a.id,
                 'bank_name': 'ING',
                 'bank_bic': 'BBRUBEBB',
@@ -697,7 +697,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         partner = self.partner_a
         partner.peppol_endpoint = '00000000001020304050'
         partner.country_id = self.env.ref('base.nl').id
-        partner.bank_ids = [Command.create({'account_number': "0123456789", 'allow_out_payment': True})]
+        partner.bank_ids = [Command.create({'formatted_account_number': "0123456789", 'allow_out_payment': True})]
         invoice = self.env['account.move'].create({
             'partner_id': partner.id,
             'move_type': 'out_invoice',
@@ -845,7 +845,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         acc_number = '1234567890'
         partner_bank = self.env['res.partner.bank'].create({
             'active': False,
-            'account_number': acc_number,
+            'formatted_account_number': acc_number,
             'partner_id': self.partner_a.id
         })
         invoice = self.env['account.move'].create({
