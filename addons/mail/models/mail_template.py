@@ -6,7 +6,7 @@ from ast import literal_eval
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
-from odoo.tools import BinaryBytes
+from odoo.tools import BinaryBytes, email_normalize, unique
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
@@ -482,20 +482,31 @@ class MailTemplate(models.Model):
         if find_or_create_partners:
             email_to_res_ids = {}
             records_emails = {}
+            emails_cc_by_res_id = {}
             for record in Model.browse(res_ids):
                 record_values = render_results.setdefault(record.id, {})
-                mails = tools.email_split(record_values.pop('email_to', '')) + \
-                        tools.email_split(record_values.pop('email_cc', ''))
+                emails_cc = tools.email_split(record_values.pop('email_cc', ''))
+                mails = tools.email_split(record_values.pop('email_to', '')) + emails_cc
                 records_emails[record] = mails
                 for mail in mails:
                     email_to_res_ids.setdefault(mail, []).append(record.id)
+                emails_cc_by_res_id[record.id] = [email_normalize(e) for e in emails_cc]
 
             if hasattr(Model, '_partner_find_from_emails'):
                 records_partners = Model.browse(res_ids)._partner_find_from_emails(records_emails)
             else:
                 records_partners = self.env['mail.thread']._partner_find_from_emails(records_emails)
+            all_partner_ids = list(unique(pid for p in records_partners.values() for pid in p.ids))
+            partner_by_email = {p.email_normalized: p for p in self.env['res.partner'].browse(all_partner_ids)}
             for res_id, partners in records_partners.items():
-                render_results[res_id].setdefault('partner_ids', []).extend(partners.ids)
+                emails_cc = emails_cc_by_res_id[res_id]
+                partners_cc_ids = [partner.id
+                                   for email in emails_cc
+                                   if (partner := partner_by_email[email]) in partners]
+                render_results[res_id].setdefault('partner_cc_ids', []).extend(partners_cc_ids)
+                partners_cc_ids_set = set(partners_cc_ids)
+                render_results[res_id].setdefault('partner_ids', []).extend(
+                    [partner.id for partner in partners if partner.id not in partners_cc_ids_set])
 
         # update 'partner_to' rendered value to 'partner_ids'
         all_partner_to = {
@@ -676,6 +687,17 @@ class MailTemplate(models.Model):
                 return None
         return [pid for pto in partner_to if (pid := to_id(pto))]
 
+    @api.model
+    def _get_adapted_rendered_no_partner_cc(self, rendered):
+        """ Convert rendered values from _generate_template for code not handling partner_cc_ids. """
+        if partner_cc_ids := rendered.get('partner_cc_ids', None):
+            # make partner_ids contains all the recipient (including the partner_cc_ids) and remove partner_cc_ids field
+            return {
+                **{k: v for k, v in rendered.items() if k not in ('partner_ids', 'partner_cc_ids')},
+                'partner_ids': rendered.get('partner_ids', []) + partner_cc_ids
+            }
+        return rendered
+
     # ------------------------------------------------------------
     # EMAIL
     # ------------------------------------------------------------
@@ -745,7 +767,7 @@ class MailTemplate(models.Model):
                  'subject',
                 )
             )
-            values_list = [res_ids_values[res_id] for res_id in res_ids_chunk]
+            values_list = [self._get_adapted_rendered_no_partner_cc(res_ids_values[res_id]) for res_id in res_ids_chunk]
 
             # get record in batch to use the prefetch
             prefetch_ids = [res_id for res_id in res_ids_chunk if res_id]  # avoid browsing False

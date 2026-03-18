@@ -478,7 +478,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=57, employee=57):  # tm 57/57
+        with self.assertQueryCount(admin=58, employee=58):  # tm 57/57
             composer._action_send_mail()
 
         # notifications
@@ -600,7 +600,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=54, employee=53):
+        with self.assertQueryCount(admin=55, employee=54):
             composer._action_send_mail()
 
         # notifications
@@ -630,7 +630,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=69, employee=69):
+        with self.assertQueryCount(admin=70, employee=69):
             composer._action_send_mail()
 
         # notifications
