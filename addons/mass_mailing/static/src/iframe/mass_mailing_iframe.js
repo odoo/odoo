@@ -330,13 +330,11 @@ export class MassMailingIframe extends Component {
      */
     async loadIframeAssets() {
         const bundleEntryPromises = this.getIframeBundles().map(async (bundle) => {
-            const targets = (
-                await loadBundle(bundle, {
-                    targetDoc: this.iframeRef.el.contentDocument,
-                    css: true,
-                    js: false,
-                })
-            ).map((bundleEvent) => bundleEvent.target);
+            const targets = await loadBundle(bundle, {
+                targetDoc: this.iframeRef.el.contentDocument,
+                css: true,
+                js: false,
+            });
             const iframe = this.iframeRef.el;
             return [
                 bundle,
