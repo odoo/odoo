@@ -245,7 +245,7 @@
                 }
 
                 &:hover, &:focus-visible, &.selected {
-                    box-shadow: 0 0 0 1px #FFF, 0 0 0 3px map-get($theme-colors, "primary")
+                    box-shadow: 0 0 0 1px #dadada, 0 0 0 3px map-get($theme-colors, "primary")
                 }
             }
 
@@ -373,6 +373,12 @@
                         animation-duration: 5s;
                     }
                 }
+            }
+        }
+
+        &.o_setup_style_screen {
+            .o_setup_style_screen_buttons {
+                box-shadow: 0px 1px 15px #dedede;
             }
         }
     }
