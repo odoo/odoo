@@ -57,7 +57,7 @@
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
                     <t t-if="not object.event_id.allday">
-                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
+                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, lang_code=object.env.lang) or ''">11:00 AM</t>
                         <t t-if="object.mail_tz">
                             <span style="font-size: 11px; font-weight: normal;">
                                 (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
@@ -187,7 +187,7 @@
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
                     <t t-if="not object.event_id.allday">
-                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
+                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, lang_code=object.env.lang) or ''">11:00 AM</t>
                         <t t-if="object.mail_tz">
                             <span style="font-size: 11px; font-weight: normal;">
                                 (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
@@ -294,7 +294,7 @@
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
                     <t t-if="not object.event_id.allday">
-                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
+                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, lang_code=object.env.lang) or ''">11:00 AM</t>
                         <t t-if="object.mail_tz">
                             <span style="font-size: 11px; font-weight: normal;">
                                 (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
@@ -394,7 +394,7 @@
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
                     <t t-if="not object.allday">
-                        <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
+                        <t t-out="format_time(time=object.start, tz=mail_tz, lang_code=object.env.lang)">11:00 AM</t>
                         <t t-if="mail_tz">
                             <span style="font-size: 11px; font-weight: normal;">
                                 (<t t-out="mail_tz or ''">Europe/Brussels</t>)
@@ -491,7 +491,7 @@
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
                     <t t-if="not object.allday">
-                        <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
+                        <t t-out="format_time(time=object.start, tz=mail_tz, lang_code=object.env.lang)">11:00 AM</t>
                         <t t-if="mail_tz">
                             <span style="font-size: 11px; font-weight: normal;">
                                 (<t t-out="mail_tz or ''">Europe/Brussels</t>)

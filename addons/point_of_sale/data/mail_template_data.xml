@@ -26,7 +26,7 @@
                     <div>Thank you for purchasing from <t t-out="store_name">Store name</t>!</div>
                     <div>Attached, you will find your receipt for the purchase of <span><t
                             t-out="format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,
-                         lang_code=lg) or ''">date</t> <t t-out="format_time(time=object.date_order, tz=tz, time_format='short',
+                         lang_code=lg) or ''">date</t> <t t-out="format_time(time=object.date_order, tz=tz,
                          lang_code=lg)">time</t>.</span>
                     </div>
                     <br/>
