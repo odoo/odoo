@@ -7,8 +7,9 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll, queryFirst } from "@odoo/hoot-dom";
+import { contains as webContains } from "@web/../tests/web_test_helpers";
+import { animationFrame, beforeEach, describe, expect, test } from "@odoo/hoot";
+import { queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { defineResourceMailModels } from "./resource_mail_test_helpers";
 
 describe.current.tags("desktop");
@@ -234,6 +235,11 @@ test("many2many_avatar_resource widget in kanban view", async () => {
         { count: 0, target: card1 },
         "No text should be displayed on any avatar",
     );
+    await waitFor(
+        ".o_kanban_record:nth-child(1) .o_field_many2many_avatar_resource .o_quick_assign",
+        { visible: false },
+        "Quick assign button should be displayed on the card"
+    );
 
     await contains(
         "img.o_m2m_avatar",
@@ -245,6 +251,17 @@ test("many2many_avatar_resource widget in kanban view", async () => {
         { count: 0, target: card2 },
         "No text should be displayed on the avatar",
     );
+    await webContains(
+        ".o_kanban_record:nth-child(2) .o_field_many2many_avatar_resource .o_quick_assign",
+        { visible: false },
+        "Quick assign button should be displayed on the card"
+    ).click();
+    await animationFrame();
+    expect(".o-overlay-container input").toBeFocused();
+    expect(".o-overlay-container .o_tag").toHaveCount(1);
+    expect(".o-overlay-container .o_avatar_many2x_autocomplete").toHaveCount(3);
+    expect(".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource.fa-wrench").toHaveCount(1);
+    expect(".o-overlay-container .o_avatar_many2x_autocomplete img").toHaveCount(2);
 
     // Second and third records in widget should display employee avatars
     const [ tagMarie, tagPierre ] = document.querySelectorAll(".many2many_tags_avatar_field_container .o_tag img");
