@@ -2303,7 +2303,7 @@ class Application:
         if ((netloc and netloc != host) or (path_netloc and path_netloc != host)):
             return None
 
-        if (module not in self.statics or static != 'static' or not resource):
+        if (static != 'static' or not resource or module not in self.statics):
             return None
 
         try:
