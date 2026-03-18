@@ -27,7 +27,7 @@ class AccountMove(models.Model):
                     (
                         # QR code is also printed if the fiscal country is not Switzerland but the receivale account is eligible
                         move.partner_bank_id.account_type == 'iban' and
-                        (iban := (move.partner_bank_id.account_number or '').replace(' ', '')).startswith('CH') and
+                        (iban := (move.partner_bank_id.account_number or '')).startswith('CH') and
                         iban[4:9].isdigit() and
                         30000 <= int(iban[4:9]) <= 31999
                     )
