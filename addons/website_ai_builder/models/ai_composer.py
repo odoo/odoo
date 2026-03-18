@@ -37,7 +37,7 @@ class AiComposer(models.Model):
             return "Could not parse page HTML."
 
         # Find sections inside #wrap, or all top-level sections
-        wrap = doc.cssselect('#wrap')
+        wrap = doc.xpath('//*[@id="wrap"]')
         container = wrap[0] if wrap else doc
         sections = [c for c in container if hasattr(c, 'tag') and c.tag == 'section']
 
