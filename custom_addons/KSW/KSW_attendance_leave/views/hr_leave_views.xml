@@ -8,16 +8,20 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="before">
+                <field name="holiday_status_requires_allocation" invisible="1"/>
                 <field name="x_attendance_ids" widget="many2many_tags"
                        options="{'no_create': True, 'no_edit': True}"
+                       invisible="holiday_status_requires_allocation"
                        readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="x_total_late_minutes" readonly="1" invisible="x_total_late_minutes == 0"/>
-                <field name="x_total_early_leave_minutes" readonly="1" invisible="x_total_early_leave_minutes == 0"/>
+                <field name="x_total_late_minutes" readonly="1"
+                       invisible="x_total_late_minutes == 0 or holiday_status_requires_allocation"/>
+                <field name="x_total_early_leave_minutes" readonly="1"
+                       invisible="x_total_early_leave_minutes == 0 or holiday_status_requires_allocation"/>
                 <field name="x_total_absent_days" readonly="1" invisible="1"/>
 
                 <!-- Attendance issue breakdown lines -->
                 <field name="x_attendance_line_ids"
-                       invisible="not request_unit_hours or x_attendance_count == 0"
+                       invisible="not request_unit_hours or x_attendance_count == 0 or holiday_status_requires_allocation"
                        readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
                        nolabel="1" colspan="2">
                     <list editable="bottom" create="false" delete="false"
@@ -35,7 +39,7 @@
                 </field>
             </xpath>
 
-            <!-- Hide the standard Hours label and fields -->
+            <!-- Hide the standard Hours label and fields for all leave types -->
             <xpath expr="//label[@for='request_hour_from']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

@@ -13,19 +13,18 @@
                         <field name="joining_date"/>
                         <field name="today_date"/>
                     </group>
-                    <group string="Service Calculation">
+                    <group string="Service">
                         <field name="total_days"/>
-                        <field name="leave_days"/>
-                        <field name="effective_days" class="fw-bold text-primary"/>
                         <field name="service_years" class="fw-bold"/>
                     </group>
                 </group>
                 <separator string="Annual Leave Balance"/>
                 <group>
-                    <group string="Entitlement">
-                        <field name="entitlement_days" class="fw-bold"/>
+                    <group string="Accrual">
+                        <field name="entitlement_days"/>
+                        <field name="total_accrued_days" class="fw-bold text-primary"/>
                     </group>
-                    <group string="Balance">
+                    <group string="Usage">
                         <field name="annual_leave_taken"/>
                         <field name="annual_leave_balance" class="fw-bold text-success"/>
                     </group>

@@ -27,16 +27,6 @@ class AbsentDaysWizard(models.TransientModel):
         string='Total Calendar Days',
         readonly=True,
     )
-    leave_days = fields.Float(
-        string='Annual Leave Days (All Time)',
-        readonly=True,
-        help='Total approved annual leave days to exclude from service count.',
-    )
-    effective_days = fields.Integer(
-        string='Effective Service Days',
-        readonly=True,
-        help='Calendar days minus annual leave days.',
-    )
     service_years = fields.Float(
         string='Service Years',
         readonly=True,
@@ -49,15 +39,21 @@ class AbsentDaysWizard(models.TransientModel):
         readonly=True,
         help='21 days if < 5 years, 30 days if ≥ 5 years.',
     )
-    annual_leave_taken = fields.Float(
-        string='Days Taken (This Year)',
+    total_accrued_days = fields.Float(
+        string='Total Accrued Days',
         readonly=True,
-        help='Approved annual leave days taken in the current year.',
+        digits=(10, 4),
+        help='Total annual leave days accrued from joining date to today.',
+    )
+    annual_leave_taken = fields.Float(
+        string='Days Taken (All Time)',
+        readonly=True,
+        help='Total approved annual leave days taken.',
     )
     annual_leave_balance = fields.Float(
         string='Available Balance',
         readonly=True,
-        help='Entitlement minus days taken this year.',
+        help='Total accrued minus all-time days taken.',
     )
 
     @api.onchange('employee_id')
@@ -78,18 +74,8 @@ class AbsentDaysWizard(models.TransientModel):
             today = fields.Date.context_today(self)
 
             self.joining_date = joining
-            delta = (today - joining).days
-            self.total_days = max(delta, 0)
-
-            # --- All-time approved annual leave days ---
-            annual_leaves_all = self.env['hr.leave'].sudo().search([
-                ('employee_id', '=', self.employee_id.id),
-                ('state', '=', 'validate'),
-                ('holiday_status_id.is_annual_leave', '=', True),
-            ])
-            total_annual = sum(annual_leaves_all.mapped('number_of_days'))
-            self.leave_days = total_annual
-            self.effective_days = max(delta - int(total_annual), 0)
+            calendar_days = max((today - joining).days, 0)
+            self.total_days = calendar_days
 
             # --- Service years ---
             rdelta = relativedelta(today, joining)
@@ -100,28 +86,35 @@ class AbsentDaysWizard(models.TransientModel):
             # --- Entitlement ---
             self.entitlement_days = 30 if rdelta.years >= 5 else 21
 
-            # --- Days taken this calendar year ---
-            year_start = f"{today.year}-01-01 00:00:00"
-            year_end = f"{today.year}-12-31 23:59:59"
-            annual_leaves_year = self.env['hr.leave'].sudo().search([
+            # --- Two-tier accrual (Saudi Labor Law Art. 109) ---
+            # Annual leave is paid leave; service is NOT reduced by leave
+            # days taken.
+            five_years_days = 5 * 365
+            if calendar_days <= five_years_days:
+                total_accrued = calendar_days * (21.0 / 365.0)
+            else:
+                total_accrued = (
+                    five_years_days * (21.0 / 365.0)
+                    + (calendar_days - five_years_days) * (30.0 / 365.0)
+                )
+            self.total_accrued_days = round(total_accrued, 4)
+
+            # --- All-time approved annual leave days taken ---
+            ksw_rec = self.env['ksw.annual.leave'].sudo().search([
                 ('employee_id', '=', self.employee_id.id),
-                ('state', '=', 'validate'),
-                ('holiday_status_id.is_annual_leave', '=', True),
-                ('date_from', '>=', year_start),
-                ('date_from', '<=', year_end),
-            ])
-            self.annual_leave_taken = sum(annual_leaves_year.mapped('number_of_days'))
-            self.annual_leave_balance = self.entitlement_days - self.annual_leave_taken
+            ], limit=1)
+            taken = ksw_rec.leaves_taken if ksw_rec else 0.0
+            self.annual_leave_taken = taken
+            self.annual_leave_balance = round(total_accrued - taken, 4)
         else:
             self._reset_fields()
 
     def _reset_fields(self):
         self.joining_date = False
         self.total_days = 0
-        self.leave_days = 0.0
-        self.effective_days = 0
         self.service_years = 0.0
         self.entitlement_days = 0
+        self.total_accrued_days = 0.0
         self.annual_leave_taken = 0.0
         self.annual_leave_balance = 0.0
 

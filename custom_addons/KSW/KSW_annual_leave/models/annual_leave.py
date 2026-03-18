@@ -34,13 +34,15 @@ class KswAnnualLeave(models.Model):
         help='Total annual leave days accrued from joining date to today.',
     )
     leaves_taken = fields.Float(
-        string='Leaves Taken', compute='_compute_leave_data',
-        store=True, digits=(10, 4),
-        help='Total approved annual leave days taken.',
+        string='Leaves Taken',
+        related='allocation_id.leaves_taken',
+        digits=(10, 4),
+        help='Total approved annual leave days taken (from linked allocation).',
     )
     remaining_balance = fields.Float(
-        string='Remaining Balance', compute='_compute_leave_data',
-        store=True, digits=(10, 4),
+        string='Remaining Balance',
+        compute='_compute_remaining_balance',
+        digits=(10, 4),
     )
     allocation_id = fields.Many2one(
         'hr.leave.allocation', string='Linked Allocation',
@@ -62,8 +64,6 @@ class KswAnnualLeave(models.Model):
             rec.years_of_service = 0.0
             rec.daily_rate = 0.0
             rec.total_accrued_days = 0.0
-            rec.leaves_taken = 0.0
-            rec.remaining_balance = 0.0
 
             if not rec.employee_id:
                 continue
@@ -83,41 +83,37 @@ class KswAnnualLeave(models.Model):
             if calendar_days <= 0:
                 continue
 
-            # --- Leaves taken (all validated annual leaves) ---
-            annual_leaves = self.env['hr.leave'].sudo().search([
-                ('employee_id', '=', rec.employee_id.id),
-                ('state', '=', 'validate'),
-                ('holiday_status_id.is_annual_leave', '=', True),
-            ])
-            taken = sum(annual_leaves.mapped('number_of_days'))
-            rec.leaves_taken = taken
-
-            # --- Effective service days (exclude annual leave periods) ---
-            effective_days = max(calendar_days - int(taken), 0)
-
-            # --- Years of service (based on effective days) ---
+            # --- Years of service ---
             rdelta = relativedelta(today, joining)
             rec.years_of_service = round(
                 rdelta.years + rdelta.months / 12.0 + rdelta.days / 365.25, 2
             )
 
-            # --- Two-tier daily accrual on effective days ---
+            # --- Two-tier daily accrual (Saudi Labor Law Art. 109) ---
+            # Annual leave is paid leave; service continues uninterrupted.
+            # Accrual is based on total calendar days of employment, NOT
+            # reduced by leave days taken.
             five_years_days = 5 * 365
-            if effective_days <= five_years_days:
-                total_accrued = effective_days * (21.0 / 365.0)
+            if calendar_days <= five_years_days:
+                total_accrued = calendar_days * (21.0 / 365.0)
             else:
                 total_accrued = (
                     five_years_days * (21.0 / 365.0)
-                    + (effective_days - five_years_days) * (30.0 / 365.0)
+                    + (calendar_days - five_years_days) * (30.0 / 365.0)
                 )
 
             rec.total_accrued_days = round(total_accrued, 4)
 
-            # --- Current daily rate (based on effective days) ---
-            rec.daily_rate = 30.0 / 365.0 if effective_days > five_years_days else 21.0 / 365.0
+            # --- Current daily rate ---
+            rec.daily_rate = 30.0 / 365.0 if calendar_days > five_years_days else 21.0 / 365.0
 
-            # --- Remaining balance ---
-            rec.remaining_balance = round(total_accrued - taken, 4)
+    # ------------------------------------------------------------------
+    # Remaining balance (non-stored, always real-time)
+    # ------------------------------------------------------------------
+    @api.depends('total_accrued_days', 'leaves_taken')
+    def _compute_remaining_balance(self):
+        for rec in self:
+            rec.remaining_balance = round(rec.total_accrued_days - rec.leaves_taken, 4)
 
     # ------------------------------------------------------------------
     # Allocation sync
@@ -136,13 +132,19 @@ class KswAnnualLeave(models.Model):
             if not rec.employee_id or rec.total_accrued_days <= 0:
                 continue
 
+            # The allocation must start from the joining date so that
+            # leaves taken at any point in the employee's service are
+            # covered by this allocation.
+            joining = rec.joining_date
+
             if rec.allocation_id:
-                # Update existing allocation – just update the number of days
-                rec.allocation_id.sudo().write({
-                    'number_of_days': rec.total_accrued_days,
-                })
+                # Update existing allocation – days and date_from
+                vals = {'number_of_days': rec.total_accrued_days}
+                if joining and rec.allocation_id.date_from != joining:
+                    vals['date_from'] = joining
+                rec.allocation_id.sudo().write(vals)
             else:
-                # Create new allocation (state defaults to 'confirm')
+                # Create new allocation
                 alloc = Allocation.with_context(
                     mail_create_nosubscribe=True,
                     mail_notrack=True,
@@ -150,6 +152,7 @@ class KswAnnualLeave(models.Model):
                     'employee_id': rec.employee_id.id,
                     'holiday_status_id': annual_type.id,
                     'number_of_days': rec.total_accrued_days,
+                    'date_from': joining,
                     'notes': 'Auto-managed by KSW Annual Leave module',
                 })
                 # Approve the allocation so it becomes active
@@ -188,5 +191,4 @@ class KswAnnualLeave(models.Model):
     def _cron_refresh(self):
         """Daily cron to auto-create missing records and recompute."""
         self.action_generate_all()
-
 

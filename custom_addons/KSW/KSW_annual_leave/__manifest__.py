@@ -1,6 +1,6 @@
 {
     'name': 'KSW Annual Leave',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Human Resources',
     'summary': 'Auto-computed annual leave allocation dashboard',
     'description': """
@@ -11,19 +11,23 @@
         Subtracts approved leaves taken and shows the remaining balance.
         Records are auto-created for all employees and refreshed daily
         by a scheduled action.
+
+        Duration for annual-leave requests is computed as calendar days
+        (including weekends) per Saudi labor law.
     """,
     'depends': [
         'hr_holidays',
+        'KSW_attendance_leave',
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/hr_leave_type_views.xml',
+        'views/hr_leave_views.xml',
         'views/annual_leave_views.xml',
+        'wizard/absent_days_wizard_views.xml',
         'data/cron.xml',
     ],
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
 }
-
-
