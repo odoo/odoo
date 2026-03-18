@@ -110,11 +110,12 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         ...super.props,
         isEditable: { type: Boolean, optional: true },
     };
+    static PopoverClass = Many2ManyTagsAvatarFieldPopover;
     visibleItemsLimit = 3;
 
     setup() {
         super.setup();
-        this.popover = usePopover(Many2ManyTagsAvatarFieldPopover, {
+        this.popover = usePopover(this.constructor.PopoverClass, {
             popoverClass: "o_m2m_tags_avatar_field_popover",
             closeOnClickAway: (target) => !target.closest(".modal"),
         });
