@@ -45,20 +45,28 @@ class TestOrmDomainExpressionPartnerBank(models.Model):
     _description = 'Test ORM Domain Expression Partner Bank'
 
     account_number = fields.Char(search='_search_account_number')
-    sanitized_account_number = fields.Char(compute='_compute_sanitized_account_number', readonly=True, store=True)
+    formatted_account_number = fields.Char(
+        compute='_compute_formatted_account_number',
+        inverse='_inverse_formatted_account_number',
+        search='_search_account_number',
+    )
     partner_id = fields.Many2one(comodel_name='test_orm.domain_expression.partner', domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], required=True)
 
     @api.depends('account_number')
-    def _compute_sanitized_account_number(self):
+    def _compute_formatted_account_number(self):
         for account in self:
-            account.sanitized_account_number = _sanitize_account_number(account.account_number)
+            account.formatted_account_number = account.account_number
+
+    def _inverse_formatted_account_number(self):
+        for account in self:
+            account.account_number = _sanitize_account_number(account.formatted_account_number)
 
     def _search_account_number(self, operator, value):
         if operator in ('in', 'not in'):
             value = [_sanitize_account_number(i) for i in value]
         else:
             value = _sanitize_account_number(value)
-        return [('sanitized_account_number', operator, value)]
+        return [('account_number', operator, value)]
 
 
 class TestOrmDomainExpressionCountry(models.Model):

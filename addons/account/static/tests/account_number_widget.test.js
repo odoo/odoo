@@ -22,7 +22,10 @@ test.tags("focus required");
 test("Account Number Widget full flow", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Awesome partner" });
-    const bankId = pyEnv["res.partner.bank"].create({ account_number: "", partner_id: partnerId });
+    const bankId = pyEnv["res.partner.bank"].create({
+        formatted_account_number: "",
+        partner_id: partnerId,
+    });
     await start();
     onRpc("res.partner.bank", "retrieve_account_type", (params) => {
         const account_number = params.args[0].replace(/\s/g, "");
@@ -39,7 +42,7 @@ test("Account Number Widget full flow", async () => {
         arch: `<form>
                 <sheet>
                     <group>
-                        <field name="account_number" widget="account_number"/>
+                        <field name="formatted_account_number" widget="account_number"/>
                     </group>
                 </sheet>
             </form>`,

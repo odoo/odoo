@@ -39,7 +39,7 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
             'vat': 'HR68139364755',
             'l10n_hr_personal_oib': '68139364755',
             'country_id': self.env.ref('base.hr').id,
-            'bank_ids': [Command.create({'account_number': 'HR10000000000000', 'allow_out_payment': True})],
+            'bank_ids': [Command.create({'formatted_account_number': 'HR10000000000000', 'allow_out_payment': True})],
             'email': 'test1@test.test',
             'invoice_sending_method': 'mojeracun',
         })
@@ -52,7 +52,7 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
             'vat': 'HR08971065561',
             'l10n_hr_personal_oib': '08971065561',
             'country_id': self.env.ref('base.hr').id,
-            'bank_ids': [Command.create({'account_number': 'HR20000000000000', 'allow_out_payment': True})],
+            'bank_ids': [Command.create({'formatted_account_number': 'HR20000000000000', 'allow_out_payment': True})],
             'email': 'test3@test.test',
             'invoice_sending_method': 'mojeracun',
         })
@@ -65,7 +65,7 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
             'vat': 'BE0477472701',
             'l10n_hr_personal_oib': '00000000000',
             'country_id': self.env.ref('base.hr').id,
-            'bank_ids': [Command.create({'account_number': 'HR30000000000000', 'allow_out_payment': True})],
+            'bank_ids': [Command.create({'formatted_account_number': 'HR30000000000000', 'allow_out_payment': True})],
             'email': 'test-mer-mirror@test.test',
             'invoice_sending_method': 'mojeracun',
         })
@@ -75,4 +75,4 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
         # when importing an invoice with the same partner / account number combination
         self.env['res.partner.bank'].sudo() \
             .search([('account_number', '=', 'HR4725000091769592233')]) \
-            .write({'account_number': 'HR8223600000012345678'})
+            .write({'formatted_account_number': 'HR8223600000012345678'})

@@ -47,7 +47,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'additional_identifiers': {'BE_EN': '0477472701'},
-            'bank_ids': [Command.create({'account_number': 'BE90735788866632', 'allow_out_payment': True})],
+            'bank_ids': [Command.create({'formatted_account_number': 'BE90735788866632', 'allow_out_payment': True})],
             'country_id': cls.env.ref('base.be').id,
             **kwargs,
         })
@@ -90,7 +90,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'city': "Canberra",
             'vat': '53 930 548 027',
             'country_id': cls.env.ref('base.au').id,
-            'bank_ids': [Command.create({'account_number': '93999574162167', 'allow_out_payment': True})],
+            'bank_ids': [Command.create({'formatted_account_number': '93999574162167', 'allow_out_payment': True})],
             **kwargs,
         })
 
@@ -281,7 +281,7 @@ class TestUblCiiBECommon(TestUblCiiCommon):
             'vat': 'BE0202239951',
             'additional_identifiers': {'BE_EN': '0202239951'},
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [Command.create({'account_number': 'BE15001559627230', 'allow_out_payment': True})],
+            'bank_ids': [Command.create({'formatted_account_number': 'BE15001559627230', 'allow_out_payment': True})],
         })
         return company
 

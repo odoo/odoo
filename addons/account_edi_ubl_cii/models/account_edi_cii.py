@@ -628,11 +628,11 @@ class AccountEdiCii(models.AbstractModel):
         invoice = vals['invoice']
         if invoice.partner_bank_id.account_type == 'iban':
             return {
-                'ram:IBANID': {'_text': invoice.partner_bank_id.sanitized_account_number}
+                'ram:IBANID': {'_text': invoice.partner_bank_id.account_number}
             }
         else:
             return {
-                'ram:ProprietaryID': {'_text': invoice.partner_bank_id.sanitized_account_number}
+                'ram:ProprietaryID': {'_text': invoice.partner_bank_id.account_number}
             }
 
     def _cii_get_applicable_trade_tax_nodes(self, vals):
@@ -816,8 +816,8 @@ class AccountEdiCii(models.AbstractModel):
                     vals['invoice'], 'partner_bank_id'
                 ),
                 'seller_payment_instructions_2': self._check_required_fields(
-                    vals['invoice']['partner_bank_id'], 'sanitized_account_number',
-                    self.env._("The field 'Sanitized Account Number' is required on the Recipient Bank.")
+                    vals['invoice']['partner_bank_id'], 'account_number',
+                    self.env._("The field 'Account Number' is required on the Recipient Bank.")
                 ),
             })
 

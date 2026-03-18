@@ -8,7 +8,6 @@ from odoo.fields import Domain
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
 from odoo.tools.partner_identifiers import get_tin_metadata_of_country
 
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
@@ -1249,7 +1248,7 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_get_payment_means_payer_financial_account_node_from_payer_bank(self, vals, payer_bank):
         return {
             'cbc:ID': {
-                '_text': sanitize_account_number(payer_bank.account_number),
+                '_text': payer_bank.account_number,
             },
         }
 
