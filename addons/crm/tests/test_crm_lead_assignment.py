@@ -60,7 +60,6 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
 
 
 @tagged('lead_assign')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadAssign(TestLeadAssignCommon):
     """ Test lead assignment feature added in saas-14.2 """
 
