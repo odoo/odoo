@@ -41,11 +41,16 @@ export class SettingsFormController extends formView.Controller {
             },
             () => [this.searchState.value]
         );
-        useLayoutEffect(() => {
-            if (this.env.__getLocalState__) {
-                this.env.__getLocalState__.remove(this);
-            }
-        });
+        useLayoutEffect(
+            () =>
+                // This returned function acts as the cleanup/unmount hook
+                () => {
+                    if (this.env.__getLocalState__) {
+                        this.env.__getLocalState__.remove(this);
+                    }
+                },
+            () => []
+        );
 
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
     }
