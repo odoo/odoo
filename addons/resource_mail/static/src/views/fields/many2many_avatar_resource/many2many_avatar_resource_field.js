@@ -13,12 +13,8 @@ import {
     listMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { Many2ManyTagsAvatarFieldPopover } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
-
-// TODO: Remove me in master
-export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {}
 
 class ResourceTag extends Component {
     static template = "resource_mail.ResourceTag";
@@ -44,7 +40,6 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
 
     static components = {
         ...super.components,
-        Many2XAutocomplete: AvatarResourceMany2XAutocomplete,
         Tag: ResourceTag,
     };
     static optionTemplate = "resource_mail.Many2ManyAvatarResourceField.option";
