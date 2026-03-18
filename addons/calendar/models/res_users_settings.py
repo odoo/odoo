@@ -14,6 +14,7 @@ class ResUsersSettings(models.Model):
         'Calendar Default Privacy', default='public', required=True,
         store=True, readonly=False, help="Default privacy setting for whom the calendar events will be visible."
     )
+    calendar_show_activities = fields.Boolean(string='Show Activities in Calendar', default=True)
 
     @api.model
     def _get_fields_blacklist(self):

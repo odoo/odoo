@@ -6,6 +6,10 @@ patch(ActivityListPopoverItem.prototype, {
         return super.hasEditButton && !this.props.activity.calendar_event_id;
     },
 
+    get hasRescheduleMeetingButton() {
+        return this.props.activity.calendar_event_id;
+    },
+
     async onClickReschedule() {
         await this.props.activity.rescheduleMeeting();
     },

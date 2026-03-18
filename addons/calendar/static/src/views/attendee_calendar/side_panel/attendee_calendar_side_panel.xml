@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarSidePanel" t-inherit="web.CalendarSidePanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_calendar_sidepanel_content')]" position="inside">
+            <div t-if="this.showActivityFilter" class="o-checkbox form-check position-relative w-100 mt-3">
+                <input
+                    id="show_activities_checkbox"
+                    type="checkbox"
+                    class="form-check-input"
+                    t-att-checked="this.state.activityFilterChecked"
+                    t-on-change="this.onToggleActivityFilter"
+                />
+                <span class="d-block fw-bolder text-truncate w-100 cursor-pointer"
+                    t-on-click.prevent.stop="this.onToggleActivityFilter"
+                    t-out="this.activityFilterName"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

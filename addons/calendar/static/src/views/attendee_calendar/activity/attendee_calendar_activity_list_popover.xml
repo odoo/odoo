@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarActivityListPopover">
+        <t t-if="env.isSmall">
+            <Dialog title.translate="Activities" withBodyPadding="false">
+                <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
+        </t>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarActivityListPopover.popover">
+        <!-- tabindex="0" needed to prevent having a weird auto-focus style
+            on the first button/link of the popover while still auto-focusing the popover. -->
+        <div tabindex="0" class="d-flex flex-column h-100">
+            <div class="overflow-y-auto d-flex flex-column flex-grow-1">
+                <AttendeeCalendarActivityListPopoverItem
+                    t-foreach="this.activities" t-as="activity" t-key="activity.id"
+                    activity="activity"
+                    onActivityChanged="this.props.onActivityChanged"
+                    onClickDoneAndScheduleNext="this.props.close"
+                    onClickEditActivityButton="this.props.close"
+                    onRemoveActivityItem.bind="this.onRemoveActivityItem"
+                    onViewMeeting.bind="this.props.onViewMeeting"/>
+            </div>
+            <button t-if="this.limit and this.props.activityIds.length > this.limit"
+                class="btn btn-secondary p-3 text-center text-primary border-top"
+                t-on-click="this.onClickViewAll">
+                ...and <t t-out="this.props.activityIds.length - this.limit"/> more
+            </button>
+        </div>
+    </t>
+</templates>

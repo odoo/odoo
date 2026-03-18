@@ -1,5 +1,6 @@
 import { mailModels, openView } from "@mail/../tests/mail_test_helpers";
 import { fields } from "@web/../tests/web_test_helpers";
+import { serializeDate, today } from "@web/core/l10n/dates";
 
 export class MailActivity extends mailModels.MailActivity {
     name = fields.Char();
@@ -18,6 +19,9 @@ export class MailActivity extends mailModels.MailActivity {
             target: "current",
         };
     }
+    action_reschedule_tomorrow(ids) {
+        this.write(ids, { date_deadline: serializeDate(today().plus({ days: 1 })) });
+    }
     unlink_w_meeting() {
         const eventIds = this.map((act) => act.calendar_event_id);
         const res = this.unlink(arguments[0]);
@@ -29,10 +33,15 @@ export class MailActivity extends mailModels.MailActivity {
     _to_store(store) {
         super._to_store(...arguments);
         for (const activity of this) {
-            if (activity.calendar_event_id) {
-                store._add_record_fields(this.browse(activity.id), {
-                    calendar_event_id: activity.calendar_event_id,
-                });
+            const fieldsToStore = ["calendar_event_id", "res_name"];
+            const storeData = fieldsToStore.reduce((acc, key) => {
+                if (key in activity) {
+                    acc[key] = activity[key];
+                }
+                return acc;
+            }, {});
+            if (Object.keys(storeData).length) {
+                store._add_record_fields(this.browse(activity.id), storeData);
             }
         }
     }

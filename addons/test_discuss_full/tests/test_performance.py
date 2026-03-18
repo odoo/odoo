@@ -464,6 +464,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "self_user": self.users[0].id,
                 "show_livechat_category": True,
                 "settings": {
+                    "calendar_show_activities": True,
                     "channel_notifications": False,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
                     "livechat_expertise_ids": [],

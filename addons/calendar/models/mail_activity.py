@@ -69,4 +69,4 @@ class MailActivity(models.Model):
 
     def _store_activity_fields(self, res: Store.FieldList):
         super()._store_activity_fields(res)
-        res.attr("calendar_event_id")
+        res.extend(["calendar_event_id", "res_name"])

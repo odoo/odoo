@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarActivityListPopoverItem" t-inherit="mail.ActivityListPopoverItem" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o-mail-ActivityListPopoverItem-name')]" position="replace">
+            <div class="d-flex flex-column text-truncate flex-grow-1 flex-basis-0">
+                <span class="o-mail-ActivityListPopoverItem-name d-flex flex-nowrap align-items-center">
+                    <i t-attf-class="fa {{this.props.activity.icon}} fa-fw lh-base me-1"/>
+                    <b t-if="this.props.activity.summary" class="fw-normal text-900 text-truncate" t-out="this.props.activity.summary"/>
+                    <b t-elif="this.props.activity.activity_type_id?.name" class="fw-normal text-900 text-truncate" t-out="this.props.activity.activity_type_id.name"/>
+                </span>
+                <span
+                    t-if="this.props.activity.res_name"
+                    class="text-action cursor-pointer text-truncate w-100 align-self-start small"
+                    t-custom-click.stop="(ev, isMiddleClick) => this.onClickOpenRelatedRecord(ev, isMiddleClick)"
+                    t-out="this.props.activity.res_name"/>
+            </div>
+            <Dropdown>
+                <button class="o-mail-ActivityListPopoverItem-reschedulebtn btn btn-sm btn-info btn-link" type="button" title="Reschedule" aria-label="Reschedule">
+                    <i class="fa fa-calendar o_button_icon"/>
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.today)">
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <i class="oi oi-schedule-today me-1"/> Today
+                            </span>
+                            <span t-out="this.targetDays.today.day.weekdayShort" class="ms-2 text-muted"/>
+                        </div>
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.tomorrow)">
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                            </span>
+                            <span t-out="this.targetDays.tomorrow.day.weekdayShort" class="ms-2 text-muted"/>
+                        </div>
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.nextWeek)">
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <i class="oi oi-schedule-later me-1"/> Next Week
+                            </span>
+                            <span t-out="this.targetDays.nextWeek.day.weekdayShort" class="ms-2 text-muted"/>
+                        </div>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-ActivityListPopoverItem-user')]" position="replace"/>
+        <xpath expr="//ActivityMarkAsDone" position="attributes">
+            <attribute name="onClickDone.bind">this.onClickDone</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-editbtn')]" position="after">
+            <button t-if="this.hasViewMeetingButton"
+                title="View Meeting" aria-label="View Meeting"
+                class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-success btn-link"
+                t-on-click="() => this.props.onViewMeeting(this.props.activity.calendar_event_id)">
+                <i class="fa fa-eye"/>
+            </button>
+        </xpath>
+    </t>
+</templates>
