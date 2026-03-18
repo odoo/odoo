@@ -2711,11 +2711,17 @@ class Application:
         if ((netloc and netloc != host) or (path_netloc and path_netloc != host)):
             return None
 
+<<<<<<< fddc31d5d21dd1c2b2c6719af64d4a386bae1395
         if not (static == 'static' and resource):
             return None
 
         static_path = self.static_path(module)
         if not static_path:
+||||||| cf641dc0c89f5ee7c4d80da11476780e2fa4574d
+        if (module not in self.statics or static != 'static' or not resource):
+=======
+        if (static != 'static' or not resource or module not in self.statics):
+>>>>>>> 2eec665bcc7c2b546951b6cc5e07aa6efaa8ba08
             return None
 
         try:
