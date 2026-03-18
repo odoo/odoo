@@ -16,6 +16,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
     def test_sanitized_account_number(self):
         partner_bank_model = self.env['res.partner.bank']
         account_number = " BE-001 2518823 03 "
+        sanitized_account_number = 'BE001251882303'
         vals = partner_bank_model.search([('account_number', '=', account_number)])
         self.assertEqual(0, len(vals))
         partner_bank = partner_bank_model.create({
@@ -29,10 +30,10 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         self.assertEqual(1, len(vals))
         self.assertEqual(partner_bank, vals[0])
 
-        self.assertEqual(partner_bank.account_number, account_number)
+        # The account number is already sanitized
+        self.assertEqual(partner_bank.account_number, sanitized_account_number)
 
         # sanitaze the account_number
-        sanitized_account_number = 'BE001251882303'
         self.assertEqual(partner_bank.sanitized_account_number, sanitized_account_number)
         vals = partner_bank_model.search(
             [('account_number', '=', sanitized_account_number)])
@@ -66,7 +67,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         )
         # The bank didn't exist, we should create it
         self.assertRecordValues(found_bank, [{
-            'account_number': 'account number',
+            'account_number': 'ACCOUNTNUMBER',
             'partner_id': partner.id,
             'company_id': False,
             'active': True,

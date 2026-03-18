@@ -146,14 +146,14 @@ class TestSelfAccessRights(TestHrCommon):
             'name': 'Employee Name',
             'work_contact_id': cls.employee_partner.id,
             'bank_account_ids': [Command.create({
-                'account_number': 'EM12 3456 7890 1234',
+                'account_number': 'EM12345678901234',
                 'partner_id': cls.employee_partner.id,
             })],
         })
         cls.contact = cls.env['res.partner'].create({
             'name': 'Contact Name',
             'bank_ids': [Command.create({
-                'account_number': 'CO09 8765 4321 4321',
+                'account_number': 'CO09876543214321',
             })],
         })
 
@@ -285,14 +285,14 @@ class TestSelfAccessRights(TestHrCommon):
         user_hr_employee_bank = self.employee_bank.with_user(self.user_hr)
         self.assertEqual(
             user_hr_employee_bank.display_name,
-            'EM12 3456 7890 1234',
+            'EM12345678901234',
             "HR officer should have access to employee's bank account",
         )
 
         user_regular_contact_bank = self.contact_bank.with_user(self.user_regular)
         self.assertEqual(
             user_regular_contact_bank.display_name,
-            'CO09 8765 4321 4321',
+            'CO09876543214321',
             "Regular user should have access to contact's bank account",
         )
         self.contact_bank.invalidate_recordset(['display_name'])
@@ -300,7 +300,7 @@ class TestSelfAccessRights(TestHrCommon):
         user_hr_contact_bank = self.contact_bank.with_user(self.user_hr)
         self.assertEqual(
             user_hr_contact_bank.display_name,
-            'CO09 8765 4321 4321',
+            'CO09876543214321',
             "HR officer should have access to contact's bank account",
         )
 
