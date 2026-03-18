@@ -1059,6 +1059,38 @@ class AccountJournal(models.Model):
             }
         )
 
+    def _assign_outsanding_account_to_payment_method_lines(self, payment_type, payment_method_codes=None, chart_template=None):
+        """ Link bank journal payment method lines to their corresponding outstanding account for the specified chart template.
+
+        :param payment_type: Payment direction, either ``'inbound'`` or ``'outbound'``.
+        :param payment_method_codes: Optional list of payment method codes used to restrict
+            the payment method lines that are updated.
+        :param chart_template: Chart template used to select the relevant bank journals
+            and determine the outstanding account.
+        """
+        bank_journals = self.filtered(lambda j: j.type == "bank" and j.company_id.chart_template == chart_template)
+        if not bank_journals:
+            return
+
+        lines_to_update = bank_journals[f"{payment_type}_payment_method_line_ids"]
+        if payment_method_codes:
+            lines_to_update = lines_to_update.filtered(
+                lambda l: l.payment_method_id.code in payment_method_codes
+            )
+        if not lines_to_update:
+            return
+
+        account_xmlid = 'account_journal_payment_debit_account_id' if payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
+        account_company_map = {
+            company: self.env['account.chart.template']
+                .with_company(company)
+                .ref(account_xmlid, raise_if_not_found=False)
+            for company in lines_to_update.mapped('company_id')
+        }
+        for company, lines in lines_to_update.grouped('company_id').items():
+            if account := account_company_map[company]:
+                lines.payment_account_id = account
+
     @api.depends('currency_id')
     def _compute_display_name(self):
         for journal in self:
