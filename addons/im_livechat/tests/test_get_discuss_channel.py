@@ -433,3 +433,19 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(len(agent), 1)
         self.assertEqual(len(visitor), 1)
         self.assertEqual(visitor.partner_id, test_user.partner_id)
+
+    def test_invited_user_can_search_users_for_invite(self):
+        john = new_test_user(self.env, "john")
+        bob = new_test_user(self.env, "bob")
+        channel = self.env["discuss.channel"].create(
+            {
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[0].partner_id.id,
+                "name": "Support Channel",
+                "livechat_channel_id": self.livechat_channel.id,
+            }
+        )
+        channel.with_user(self.operators[0])._add_members(users=john)
+        data = john.partner_id.with_user(john).search_for_channel_invite("bob", channel.id)["store_data"]
+        self.assertIn(bob.partner_id.id, [p["id"] for p in data["res.partner"]])
+        self.assertFalse(john.has_group("im_livechat.im_livechat_group_user"))
