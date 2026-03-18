@@ -107,6 +107,7 @@ class AccountEdiUBL(models.AbstractModel):
                 # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
                 # In self-billed invoices, we report them from the seller's perspective, as 0% taxes.
                 tax = tax_data['tax']
+
                 return {
                     'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
                     **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
@@ -117,10 +118,21 @@ class AccountEdiUBL(models.AbstractModel):
                 }
             elif tax_data:
                 tax = tax_data['tax']
+                tax_category_code = self._get_tax_category_code(customer.commercial_partner_id, supplier, tax)
+                if tax_category_code == 'O':
+                    # [BR-O-05] An Invoice line (BG-25) where the VAT category code (BT-151) is
+                    # "Not subject to VAT" shall not contain an Invoiced item VAT rate (BT-152).
+                    # [BR-O-06] A Document level allowance (BG-20) where VAT category code (BT-95) is
+                    # "Not subject to VAT" shall not contain a Document level allowance VAT rate (BT-96).
+                    # [BR-O-07] A Document level charge (BG-21) where the VAT category code (BT-102) is
+                    # "Not subject to VAT" shall not contain a Document level charge VAT rate (BT-103).
+                    percent = None
+                else:
+                    percent = tax.amount if not tax.has_negative_factor else 0.0
                 return {
-                    'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
+                    'tax_category_code': tax_category_code,
                     **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
-                    'percent': tax.amount,
+                    'percent': percent,
                     'scheme_id': scheme_id,
                     'is_withholding': tax.amount < 0.0,
                     'currency': currency,
