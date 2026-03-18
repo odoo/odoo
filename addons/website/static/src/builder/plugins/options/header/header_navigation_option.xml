@@ -6,37 +6,6 @@
         <span class="options-container-label ps-2 py-2">Navigation</span>
     </div>
 
-    <t t-set="align_left_views" t-value="[
-    ]"/>
-
-    <t t-set="align_center_views" t-value="[
-        'website.template_header_hamburger_mobile_align_center',
-        'website.template_header_default_align_center',
-        'website.template_header_boxed_align_center',
-        'website.template_header_stretch_align_center',
-        'website.template_header_search_align_center',
-        'website.template_header_sales_one_align_center',
-        'website.template_header_sales_two_align_center',
-        'website.template_header_sales_three_align_center',
-        'website.template_header_sales_four_align_center',
-        'website.template_header_sidebar_align_center',
-        'website.template_header_vertical_align_center',
-    ]"/>
-
-    <t t-set="align_right_views" t-value="[
-        'website.template_header_hamburger_mobile_align_right',
-        'website.template_header_default_align_right',
-        'website.template_header_boxed_align_right',
-        'website.template_header_stretch_align_right',
-        'website.template_header_search_align_right',
-        'website.template_header_sales_one_align_right',
-        'website.template_header_sales_two_align_right',
-        'website.template_header_sales_three_align_right',
-        'website.template_header_sales_four_align_right',
-        'website.template_header_sidebar_align_right',
-        'website.template_header_vertical_align_right',
-    ]"/>
-
     <BuilderRow label.translate="Desktop Menu" tooltip.translate="Change the burger button position/menu items alignment">
         <!-- Reason why we enable this option for those templates only:
             website.template_header_hamburger => Hamburger Icon Position
@@ -60,19 +29,19 @@
         </BuilderButtonGroup>
 
         <BuilderSelect action="'websiteConfig'">
-            <BuilderSelectItem ltrRtlMapping="'align'" actionParam="{ views: align_left_views }">
+            <BuilderSelectItem ltrRtlMapping="'align'" actionParam="{ views: this.getAlignmentViews('left') }">
                 <div title="Align Left">
                     <i class="fa fa-align-left fa-fw" role="img" aria-hidden="true"/>
                     <span class="visually-hidden">Align Left</span>
                 </div>
             </BuilderSelectItem>
-            <BuilderSelectItem actionParam="{ views: align_center_views }">
+            <BuilderSelectItem actionParam="{ views: this.getAlignmentViews('center') }">
                 <div title="Center">
                     <i class="fa fa-align-center fa-fw" role="img" aria-hidden="true"/>
                     <span class="visually-hidden">Center</span>
                 </div>
             </BuilderSelectItem>
-            <BuilderSelectItem ltrRtlMapping="'align'" actionParam="{ views: align_right_views }">
+            <BuilderSelectItem ltrRtlMapping="'align'" actionParam="{ views: this.getAlignmentViews('right') }">
                 <div title="Align Right">
                     <i class="fa fa-align-right fa-fw" role="img" aria-hidden="true"/>
                     <span class="visually-hidden">Align Right</span>

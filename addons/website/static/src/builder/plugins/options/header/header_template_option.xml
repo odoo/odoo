@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website.HeaderTemplateOption">
         <BuilderRow label.translate="Template">
-            <BuilderSelect action="'reloadComposite'">
+            <BuilderSelect>
                 <t t-foreach="this.headerTemplates" t-as="template" t-key="template.key">
                     <t t-component="template.Component" t-props="template.props"/>
                 </t>
@@ -161,20 +161,17 @@
         <BuilderSelectItem
             id="this.props.id"
             title="this.props.title"
-            actionParam="[
-                {
-                    action: 'websiteConfig',
-                    actionParam: {
-                        views: this.props.views,
-                        vars: {
-                            'header-template': this.props.varName,
-                            'menu-shadow-class': this.props.menuShadowClass,
-                            'menu-box-shadow-style': null,
-                        },
-                        checkVars: false,
-                    },
-                }
-            ]">
+            action="'headerTemplateConfig'"
+            actionParam="{
+                views: this.props.views,
+                vars: {
+                    'header-template': this.props.varName,
+                    'menu-shadow-class': this.props.menuShadowClass,
+                    'menu-box-shadow-style': null,
+                },
+                checkVars: false,
+                defaultAlignment: this.props.defaultAlignment,
+            }">
             <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="this.props.imgSrc"/>
         </BuilderSelectItem>
     </t>

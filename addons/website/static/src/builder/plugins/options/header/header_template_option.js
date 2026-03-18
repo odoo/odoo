@@ -27,5 +27,6 @@ export class HeaderTemplateChoice extends BaseOptionComponent {
         imgSrc: String,
         id: String,
         menuShadowClass: String,
+        defaultAlignment: { type: Object, optional: true },
     };
 }

@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { HeaderTemplateChoice } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
+import { WebsiteConfigAction } from "../../customize_website_plugin";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
@@ -25,6 +26,7 @@ export class HeaderOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        builder_actions: { HeaderTemplateConfigAction },
         builder_header_middle_buttons: [
             {
                 Component: HeaderTopOptions,
@@ -48,14 +50,29 @@ export class HeaderOptionPlugin extends Plugin {
                         name: "hamburger",
                         title: _t("Hamburger Menu"),
                         extraViews: ["website.no_autohide_menu"],
+                        defaultAlignment: {
+                            mobile: "left",
+                        },
                     },
                     { name: "boxed", title: _t("Rounded Box Menu") },
                     { name: "stretch", title: _t("Stretch Menu") },
-                    { name: "vertical", title: _t("Vertical") },
+                    {
+                        name: "vertical",
+                        title: _t("Vertical"),
+                        defaultAlignment: {
+                            desktop: "center",
+                        },
+                    },
                     { name: "search", title: _t("Menu with Search Bar") },
                     { name: "sales_one", title: _t("Menu - Sales 1") },
                     { name: "sales_two", title: _t("Menu - Sales 2") },
-                    { name: "sales_three", title: _t("Menu - Sales 3") },
+                    {
+                        name: "sales_three",
+                        title: _t("Menu - Sales 3"),
+                        defaultAlignment: {
+                            desktop: "right",
+                        },
+                    },
                     { name: "sales_four", title: _t("Menu - Sales 4") },
                     {
                         name: "sidebar",
@@ -75,6 +92,7 @@ export class HeaderOptionPlugin extends Plugin {
                             title: info.title,
                             varName: info.name,
                             views: [view, ...(info.extraViews || [])],
+                            defaultAlignment: info.defaultAlignment,
                         },
                     };
                 }),
@@ -90,6 +108,43 @@ export class HeaderOptionPlugin extends Plugin {
     getHeaderTemplates() {
         return this.headerTemplates;
     }
+}
+
+export class HeaderTemplateConfigAction extends WebsiteConfigAction {
+    static id = "headerTemplateConfig";
+
+    async apply(applySpec) {
+        const template = applySpec.params.views[0];
+        const alignmentViews = getAlignmentViews(template, applySpec.params.defaultAlignment);
+        applySpec.params.views.push(...alignmentViews);
+        await super.apply(applySpec);
+        return;
+    }
+}
+
+/**
+ * Returns the alignment view keys to enable/disable for the given header
+ * template. "left" is the default so it has no dedicated view;
+ * only "center" and "right" are toggled. "!" prefix means disable.
+ *
+ * @param {string} template - Fully-qualified header template view key
+ * @param {object} [alignment]
+ * @returns {string[]} View keys to activate or deactivate
+ */
+function getAlignmentViews(template, alignment) {
+    const views = [];
+    // If not alignment is set, then the default alignment is "desktop left"
+    for (const direction of ["center", "right"]) {
+        if (!alignment || "desktop" in alignment) {
+            const view = template + `_align_${direction}`;
+            views.push(alignment?.desktop === direction ? view : "!" + view);
+        }
+        if (alignment && "mobile" in alignment) {
+            const view = template + `_mobile_align_${direction}`;
+            views.push(alignment.mobile === direction ? view : "!" + view);
+        }
+    }
+    return views;
 }
 
 registry.category("website-plugins").add(HeaderOptionPlugin.id, HeaderOptionPlugin);
