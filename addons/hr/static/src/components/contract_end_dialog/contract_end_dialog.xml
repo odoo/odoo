@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+	<t t-name="hr.ContractEndDialog">
+		<Dialog title.translate="End of contract?" size="'sm'">
+			<div class="mb-3">
+				<p>Why did you change the contract end date?</p>
+				<div class="d-flex flex-column gap-2">
+					<div class="form-check">
+						<input
+							type="radio"
+							id="reason_correction"
+							name="contractEndReason"
+							class="form-check-input"
+							value="correction"
+							t-custom-model="this.state.reason"
+						/>
+						<label class="form-check-label" for="reason_correction">
+							Correction of contract terms
+						</label>
+					</div>
+					<div class="form-check">
+						<input
+							type="radio"
+							id="reason_end_collab"
+							name="contractEndReason"
+							class="form-check-input"
+							value="end_collaboration"
+							t-custom-model="this.state.reason"
+						/>
+						<label class="form-check-label" for="reason_end_collab">
+							End of Collaboration
+						</label>
+					</div>
+					<div class="form-check">
+						<input
+							type="radio"
+							id="reason_new_contract"
+							name="contractEndReason"
+							class="form-check-input"
+							value="new_contract"
+							t-custom-model="this.state.reason"
+						/>
+						<label class="form-check-label" for="reason_new_contract">
+							Start a new contract
+						</label>
+					</div>
+				</div>
+
+				<div t-if="this.state.reason === 'new_contract'" class="mt-3">
+					<label class="form-label" for="contract_template_autocomplete">
+						Contract Template
+					</label>
+					<Many2XAutocomplete
+						id="contract_template_autocomplete"
+						activeActions="{}"
+						fieldString.translate="Contract Template"
+						getDomain="() => this.contractTemplateDomain"
+						resModel="'hr.version'"
+						update="(records) => this.onTemplateUpdate(records)"
+						value="this.state.template.name"
+						placeholder.translate="Use Employee's current version information"
+					/>
+				</div>
+			</div>
+            <t t-set-slot="footer">
+                <button t-if="this.state.reason === 'correction'" type="button" class="btn btn-primary" t-on-click="this.onCorrectContract">
+                    Correct terms
+                </button>
+                <button t-elif="this.state.reason === 'end_collaboration'" type="button" class="btn btn-primary" t-on-click="this.onEndCollaboration">
+                    End of Collaboration
+                </button>
+                <button t-elif="this.state.reason === 'new_contract'" type="button" class="btn btn-primary" t-on-click="this.onNewContract">
+                    New Contract
+                </button>
+                <button type="button" class="btn btn-secondary" t-on-click="this.onDiscard">
+                    Discard
+                </button>
+            </t>
+		</Dialog>
+	</t>
+</templates>
