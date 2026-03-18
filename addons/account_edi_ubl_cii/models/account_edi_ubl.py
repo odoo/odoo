@@ -31,7 +31,10 @@ class AccountEdiUBL(models.AbstractModel):
             return additional_docs
         try:
             invoices_by_odoo_xmlid = 'account_edi_ubl_cii.action_report_account_invoices_generated_by_odoo'
-            report_xmlid = invoices_by_odoo_xmlid if self.env.ref(invoices_by_odoo_xmlid, raise_if_not_found=False) else 'account.account_invoices'
+            if not self.env.ref(invoices_by_odoo_xmlid, raise_if_not_found=False):
+                _logger.warning("Missing template while generating substitute PDF attachment for invoice %s", invoice.id)
+                return additional_docs
+            report_xmlid = invoices_by_odoo_xmlid
 
             pdf_raw, pdf_extension = self.env['ir.actions.report'] \
                         ._render_qweb_pdf(report_xmlid, res_ids=[invoice.id])
