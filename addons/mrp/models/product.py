@@ -232,8 +232,13 @@ class ProductProduct(models.Model):
         # pre-compute bom lines and identify missing kit components to prefetch
         bom_sub_lines_per_kit = {}
         prefetch_component_ids = set()
+        bom_per_type = {}
+        for bom in bom_kits.values():
+            if not bom_per_type.get((bom.picking_type_id, bom.company_id.id)):
+                bom_per_type[bom.picking_type_id, bom.company_id.id] = bom
+        bom_per_product_per_type = {k: v._bom_find(self, picking_type=k[0], company_id=k[1], bom_type='phantom') for k, v in bom_per_type.items()}
         for product in bom_kits:
-            __, bom_sub_lines = bom_kits[product].explode(product, 1)
+            __, bom_sub_lines = bom_kits[product].with_context(bom_per_product_per_type=bom_per_product_per_type).explode(product, 1)
             bom_sub_lines_per_kit[product] = bom_sub_lines
             for bom_line, __ in bom_sub_lines:
                 if bom_line.product_id.id not in qties:
