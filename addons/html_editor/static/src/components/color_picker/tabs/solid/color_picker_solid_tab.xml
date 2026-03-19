@@ -16,7 +16,7 @@
             <t t-foreach="this.props.defaultColors" t-as="line" t-key="line_index">
                 <t t-foreach="line" t-as="color" t-key="color_index">
                     <button class="o_color_button o_color_picker_button btn p-0"
-                        t-att-class="{'selected': color === this.props.currentCustomColor.toUpperCase() and !this.props.defaultColorSet}"
+                        t-att-class="{'selected': color === this.props.currentCustomColor?.toUpperCase() and !this.props.defaultColorSet}"
                         t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                 </t>
             </t>
