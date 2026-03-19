@@ -10,7 +10,8 @@ cryptography==38.0.4 ; python_version >= '3.11' and python_version < '3.12'  # (
 cryptography==42.0.8 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) min 41.0.7, pinning 42.0.8 for security fixes
 cryptography==43.0.0 ; python_version >= '3.13'  # (Trixie)
 decorator==4.4.2  ; python_version < '3.11'  # (Jammy)
-decorator==5.1.1  ; python_version >= '3.11'
+decorator==5.1.1 ; python_version >= '3.11' and python_version < '3.13'
+decorator==5.2.1 ; python_version >= '3.13'  # (Trixie)
 docutils==0.17 ; python_version < '3.11'  # (Jammy) even though Ubuntu package is named 0.17.1
 docutils==0.20.1 ; python_version >= '3.11' and python_version < '3.13'
 docutils==0.21.2 ; python_version >= '3.13'  # (Trixie)
