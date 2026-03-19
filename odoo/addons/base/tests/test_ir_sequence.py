@@ -10,7 +10,7 @@ import odoo
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tests import tagged, common
-from odoo.tests.common import BaseCase, SingleTransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -283,7 +283,7 @@ class TestIrSequenceInit(common.TransactionCase):
 
 
 @tagged('at_install', '-post_install')
-class TestIrSequenceDateRangeStandard(SingleTransactionCase):
+class TestIrSequenceDateRangeStandard(TransactionCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
     def test_ir_sequence_date_range_1_create(self):
@@ -294,8 +294,6 @@ class TestIrSequenceDateRangeStandard(SingleTransactionCase):
             'use_date_range': True,
         })
         self.assertTrue(seq)
-
-    def test_ir_sequence_date_range_2_change_dates(self):
         """ Draw numbers to create a first subsequence then change its date range. Then, try to draw a new number adn check a new subsequence was correctly created. """
         year = date.today().year - 1
         january = lambda d: date(year, 1, d)
@@ -318,13 +316,12 @@ class TestIrSequenceDateRangeStandard(SingleTransactionCase):
         seq_date_range = self.env['ir.sequence.date_range'].search(domain)
         self.assertEqual(seq_date_range.date_to, january(17))
 
-    def test_ir_sequence_date_range_3_unlink(self):
         seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range')])
         seq.unlink()
 
 
 @tagged('at_install', '-post_install')
-class TestIrSequenceDateRangeNoGap(SingleTransactionCase):
+class TestIrSequenceDateRangeNoGap(TransactionCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
     def test_ir_sequence_date_range_1_create_no_gap(self):
@@ -337,7 +334,6 @@ class TestIrSequenceDateRangeNoGap(SingleTransactionCase):
         })
         self.assertTrue(seq)
 
-    def test_ir_sequence_date_range_2_change_dates(self):
         """ Draw numbers to create a first subsequence then change its date range. Then, try to draw a new number adn check a new subsequence was correctly created. """
         year = date.today().year - 1
         january = lambda d: date(year, 1, d)
@@ -360,13 +356,12 @@ class TestIrSequenceDateRangeNoGap(SingleTransactionCase):
         seq_date_range = self.env['ir.sequence.date_range'].search(domain)
         self.assertEqual(seq_date_range.date_to, january(17))
 
-    def test_ir_sequence_date_range_3_unlink(self):
         seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range_2')])
         seq.unlink()
 
 
 @tagged('at_install', '-post_install')
-class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
+class TestIrSequenceDateRangeChangeImplementation(TransactionCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
     def test_ir_sequence_date_range_1_create(self):
@@ -386,7 +381,6 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
         })
         self.assertTrue(seq)
 
-    def test_ir_sequence_date_range_2_use(self):
         """ Make some use of the sequences to create some subsequences """
         year = date.today().year - 1
         january = lambda d: date(year, 1, d)
@@ -407,14 +401,12 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
             n = seq16.next_by_code('test_sequence_date_range_4')
             self.assertEqual(n, str(i))
 
-    def test_ir_sequence_date_range_3_write(self):
         """swap the implementation method on both"""
         domain = [('code', 'in', ['test_sequence_date_range_3', 'test_sequence_date_range_4'])]
         seqs = self.env['ir.sequence'].search(domain)
         seqs.write({'implementation': 'standard'})
         seqs.write({'implementation': 'no_gap'})
 
-    def test_ir_sequence_date_range_4_unlink(self):
         domain = [('code', 'in', ['test_sequence_date_range_3', 'test_sequence_date_range_4'])]
         seqs = self.env['ir.sequence'].search(domain)
         seqs.unlink()
