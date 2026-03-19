@@ -186,7 +186,7 @@ export class IconPlugin extends Plugin {
         if (!selectedIcon) {
             return;
         }
-        selectedIcon.classList.toggle("fa-spin");
+        selectedIcon.classList.toggle("oi-spin");
         this.dependencies.history.commit();
     }
 
@@ -209,7 +209,9 @@ export class IconPlugin extends Plugin {
         if (!selectedIcon) {
             return;
         }
-        return selectedIcon.classList.contains("fa-spin");
+        return (
+            selectedIcon.classList.contains("oi-spin") || selectedIcon.classList.contains("fa-spin")
+        );
     }
 
     openIconDialog() {

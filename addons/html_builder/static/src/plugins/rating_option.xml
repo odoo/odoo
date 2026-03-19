@@ -4,21 +4,21 @@
 <t t-name="html_builder.RatingOption">
     <BuilderRow label.translate="Icon">
         <BuilderSelect>
-            <BuilderSelectItem action="'setIcons'" actionParam="'fa-star'">Stars</BuilderSelectItem>
-            <BuilderSelectItem action="'setIcons'" actionParam="'fa-thumbs-up'">Thumbs</BuilderSelectItem>
-            <BuilderSelectItem action="'setIcons'" actionParam="'fa-circle'">Circles</BuilderSelectItem>
-            <BuilderSelectItem action="'setIcons'" actionParam="'fa-square'">Squares</BuilderSelectItem>
-            <BuilderSelectItem action="'setIcons'" actionParam="'fa-heart'">Hearts</BuilderSelectItem>
-            <BuilderSelectItem action="'setIcons'" actionParam="'custom'">Custom</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'star'">Stars</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'thumb_up'">Thumbs</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'circle'">Circles</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'square'">Squares</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'favorite'">Hearts</BuilderSelectItem>
+            <BuilderSelectItem action="'setIcons'" actionParam="'dark_mode'">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Active" level="1">
         <BuilderColorPicker applyTo="'.s_rating_active_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
-        <BuilderButton action="'customIcon'" actionParam="'customActiveIcon'" type="'success'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
+        <BuilderButton action="'customIcon'" actionParam="'customActiveIcon'" type="'success'" preview="false"><i class="oi oi-fw me-1" data-icon="refresh"/> Replace Icon</BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Inactive" level="1">
         <BuilderColorPicker applyTo="'.s_rating_inactive_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
-        <BuilderButton action="'customIcon'" actionParam="'customInactiveIcon'" type="'success'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
+        <BuilderButton action="'customIcon'" actionParam="'customInactiveIcon'" type="'success'" preview="false"><i class="oi oi-fw me-1" data-icon="refresh"/> Replace Icon</BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Score">
         <BuilderNumberInput action="'activeIconsNumber'" min="0"/>
@@ -28,8 +28,8 @@
     <BuilderRow label.translate="Size">
         <BuilderButtonGroup applyTo="'.s_rating_icons'">
             <BuilderButton classAction="''" title.translate="Small"><Image src="'/html_builder/static/img/options/size_small.svg'" /></BuilderButton>
-            <BuilderButton classAction="'fa-2x'" title.translate="Medium"><Image src="'/html_builder/static/img/options/size_medium.svg'" /></BuilderButton>
-            <BuilderButton classAction="'fa-3x'" title.translate="Large"><Image src="'/html_builder/static/img/options/size_large.svg'" /></BuilderButton>
+            <BuilderButton classAction="'oi-2x'" title.translate="Medium"><Image src="'/html_builder/static/img/options/size_medium.svg'" /></BuilderButton>
+            <BuilderButton classAction="'oi-3x'" title.translate="Large"><Image src="'/html_builder/static/img/options/size_large.svg'" /></BuilderButton>
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Title Position">

@@ -30,13 +30,13 @@ test("Drag & drop an 'Icon' snippet opens the dialog to select an icon", async (
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
     // Discard first attempt
     await contains(".o_select_media_dialog button:contains('Discard')").click();
-    expect(":iframe p span.fa-heart").toHaveCount(0);
+    expect(":iframe p span[data-icon='favorite']").toHaveCount(0);
     // Drag again and select heart
     await dragIcon();
-    await contains(".o_select_media_dialog .font-icons-icons span.fa-heart").click();
+    await contains(".o_select_media_dialog .font-icons-icons span[data-icon='favorite']").click();
     expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe p").toHaveCount(2); // new `p` for the icon
-    expect(":iframe p span.fa-heart").toHaveCount(1);
+    expect(":iframe p span[data-icon='favorite']").toHaveCount(1);
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
 
@@ -46,8 +46,10 @@ test("Drag & drop an 'Icon' snippet in inline does not add <p>", async () => {
         ".o-website-builder_sidebar [name='Icon'] .o_snippet_thumbnail"
     ).drag();
     await drop(":iframe p a + .oe_drop_zone");
-    await contains(".o_select_media_dialog .font-icons-icons span.fa-heart").click();
+    await contains(
+        ".o_select_media_dialog .font-icons-icons span.oi-filled[data-icon='favorite']"
+    ).click();
     expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe p").toHaveCount(1); // no new `p` for the icon
-    expect(":iframe p span.fa-heart").toHaveCount(1);
+    expect(":iframe p span.oi-filled[data-icon='favorite']").toHaveCount(1);
 });

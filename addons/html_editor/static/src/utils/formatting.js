@@ -184,3 +184,38 @@ export function getFontSizeOrClass(node) {
     }
     return null;
 }
+
+/**
+ * Allows to iterate over all the CSS rules of all the stylesheets of the
+ * document and to map them to a key-value object.
+ *
+ * @param {function(CSSStyleRule): [string, any]} fn A function that takes a
+ * CSSStyleRule and returns a [key, value] pair. If the function returns undefined, the rule is ignored.
+ * @returns {Object<string, any>} An object mapping keys to values as returned by the provided function.
+ */
+export function mapCSSRules(fn) {
+    const mapping = {};
+
+    for (const sheet of document.styleSheets) {
+        try {
+            if (!sheet.cssRules) {
+                continue;
+            }
+        } catch {
+            continue;
+        }
+        for (const rule of sheet.cssRules) {
+            if (!(rule instanceof CSSStyleRule)) {
+                continue;
+            }
+
+            const result = fn(rule);
+            if (result) {
+                const [key, value] = result;
+                mapping[key] = value;
+            }
+        }
+    }
+
+    return mapping;
+}

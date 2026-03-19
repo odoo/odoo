@@ -1,24 +1,28 @@
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.IconSelector">
     <div>
-        <div class="o_we_file_selector_control_panel sticky-top d-flex gap-2 align-items-center mb-1 py-4 px-3">
+        <div class="o_we_file_selector_control_panel o_we_file_selector_control_panel_icons border-bottom sticky-top d-flex gap-2 align-items-center mb-1 px-3">
             <SearchMedia searchPlaceholder.translate="Search a pictogram"
                 search.bind="this.search"
                 needle="this.state.needle"/>
         </div>
         <div class="font-icons-icons">
-            <t t-foreach="this.state.fonts" t-as="font" t-key="font.base">
-                <div t-if="!font.icons.length" class="o_nocontent_help">
-                    <p class="o_empty_folder_image">No pictograms found.</p>
-                    <p class="o_empty_folder_subtitle">Try searching with other keywords.</p>
-                </div>
-                <span t-foreach="font.icons" t-as="icon" t-key="icon.id"
-                    t-att-title="icon.names[0]"
-                    t-att-aria-label="icon.names[0]" role="img"
-                    class="font-icons-icon m-2 fs-2 p-3 cursor-pointer text-center"
-                    t-att-class="{ o_we_attachment_selected: this.selectedMediaIds.includes(icon.id) }"
-                    t-attf-class="{{ font.base }} {{ icon.names[0] }}"
-                    t-on-click="() => this.onClickIcon(font, icon)"/>
+            <!-- Material Symbols and Odoo UI icons: rendered via the data-icon attribute -->
+            <t t-foreach="this.state.filteredIcons" t-as="icon" t-key="icon.id">
+                <t t-foreach="[false, true]" t-as="filled" t-key="filled">
+                    <span
+                        t-if="!filled || icon.hasFilledVersion"
+                        t-att-title="icon.name"
+                        t-att-aria-label="icon.name"
+                        role="img"
+                        class="font-icons-icon oi m-2 fs-2 p-3 cursor-pointer text-center"
+                        t-att-data-icon="icon.dataIcon"
+                        t-att-class="{
+                            o_we_attachment_selected: this.isIconSelected(icon, filled),
+                            'oi-filled': filled,
+                        }"
+                        t-on-click="() => this.onClickIcon(icon, filled)"/>
+                </t>
             </t>
         </div>
     </div>
