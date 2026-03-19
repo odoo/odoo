@@ -20,7 +20,8 @@ class IrActionsReport(models.Model):
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         """Override to add and fill headers, footers and product documents to the sale quotation."""
         result = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
-        if self._get_report(report_ref).report_name != 'sale.report_saleorder':
+        report_sudo = self._get_report(report_ref)
+        if report_sudo.report_name != 'sale.report_saleorder' or report_sudo.report_type == 'qweb-pdf-paper-muncher':
             return result
 
         ICP = self.env['ir.config_parameter'].sudo()

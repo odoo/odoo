@@ -408,7 +408,7 @@ def consume_headers(buffer: bytearray) -> tuple[Optional[str], Optional[dict[str
 
 
 def _serve_requests(process, documents):
-    _logger.info("_serve_requests: Starting multiplexed loop")
+    _logger.info("_serve_requests: Starting request loop, %d documents available", len(documents))
     documents_served = set()
 
     # We use a selector to monitor both stdout (requests) and stderr (logs)
@@ -420,6 +420,7 @@ def _serve_requests(process, documents):
     stdout_buffer = bytearray()
     stderr_buffer = bytearray()
 
+    request_number = 0
     try:
         while True:
             # Check if process died
@@ -458,10 +459,12 @@ def _serve_requests(process, documents):
                         if request_line is None:
                             break
 
+                        request_number += 1
+
                         if request_line.startswith('GET'):
-                            _handle_single_request(process, request_line, documents, documents_served)
+                            _handle_single_request(process, request_line, documents, documents_served, request_number)
                         elif request_line.startswith('PUT'):
-                            print(f"PUT RECEIVED {request_line} headers: {headers}, still have {stdout_buffer}")
+                            print(f"PUT RECEIVED {request_line} headers: {headers}")
 
                             return _finalize_and_read(process, stdout_buffer)
                             if len(documents_served) >= len(documents):
@@ -543,7 +546,7 @@ def _finalize_and_read(process, current_buffer):
     return rendered_content
 
 
-def _handle_single_request(process, request_line, documents, documents_served):
+def _handle_single_request(process, request_line, documents, documents_served, request_number):
     """Extracted logic to handle a single protocol request."""
     parts = request_line.split(' ')
     if len(parts) < 2:
@@ -556,13 +559,13 @@ def _handle_single_request(process, request_line, documents, documents_served):
             f"Unexpected HTTP method: {method} in line: {request_line}")
 
 
-    _logger.info("Processing %s %s", method, path)
+    _logger.info("Request #%d: path=%r (documents_count=%d)", request_number, path, len(documents))
 
     # Document vs Asset logic
     document = re.match(r'^/?(?P<index>\d+)\.html(?:\?.*)?$', path)
     if document:
         index = int(document.group('index'))
-        _logger.info("Request #: Document request for index=%d", index)
+        _logger.info("Request #%d: Document request for index=%d", request_number, index)
         content = documents[index]
         now = datetime.now(timezone.utc)
         response_headers = (
@@ -587,8 +590,7 @@ def _handle_single_request(process, request_line, documents, documents_served):
             _safe_write(process, chunk)
 
     process.stdin.flush()
-    _logger.info("Request #: Asset %s sent successfully", path)
-
+    _logger.info("Request #%d: Asset %s sent successfully", request_number, path)
 
 
 def _safe_write(process, data: bytes) -> None:

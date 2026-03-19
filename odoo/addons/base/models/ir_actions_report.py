@@ -464,7 +464,7 @@ class IrActionsReport(models.Model):
                     'attachment': attachment,
                 }
 
-        # Call 'wkhtmltopdf' to generate the missing streams.
+        # Call the defined PDF engine to generate the missing streams.
         res_ids_wo_stream = [res_id for res_id, stream_data in collected_streams.items() if not stream_data['stream']]
         all_res_ids_wo_stream = res_ids if has_duplicated_ids else res_ids_wo_stream
 
@@ -512,8 +512,9 @@ class IrActionsReport(models.Model):
                     report_sudo.name,
                 ))
 
+            print("dzzdz", pdf_content[:300].decode('utf-8', errors='replace'))
             pdf_content_stream = io.BytesIO(pdf_content)
-
+            # TODO DOODODODOD
             # Printing a PDF report without any records. The content could be returned directly.
             if has_duplicated_ids or not res_ids:
                 return {

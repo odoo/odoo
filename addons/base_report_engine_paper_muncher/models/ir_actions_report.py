@@ -69,6 +69,9 @@ class IrActionsReport(models.Model):
             )
             raise UserError(_('The PDF generation failed. Please contact an administrator.'))
 
+        with open("/tmp/PM1.pdf", 'wb') as f:
+            f.write(output)
+
         return output
 
     def _run_pdf_engine(self, engine_name, html, report_ref=False, landscape=False, **kwargs):
