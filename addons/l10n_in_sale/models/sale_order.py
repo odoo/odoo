@@ -12,6 +12,7 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_invoice_id')
     def _compute_fiscal_position_id(self):
+        sez_foreign_state = self.env.ref("l10n_in.state_in_oc", raise_if_not_found=False)
 
         def _get_partner_fiscal(order):
             order = order.with_company(order.company_id)
@@ -30,7 +31,13 @@ class SaleOrder(models.Model):
             partner_to_consider = order.partner_invoice_id or order.partner_id
             if partner_to_consider.l10n_in_gst_treatment == 'special_economic_zone':
                 # Special Economic Zone
+<<<<<<< 6cd974d7191b08c28b6a8d7b57f83ee4ddf58fd6
                 return sez_state
+||||||| b7536059dea9b56e2c10d09d932f59770911c97c
+                return foreign_state
+=======
+                return sez_foreign_state or foreign_state
+>>>>>>> c45d7b77b6e36639cb7f87747121f9ec95f29caa
 
             # Computing Place of Supply for particular order
             partner = (
