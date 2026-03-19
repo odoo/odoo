@@ -252,7 +252,7 @@
 
                 <BuilderRow
                     label.translate="Hover Effect"
-                    t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (this.catalogPanel and this.isActiveItem('o_has_description_opt'))"
+                    t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (catalogBento and this.isActiveItem('o_has_description_opt'))"
                     >
                     <BuilderSelect>
                         <BuilderSelectItem
@@ -285,7 +285,7 @@
                             Border-Primary
                         </BuilderSelectItem>
                         <BuilderSelectItem
-                            t-if="this.catalogPanel"
+                            t-if="catalogBento"
                             classAction="'o_wsale_products_opt_hover_show_description'">
                             Show description
                         </BuilderSelectItem>
