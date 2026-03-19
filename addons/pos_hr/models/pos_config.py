@@ -10,12 +10,15 @@ class PosConfig(models.Model):
 
     minimal_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_minimal_employee_hr_employee', string="Employees with minimal access",
+        bypass_search_access=True,
         help='If left empty, all employees can log in to PoS')
     basic_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_basic_employee_hr_employee', string="Employees with basic access",
+        bypass_search_access=True,
         help='If left empty, all employees can log in to PoS')
     advanced_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_advanced_employee_hr_employee', string="Employees with manager access",
+        bypass_search_access=True,
         help='Employees linked to users with the PoS Manager role are automatically added to this list')
 
     def write(self, vals):
