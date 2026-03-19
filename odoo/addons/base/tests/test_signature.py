@@ -61,7 +61,7 @@ class TestSignature(TransactionCase):
         fixed_time = datetime.datetime.now(datetime.timezone.utc)
         with file_open(self.pdf_path, "rb") as stream:
             out_stream = io.BytesIO()
-            with patch.object(PdfSigner, "_load_key_and_certificate", return_value=(self.private_key, self.certificate)):
+            with patch.object(PdfSigner, "_load_key_and_certificates", return_value=(self.private_key, self.certificate, None)):
                 signer = PdfSigner(stream, self.env, signing_time=fixed_time)
                 out_stream = signer.sign_pdf()
                 if not out_stream:
