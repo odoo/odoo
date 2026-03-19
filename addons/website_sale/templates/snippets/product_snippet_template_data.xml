@@ -53,7 +53,7 @@
                         t-set="ribbon"
                         t-value="product_template._get_ribbon(
                             price_vals=data,
-                            variant=product_variant,
+                            variant=product_variant if not data.get('hide_variants') else None,
                         )"
                     />
                     <t

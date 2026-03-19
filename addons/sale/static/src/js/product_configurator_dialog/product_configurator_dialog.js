@@ -81,6 +81,7 @@ export class ProductConfiguratorDialog extends Component {
             updateProductTemplateSelectedPTAV: this._updateProductTemplateSelectedPTAV.bind(this),
             updatePTAVCustomValue: this._updatePTAVCustomValue.bind(this),
             isPossibleCombination: this._isPossibleCombination,
+            isQuantityAllowed: this._isQuantityAllowed.bind(this),
         });
 
         onWillStart(async () => {
@@ -248,6 +249,10 @@ export class ProductConfiguratorDialog extends Component {
      * @return {Boolean} - Whether the quantity was updated.
      */
     async _setQuantity(productTmplId, quantity) {
+        const product = this._findProduct(productTmplId);
+        if (!this._isQuantityAllowed(product, quantity)) {
+            quantity = product.free_qty;
+        }
         if (quantity <= 0) {
             if (productTmplId === this.env.mainProductTmplId) {
                 quantity = 1;
@@ -256,7 +261,6 @@ export class ProductConfiguratorDialog extends Component {
                 return true;
             }
         }
-        const product = this._findProduct(productTmplId);
         if (product.quantity === quantity) {
             return false;
         }
@@ -473,6 +477,26 @@ export class ProductConfiguratorDialog extends Component {
         return [...this.state.products].every(
             p => this._isPossibleCombination(p)
         );
+    }
+
+    /**
+     * Check whether the provided product quantity can be added to the cart.
+     *
+     * @param {Object} product - The provided product.
+     * @param {Number} quantity - The new quantity of the product.
+     * @return {Boolean} - Whether the provided product quantity can be added to the cart.
+     */
+    _isQuantityAllowed(product, quantity) {
+        return !('free_qty' in product) || product.free_qty >= quantity;
+    }
+
+    /**
+     * Check whether all selected product quantities can be added to the cart.
+     *
+     * @return {Boolean} - Whether all selected product quantities can be added to the cart.
+     */
+    areQuantitiesAllowed() {
+        return this.state.products.every(p => this._isQuantityAllowed(p, p.quantity));
     }
 
     /**

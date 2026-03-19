@@ -1319,6 +1319,22 @@ $-product-radius-map: (
             flex-grow: 0 !important;
         }
     }
+
+    &.o_wsale_cta_wrapper_large {
+        .stock_notification_input_group {
+            > :first-child {
+                border-radius: $btn-border-radius-lg;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            > :last-child {
+                border-radius: $btn-border-radius-lg;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+    }
 }
 
 // ==== Product Grid ===========================================================
