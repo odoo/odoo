@@ -10,7 +10,8 @@ import {
     paragraphRelatedElementsSelector,
 } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
-import { MediaDialog, TABS } from "./media_dialog/media_dialog";
+import { MediaDialog } from "./media_dialog/media_dialog";
+import { TABS } from "./media_dialog/media_dialog_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -209,8 +210,7 @@ export class MediaPlugin extends Plugin {
             }
             this.trigger("on_media_replaced_handlers", { newMediaEl: element });
         } else {
-            this.dependencies.dom.insert(element);
-            this.trigger("on_media_added_handlers", { newMediaEl: element });
+            await this.addMedia(element);
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
@@ -219,9 +219,13 @@ export class MediaPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
+    async addMedia(element) {
+        this.dependencies.dom.insert(element);
+        this.trigger("on_media_added_handlers", { newMediaEl: element });
+    }
+
     openMediaDialog(params = {}, editableEl = null) {
-        const oldSave =
-            params.save || ((element) => this.onSaveMediaDialog(element, { node: params.node }));
+        const oldSave = params.save || this.getSaveFunction(params);
         params.save = async (...args) => {
             const selection = args[0];
             const elements = selection
@@ -231,7 +235,7 @@ export class MediaPlugin extends Plugin {
                 : [];
             await Promise.all(
                 this.trigger("on_will_save_media_dialog_handlers", elements, {
-                    node: params.node,
+                    node: args[3] || params.node,
                 })
             );
             return oldSave(...args);
@@ -240,6 +244,7 @@ export class MediaPlugin extends Plugin {
         const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
+            field,
             useMediaLibrary: !!(
                 field &&
                 ((resModel === "ir.ui.view" && field === "arch") || type === "html")
@@ -252,6 +257,14 @@ export class MediaPlugin extends Plugin {
             ...params,
         });
         return mediaDialogClosedPromise;
+    }
+
+    getSaveFunction(params) {
+        return (...args) => {
+            const element = args[0];
+            const node = args[3] || params.node;
+            this.onSaveMediaDialog(element, { node });
+        };
     }
 
     /**

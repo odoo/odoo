@@ -8,7 +8,6 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-
 import { Component, xml, onWillStart } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
@@ -21,6 +20,24 @@ export const IMAGE_MIMETYPES = [
     "image/webp",
 ];
 export const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".jpe", ".png", ".svg", ".gif", ".webp"];
+
+export const ATTACHMENT_FIELDS = [
+    "id",
+    "name",
+    "mimetype",
+    "description",
+    "checksum",
+    "url",
+    "type",
+    "res_id",
+    "res_model",
+    "public",
+    "access_token",
+    "image_src",
+    "image_width",
+    "image_height",
+    "original_id",
+];
 
 class RemoveButton extends Component {
     static template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-1 transition-base" t-att-title="this.removeTitle" role="img" t-att-aria-label="this.removeTitle" t-on-click="this.remove"/>`;
@@ -282,22 +299,7 @@ export class FileSelector extends Component {
         this.state.isFetchingAttachments = true;
         const attachments = await this.orm.call("ir.attachment", "search_read", [], {
             domain: this.attachmentsDomain,
-            fields: [
-                "name",
-                "mimetype",
-                "description",
-                "checksum",
-                "url",
-                "type",
-                "res_id",
-                "res_model",
-                "public",
-                "access_token",
-                "image_src",
-                "image_width",
-                "image_height",
-                "original_id",
-            ],
+            fields: ATTACHMENT_FIELDS,
             order: "id desc",
             // Try to fetch first record of next page just to know whether there is a next page.
             limit,

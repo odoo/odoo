@@ -13,7 +13,7 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 
 @odoo.tests.tagged("mail_controller")
-class TestMessageController(HttpCaseWithUserDemo):
+class TestMessageController(HttpCaseWithUserDemo, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -97,7 +97,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data1 = res2.json()["result"]
         self.assertEqual(
             data1["store_data"]["ir.attachment"],
-            [
+            self._filter_attachments_fields(
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
@@ -115,8 +115,16 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[0].res_id,
                 },
-            ],
+            ),
             "guest should be allowed to add attachment with token when posting message",
         )
         # test message update: token error
@@ -163,7 +171,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data2 = res4.json()["result"]
         self.assertEqual(
             data2["ir.attachment"],
-            [
+            self._filter_attachments_fields(
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
@@ -181,6 +189,14 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[0].res_id,
                 },
                 {
                     "checksum": False,
@@ -199,8 +215,16 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[1].res_id,
                 },
-            ],
+            ),
             "guest should be allowed to add attachment with token when updating message",
         )
 

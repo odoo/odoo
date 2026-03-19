@@ -634,7 +634,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Reading the milestone should no longer trigger an access error.
         project_milestone.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError, msg="Should not accept the portal user to update a milestone."):
-            project_milestone.with_user(self.user_portal).write(['name'])
+            project_milestone.with_user(self.user_portal).write({'name': 'test_milestone'})
         with self.assertRaises(AccessError, msg="Should not accept the portal user to delete a milestone."):
             project_milestone.with_user(self.user_portal).unlink()
         with self.assertRaises(AccessError, msg="Should not accept the portal user to create a milestone."):

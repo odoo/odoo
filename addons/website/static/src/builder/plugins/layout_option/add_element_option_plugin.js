@@ -98,21 +98,19 @@ export class AddGridElementAction extends BuilderAction {
 
     async apply({ editingElement: rowEl, params: { mainParam: elementType } }) {
         if (elementType === "image") {
-            // Choose an image with the media dialog.
-            let imageEl;
             await this.dependencies.media.openMediaDialog({
                 onlyImages: true,
                 noDocuments: true,
-                save: (selectedImageEl) => (imageEl = selectedImageEl),
+                save: async (imageEl) => {
+                    if (!imageEl) {
+                        return;
+                    }
+                    await onceAllImagesLoaded(imageEl);
+                    this.dependencies.addElementOption.addGridElement(rowEl, imageEl, 6, 6, [
+                        "o_grid_item_image",
+                    ]);
+                },
             });
-            if (!imageEl) {
-                return;
-            }
-            // Wait for the image to be loaded.
-            await onceAllImagesLoaded(imageEl);
-            this.dependencies.addElementOption.addGridElement(rowEl, imageEl, 6, 6, [
-                "o_grid_item_image",
-            ]);
         } else if (elementType === "text") {
             // Create default text content.
             const pEl = document.createElement("p");

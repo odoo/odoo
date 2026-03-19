@@ -18,7 +18,7 @@ import wUtils from "@website/js/utils";
 const WORD_SEPARATORS_REGEX =
     "([\\u2000-\\u206F\\u2E00-\\u2E7F'!\"#\\$%&\\(\\)\\*\\+,\\-\\.\\/:;<=>\\?¿¡@\\[\\]\\^_`\\{\\|\\}~\\s]+|^|$)";
 
-const seoContext = reactive({
+export const seoContext = reactive({
     description: "",
     keywords: [],
     title: "",

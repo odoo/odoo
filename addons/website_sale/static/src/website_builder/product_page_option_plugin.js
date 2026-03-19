@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { PRODUCT_PAGE_OPTION_SELECTOR } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
-import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
+import { TABS } from "@html_editor/main/media/media_dialog/media_dialog_utils";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -317,15 +317,19 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
         this.reload = false;
         this.canTimeout = false;
     }
-    apply({ editingElement: productDetailMainEl }) {
+    async apply({ editingElement }) {
+        await this.dependencies.media.openMediaDialog(this.getMediaDialogProps({ editingElement }));
+    }
+
+    getMediaDialogProps({ editingElement: productDetailMainEl }){
         // Emulate click on the main image of the carousel.
         const image = productDetailMainEl.querySelector(
             `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
         );
-        this.dependencies.media.openMediaDialog({
+        return {
             multiImages: false,
             visibleTabs: ["IMAGES"],
-            node: productDetailMainEl,
+            node: image,
             save: (imgEl, selectedMedia) => {
                 const attachment = selectedMedia[0];
                 if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
@@ -348,7 +352,7 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
                     image_1920: image.src.split(",")[1],
                 });
             },
-        });
+        }
     }
 }
 
@@ -367,21 +371,28 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
             );
         }
         return new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                addFieldImage: true,
-                multiImages: true,
-                visibleTabs: ["IMAGES", "VIDEOS"],
-                node: el,
-                // Kinda hack-ish but the regular save does not get the information we need
-                save: async (imgEls, selectedMedia, activeTab) => {
-                    if (selectedMedia.length) {
-                        const type = activeTab === TABS["IMAGES"].id ? "image" : "video";
-                        resolve({ imgEls, selectedMedia, type });
-                    }
-                },
-            });
-            onClose.then(resolve);
+            const onClose = this.dependencies.media.openMediaDialog(this.getMediaDialogProps({ editingElement: el, loadPromiseResolveFunction: resolve }));
+            // Make sure to resolve with a Falsy value when the mediaDialog is closed without selecting an image so that
+            // loadResult is Falsy and apply() cancels the reload of the page.
+            onClose.then(() => resolve());
         });
+    }
+
+    getMediaDialogProps({ editingElement, loadPromiseResolveFunction }) {
+        return {
+            addFieldImage: true,
+            multiImages: true,
+            visibleTabs: ["IMAGES", "VIDEOS"],
+            node: editingElement,
+            // Kinda hack-ish but the regular save does not get the information we need
+            save: async (imgEls, selectedMedia, activeTab) => {
+                if (selectedMedia.length) {
+                    const type =
+                        activeTab === TABS["IMAGES"].id ? "image" : "video";
+                    loadPromiseResolveFunction({ imgEls, selectedMedia, type });
+                }
+            },
+        };
     }
     async apply({ editingElement: el, loadResult }) {
         if (!loadResult) {
