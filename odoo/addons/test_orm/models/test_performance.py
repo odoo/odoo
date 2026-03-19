@@ -67,8 +67,7 @@ class TestPerformanceBacon(models.Model):
     _name = 'test_performance.bacon'
     _description = 'Test Performance Bacon'
 
-    property_eggs = fields.Many2one(
-        'test_performance.eggs', company_dependent=True, string='Eggs')
+    property_eggs = fields.Many2one('test_performance.eggs', company_dependent=True, string='Eggs')
 
 
 class TestPerformanceEggs(models.Model):
@@ -90,34 +89,3 @@ class TestPerformanceMozzarella(models.Model):
     def _value_plus_one(self):
         for record in self:
             record.value_plus_one = record.value + 1
-
-
-class TestPerformanceSimpleMinded(models.Model):
-    _name = 'test_performance.simple.minded'
-    _description = 'test_performance.simple.minded'
-
-    name = fields.Char()
-    active = fields.Boolean(default=True)
-    parent_id = fields.Many2one('test_performance.simple.minded')
-
-    child_ids = fields.One2many('test_performance.simple.minded', 'parent_id')
-
-    def simple_loop(self):
-        for record in self:
-            record.name
-
-    def nested_loop(self):
-        for record in self:
-            for child in record.child_ids:
-                child.name
-
-    def union_once(self):
-        """ Union all first children at once. """
-        return self.browse().union(*[record.child_ids[:1] for record in self])
-
-    def union_loop(self):
-        """ Union all first children in a loop. """
-        result = self.browse()
-        for record in self:
-            result |= record.child_ids[:1]
-        return result
