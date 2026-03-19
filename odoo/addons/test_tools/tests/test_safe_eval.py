@@ -12,7 +12,7 @@ from odoo.tools.safe_eval import (
     expr_eval,
     safe_checker,
     safe_eval,
-    UnsafeObjectError,
+    UnsafeClassError,
     UnsafePolicy,
 )
 
@@ -251,7 +251,7 @@ class TestSafeEvalRuntime(TransactionCase):
         expr = """
             UnsafeClass()
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -260,7 +260,7 @@ class TestSafeEvalRuntime(TransactionCase):
             callee = lambda *args, **kwargs: ...
             callee(UnsafeClass)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -269,7 +269,7 @@ class TestSafeEvalRuntime(TransactionCase):
             callee = lambda *args, **kwargs: ...
             callee(kw=UnsafeClass)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -279,7 +279,7 @@ class TestSafeEvalRuntime(TransactionCase):
             struct = {'a': {'b': {'c': UnsafeClass}}}
             callee(struct)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         expr = """
@@ -287,7 +287,7 @@ class TestSafeEvalRuntime(TransactionCase):
             struct = ['a', 'b', 'c', UnsafeClass]
             callee(struct)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -295,19 +295,19 @@ class TestSafeEvalRuntime(TransactionCase):
         expr = """
             map(UnsafeClass, ['foo'])
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         expr = """
             filter(UnsafeClass, ['foo'])
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         expr = """
             sorted(['foo'], key=UnsafeClass)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -324,7 +324,7 @@ class TestSafeEvalRuntime(TransactionCase):
             'type': 'qweb',
             'arch_db': arch,
         })
-        with self.assertRaises(UnsafeObjectError):
+        with self.assertRaises(UnsafeClassError):
             self.env['ir.qweb']._render(view.id, self.unsafe_context)
 
     def test_override_call(self):
@@ -372,7 +372,7 @@ class TestSafeEvalRuntime(TransactionCase):
             g = (UnsafeClass() for _ in [0])
         """
         safe_eval(dedent(expr), self.unsafe_context, mode='exec')
-        with self.assertRaises(UnsafeObjectError):
+        with self.assertRaises(UnsafeClassError):
             list(self.unsafe_context['g'])
 
         # Attempt to hide a dangerous object (caught by the `YIELD` event)
@@ -385,7 +385,7 @@ class TestSafeEvalRuntime(TransactionCase):
             # Regardless of the usage, the context must be checked
             use_generator=lambda g: list(g),  # noqa: PLW0108
         )
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         # Attempt to alter the generator's context by modifying globals
@@ -405,7 +405,7 @@ class TestSafeEvalRuntime(TransactionCase):
             'd': {},
             'use_generator': use_generator_1,
         }
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
         # Attempt to alter the generator's context by modifying locals
@@ -425,7 +425,7 @@ class TestSafeEvalRuntime(TransactionCase):
         safe_ctx = {
             'use_generator': use_generator_2,
         }
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
         # Attempt to alter the generator's context by modifying builtins
@@ -448,7 +448,7 @@ class TestSafeEvalRuntime(TransactionCase):
             'foo': '',  # Shadow builtin
             'use_generator': use_generator_3,
         }
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
     def test_trust_iterators(self):

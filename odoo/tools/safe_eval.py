@@ -89,10 +89,35 @@ class UnsafeContextError(UnsafeError):
 class UnsafeObjectError(UnsafeError):
     """ Exception raised when an object is unsafe. """
 
+
+class UnsafeModuleError(UnsafeObjectError):
+
+    def __init__(self, obj):
+        super().__init__(f'Unsafe module access: {obj!r}')
+
+
+class UnsafeClassError(UnsafeObjectError):
+
+    def __init__(self, obj):
+        obj_path = safe_whitelist.get_full_path(obj)
+        super().__init__(f'Unsafe class access: {obj!r} (path: {obj_path})')
+
+
+class UnsafeInstanceError(UnsafeObjectError):
+
+    def __init__(self, obj):
+        obj_path = safe_whitelist.get_full_path(type(obj))
+        super().__init__(
+            f'Unsafe instance access: {obj!r} (type: {type(obj)!r}, path: {obj_path})',
+        )
+
+
+class UnsafeFunctionError(UnsafeObjectError):
+
     def __init__(self, obj):
         obj_path = safe_whitelist.get_full_path(obj)
         super().__init__(
-            f'Unsafe object access (type {type(obj)!r}): {obj!r} (path: {obj_path})',
+            f'Unsafe function access: {obj!r} (type: {type(obj)!r}, path: {obj_path})',
         )
 
 
@@ -928,19 +953,18 @@ class _SafeWhitelist:
 
     def check_class(self, obj):
         if not self._re_class.fullmatch(self.get_full_path(obj)):
-            raise UnsafeObjectError(obj)
+            raise UnsafeClassError(obj)
 
     def check_instance(self, obj):
-        obj = type(obj)
-        if not self._re_instance.fullmatch(self.get_full_path(obj)):
-            raise UnsafeObjectError(obj)
+        if not self._re_instance.fullmatch(self.get_full_path(type(obj))):
+            raise UnsafeInstanceError(obj)
 
     def check_function(self, obj):
         if not self._re_function.fullmatch(self.get_full_path(obj)):
-            raise UnsafeObjectError(obj)
+            raise UnsafeFunctionError(obj)
 
     def check_module(self, obj):
-        raise UnsafeObjectError(obj)
+        raise UnsafeModuleError(obj)
 
 
 safe_transformer = _SafeTransformer()
