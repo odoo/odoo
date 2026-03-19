@@ -11,7 +11,6 @@
         'data/test_domain.xml',
         'data/test_fields.xml',
         'data/test_inherits.xml',
-        'data/test_json_field.xml',
         'data/test_one2many.xml',
         'data/test_properties.xml',
         'data/test_search.xml',
