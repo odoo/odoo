@@ -10,7 +10,7 @@ from odoo.tools.safe_eval import (
     const_eval,
     expr_eval,
     safe_eval,
-    UnsafeObjectError,
+    UnsafeClassError,
     UnsafePolicy,
 )
 
@@ -249,7 +249,7 @@ class TestSafeEvalRuntime(TransactionCase):
         expr = """
             UnsafeClass()
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -258,7 +258,7 @@ class TestSafeEvalRuntime(TransactionCase):
             callee = lambda *args, **kwargs: ...
             callee(UnsafeClass)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -267,7 +267,7 @@ class TestSafeEvalRuntime(TransactionCase):
             callee = lambda *args, **kwargs: ...
             callee(kw=UnsafeClass)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -277,7 +277,7 @@ class TestSafeEvalRuntime(TransactionCase):
             struct = {'a': {'b': {'c': UnsafeClass}}}
             callee(struct)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         expr = """
@@ -285,7 +285,7 @@ class TestSafeEvalRuntime(TransactionCase):
             struct = ['a', 'b', 'c', UnsafeClass]
             callee(struct)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -293,19 +293,19 @@ class TestSafeEvalRuntime(TransactionCase):
         expr = """
             map(UnsafeClass, ['foo'])
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         expr = """
             filter(UnsafeClass, ['foo'])
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
         expr = """
             sorted(['foo'], key=UnsafeClass)
         """
-        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
@@ -322,7 +322,7 @@ class TestSafeEvalRuntime(TransactionCase):
             'type': 'qweb',
             'arch_db': arch,
         })
-        with self.assertRaises(UnsafeObjectError):
+        with self.assertRaises(UnsafeClassError):
             self.env['ir.qweb']._render(view.id, self.unsafe_context)
 
     def test_override_call(self):
