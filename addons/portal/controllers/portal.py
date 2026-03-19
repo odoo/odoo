@@ -628,6 +628,13 @@ class CustomerPortal(Controller):
                 field = partner_fields[key]
                 if field.type == 'many2one' and isinstance(value, str) and value.isdigit():
                     address_values[key] = field.convert_to_cache(int(value), ResPartner)
+                elif (
+                    field.type == 'selection'
+                    and value == ''  # noqa: PLC1901
+                    and '' not in field.get_values(request.env)
+                ):
+                    # An empty string from an HTML select means "no selection"; map it to False.
+                    address_values[key] = False
                 else:
                     # Always keep field values, even if falsy, as it might be for resetting a field.
                     address_values[key] = field.convert_to_cache(value, ResPartner)
