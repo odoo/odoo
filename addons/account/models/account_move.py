@@ -3468,7 +3468,7 @@ class AccountMove(models.Model):
         def has_non_deductible_lines(move):
             return (
                 move.state == 'draft'
-                and move.is_purchase_document()
+                and move.is_purchase_document(include_receipts=True)
                 and any(move.line_ids.filtered(lambda line: line.display_type == 'product' and line.deductible_amount < 100))
             )
 
