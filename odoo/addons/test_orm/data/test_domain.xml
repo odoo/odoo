@@ -10,13 +10,11 @@
 
         <record id="test_domain_discussion_0" model="test_domain.discussion">
             <field name="name">Stuff</field>
-            <field name="participants" eval="[Command.link(ref('base.user_root'))]"/>
         </record>
 
         <record id="test_domain_message_0_0" model="test_domain.message">
             <field name="discussion" ref="test_domain_discussion_0"/>
             <field name="body">Hey dude!</field>
-            <field name="label">hello</field>
         </record>
         <record id="test_domain_message_0_1" model="test_domain.message">
             <field name="discussion" ref="test_domain_discussion_0"/>
@@ -27,11 +25,6 @@
             <field name="body">This is a much longer message</field>
         </record>
 
-        <record id="test_domain_emailmessage_0_0" model="test_domain.emailmessage">
-            <field name="message" ref="test_domain_message_0_0"/>
-            <field name="email_to">first@example.localhost</field>
-        </record>
-        
         <record id="bool_1" model="test_domain.bool">
             <field name="bool_true" eval="True"/>
         </record>
