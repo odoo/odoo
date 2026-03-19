@@ -72,6 +72,8 @@ export class Thread extends Record {
     uuid;
     /** @type {string} */
     model;
+    /** @type {boolean} */
+    active;
     allMessages = Record.many("Message", {
         inverse: "thread",
     });
@@ -385,6 +387,14 @@ export class Thread extends Record {
         );
         attachments.sort((a1, a2) => a2.id - a1.id);
         return attachments;
+    }
+
+    get isArchived() {
+        return this.active === false;
+    }
+
+    get showArchivedBadge() {
+        return this.isArchived;
     }
 
     get isUnread() {

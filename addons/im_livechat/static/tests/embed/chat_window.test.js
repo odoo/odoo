@@ -160,6 +160,37 @@ test("livechat is shown as bubble on page reload", async () => {
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
 });
 
+test("visitor does not see the archived badge", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId, fold_state: "open" }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
+    );
+    await start({
+        authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
+    });
+    await contains(".o-mail-Composer-input");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(".o-mail-Composer-input", { count: 0 });
+    await contains(".o-mail-ChatWindow-header", { textContent: serverState.partnerName });
+});
+
 test("thread actions are not displayed on temporary thread", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();

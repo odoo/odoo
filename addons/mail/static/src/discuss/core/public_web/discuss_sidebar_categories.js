@@ -303,6 +303,7 @@ export class DiscussSidebarCategories extends Component {
     filteredThreads(threads) {
         return threads.filter(
             (thread) =>
+                !thread.isArchived &&
                 thread.displayInSidebar &&
                 (thread.parent_channel_id ||
                     !this.state.quickSearchVal ||
