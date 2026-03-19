@@ -3,7 +3,9 @@
 
 from ast import literal_eval
 
-from odoo import fields, models, api
+from odoo import fields, models, api, Command
+from odoo.exceptions import UserError
+from odoo.tools import format_list
 
 
 class StockQuantRelocate(models.TransientModel):
@@ -74,3 +76,96 @@ class StockQuantRelocate(models.TransientModel):
         elif self.env.context.get('single_product', False) and len(product_ids) == 1:
             return product_ids.action_open_quants()
         return self.quant_ids.with_context(always_show_loc=1).action_view_quants()
+
+    def action_request_quants_relocation(self):
+        self.ensure_one()
+        if not (self.dest_location_id or self.dest_package_id):
+            return
+
+        pickings = []
+        quants = self.quant_ids.filtered(
+            lambda q: q.location_id != self.dest_location_id or q.package_id != self.dest_package_id
+        )
+        warehouses = quants.location_id.warehouse_id | self.dest_location_id.warehouse_id
+        fallback_whs = warehouses.filtered(lambda w: not w.int_type_id.active)
+        fallback_types = {}
+        if fallback_whs:
+            picking_types_by_wh = self.env['stock.picking.type']._read_group(
+                [('code', '=', 'internal'), ('warehouse_id', 'in', fallback_whs.ids)],
+                ['warehouse_id'],
+                ['id:min']
+            )
+            fallback_types = {wh: self.env['stock.picking.type'].browse(pt_id) for wh, pt_id in picking_types_by_wh}
+        # Iterate through the dictionary to create one picking per location
+        quants_by_location = quants.grouped('location_id')
+        for location, quants in quants_by_location.items():
+            warehouse = location.warehouse_id or self.dest_location_id.warehouse_id
+            picking_type = warehouse.int_type_id if warehouse.int_type_id.active else fallback_types.get(warehouse)
+            if not picking_type:
+                raise UserError(self.env._('You need to create an internal operation type for your warehouse.'))
+            pickings.append(self._create_moves_and_picking(quants, location.id, picking_type))
+
+        links = self._generate_links(pickings)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': self.env._('The transfer request has been created') if pickings
+                    else self.env._('Only products assigned to a warehouse can be relocated'),
+                'message': format_list(self.env, ['%s' for _ in pickings]),
+                'links': links,
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
+    def _create_moves_and_picking(self, quants, source_location, picking_type):
+        moves = []
+        quants_by_product = quants.grouped('product_id')
+        for product, prod_quants in quants_by_product.items():
+            move_vals = {
+                'product_id': product.id,
+                'product_uom_qty': sum(prod_quants.mapped('quantity')),
+                'uom_id': prod_quants[0].uom_id.id,
+                'location_id': source_location,
+                'location_dest_id': self.dest_location_id.id,
+            }
+
+            move_lines = []
+            for quant in prod_quants:
+                move_lines.append(
+                    Command.create({
+                        'product_id': product.id,
+                        'quantity': quant.quantity,
+                        'uom_id': quant.uom_id.id,
+                        'location_id': quant.location_id.id,
+                        'location_dest_id': self.dest_location_id.id,
+                        'company_id': quant.company_id.id,
+                        'package_id': quant.package_id.id,
+                        'result_package_id': self.dest_package_id.id,
+                        'lot_id': quant.lot_id.id,
+                    })
+                )
+            move_vals['move_line_ids'] = move_lines
+            moves.append(Command.create(move_vals))
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'origin': f'Relocation Request{f": {self.message}" if self.message else ""}',
+            'location_id': source_location,
+            'location_dest_id': self.dest_location_id.id,
+            'move_ids': moves,
+        })
+        picking.action_confirm()
+        # Link move_line_ids to the picking
+        picking.move_ids.move_line_ids.picking_id = picking
+        return picking
+
+    def _generate_links(self, pickings):
+        links = []
+        for picking in pickings:
+            links.append({
+                'label': picking.name,
+                'url': f'/odoo/action-stock.stock_picking_action_picking_type/{picking.id}'
+            })
+        return links
