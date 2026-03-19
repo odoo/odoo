@@ -1503,6 +1503,12 @@
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                                domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
+                                               invisible="move_type != 'out_invoice'"
+                                               readonly="is_move_sent and state != 'draft'"/>
+                                        <field name="partner_bank_id"
+                                               context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
+                                               domain="[('partner_id', '=', bank_partner_id)]"
+                                               invisible="move_type != 'out_refund'"
                                                readonly="is_move_sent and state != 'draft'"/>
                                         <field name="payment_reference"
                                             invisible="move_type not in ('out_invoice', 'out_refund')"
