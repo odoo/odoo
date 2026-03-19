@@ -15,15 +15,6 @@ from odoo.tools.intervals import Intervals
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
-    work_entry_source = fields.Selection(string="Tracking Method", selection=[
-        ('calendar', 'Time Off'),
-    ], default=lambda self: self.env.company.sudo().work_entry_source, tracking=True, required=True, help='''
-            Defines the source for work entries generation
-
-            Working Schedule: Work entries will be generated from the working hours below.
-            Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
-        ''', groups="base.group_system,hr.group_hr_manager")
-
     def _get_default_work_entry_type_id(self):
         country_code = self.country_code
         country_attendance = self.env['hr.work.entry.type'].search([
@@ -81,7 +72,7 @@ class HrVersion(models.Model):
     def _get_attendance_intervals(self, start_dt, end_dt):
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
-        versions_with_calendar_work_entry_source = self.filtered(lambda version: version.work_entry_source == 'calendar')
+        versions_with_calendar_work_entry_source = self.filtered(lambda version: version.has_static_work_entries())
         result = dict()
         for calendar, versions in versions_with_calendar_work_entry_source.grouped('resource_calendar_id').items():
             fully_flex_versions = versions.filtered('is_fully_flexible')
@@ -106,10 +97,6 @@ class HrVersion(models.Model):
     def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
         return [interval]
-
-    @api.model
-    def _get_whitelist_fields_from_template(self):
-        return super()._get_whitelist_fields_from_template() + ['work_entry_source']
 
     def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
         return not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id
@@ -299,10 +286,10 @@ class HrVersion(models.Model):
         return version_vals
 
     def has_static_work_entries(self):
-        # Static work entries as in the same are to be generated each month
-        # Useful to differentiate attendance based versions from regular ones
+        # True means this is calendar based, False it is attendance based.
+        # This function gets overridden in hr_work_entry_attendance to correctly check if it's attendance based
         self.ensure_one()
-        return self.work_entry_source == 'calendar'
+        return True
 
     def generate_work_entries(self, date_start, date_stop):
         # Generate work entries between 2 dates (datetime.date)

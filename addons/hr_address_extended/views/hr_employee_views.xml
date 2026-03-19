@@ -5,6 +5,7 @@
             <field name="name">hr.employee.form.inherit.address</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='private_city']" position="attributes">
                     <attribute name="invisible">private_country_enforce_cities</attribute>
