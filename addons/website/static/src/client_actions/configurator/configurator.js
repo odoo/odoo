@@ -29,6 +29,7 @@ import {
     markup,
     onMounted,
     onWillStart,
+    onWillUnmount,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
@@ -116,7 +117,6 @@ const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
 async function getRecommendedThemes(orm, state, resultNbrMax = MAX_NBR_DISPLAY_MAIN_THEMES) {
     return orm.call("website", "configurator_recommended_themes", [], {
         industry_id: state.selectedIndustry.id,
-        palette: state.selectedPalette,
         result_nbr_max: resultNbrMax,
     });
 }
@@ -775,40 +775,32 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
 
         this.uiService = useService("ui");
         this.orm = useService("orm");
-        this.maxNbrDisplayExtraThemes = 100;
+        this.maxNbrDisplayThemes = 100;
+        this.themesByStep = 6;
+        this.bottomPageTrigger = useRef("loadMoreThemes");
+        this.bottomPageObserver = null;
         const env = useEnv();
-        env.store["extraThemesLoaded"] = false;
-        env.store["extraThemes"] = [];
         this.state = useState(env.store);
-        this.themeSVGPreviews = [
-            useRef("ThemePreview1"),
-            useRef("ThemePreview2"),
-            useRef("ThemePreview3"),
-        ];
-        this.extraThemesButtonRef = useRef("extraThemesButton");
-        this.extraThemeSVGPreviews = [];
-        for (let i = 0; i < this.maxNbrDisplayExtraThemes; i++) {
-            this.extraThemeSVGPreviews.push(useRef(`ExtraThemePreview${i}`));
-        }
         onWillStart(async () => {
-            this.state.selectPalette("default-light-1"); // TODO remove this draft code
-            const themes = await getRecommendedThemes(this.orm, this.state);
-            if (!themes.length) {
-                await this.applyConfigurator("theme_default");
-            } else {
-                this.state.updateRecommendedThemes(themes);
+            await this.getThemes();
+            if (!this.state.themes.length) {
+                this.state.selectedTheme = "theme_default";
+                this.props.navigate(ROUTES.setupStyleScreen);
             }
         });
-
         onMounted(() => {
-            this.blockUiDuringImageLoading(this.state.themes, this.themeSVGPreviews);
+            this.bottomPageObserver = new IntersectionObserver((entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    this.loadNextThemes();
+                }
+            });
+            if (this.bottomPageTrigger.el) {
+                this.bottomPageObserver.observe(this.bottomPageTrigger.el);
+            }
         });
-
-        useLayoutEffect(
-            () =>
-                this.blockUiDuringImageLoading(this.state.extraThemes, this.extraThemeSVGPreviews),
-            () => [this.state.extraThemes]
-        );
+        onWillUnmount(() => {
+            this.bottomPageObserver?.disconnect();
+        });
     }
 
     /**
@@ -824,78 +816,32 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         );
     }
 
-    /**
-     * Transforms text svgs into svg elements and adds a loading effect that
-     * blocks the UI during the loading of the images inside those svg elements.
-     *
-     * @param {Array<Object>} themes - The text svgs.
-     * @param {Array} themeSVGPreviews - A reference to the svg elements.
-     */
-    blockUiDuringImageLoading(themes, themeSVGPreviews) {
-        if (!themes.length) {
-            // There is no svg to transform
-            return;
-        }
-        const proms = [];
-        this.uiService.block({ delay: 700 });
-        themes.forEach((theme, idx) => {
-            const svgEl = new DOMParser().parseFromString(
-                theme.svg,
-                "image/svg+xml"
-            ).documentElement;
-            for (const imgEl of svgEl.querySelectorAll("image")) {
-                proms.push(
-                    new Promise((resolve, reject) => {
-                        imgEl.addEventListener(
-                            "load",
-                            () => {
-                                resolve(imgEl);
-                            },
-                            { once: true }
-                        );
-                        imgEl.addEventListener(
-                            "error",
-                            () => {
-                                reject(imgEl);
-                            },
-                            { once: true }
-                        );
-                    })
-                );
-            }
-            themeSVGPreviews[idx].el.appendChild(svgEl);
-        });
-        // When all the images inside the svgs are loaded then remove the
-        // loading effect.
-        Promise.allSettled(proms).then(() => {
-            this.uiService.unblock();
-        });
-    }
-
     chooseTheme(themeName) {
         this.state.selectedTheme = themeName;
         this.props.navigate(ROUTES.setupStyleScreen);
     }
 
-    async getMoreThemes() {
+    async getThemes() {
         this.uiService.block();
-        const themes = await getRecommendedThemes(
-            this.orm,
-            this.state,
-            this.maxNbrDisplayExtraThemes
-        );
-        // Filter the extra themes to not propose a theme that is already
-        // present in the main themes.
-        const mainThemeNames = this.state.themes.map((theme) => theme.name);
-        this.state.extraThemes = themes.filter(
-            (extraTheme) => !mainThemeNames.includes(extraTheme.name)
-        );
-        this.state.extraThemesLoaded = true;
+        const themes = await getRecommendedThemes(this.orm, this.state, this.maxNbrDisplayThemes);
+        this.state.allThemes = themes;
+        this.loadNextThemes();
         this.uiService.unblock();
     }
 
-    getExtraThemeName(idx) {
-        return this.state.extraThemes.length > idx && this.state.extraThemes[idx].name;
+    loadNextThemes() {
+        const allThemes = this.state.allThemes || [];
+        if (!allThemes.length) {
+            return;
+        }
+        const nbrThemesToDisplay = Math.min(
+            this.state.themes.length + this.themesByStep,
+            allThemes.length
+        );
+        this.state.themes = allThemes.slice(0, nbrThemesToDisplay);
+        if (nbrThemesToDisplay >= allThemes.length) {
+            this.bottomPageObserver?.disconnect();
+        }
     }
 }
 
@@ -1200,11 +1146,7 @@ export class Configurator extends Component {
 
         const localState = JSON.parse(sessionStorage.getItem(this.storageItemName));
         if (localState) {
-            let themes = [];
-            if (localState.selectedIndustry && localState.selectedPalette) {
-                themes = await getRecommendedThemes(this.orm, localState);
-            }
-            return Object.assign(r, { ...localState, palettes, themes });
+            return Object.assign(r, { ...localState, palettes, themes: [] });
         }
 
         const features = {};

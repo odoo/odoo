@@ -213,66 +213,23 @@
 <t t-name="website.Configurator.ThemeSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
-            <div class="m-auto w-100 w-md-75 w-xl-100">
-                <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>
+            <div class="container-fluid px-3 px-xl-5">
+                <div class="o_configurator_typing_text mt-4 mb-lg-4">Choose your favorite <b>style</b>
                 </div>
-                <div class="container">
-                    <div class="row pb-4 pt-5">
-                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                            <t t-if="this.state.getThemeName(1)">
-                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview2" dir="ltr"/>
-                                    <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(this.state.getThemeName(1))"/>
+                <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-2 g-2 g-sm-3 g-lg-4">
+                    <t t-foreach="this.state.themes" t-as="theme" t-key="theme.name">
+                        <div class="col">
+                            <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast mt-3 mb-2">
+                                <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                <div class="theme_img_container rounded overflow-hidden">
+                                    <img t-att-src="theme.url" t-att-alt="theme.name" class="w-100"/>
                                 </div>
-                            </t>
-                        </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                            <t t-if="this.state.getThemeName(0)">
-                                <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview1" dir="ltr"/>
-                                    <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(this.state.getThemeName(0))"/>
-                                </div>
-                            </t>
-                        </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-end">
-                            <t t-if="this.state.getThemeName(2)">
-                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview3" dir="ltr"/>
-                                    <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(this.state.getThemeName(2))"/>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                    <t t-if="this.showViewMoreThemesButton">
-                        <p style="text-align: center;">
-                            <button class="btn btn-primary btn-lg px-4 py-2 center-block" t-on-click="this.getMoreThemes" t-custom-ref="extraThemesButton">View more themes</button>
-                        </p>
-                    </t>
-                    <t t-elif="this.state.extraThemes.length" t-foreach="Array(Math.ceil(this.state.extraThemes.length/3))" t-as="nbrExtraRow" t-key="nbrExtraRow_index">
-                        <div class="row pb-4 pt-5">
-                            <t t-foreach="Array(3)" t-as="nbrExtraCol" t-key="nbrExtraCol_index">
-                                <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                                    <t t-set="extraThemeId" t-value="nbrExtraRow_index * 3 + nbrExtraCol_index"/>
-                                    <t t-set="extraThemeName" t-value="this.getExtraThemeName(extraThemeId)"/>
-                                    <t t-if="extraThemeName">
-                                        <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                            <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                            <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                            <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ExtraThemePreview{{extraThemeId}}" dir="ltr"/>
-                                            <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(extraThemeName)"/>
-                                        </div>
-                                    </t>
-                                </div>
-                            </t>
+                                <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(theme.name)"/>
+                            </div>
                         </div>
                     </t>
                 </div>
+                <div style="min-height: 1px;" t-custom-ref="loadMoreThemes"/>
             </div>
         </div>
     </div>
