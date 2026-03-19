@@ -1,0 +1,24 @@
+package event
+
+// RequestMakeTargetMsg asks the root app to confirm and run a Make target.
+type RequestMakeTargetMsg struct {
+	Target            string
+	Vars              map[string]string
+	Description       string
+	RelevantKeys      []string
+	RequireTypedCheck bool
+	ConfirmWord       string
+	SelectDatabase    bool
+	DatabaseBackend   string
+}
+
+// RequestOpenEditorMsg asks the root app to open a file in $EDITOR.
+type RequestOpenEditorMsg struct {
+	Path string
+}
+
+// EditorDoneMsg reports the result of an editor session.
+type EditorDoneMsg struct {
+	Path string
+	Err  error
+}

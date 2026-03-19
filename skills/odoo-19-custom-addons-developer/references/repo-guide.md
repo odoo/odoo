@@ -17,7 +17,7 @@
 
 ## Module Families
 
-- Treat `custom_addons/gov_*` as project-owned government workflow and accounting modules.
+- Treat `custom_addons/public_sector/gov_*` as the project-owned public-sector workflow and accounting suite.
 - Treat `custom_addons/accountant` and `custom_addons/theme_liquid_glass` as project-owned.
 - Treat `custom_addons/knowledge/*` as OCA-style addons. Preserve their existing structure, tests, and lighter-touch modification style.
 - Treat `custom_addons/om_account_accountant-19.0.1.0.3/*` as vendored third-party addons unless the user explicitly asks to modify them.
@@ -25,7 +25,7 @@
 
 ## Preferred Local Commands
 
-- Install Python dependencies with `pip install -r requirements.txt -r requirements-gov-general.txt`.
+- Install Python dependencies with `pip install -r requirements.txt -r requirements-gov-runtime.txt`.
 - Prepare local databases with `make dev-host-db-setup`.
 - Initialize the main dev database with `make dev-host-db-init`.
 - Initialize the test database with `make dev-host-test-init`.
@@ -40,7 +40,7 @@
 - Use `deploy/odoo/kodoo.dev-host.local.conf` as the preferred local config path.
 - Use `kodoo` as the default dev database name.
 - Use `ktest` as the default test database name.
-- Use this addon path from the dev-host config: `addons,custom_addons,custom_addons/knowledge,custom_addons/om_account_accountant-19.0.1.0.3`
+- Use this addon path from the dev-host config: `addons,custom_addons,custom_addons/public_sector,custom_addons/knowledge,custom_addons/om_account_accountant-19.0.1.0.3`
 - Start Odoo directly with `./odoo-bin -c deploy/odoo/kodoo.dev-host.local.conf -d kodoo`.
 - Upgrade one module with `./odoo-bin -c deploy/odoo/kodoo.dev-host.local.conf -d kodoo -u <module_name> --stop-after-init`.
 - Install and run module tests with `./odoo-bin -c deploy/odoo/kodoo.dev-host.local.conf -d ktest --test-enable -i <module_name> --stop-after-init`.

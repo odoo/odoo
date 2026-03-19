@@ -1,4 +1,4 @@
-# Optional override: replace the AGI Gov runtime with a plain Odoo image.
+# Optional override: replace the public-sector runtime with a plain Odoo image.
 #
 # Usage:
 #   docker compose -f docker-compose.yml -f docker-compose.base.yml build odoo
@@ -11,4 +11,4 @@ services:
       dockerfile: docker/odoo/Dockerfile
     image: kodoo-odoo:19.0
     environment:
-      AGI_GOV_RUNTIME: "0"
+      KODOO_RUNTIME_PROFILE: "plain"

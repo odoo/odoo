@@ -2,7 +2,7 @@ import json
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.sql import column_exists, create_column
+from odoo.tools.sql import column_exists, create_column, table_exists
 
 from .constants import DOC_TYPE_SELECTION, PROCESS_TYPE_SELECTION, TEMPLATE_SCOPE_SELECTION
 from .gov_template_service import GovTemplateService
@@ -111,15 +111,17 @@ class GovAiTemplate(models.Model):
     active = fields.Boolean(default=True)
 
     def _auto_init(self):
-        if not column_exists(self.env.cr, "gov_ai_template", "source_filename"):
-            create_column(self.env.cr, "gov_ai_template", "source_filename", "varchar")
-        if not column_exists(self.env.cr, "gov_ai_template", "source_input_format"):
-            create_column(self.env.cr, "gov_ai_template", "source_input_format", "varchar")
-        if not column_exists(self.env.cr, "gov_ai_template", "source_native_text"):
-            create_column(self.env.cr, "gov_ai_template", "source_native_text", "text")
-        if not column_exists(self.env.cr, "gov_ai_template", "typst_template"):
-            create_column(self.env.cr, "gov_ai_template", "typst_template", "text")
-        return super()._auto_init()
+        result = super()._auto_init()
+        if table_exists(self.env.cr, "gov_ai_template"):
+            if not column_exists(self.env.cr, "gov_ai_template", "source_filename"):
+                create_column(self.env.cr, "gov_ai_template", "source_filename", "varchar")
+            if not column_exists(self.env.cr, "gov_ai_template", "source_input_format"):
+                create_column(self.env.cr, "gov_ai_template", "source_input_format", "varchar")
+            if not column_exists(self.env.cr, "gov_ai_template", "source_native_text"):
+                create_column(self.env.cr, "gov_ai_template", "source_native_text", "text")
+            if not column_exists(self.env.cr, "gov_ai_template", "typst_template"):
+                create_column(self.env.cr, "gov_ai_template", "typst_template", "text")
+        return result
 
     def init(self):
         # Backfill de registros legados criados antes do campo "name" obrigatório.

@@ -15,17 +15,17 @@ Kodoo extends the standard Odoo core with a focus on modern AI/ML capabilities a
 
 - **AI & LLM Integration:** Built-in support for Hugging Face, LangChain, and vector embeddings.
 - **Agent-First Design:** Optimized for AI agents to interact with the ERP via structured APIs and clear module boundaries (see `AGENTS.md`).
-- **GOV Modules:** Specialized `custom_addons/` for government and high-compliance environments.
+- **Public-Sector Suite:** Specialized `custom_addons/public_sector/` modules for government and high-compliance environments.
 - **Docker-Ready Stack:** Includes a pre-configured `docker-compose.yml` featuring Odoo, PostgreSQL, and Ollama for local LLM execution.
 - **Enhanced Document Processing:** Advanced OCR stack (Tesseract, OCRmyPDF) and LaTeX-based PDF generation.
-- **Dedicated AGI Gov Runtime:** The Docker stack can run with a GOV-focused Odoo image that isolates LaTeX, OCR, Typst-ready, and document-ingest dependencies.
-- **Optional AI Extras:** Heavy embedding/ML dependencies can be enabled only when needed, instead of inflating the default GOV container.
+- **Dedicated Public-Sector Runtime:** The Docker stack can run with a public-sector-focused Odoo image that isolates LaTeX, OCR, Typst-ready, and document-ingest dependencies.
+- **Optional AI Extras:** Heavy embedding/ML dependencies can be enabled only when needed, instead of inflating the default public-sector container.
 
 ## Project Structure
 
 - `odoo/`: Core framework code.
 - `addons/`: Upstream Odoo modules (treated as vendor code).
-- `custom_addons/`: Project-specific modules (`gov_*`, `knowledge/*`, `ai_ml/*`).
+- `custom_addons/`: Project-specific modules, including the public-sector suite in `public_sector/gov_*`, `knowledge/*`, and other local bundles.
 - `kodoo_assets/`: Specific branding and configuration assets for the Kodoo distro.
 
 ## Getting Started
@@ -61,10 +61,10 @@ docker compose up -d
 make refresh-safe
 ```
 
-To include the optional AI/embedding stack inside the AGI Gov image:
+To include the optional AI/embedding stack inside the public-sector image:
 
 ```bash
-AGI_GOV_INSTALL_AI_EXTRAS=1 docker compose build odoo
+PUBLIC_SECTOR_INSTALL_AI_EXTRAS=1 docker compose build odoo
 ```
 
 Recommended workflow split:
@@ -74,7 +74,7 @@ Recommended workflow split:
 - `make dev-host-up`: native Odoo, database manager, isolated local PostgreSQL data
 - Docker: stable/public-like runtime
 
-If you want a plain Odoo image without the AGI Gov runtime extras:
+If you want a plain Odoo image without the public-sector runtime extras:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.base.yml build odoo

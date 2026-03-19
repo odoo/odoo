@@ -1,11 +1,11 @@
-# GRP GOV Suite (`gov_suite`)
+# Public Sector Suite (`gov_suite`)
 
-Modulo agregador para instalacao completa da suite GOV.
+Modulo agregador para instalacao completa da suite de setor publico.
 
 ## Quando usar
 
 - `gov_suite`: instalacao completa.
-- `gov_public_accounting`: pacote contabil completo (somente camada contabil GOV).
+- `gov_public_accounting`: pacote contabil completo da camada publica.
 - `gov_*` individuais: instalacao modular por dominio.
 
 ## Observacao

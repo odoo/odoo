@@ -59,7 +59,7 @@ ODOO_AI_TEMPLATE_MODEL=gov.ai.template
 ODOO_AI_MEMORY_MODEL=gov.ai.memory
 ```
 
-Esses defaults foram alinhados com os modelos encontrados em `custom_addons/gov_processos`.
+Esses defaults foram alinhados com os modelos encontrados em `custom_addons/public_sector/gov_processos`.
 Se `.env.local` nao existir, o GRP usa fallback local: `http://localhost:8069`, DB `kodoo`, user `admin`, password `admin`.
 
 4. Rode em dev:

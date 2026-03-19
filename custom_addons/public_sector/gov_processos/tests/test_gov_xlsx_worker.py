@@ -29,17 +29,26 @@ class TestGovXlsxWorker(TransactionCase):
         )
 
     def _create_parameter(self, key, value_text, fase=0):
-        return self.env["gov.processo.parametro"].create(
-            {
-                "processo_id": self.processo.id,
-                "key": key,
-                "name": key.replace("_", " ").title(),
-                "fase": fase,
-                "section": "additional_fields",
-                "value_type": "json",
-                "value_text": value_text,
-            }
+        parameter = self.env["gov.processo.parametro"].search(
+            [
+                ("processo_id", "=", self.processo.id),
+                ("key", "=", key),
+            ],
+            limit=1,
         )
+        values = {
+            "processo_id": self.processo.id,
+            "key": key,
+            "name": key.replace("_", " ").title(),
+            "fase": fase,
+            "section": "additional_fields",
+            "value_type": "json",
+            "value_text": value_text,
+        }
+        if parameter:
+            parameter.with_context(skip_phase_lock=True).write(values)
+            return parameter
+        return self.env["gov.processo.parametro"].create(values)
 
     def _get_sheet_formulas(self, workbook_binary, target):
         namespace = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}

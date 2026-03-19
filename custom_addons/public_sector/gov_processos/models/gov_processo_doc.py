@@ -8,7 +8,7 @@ from markupsafe import Markup, escape
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.sql import column_exists, create_column
+from odoo.tools.sql import column_exists, create_column, table_exists
 
 from .constants import (
     DOC_TYPE_SELECTION,
@@ -36,14 +36,14 @@ class GovProcessoDoc(models.Model):
     _HTML_TAG_RE = re.compile(r"<[^>]+>")
 
     def _auto_init(self):
-        if not column_exists(self.env.cr, "gov_processo_doc", "xlsx_profile"):
-            create_column(self.env.cr, "gov_processo_doc", "xlsx_profile", "varchar")
-        if not column_exists(self.env.cr, "gov_processo_doc", "typst_source"):
-            create_column(self.env.cr, "gov_processo_doc", "typst_source", "text")
-        if not column_exists(self.env.cr, "gov_processo_doc", "ingest_target_format"):
-            create_column(self.env.cr, "gov_processo_doc", "ingest_target_format", "varchar")
-
         result = super()._auto_init()
+        if table_exists(self.env.cr, "gov_processo_doc"):
+            if not column_exists(self.env.cr, "gov_processo_doc", "xlsx_profile"):
+                create_column(self.env.cr, "gov_processo_doc", "xlsx_profile", "varchar")
+            if not column_exists(self.env.cr, "gov_processo_doc", "typst_source"):
+                create_column(self.env.cr, "gov_processo_doc", "typst_source", "text")
+            if not column_exists(self.env.cr, "gov_processo_doc", "ingest_target_format"):
+                create_column(self.env.cr, "gov_processo_doc", "ingest_target_format", "varchar")
         self.env.cr.execute(
             """
             UPDATE gov_processo_doc doc
@@ -321,10 +321,10 @@ class GovProcessoDoc(models.Model):
     render_job_ids = fields.One2many(
         "gov.processo.doc.render.job",
         "doc_id",
-        string="Jobs de Render",
+        string="Historico de Render",
     )
     render_job_count = fields.Integer(
-        string="Jobs de Render",
+        string="Qtd. Jobs de Render",
         compute="_compute_render_job_count",
     )
 

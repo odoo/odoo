@@ -623,6 +623,7 @@ class GovXlsxWorkerService(models.AbstractModel):
                 "mar": "OF 30-45 d",
                 "mai": "OF 30-45 d",
                 "jul": "OF 45-60 d",
+                "out": "OF 30-45 d",
                 "set": "OF 45-60 d",
                 "nov": "OF 30 d",
                 "dez": "OF 30 d",

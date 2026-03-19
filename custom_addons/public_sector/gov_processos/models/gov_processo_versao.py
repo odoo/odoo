@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.tools.sql import column_exists, create_column
+from odoo.tools.sql import column_exists, create_column, table_exists
 
 
 class GovProcessoVersao(models.Model):
@@ -8,9 +8,12 @@ class GovProcessoVersao(models.Model):
     _order = "version_number desc"
 
     def _auto_init(self):
-        if not column_exists(self.env.cr, "gov_processo_versao", "typst_snapshot"):
+        result = super()._auto_init()
+        if table_exists(self.env.cr, "gov_processo_versao") and not column_exists(
+            self.env.cr, "gov_processo_versao", "typst_snapshot"
+        ):
             create_column(self.env.cr, "gov_processo_versao", "typst_snapshot", "text")
-        return super()._auto_init()
+        return result
 
     doc_id = fields.Many2one(
         "gov.processo.doc",

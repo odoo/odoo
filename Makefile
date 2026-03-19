@@ -22,6 +22,9 @@ TUI_VENV ?= .venv-tui
 TUI_REQUIREMENTS ?= requirements-tui.txt
 TUI_REFRESH_SECONDS ?= 3
 TUI_LOG_LINES ?= 20
+GO ?= go
+KODOO_TUI_DIR ?= kodoo-tui
+KODOO_TUI_BIN ?= $(KODOO_TUI_DIR)/bin/kodoo-tui
 WEBSOCKET_TEST_KEY ?= dGhlIHNhbXBsZSBub25jZQ==
 PUBLIC_HTTP_PORT ?= 80
 PUBLIC_HTTPS_PORT ?= 443
@@ -69,6 +72,7 @@ DB_SETUP ?= none
 PRECREATE_DB ?= 0
 PREBOOT_TEST_DB ?= $(DEV_HOST_TEST_DB)
 COMPOSE_LOCAL := $(COMPOSE) -f docker-compose.yml -f deploy/local/docker-compose.local.yml
+COMPOSE_BASE := $(COMPOSE) -f docker-compose.yml -f docker-compose.base.yml
 COMPOSE_INSECURE := $(COMPOSE) -f docker-compose.yml -f deploy/insecure/docker-compose.insecure.yml
 COMPOSE_GPU := $(COMPOSE) -f docker-compose.yml -f deploy/ollama/docker-compose.gpu.yml
 COMPOSE_TUNNEL := $(COMPOSE) -f docker-compose.yml -f deploy/cloudflare/docker-compose.tunnel.yml -f deploy/local/docker-compose.local.yml -f deploy/cloudflare/docker-compose.cloudflare.yml
@@ -80,7 +84,7 @@ CONFIG_FIND_CMD = find . \
 	LC_ALL=C sort | sed 's|^\./||'
 
 .PHONY: help doctor deps-install clean clean-all \
-	odoo-lnav build up up-cpu up-gpu down logs status \
+	odoo-lnav build build-base up up-base up-cpu up-gpu down down-base logs logs-base status status-base \
 	probe certbot certbot-renew \
 	db-init db-check db-list db-manager \
 	stop ports-clean \
@@ -93,11 +97,11 @@ CONFIG_FIND_CMD = find . \
 	up-cowork down-cowork logs-cowork smoke-cowork troubleshoot-cowork \
 	up-dev down-dev logs-dev smoke-dev troubleshoot-dev \
 	up-project down-project logs-project smoke-project troubleshoot-project \
-	tui tui-live tui-install tui-menu tui-doctor \
+	tui tui-live tui-build tui-install tui-menu tui-doctor \
 	odoo-tui odoo-shell odoo-fix-url \
 	dev-host-db-setup dev-host-db-init dev-host-test-init \
 	dev-host-up dev-host-stop dev-host-logs dev-host-status dev-host-upgrade \
-	dev-project-config dev-project-db-setup dev-project-db-init \
+	dev-project dev-project-config dev-project-db-setup dev-project-db-init \
 	dev-project-up dev-project-stop dev-project-logs dev-project-status \
 	dev-host-backup dev-host-restore-ktest \
 	assets-rebuild \
@@ -113,8 +117,8 @@ CONFIG_FIND_CMD = find . \
 help:
 	@echo "Targets:"
 	@echo "Modes:"
-	@echo "  make dev            # Run Odoo natively on host with database manager over Docker PostgreSQL"
-	@echo "  make dev-safe       # Run Odoo natively on host with database manager over local PostgreSQL"
+	@echo "  make dev            # Run Odoo natively on host over Docker PostgreSQL (DB=<client> pins one DB; empty keeps manager)"
+	@echo "  make dev-safe       # Run Odoo natively on host over local PostgreSQL (DB=<client> pins one DB; empty keeps manager)"
 	@echo "  make up-home        # Switch to the normal home stack (same as up, after down-tunnel)"
 	@echo "  make up-cowork      # Switch to cowork stack (tunnel + local URL)"
 	@echo "  make up-dev         # Switch to localhost-only dev stack"
@@ -130,10 +134,13 @@ help:
 	@echo ""
 	@echo "Stacks:"
 	@echo "  make up             # Start the local/home stack (not the public internet path)"
+	@echo "  make up-base        # Start the stable stack with the plain Odoo runtime"
 	@echo "  make up-cpu         # Same as up (CPU mode default for Ollama; local/home)"
 	@echo "  make up-gpu         # Start local/home stack with optional Ollama GPU override"
 	@echo "  make up-local       # Local dev via nginx on $(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT) (websocket-safe)"
+	@echo "  make down-base      # Stop the stable plain-runtime stack"
 	@echo "  make down-local     # Stop local-dev stack"
+	@echo "  make logs-base      # Tail logs for the stable plain-runtime stack"
 	@echo "  make logs-local     # Tail local-dev logs (nginx + odoo + db + ollama)"
 	@echo "  make up-insecure    # Quick test: expose Odoo 8069/8072 (UNSAFE)"
 	@echo "  make down-insecure  # Stop insecure stack"
@@ -183,7 +190,9 @@ help:
 	@echo ""
 	@echo "Containers:"
 	@echo "  make build          # Build Docker images"
+	@echo "  make build-base     # Build the plain Odoo runtime image"
 	@echo "  make status         # Show compose status"
+	@echo "  make status-base    # Show compose status for the plain-runtime stack"
 	@echo "  make logs           # Tail odoo + nginx logs"
 	@echo "  make stop           # Stop all modes and free service ports ($(STOP_PORTS))"
 	@echo "  make odoo-start CONFIG=... DB=... HTTP_PORT=... # Generic host boot pinned to one DB"
@@ -202,11 +211,11 @@ help:
 	@echo "  make dev-host-stop  # Stop local host-run Odoo"
 	@echo "  make dev-host-logs  # Tail local host-run Odoo log"
 	@echo "  make dev-host-status # Check local host-run Odoo status"
-	@echo "  make dev            # Run host Odoo with database manager against Docker PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)"
+	@echo "  make dev            # Run host Odoo against Docker PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT) (optional DB=<client>)"
 	@echo "  make dev-stop       # Stop the shared-DB native Odoo without stopping Docker PostgreSQL"
 	@echo "  make dev-logs       # Tail shared-DB native Odoo log"
 	@echo "  make dev-status     # Check shared-DB native Odoo and Docker PostgreSQL status"
-	@echo "  make dev-safe       # Run host Odoo with database manager against local PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"
+	@echo "  make dev-safe       # Run host Odoo against local PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT) (optional DB=<client>)"
 	@echo "  make dev-safe-stop  # Stop the local-DB native Odoo database-manager mode"
 	@echo "  make dev-safe-logs  # Tail local-DB native Odoo database-manager log"
 	@echo "  make dev-safe-status # Check local-DB native Odoo database-manager status"
@@ -228,11 +237,11 @@ help:
 	@echo "  make deps-install   # Install only required host deps (OS-aware, GPU-aware)"
 	@echo "  make up-smoke       # Start tunnel/public stack and run smoke checks"
 	@echo "  make odoo-lnav      # Run local Odoo and tail logs with lnav or tail"
-	@echo "  make tui            # Open the live diagnostics TUI (fallback: shell menu)"
-	@echo "  make tui-live       # Open the Textual diagnostics dashboard"
-	@echo "  make tui-install    # Create $(TUI_VENV) and install Textual deps"
-	@echo "  make tui-menu       # Open the shell-based Make menu"
-	@echo "  make tui-doctor     # Check TUI runtime prerequisites"
+	@echo "  make tui            # Build and open the Go Bubble Tea control plane"
+	@echo "  make tui-live       # Alias for make tui"
+	@echo "  make tui-install    # Download Go deps and build $(KODOO_TUI_BIN)"
+	@echo "  make tui-menu       # Open the shell-based legacy Make menu"
+	@echo "  make tui-doctor     # Check Go TUI runtime prerequisites"
 	@echo ""
 	@echo "Mobile:"
 	@echo "  make mobile-install # Install mobile app dependencies in $(MOBILE_DIR)"
@@ -596,6 +605,10 @@ build:
 	@$(MAKE) prod-config
 	@$(COMPOSE) build
 
+build-base:
+	@$(MAKE) prod-config
+	@$(COMPOSE_BASE) build odoo
+
 refresh-safe:
 	@./scripts/refresh-safe.sh
 
@@ -640,6 +653,13 @@ ports-clean:
 
 up: up-cpu
 
+up-base:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@$(COMPOSE_BASE) up -d db odoo nginx ollama
+	@$(MAKE) ollama-pull
+	@echo "Stable plain Odoo runtime: https://$(DOMAIN)"
+
 up-home:
 	@$(MAKE) down-tunnel >/dev/null 2>&1 || true
 	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
@@ -683,14 +703,18 @@ up-dev:
 	@$(MAKE) up-local
 
 dev:
-	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
-	@ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true
-	@$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"
-	@$(MAKE) dev-project-db-setup DEV_PROJECT_PRECREATE_DATABASE=0
-	@$(MAKE) dev-project-config
-	@PYTHON_BIN="$(PYTHON)" \
+	@selected_db="$(strip $(DB))"; \
+	db_name="$${selected_db:-$(DEV_PROJECT_DB)}"; \
+	precreate=0; \
+	if [ -n "$$selected_db" ]; then precreate=1; fi; \
+	$(MAKE) dev-host-stop >/dev/null 2>&1 || true; \
+	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true; \
+	$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"; \
+	$(MAKE) dev-project-db-setup DEV_PROJECT_DB="$$db_name" DEV_PROJECT_PRECREATE_DATABASE="$$precreate"; \
+	$(MAKE) dev-project-config; \
+	PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_PROJECT_CONFIG)" \
-	ODOO_DEV_DB="" \
+	ODOO_DEV_DB="$$selected_db" \
 	ODOO_DEV_LOG_PATH="$(DEV_PROJECT_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" \
 	ODOO_DEV_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
@@ -727,13 +751,17 @@ dev-status:
 	echo "Database endpoint: $(DOCKER_DB_BIND_HOST):$(DOCKER_DB_HOST_PORT)"
 
 dev-safe:
-	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
-	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
-	@$(MAKE) dev-host-db-setup DEV_HOST_PRECREATE_DATABASES=0
-	@$(MAKE) dev-host-config
-	@PYTHON_BIN="$(PYTHON)" \
+	@selected_db="$(strip $(DB))"; \
+	db_name="$${selected_db:-$(DEV_HOST_DB)}"; \
+	precreate=0; \
+	if [ -n "$$selected_db" ]; then precreate=1; fi; \
+	$(MAKE) dev-host-stop >/dev/null 2>&1 || true; \
+	$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"; \
+	$(MAKE) dev-host-db-setup DEV_HOST_DB="$$db_name" DEV_HOST_PRECREATE_DATABASES="$$precreate"; \
+	$(MAKE) dev-host-config; \
+	PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_HOST_CONFIG)" \
-	ODOO_DEV_DB="" \
+	ODOO_DEV_DB="$$selected_db" \
 	ODOO_DEV_LOG_PATH="$(DEV_HOST_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" \
 	ODOO_DEV_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
@@ -861,14 +889,23 @@ up-local:
 logs-local:
 	@$(COMPOSE_LOCAL) logs -f --tail=120 nginx odoo db ollama
 
+logs-base:
+	@$(COMPOSE_BASE) logs -f --tail=120 nginx odoo db ollama
+
 down-local:
 	@$(COMPOSE_LOCAL) down --remove-orphans
+
+down-base:
+	@$(COMPOSE_BASE) down --remove-orphans
 
 down:
 	@$(COMPOSE) down --remove-orphans
 
 status:
 	@$(COMPOSE) ps
+
+status-base:
+	@$(COMPOSE_BASE) ps
 
 logs:
 	@$(COMPOSE) logs -f --tail=120 odoo nginx
@@ -931,12 +968,16 @@ dev-host-test-init:
 	@$(MAKE) dev-host-up DEV_HOST_PRECREATE_DATABASES=0
 
 dev-host-up:
-	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
-	@$(MAKE) dev-host-db-setup DEV_HOST_PRECREATE_DATABASES=0
-	@$(MAKE) dev-host-config
-	@PYTHON_BIN="$(PYTHON)" \
+	@selected_db="$(strip $(DB))"; \
+	db_name="$${selected_db:-$(DEV_HOST_DB)}"; \
+	precreate=0; \
+	if [ -n "$$selected_db" ]; then precreate=1; fi; \
+	$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"; \
+	$(MAKE) dev-host-db-setup DEV_HOST_DB="$$db_name" DEV_HOST_PRECREATE_DATABASES="$$precreate"; \
+	$(MAKE) dev-host-config; \
+	PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_HOST_CONFIG)" \
-	ODOO_DEV_DB="" \
+	ODOO_DEV_DB="$$selected_db" \
 	ODOO_DEV_LOG_PATH="$(DEV_HOST_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" \
 	ODOO_DEV_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
@@ -981,14 +1022,21 @@ dev-project-db-init:
 	@echo "Opening Odoo database manager over Docker PostgreSQL. Create or restore '$(DEV_PROJECT_DB)' at http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)/web/database/manager"
 	@$(MAKE) dev-project-up DEV_PROJECT_PRECREATE_DATABASE=0
 
+dev-project:
+	@$(MAKE) dev-project-up
+
 dev-project-up:
 	@echo "WARNING: dev-project-up shares the Docker DB service. Avoid while the public tunnel stack is serving traffic."
-	@$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"
-	@$(MAKE) dev-project-db-setup DEV_PROJECT_PRECREATE_DATABASE=0
-	@$(MAKE) dev-project-config
-	@PYTHON_BIN="$(PYTHON)" \
+	@selected_db="$(strip $(DB))"; \
+	db_name="$${selected_db:-$(DEV_PROJECT_DB)}"; \
+	precreate=0; \
+	if [ -n "$$selected_db" ]; then precreate=1; fi; \
+	$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"; \
+	$(MAKE) dev-project-db-setup DEV_PROJECT_DB="$$db_name" DEV_PROJECT_PRECREATE_DATABASE="$$precreate"; \
+	$(MAKE) dev-project-config; \
+	PYTHON_BIN="$(PYTHON)" \
 	ODOO_DEV_CONFIG="$(DEV_PROJECT_CONFIG)" \
-	ODOO_DEV_DB="" \
+	ODOO_DEV_DB="$$selected_db" \
 	ODOO_DEV_LOG_PATH="$(DEV_PROJECT_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" \
 	ODOO_DEV_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
@@ -1224,58 +1272,63 @@ troubleshoot:
 	echo "make down-tunnel && make up-tunnel   # public internet path"; \
 	exit $$rc
 
-tui:
-	@if [ -x "$(TUI_VENV)/bin/python" ]; then \
-	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_VENV)/bin/python" ./scripts/kodoo_tui.py; \
-	elif "$(TUI_PYTHON)" -c "import textual" >/dev/null 2>&1; then \
-	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_PYTHON)" ./scripts/kodoo_tui.py; \
-	else \
-	  echo "Textual is not installed. Falling back to the shell menu."; \
-	  echo "Run 'make tui-install' to enable the live diagnostics dashboard."; \
-	  ./scripts/make-tui.sh; \
-	fi
+tui: tui-build
+	@TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(KODOO_TUI_BIN)"
 
-tui-live:
-	@if [ -x "$(TUI_VENV)/bin/python" ]; then \
-	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_VENV)/bin/python" ./scripts/kodoo_tui.py; \
-	elif "$(TUI_PYTHON)" -c "import textual" >/dev/null 2>&1; then \
-	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_PYTHON)" ./scripts/kodoo_tui.py; \
-	else \
-	  echo "Textual is not installed."; \
-	  echo "Run 'make tui-install' or install dependencies from $(TUI_REQUIREMENTS)."; \
+tui-live: tui
+
+tui-build:
+	@if ! command -v "$(GO)" >/dev/null 2>&1; then \
+	  echo "Missing Go toolchain: $(GO)"; \
+	  echo "Install Go 1.22+ or override with: make tui-build GO=go"; \
 	  exit 1; \
 	fi
+	@mkdir -p "$(dir $(KODOO_TUI_BIN))"
+	@cd "$(KODOO_TUI_DIR)" && "$(GO)" build -o "./bin/kodoo-tui" ./cmd/kodoo-tui
+	@echo "Built $(KODOO_TUI_BIN)."
 
 tui-install:
-	@if ! command -v "$(TUI_PYTHON)" >/dev/null 2>&1; then \
-	  echo "Missing Python interpreter: $(TUI_PYTHON)"; \
-	  echo "Override with: make tui-install TUI_PYTHON=python3.12"; \
+	@if ! command -v "$(GO)" >/dev/null 2>&1; then \
+	  echo "Missing Go toolchain: $(GO)"; \
+	  echo "Install Go 1.22+ or override with: make tui-install GO=go"; \
 	  exit 1; \
 	fi
-	@"$(TUI_PYTHON)" -m venv "$(TUI_VENV)"
-	@"$(TUI_VENV)/bin/python" -m pip install --upgrade pip
-	@"$(TUI_VENV)/bin/pip" install -r "$(TUI_REQUIREMENTS)"
-	@echo "TUI environment ready in $(TUI_VENV)."
-	@echo "Run: make tui-live"
+	@cd "$(KODOO_TUI_DIR)" && "$(GO)" mod download
+	@$(MAKE) tui-build
+	@echo "Go TUI ready at $(KODOO_TUI_BIN)."
+	@echo "Run: make tui"
 
 tui-menu:
 	@./scripts/make-tui.sh
 
 tui-doctor:
 	@echo "== TUI runtime =="; \
-	if [ -x "$(TUI_VENV)/bin/python" ]; then \
-	  echo "venv: $(TUI_VENV)"; \
-	  "$(TUI_VENV)/bin/python" -c "import sys; print(sys.version); import textual; print('textual', textual.__version__)" 2>/dev/null || \
-	  "$(TUI_VENV)/bin/python" -c "import sys; print(sys.version); print('textual-missing')" ; \
+	if command -v "$(GO)" >/dev/null 2>&1; then \
+	  echo "go: $$("$(GO)" version 2>/dev/null)"; \
 	else \
-	  echo "venv: not created"; \
+	  echo "go: missing ($(GO))"; \
 	fi; \
-	if command -v "$(TUI_PYTHON)" >/dev/null 2>&1; then \
-	  echo "python: $$("$(TUI_PYTHON)" --version 2>/dev/null)"; \
+	if [ -x "$(KODOO_TUI_BIN)" ]; then \
+	  echo "binary: $(KODOO_TUI_BIN)"; \
 	else \
-	  echo "python: missing ($(TUI_PYTHON))"; \
+	  echo "binary: not built"; \
 	fi; \
-	if command -v docker >/dev/null 2>&1; then echo "docker: ok"; else echo "docker: missing"; fi; \
+	if [ -f .env.make ]; then echo ".env.make: present"; else echo ".env.make: missing"; fi; \
+	if command -v docker >/dev/null 2>&1; then \
+	  echo "docker cli: ok"; \
+	  docker_check="$$(docker version 2>&1 || true)"; \
+	  if [ -S /var/run/docker.sock ] && docker version >/dev/null 2>&1; then \
+	    echo "docker daemon: ok"; \
+	  elif printf '%s' "$$docker_check" | grep -q "could not be found in this WSL 2 distro"; then \
+	    echo "docker daemon: WSL integration disabled for this distro"; \
+	  elif printf '%s' "$$docker_check" | grep -qi "permission denied"; then \
+	    echo "docker daemon: permission denied"; \
+	  elif printf '%s' "$$docker_check" | grep -qi "Cannot connect to the Docker daemon"; then \
+	    echo "docker daemon: not reachable"; \
+	  else \
+	    echo "docker daemon: unavailable"; \
+	  fi; \
+	else echo "docker cli: missing"; echo "docker daemon: unavailable"; fi; \
 	if command -v curl >/dev/null 2>&1; then echo "curl: ok"; else echo "curl: missing"; fi
 
 up-smoke:

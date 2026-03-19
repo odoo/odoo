@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 - `odoo/`: core framework code.
 - `addons/`: upstream Odoo modules (treat as vendor code unless explicitly requested).
-- `custom_addons/`: project-specific modules (`gov_*`, `knowledge/*`).
+- `custom_addons/`: project-specific modules, including the public-sector suite under `public_sector/gov_*` and `knowledge/*`.
 - `doc/` and `debian/`: documentation and packaging assets.
 - `frontend/odoo-next-dummy/`: Next.js/Vitest frontend scaffold and integration docs.
 - `scripts/`: local helper scripts (for example `start-with-lnav.ps1`).

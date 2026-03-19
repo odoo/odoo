@@ -19,8 +19,20 @@ PROD_NAME="${PROD_DB_NAME:-kodoo}"
 DEV_HOST_NAME="${DEV_HOST_DB:-kodoo}"
 DEV_TEST_NAME="${DEV_HOST_TEST_DB:-ktest}"
 DEV_PROJECT_NAME="${DEV_PROJECT_DB:-ktest}"
+DB_MANAGER_BACKEND="${DB_MANAGER_BACKEND:-auto}"
 
 detect_backend() {
+    case "$DB_MANAGER_BACKEND" in
+        docker|local)
+            echo "$DB_MANAGER_BACKEND"
+            return 0
+            ;;
+        auto) ;;
+        *)
+            echo "[db-manager] Invalid DB_MANAGER_BACKEND: $DB_MANAGER_BACKEND" >&2
+            return 1
+            ;;
+    esac
     if docker inspect kodoo-db >/dev/null 2>&1; then
         if [ "$(docker inspect -f '{{.State.Running}}' kodoo-db 2>/dev/null)" = "true" ]; then
             echo "docker"
@@ -104,6 +116,23 @@ list_databases_pretty() {
     while IFS='|' read -r name owner size; do
         [ -n "$name" ] || continue
         printf "%-28s %-12s %-16s %-12s %s\n" "$name" "$backend" "$owner" "$size" "$(database_tags "$name")"
+    done <<< "$raw_output"
+}
+
+list_databases_machine() {
+    local backend raw_output
+    backend="$(detect_backend 2>/dev/null || true)"
+    if [ -z "$backend" ]; then
+        echo "[db-manager] No PostgreSQL backend available." >&2
+        return 1
+    fi
+    raw_output="$(list_databases_raw 2>&1)" || {
+        echo "[db-manager] Database query failed: $raw_output" >&2
+        return 1
+    }
+    while IFS='|' read -r name owner size; do
+        [ -n "$name" ] || continue
+        printf "%s|%s|%s|%s|%s\n" "$name" "$backend" "$owner" "$size" "$(database_tags "$name")"
     done <<< "$raw_output"
 }
 
@@ -218,6 +247,9 @@ case "${1:-}" in
     list)
         list_databases_pretty
         ;;
+    list-raw)
+        list_databases_machine
+        ;;
     create)
         create_database "${2:-}"
         ;;
@@ -231,7 +263,7 @@ case "${1:-}" in
         interactive_menu
         ;;
     *)
-        echo "Usage: $0 [list|create <name>|clone <source> <target>|drop <name>]" >&2
+        echo "Usage: $0 [list|list-raw|create <name>|clone <source> <target>|drop <name>]" >&2
         exit 1
         ;;
 esac

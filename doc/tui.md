@@ -1,7 +1,7 @@
-# TUI Diagnostics
+# kodoo-tui
 
-The live TUI is an optional control plane for the existing `Makefile`.
-It does not replace the shell menu; it adds a real-time dashboard on top of the current targets.
+`kodoo-tui` is the Go/Bubble Tea control plane for the repository.
+It is now the primary interactive entrypoint for day-to-day environment control.
 
 ## Install
 
@@ -9,7 +9,7 @@ It does not replace the shell menu; it adds a real-time dashboard on top of the 
 make tui-install
 ```
 
-This creates `.venv-tui/` and installs `Textual` from [Textualize/textual](https://github.com/Textualize/textual).
+This downloads the Go dependencies for `kodoo-tui/` and builds `kodoo-tui/bin/kodoo-tui`.
 
 ## Run
 
@@ -17,46 +17,56 @@ This creates `.venv-tui/` and installs `Textual` from [Textualize/textual](https
 make tui
 ```
 
-Behavior:
+`make tui-live` is an alias for the same Go TUI.
 
-- If `Textual` is available, `make tui` opens the live dashboard.
-- If `Textual` is missing, it falls back to `scripts/make-tui.sh`.
+When the TUI opens, it now starts on a **launchpad** screen so you can choose the session mode explicitly:
 
-To force the live dashboard:
+- **Stable Docker · Public-Sector Runtime**: the stable stack with the public-sector image
+- **Stable Docker · Plain Runtime**: the same stable stack with the plain Odoo image
+- **Client Dev · Docker DB / Local DB**: ask for the client database first, then boot native Odoo
+- **Database Manager · Docker DB / Local DB**: open the Odoo database manager without pinning a client database
+
+The legacy shell menu still exists as an explicit escape hatch:
 
 ```bash
-make tui-live
+make tui-menu
 ```
 
-## Controls
+## Tabs
 
-- `h`: run `make up-home`
-- `c`: run `make up-cowork`
-- `d`: run `make up-dev`
-- `p`: run `make up-project`
-- `u`: run `make refresh-safe`
-- `x`: run `make stop`
-- `s`: run `make smoke`
-- `t`: run `make troubleshoot`
-- `r`: refresh diagnostics now
-- `q`: quit
+- `1 Dashboard`: container state, inferred mode, ports, recent compose events
+- `2 Logs`: follow one service or all services with inline search
+- `3 Actions`: run grouped Make targets with confirmation and streamed output
+- `4 Config`: inspect `.env.make`, open it in `$EDITOR`, and generate Odoo config files
 
-## Panels
+## Global Keys
 
-- `Summary`: active mode, URLs, and refresh timestamp
-- `Files`: `.env.make`, generated configs, and runtime hints
-- `Services`: Docker container state, health, and published ports
-- `Endpoints`: local HTTP, websocket, and public HTTP probes
-- `Activity`: output from `make` targets launched inside the TUI
-- `Runtime log`: recent lines from `odoo`, `nginx`, and `cloudflared`
+- `1`–`4`: jump directly to a tab
+- `tab` / `shift+tab`: switch tabs
+- `l`: reopen the launchpad at any time
+- `?`: open contextual help
+- `q` or `ctrl+c`: quit
+- `esc`: close the current help/action overlay after completion
 
-## Environment
+## Action Output
 
-Optional variables in `.env.make`:
+Any action launched from the TUI opens a lower output panel with:
+
+- the target name and start time
+- streaming stdout/stderr
+- final completion status
+- database selection when the action runs in a per-client mode
+- typed confirmation for destructive actions such as `down` and restore flows
+
+## Config and Environment
+
+The TUI reads `.env.make` from the repository root and overlays any process environment variables with the same names.
+
+Useful knobs:
 
 ```bash
 TUI_REFRESH_SECONDS=3
 TUI_LOG_LINES=20
 ```
 
-The TUI also reads the standard stack variables already used by the repository, such as `DOMAIN`, `LOCAL_HTTP_PORT`, and `SMOKE_PUBLIC`.
+If `.env.make` is missing, the dashboard warns and the config tab can create it with `make env-init`.

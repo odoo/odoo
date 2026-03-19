@@ -96,35 +96,35 @@ Lexoid parser params (optional):
 The repository now separates the images clearly:
 
 - Base image: `docker/odoo/Dockerfile`
-- AGI Gov runtime image: `docker/odoo/Dockerfile.gov`
-- Default stack: `docker-compose.yml` uses the AGI Gov runtime image
+- Public-sector runtime image: `docker/odoo/Dockerfile.public-sector`
+- Default stack: `docker-compose.yml` uses the public-sector runtime image
 - Plain Odoo override: `docker-compose.base.yml`
-- The default AGI Gov image installs only runtime/document extras; AI extras are opt-in.
+- The default public-sector image installs only runtime/document extras; AI extras are opt-in.
 
-Build and start with AGI Gov runtime:
+Build and start with the public-sector runtime:
 
 ```bash
 docker compose build odoo
 docker compose up -d
 ```
 
-Build and start without AGI Gov runtime extras:
+Build and start without public-sector runtime extras:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.base.yml build odoo
 docker compose -f docker-compose.yml -f docker-compose.base.yml up -d
 ```
 
-Optional extra packages for the AGI Gov image can be injected at build time:
+Optional extra packages for the public-sector image can be injected at build time:
 
 ```bash
-AGI_GOV_EXTRA_APT_PACKAGES="typst" \
-AGI_GOV_EXTRA_PIP_PACKAGES="" \
+PUBLIC_SECTOR_EXTRA_APT_PACKAGES="typst" \
+PUBLIC_SECTOR_EXTRA_PIP_PACKAGES="" \
 docker compose build odoo
 ```
 
-If you also want the heavyweight AI/embedding stack inside the AGI Gov container:
+If you also want the heavyweight AI/embedding stack inside the public-sector container:
 
 ```bash
-AGI_GOV_INSTALL_AI_EXTRAS=1 docker compose build odoo
+PUBLIC_SECTOR_INSTALL_AI_EXTRAS=1 docker compose build odoo
 ```

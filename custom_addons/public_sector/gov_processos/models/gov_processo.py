@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.sql import column_exists, create_column
+from odoo.tools.sql import column_exists, create_column, table_exists
 
 from .constants import PROCESS_SCOPE_SELECTION, PROCESS_TYPE_SELECTION, XLSX_PROFILE_SELECTION
 
@@ -40,10 +40,11 @@ class GovProcesso(models.Model):
     }
 
     def _auto_init(self):
-        if not column_exists(self.env.cr, "gov_processo", "xlsx_profile"):
-            create_column(self.env.cr, "gov_processo", "xlsx_profile", "varchar")
-
         result = super()._auto_init()
+        if table_exists(self.env.cr, "gov_processo") and not column_exists(
+            self.env.cr, "gov_processo", "xlsx_profile"
+        ):
+            create_column(self.env.cr, "gov_processo", "xlsx_profile", "varchar")
         self.env.cr.execute(
             """
             UPDATE gov_processo
@@ -686,6 +687,7 @@ class GovProcesso(models.Model):
                     "mar": "OF 30-45 d",
                     "mai": "OF 30-45 d",
                     "jul": "OF 45-60 d",
+                    "out": "OF 30-45 d",
                     "set": "OF 45-60 d",
                     "nov": "OF 30 d",
                     "dez": "OF 30 d",

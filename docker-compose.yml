@@ -29,12 +29,15 @@ services:
   odoo:
     build:
       context: .
-      dockerfile: docker/odoo/Dockerfile.gov
+      dockerfile: docker/odoo/Dockerfile.public-sector
       args:
-        GOV_EXTRA_APT_PACKAGES: ${AGI_GOV_EXTRA_APT_PACKAGES:-}
-        GOV_EXTRA_PIP_PACKAGES: ${AGI_GOV_EXTRA_PIP_PACKAGES:-}
-        GOV_INSTALL_AI_EXTRAS: ${AGI_GOV_INSTALL_AI_EXTRAS:-0}
-    image: kodoo-odoo:19.0-agi-gov
+        PUBLIC_SECTOR_EXTRA_APT_PACKAGES: ${PUBLIC_SECTOR_EXTRA_APT_PACKAGES:-}
+        PUBLIC_SECTOR_EXTRA_PIP_PACKAGES: ${PUBLIC_SECTOR_EXTRA_PIP_PACKAGES:-}
+        PUBLIC_SECTOR_INSTALL_AI_EXTRAS: ${PUBLIC_SECTOR_INSTALL_AI_EXTRAS:-}
+        LEGACY_GOV_EXTRA_APT_PACKAGES: ${AGI_GOV_EXTRA_APT_PACKAGES:-}
+        LEGACY_GOV_EXTRA_PIP_PACKAGES: ${AGI_GOV_EXTRA_PIP_PACKAGES:-}
+        LEGACY_GOV_INSTALL_AI_EXTRAS: ${AGI_GOV_INSTALL_AI_EXTRAS:-0}
+    image: kodoo-odoo:19.0-public-sector
     container_name: kodoo-odoo
     command:
       - odoo
@@ -56,7 +59,7 @@ services:
       - USER=${PROD_DB_USER}
       - PASSWORD=${PROD_DB_PASSWORD}
       - OLLAMA_HOST=http://ollama:11434
-      - AGI_GOV_RUNTIME=1
+      - KODOO_RUNTIME_PROFILE=public-sector
     networks:
       - kodoo-net
     restart: always

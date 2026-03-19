@@ -1,0 +1,54 @@
+FROM odoo:19.0
+
+USER root
+ARG PYTHON_BIN=python3.12
+ARG PUBLIC_SECTOR_EXTRA_APT_PACKAGES=""
+ARG PUBLIC_SECTOR_EXTRA_PIP_PACKAGES=""
+ARG PUBLIC_SECTOR_INSTALL_AI_EXTRAS=""
+ARG LEGACY_GOV_EXTRA_APT_PACKAGES=""
+ARG LEGACY_GOV_EXTRA_PIP_PACKAGES=""
+ARG LEGACY_GOV_INSTALL_AI_EXTRAS=""
+
+# Public-sector runtime dependencies (PDF/LaTeX/OCR/ingest).
+# The requirements files still keep their historical names for now.
+RUN apt-get update \
+    && EXTRA_APT_PACKAGES="${PUBLIC_SECTOR_EXTRA_APT_PACKAGES:-${LEGACY_GOV_EXTRA_APT_PACKAGES}}" \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3.12-venv \
+        wkhtmltopdf \
+        texlive-latex-base \
+        texlive-latex-recommended \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        texlive-lang-portuguese \
+        lmodern \
+        tesseract-ocr \
+        tesseract-ocr-por \
+        ocrmypdf \
+        ghostscript \
+        poppler-utils \
+        libmagic1 \
+        pandoc \
+        ${EXTRA_APT_PACKAGES} \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/kodoo
+
+# Base Odoo dependencies are already present in the upstream Odoo image.
+# Create a venv that can also see system site-packages (e.g., psycopg2 from base image),
+# then install only the public-sector runtime/document extras by default.
+COPY requirements-gov-runtime.txt /opt/kodoo/requirements-gov-runtime.txt
+COPY requirements-gov-ai.txt /opt/kodoo/requirements-gov-ai.txt
+RUN ${PYTHON_BIN} --version \
+    && ${PYTHON_BIN} -m venv --system-site-packages /opt/kodoo-venv \
+    && EXTRA_PIP_PACKAGES="${PUBLIC_SECTOR_EXTRA_PIP_PACKAGES:-${LEGACY_GOV_EXTRA_PIP_PACKAGES}}" \
+    && INSTALL_AI_EXTRAS="${PUBLIC_SECTOR_INSTALL_AI_EXTRAS:-${LEGACY_GOV_INSTALL_AI_EXTRAS}}" \
+    && if [ -z "${INSTALL_AI_EXTRAS}" ]; then INSTALL_AI_EXTRAS=0; fi \
+    && /opt/kodoo-venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && /opt/kodoo-venv/bin/pip install --no-cache-dir -r /opt/kodoo/requirements-gov-runtime.txt \
+    && if [ "${INSTALL_AI_EXTRAS}" = "1" ]; then /opt/kodoo-venv/bin/pip install --no-cache-dir -r /opt/kodoo/requirements-gov-ai.txt; fi \
+    && if [ -n "${EXTRA_PIP_PACKAGES}" ]; then /opt/kodoo-venv/bin/pip install --no-cache-dir ${EXTRA_PIP_PACKAGES}; fi
+ENV PATH="/opt/kodoo-venv/bin:${PATH}"
+ENV KODOO_RUNTIME_PROFILE=public-sector
+
+USER odoo
