@@ -127,9 +127,10 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         self.start_tour(self_route, "test_kiosk_cart_restore_and_cancel")
 
         kiosk_order = self.env['pos.order'].search(
-            [('config_id', '=', self.pos_config.id), ('state', '=', 'cancel')],
+            [('config_id', '=', self.pos_config.id)],
             order="id desc", limit=1
         )
+        self.assertEqual(kiosk_order.state, 'cancel')
 
         # Collect order lines in a dict by product name
         order_lines = {line.product_id.name: line for line in kiosk_order.lines}
