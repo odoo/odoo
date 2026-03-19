@@ -1023,7 +1023,7 @@ class TestMailMailServer(MailCommon):
         email content.
 
         The feature is tested in the following conditions:
-        - using a specified server or the default one (to test command ICP parameter)
+        - using a specified server or the default one
         - in batch mode
         - with mail that exceed (with one or more attachments) or not the limit
         - with attachment owned by a business record or not: attachments not owned by a
@@ -1041,37 +1041,25 @@ class TestMailMailServer(MailCommon):
 
         mock_attachment_file_size.return_value = 1024 * 128
         # Define some constant to ease the understanding of the test
-        test_mail_server = self.mail_server_domain_2
         max_size_always_exceed = 0.1
         max_size_never_exceed = 10
 
-        for n_attachment, mail_server, business_attachment, expected_is_links in (
+        for n_attachment, business_attachment, expected_is_links in (
                 # 1 attachment which doesn't exceed max size
-                (1, self.env['ir.mail_server'], True, False),
+                (1, True, False),
                 # 3 attachment: exceed max size
-                (3, self.env['ir.mail_server'], True, True),
+                (3, True, True),
                 # 1 attachment: exceed max size
-                (1, self.env['ir.mail_server'], True, True),
-                # Same as above with a specific server. Note that the default and server max_email size are reversed.
-                (1, test_mail_server, True, False),
-                (3, test_mail_server, True, True),
-                (1, test_mail_server, True, True),
+                (1, True, True),
                 # Attachments not linked to a business record are never turned to link
-                (3, self.env['ir.mail_server'], False, False),
-                (1, test_mail_server, False, False),
+                (3, False, False),
         ):
             # Setup max email size to check that the right maximum is used (default or mail server one)
             if expected_is_links:
                 max_size_test_succeed = max_size_always_exceed * n_attachment
-                max_size_test_fail = max_size_never_exceed
             else:
                 max_size_test_succeed = max_size_never_exceed
-                max_size_test_fail = max_size_always_exceed * n_attachment
-            if mail_server:
-                self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_fail)
-                mail_server.max_email_size = max_size_test_succeed
-            else:
-                self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_succeed)
+            self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_succeed)
 
             attachments = self.env['ir.attachment'].sudo().create([{
                 'name': f'attachment{idx_attachment}',
@@ -1087,14 +1075,14 @@ class TestMailMailServer(MailCommon):
                     'email_from': 'test@test_2.com',
                     'email_to': f'mail_{mail_idx}@test.com',
                 } for mail_idx in range(2)])
-                mails._send(mail_server=mail_server)
+                mails._send()
 
             self.assertEqual(len(self.emails), 2)
             for outgoing_email in self.emails:
                 message_raw = outgoing_email['message']
                 message_parsed = message_from_string(message_raw)
                 message_cleaned = re.sub(r'[\s=]', '', message_raw)
-                with self.subTest(n_attachment=n_attachment, mail_server=mail_server,
+                with self.subTest(n_attachment=n_attachment,
                                   business_attachment=business_attachment, expected_is_links=expected_is_links):
                     if expected_is_links:
                         self.assertEqual(count_attachments(message_parsed), 0,

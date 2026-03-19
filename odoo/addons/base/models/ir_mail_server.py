@@ -30,7 +30,6 @@ from odoo.tools import (
     email_normalize,
     encapsulate_email,
     formataddr,
-    human_size,
     parse_version,
 )
 
@@ -272,10 +271,9 @@ class IrMail_Server(models.Model):
         """
         return dict()
 
+    @api.model
     def _get_max_email_size(self):
-        if self.max_email_size:
-            return self.max_email_size
-        return self.env['ir.config_parameter'].sudo().get_float('base.default_max_email_size') or 10
+        return self.env['ir.config_parameter'].sudo().get_float('base.default_max_email_size', 20)
 
     def _get_test_email_from(self):
         self.ensure_one()
@@ -297,16 +295,13 @@ class IrMail_Server(models.Model):
     def _get_test_email_to(self):
         return "noreply@odoo.com"
 
-    def test_smtp_connection(self, autodetect_max_email_size=False):
-        """Test the connection and if autodetect_max_email_size, set auto-detected max email size.
+    def test_smtp_connection(self):
+        """Test the connection.
 
-        :param bool autodetect_max_email_size: whether to autodetect the max email size
-        :return: client action to notify the user of the result of the operation (connection test or
-            auto-detection successful depending on the ``autodetect_max_email_size`` parameter)
+        :return: client action to notify the user of the result of the operation
         :rtype: dict
 
-        :raises UserError: if the connection fails and if ``autodetect_max_email_size`` and
-            the server doesn't support the auto-detection of email max size
+        :raises UserError: if the connection fails
         """
         for server in self:
             smtp = False
@@ -329,12 +324,6 @@ class IrMail_Server(models.Model):
                 (code, repl) = smtp.getreply()
                 if code != 354:
                     raise UserError(_('The server refused the test connection with error %(repl)s', repl=repl))  # noqa: TRY301
-                if autodetect_max_email_size:
-                    max_size = smtp.esmtp_features.get('size')
-                    if not max_size:
-                        raise UserError(_('The server "%(server_name)s" doesn\'t return the maximum email size.',
-                                          server_name=server.name))
-                    server.max_email_size = float(max_size) / (1024 ** 2)
             except (UnicodeError, idna.core.InvalidCodepoint) as e:
                 raise UserError(_("Invalid server name!\n %s", e)) from e
             except (gaierror, timeout) as e:
@@ -363,27 +352,16 @@ class IrMail_Server(models.Model):
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-
-        if autodetect_max_email_size:
-            message = _(
-                'Email maximum size updated (%(details)s).',
-                details=', '.join(f'{server.name}: {human_size(server.max_email_size * 1024 ** 2)}' for server in self))
-        else:
-            message = _('Connection Test Successful!')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': message,
+                'message': _('Connection Test Successful!'),
                 'type': 'success',
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},  # force a form reload
             },
         }
-
-    def action_retrieve_max_email_size(self):
-        self.ensure_one()
-        return self.test_smtp_connection(autodetect_max_email_size=True)
 
     @classmethod
     def _disable_send(cls):
