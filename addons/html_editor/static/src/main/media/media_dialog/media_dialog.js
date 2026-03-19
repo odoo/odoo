@@ -137,29 +137,58 @@ export class MediaDialog extends Component {
         }
         const addIcons = !this.props.visibleTabs || this.props.visibleTabs.includes(TABS.ICONS.id);
         if (addIcons) {
-            const fonts = TABS.ICONS.Component.initFonts();
+            const categories = TABS.ICONS.Component.initFonts();
             this.addTab(TABS.ICONS, {
-                fonts,
+                categories,
             });
 
             if (
                 this.props.media &&
                 TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
             ) {
+                const dataIcon = this.props.media.dataset.icon;
                 const classes = this.props.media.className.split(/\s+/);
-                const predefinedMediaFont = fonts.find((font) => classes.includes(font.base));
-                if (predefinedMediaFont) {
-                    const selectedIcon = predefinedMediaFont.icons.find((icon) =>
-                        icon.names.some((name) => classes.includes(name))
-                    );
-                    if (selectedIcon) {
-                        this.initialIconClasses.push(...selectedIcon.names);
-                        this.selectMedia(selectedIcon, TABS.ICONS.id);
+
+                if (dataIcon) {
+                    // Material Symbols or Odoo UI icon: identified by the data-icon attribute
+                    for (const category of categories) {
+                        if (category.source === "fa") {
+                            continue;
+                        }
+                        const selectedIcon = category.icons.find(
+                            (icon) => icon.dataIcon === dataIcon
+                        );
+                        if (selectedIcon) {
+                            this.selectMedia(selectedIcon, TABS.ICONS.id);
+                            break;
+                        }
                     }
+                    // No initialIconClasses needed: data-icon is overwritten by createElements,
+                    // and "oi" is the shared base class preserved across icon changes.
                 } else {
-                    const iconRegex = new RegExp(`\\b(?:${iconClasses.join("|")})(?:-\\S+)?\\b`);
-                    const fallbackIconClasses = classes.filter((cls) => iconRegex.test(cls));
-                    this.initialIconClasses.push(...fallbackIconClasses);
+                    // Legacy FontAwesome icon: identified by CSS class names
+                    let found = false;
+                    for (const category of categories) {
+                        if (category.source !== "fa" || !classes.includes(category.base)) {
+                            continue;
+                        }
+                        const selectedIcon = category.icons.find((icon) =>
+                            icon.names.some((name) => classes.includes(name))
+                        );
+                        if (selectedIcon) {
+                            this.initialIconClasses.push(...selectedIcon.names);
+                            this.selectMedia(selectedIcon, TABS.ICONS.id);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        const iconRegex = new RegExp(
+                            `\\b(?:${iconClasses.join("|")})(?:-\\S+)?\\b`
+                        );
+                        const fallbackIconClasses = classes.filter((cls) => iconRegex.test(cls));
+                        this.initialIconClasses.push(...fallbackIconClasses);
+                    }
                 }
             }
         }

@@ -1,10 +1,25 @@
 .modal .o_select_media_dialog {
+    --FileSelectorControlPanelIcons-height: 4rem;
+
     $min-row-height: 128;
     $scroll-button-height: 36px;
+
+    .tab-pane {
+        margin-left: var(--Notebook-margin-x);
+        margin-right: var(--Notebook-margin-x);
+    }
 
     .o_we_file_selector_control_panel {
         top: -$modal-inner-padding;
         background-color: $modal-content-bg;
+
+        &.o_we_file_selector_control_panel_icons {
+            height: var(--FileSelectorControlPanelIcons-height);
+        }
+    }
+
+    .font-icons-category-header {
+        top: CALC(var(--FileSelectorControlPanelIcons-height) + #{-$modal-inner-padding});
     }
 
     .o_we_existing_attachments {

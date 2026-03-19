@@ -1,24 +1,61 @@
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.IconSelector">
     <div>
-        <div class="o_we_file_selector_control_panel sticky-top d-flex gap-2 align-items-center mb-1 py-4 px-3">
+        <div class="o_we_file_selector_control_panel o_we_file_selector_control_panel_icons border-bottom sticky-top d-flex gap-2 align-items-center mb-1 px-3">
             <SearchMedia searchPlaceholder.translate="Search a pictogram"
                 search.bind="this.search"
                 needle="this.state.needle"/>
+            <!-- Category filter dropdown -->
+            <select class="form-select form-select-sm w-auto flex-shrink-0"
+                t-on-change="onCategoryChange">
+                <option value="">All categories</option>
+                <t t-foreach="this.props.categories" t-as="cat" t-key="cat.id">
+                    <option t-att-value="cat.id"
+                        t-att-selected="state.selectedCategory === cat.id">
+                        <t t-esc="cat.label"/>
+                    </option>
+                </t>
+            </select>
+            <!-- Filled mode toggle -->
+            <div class="form-check form-switch mb-0 flex-shrink-0 ms-3">
+                <input class="form-check-input" type="checkbox" id="o_icon_filled_toggle"
+                    t-att-checked="state.filled"
+                    t-on-change="() => (this.state.filled = !this.state.filled)"/>
+                <label class="form-check-label" for="o_icon_filled_toggle">Filled</label>
+            </div>
         </div>
         <div class="font-icons-icons">
-            <t t-foreach="this.state.fonts" t-as="font" t-key="font.base">
-                <div t-if="!font.icons.length" class="o_nocontent_help">
-                    <p class="o_empty_folder_image">No pictograms found.</p>
-                    <p class="o_empty_folder_subtitle">Try searching with other keywords.</p>
-                </div>
-                <span t-foreach="font.icons" t-as="icon" t-key="icon.id"
-                    t-att-title="icon.names[0]"
-                    t-att-aria-label="icon.names[0]" role="img"
-                    class="font-icons-icon m-2 fs-2 p-3 cursor-pointer text-center"
-                    t-att-class="{ o_we_attachment_selected: this.selectedMediaIds.includes(icon.id) }"
-                    t-attf-class="{{ font.base }} {{ icon.names[0] }}"
-                    t-on-click="() => this.onClickIcon(font, icon)"/>
+            <t t-foreach="this.state.categories" t-as="category" t-key="category.id">
+                <t t-if="category.icons.length">
+                    <div class="font-icons-category-header position-sticky bg-view z-1 fw-bold py-2 px-3 mt-2 border-bottom">
+                        <h2 class="fs-5 m-0" t-esc="category.label"/>
+                    </div>
+                    <!-- Material Symbols and Odoo UI icons: rendered via the data-icon attribute -->
+                    <t t-if="category.source !== 'fa'">
+                        <span t-foreach="category.icons" t-as="icon" t-key="icon.id"
+                            t-att-title="icon.name"
+                            t-att-aria-label="icon.name"
+                            role="img"
+                            class="font-icons-icon oi m-2 fs-2 p-3 cursor-pointer text-center"
+                            t-att-data-icon="icon.dataIcon"
+                            t-att-class="{
+                                o_we_attachment_selected: this.selectedMediaIds.includes(icon.id),
+                                'oi-filled': state.filled,
+                            }"
+                            t-on-click="() => this.onClickIcon(category, icon)"/>
+                    </t>
+                    <!-- Legacy FontAwesome icons: rendered via CSS class names -->
+                    <t t-else="">
+                        <span t-foreach="category.icons" t-as="icon" t-key="icon.id"
+                            t-att-title="icon.names[0]"
+                            t-att-aria-label="icon.names[0]"
+                            role="img"
+                            class="font-icons-icon m-2 fs-2 p-3 cursor-pointer text-center"
+                            t-att-class="{ o_we_attachment_selected: this.selectedMediaIds.includes(icon.id) }"
+                            t-attf-class="{{ category.base }} {{ icon.names[0] }}"
+                            t-on-click="() => this.onClickIcon(category, icon)"/>
+                    </t>
+                </t>
             </t>
         </div>
     </div>
