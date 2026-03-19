@@ -10024,6 +10024,33 @@ test(`navigation: not moving down with keydown`, async () => {
 });
 
 test.tags("desktop");
+test(`no crash when keydown on x2many "Add a line" cell while record is in edit mode`, async () => {
+    Foo._records[0].o2m = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <field name="o2m">
+                    <list editable="bottom">
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add a`).click();
+    expect(`.o_selected_row`).toHaveCount(1);
+
+    await contains(".o_field_x2many_list_row_add a").keyDown("ArrowRight");
+
+    expect(`.o_form_view`).toHaveCount(1);
+});
+
+test.tags("desktop");
 test(`navigation: moving right with keydown from text field does not move the focus`, async () => {
     Foo._fields.foo = fields.Text();
 
