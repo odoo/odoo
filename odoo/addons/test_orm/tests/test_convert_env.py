@@ -22,7 +22,7 @@ function = E.function
 class TestEnv(common.TransactionCase):
     def setUp(self):
         super().setUp()
-        self._importer = xml_import(self.env, 'test_convert', None, 'init')
+        self._importer = xml_import(self.env, 'test_convert_env', None, 'init')
 
     def importer(self, doc):
         etree.RelaxNG(
@@ -38,13 +38,13 @@ class TestEnv(common.TransactionCase):
                 record(
                     field("a", name="name"),
                     model="test_convert_env.usered",
-                    id="test_convert.testing",
+                    id="test_convert_env.testing",
                 ),
                 uid="base.user_admin",
             ),
         )
 
-        r = self.env.ref('test_convert.testing')
+        r = self.env.ref('test_convert_env.testing')
         self.assertEqual(r.name, 'a')
         self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
         self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
@@ -72,14 +72,14 @@ class TestEnv(common.TransactionCase):
                 record(
                     field('c', name="name"),
                     model="test_convert_env.usered",
-                    id="test_convert.testing",
+                    id="test_convert_env.testing",
                     uid="base.user_admin",
                 ),
                 uid="base.user_root",
             ),
         )
 
-        r = self.env.ref('test_convert.testing')
+        r = self.env.ref('test_convert_env.testing')
         self.assertEqual(r.name, 'c')
         self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
         self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
