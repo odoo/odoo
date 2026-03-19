@@ -1,7 +1,5 @@
-import itertools
-
 from odoo import api, fields, models
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 class TestOne2manyMulti(models.Model):
@@ -12,25 +10,14 @@ class TestOne2manyMulti(models.Model):
     _description = 'Test ORM Multi'
 
     name = fields.Char(related='partner.name', readonly=True)
+
     partner = fields.Many2one('res.partner')
     lines = fields.One2many('test_one2many.multi.line', 'multi')
-    partners = fields.One2many(related='partner.child_ids')
-    tags = fields.Many2many('test_one2many.multi.tag', domain=[('name', 'ilike', 'a')])
 
     @api.onchange('name')
     def _onchange_name(self):
         for line in self.lines:
             line.name = self.name
-
-    @api.onchange('partner')
-    def _onchange_partner(self):
-        for line in self.lines:
-            line.partner = self.partner
-
-    @api.onchange('tags')
-    def _onchange_tags(self):
-        for line in self.lines:
-            line.tags |= self.tags
 
 
 class TestOne2manyMultiLine(models.Model):
@@ -39,24 +26,6 @@ class TestOne2manyMultiLine(models.Model):
 
     multi = fields.Many2one('test_one2many.multi', ondelete='cascade')
     name = fields.Char()
-    partner = fields.Many2one(related='multi.partner', store=True)
-    tags = fields.Many2many('test_one2many.multi.tag')
-
-
-class TestOne2manyMultiTag(models.Model):
-    _name = 'test_one2many.multi.tag'
-    _description = 'Test ORM Multi Tag'
-
-    name = fields.Char()
-
-    @api.depends('name')
-    @api.depends_context('special_tag')
-    def _compute_display_name(self):
-        for record in self:
-            name = record.name
-            if name and self.env.context.get('special_tag'):
-                name += "!"
-            record.display_name = name or ""
 
 
 class TestOne2manyCreativeworkEdition(models.Model):
@@ -130,91 +99,6 @@ class TestOne2manyAttachmentHost(models.Model):
         'test_one2many.attachment', 'res_id', bypass_search_access=True,
         domain=lambda self: [('res_model', '=', self._name)],
     )
-    m2m_attachment_ids = fields.Many2many(
-        'test_one2many.attachment', bypass_search_access=True,
-    )
-
-    real_binary = fields.Binary(attachment=True)
-    real_attachment_ids = fields.One2many(
-        'ir.attachment', 'res_id', bypass_search_access=True,
-        domain=lambda self: [('res_model', '=', self._name)],
-    )
-    real_m2m_attachment_ids = fields.Many2many(
-        'ir.attachment', bypass_search_access=True,
-    )
-
-
-class TestOne2manyCategory(models.Model):
-    _name = 'test_one2many.category'
-    _description = 'Test ORM Category'
-    _order = 'name'
-    _parent_store = True
-    _parent_name = 'parent'
-
-    name = fields.Char(required=True)
-    color = fields.Integer('Color Index')
-    parent = fields.Many2one('test_one2many.category', ondelete='cascade')
-    parent_path = fields.Char(index=True)
-    depth = fields.Integer(compute="_compute_depth")
-    root_categ = fields.Many2one('test_one2many.category', compute='_compute_root_categ')
-    display_name = fields.Char(
-        inverse='_inverse_display_name',
-        recursive=True,
-    )
-    dummy = fields.Char(store=False)
-    discussions = fields.Many2many('test_one2many.discussion', 'test_one2many_discussion_category',
-                                   'category', 'discussion')
-
-    _positive_color = models.Constraint(
-        'CHECK(color >= 0)',
-        "The color code must be positive!",
-    )
-
-    @api.depends('name', 'parent.display_name')     # this definition is recursive
-    def _compute_display_name(self):
-        for cat in self:
-            if cat.parent:
-                cat.display_name = cat.parent.display_name + ' / ' + cat.name
-            else:
-                cat.display_name = cat.name
-
-    @api.depends('parent')
-    def _compute_root_categ(self):
-        for cat in self:
-            current = cat
-            while current.parent:
-                current = current.parent
-            cat.root_categ = current
-
-    @api.depends('parent_path')
-    def _compute_depth(self):
-        for cat in self:
-            cat.depth = cat.parent_path.count('/') - 1
-
-    def _inverse_display_name(self):
-        for cat in self:
-            names = cat.display_name.split('/')
-            # determine sequence of categories
-            categories = []
-            for name in names[:-1]:
-                category = self.search([('name', 'ilike', name.strip())])
-                categories.append(category[0])
-            categories.append(cat)
-            # assign parents following sequence
-            for parent, child in itertools.pairwise(categories):
-                if parent and child:
-                    child.parent = parent
-            # assign name of last category, and reassign display_name (to normalize it)
-            cat.name = names[-1].strip()
-
-    def _fetch_query(self, query, fields):
-        # DLE P45: `test_31_prefetch`,
-        # with self.assertRaises(AccessError):
-        #     cat1.name
-        if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
-            msg = 'Sorry'
-            raise AccessError(msg)
-        return super()._fetch_query(query, fields)
 
 
 class TestOne2manyDiscussion(models.Model):
@@ -222,49 +106,7 @@ class TestOne2manyDiscussion(models.Model):
     _description = 'Test ORM Discussion'
 
     name = fields.Char(string='Title', required=True, help="Description of discussion.")
-    moderator = fields.Many2one('res.users')
-    categories = fields.Many2many('test_one2many.category',
-        'test_one2many_discussion_category', 'discussion', 'category')
-    participants = fields.Many2many('res.users', context={'active_test': False})
     messages = fields.One2many('test_one2many.message', 'discussion', copy=True)
-    message_concat = fields.Text(string='Message concatenate')
-    important_messages = fields.One2many('test_one2many.message', 'discussion',
-                                         domain=[('important', '=', True)])
-    very_important_messages = fields.One2many(
-        'test_one2many.message', 'discussion',
-        domain=lambda self: self._domain_very_important())
-    emails = fields.One2many('test_one2many.emailmessage', 'discussion')
-    important_emails = fields.One2many('test_one2many.emailmessage', 'discussion',
-                                       domain=[('important', '=', True)])
-
-    history = fields.Json('History', default={'delete_messages': []})
-    attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
-
-    def _domain_very_important(self):
-        """Ensure computed O2M domains work as expected."""
-        return [("important", "=", True)]
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        # test onchange modifying one2many field values
-        if self.env.context.get('generate_dummy_message') and self.name == '{generate_dummy_message}':
-            # update body of existings messages and emails
-            for message in self.messages:
-                message.body = 'not last dummy message'
-            for message in self.important_messages:
-                message.body = 'not last dummy message'
-            # add new dummy message
-            message_vals = self.messages._add_missing_default_values({'body': 'dummy message', 'important': True})
-            self.messages |= self.messages.new(message_vals)
-            self.important_messages |= self.messages.new(message_vals)
-
-    @api.onchange('moderator')
-    def _onchange_moderator(self):
-        self.participants |= self.moderator
-
-    @api.onchange('messages')
-    def _onchange_messages(self):
-        self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
 class TestOne2manyMessage(models.Model):
@@ -273,113 +115,6 @@ class TestOne2manyMessage(models.Model):
 
     discussion = fields.Many2one('test_one2many.discussion', ondelete='cascade')
     body = fields.Text(index='trigram')
-    author = fields.Many2one('res.users', default=lambda self: self.env.user)
-    name = fields.Char(string='Title', compute='_compute_name', store=True)
-    display_name = fields.Char(string='Abstract')
-    size = fields.Integer(compute='_compute_size', search='_search_size')
-    double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
-    author_partner = fields.Many2one(
-        'res.partner', compute='_compute_author_partner',
-        search='_search_author_partner')
-    important = fields.Boolean()
-    label = fields.Char(translate=True)
-    priority = fields.Integer()
-    active = fields.Boolean(default=True)
-    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling')
-
-    attributes = fields.Properties(
-        string='Discussion Properties',
-        definition='discussion.attributes_definition',
-    )
-
-    @api.depends('discussion.messages.important')
-    def _compute_has_important_sibling(self):
-        for record in self:
-            siblings = record.discussion.with_context(active_test=False).messages - record
-            record.has_important_sibling = any(siblings.mapped('important'))
-
-    @api.constrains('author', 'discussion')
-    def _check_author(self):
-        for message in self.with_context(active_test=False):
-            if message.discussion and message.author not in message.discussion.sudo().participants:
-                raise ValidationError(self.env._("Author must be among the discussion participants."))
-
-    @api.depends('author.name', 'discussion.name')
-    def _compute_name(self):
-        for message in self:
-            message.name = self.env.context.get('compute_name',
-                "[%s] %s" % (message.discussion.name or '', message.author.name or ''))
-
-    @api.constrains('name')
-    def _check_name(self):
-        # dummy constraint to check on computed field
-        for message in self:
-            if message.name.startswith("[X]"):
-                msg = "No way!"
-                raise ValidationError(msg)
-
-    @api.depends('author.name', 'discussion.name', 'body')
-    def _compute_display_name(self):
-        for message in self:
-            stuff = "[%s] %s: %s" % (message.author.name, message.discussion.name or '', message.body or '')
-            message.display_name = stuff[:80]
-
-    @api.depends('body')
-    def _compute_size(self):
-        for message in self:
-            message.size = len(message.body or '')
-
-    def _search_size(self, operator, value):
-        if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
-            return []
-        # retrieve all the messages that match with a specific SQL query
-        self.flush_model(['body'])
-        query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
-                (self._table, operator)
-        self.env.cr.execute(query, (value,))
-        ids = [t[0] for t in self.env.cr.fetchall()]
-        # return domain with an implicit AND
-        return [('id', 'in', ids), (1, '=', 1)]
-
-    @api.depends('size')
-    def _compute_double_size(self):
-        for message in self:
-            # This illustrates a subtle situation: message.double_size depends
-            # on message.size. When the latter is computed, message.size is
-            # assigned, which would normally invalidate message.double_size.
-            # However, this may not happen while message.double_size is being
-            # computed: the last statement below would fail, because
-            # message.double_size would be undefined.
-            message.double_size = 0
-            size = message.size
-            message.double_size = message.double_size + size
-
-    @api.depends('author', 'author.partner_id')
-    def _compute_author_partner(self):
-        for message in self:
-            message.author_partner = message.author.partner_id
-
-    @api.model
-    def _search_author_partner(self, operator, value):
-        return [('author.partner_id', operator, value)]
-
-    def write(self, vals):
-        if 'priority' in vals:
-            vals['priority'] = 5
-        return super().write(vals)
-
-
-class TestOne2manyEmailmessage(models.Model):
-    _name = 'test_one2many.emailmessage'
-    _description = 'Test ORM Email Message'
-    _inherits = {'test_one2many.message': 'message'}
-    _inherit = 'properties.base.definition.mixin'
-
-    message = fields.Many2one('test_one2many.message', 'Message',
-                              required=True, ondelete='cascade')
-    email_to = fields.Char('To')
-    active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
 class TestOne2manyModelChildM2o(models.Model):
@@ -390,18 +125,12 @@ class TestOne2manyModelChildM2o(models.Model):
     parent_id = fields.Many2one('test_one2many.model_parent_m2o', ondelete='cascade')
     size1 = fields.Integer(compute='_compute_sizes', store=True)
     size2 = fields.Integer(compute='_compute_sizes', store=True)
-    cost = fields.Integer(compute='_compute_cost', store=True, readonly=False)
 
     @api.depends('parent_id.name')
     def _compute_sizes(self):
         for record in self:
             record.size1 = len(record.parent_id.name)
             record.size2 = len(record.parent_id.name)
-
-    @api.depends('name')
-    def _compute_cost(self):
-        for record in self:
-            record.cost = len(record.name)
 
     def write(self, vals):
         res = super().write(vals)
@@ -417,12 +146,6 @@ class TestOne2manyModelParentM2o(models.Model):
 
     name = fields.Char('Name')
     child_ids = fields.One2many('test_one2many.model_child_m2o', 'parent_id', string="Children")
-    cost = fields.Integer(compute='_compute_cost', store=True)
-
-    @api.depends('child_ids.cost')
-    def _compute_cost(self):
-        for record in self:
-            record.cost = sum(child.cost for child in record.child_ids)
 
 
 class TestOne2manyOrder(models.Model):
@@ -430,7 +153,6 @@ class TestOne2manyOrder(models.Model):
     _description = 'test_one2many.order'
 
     line_ids = fields.One2many('test_one2many.order.line', 'order_id')
-    line_short_field_name = fields.Integer(index=True)
 
 
 class TestOne2manyOrderLine(models.Model):
@@ -440,16 +162,6 @@ class TestOne2manyOrderLine(models.Model):
     order_id = fields.Many2one('test_one2many.order', required=True, ondelete='cascade')
     product = fields.Char()
     reward = fields.Boolean()
-    short_field_name = fields.Integer(index=True)
-    very_very_very_very_very_long_field_name_1 = fields.Integer(index=True)
-    very_very_very_very_very_long_field_name_2 = fields.Integer(index=True)
-    has_been_rewarded = fields.Char(compute='_compute_has_been_rewarded', store=True)
-
-    @api.depends('reward')
-    def _compute_has_been_rewarded(self):
-        for rec in self:
-            if rec.reward:
-                rec.has_been_rewarded = 'Yes'
 
     def unlink(self):
         # also delete associated reward lines
@@ -469,7 +181,6 @@ class TestOne2manyComputeContainer(models.Model):
     _description = 'test_one2many.compute.container'
 
     name = fields.Char()
-    name_translated = fields.Char(translate=True)
     member_ids = fields.One2many('test_one2many.compute.member', 'container_id')
     member_count = fields.Integer(compute='_compute_member_count', store=True)
 
@@ -485,37 +196,12 @@ class TestOne2manyComputeMember(models.Model):
 
     name = fields.Char()
     container_id = fields.Many2one('test_one2many.compute.container', compute='_compute_container', store=True)
-    container_super_id = fields.Many2one(
-        'test_one2many.compute.container', string='Container For SUPERUSER',
-    )
-    container_context_id = fields.Many2one(
-        'test_one2many.compute.container',
-        compute='_compute_container_context_id',
-        search='_search_container_context',
-    )
-    container_context_name = fields.Char(
-        related='container_context_id.name', string='Container Context Name',
-    )
-    container_context_name_translated = fields.Char(
-        related='container_context_id.name_translated', string='Container Context Name Translated',
-    )
 
     @api.depends('name')
     def _compute_container(self):
         container = self.env['test_one2many.compute.container']
         for member in self:
             member.container_id = container.search([('name', '=', member.name)], limit=1)
-
-    @api.depends('container_id', 'container_super_id')
-    @api.depends_context('uid')
-    def _compute_container_context_id(self):
-        field_name = 'container_super_id' if self.env.user._is_superuser() else 'container_id'
-        for member in self:
-            member.container_context_id = member[field_name]
-
-    def _search_container_context(self, operator, value):
-        field_name = 'container_super_id' if self.env.user._is_superuser() else 'container_id'
-        return [(field_name, operator, value)]
 
 
 class TestOne2manyTeam(models.Model):
