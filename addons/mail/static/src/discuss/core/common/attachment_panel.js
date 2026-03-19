@@ -51,6 +51,7 @@ export class AttachmentPanel extends Component {
 
     get hasToggleAllowPublicUpload() {
         return (
+            this.props.thread.isActive &&
             this.props.thread.model !== "mail.box" &&
             this.props.thread.channel_type !== "chat" &&
             this.store.self.isInternalUser

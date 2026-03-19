@@ -26,7 +26,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         return channel._load_more_members(known_member_ids)
@@ -41,7 +41,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/info", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_info(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             return
         return Store(channel).get_result()
@@ -49,7 +49,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_messages(self, channel_id, search_term=None, before=None, after=None, limit=30, around=None):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         domain = [
@@ -72,7 +72,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_pins(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
@@ -120,7 +120,7 @@ class ChannelController(http.Controller):
         :param limit: maximum number of attachments to return
         :param before: id of the attachment from which to load older attachments
         """
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         domain = [
@@ -145,7 +145,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/join", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_join(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if not channel:
             raise NotFound()
         channel._find_or_create_member_for_self()
@@ -165,7 +165,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_sub_channel_fetch(self, parent_channel_id, search_term=None, before=None, limit=30):
-        channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(parent_channel_id)
         if not channel:
             raise NotFound()
         domain = [("parent_channel_id", "=", channel.id)]
@@ -173,5 +173,7 @@ class ChannelController(http.Controller):
             domain.append(("id", "<", before))
         if search_term:
             domain.append(("name", "ilike", search_term))
-        sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
+        sub_channels = request.env["discuss.channel"]._find_channels(
+            domain=domain, order="id desc", limit=limit
+        )
         return Store(sub_channels).add(sub_channels._get_last_messages()).get_result()
