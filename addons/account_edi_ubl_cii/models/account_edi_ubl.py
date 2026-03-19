@@ -2,7 +2,7 @@ import io
 import logging
 
 from odoo import _, models
-from odoo.tools import frozendict, html2plaintext, pdf
+from odoo.tools import frozendict, html2plaintext, pdf, str2bool
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
@@ -18,9 +18,15 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_attachments(self, invoice, tree):
         """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
-
+        IrConfigParam = self.env['ir.config_parameter'].sudo()
+        disable_pdf_in_xml = str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
         additional_docs = super()._import_attachments(invoice, tree)
-        if additional_docs or invoice.message_main_attachment_id or not invoice.is_purchase_document():
+        if (
+            additional_docs or
+            invoice.message_main_attachment_id or
+            not invoice.is_purchase_document() or
+            disable_pdf_in_xml
+        ):
             return additional_docs
         try:
             invoices_by_odoo_xmlid = 'account_edi_ubl_cii.action_report_account_invoices_generated_by_odoo'
