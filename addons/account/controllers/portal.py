@@ -3,7 +3,7 @@
 from collections import OrderedDict
 
 from odoo import _, fields, http
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, email_normalize_all
@@ -154,8 +154,9 @@ class PortalAccount(CustomerPortal):
     def portal_my_invoice_detail(self, invoice_id, access_token=None, report_type=None, download=False, **kw):
         try:
             invoice_sudo = self._document_check_access('account.move', invoice_id, access_token)
-        except (AccessError, MissingError):
-            return request.redirect('/my')
+        except (AccessDenied, AccessError, MissingError) as exc:
+            exc.error_response = request.redirect('/my')
+            raise
 
         if report_type == 'pdf' and download and invoice_sudo.state == 'posted':
             # Download the official attachment(s) or a Pro Forma invoice
@@ -190,9 +191,9 @@ class PortalAccount(CustomerPortal):
             try:
                 token_data = verify_hash_signed(request.env(su=True), request.env['account.journal']._get_journal_notification_unsubscribe_scope(), access_token)
             except ValueError:
-                return _render({'error': _('Invalid token')}, 403)
+                raise AccessDenied(response=_render({'error': _('Invalid token')}, 403))
             if not token_data or token_data.get('journal_id') != journal_id:
-                return _render({'error': _('Invalid token')}, 403)
+                raise AccessDenied(response=_render({'error': _('Invalid token')}, 403))
             journal = request.env['account.journal'].sudo().browse(journal_id)
         else:
             # Legacy link for authenticated user trying to unsubscribe (needs access rights on journal)

@@ -297,6 +297,12 @@ class Application:
                     _logger.info(exc)
                 elif isinstance(exc, AccessError):
                     _logger.warning(exc, exc_info='access' in config['dev_mode'])
+                elif isinstance(exc, AccessDenied):
+                    f2b = f"\nfail2ban: ip={httprequest.remote_addr}"
+                    if request.session and not request.session.is_new:
+                        f2b += f" sid={request.session.sid[:8]}"  # 8 enough for identification
+                    exc.args = (exc.args[0] + f2b, *exc.args[1:])
+                    _logger.warning(exc)
                 elif isinstance(exc, UserError):
                     _logger.warning(exc)
                 else:

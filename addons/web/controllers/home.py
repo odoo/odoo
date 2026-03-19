@@ -132,6 +132,7 @@ class Home(Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
 
+        exc = None
         if request.httprequest.method == 'POST':
             try:
                 credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
@@ -142,6 +143,7 @@ class Home(Controller):
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
+                exc = e
                 if e.args == odoo.exceptions.AccessDenied().args:
                     values['error'] = _("Wrong login/password")
                 else:
@@ -156,10 +158,14 @@ class Home(Controller):
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
 
-        response = request.render('web.login', values)
+        response = request.render('web.login', values, status=exc.http_status if exc else 200)
         response.headers['Cache-Control'] = 'no-cache'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+        if exc:
+            response.flatten()
+            exc.error_response = response
+            raise exc
         return response
 
     @route('/web/login_successful', type='http', auth='user', website=True, sitemap=False)

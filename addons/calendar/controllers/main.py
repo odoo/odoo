@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.http as http
-
+from odoo.exceptions import AccessDenied
 from odoo.http import request
 from odoo.tools.misc import get_lang
 
@@ -87,7 +87,7 @@ class CalendarController(http.Controller):
         event = request.env['calendar.event'].sudo().search([
             ('access_token', '=', token)])
         if not event:
-            return request.not_found()
+            raise AccessDenied("Invalid access token", response=request.not_found())
         event.action_join_meeting(request.env.user.partner_id.id)
         attendee = request.env['calendar.attendee'].sudo().search([('partner_id', '=', request.env.user.partner_id.id), ('event_id', '=', event.id)])
         return request.redirect('/calendar/meeting/view?token=%s&id=%s' % (attendee.access_token, event.id))
@@ -105,7 +105,7 @@ class CalendarController(http.Controller):
     def calendar_join_videocall(self, access_token):
         event = request.env['calendar.event'].sudo().search([('access_token', '=', access_token)])
         if not event:
-            return request.not_found()
+            raise AccessDenied("Invalid access token", response=request.not_found())
 
         # if channel doesn't exist
         if not event.videocall_channel_id:
