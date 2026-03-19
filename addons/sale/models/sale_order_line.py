@@ -2077,7 +2077,11 @@ class SaleOrderLine(models.Model):
     # For `sale_management`, to control optional products on portal
     def _can_be_edited_on_portal(self):
         self.ensure_one()
-        return self.order_id._can_be_edited_on_portal() and not self.combo_item_id
+        return (
+            self.order_id._can_be_edited_on_portal()
+            and not self.combo_item_id
+            and self.product_id != self.company_id.sale_discount_product_id
+        )
 
     def _get_rounding(self):
         self.ensure_one()
