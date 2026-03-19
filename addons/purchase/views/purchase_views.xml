@@ -629,7 +629,6 @@
                     <field name="company_id" readonly="1" options="{'no_create': True}"
                         groups="base.group_multi_company" optional="show"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
-                    <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user"/>
                     <field name="date_order"
                         invisible="state == 'purchase' or state == 'cancel'"
@@ -644,7 +643,12 @@
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase'"
                         decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
+                    <field name="receipt_status" widget="badge" optional="hide"
+                        decoration-success="receipt_status == 'full'"
+                        decoration-info="receipt_status == 'partial'"
+                        decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="hide"/>
+                    <field name="date_planned" optional="hide" readonly="1"/>
                 </list>
             </field>
         </record>
