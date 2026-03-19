@@ -9,8 +9,9 @@ cryptography==3.4.8; python_version < '3.12'  # incompatibility between pyopenss
 cryptography==42.0.8 ; python_version >= '3.12'  # (Noble) min 41.0.7, pinning 42.0.8 for security fixes
 decorator==4.4.2  ; python_version < '3.11'  # (Jammy)
 decorator==5.1.1  ; python_version >= '3.11'
-docutils==0.17 ; python_version < '3.11'  # (Jammy)
-docutils==0.20.1 ; python_version >= '3.11'
+docutils==0.17 ; python_version < '3.11'  # (Jammy) even though Ubuntu package is named 0.17.1
+docutils==0.20.1 ; python_version >= '3.11' and python_version < '3.13'
+docutils==0.21.2 ; python_version >= '3.13'  # (Trixie)
 ebaysdk==2.1.5
 freezegun==1.1.0 ; python_version < '3.11'  # (Jammy)
 freezegun==1.2.1 ; python_version >= '3.11' and python_version < '3.13'
