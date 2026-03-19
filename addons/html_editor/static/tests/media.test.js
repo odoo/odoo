@@ -1,6 +1,6 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "./_helpers/dispatch";
@@ -10,6 +10,7 @@ import { expectElementCount } from "./_helpers/ui_expectations";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { delay } from "@web/core/utils/concurrency";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
+import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -386,4 +387,34 @@ test("Image cropper disappear on backspace", async () => {
     press("backspace");
     await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test("double-click on image in Media Dialog executes onClickAttachment only once", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+
+    let executionCount = 0;
+    patchWithCleanup(ImageSelector.prototype, {
+        selectAttachment(attachment) {
+            executionCount++;
+            return super.selectAttachment(attachment);
+        },
+    });
+
+    const env = await makeMockEnv();
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png"></p>`, { env });
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await dblclick(".o_existing_attachment_cell .o_button_area");
+    expect(executionCount).toBe(1);
 });
