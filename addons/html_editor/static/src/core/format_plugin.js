@@ -707,8 +707,8 @@ export class FormatPlugin extends Plugin {
         }
         return (
             !isSelfClosingElement(node) &&
-            areSimilarElements(node, previousSibling) &&
-            isMergeable(node)
+            isMergeable(node) &&
+            areSimilarElements(node, previousSibling)
         );
     }
 }
