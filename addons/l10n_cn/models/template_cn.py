@@ -44,6 +44,12 @@ class AccountChartTemplate(models.AbstractModel):
     @template('cn', 'account.account')
     def _get_cn_account_account(self):
         return {
+            'l10n_cn_common_account_160101': {'asset_depreciation_account_id': 'l10n_cn_common_account_160201', 'asset_expense_account_id': 'l10n_cn_account_5602'},
+            'l10n_cn_common_account_160102': {'asset_depreciation_account_id': 'l10n_cn_common_account_160202', 'asset_expense_account_id': 'l10n_cn_account_5602'},
+            'l10n_cn_common_account_160103': {'asset_depreciation_account_id': 'l10n_cn_common_account_160203', 'asset_expense_account_id': 'l10n_cn_account_5602'},
+            'l10n_cn_common_account_160104': {'asset_depreciation_account_id': 'l10n_cn_common_account_160204', 'asset_expense_account_id': 'l10n_cn_account_5602'},
+            'l10n_cn_common_account_160105': {'asset_depreciation_account_id': 'l10n_cn_common_account_160205', 'asset_expense_account_id': 'l10n_cn_account_5602'},
+            'l10n_cn_common_account_160106': {'asset_depreciation_account_id': 'l10n_cn_common_account_160206', 'asset_expense_account_id': 'l10n_cn_account_5602'},
             'l10n_cn_common_account_1403': {
                 'account_stock_variation_id': 'l10n_cn_account_5601',
             },

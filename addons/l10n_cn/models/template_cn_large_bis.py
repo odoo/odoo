@@ -43,6 +43,12 @@ class AccountChartTemplate(models.AbstractModel):
     @template('cn_large_bis', 'account.account')
     def _get_cn_large_bis_account_account(self):
         return {
+            'l10n_cn_common_account_160101': {'asset_depreciation_account_id': 'l10n_cn_common_account_160201', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020201'},
+            'l10n_cn_common_account_160102': {'asset_depreciation_account_id': 'l10n_cn_common_account_160202', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020202'},
+            'l10n_cn_common_account_160103': {'asset_depreciation_account_id': 'l10n_cn_common_account_160203', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020203'},
+            'l10n_cn_common_account_160104': {'asset_depreciation_account_id': 'l10n_cn_common_account_160204', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020204'},
+            'l10n_cn_common_account_160105': {'asset_depreciation_account_id': 'l10n_cn_common_account_160205', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020205'},
+            'l10n_cn_common_account_160106': {'asset_depreciation_account_id': 'l10n_cn_common_account_160206', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020206'},
             'l10n_cn_common_account_1403': {
                 'account_stock_variation_id': 'l10n_cn_large_bis_account_6601',
             },
