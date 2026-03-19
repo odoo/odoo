@@ -8,7 +8,7 @@
                     <t t-if="!displayName_first">
                         <i class="oi oi-chevron-right m-1" role="img" aria-label="Followed by" data-tooltip="Followed by" />
                     </t>
-                    <span t-attf-class="o_model_field_selector_chain_part mb-1 #{this.props.readonly ? 'border-0 fw-bolder' : 'px-1'} text-nowrap">
+                    <span t-attf-class="o_model_field_selector_chain_part text-truncate d-inline-block align-middle mb-1 #{this.props.readonly ? 'border-0 fw-bolder' : 'px-1'}">
                         <t t-out="displayName" />
                     </span>
                 </t>
