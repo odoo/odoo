@@ -15,11 +15,13 @@
         }
 
         @keyframes theme_screenshot_scroll {
-            to { transform: translate3d(0, calc((100% - var(--ConfiguratorPreview-height)) * -1), 0)}
+            from { object-position: center top; }
+            to { object-position: center bottom; }
         }
 
         @keyframes theme_screenshot_scroll_small {
-            to { transform: translate3d(0, calc((100% - var(--ConfiguratorSmallPreview-height)) * -1), 0)}
+            from { object-position: center top; }
+            to { object-position: center bottom; }
         }
 
         // ==== General Components
@@ -305,7 +307,7 @@
         }
 
         &.o_theme_selection_screen{
-            .button_area, .theme_svg_container {
+            .button_area, .theme_img_container {
                 @include o-position-absolute(0, 0, 0, 0);
             }
 
@@ -313,7 +315,7 @@
                 @include o-position-absolute(0, 0, auto, 0);
             }
 
-            .theme_preview, .theme_svg_container svg, .theme_preview_tip {
+            .theme_preview, .theme_img_container img, .theme_preview_tip {
                 transform: translate3d(0,0,0);
                 will-change: transform;
             }
@@ -322,9 +324,11 @@
                 transition: all .3s ease 0s;
             }
 
-            .theme_svg_container svg {
+            .theme_img_container img {
                 width: 100%;
-                height: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center top;
             }
 
             .button_area {
@@ -349,7 +353,8 @@
                     }
 
                     &.small {
-                        height: var(--ConfiguratorSmallPreview-height);
+                        aspect-ratio: 100 / 66;
+                        height: auto;
                     }
                 }
 
@@ -364,11 +369,11 @@
                         transform: translate3d(0,-120%,0);
                     }
 
-                    .theme_svg_container svg {
-                        animation: theme_screenshot_scroll 4s cubic-bezier(0.455, 0.030, 0.515, 0.955) .1s infinite alternate;
+                    .theme_img_container img {
+                        animation: theme_screenshot_scroll 4s cubic-bezier(0.455, 0.030, 0.515, 0.955) 2s infinite alternate;
                     }
 
-                    &.small .theme_svg_container svg {
+                    &.small .theme_img_container img {
                         animation-name: theme_screenshot_scroll_small;
                         animation-duration: 5s;
                     }
