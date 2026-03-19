@@ -234,6 +234,7 @@ export class DiscussChannel extends models.ServerModel {
         const [data] = this.read(
             ids,
             [
+                "active",
                 "allow_public_upload",
                 "avatarCacheKey", // mock server simplification
                 "channel_type",

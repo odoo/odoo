@@ -12,6 +12,8 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const threadPatch = {
     setup() {
         super.setup();
+        /** @type {Boolean} */
+        this.active;
         this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
         this.fetchChannelInfoState = "not_fetched";
@@ -51,6 +53,9 @@ const threadPatch = {
     },
     get hasMemberList() {
         return ["channel", "group"].includes(this.channel_type);
+    },
+    get isActive() {
+        return super.isActive || this.active;
     },
     async fetchChannelInfo() {
         return this.fetchChannelMutex.exec(async () => {

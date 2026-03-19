@@ -78,7 +78,7 @@ class IrWebsocket(models.AbstractModel):
         if guest:
             channels.append(guest)
         domain = ["|", ("is_member", "=", True), ("id", "in", discuss_channel_ids)]
-        all_user_channels = self.env["discuss.channel"].search(domain)
+        all_user_channels = self.env["discuss.channel"]._find_channels(domain=domain)
         member_specific_channels = [(c, "members") for c in all_user_channels if c.id not in discuss_channel_ids]
         channels.extend([*all_user_channels, *member_specific_channels])
         return super()._build_bus_channel_list(channels)

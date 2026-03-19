@@ -10,7 +10,7 @@ import { patch } from "@web/core/utils/patch";
 
 threadActionsRegistry.add("restart", {
     condition(component) {
-        return component.chatbotService.canRestart;
+        return component.thread?.isActive && component.chatbotService.canRestart;
     },
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
@@ -29,6 +29,7 @@ patch(callSettingsAction, {
             return super.condition(...arguments);
         }
         return (
+            component.thread.isActive &&
             component.livechatService.state === SESSION_STATE.PERSISTED &&
             component.rtcService.state.channel?.eq(component.thread)
         );

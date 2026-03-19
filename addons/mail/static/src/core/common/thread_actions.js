@@ -32,7 +32,7 @@ threadActionsRegistry
     .add("rename-thread", {
         condition(component) {
             return (
-                component.thread &&
+                component.thread?.isActive &&
                 component.props.chatWindow?.isOpen &&
                 (component.thread.is_editable || component.thread.channel_type === "chat")
             );

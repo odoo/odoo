@@ -73,6 +73,9 @@ export class UseSuggestion {
         this.state.items = undefined;
     }
     detect() {
+        if (this.thread && !this.thread.isActive) {
+            return;
+        }
         const { start, end } = this.composer.selection;
         const text = this.composer.text;
         if (start !== end) {
