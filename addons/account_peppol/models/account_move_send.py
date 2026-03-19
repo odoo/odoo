@@ -250,7 +250,7 @@ class AccountMoveSend(models.AbstractModel):
                         for attachment in attachments_linked
                     ] + base_attachments
 
-                    new_message = invoice.message_post(
+                    new_message = invoice.with_context(no_document=True).message_post(
                         body=attachments_linked_message,
                         attachments=attachments_embedded
                     )
