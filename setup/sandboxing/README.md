@@ -33,6 +33,14 @@ Install bubblewrap with your package manager. For example, on Debian/Ubuntu:
 sudo apt install bubblewrap
 ```
 
+For Ubuntu 24.04 and later, you also need to load the appropriate AppArmor profile for Bubblewrap:
+
+```sh
+sudo apt install apparmor-profiles
+sudo ln -s /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmor.d/
+sudo apparmor_parser /etc/apparmor.d/bwrap-userns-restrict
+```
+
 It is advised to copy the scripts `bwrap-claude.sh` and `bwrap-opencode.sh` to a
 directory in your PATH (e.g. `~/.local/bin`).
 
@@ -122,3 +130,22 @@ Can you do this for me?
 ```
 
 You can follow the logs in the file `~/src/odoo/log/pouet.log`.
+
+### Troubleshooting
+
+1. If you get the following error:
+
+```
+bwrap: setting up uid map: Permission denied
+```
+
+Make sure you loaded the AppArmor profile for Bubblewrap as described in the prerequisites.
+This is required on Ubuntu 24.04 and later.
+
+Another solution is to deactivate the user namespace restrictions in AppArmor, but this is
+less secure:
+
+```sh
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+```
