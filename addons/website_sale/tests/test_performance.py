@@ -336,6 +336,7 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
+        res["product_product"] += 1
         if "website_sale_stock" in self.installed_modules:
             res["stock_warehouse"] += 2
             res["stock_move"] += 2

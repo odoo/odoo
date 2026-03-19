@@ -546,7 +546,7 @@
         >
             <div
                 id="add_to_cart_wrap"
-                t-attf-class="{{'d-none' if combination_info['prevent_sale'] else 'd-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
+                t-attf-class="{{'d-none' if combination_info['prevent_sale'] or combination_info.get('is_sold_out') else 'd-inline-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
             >
                 <!-- data-action="add_to_cart" is the default, but it's needed to distinguish this
                 button from the "buy now" button in xpaths. -->
@@ -566,6 +566,28 @@
                 </button>
             </div>
             <div
+                id="out_of_stock_buttons_wrapper"
+                t-attf-class="{{'d-flex' if combination_info.get('is_sold_out') else 'd-none'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else 'w-100'}}"
+                t-if="combination_info.get('is_storable') and not combination_info.get('prevent_sale')"
+            >
+                <button
+                    id="stock_notification_button"
+                    t-attf-class="{{'d-none' if combination_info.get('has_stock_notification') else ''}} btn btn-primary flex-grow-1 align-items-center"
+                    t-att-data-product-id="product.id"
+                >
+                    <i class="oi me-2" data-icon="mail"/>
+                    Notify me
+                </button>
+                <button
+                    id="stock_notification_subscribed_button"
+                    t-attf-class="{{'' if combination_info.get('has_stock_notification') else 'd-none'}} btn btn-outline-primary flex-grow-1 align-items-center"
+                    disabled=""
+                >
+                    <i class="oi oi-filled me-2" data-icon="notifications"/>
+                    Subscribed
+                </button>
+            </div>
+            <div
                 id="contact_us_wrapper"
                 t-attf-class="{{'d-flex' if combination_info['prevent_sale'] else 'd-none'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else 'w-100'}}"
             >
@@ -580,6 +602,33 @@
                 id="product_option_block"
                 t-attf-class="d-flex d-empty-none flex-wrap gap-2 w-100 {{'w-sm-auto' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ''}}"
             />
+        </div>
+        <div
+            id="stock_notification_wrapper"
+            t-attf-class="d-none flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center mb-4 {{'' if is_50_pc else 'w-100'}}"
+        >
+            <div id="stock_notification_form" class="flex-grow-1">
+                <div id="stock_notification_input_wrapper" class="input-group">
+                    <input
+                        id="stock_notification_input"
+                        class="form-control flex-grow-1"
+                        name="email"
+                        type="text"
+                        placeholder="youremail@gmail.com"
+                        t-att-value="combination_info.get('stock_notification_email', '')"
+                    />
+                    <button
+                        id="stock_notification_submit_button"
+                        class="btn btn-primary"
+                        t-att-data-product-id="product.id"
+                    >
+                        Subscribe
+                    </button>
+                </div>
+                <div id="stock_notification_input_incorrect" class="d-none form-text text-danger">
+                    Invalid email
+                </div>
+            </div>
         </div>
     </template>
 
@@ -622,6 +671,15 @@
                 </div>
             </div>
         </xpath>
+        <div id="out_of_stock_buttons_wrapper" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </div>
+        <div id="stock_notification_wrapper" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0 mb-4" separator=" "/>
+        </div>
+        <div id="out_of_stock_buttons_wrapper" position="after">
+            <div id="stock_notification_wrapper" position="move"/>
+        </div>
     </template>
 
     <template
@@ -651,6 +709,38 @@
                 separator=" "
             />
         </button>
+        <div id="out_of_stock_buttons_wrapper" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </div>
+
+        <div id="stock_notification_wrapper" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0 mb-4" separator=" "/>
+        </div>
+
+        <div id="out_of_stock_buttons_wrapper" position="after">
+            <div id="stock_notification_wrapper" position="move"/>
+        </div>
+        <button id="stock_notification_button" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="btn-lg {{('' if is_50_pc else ' px-xl-0')}}"
+                separator=" "
+            />
+        </button>
+         <button id="stock_notification_subscribed_button" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="btn-lg {{('' if is_50_pc else ' px-xl-0')}}"
+                separator=" "
+            />
+        </button>
+        <xpath expr="//div[@id='stock_notification_input_wrapper']" position="attributes">
+            <attribute
+                name="class"
+                add="stock_notification_input_group input-group-lg"
+                separator=" "
+            />
+        </xpath>
     </template>
 
     <template

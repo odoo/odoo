@@ -1,11 +1,11 @@
 import { registry } from '@web/core/registry';
 import configuratorTourUtils from '@sale/js/tours/product_configurator_tour_utils';
 import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
-import stockConfiguratorTourUtils from '@website_sale_stock/js/tours/product_configurator_tour_utils';
+import WebsiteSaleConfiguratorTourUtils from '@website_sale/js/tours/product_configurator_tour_utils';
 
 registry
     .category('web_tour.tours')
-    .add('website_sale_stock.product_configurator', {
+    .add('website_sale.product_configurator', {
         steps: () => [
             ...wsTourUtils.addToCartFromProductPage(),
             configuratorTourUtils.assertProductQuantity("Main product", 1),
@@ -24,7 +24,8 @@ registry
                 trigger: `.modal button[name=sale_quantity_button_plus]:disabled`,
             },
             // Assert that the "Out of stock" variant of the optional product can't be sold.
-            ...stockConfiguratorTourUtils.assertOptionalProductOutOfStock(
+            configuratorTourUtils.selectAttribute("Optional product", "Stock", "Out of stock"),
+            ...WebsiteSaleConfiguratorTourUtils.assertOptionalProductOutOfStock(
                 "Optional product (Out of stock)"
             ),
             // Add the "Out of stock" variant by selecting the "In stock" variant, adding it, and
@@ -33,7 +34,7 @@ registry
             configuratorTourUtils.addOptionalProduct("Optional product (In stock)"),
             configuratorTourUtils.selectAttribute("Optional product", "Stock", "Out of stock"),
             // Assert that the "Out of stock" variant of the optional product still can't be sold.
-            ...stockConfiguratorTourUtils.assertProductOutOfStock("Optional product (Out of stock)"),
+            ...WebsiteSaleConfiguratorTourUtils.assertProductOutOfStock("Optional product (Out of stock)"),
             configuratorTourUtils.assertFooterButtonsDisabled(),
             // Remove the "Out of stock" variant.
             configuratorTourUtils.removeOptionalProduct("Optional product"),

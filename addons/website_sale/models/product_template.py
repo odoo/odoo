@@ -807,7 +807,7 @@ class ProductTemplate(models.Model):
         uom = self.env["uom.uom"].browse(uom_id) or self._get_main_uom()
 
         if not product_id and not combination and not only_template:
-            combination = self._get_first_possible_combination()
+            combination = self._get_first_available_combination()
 
         if only_template:
             product = self.env["product.product"]
@@ -1043,11 +1043,18 @@ class ProductTemplate(models.Model):
                 "has_stock_notification": has_stock_notification,
                 "stock_notification_email": stock_notification_email,
                 "is_in_wishlist": product_sudo._is_in_wishlist(),
+                "is_sold_out": (
+                    not product_sudo.allow_out_of_stock_order and (free_qty - cart_quantity) < 1
+                ),
             })
             if self.env["res.groups"]._is_feature_enabled("uom.group_uom"):
                 combination_info["uom_name"] = uom.name
         else:
-            combination_info.update({"free_qty": 0, "cart_qty": 0})
+            combination_info.update({
+                "free_qty": 0,
+                "cart_qty": 0,
+                "is_sold_out": not product_or_template.allow_out_of_stock_order,
+            })
 
         return combination_info
 
@@ -1681,8 +1688,7 @@ class ProductTemplate(models.Model):
         :returns: the ribbon to display, if there is one.
         :rtype: `product.ribbon` recordset
         """
-        variant = variant or self.product_variant_id
-        ribbon = variant.sudo().variant_ribbon_id or self.sudo().website_ribbon_id
+        ribbon = (variant and variant.sudo().variant_ribbon_id) or self.sudo().website_ribbon_id
         if not ribbon:
             # The None check ensures that we do not recompute the ribbons when no ribbons were
             # previously found.
@@ -1691,6 +1697,11 @@ class ProductTemplate(models.Model):
                 auto_assign_ribbons = self.env["product.ribbon"].search_fetch([
                     ("assign", "!=", "manual")
                 ])
+
+            if auto_assign_ribbons:
+                variant = variant or self._get_variant_for_combination(
+                    self._get_first_available_combination()
+                )
             for rb in auto_assign_ribbons:
                 if rb._is_applicable_for(variant, price_vals):
                     return rb
@@ -1784,20 +1795,45 @@ class ProductTemplate(models.Model):
             return self._get_available_uoms()[:1] or self.uom_id
         return super()._get_main_uom()
 
+    def _get_first_available_combination(self, necessary_values=None):
+        """Override of `product` to return the first combination that has stock."""
+        if self.env.context.get("website_id"):
+            combinations = self._get_possible_combinations(necessary_values)
+            return next(
+                filter(self._is_combination_in_stock, combinations),
+                super()._get_first_available_combination(necessary_values),
+            )
+        return super()._get_first_available_combination(necessary_values)
+
+    def _is_combination_in_stock(self, combination):
+        """Check that the given combination is not sold out.
+
+        :param recordset combination: the product combination to check
+        :returns whether there is stock for the combination
+        :rtype: boolean
+        """
+        try:
+            variant = self._get_variant_for_combination(combination)
+            return variant and not variant._is_sold_out()
+        except ValueError:
+            return False
+
     def _is_sold_out(self):
         """Return whether the product is sold out (no available quantity).
 
         If a product inventory is not tracked, or if it's allowed to be sold regardless
         of availabilities, the product is never considered sold out.
 
-        Note: only checks the availability of the first variant of the template.
+        Note: checks the availability of all variants of the template.
 
         :return: whether the product can still be sold
         :rtype: bool
         """
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        return not self.product_variant_id or self.product_variant_id._is_sold_out()
+        return not self.product_variant_ids or all(
+            variant._is_sold_out() for variant in self.product_variant_ids
+        )
 
     @api.model
     def _get_additional_configurator_data(

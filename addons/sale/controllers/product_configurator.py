@@ -69,7 +69,7 @@ class SaleProductConfiguratorController(Controller):
                     lambda ptal: ptal.product_template_value_ids._only_active()[:1]
                 )
             if not combination:
-                combination = product_template._get_first_possible_combination()
+                combination = product_template._get_first_available_combination()
             currency = self.env["res.currency"].browse(currency_id)
             pricelist = self.env["product.pricelist"].browse(pricelist_id)
             so_date = datetime.fromisoformat(so_date)
@@ -94,7 +94,7 @@ class SaleProductConfiguratorController(Controller):
                     dict(
                         **self._get_product_information(
                             optional_product_template,
-                            optional_product_template._get_first_possible_combination(),
+                            optional_product_template._get_first_available_combination(),
                             currency,
                             pricelist,
                             so_date,
@@ -254,7 +254,7 @@ class SaleProductConfiguratorController(Controller):
             dict(
                 **self._get_product_information(
                     optional_product_template,
-                    optional_product_template._get_first_possible_combination(),
+                    optional_product_template._get_first_available_combination(),
                     currency,
                     pricelist,
                     datetime.fromisoformat(so_date),

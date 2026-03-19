@@ -345,10 +345,15 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         """Test that the product configurator applies taxes to PTAV extra prices."""
         self.website.show_line_subtotals_tax_selection = "tax_included"
         tax = self.env["account.tax"].sudo().create({"name": "Tax", "amount": 10})
-        attribute = self.env["product.attribute"].sudo().create({
-            "name": "Attribute",
-            "value_ids": [Command.create({"name": "A", "default_extra_price": 1})],
-        })
+        attribute = (
+            self
+            .env["product.attribute"]
+            .sudo()
+            .create({
+                "name": "Attribute",
+                "value_ids": [Command.create({"name": "A", "default_extra_price": 1})],
+            })
+        )
         product = self.env["product.template"].create({
             "name": "Product",
             "website_published": True,
@@ -402,7 +407,9 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
     def test_product_configurator_strikethrough_price(self):
         """Test that the product configurator displays the strikethrough price correctly."""
         self.pricelist = self._enable_pricelists()
-        self.env["res.config.settings"].sudo().create({"group_product_price_comparison": True}).execute()
+        self.env["res.config.settings"].sudo().create({
+            "group_product_price_comparison": True
+        }).execute()
         self.website.show_line_subtotals_tax_selection = "tax_included"
         tax = self.env["account.tax"].sudo().create({"name": "Tax", "amount": 10})
         optional_product = self.env["product.template"].create({
@@ -490,7 +497,8 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
         with self.mock_request() as request:
             product_values = self.pc_controller._prepare_product_values(
-                main_product.with_context(request.env.context), **{str(attribute_single.id): str(attribute_single.value_ids.id)}
+                main_product.with_context(request.env.context),
+                **{str(attribute_single.id): str(attribute_single.value_ids.id)},
             )
         is_combination_possible = product_values["combination_info"]["is_combination_possible"]
         combination_product_id = product_values["combination_info"]["product_id"]
@@ -521,10 +529,55 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         # On website 1, the category from website 1 should be selected.
         with MockRequest(self.website.env, website=self.website) as request:
-            values = self.pc_controller._prepare_product_values(product_tmpl.with_context(request.env.context))
+            values = self.pc_controller._prepare_product_values(
+                product_tmpl.with_context(request.env.context)
+            )
         self.assertEqual(values["category"], categ_website_1)
 
         # On website 2, the category from website 2 should be selected.
         with MockRequest(self.website.env, website=second_website) as request:
-            values = self.pc_controller._prepare_product_values(product_tmpl.with_context(request.env.context))
+            values = self.pc_controller._prepare_product_values(
+                product_tmpl.with_context(request.env.context)
+            )
         self.assertEqual(values["category"], categ_website_2)
+
+    def test_out_of_stock_product_configurator(self):
+        stock_attribute = self.env["product.attribute"].create({
+            "name": "Stock",
+            "value_ids": [
+                Command.create({"name": "Out of stock"}),
+                Command.create({"name": "In stock"}),
+            ],
+        })
+        optional_product = (
+            self
+            .env["product.template"]
+            .sudo()
+            .create({
+                "name": "Optional product",
+                "website_published": True,
+                "is_storable": True,
+                "allow_out_of_stock_order": False,
+                "attribute_line_ids": [
+                    Command.create({
+                        "attribute_id": stock_attribute.id,
+                        "value_ids": [Command.set(stock_attribute.value_ids.ids)],
+                    })
+                ],
+            })
+        )
+        main_product = (
+            self
+            .env["product.product"]
+            .sudo()
+            .create({
+                "name": "Main product",
+                "website_published": True,
+                "is_storable": True,
+                "allow_out_of_stock_order": False,
+                "optional_product_ids": [Command.set(optional_product.ids)],
+            })
+        )
+        main_product.qty_available = 10
+        optional_product.product_variant_ids[1].qty_available = 10
+        self.start_tour(main_product.website_url, "website_sale.product_configurator")
