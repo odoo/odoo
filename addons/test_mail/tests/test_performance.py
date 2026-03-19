@@ -1718,6 +1718,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Test",
+                                        "has_mail_thread": True,
                                         "id": record.id,
                                         "model": "mail.test.simple",
                                         "module_icon": "/base/static/description/icon.png",
@@ -1836,6 +1837,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Test",
+                                        "has_mail_thread": True,
                                         "id": record.id,
                                         "model": "mail.test.simple",
                                         "module_icon": "/base/static/description/icon.png",

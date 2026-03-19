@@ -134,6 +134,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Group",
+                                        "has_mail_thread": True,
                                         "id": test_group.id,
                                         "model": "discuss.channel",
                                         "rating_avg": 0.0,

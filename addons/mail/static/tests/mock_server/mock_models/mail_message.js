@@ -93,6 +93,7 @@ export class MailMessage extends models.ServerModel {
             if (thread) {
                 const thread_data = {
                     display_name: thread.name ?? thread.display_name,
+                    has_mail_thread: this.env[message.model]._inherit?.includes("mail.thread"),
                     module_icon: "/base/static/description/icon.png",
                 };
                 if (thread.priority) {
