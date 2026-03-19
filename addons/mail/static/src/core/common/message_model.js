@@ -495,7 +495,8 @@ export class Message extends Record {
             !this.is_transient &&
                 !this.isPending &&
                 this.thread?.can_react &&
-                !this.thread.isTransient
+                !this.thread.isTransient &&
+                this.thread.has_mail_thread
         );
     }
 
