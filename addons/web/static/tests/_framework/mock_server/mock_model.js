@@ -2933,17 +2933,34 @@ export class Model extends Array {
             // 'child_of' operator isn't supported by domain.js, so we replace
             // in by the 'in' operator (with the ids of children)
             if (criterion[1] === "child_of") {
-                let oldLength = 0;
-                const childIds = [criterion[2]];
-                while (childIds.length > oldLength) {
-                    oldLength = childIds.length;
-                    for (const record of this) {
-                        if (childIds.indexOf(record[this._parent_name]) >= 0) {
-                            childIds.push(record.id);
-                        }
+                const relationKey = this._parent_name;
+                // Let's build an adjacency list where a key represents a parent, value reprensents a list of children
+                const parentChildMap = {};
+
+                for (const record of this) {
+                    const parentId = record[relationKey];
+                    if (!parentId) {
+                        continue;
+                    }
+                    if (parentChildMap[parentId]) {
+                        parentChildMap[parentId].push(record.id);
+                    } else {
+                        parentChildMap[parentId] = [record.id];
                     }
                 }
-                criterion = [criterion[0], "in", childIds];
+
+                // Use DFS to build children list from adjacency list
+                const childrenIds = [];
+                const DfsStack = [criterion[2]];
+
+                while (DfsStack.length > 0) {
+                    const currentNode = DfsStack.pop();
+                    childrenIds.push(currentNode);
+                    if (parentChildMap[currentNode]) {
+                        DfsStack.push(parentChildMap[currentNode]);
+                    }
+                }
+                criterion = [criterion[0], "in", childrenIds];
             }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
             const field = this._fields[criterion[0]] || {};
