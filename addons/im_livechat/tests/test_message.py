@@ -184,6 +184,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "mail.thread": self._filter_threads_fields(
                     {
                         "display_name": "test1 Ernest Employee",
+                        "has_mail_thread": True,
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
                     },
@@ -276,6 +277,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                             "mail.thread": self._filter_threads_fields(
                                 {
                                     "display_name": "Chell Gladys Ernest Employee",
+                                    "has_mail_thread": True,
                                     "id": channel.id,
                                     "model": "discuss.channel",
                                     "rating_id": False,

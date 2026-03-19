@@ -1227,6 +1227,7 @@ class MailMessage(models.Model):
             lambda res: (
                 # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
                 res.attr("display_name", sudo=True),
+                res.attr("has_mail_thread", lambda t: isinstance(t, self.env.registry["mail.thread"])),
                 res.attr(
                     "module_icon",
                     lambda t: modules.module.get_module_icon(t._original_module),
