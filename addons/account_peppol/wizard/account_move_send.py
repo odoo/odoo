@@ -248,7 +248,7 @@ class AccountMoveSend(models.TransientModel):
                         for attachment in attachments_linked
                     ] + base_attachments
 
-                    new_message = invoice.with_context(no_new_invoice=True).message_post(
+                    new_message = invoice.with_context(no_new_invoice=True, no_document=True).message_post(
                         body=attachments_linked_message,
                         attachments=attachments_embedded,
                     )
