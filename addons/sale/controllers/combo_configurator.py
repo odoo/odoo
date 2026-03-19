@@ -50,13 +50,15 @@ class SaleComboConfiguratorController(Controller):
         date = datetime.fromisoformat(date)
         selected_combo_item_dict = {item["id"]: item for item in selected_combo_items or []}
 
+        price, pricelist_rule_id = product_template._get_configurator_display_price(
+            product_template, quantity, date, currency, pricelist, **kwargs
+        )
+
         return {
             "product_tmpl_id": product_tmpl_id,
             "display_name": product_template.display_name,
             "quantity": quantity,
-            "price": product_template._get_configurator_display_price(
-                product_template, quantity, date, currency, pricelist, **kwargs
-            )[0],
+            "price": price,
             "combos": [
                 {
                     "id": combo.id,
@@ -70,6 +72,7 @@ class SaleComboConfiguratorController(Controller):
                             currency,
                             pricelist,
                             quantity=quantity,
+                            pricelist_rule_id=pricelist_rule_id,
                             **kwargs,
                         )
                         for combo_item in combo.combo_item_ids
