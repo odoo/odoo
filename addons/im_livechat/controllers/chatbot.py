@@ -10,7 +10,11 @@ class LivechatChatbotScriptController(http.Controller):
     @http.route("/chatbot/restart", type="json", auth="public")
     @add_guest_to_context
     def chatbot_restart(self, channel_id, chatbot_script_id):
-        discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        discuss_channel = (
+            request.env["discuss.channel"]
+            .with_context(active_test=False)
+            .search([("id", "=", channel_id)])
+        )
         chatbot = request.env['chatbot.script'].browse(chatbot_script_id)
         if not discuss_channel or not chatbot.exists():
             return None
@@ -21,7 +25,11 @@ class LivechatChatbotScriptController(http.Controller):
     @http.route("/chatbot/answer/save", type="json", auth="public")
     @add_guest_to_context
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
-        discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        discuss_channel = (
+            request.env["discuss.channel"]
+            .with_context(active_test=False)
+            .search([("id", "=", channel_id)])
+        )
         chatbot_message = request.env['chatbot.message'].sudo().search([
             ('mail_message_id', '=', message_id),
             ('discuss_channel_id', '=', discuss_channel.id),
@@ -111,9 +119,12 @@ class LivechatChatbotScriptController(http.Controller):
     @http.route("/chatbot/step/validate_email", type="json", auth="public")
     @add_guest_to_context
     def chatbot_validate_email(self, channel_id):
-        discuss_channel = request.env["discuss.channel"].search(
-            [("id", "=", channel_id)]
-        ).with_context(lang=self._get_chatbot_language())
+        discuss_channel = (
+            request.env["discuss.channel"]
+            .with_context(active_test=False)
+            .search([("id", "=", channel_id)])
+            .with_context(lang=self._get_chatbot_language())
+        )
         if not discuss_channel or not discuss_channel.chatbot_current_step_id:
             return None
 

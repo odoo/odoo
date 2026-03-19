@@ -338,6 +338,22 @@ class Channel(models.Model):
             self._cr.execute('CREATE INDEX discuss_channel_member_seen_message_id_idx ON discuss_channel_member (channel_id,partner_id,seen_message_id)')
 
     # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    def action_archive(self):
+        if to_archive := self.sub_channel_ids.filtered("active"):
+            to_archive.action_archive()
+        return super().action_archive()
+
+    def action_unarchive(self):
+        if to_unarchive := self.with_context(active_test=False).sub_channel_ids.filtered(
+            lambda sc: not sc.active
+        ):
+            to_unarchive.action_unarchive()
+        return super().action_unarchive()
+
+    # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
     # ------------------------------------------------------------
 
@@ -859,6 +875,21 @@ class Channel(models.Model):
                 'see_all_pins': _('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+
+    @api.model
+    def _find_channels(self, ids, domain=False):
+        """
+        Get channels by ID(s), including archived ones.
+        :param ids: int or list of ints
+        :param domain: restrict the result to domain if set
+        :return: discuss.channel recordset
+        """
+        if not ids:
+            return self.env["discuss.channel"]
+        channel_domain = [("id", "in", [ids] if isinstance(ids, int) else ids)]
+        if domain:
+            channel_domain = expression.AND([channel_domain, domain])
+        return self.with_context(active_test=False).search(channel_domain)
 
     def _find_or_create_member_for_self(self):
         self.ensure_one()

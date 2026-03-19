@@ -65,7 +65,11 @@ class RtcController(http.Controller):
         """Joins the RTC call of a channel if the user is a member of that channel
         :param int channel_id: id of the channel to join
         """
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = (
+            request.env["discuss.channel"]
+            .with_context(active_test=False)
+            .search([("id", "=", channel_id)])
+        )
         if not channel:
             raise request.not_found()
         member = channel._find_or_create_member_for_self()
@@ -102,7 +106,11 @@ class RtcController(http.Controller):
         :param member_ids: members whose invitation is to cancel
         :type member_ids: list(int) or None
         """
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = (
+            request.env["discuss.channel"]
+            .with_context(active_test=False)
+            .search([("id", "=", channel_id)])
+        )
         if not channel:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - can cancel invitations in accessible channel

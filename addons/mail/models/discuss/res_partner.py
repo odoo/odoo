@@ -41,7 +41,11 @@ class ResPartner(models.Model):
         )
         channel = self.env["discuss.channel"]
         if channel_id:
-            channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
+            channel = (
+                self.env["discuss.channel"]
+                .with_context(active_test=False)
+                .search([("id", "=", int(channel_id))])
+            )
             domain = expression.AND([domain, [("channel_ids", "not in", channel.id)]])
             if channel.group_public_id:
                 domain = expression.AND(
@@ -68,7 +72,11 @@ class ResPartner(models.Model):
         Only members of the given channel are returned.
         The return format is a list of partner data (as per returned by `_to_store()`).
         """
-        channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = (
+            self.env["discuss.channel"]
+            .with_context(active_test=False)
+            .search([("id", "=", channel_id)])
+        )
         if not channel:
             return []
         domain = expression.AND(

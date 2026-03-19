@@ -11,10 +11,8 @@ class LivechatRtcController(RtcController):
     @route()
     @add_guest_to_context
     def channel_call_join(self, channel_id, check_rtc_session_ids=None, camera=False):
-        if request.env.user.is_public and request.env["discuss.channel"].search([
-            ("id", "=", channel_id),
-            ("channel_type", "=", "livechat"),
-            ("rtc_session_ids", "=", False),
-        ]):
+        if request.env.user.is_public and request.env["discuss.channel"]._find_channels(
+            channel_id, [("channel_type", "=", "livechat"), ("rtc_session_ids", "=", False)]
+        ):
             raise NotFound()
         return super().channel_call_join(channel_id, check_rtc_session_ids, camera)
