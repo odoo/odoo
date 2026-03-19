@@ -137,10 +137,9 @@
                             <field name="stop" required="not allday" invisible="1" />
                             <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
                             <field name="allday" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
-                            <label for="duration" class="fw-bold text-900 opacity-100"/>
+                            <label for="duration" class="fw-bold text-900 opacity-100" invisible="allday"/>
                             <div class="o_input_box" invisible="allday">
                                 <field name="duration" widget="float_time" string="Duration" readonly="(id and recurrency) or not user_can_edit"/>
-                                <span class="o_input_box_overlay_end o_input_box_overlay_inline">hours</span>
                             </div>
                             <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
                             <label for="videocall_location" class="opacity-100"/>
@@ -330,40 +329,40 @@
                         placeholder="Add Title"
                     />
                 </div>
-                <div class="o_input_box  pt-1 pb-2">
+                <div class="o_input_box  pt-1 pb-2 d-md-flex">
                     <!--when "stop" is set manually, "duration" is computed. When "start" is changed
                     "stop" is computed based on the previously-computed "duration". Hence we need to
                     keep the last computed duration in the front-end model and send it with "start"
                     when it changes-->
                     <!--field is also used for custom behavior in default_get, check before removing-->
-                    <i class="o_input_box_overlay_start fa fa-clock-o d-touch-none" title="Dates"/>
+                    <i class="o_input_box_overlay_start fa fa-clock-o d-touch-none mt-1" title="Dates"/>
                     <field name="duration" invisible="1" force_save="1"/>
-                    <field name="start" nolabel="1" class="d-block"
+                    <field name="start" nolabel="1" class="d-block flex-grow-1"
                         widget="daterange" options="{'end_date_field': 'stop'}"
                         placeholder="Dates"
                         invisible="allday"
                     />
-                    <field name="start_date" nolabel="1" class="d-block"
+                    <field name="start_date" nolabel="1" class="d-block flex-grow-1"
                         widget="daterange" options="{'end_date_field': 'stop_date'}"
                         placeholder="Dates"
                         invisible="not allday"
                     />
-                    <span class="d-flex text-nowrap justify-content-between justify-content-md-start align-items-center mx-3">
+                    <span class="d-flex text-nowrap justify-content-start align-items-center mx-3">
                         <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
                         <field name="show_as" invisible="1"/>
-                        <label for="allday" string="All day"/>
-                        <field name="allday" widget="boolean_toggle"  class="mb-0" title="All Day" nolabel="1"/>
+                        <label for="allday" string="All day" class="ms-md-3"/>
+                        <field name="allday" widget="boolean_toggle" class="mb-0 mt-1" title="All Day" nolabel="1"/>
                     </span>
                     <field name="stop" invisible="1"/>
                 </div>
-                <div class="o_input_box">
+                <div class="o_input_box w-100 mb-md-2">
                     <i class="o_input_box_overlay_start fa fa-user" title="Participants"/>
-                    <field name="partner_ids" nolabel="1"
+                    <field name="partner_ids" nolabel="1" class="w-100"
                         widget="many2many_tags"
                         placeholder="Participants"
                     />
                 </div>
-                <div class="o_input_box">
+                <div class="o_input_box mb-md-2">
                     <i class="o_input_box_overlay_start fa fa-map" title="Location"/>
                     <field name="location" nolabel="1"
                         placeholder="Room or Location"
@@ -373,28 +372,28 @@
                     <field name="access_token" force_save="1" invisible="1"/>
                     <field name="videocall_location" force_save="1" invisible="1"/>
                     <field name="videocall_source" force_save="1" invisible="1"/>
-                    <button name="set_discuss_videocall_location" type="object" class="o_input_box_overlay_end btn btn-link"
+                    <button name="set_discuss_videocall_location" type="object" class="o_input_box_overlay_end btn btn-link visible"
                         invisible="videocall_location" context="{'recurrence_update': recurrence_update}">
                         <span class="fa fa-plus me-1"/>Video conference
                     </button>
                 </div>
-                <div class="o_input_box" invisible="not videocall_location">
+                <div class="o_input_box mb-md-2" invisible="not videocall_location">
                     <i class="o_input_box_overlay_start fa fa-video-camera" title="Videocall URL"/>
                     <field name="videocall_location" nolabel="1" widget="CopyClipboardChar"/>
                     <button name="clear_videocall_location" class="o_input_box_overlay_end btn btn-link"><i class="fa fa-remove" title="Remove"/></button>
                 </div>
-                <div class="o_input_box">
+                <div class="o_input_box mb-md-2">
                     <i class="o_input_box_overlay_start fa fa-lock" title="Visibility"/>
                     <field name="privacy_placeholder" invisible="1"/> <!-- Used to generate the privacy field's placeholder. -->
-                    <field name="privacy" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}"/>
+                    <field name="privacy" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}" class="w-100"/>
                 </div>
-                <div class="o_input_box">
+                <div class="o_input_box mb-md-2">
                     <i class="o_input_box_overlay_start fa fa-circle" title="Show as"/>
-                    <field name="show_as" nolabel="1"/>
+                    <field name="show_as" nolabel="1" class="w-100"/>
                 </div>
                 <div class="o_input_box d-flex">
                     <i class="o_input_box_overlay_start fa fa-sticky-note" title="Notes"/>
-                    <field name="notes" nolabel="1" placeholder="Notes" widget="calendar_event_notes_html"/>
+                    <field name="notes" nolabel="1" class="w-100" placeholder="Notes" widget="calendar_event_notes_html"/>
                 </div>
             </form>
         </field>

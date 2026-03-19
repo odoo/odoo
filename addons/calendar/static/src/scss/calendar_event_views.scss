@@ -25,4 +25,17 @@
     .o_field_many2many_tags[name="partner_ids"] .o_tags_input {
         width: 100%;
     }
+    .o_field_CopyClipboardChar {
+        padding-left: 0 !important;
+    }
+    .o_field_calendar_event_notes_html {
+        @include media-breakpoint-up(sm) {
+            margin-top: -2px;
+        }
+        .note-editable {
+            border: 0;
+            padding-left: 0 !important;
+        }
+    }
+
 }
