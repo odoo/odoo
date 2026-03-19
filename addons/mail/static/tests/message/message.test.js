@@ -2223,3 +2223,32 @@ test("Remove link preview when message no longer contains the link", async () =>
     await contains(".o-mail-Message-body:text('Hi (edited)')");
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
+
+test("Message actions change when channel is archived", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "Test",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message .o-mail-Message-actions");
+    await contains("[title='Add a Reaction']");
+    await contains("[title='Reply']");
+    await contains("[title='Mark as Todo']");
+    await click("[title='Expand']");
+    await contains("[title='Pin']");
+    await contains("[title='Mark as Unread']");
+    await contains("[title='Create Thread']");
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(".o-mail-Message .o-mail-Message-actions");
+    await contains("[title='Expand']", { count: 0 });
+    await contains("[title='Add a Reaction']");
+    await contains("[title='Reply']", { count: 0 });
+    await contains("[title='Mark as Todo']");
+    await contains("[title='Pin']", { count: 0 });
+    await contains("[title='Mark as Unread']");
+    await contains("[title='Create Thread']", { count: 0 });
+});

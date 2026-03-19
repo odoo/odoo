@@ -45,7 +45,9 @@ commandProviderRegistry.add("mail.partner", {
         await store.channels.fetch();
         const suggestionService = env.services["mail.suggestion"];
         const commands = [];
-        const mentionedChannels = store.getNeedactionChannels();
+        const mentionedChannels = store
+            .getNeedactionChannels()
+            .filter((channel) => !channel.isArchived);
         // We don't want to display the same channel twice in the command palette.
         const displayedPartnerIds = new Set();
         if (!options.searchValue) {
@@ -130,7 +132,10 @@ commandProviderRegistry.add("discuss.channel", {
         const shownChannels = new Set();
         if (!options.searchValue) {
             recentChannels
-                .filter((channel) => ["channel", "group"].includes(channel.channel_type))
+                .filter(
+                    (channel) =>
+                        !channel.isArchived && ["channel", "group"].includes(channel.channel_type)
+                )
                 .slice(0, 3)
                 .map((channel) => {
                     shownChannels.add(channel.id);

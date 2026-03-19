@@ -230,6 +230,7 @@ export class DiscussChannel extends models.ServerModel {
         const [data] = this.read(
             ids,
             [
+                "active",
                 "allow_public_upload",
                 "avatarCacheKey", // mock server simplification
                 "channel_type",
@@ -1052,5 +1053,14 @@ export class DiscussChannel extends models.ServerModel {
             channel_member_ids: [Command.create({ guest_id: guestId })],
         });
         MailGuest._set_auth_cookie(guestId);
+    }
+
+    _find_channels(channelId) {
+        return this.browse(
+            this.search(
+                [["id", "=", channelId]],
+                makeKwArgs({ context: { ...this.env.context, active_test: false } })
+            )
+        );
     }
 }

@@ -87,6 +87,9 @@ export class UseSuggestion {
         this.isDismissed = true;
     }
     detect() {
+        if (this.thread?.isArchived) {
+            return;
+        }
         const { start, end } = this.composer.selection;
         const text = this.composer.text;
         if (start !== end) {

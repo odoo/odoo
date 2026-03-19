@@ -118,7 +118,7 @@ async function feedback(request) {
     const RatingRating = this.env["rating.rating"];
 
     const { channel_id, rate, reason } = await parseRequestParams(request);
-    let [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    const [channel] = DiscussChannel._find_channels(channel_id);
     if (!channel) {
         return false;
     }
@@ -136,7 +136,6 @@ async function feedback(request) {
     } else {
         RatingRating.write([channel.rating_ids[0]], values);
     }
-    [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     return channel.rating_ids[0];
 }
 
