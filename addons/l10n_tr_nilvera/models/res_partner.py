@@ -57,7 +57,7 @@ class ResPartner(models.Model):
             if partner.invoice_edi_format != "ubl_tr":
                 continue
             partner.is_company = False
-            if not partner._is_vat_void(partner.vat) and partner.vat.isdigit() and len(partner.vat) <= 10:
+            if not partner._is_vat_void() and partner.vat.isdigit() and len(partner.vat) <= 10:
                 partner.is_company = True
             l10n_tr_partners += partner
 
