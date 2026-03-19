@@ -6,8 +6,8 @@
         <label class="col-12" t-attf-style="font-weight: {{previewWeight}};" t-out="previewLabel"/>
     </div>
     <div class="mb-3 row">
-        <div class="col-11 offset-1" t-attf-style="font-family: '{{this.previewFontName}}';">
-            <input t-if="this.previewFontName" class="w-100 border-0 bg-transparent" t-custom-model="this.state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
+        <div class="col-11 offset-1" t-attf-style="font-family: '{{previewFontName}}';">
+            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-custom-model="this.state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
             <input t-else="" class="w-100 border-0 bg-transparent" readonly="1" t-attf-style="font-weight: {{previewWeight}};"/>
         </div>
     </div>

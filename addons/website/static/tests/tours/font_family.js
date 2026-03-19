@@ -78,5 +78,9 @@ registerWebsitePreviewTour(
             content: "Check that the preview of the selected font is displayed in the modal",
             trigger: ".modal:contains('Preview of Second test font')",
         },
+        {
+            content: "Check that the 3 previews are correctly set in the modal",
+            trigger: `.modal div[style="font-family: 'Second test font';"]:count(3)`,
+        },
     ]
 );
