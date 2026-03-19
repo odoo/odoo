@@ -44,12 +44,19 @@ export const localizationService = {
             multi_lang: multiLang,
         } = await response.json();
 
-        // FIXME We flatten the result of the python route.
-        // Eventually, we want a new python route to return directly the good result.
+        // The first module to define a term owns the plain key.
+        // When a later module defines the same term differently, a scoped key
+        // ("module\x04term") is stored for that module so _t() can pick the
+        // right translation via this.templateName in the OWL CodeGenerator.
+        // Scoped keys are only created on actual conflicts, saving memory.
         const terms = {};
         for (const addon of Object.keys(modules)) {
             for (const message of modules[addon].messages) {
-                terms[message.id] = message.string;
+                if (!(message.id in terms)) {
+                    terms[message.id] = message.string;
+                } else {
+                    terms[`${addon}\x04${message.id}`] = message.string;
+                }
             }
         }
 

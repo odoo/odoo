@@ -216,8 +216,15 @@
 
         /** @type {OdooModuleLoader["startModule"]} */
         startModule(name) {
+            const addon = name.match(/^@([^/]+)\//)?.[1];
             /** @type {(dependency: string) => OdooModule} */
-            const require = (dependency) => this.modules.get(dependency);
+            const require = (dependency) => {
+                const mod = this.modules.get(dependency);
+                if (dependency === "@web/core/l10n/translation" && mod?.createModuleT && addon) {
+                    return Object.assign(Object.create(mod), { _t: mod.createModuleT(addon) });
+                }
+                return mod;
+            };
             this.jobs.delete(name);
             const factory = this.factories.get(name);
             /** @type {OdooModule | null} */

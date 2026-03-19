@@ -8,7 +8,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import { _t, createModuleT, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 
 import { Component, markup, xml } from "@odoo/owl";
@@ -154,6 +154,39 @@ test("_t fills the format specifiers in lazy translated terms with its extra arg
         "Due in %s days": "Échéance dans %s jours",
     });
     expect(translatedStr.toString()).toBe("Échéance dans 513 jours");
+});
+
+describe("createModuleT", () => {
+    test("resolves to module-specific translation when two modules define the same term differently", () => {
+        // Simulate what localization_service does: first module (web_editor) owns
+        // the plain key; second module (pos_restaurant) gets a scoped key.
+        patchTranslations({
+            Table: "Tabla",
+            "pos_restaurant\x04Table": "Mesa",
+        });
+        const tWebEditor = createModuleT("web_editor");
+        const tPosRestaurant = createModuleT("pos_restaurant");
+        expect(tWebEditor("Table")).toBe("Tabla");
+        expect(tPosRestaurant("Table")).toBe("Mesa");
+    });
+
+    test("falls back to plain key when no scoped key exists for the module", () => {
+        patchTranslations({ Table: "Tabla" });
+        const tUnknownModule = createModuleT("some_other_module");
+        expect(tUnknownModule("Table")).toBe("Tabla");
+    });
+
+    test("templateName takes precedence over module name when used as OWL translateFn", () => {
+        patchTranslations({
+            Table: "Tabla",
+            "pos_restaurant\x04Table": "Mesa",
+        });
+        // Simulate OWL calling translateFn with `this` bound to a CodeGenerator
+        // whose templateName belongs to pos_restaurant.
+        const tWebEditor = createModuleT("web_editor");
+        const result = tWebEditor.call({ templateName: "pos_restaurant.TicketScreen" }, "Table");
+        expect(result).toBe("Mesa");
+    });
 });
 
 describe("_t with markups", () => {

@@ -11,6 +11,21 @@ export const translationIsReady = new Deferred();
 
 const Markup = markup().constructor;
 
+function _translate(term, moduleName, ...values) {
+    if (translatedTerms[translationLoaded]) {
+        let translation = translatedTerms[term] ?? term;
+        if (moduleName) {
+            const scopedKey = `${moduleName}\x04${term}`;
+            if (scopedKey in translatedTerms) {
+                translation = translatedTerms[scopedKey];
+            }
+        }
+        return values.length === 0 ? translation : _safeSprintf(translation, ...values);
+    } else {
+        return new LazyTranslatedString(term, values);
+    }
+}
+
 /**
  * Translates a term, or returns the term as it is if no translation can be
  * found.
@@ -34,15 +49,25 @@ const Markup = markup().constructor;
  * @returns {string|Markup|LazyTranslatedString}
  */
 export function _t(term, ...values) {
-    if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[term] ?? term;
-        if (values.length === 0) {
-            return translation;
-        }
-        return _safeSprintf(translation, ...values);
-    } else {
-        return new LazyTranslatedString(term, values);
-    }
+    // When OWL calls translateFn it does so as `this.translateFn(term, ctx)`,
+    // binding `this` to the CodeGenerator which carries `templateName`
+    return _translate(term, this?.templateName?.split(".")[0], ...values);
+}
+
+/**
+ * Creates a module-specific translation function. Called automatically by the
+ * transpiler when a file imports `_t` from this module; should not be needed
+ * in hand-written code.
+ *
+ * @param {string} moduleName
+ * @returns {typeof _t}
+ */
+export function createModuleT(moduleName) {
+    return function _t(term, ...values) {
+        // If called as OWL's translateFn, this.templateName takes precedence
+        // so that template translations resolve to the template's own module.
+        return _translate(term, this?.templateName?.split(".")[0] || moduleName, ...values);
+    };
 }
 
 class LazyTranslatedString extends String {
