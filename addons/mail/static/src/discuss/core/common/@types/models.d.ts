@@ -40,6 +40,7 @@ declare module "models" {
         fetchChannelMembers: () => Promise<void>;
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
+        has_mail_thread: boolean | undefined;
         hasMemberList: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;

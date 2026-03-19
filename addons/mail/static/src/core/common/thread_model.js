@@ -205,6 +205,8 @@ export class Thread extends Record {
             this.onPinStateUpdated();
         },
     });
+    /** @type {Boolean|undefined} */
+    has_mail_thread;
     message_main_attachment_id = fields.One("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
