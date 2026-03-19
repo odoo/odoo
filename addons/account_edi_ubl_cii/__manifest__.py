@@ -23,6 +23,7 @@ Pro rules and show the errors.
     'depends': ['account'],
     'data': [
         'data/cii_22_templates.xml',
+        'data/ir_config_parameter_data.xml',
         'views/account_tax_views.xml',
         'views/account_move_views.xml',
         'views/res_partner_views.xml',
