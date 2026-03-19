@@ -424,7 +424,6 @@ class CrmTeam(models.Model):
 
         BUNDLE_HOURS_DELAY = self.env['ir.config_parameter'].sudo().get_float('crm.assignment.delay')
         BUNDLE_COMMIT_SIZE = self.env['ir.config_parameter'].sudo().get_int('crm.assignment.commit.bundle') or 100
-        auto_commit = not modules.module.current_test
 
         # leads
         max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
@@ -465,8 +464,7 @@ class CrmTeam(models.Model):
         # Start a new transaction, since data fetching take times
         # and the first commit occur at the end of the bundle,
         # the first transaction can be long which we want to avoid
-        if auto_commit:
-            self.env.cr.commit()
+        self._auto_commit_if_not_test()
 
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
@@ -494,17 +492,16 @@ class CrmTeam(models.Model):
 
             # auto-commit except in testing mode. As this process may be time consuming or we
             # may encounter errors, already commit what is allocated to avoid endless cron loops.
-            if auto_commit and counter % BUNDLE_COMMIT_SIZE == 0:
+            if counter % BUNDLE_COMMIT_SIZE == 0:
                 # unlink duplicates once
                 self.env['crm.lead'].browse(lead_unlink_ids).unlink()
                 lead_unlink_ids = set()
-                self.env.cr.commit()
+                self._auto_commit_if_not_test()
 
-        # unlink duplicates once
-        self.env['crm.lead'].browse(lead_unlink_ids).unlink()
-
-        if auto_commit:
-            self.env.cr.commit()
+        # unlink duplicates once and commit work (unless nothing since last commit)
+        if counter % BUNDLE_COMMIT_SIZE != 0:
+            self.env['crm.lead'].browse(lead_unlink_ids).unlink()
+            self._auto_commit_if_not_test()
 
         # some final log
         _logger.info('## Assigned %s leads', (len(global_data['assigned']) + len(global_data['merged'])))
@@ -516,6 +513,10 @@ class CrmTeam(models.Model):
                 '\tLeads: direct assign %s / merge result %s / duplicates merged: %s',
                 team_data['assigned'], team_data['merged'], team_data['duplicates'])
         return teams_data
+
+    def _auto_commit_if_not_test(self):
+        if not modules.module.current_test:
+            self.env.cr.commit()
 
     def _allocate_leads_deduplicate(self, leads, duplicates_cache=None):
         """ Assign leads to sales team given by self by calling lead tool
@@ -598,7 +599,6 @@ class CrmTeam(models.Model):
           }, ...
 
         """
-        auto_commit = not modules.module.current_test
         result_data = {}
         commit_bundle_size = self.env['ir.config_parameter'].sudo().get_int('crm.assignment.commit.bundle') or 100
         teams_with_members = self.filtered(lambda team: team.crm_team_member_ids)
@@ -672,8 +672,8 @@ class CrmTeam(models.Model):
                 if not member_found:
                     continue
                 assigned_preferred_leads += lead
-                if auto_commit and counter % commit_bundle_size == 0:
-                    self.env.cr.commit()
+                if counter % commit_bundle_size == 0:
+                    self._auto_commit_if_not_test()
 
             # second assign loop: fill up with other leads
             to_assign = to_assign - assigned_preferred_leads
@@ -686,27 +686,27 @@ class CrmTeam(models.Model):
                 member_found = _assign_lead(lead, members_to_assign, leads_per_member, quota_per_member, members_to_assign)
                 if not member_found:
                     continue
-                if auto_commit and counter % commit_bundle_size == 0:
-                    self.env.cr.commit()
+                if counter % commit_bundle_size == 0:
+                    self._auto_commit_if_not_test()
 
             # Make sure we commit at least at the end of the team
-            if auto_commit:
-                self.env.cr.commit()
+            if counter % commit_bundle_size != 0:
+                self._auto_commit_if_not_test()
             # Once we are done with a team we don't need to keep the leads in memory
             # Try to avoid to explode memory usage
             self.env.invalidate_all()
             _logger.info(
                 'Team %s: Assigned %s leads based on preference, on a potential of %s (limited by quota)',
-                team.name, len(assigned_preferred_leads), len(preferred_leads)
+                team.name, len(assigned_preferred_leads), len(preferred_leads),
             )
         _logger.info(
             'Assigned %s leads to %s salesmen',
-            sum(len(r['assigned']) for r in result_data.values()), len(result_data)
+            sum(len(r['assigned']) for r in result_data.values()), len(result_data),
         )
         for member, member_info in result_data.items():
             _logger.info(
                 '-> member %s of team %s: assigned %d/%d leads (%s)',
-                member.id, member.crm_team_id.id, len(member_info["assigned"]), member_info["quota"], member_info["assigned"]
+                member.id, member.crm_team_id.id, len(member_info["assigned"]), member_info["quota"], member_info["assigned"],
             )
         return result_data
 

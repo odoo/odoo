@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.addons.crm.models.crm_team import CrmTeam
 from odoo.addons.crm.tests.common import TestLeadConvertCommon
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
@@ -308,6 +309,36 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on one month -> 1 daily
         self.assertMemberAssign(self.sales_team_convert_m1, 1)  # 30 max on one month -> 1 daily
         self.assertMemberAssign(self.sales_team_convert_m2, 2)  # 60 max on one month -> 2 daily
+
+    @mute_logger('odoo.models.unlink')
+    def test_assign_iterative(self):
+        """ Test iterative process and logs on assign """
+        # fix the seed and avoid randomness
+        random.seed(1618)
+
+        test_bundle_size = 5
+        self.env['ir.config_parameter'].set_int('crm.assignment.commit.bundle', test_bundle_size)
+
+        sales_teams = self.sales_teams
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            partner_ids=[False, False, False, self.contact_1.id],
+            probabilities=[30],
+            count=20,
+            suffix='Initial',
+        )
+        # commit probability and related fields
+        leads.flush_recordset()
+        self.assertInitialData()
+
+        crm_team_auto_commit_if_not_test = CrmTeam._auto_commit_if_not_test
+        with patch.object(CrmTeam, '_auto_commit_if_not_test',
+                          autospec=True, side_effect=crm_team_auto_commit_if_not_test) as mock_team_commit, \
+             self.with_user('user_sales_manager'):
+            self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads()
+        self.assertEqual(mock_team_commit.call_count, 8), '5 during team phase, 3 during lead phase'
 
     @mute_logger('odoo.models.unlink')
     def test_assign_populated(self):
