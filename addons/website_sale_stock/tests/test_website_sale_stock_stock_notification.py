@@ -54,6 +54,7 @@ class TestStockNotificationProduct(HttpCase):
         quants.action_apply_inventory()
 
         website = self.env['website'].get_current_website()
+        website.company_id.partner_id.email = "test@test.com"
 
         ProductProduct._send_availability_email()
         emails = self.env['mail.mail'].search([('email_to', '=', partner.email_formatted)])

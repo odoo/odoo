@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import date, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
@@ -763,6 +763,43 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.standard_price, 23)
         self._make_in_move(product, 1, unit_cost=77)
         self.assertEqual(product.standard_price, 77)
+
+    def test_post_multiple_stock_valuation_closings_in_past(self):
+        """
+        Ensure multiple stock valuation closings with different accounting dates in the past
+        can be posted.
+
+        Example scenario:
+        - Move 1: Accounting date = today - 4 days
+        - Move 2: Accounting date = today - 2 days
+        - First closing: at_date = today - 3 days
+        - Second closing: at_date = today - 1 day
+        Both closings should post successfully and calculate the correct valuation amounts.
+        """
+        self.env = self.env['base'].with_context(
+            tracking_disable=False,
+            mail_create_nolog=False,
+            mail_notrack=False,
+        ).env
+
+        product = self.product_fifo
+        today = Datetime.now()
+        with freeze_time(today - timedelta(days=4)):
+            move = self._make_in_move(product, 1, 10, create_picking=True, owner=self.env.company.partner_id)
+        with freeze_time(today - timedelta(days=2)):
+            move_2 = self._make_in_move(product, 1, 10, create_picking=True, owner=self.env.company.partner_id)
+
+        closing_move = self.env['account.move'].browse(move.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=3)))['res_id'])
+        self.env.cr.flush()
+        closing_move._post()
+        self.env.cr.flush()
+        closing_move_2 = self.env['account.move'].browse(move_2.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=1)))['res_id'])
+        closing_move_2._post()
+
+        self.assertEqual(move.value, 10)
+        self.assertEqual(closing_move.amount_total, 10)
+        self.assertEqual(move_2.value, 10)
+        self.assertEqual(closing_move_2.amount_total, 10)
 
     def test_create_done_move(self):
         """Stock Move created directly in Done state must impact de valuation."""
@@ -2213,6 +2250,58 @@ class TestStockValuation(TestStockValuationCommon):
         report_value_2 = report_for_company_2.get_report_values(docids=product.ids)
         self.assertEqual(report_value_1['docs']['value'], "U 50.00")
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
+
+    @freeze_time("2024-01-10 10:00:00")
+    def test_product_qty_and_value_correct_at_to_date_with_timezone(self):
+        """
+        Ensure that qty_available, free_qty, avg_cost, and total_value are computed
+        correctly for products at a historical to_date, taking the user's timezone into account.
+        """
+        self.env.user.tz = 'Europe/Paris'
+        to_date = date(2024, 1, 10)
+
+        lot_product = self.env['product.product'].create([
+            {
+                'name': 'Product LOT',
+                'tracking': 'lot',
+                'categ_id': self.category_avco.id,
+                'is_storable': True,
+                'standard_price': 10.0,
+                'lot_valuated': True,
+            },
+        ])
+        lot = self.env['stock.lot'].create({
+            'name': 'lot',
+            'product_id': lot_product.id,
+        })
+
+        products = self.product_standard | self.product_avco | self.product_fifo | lot_product
+        for product in products:
+            self._make_in_move(
+                product=product,
+                quantity=10.0,
+                location_id=self.supplier_location.id,
+                location_dest_id=self.stock_location.id,
+                lot_ids=lot if product.tracking == 'lot' else self.env['stock.lot'],
+            )
+
+        expected_values = [
+            {
+                    'qty_available': 10.0,
+                    'free_qty': 10.0,
+                    'avg_cost': 10.0,
+                    'total_value': 100.0,
+            }
+            for _ in products
+        ]
+        self.assertRecordValues(
+            products.with_context(to_date=to_date),
+            expected_values,
+        )
+        self.assertRecordValues(
+            products.with_context(to_date="2024-01-10"),
+            expected_values,
+        )
 
     def test_stock_report_avco_warehouse_dependency(self):
         """ Create two warehouses and check that the total value and the on hand quantity

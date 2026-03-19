@@ -165,6 +165,13 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 '_text': f'{prefix}{partner.nemhandel_identifier_value}',
                 'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
             }
+        if partner.nemhandel_identifier_value or partner.ref:
+            party_node['cac:PartyIdentification'] = {
+                'cbc:ID': {
+                    '_text': partner.nemhandel_identifier_value or partner.ref,
+                    'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
+                }
+            }
 
         return party_node
 

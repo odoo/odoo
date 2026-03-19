@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import math
 
 from odoo import api, fields, models, _, Command
 from odoo.tools import format_date
@@ -68,8 +69,8 @@ class SaleOrder(models.Model):
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
-            invoices = sale_order.order_line.invoice_lines.move_id.filtered(lambda invoice: invoice.state in ('draft', 'posted'))
-            total_invoices_paid = sum(invoices.mapped('amount_total'))
+            invoice_lines = sale_order.order_line.invoice_lines.filtered(lambda l: l.parent_state in ('draft', 'posted'))
+            total_invoices_paid = sum(invoice_lines.mapped(lambda l: math.copysign(l.price_total, -l.balance)))
             pos_orders = sale_order.order_line.pos_order_line_ids.order_id
             total_pos_orders_paid = sum(pos_orders.mapped('amount_total'))
             sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_orders_paid - sale_order.amount_paid, 0.0)

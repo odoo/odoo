@@ -603,10 +603,10 @@ class CrmLead(models.Model):
                 lead.meeting_display_date = False
                 lead.meeting_display_label = _('No Meeting')
             elif lead_meeting_info['next_meeting_date']:
-                lead.meeting_display_date = lead_meeting_info['next_meeting_date']
+                lead.meeting_display_date = fields.Datetime.context_timestamp(lead, lead_meeting_info['next_meeting_date'])
                 lead.meeting_display_label = _('Next Meeting')
             else:
-                lead.meeting_display_date = lead_meeting_info['last_meeting_date']
+                lead.meeting_display_date = fields.Datetime.context_timestamp(lead, lead_meeting_info['last_meeting_date'])
                 lead.meeting_display_label = _('Last Meeting')
 
     @api.depends('active', 'probability', 'stage_id')

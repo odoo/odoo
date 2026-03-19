@@ -45,6 +45,8 @@ STANDARD_EXCEPTION_CODE_MESSAGES_MAP: dict[int, Callable[..., str]] = {
     707: lambda: _lt('You have reached the limit of documents you can send today. Retry later. Please contact the support if you think you need to increase that limit.'),
     708: lambda: _lt('You are not authorized to change the contact email.'),
 }
+# Messages that we must show the full error instead of a generic one.
+STANDARD_EXCEPTION_ALLOWED_MESSAGES = (105, 106)
 
 
 # Errors from the ebMS standard (stored as `ebms_code`)
@@ -125,8 +127,10 @@ def get_peppol_error_message(env, error_vals: dict):
         # Error with ebMS code is originally from PeppolInboundError
         # In most case, ebMS message will be better and more specific, except for when the code is 4 (general "Other" message)
         error_message = get_ebms_message(env, error_vals)
-    else:
+    elif (strd_code := error_vals.get('code')) and strd_code not in STANDARD_EXCEPTION_ALLOWED_MESSAGES:
         error_message = get_exception_message(env, error_vals)
+    else:
+        error_message = error_vals.get('message', 'Not able to retrieve error message')
 
     return env._(
         "Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",

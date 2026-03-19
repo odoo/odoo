@@ -19,6 +19,7 @@ import {
     waitFor,
     hover,
     manuallyDispatchProgrammaticEvent,
+    advanceTime,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
@@ -997,6 +998,54 @@ test("isDirty should be false when the content is being transformed by the edito
         message: "value should be sanitized by the editor",
     });
     expect(`.o_form_button_save`).not.toBeVisible();
+});
+
+test("isDirty should not be reset to false if onChange fired between getEditorContent and updateValue", async () => {
+    let htmlField;
+    const { promise: firstStep, resolve: resolveFirst } = Promise.withResolvers();
+    const { promise: secondStep, resolve: resolveSecond } = Promise.withResolvers();
+    const { promise: thirdStep, resolve: resolveThird } = Promise.withResolvers();
+    patchWithCleanup(HtmlField.prototype, {
+        setup() {
+            super.setup();
+            htmlField = this;
+        },
+        async getEditorContent() {
+            const el = await super.getEditorContent();
+            resolveFirst();
+            await secondStep;
+            return el;
+        },
+        async updateValue() {
+            const updated = await super.updateValue(...arguments);
+            resolveThird();
+            return updated;
+        },
+    });
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(htmlField.isDirty).toBe(false);
+    expect(`.o_form_button_save`).not.toBeVisible();
+    const p = htmlField.editor.editable.querySelector("p");
+    p.append(htmlField.editor.document.createTextNode("Second"));
+    htmlField.editor.shared.history.addStep();
+    await clickSave();
+    await firstStep;
+    p.append(htmlField.editor.document.createTextNode("Third"));
+    htmlField.editor.shared.history.addStep();
+    resolveSecond();
+    await thirdStep;
+    await animationFrame();
+    expect(htmlField.editor.editable).toHaveInnerHTML(`<p>firstSecondThird</p>`);
+    expect(htmlField.isDirty).toBe(true);
+    expect(`.o_form_button_save`).toBeVisible();
 });
 
 test.tags("desktop");
@@ -2574,6 +2623,7 @@ describe("save image", () => {
         await delay(50);
         // reswitch tab, and check the image was saved properly.
         await contains(".o_notebook_headers .nav-link:not(.active)").click();
+        await waitFor(".odoo-editor-editable");
         const savedImg = htmlEditor.editable.querySelector("img");
         expect(savedImg.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
         expect(savedImg).not.toHaveClass("o_b64_image_to_save");
@@ -2679,4 +2729,32 @@ test("should always have a block before a Table of Contents", async () => {
     expect(firstChild).toHaveOuterHTML(
         '<div class="o-paragraph" data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></div>'
     );
+});
+
+test.tags("desktop");
+test("should not open icon toolbar when creating table of contents inside a list", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<ol><li><br></li></ol>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField("li");
+    await insertText(htmlEditor, "/tableofcontents");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Table of Contents");
+    await press("Enter");
+    await animationFrame();
+    setSelectionInHtmlField("li");
+    await advanceTime(200);
+    await expectElementCount(".o-we-toolbar", 0);
 });

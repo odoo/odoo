@@ -180,10 +180,19 @@ patch(ProductScreen.prototype, {
 
         for (const [ticketId, data] of Object.entries(result.byRegistration)) {
             const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
+            const priceExtra = ticket.price - ticket.product_id.lst_price;
+            const priceUnit = ticket.product_id.getPrice(
+                this.pos.getOrder().pricelist_id,
+                1,
+                priceExtra,
+                false,
+                ticket.product_id
+            );
             const line = await this.pos.addLineToCurrentOrder({
                 product_id: ticket.product_id,
                 product_tmpl_id: ticket.product_id.product_tmpl_id,
-                price_unit: ticket.price,
+                price_unit: priceUnit,
+                price_extra: priceExtra,
                 price_type: "original",
                 qty: data.length,
                 event_ticket_id: ticket,

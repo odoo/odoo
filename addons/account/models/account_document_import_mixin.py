@@ -167,7 +167,11 @@ class AccountDocumentImportMixin(models.AbstractModel):
 
         # Call _extend_with_attachments at the end, because it commits the transaction.
         for record, file_data_group in zip(records, file_data_groups):
-            record._extend_with_attachments(file_data_group, new=True)
+            record_extended = record._extend_with_attachments(file_data_group, new=True)
+            if not record_extended:
+                record.message_post(
+                    body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
+                )
 
         return records
 

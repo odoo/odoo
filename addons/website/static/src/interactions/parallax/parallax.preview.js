@@ -91,7 +91,9 @@ const ParallaxPreview = (I) =>
         updateParallaxPosition = () => {
             const clamp = (value) => Math.min(1, Math.max(0, value));
             const rect = this.el.getBoundingClientRect();
-            const viewportHeight = this.previewContainerEl.clientHeight;
+            // Do not use `body.clientHeight` here. Inside a scaled iframe,
+            // Firefox and Chrome can return different values for "clientHeight".
+            const viewportHeight = this.el.ownerDocument.documentElement.clientHeight;
             const relativeScrollProgress = viewportHeight ? rect.top / viewportHeight : 0;
 
             const parallaxShift = relativeScrollProgress * this.PARALLAX_RATE * 100;

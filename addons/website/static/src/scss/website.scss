@@ -1882,7 +1882,7 @@ header {
     .o_mega_nav, .o_mega_menu {
         @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
         z-index: $o-mega-menu-zindex;
-        max-width: $offcanvas-horizontal-width;
+        max-width: $offcanvas-horizontal-width !important;
         opacity: 0;
         pointer-events: none;
 

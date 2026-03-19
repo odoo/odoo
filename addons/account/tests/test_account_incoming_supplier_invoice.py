@@ -253,7 +253,14 @@ class TestAccountInvoiceImportMixin:
                 case _:
                     raise ValueError(f"Unknown origin: {origin}")
 
-        return attachment_capturer.records, message_capturer.records, move_capturer.records
+        attachments_created = attachment_capturer.records
+        moves = move_capturer.records
+        # if account_edi_ubl_cii is installed and used as decoder, an attachment is linked to the imported bill with res_field = ubl_cii_xml_file
+        # Therefore it is not detected in the attachment_capturer (because res_field is not specified in domain used to search, see `_search` method override in ir.attachment)
+        # So we need to catch it as some tests check that it has been created
+        if 'ubl_cii_xml_id' in moves._fields:
+            attachments_created |= moves.ubl_cii_xml_id
+        return attachments_created, message_capturer.records, moves
 
     def _get_raw_mail_message_str(self, attachments_vals, email_to, message_id=None):
         """
@@ -415,6 +422,30 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
             'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
             'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % (self.internal_user.name, self.internal_user.email),
+            'attachments': [b'Hello, invoice'],
+        }
+
+        invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
+
+        message_ids = invoice.message_ids
+        self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
+        self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
+
+        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        self.assertEqual(following_partners, self.env.user.partner_id)
+
+    def test_supplier_invoice_forwarded_by_internal_with_company_in_body(self):
+        """ In this test, the bill was forwarded by an employee,
+            and the company email address is found in the body."""
+        self.journal.company_id.partner_id.email = 'contact@example.com'
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % (self.journal.company_id.partner_id.name, self.journal.company_id.partner_id.email),
             'attachments': [b'Hello, invoice'],
         }
 

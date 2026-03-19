@@ -20,7 +20,7 @@ export class PopupVisibilityPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         on_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
         on_reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),
-        attribute_change_processors: ({ target, attributeName, value, oldValue }) => {
+        attribute_change_processors: ({ target, attributeName, value }) => {
             // On hide/show of the popup, the `style` attribute of the modal in
             // the popup is changed. This also happens with the option
             // "Backdrop" on the popup. When reverting/re-applying steps that
@@ -30,8 +30,8 @@ export class PopupVisibilityPlugin extends Plugin {
             // revert/re-apply a step that modified it.
             if (attributeName === "style" && target.matches(".s_popup > .modal")) {
                 const re = /display: .*?;/;
-                const oldDisplay = oldValue.match(re)?.[0] ?? "";
-                value = re.test(value) ? value.replace(re, oldDisplay) : value + oldDisplay;
+                const currentDisplay = target.attributes.style?.value.match(re)?.[0] ?? "";
+                value = re.test(value) ? value.replace(re, currentDisplay) : value + currentDisplay;
             }
             return value;
         },

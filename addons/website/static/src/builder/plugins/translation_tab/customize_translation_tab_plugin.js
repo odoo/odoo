@@ -176,14 +176,20 @@ class TranslateToAction extends BuilderAction {
         // Limit concurrency to avoid
         // "Oops, it looks like our AI is unreachable!" error
         // when too many requests are sent in a short time.
-        const concurrencyLimit = 5;
+        const concurrencyLimit = 3;
         const allResults = [];
         const executing = new Set();
         for (const task of tasks) {
             if (executing.size >= concurrencyLimit) {
                 await Promise.race(executing);
             }
-            const promise = task().finally(() => executing.delete(promise));
+            const promise = task()
+                .catch((error) => {
+                    // Ignore failed request to save successfull ones
+                    console.warn("Translation chunck failed:", error);
+                    return {};
+                })
+                .finally(() => executing.delete(promise));
             executing.add(promise);
             allResults.push(promise);
         }
@@ -199,13 +205,12 @@ class TranslateToAction extends BuilderAction {
      * @return {Number} Count of failed translation nodes
      */
     applyTranslationsToDOM(translationMap, responses) {
-        let numOfFailedTranslationNodes = 0;
+        let numOfFailedTranslationNodes = translationMap.size;
         for (const response of responses) {
             let translations;
             try {
                 translations = JSON.parse(response);
             } catch {
-                numOfFailedTranslationNodes += translationMap.size;
                 continue;
             }
 
@@ -216,9 +221,9 @@ class TranslateToAction extends BuilderAction {
                 }
                 const translated = (text || "").trim();
                 if (!translated) {
-                    numOfFailedTranslationNodes++;
                     continue;
                 }
+                numOfFailedTranslationNodes--;
                 node.textContent = translated;
                 const parentEl = node.parentElement?.closest("[data-oe-translation-state]");
                 if (parentEl) {

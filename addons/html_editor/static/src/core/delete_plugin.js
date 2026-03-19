@@ -661,7 +661,8 @@ export class DeletePlugin extends Plugin {
             }
             if (
                 this.isUnremovable(node, root) ||
-                !this.dependencies.selection.isNodeEditable(node)
+                (!this.dependencies.selection.isNodeEditable(node) &&
+                    !node.parentElement?.isContentEditable)
             ) {
                 return false;
             }

@@ -436,6 +436,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         amount_paid = vals[f'total_paid_amount{currency_suffix}']
         if amount_paid:
+            # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
+            amount_paid = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else amount_paid
             document_node['cac:PrepaidPayment'] = {
                 'cbc:PaidAmount': {
                     '_text': self.format_float(amount_paid, vals['currency_dp']),
@@ -443,6 +445,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 },
             }
         monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+        # For credit, debit, refund notes, and their self-billed variants, the PayableAmount reflects the full
+        # refund/adjustment amount without being reduced by the prepayment, as per MyInvois specifications.
         payable_amount = self.format_float(vals[f'tax_inclusive_amount{currency_suffix}'] - amount_paid, vals['currency_dp'])
         document_node[monetary_total_tag]['cbc:PayableAmount']['_text'] = payable_amount
 

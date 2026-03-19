@@ -84,6 +84,10 @@ class ResConfigSettings(models.TransientModel):
             # Update company field
             company.account_peppol_contact_email = record.account_peppol_contact_email
 
+            # No Peppol user yet: keep new value but skip proxy sync.
+            if not record.account_peppol_edi_user:
+                continue
+
             # Sync with IAP (Peppol proxy)
             params = {
                 'update_data': {

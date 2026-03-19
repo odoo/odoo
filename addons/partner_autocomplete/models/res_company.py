@@ -40,7 +40,7 @@ class ResCompany(models.Model):
     def iap_enrich_auto(self):
         """ Enrich company. This method should be called by automatic processes
         and a protection is added to avoid doing enrich in a loop. """
-        if self.env.user._is_system() and self.env.registry.ready:
+        if self.env.user._is_system() and self.env.registry.ready and not self.env.context.get('install_demo'):
             for company in self.filtered(lambda company: not company.iap_enrich_auto_done):
                 company._enrich()
             self.iap_enrich_auto_done = True

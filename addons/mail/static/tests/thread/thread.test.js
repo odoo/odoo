@@ -934,7 +934,8 @@ test("Can scroll to notification", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await tick(); // wait for the scroll to first unread to complete
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
     await isInViewportOf(".o-mail-Message:contains(message 59)", ".o-mail-Thread");
     await click("[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });

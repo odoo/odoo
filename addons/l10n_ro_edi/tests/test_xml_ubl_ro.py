@@ -141,8 +141,7 @@ def _patch_request_ciusro_xml_to_pdf(company, xml_data):
     return {'content': 'JVBERi0xLjEKMSAwIG9iaiA8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PiBlbmRvYmogMiAwIG9iaiA8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PiBlbmRvYmogMyAwIG9iaiA8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCAxIDEgXT4+IGVuZG9iaiB0cmFpbGVyIDw8L1Jvb3QgMSAwIFI+PiAlJUVPRg=='}
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLRO(TestUBLCommon):
+class TestUBLROCommon(TestUBLCommon):
 
     @classmethod
     @TestUBLCommon.setup_country('ro')
@@ -230,6 +229,10 @@ class TestUBLRO(TestUBLCommon):
         self.assertTrue(move.ubl_cii_xml_id)
         self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
         return move.ubl_cii_xml_id
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestUBLRO(TestUBLROCommon):
 
     ####################################################
     # Testing of the XML generation

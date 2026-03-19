@@ -4,9 +4,9 @@ import { isZwnbsp } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { setupEditor } from "./_helpers/editor";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
-import { insertText } from "./_helpers/user_actions";
+import { deleteBackward, insertText } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
@@ -256,6 +256,14 @@ test("Should not apply color to file box", async () => {
     await animationFrame();
     const fileBox = queryOne(".o_file_box");
     expect(fileBox).not.toHaveClass("text-o-color-1");
+});
+
+test("should remove contenteditable=false on backspace", async () => {
+    await testEditor({
+        contentBefore: `<p>a<span contenteditable="false">test</span>[]</p>`,
+        stepFunction: deleteBackward,
+        contentAfter: `<p>a[]</p>`,
+    });
 });
 
 describe("document tab in media dialog", () => {

@@ -78,7 +78,8 @@ class StockScrap(models.Model):
         self.scrap_qty = 1
         for scrap in self:
             if not scrap.bom_id:
-                return super(StockScrap, scrap)._compute_scrap_qty()
+                super(StockScrap, scrap)._compute_scrap_qty()
+                continue
             if scrap.move_ids:
                 filters = {
                     'incoming_moves': lambda m: True,

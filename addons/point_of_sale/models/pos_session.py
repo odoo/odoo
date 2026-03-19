@@ -374,14 +374,15 @@ class PosSession(models.Model):
         return True
 
     def get_session_orders(self):
-        return self.order_ids.filtered(lambda o:
-            not (o.preset_time and o.preset_time.date() > fields.Date.today())
-        )
+        return self.env['pos.order'].search([
+            ('session_id', '=', self.id),
+            '|', ('preset_time', '=', False), ('preset_time', '<=', fields.Datetime.now())
+        ])
 
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:
-            if any(order.state == 'draft' for order in self.get_session_orders()):
+            if any(order.state == 'draft' for order in session.get_session_orders()):
                 raise UserError(_("You cannot close the POS while there are still draft orders for the day."))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -420,7 +421,7 @@ class PosSession(models.Model):
         if self.env.user.has_group('point_of_sale.group_pos_user'):
             record = record.sudo()
         data = {}
-        if self.get_session_orders().filtered(lambda o: o.state != 'cancel') or self.sudo().statement_line_ids:
+        if record.get_session_orders().filtered(lambda o: o.state != 'cancel') or record.statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -553,7 +554,11 @@ class PosSession(models.Model):
             check_closing_session['open_order_ids'] = open_order_ids
             return check_closing_session
 
-        future_orders = self.order_ids.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
+        future_orders = self.env['pos.order'].search([
+            ('session_id', '=', self.id),
+            ('state', '=', 'draft'),
+            ('preset_time', '>', fields.Datetime.now())
+        ])
         future_orders.session_id = False
 
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
@@ -954,31 +959,29 @@ class PosSession(models.Model):
                 partners = (order.partner_id | order.partner_id.commercial_partner_id)
                 partners._increase_rank('customer_rank')
 
-        if self.company_id.inventory_valuation == 'real_time':
-            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
-            if all_picking_ids:
-                # Combine stock lines
-                stock_move_sudo = self.env['stock.move'].sudo()
-                stock_moves = stock_move_sudo.search([
-                    ('picking_id', 'in', all_picking_ids),
-                    ('company_id.inventory_valuation', '=', 'real_time'),
-                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
-                    ('product_id.is_storable', '=', True),
-                ])
-                for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
-                    for move in stock_moves_batch:
-                        product_accounts = move.with_company(move.company_id).product_id._get_product_accounts()
-                        exp_key = product_accounts['expense']
-                        stock_key = product_accounts['stock_valuation']
-                        signed_product_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False)
-                        if move._is_in():
-                            signed_product_qty *= -1
-                        amount = signed_product_qty * move._get_price_unit()
-                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-                        if move._is_in():
-                            stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-                        else:
-                            stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+        all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+        if all_picking_ids:
+            # Combine stock lines
+            stock_move_sudo = self.env['stock.move'].sudo()
+            stock_moves = stock_move_sudo.search([
+                ('picking_id', 'in', all_picking_ids),
+                ('product_id.is_storable', '=', True),
+                ('product_id.valuation', '=', 'real_time'),
+            ])
+            for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
+                for move in stock_moves_batch:
+                    product_accounts = move.product_id._get_product_accounts()
+                    exp_key = product_accounts['expense']
+                    stock_key = product_accounts['stock_valuation']
+                    signed_product_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False)
+                    if move._is_in():
+                        signed_product_qty *= -1
+                    amount = signed_product_qty * move._get_price_unit()
+                    stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+                    if move._is_in():
+                        stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
+                    else:
+                        stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
 
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
@@ -1080,6 +1083,18 @@ class PosSession(models.Model):
         data['pay_later_move_lines'] = MoveLine.create(vals)
         return data
 
+    def _ensure_payment_outstanding_account(self, payment, payment_amount):
+        # In community the outstanding account is computed on the creation of account.payment records
+        if not payment.outstanding_account_id and self.env['account.move']._get_invoice_in_payment_state() == 'in_payment':
+            payment.outstanding_account_id = payment._get_outstanding_account(payment.payment_type)
+
+        if float_compare(payment_amount, 0, precision_rounding=self.currency_id.rounding) < 0:
+            payment.write({
+                'force_outstanding_account_id': payment.destination_account_id,
+                'destination_account_id': payment.outstanding_account_id,
+                'payment_type': 'outbound',
+            })
+
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
         outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
@@ -1095,19 +1110,7 @@ class PosSession(models.Model):
             'company_id': self.company_id.id,
         })
 
-        # In community the outstanding account is computed on the creation of account.payment records
-        accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
-        if not account_payment.outstanding_account_id and accounting_installed:
-            account_payment.outstanding_account_id = account_payment._get_outstanding_account(account_payment.payment_type)
-
-        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
-            # revert the accounts because account.payment doesn't accept negative amount.
-            account_payment.write({
-                'outstanding_account_id': account_payment.destination_account_id,
-                'destination_account_id': account_payment.outstanding_account_id,
-                'payment_type': 'outbound',
-            })
-
+        self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
         account_payment.action_post()
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
@@ -1147,10 +1150,6 @@ class PosSession(models.Model):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
 
-        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
-            # revert the accounts because account.payment doesn't accept negative amount.
-            outstanding_account, destination_account = destination_account, outstanding_account
-
         account_payment = self.env['account.payment'].create({
             'amount': abs(amounts['amount']),
             'partner_id': accounting_partner.id,
@@ -1161,6 +1160,8 @@ class PosSession(models.Model):
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
+
+        self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
         account_payment.action_post()
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == accounting_partner.property_account_receivable_id)
 

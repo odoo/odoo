@@ -10,7 +10,7 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-DPOPAY_DEFAULT_TIMEOUT = 35
+DPOPAY_DEFAULT_TIMEOUT = 60
 
 
 class PosPaymentMethod(models.Model):
@@ -93,7 +93,7 @@ class PosPaymentMethod(models.Model):
         try:
             def _send_request(token_expired=False):
                 headers = self._dpopay_headers(token_expired)
-                _logger.info('Sending request to %s | Mode: %s | Headers: %s', url, mode, list(headers.keys()))
+                _logger.info('Sending request to %s | Mode: %s | Headers: %s | Source ID: %s', url, mode, list(headers.keys()), payload.get('sourceId'))
                 response = requests.post(url, json=payload, headers=headers, timeout=DPOPAY_DEFAULT_TIMEOUT)
                 response_json = response.json()
                 return response, response_json
@@ -109,7 +109,7 @@ class PosPaymentMethod(models.Model):
             return response_json
 
         except HTTPError as error:
-            _logger.warning('HTTPError: %s', error)
+            _logger.warning('HTTPError: %s | Mode: %s | Source ID: %s', error, mode, payload.get('sourceId'))
             error_json = error.response.json()
             error_code = str(error_json.get('error_code') or error_json.get('errorCode') or error_json.get('resultCode'))
             error_message = error_json.get('errorMessage') or error_json.get('error_description') or error_json.get('resultDescription') or str(error_json)
@@ -123,5 +123,5 @@ class PosPaymentMethod(models.Model):
             return {'errorMessage': error_message}
 
         except RequestException as error:
-            _logger.warning('%s: %s', error.__class__.__name__, error)
+            _logger.warning('%s: %s | Mode: %s | Source ID: %s', error.__class__.__name__, error, mode, payload.get('sourceId'))
             return {'errorMessage': str(error)}

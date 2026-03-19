@@ -1075,15 +1075,15 @@ Please change the quantity done or the rounding precision in your settings.""",
             lot_qties = [1] * len(lot_names)
 
         vals_list = []
+        loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
+        product = self.env['product.product'].browse(default_vals['product_id'])
         for lot, qty in zip(lot_names, lot_qties):
             if not lot.get('quantity'):
                 lot['quantity'] = qty
-            loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
-            product = self.env['product.product'].browse(default_vals['product_id'])
-            loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
+            putaway_loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
             vals_list.append({**default_vals,
                              **lot,
-                             'location_dest_id': loc_dest.id,
+                             'location_dest_id': putaway_loc_dest.id,
                              'product_uom_id': product.uom_id.id,
                             })
         if default_vals.get('picking_type_id'):
@@ -1100,9 +1100,19 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'id': value,
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
-        first_number = product.lot_sequence_id.number_next_actual - product.lot_sequence_id.number_increment
-        if (first_lot and first_lot == product.lot_sequence_id.get_next_char(first_number)):
-            product.lot_sequence_id.sudo().write({'number_next_actual': first_number + len(lot_qties)})
+        if product.lot_sequence_id and first_lot:
+            current_sequence = product.lot_sequence_id._get_current_sequence()
+            increment = product.lot_sequence_id.number_increment
+            first_number = current_sequence.number_next_actual - increment
+            final_number = first_number
+            # Since the value might have been incremented by the "New" button of the "Generate Serial Numbers" wizard
+            # we need to consider both the decremented and the current value of the sequence
+            if first_lot == product.lot_sequence_id.get_next_char(first_number):
+                final_number = first_number + len(lot_qties)
+            elif first_lot == product.lot_sequence_id.get_next_char(first_number + increment):
+                final_number = first_number + increment + len(lot_qties)
+            if first_number != final_number:
+                current_sequence.sudo().write({'number_next_actual': final_number})
         return vals_list
 
     def _push_apply(self):
@@ -2106,7 +2116,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.filtered(lambda q: q.product_uom_id.compare(q.quantity, 0.0) > 0).mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+                error_msg = _(
+                    'You cannot move the same package content more than once in the same transfer'
+                    ' or split the same package into two location.'
+                )
+                package_msg = _("\nPackage: %s", result_package.name)
+                raise UserError(error_msg + package_msg)
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')

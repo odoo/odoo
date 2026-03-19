@@ -41,6 +41,10 @@ class StockMove(models.Model):
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         carrier_id = self.reference_ids.sale_ids.carrier_id.id
+        # check if the previous picking have a carrier_id, then take carrier from that
+        # earlier we were taking carrier from sale but since carrier can be changed or updated in next steps so now we take carrier from prev picking
+        if len(self.move_orig_ids.picking_id.carrier_id) == 1:
+            carrier_id = self.move_orig_ids.picking_id.carrier_id.id
         vals['carrier_id'] = any(rule.propagate_carrier for rule in self.rule_id) and carrier_id
         return vals
 

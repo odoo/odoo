@@ -17,7 +17,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
-import { uuidv4 } from "@point_of_sale/utils";
+import { isPrivateIp, uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -55,7 +55,43 @@ export class Navbar extends Component {
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
 
-    openLnaPopup() {
+    async openLnaPopup() {
+        let localPrinterIp;
+        if (isPrivateIp(this.pos.config.epson_printer_ip)) {
+            localPrinterIp = this.pos.config.epson_printer_ip;
+        }
+        if (!localPrinterIp) {
+            for (const printer of this.pos.config.printer_ids) {
+                if (isPrivateIp(printer.epson_printer_ip)) {
+                    localPrinterIp = printer.epson_printer_ip;
+                }
+            }
+        }
+        if (localPrinterIp) {
+            try {
+                const protocol = "http:";
+                const url = protocol + "//" + localPrinterIp;
+                this.address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+                const params = {
+                    method: "POST",
+                    body: `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                            <s:Body>
+                                <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+                                    <feed line="1" />
+                                    <text align="center">This is a test receipt&#10;</text>
+                                    <feed line="3" />
+                                    <cut type="feed" />
+                                </epos-print>
+                            </s:Body>
+                        </s:Envelope>`,
+                    signal: AbortSignal.timeout(15000),
+                };
+                await fetch(this.address, params);
+                return;
+            } catch {
+                console.error("Could not connect to printer");
+            }
+        }
         this.dialog.add(AlertDialog, {
             title: _t("LNA Permission status"),
             body: this.pos.lnaState.message,

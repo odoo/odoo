@@ -165,7 +165,8 @@ class AccountMoveLine(models.Model):
         posted_cogs_qty = sum(self.sale_line_ids.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
             lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
         ).mapped('quantity'))
-        return posted_cogs_qty + super()._get_cogs_qty()
+        posted_cogs_qty_prod_uom = self.product_uom_id._compute_quantity(posted_cogs_qty, self.product_id.uom_id)
+        return posted_cogs_qty_prod_uom + super()._get_cogs_qty()
 
     def _get_posted_cogs_value(self):
         self.ensure_one()
