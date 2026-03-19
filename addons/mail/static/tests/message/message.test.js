@@ -2328,3 +2328,42 @@ test("should delete link preview along with message", async () => {
     await click(".modal button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
+
+test("Prevent adding reactions on messages without a mail thread", async () => {
+    const pyEnv = await startServer();
+    const fakeId = pyEnv["res.fake"].create({ name: "Fake" });
+    const messageIds = pyEnv["mail.message"].create([
+        {
+            body: "Hello",
+            message_type: "user_notification",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+        },
+        {
+            body: "Hello",
+            message_type: "user_notification",
+            model: "res.fake",
+            res_id: fakeId,
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageIds[0],
+            notification_type: "inbox",
+            is_read: true,
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageIds[1],
+            notification_type: "inbox",
+            is_read: true,
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss("mail.box_history");
+    await contains(".o-mail-Message", { count: 2 });
+    await contains("[title='Add a Reaction']");
+    await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
+    await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
+});
