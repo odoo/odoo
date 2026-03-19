@@ -15,7 +15,7 @@ export function getSnippetName(snippetEl) {
     }
     const snippetNameRules = [
         { selector: "img", name: _t("Image") },
-        { selector: ".fa", name: _t("Icon") },
+        { selector: ".oi", name: _t("Icon") },
         { selector: ".media_iframe_video", name: _t("Video") },
         { selector: ".row > *", name: _t("Column") },
         { selector: "#wrapwrap > main", name: _t("Page Options") },

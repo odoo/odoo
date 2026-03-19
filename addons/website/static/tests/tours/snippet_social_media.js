@@ -192,7 +192,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select a new icon",
-            trigger: ".o_select_media_dialog .fa-heart",
+            trigger: ".o_select_media_dialog [data-icon='favorite']",
             run: "click",
         },
         {
@@ -206,7 +206,7 @@ registerWebsitePreviewTour(
                 ":has(a:eq(4)[href='https://www.tiktok.com/@odoo'])" +
                 ":has(a:eq(5)[href='https://discord.com/servers/discord-town-hall-169256939211980800'])" +
                 ":has(a:eq(6)[href='https://twitter.com/Odoo'])" +
-                ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-heart))" +
+                ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i[data-icon='favorite']))" +
                 ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
         },
         // Create a social network but replace its icon by an image before setting

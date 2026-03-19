@@ -91,7 +91,7 @@ registerWebsitePreviewTour(
         {
             content: "select an icon",
             trigger:
-                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span[data-icon='favorite']",
             run: "click",
         },
         {
@@ -105,7 +105,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "select icon",
-            trigger: ":iframe .s_picture figure span.fa-heart",
+            trigger: ":iframe .s_picture figure span[data-icon='favorite']",
             run: "click",
         },
         {
@@ -156,7 +156,7 @@ registerWebsitePreviewTour(
         {
             content: "select an icon",
             trigger:
-                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span[data-icon='favorite']",
             run: "click",
         },
         {
@@ -170,7 +170,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "select icon",
-            trigger: ":iframe .s_picture figure span.fa-heart",
+            trigger: ":iframe .s_picture figure span[data-icon='favorite']",
             run: "click",
         },
         {

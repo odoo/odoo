@@ -12,7 +12,7 @@ patch(MediaDialog.prototype, {
         ) {
             classes.push("social_media_img");
             for (const element of this.props.node.classList) {
-                if (element.match(/fa-\d{1}x/) || element == "small_social_icon") {
+                if (element.match(/oi-\d{1}x/) || element == "small_social_icon") {
                     classes.push(element);
                 }
             }

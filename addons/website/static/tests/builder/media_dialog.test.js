@@ -10,11 +10,11 @@ defineWebsiteModels();
 
 test("Icon styles should be retained when it is replaced with another icon", async () => {
     const extractClasses = "rounded-circle rounded shadow img-thumbnail";
-    await setupWebsiteBuilder(`<i class="fa fa-search ${extractClasses}"/>`);
+    await setupWebsiteBuilder(`<i class="oi ${extractClasses}" data-icon="search"/>`);
 
-    await dblclick(":iframe .fa");
+    await dblclick(":iframe .oi");
     await animationFrame();
-    await click(".fa-heart");
+    await click("[data-icon=favorite]");
     await animationFrame();
-    expect(":iframe .fa-heart").toHaveClass(extractClasses);
+    expect(":iframe [data-icon=favorite]").toHaveClass(extractClasses);
 });

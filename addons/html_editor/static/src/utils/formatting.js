@@ -184,3 +184,39 @@ export function getFontSizeOrClass(node) {
     }
     return null;
 }
+
+/**
+ * Allows to iterate over all the CSS rules of all the stylesheets of the
+ * document and to map them to an array.
+ *
+ * @param {function(CSSStyleRule): any} fn A function that takes a
+ * CSSStyleRule and returns any value. If the function returns undefined, the
+ * rule is ignored.
+ * @returns {Array<any>} An array of elements returned by the function for
+ * each CSS rule.
+ */
+export function mapCSSRules(fn) {
+    const mapping = [];
+
+    for (const sheet of document.styleSheets) {
+        try {
+            if (!sheet.cssRules) {
+                continue;
+            }
+        } catch {
+            continue;
+        }
+        for (const rule of sheet.cssRules) {
+            if (!(rule instanceof CSSStyleRule)) {
+                continue;
+            }
+
+            const result = fn(rule);
+            if (result) {
+                mapping.push(result);
+            }
+        }
+    }
+
+    return mapping;
+}
