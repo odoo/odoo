@@ -276,6 +276,33 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
+    def test_mail_composer_comment_wtpl_signature_only(self):
+        """Signature-only body loads user default template; otherwise keeps signature."""
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(
+                self.test_record,
+                add_web=True,
+                default_body='<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>',
+                body_contains_signature_only=True,
+            )
+        ))
+        self.assertEqual(composer_form.body, '<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>')
+
+        # Now with user default template
+        self.env['ir.default'].sudo().set(
+            'mail.compose.message', 'template_id', self.template.id
+        )
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(
+                self.test_record,
+                add_web=True,
+                default_body='<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>',
+                body_contains_signature_only=True,
+            )
+        ))
+        self.assertEqual(composer_form.body, f'<p>TemplateBody {self.test_record.name}</p>')
+
+    @users('employee')
     def test_mail_composer_comment_wtpl_batch(self):
         """ Batch mode of composer in comment mode. """
         composer_form = Form(self.env['mail.compose.message'].with_context(

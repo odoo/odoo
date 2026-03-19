@@ -1330,14 +1330,18 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
 
         if commercial_partner.vat and commercial_partner.vat != '/':
+            vat = commercial_partner.vat
             country_code = commercial_partner.country_id.code
             if country_code in GST_COUNTRY_CODES:
                 tax_scheme_id = 'GST'
             else:
                 tax_scheme_id = 'VAT'
 
+            if country_code == 'HU' and not vat.upper().startswith('HU'):
+                vat = 'HU' + vat[:8]
+
             nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cbc:CompanyID': {'_text': vat},
                 'cac:TaxScheme': {
                     'cbc:ID': {'_text': tax_scheme_id},
                 },
@@ -1565,6 +1569,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         if tax_total_keys['tax_total_key'] and tax_total_keys['tax_total_key']['is_withholding']:
             tax_total_keys['tax_total_key'] = None
 
+        tax_category_key = tax_total_keys['tax_category_key']
+        if (
+            tax_category_key
+            and tax_category_key['tax_category_code'] == 'E'
+            and not tax_category_key.get('tax_exemption_reason')
+            ):
+            tax_category_key['tax_exemption_reason'] = _("Exempt from tax")
         # In case of multi-currencies, there will be 2 TaxTotals but the one expressed in
         # foreign currency must not have any TaxSubtotal.
         company_currency = vals['company'].currency_id
