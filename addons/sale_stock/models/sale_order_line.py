@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 
@@ -211,6 +211,7 @@ class SaleOrderLine(models.Model):
                 at_least_one_done = at_least_one_done or move.state == 'done'
             return at_least_one_done
         super()._compute_invoice_status()
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for line in self:
             # We handle the following specific situation: a physical product is partially delivered,
             # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
@@ -223,6 +224,7 @@ class SaleOrderLine(models.Model):
                 and line.product_id.invoice_policy == 'delivery'
                 and line.move_ids
                 and check_moves_state(line.move_ids)
+                and not float_is_zero(line.qty_delivered, precision_digits=precision)
             ):
                 line.invoice_status = 'invoiced'
 
