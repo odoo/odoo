@@ -4920,6 +4920,60 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'balance': 851053.94},
         ])
 
+    def test_tax_on_line_and_currency_rate_change(self):
+        eur = self.setup_other_currency('EUR')
+        percent_tax = self.company_data['default_tax_sale']
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': eur.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'price_unit': 10,
+                    'tax_ids': [percent_tax.id]
+                }),
+            ],
+        })
+        invoice.write({
+            'invoice_currency_rate': 1.1,
+            'invoice_line_ids': [Command.update(invoice.line_ids[0].id, {
+                'price_unit': 400_000
+            })]
+        })
+
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertRecordValues(tax_line, [
+            {
+                'balance': -54_545.45,
+                'tax_base_amount': 363_636.36,
+                'tax_line_id': percent_tax.id,
+            }
+        ])
+
+        invoice.invoice_line_ids = [
+            Command.create({
+                'name': 'test line',
+                'price_unit': 20,
+                'tax_ids': [percent_tax.id]
+            })
+        ]
+        invoice.write({
+            'invoice_currency_rate': 1.2,
+            'invoice_line_ids': [Command.update(invoice.line_ids[0].id, {
+                'price_unit': 10
+            })]
+        })
+
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertRecordValues(tax_line, [
+            {
+                'balance': -3.75,
+                'tax_base_amount': 25.0,
+                'tax_line_id': percent_tax.id,
+            }
+        ])
+
     def test_tax_recomputed_when_changing_base_lines(self):
         percent_tax = self.company_data['default_tax_sale']
 
