@@ -55,14 +55,7 @@ class SaleOrderLine(models.Model):
         return super()._get_order_date()
 
     def _get_displayed_unit_price(self):
-        show_tax = self.order_id.website_id.tax_display
-        tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
-        is_combo = self.product_type == "combo"
-        unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
-
-        return self.tax_ids.compute_all(
-            unit_price, self.currency_id, 1, self.product_id, self.order_partner_id
-        )[tax_display]
+        return self._get_cart_display_price(without_discount=True)
 
     def _get_selected_combo_items(self):
         if self.product_id.type == "combo":
@@ -99,14 +92,28 @@ class SaleOrderLine(models.Model):
             and not self._is_custom_cart_line()
         )
 
-    def _get_cart_display_price(self):
+    def _get_cart_display_price(self, without_discount=False):
         self.ensure_one()
-        price_type = (
-            "price_subtotal"
-            if self.order_id.website_id.tax_display == "tax_excluded"
-            else "price_total"
+
+        AccountTax = self.env["account.tax"]
+        lines_with_price = self._get_lines_with_price()
+        extra_values = {"discount": 0.0} if without_discount else {}
+        base_lines = [
+            line._prepare_base_line_for_taxes_computation(**extra_values)
+            for line in lines_with_price
+        ]
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        tax_totals = AccountTax._get_tax_totals_summary(
+            base_lines=base_lines,
+            currency=self.currency_id or self.company_id.currency_id,
+            company=self.company_id,
         )
-        return sum(self._get_lines_with_price().mapped(price_type))
+        return (
+            tax_totals["base_amount_currency"]
+            if self.order_id.website_id.tax_display == "tax_excluded"
+            else tax_totals["total_amount_currency"]
+        )
 
     def _check_validity(self):
         website = self.order_id.website_id
