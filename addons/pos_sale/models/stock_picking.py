@@ -16,4 +16,9 @@ class StockPicking(models.Model):
                 continue
             lines_to_unreserve |= line
         lines_to_unreserve.sale_order_line_id.move_ids.filtered(lambda ml: ml.state not in ['cancel', 'done'])._do_unreserve()
-        return super()._create_move_from_pos_order_lines(lines.filtered(lambda l: not l.sale_order_line_id or (l.sale_order_line_id.has_valued_move_ids() or not l.sale_order_line_id.move_ids)))
+        lines_for_moves = lines.filtered(
+            lambda l: not l.sale_order_line_id
+            or (l.sale_order_line_id.has_valued_move_ids() or not l.sale_order_line_id.move_ids)
+            or (l.sale_order_line_id == l.refunded_orderline_id.sale_order_line_id)
+        )
+        return super()._create_move_from_pos_order_lines(lines_for_moves)
