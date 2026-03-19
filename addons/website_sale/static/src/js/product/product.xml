@@ -2,13 +2,17 @@
 <templates xml:space="preserve">
     <t t-inherit="sale.Product" t-inherit-mode="extension">
         <QuantityButtons position="attributes">
-            <attribute name="t-if" add="this.props.can_be_sold" separator=" &amp;&amp; "/>
+            <attribute name="t-if" add="this.props.can_be_sold &amp;&amp; !this.isOutOfStock()" separator=" &amp;&amp; "/>
+            <attribute name="isPlusButtonDisabled">
+                !this.env.isQuantityAllowed(this.props, this.props.quantity + 1)
+            </attribute>
         </QuantityButtons>
         <QuantityButtons position="after">
             <t t-call="website_sale.not_for_sale"/>
+            <t t-call="website_sale.out_of_stock"/>
         </QuantityButtons>
         <button name="sale_product_configurator_add_button" position="attributes">
-            <attribute name="t-if">this.props.can_be_sold</attribute>
+            <attribute name="t-if">this.props.can_be_sold &amp;&amp; !this.isOutOfStock()</attribute>
             <attribute name="class" remove="btn-secondary" add="btn-outline-primary text-nowrap" separator=" "/>
         </button>
         <span name="add_button" position="replace">
@@ -17,6 +21,7 @@
 
         <button name="sale_product_configurator_add_button" position="after">
             <t t-call="website_sale.not_for_sale"/>
+            <t t-call="website_sale.out_of_stock"/>
         </button>
         <t name="sale_product_configurator_price" position="after">
             <t t-call="website_sale.product_prices"/>
@@ -61,6 +66,16 @@
             (<span t-out="this.getFormattedPrice(this.props.base_unit_price)"/>
             /
             <span t-out="this.props.base_unit_name"/>)
+        </div>
+    </t>
+
+    <t t-name="website_sale.out_of_stock">
+        <div
+            t-if="this.isOutOfStock()"
+            class="badge text-bg-danger"
+        >
+            <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>
+            Out of stock
         </div>
     </t>
 </templates>
