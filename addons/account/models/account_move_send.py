@@ -6,6 +6,8 @@ from markupsafe import Markup
 from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.tools.safe_eval import safe_eval
+
 
 _logger = logging.getLogger(__name__)
 
@@ -267,20 +269,31 @@ class AccountMoveSend(models.AbstractModel):
         # In case the report selected to do so is also added in dynamic attachments of the mail template, we need to
         # filter them out to avoid duplicated placeholders, since they are already added in the
         # _get_placeholder_mail_attachments_data method.
+        if not (move and isinstance(move, self.env.registry['account.move'])):
+            return []
         pdf_report = pdf_report or self._get_default_pdf_report_id(move)
         invoice_template = pdf_report | self.env.ref('account.account_invoices')
         extra_mail_templates = mail_template.report_template_ids - invoice_template
-        attachments = []
+        filename = move._get_invoice_report_filename(report=pdf_report)
+        placeholders = []
         for extra_mail_template in extra_mail_templates:
-            filename = move._get_invoice_report_filename(report=extra_mail_template)
-            attachments.append({
+            if extra_mail_template.print_report_name:
+                report_name = safe_eval(
+                    extra_mail_template.print_report_name,
+                    {
+                        'object': move,
+                    }
+                )
+            else:
+                report_name = f'{extra_mail_template.name.lower()}_{filename}'
+            placeholders.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
-                'name': filename,
+                'name': report_name,
                 'mimetype': 'application/pdf',
                 'placeholder': True,
                 'dynamic_report': extra_mail_template.report_name,
-            })
-        return attachments
+        })
+        return placeholders
 
     @api.model
     def _get_invoice_extra_attachments(self, move):
