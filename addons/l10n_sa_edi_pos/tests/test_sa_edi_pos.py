@@ -4,7 +4,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.l10n_sa_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.l10n_sa_edi.tests.common import AccountEdiTestCommon, TestSaEdiCommon
 from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
 
 
@@ -32,6 +32,62 @@ class TestGenericSAEdi(TestGenericLocalization):
             'zip': '42317',
             'l10n_sa_edi_building_number': '1234',
         })
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestSaEdiPos(TestSaEdiCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.pos_config = cls.env['pos.config'].sudo().create({'name': 'SA Test POS'})
+        cls.pos_session = cls.env['pos.session'].sudo().create({
+            'config_id': cls.pos_config.id,
+            'state': 'opened',
+        })
+
+    def test_accounting_user_can_read_invoice_with_pos_order(self):
+        """
+        Regression: an accounting admin without POS access should not get an
+        AccessError when opening a customer invoice linked to a POS order.
+        """
+        invoice = self._create_test_invoice(
+            move_type='out_invoice',
+            partner_id=self.partner_sa,
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax_15.id]}],
+        )
+
+        # Link a pos.order to the invoice to trigger the code path
+        self.env['pos.order'].sudo().create({
+            'session_id': self.pos_session.id,
+            'account_move': invoice.id,
+            'amount_tax': 0.0,
+            'amount_total': 100.0,
+            'amount_paid': 100.0,
+            'amount_return': 0.0,
+        })
+
+        # Create a user with accounting admin rights but no POS access
+        accounting_user = self.env['res.users'].create({
+            'name': 'Test Accountant No POS',
+            'login': 'test_accountant_no_pos',
+            'company_id': self.company.id,
+            'company_ids': [Command.link(self.company.id)],
+            'group_ids': [Command.link(self.env.ref('account.group_account_manager').id)],
+        })
+
+        edi_format = self.env.ref('l10n_sa_edi.edi_sa_zatca')
+
+        # Simulate pos_settle_due being installed: it adds _is_settle_or_deposit to
+        # pos.order.line, which is what enables the buggy code path. Without this
+        # patch the hasattr() guard would short-circuit and the bug would not be hit.
+        with patch(
+            'odoo.addons.point_of_sale.models.pos_order.PosOrderLine._is_settle_or_deposit',
+            new=lambda self: False,
+            create=True,
+        ):
+            result = edi_format._move_has_settle_or_deposit_pos_order(invoice.with_user(accounting_user))
+            self.assertFalse(result)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
