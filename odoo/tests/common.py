@@ -1322,6 +1322,15 @@ class ChromeBrowser:
             headless=headless,
             debug=debug,
         ))
+        self.cleanup.callback(
+            lambda: save_test_file(
+                test_case._testMethodName,
+                pathlib.Path(self.user_data_dir, 'chrome_debug.log').read_bytes(),
+                prefix='chrome_log_',
+                extension='txt',
+                document_type="Chrome Log",
+            )
+        )
         self.ws = self.cleanup.enter_context(self._open_websocket())
         if scs := odoo.tools.config['screencasts']:
             self.screencaster = self.cleanup.enter_context(Screencaster(self, scs))
@@ -1415,15 +1424,12 @@ class ChromeBrowser:
             raise
 
     def _spawn_chrome(self, cmd):
-        log_path = pathlib.Path(self.user_data_dir, 'err.log')
-        with log_path.open('wb') as log_file:
-            # pylint: disable=subprocess-popen-preexec-fn
-            proc = subprocess.Popen(
-                cmd,
-                stderr=log_file,
-                preexec_fn=_preexec,
-                env={**os.environ, 'TMPDIR': self.user_data_dir},
-            )  # noqa: PLW1509
+        # pylint: disable=subprocess-popen-preexec-fn
+        proc = subprocess.Popen(
+            cmd,
+            preexec_fn=_preexec,
+            env={**os.environ, 'TMPDIR': self.user_data_dir},
+        )  # noqa: PLW1509
 
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
@@ -1439,7 +1445,10 @@ class ChromeBrowser:
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.wait()
-        self._logger.warning('Chrome headless failed to start:\n%s', log_path.read_text(encoding="utf-8"))
+        self._logger.warning(
+            'Chrome headless failed to start:\n%s',
+            pathlib.Path(self.user_data_dir, 'chrome_debug.log').read_text(encoding="utf-8"),
+        )
         self.stop()
 
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
@@ -1479,6 +1488,8 @@ class ChromeBrowser:
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
+            '--enable-logging': '',
+            # '--v': '1',
             '--no-first-run': '',
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
@@ -1663,7 +1674,8 @@ class ChromeBrowser:
         try:
             return f.result(timeout=timeout * self.throttling_factor)
         except concurrent.futures.TimeoutError:
-            raise TimeoutError(f'{method}({params or ""})')
+            errmsg = f'{method}({params or ""}) (after {timeout * self.throttling_factor}s)'
+            raise TimeoutError(errmsg) from None
 
     def _websocket_send(self, method, *, params=None, with_future=False):
         """send chrome devtools protocol commands through websocket
@@ -1833,7 +1845,7 @@ which leads to stray network requests and inconsistencies."""
             try:
                 base_png = f.result(timeout=0)['data']
             except Exception as e:
-                self._logger.runbot("Couldn't capture screenshot: %s", e)
+                self._logger.runbot("Couldn't capture screenshot: %s", e, exc_info=True)
                 return
             if not base_png:
                 self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
@@ -1894,11 +1906,12 @@ which leads to stray network requests and inconsistencies."""
         if res.get('subtype') == 'error':
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
-        err = ChromeBrowserException("failed")
+        err = None
+        wait_timeout = time.time() - start + timeout
         try:
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
-            if self._result.result(time.time() - start + timeout) and not self.had_failure:
+            if self._result.result(wait_timeout) and not self.had_failure:
                 return
         except CancelledError:
             # regular-ish shutdown
@@ -1913,7 +1926,8 @@ which leads to stray network requests and inconsistencies."""
         self.screencaster.save()
 
         if isinstance(err, concurrent.futures.TimeoutError):
-            raise ChromeBrowserException('Script timeout exceeded') from err
+            errmsg = f'Script timeout ({wait_timeout:.2f}s) exceeded'
+            raise ChromeBrowserException(errmsg) from err
         raise ChromeBrowserException("Unknown error") from err
 
     def navigate_to(self, url, wait_stop=False):
