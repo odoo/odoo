@@ -27,6 +27,10 @@ export class ProductPricelistItem extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return ["product.pricelist", "product.product", "product.category"];
+    }
+
     _records = [
         {
             id: 1,

@@ -45,19 +45,21 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
             'only_records': True,
         })
 
-        self.assertNotIn(new_product.id, data['pos.config'][0]['_pos_special_products_ids'],
-                        "Loyalty product should not be in _pos_special_products_ids when program is inactive.")
+        product = next((n for n in data['product.product'] if n['id'] == new_product.id and n['_is_pos_special_product']), None)
+        self.assertIsNone(product,
+                        "Loyalty product should not be _is_pos_special_product when program is inactive.")
 
         data = current_session.load_data({
             'models': ['pos.config', 'product.template', 'product.product'],
             'only_records': True,
         })
 
-        self.assertIn(new_product.product_tmpl_id.id, [product['id'] for product in data['product.template']],
+        product = next((n for n in data['product.template'] if n['id'] == new_product.product_tmpl_id.id), None)
+        self.assertIsNotNone(product,
                         "Loyalty product should be loaded in the PoS session when program is active.")
 
         self.assertIsNone(next((n for n in data['product.product'] if n['id'] == new_product.id and n['_is_pos_special_product']), None),
-                        "Loyalty product should not be in _pos_special_products_ids since it is loaded.")
+                        "Loyalty product should not be _is_pos_special_product since it is loaded.")
 
         # Make the product not available in the PoS
         new_product.write({'available_in_pos': False})

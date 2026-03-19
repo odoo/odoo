@@ -16,6 +16,10 @@ export class ProductCombo extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return ["product.combo.item"];
+    }
+
     _records = [
         {
             id: 1,

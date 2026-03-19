@@ -350,7 +350,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             return ['none']
 
         with patch.object(self.env.registry.models['pos.payment.method'], "_get_customer_required_providers_code", _get_customer_required_providers_code_patch):
-            loaded_data = self.pos_config.current_session_id.load_data([])
+            loaded_data = self.pos_config.current_session_id.load_data({'only_records': True})
             config_online_pm_data = [record.get('_customer_required') for record in loaded_data['pos.payment.method'] if record['id'] == online_pm.id]
             self.assertTrue(all(config_online_pm_data))
             self.start_pos_tour('test_payment_method_customer_required')

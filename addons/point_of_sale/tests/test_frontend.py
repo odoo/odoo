@@ -3093,7 +3093,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.env['product.template'].flush_model()
         self.main_pos_config.open_ui()
-        loaded_data = self.main_pos_config.current_session_id.load_data([])
+        loaded_data = self.main_pos_config.current_session_id.load_data({'only_records': True})
         loaded_product_uoms = [loaded_product_uom['id'] for loaded_product_uom in loaded_data['product.uom']]
 
         self.assertNotIn(product_uom_three.id, loaded_product_uoms, f"Product UOM {product_uom_three} shouldn't be loaded as its product {product_three} is not included in the results")

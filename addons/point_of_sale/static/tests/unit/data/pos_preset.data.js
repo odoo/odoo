@@ -21,6 +21,10 @@ export class PosPreset extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return ["account.fiscal.position", "product.pricelist", "resource.calendar.attendance"];
+    }
+
     _records = [
         {
             id: 1,

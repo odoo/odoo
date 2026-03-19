@@ -156,7 +156,7 @@ class PosSession(models.Model):
         data = self._read_from_metadata(to_read, local_data, self.config_id)
         if local_data['only_records']:
             return {model: d['records'] for model, d in data.items()}
-        elif local_data['records']:
+        if local_data['records']:
             # Add data to remove from the indexedDB
             data_to_remove = self.filter_local_data({model: list(d.keys()) for model, d in local_data['records'].items()})
             for model, ids in data_to_remove.items():

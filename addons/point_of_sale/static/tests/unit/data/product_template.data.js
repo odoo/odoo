@@ -40,6 +40,10 @@ export class ProductTemplate extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return ["product.combo", "pos.category", "account.tax"];
+    }
+
     _records = [
         {
             id: 1,

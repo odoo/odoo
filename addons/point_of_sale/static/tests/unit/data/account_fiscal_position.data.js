@@ -7,6 +7,10 @@ export class AccountFiscalPosition extends models.ServerModel {
         return ["id", "name", "display_name", "tax_map", "tax_ids"];
     }
 
+    _load_pos_data_dependencies() {
+        return ["res.partner", "pos.preset"];
+    }
+
     _records = [
         {
             id: 1,
