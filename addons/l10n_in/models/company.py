@@ -130,11 +130,10 @@ class ResCompany(models.Model):
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit(self):
-        for record in self:
-            if record.country_code == "IN" and record.vat:
-                record.l10n_in_hsn_code_digit = "4"
-            else:
-                record.l10n_in_hsn_code_digit = False
+        is_vat_valid = self.env['res.partner'].check_vat_in
+        self.filtered(
+            lambda c: c.country_code == 'IN' and not c.l10n_in_hsn_code_digit and is_vat_valid(c.vat)
+        ).l10n_in_hsn_code_digit = '4'
 
     @api.onchange('vat')
     def onchange_vat(self):
