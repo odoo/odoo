@@ -1204,6 +1204,43 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             "Portal user should not see the timesheet of another SO line (line 2)."
         )
 
+    def test_timesheet_rebilling_after_partial_credit(self):
+        """Credit notes should only make timesheets rebillable proportional to credited hours."""
+        jan, feb = date(2024, 1, 15), date(2024, 2, 15)
+        jan_start, jan_end, full_end = date(2024, 1, 1), date(2024, 1, 31), date(2024, 2, 28)
+
+        for credit_qty, jan_hours, feb_hours, expected in [
+            (0, 1, 2, 2),  # Zero credit: only Feb rebillable
+            (1, 5, 3, 4),  # Partial credit: 1h credited + 3h Feb
+        ]:
+            with self.subTest(credit_qty=credit_qty, expected=expected):
+                sale_order = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+                self.env['sale.order.line'].create({
+                    'order_id': sale_order.id,
+                    'product_id': self.product_delivery_timesheet2.id,
+                })
+                sale_order.action_confirm()
+                task = sale_order.order_line.task_id
+                self.env['account.analytic.line'].create([
+                    {'name': 'Jan', 'project_id': task.project_id.id, 'task_id': task.id,
+                     'unit_amount': jan_hours, 'employee_id': self.employee_user.id, 'date': jan},
+                    {'name': 'Feb', 'project_id': task.project_id.id, 'task_id': task.id,
+                     'unit_amount': feb_hours, 'employee_id': self.employee_user.id, 'date': feb},
+                ])
+                sale_order.order_line._recompute_qty_to_invoice(jan_start, jan_end)
+                invoice = sale_order.with_context(
+                    timesheet_start_date=jan_start, timesheet_end_date=jan_end,
+                )._create_invoices()
+                invoice.action_post()
+                credit_note = invoice._reverse_moves()
+                credit_note.invoice_line_ids.quantity = credit_qty
+                credit_note.action_post()
+                sale_order.order_line._recompute_qty_to_invoice(jan_start, full_end)
+                invoice2 = sale_order.with_context(
+                    timesheet_start_date=jan_start, timesheet_end_date=full_end,
+                )._create_invoices()
+                self.assertEqual(invoice2.invoice_line_ids.quantity, expected)
+
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
