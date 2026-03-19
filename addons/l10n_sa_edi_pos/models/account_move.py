@@ -19,4 +19,4 @@ class AccountMove(models.Model):
         self.ensure_one()
         if not hasattr(self.env['pos.order.line'], '_is_settle_or_deposit'):
             return False
-        return any(line._is_settle_or_deposit() for line in self.pos_order_ids.lines)
+        return any(line._is_settle_or_deposit() for line in self.sudo().pos_order_ids.lines)
