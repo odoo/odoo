@@ -2157,7 +2157,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             moves_to_push._push_apply()
 
         for move in moves_todo:
-            for move_dest in move.move_dest_ids:
+            for move_dest in move.sudo().move_dest_ids:
                 if not move_dest.location_id._child_of(move.location_dest_id) and not move.location_dest_id._child_of(move_dest.location_id):
                     move_dest._break_mto_link(move)
                     continue
