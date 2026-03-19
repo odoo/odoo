@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class TestAccessFeedbackSomeObj(models.Model):
@@ -6,7 +6,6 @@ class TestAccessFeedbackSomeObj(models.Model):
     _description = 'Object For Test Access Right'
 
     val = fields.Integer()
-    categ_id = fields.Many2one('test_access_feedback.obj_categ')
     parent_id = fields.Many2one('test_access_feedback.some_obj')
     company_id = fields.Many2one('res.company')
     forbidden = fields.Integer(
@@ -31,16 +30,3 @@ class TestAccessFeedbackChild(models.Model):
     _description = 'Object for testing company ir rule'
 
     parent_id = fields.Many2one('test_access_feedback.some_obj')
-
-
-class TestAccessFeedbackObjCateg(models.Model):
-    _name = 'test_access_feedback.obj_categ'
-    _description = "Context dependent searchable model"
-
-    name = fields.Char(required=True)
-
-    @api.model
-    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
-        if self.env.context.get('only_media'):
-            domain += [('name', '=', 'Media')]
-        return super().search_fetch(domain, field_names, offset, limit, order)
