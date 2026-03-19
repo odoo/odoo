@@ -389,7 +389,8 @@ class Warehouse(models.Model):
         data_route = route = self.env.ref(xml_id, raise_if_not_found=False)
         company = self.company_id[:1] or self.env.company
         if not route or (route.sudo().company_id and route.sudo().company_id != company):
-            route = self.env['stock.route'].with_context(active_test=False).search([
+            # search route with user lang as `route_name` is translated
+            route = self.env['stock.route'].with_context(lang=self.env.user.lang, active_test=False).search([
                 ('name', 'like', route_name), ('company_id', 'in', [False, company.id])
             ], order='company_id', limit=1)
         if not route:
