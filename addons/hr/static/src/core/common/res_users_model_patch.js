@@ -13,7 +13,7 @@ patch(ResUsers.prototype, {
             compute() {
                 return (
                     this.employee_ids.find(
-                        (employee) => employee.company_id?.id === user.activeCompany.id
+                        (employee) => employee.company_id?.id === user.activeCompany?.id
                     ) || this.employee_ids[0]
                 );
             },
