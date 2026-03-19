@@ -267,3 +267,34 @@ class TestDiscussSubChannels(HttpCase):
             ),
             notifications,
         )
+
+    def test_13_fetch_archived_sub_channels(self):
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        active_sub = self.general._create_sub_channel(name="Active Sub Channel")
+        archived_sub = self.general._create_sub_channel(name="Archived Sub Channel")
+        archived_sub.action_archive()
+
+        def fetch_sub_channel_ids():
+            res = self.make_jsonrpc_request(
+                "/discuss/channel/sub_channel/fetch",
+                {"parent_channel_id": self.general.id},
+            )
+            return {c["id"] for c in res["discuss.channel"] if c["id"] != self.general.id}
+
+        self.assertEqual(fetch_sub_channel_ids(), {active_sub.id})
+        self.general.action_archive()
+        self.assertEqual(fetch_sub_channel_ids(), {active_sub.id})
+
+    def test_14_link_archived_sub_channel_to_message(self):
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
+        sub_channel.action_archive()
+        data = self.make_jsonrpc_request(
+            "/discuss/channel/messages",
+            {"channel_id": self.general.id},
+        )
+        vals_by_message_id = {vals["id"]: vals for vals in data["data"]["mail.message"]}
+        self.assertEqual(
+            vals_by_message_id[self.general_message.id]["linkedSubChannel"],
+            {"id": sub_channel.id, "model": "discuss.channel"},
+        )
