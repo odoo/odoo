@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import random
 
 from ast import literal_eval
@@ -9,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.addons.crm.models.crm_lead import CrmLead
 from odoo.addons.crm.models.crm_team import CrmTeam
 from odoo.addons.crm.tests.common import TestLeadConvertCommon
 from odoo.tests.common import tagged
@@ -336,9 +338,96 @@ class TestLeadAssign(TestLeadAssignCommon):
         crm_team_auto_commit_if_not_test = CrmTeam._auto_commit_if_not_test
         with patch.object(CrmTeam, '_auto_commit_if_not_test',
                           autospec=True, side_effect=crm_team_auto_commit_if_not_test) as mock_team_commit, \
-             self.with_user('user_sales_manager'):
+             self.with_user('user_sales_manager'), \
+             self.assertLogs() as cm:
             self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads()
         self.assertEqual(mock_team_commit.call_count, 8), '5 during team phase, 3 during lead phase'
+        checkpoint_logs = [l for l in cm.output if '-checkpoint-' in l]
+        self.assertEqual(len(checkpoint_logs), 7, 'Should have 7 intermediate commits and logs')
+
+    @mute_logger('odoo.models.unlink')
+    def test_assign_iterative_crash_allocate(self):
+        """ Test defensive behavior when allocation crashes (memory error, other
+        unexpected issue, ...) """
+        # fix the seed and avoid randomness
+        random.seed(1618)
+
+        test_bundle_size = 5
+        self.env['ir.config_parameter'].set_int('crm.assignment.commit.bundle', '%s' % test_bundle_size)
+
+        sales_teams = self.sales_teams
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            partner_ids=[False, False, False, self.contact_1.id],
+            probabilities=[30],
+            count=10,
+            suffix='Initial',
+        )
+        # commit probability and related fields
+        leads.flush_recordset()
+        self.assertInitialData()
+
+        original_allocate_leads_deduplicate = CrmTeam._allocate_leads_deduplicate
+
+        def _mock_allocate_leads_deduplicate(records, assign_leads, duplicates_cache=None):
+            if assign_leads == leads[0]:
+                raise MemoryError("My Error Message")
+            return original_allocate_leads_deduplicate(records, assign_leads, duplicates_cache)
+
+        with patch.object(CrmTeam, '_allocate_leads_deduplicate',
+                          autospec=True, side_effect=_mock_allocate_leads_deduplicate) as _mock_team_assign_dedup, \
+             self.with_user('user_sales_manager'), \
+             self.assertLogs() as cm:
+            with contextlib.suppress(Exception):
+                self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads()
+        error_log = [l for l in cm.output if 'Error while assigning' in l]
+        self.assertEqual(len(error_log), 1)
+        self.assertIn(f'Error while assigning lead {leads[0].id}', error_log[0], 'Should log error + some stats')
+        self.assertIn('Error: My Error Message', error_log[0], 'Should log error + some stats')
+
+    @mute_logger('odoo.models.unlink')
+    def test_assign_iterative_crash_assign(self):
+        """ Test defensive behavior when assign / convert crashes (memory error, other
+        unexpected issue, ...) """
+        # fix the seed and avoid randomness
+        random.seed(1618)
+
+        test_bundle_size = 5
+        self.env['ir.config_parameter'].set_int('crm.assignment.commit.bundle', '%s' % test_bundle_size)
+
+        sales_teams = self.sales_teams
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            partner_ids=[False, False, False, self.contact_1.id],
+            probabilities=[30],
+            count=10,
+            suffix='Initial',
+        )
+        # commit probability and related fields
+        leads.flush_recordset()
+        self.assertInitialData()
+
+        original_convert_opportunity = CrmLead.convert_opportunity
+
+        def _mock_convert_opportunity(records, partner, user_ids=False, team_id=False):
+            if records[0] == leads[2]:
+                raise MemoryError("My Error Message")
+            return original_convert_opportunity(records, partner, user_ids=user_ids, team_id=team_id)
+
+        with patch.object(CrmLead, 'convert_opportunity',
+                          autospec=True, side_effect=_mock_convert_opportunity) as _mock_team_assign_dedup, \
+             self.with_user('user_sales_manager'), \
+             self.assertLogs() as cm:
+            with contextlib.suppress(Exception):
+                self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads()
+        error_log = [l for l in cm.output if 'Error while assigning' in l]
+        self.assertEqual(len(error_log), 1)
+        self.assertIn(f'Error while assigning lead {leads[2].id}', error_log[0], 'Should log error + some stats')
+        self.assertIn('Error: My Error Message', error_log[0], 'Should log error + some stats')
 
     @mute_logger('odoo.models.unlink')
     def test_assign_populated(self):
