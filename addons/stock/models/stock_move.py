@@ -1977,9 +1977,16 @@ Please change the quantity done or the rounding precision in your settings.""",
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
+                    # If the picking declares an owner, pass it so that only
+                    # quants belonging to that owner are considered. Without
+                    # this, when several owners coexist in the same location
+                    # the reservation can pick quants from the wrong owner.
+                    # _action_done() already enforces picking.owner_id at
+                    # validation time (see StockPicking._action_done); this
+                    # makes action_assign() consistent with that behaviour.
                     taken_quantity = move._update_reserved_quantity(
                         need, move.location_id,
-                        owner_id=move.restrict_partner_id or None,
+                        owner_id=move.picking_id.owner_id or None,
                         strict=False,
                     )
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
