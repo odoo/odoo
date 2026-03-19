@@ -6,9 +6,12 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.tests.common import tagged, BaseCase, TransactionCase
 from odoo.tools import mute_logger
+from odoo.tools.misc import OrderedSet
 from odoo.tools.safe_eval import (
+    _BUILTINS,
     const_eval,
     expr_eval,
+    safe_checker,
     safe_eval,
     UnsafeClassError,
     UnsafePolicy,
@@ -347,3 +350,39 @@ class TestSafeEvalRuntime(TransactionCase):
         """
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    def test_trust_auto_objects(self):
+        import builtins  # noqa: PLC0415
+        import collections  # noqa: PLC0415
+        import functools  # noqa: PLC0415
+        import types  # noqa: PLC0415
+
+        objs = (
+            # classes
+            builtins.object,
+            builtins.bool, builtins.int, builtins.float, builtins.str,
+            builtins.bytes, builtins.bytearray, builtins.memoryview,
+            builtins.Exception,
+            builtins.AttributeError, builtins.KeyError, builtins.TypeError,
+            builtins.UnboundLocalError, builtins.ValueError, builtins.ZeroDivisionError,
+            builtins.enumerate, builtins.filter, builtins.map, builtins.range,
+            builtins.reversed, builtins.zip,
+            builtins.dict,
+            builtins.list, builtins.tuple, builtins.set, builtins.frozenset,
+            types.MappingProxyType,
+            collections.defaultdict, collections.OrderedDict,
+            OrderedSet,  # tools
+            # functions
+            builtins.abs, builtins.divmod, builtins.max, builtins.min,
+            builtins.round, builtins.sum,
+            builtins.chr, builtins.ord, builtins.repr,
+            builtins.all, builtins.any, builtins.len, builtins.sorted,
+            builtins.hasattr, builtins.isinstance,
+            functools.reduce,
+        )
+        for obj in objs:
+            safe_checker.check(obj)
+
+        # Ensure controlled builtins are trusted
+        for obj in _BUILTINS.values():
+            safe_checker.check(obj)
