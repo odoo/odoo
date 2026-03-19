@@ -1977,7 +1977,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(
+                        need, move.location_id,
+                        owner_id=move.restrict_partner_id or None,
+                        strict=False,
+                    )
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)
