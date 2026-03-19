@@ -129,6 +129,35 @@ test("elements within iframe can't be clicked while the builder is being set up"
     expect.verifySteps(["button clicked"]);
 });
 
+test("onPageUnload does not crash when scrolling elements are unavailable", async () => {
+    let websiteBuilder;
+    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+        setup() {
+            websiteBuilder = this;
+            super.setup();
+        },
+        get testMode() {
+            return false;
+        },
+        cleanIframeFallback() {},
+    });
+
+    await setupWebsiteBuilder(`<h1>Homepage</h1>`, { openEditor: false });
+
+    const websiteDoc = websiteBuilder.websiteContent.el.contentDocument;
+    const fallbackDoc = websiteBuilder.iframefallback.el.contentDocument;
+    Object.defineProperty(websiteDoc, "scrollingElement", {
+        value: null,
+        configurable: true,
+    });
+    Object.defineProperty(fallbackDoc, "scrollingElement", {
+        value: null,
+        configurable: true,
+    });
+
+    expect(() => websiteBuilder.onPageUnload()).not.toThrow();
+});
+
 describe.tags("desktop");
 describe("BuilderMany2One: exit editor when previewing", () => {
     beforeEach(async () => {

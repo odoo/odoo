@@ -652,7 +652,9 @@ export class WebsiteBuilderClientAction extends Component {
             fallBackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
             const currentScrollEl = getScrollingElement(websiteDoc);
             const scrollElement = getScrollingElement(fallBackDoc);
-            scrollElement.scrollTop = currentScrollEl.scrollTop;
+            if (currentScrollEl && scrollElement) {
+                scrollElement.scrollTop = currentScrollEl.scrollTop;
+            }
             this.cleanIframeFallback();
         }
     }
