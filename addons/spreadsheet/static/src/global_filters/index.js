@@ -24,9 +24,14 @@ invalidateEvaluationCommands.add("SET_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("SET_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("UPDATE_OBJECT_DOMAINS");
+<<<<<<< fbc9a7b4b55c24a84a792be9ced7fc3af4a17c34
 readonlyAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
 readonlyAllowedCommands.add("UPDATE_CHART_GRANULARITY");
+||||||| b026f26a46ff36b5d405a559d5e0b11589dad1da
+=======
+readonlyAllowedCommands.add("LOG_DATASOURCE_EXPORT");
+>>>>>>> 69e2c0070ced7f95e595348bb139ac476bc0a579
 
 inverseCommandRegistry
     .add("EDIT_GLOBAL_FILTER", identity)
