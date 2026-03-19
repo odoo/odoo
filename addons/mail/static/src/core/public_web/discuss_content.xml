@@ -45,7 +45,7 @@
                     </div>
                     <div t-if="showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="state.correspondentLocalDateTimeFormatted"/>
                 </div>
-                <div class="pe-3">
+                <div class="pe-3 d-print-none">
                     <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true"/>
                 </div>
                 <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
@@ -65,7 +65,7 @@
                             <Composer t-if="(thread.model !== 'mail.box' and !thread.channel?.composerHidden) or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                             <span t-if="thread.channel?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-esc="thread.channel?.composerHiddenText"/>
                         </div>
-                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
+                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': ui.isSmall }">
                             <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
