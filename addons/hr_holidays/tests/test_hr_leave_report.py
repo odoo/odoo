@@ -8,7 +8,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         super().setUpClass()
         cls.overtime_work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Overtime Type',
-            'code': 'OVERTIME',
+            'code': 'overtime_test',
             'requires_allocation': True,
             'leave_validation_type': 'no_validation',
             'request_unit': 'hour',

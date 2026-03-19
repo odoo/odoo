@@ -38,7 +38,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         cls.work_entry_type_hour_day = cls.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off hours',
-            'code': 'Paid Time Off hours',
+            'code': 'Paid Time Off hours Test',
             'count_as': 'absence',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
