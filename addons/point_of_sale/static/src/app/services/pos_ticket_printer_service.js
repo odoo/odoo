@@ -291,8 +291,7 @@ export class PosTicketPrinterService {
     }
 
     async initPrinters() {
-        const printers = [...this.preparationPrinters, ...this.receiptPrinters];
-        for (const printer of printers) {
+        for (const printer of this.printers) {
             const instance = await this.createPrinterInstance(printer);
             printer._instance = instance;
         }
@@ -356,6 +355,11 @@ export class PosTicketPrinterService {
         } else {
             order.nb_print = count;
         }
+    }
+
+    // This method is intended to be overridden in pos_iot and use in pos_enterprise module.
+    _getPdisFallbackPrinterExtraData(printer) {
+        return {};
     }
 }
 
