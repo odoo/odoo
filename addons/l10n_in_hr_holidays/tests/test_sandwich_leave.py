@@ -495,7 +495,7 @@ class TestSandwichLeave(TransactionCase):
         """
         other_work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Test Leave Type',
-            'code': 'Test Leave Type',
+            'code': 'Test Other Leave Type',
             'request_unit': 'day',
             'unit_of_measure': 'day',
             'requires_allocation': False,
