@@ -33,7 +33,7 @@ export class ReplaceMediaOption extends BaseOptionComponent {
         } else if (classes.contains("img")) {
             return _t("Replace Image");
         } else if (
-            classes.contains("fa") ||
+            classes.contains("oi") ||
             Array.from(classes).some((cls) => cls.startsWith("s_share_"))
         ) {
             return _t("Replace Icon");

@@ -23,6 +23,6 @@ test("Icon List Snippet", async () => {
     );
 
     await contains(".options-container button[data-action-id='replaceListIcon']").click();
-    await contains(".modal-dialog .fa-remove").click();
-    expect(":iframe .s_icon_list").toHaveStyle('--icon-list-icon-content: "\\f00d"');
+    await contains(".modal-dialog [data-icon='close']").click();
+    expect(":iframe .s_icon_list").toHaveStyle('--icon-list-icon-content: "close"');
 });
