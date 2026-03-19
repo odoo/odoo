@@ -55,8 +55,30 @@ class SaleOrderLine(models.Model):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
         tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
         is_combo = self.product_type == "combo"
-        unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
 
+        if is_combo and tax_display == "total_included":
+            combo_items = self.order_id.order_line.filtered(
+                lambda line: line.linked_line_id == self and line.combo_item_id
+            )
+            if combo_items:
+                bases_by_tax = {}
+                for item in combo_items:
+                    original_price = item._get_combo_item_display_price()
+                    bases_by_tax[item.tax_ids] = (
+                        bases_by_tax.get(item.tax_ids, 0.0) + original_price
+                    )
+
+                total_tax_included_price = 0.0
+                for tax_ids, base in bases_by_tax.items():
+                    if tax_ids:
+                        total_tax_included_price += tax_ids.compute_all(
+                            base, self.currency_id, 1, product=None, partner=self.order_partner_id
+                        )[tax_display]
+                    else:
+                        total_tax_included_price += base
+                return total_tax_included_price
+
+        unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
         return self.tax_ids.compute_all(
             unit_price, self.currency_id, 1, self.product_id, self.order_partner_id
         )[tax_display]
@@ -102,6 +124,23 @@ class SaleOrderLine(models.Model):
             if self.order_id.website_id.show_line_subtotals_tax_selection == "tax_excluded"
             else "price_total"
         )
+        if price_type == "price_total" and self.product_type == "combo":
+            lines = self._get_lines_with_price()
+            bases_by_tax = {}
+            for line in lines:
+                bases_by_tax[line.tax_ids] = (
+                    bases_by_tax.get(line.tax_ids, 0.0) + line.price_subtotal
+                )
+
+            total_tax_included_price = 0.0
+            for tax_ids, base in bases_by_tax.items():
+                if tax_ids:
+                    total_tax_included_price += tax_ids.compute_all(
+                        base, self.currency_id, 1, product=None, partner=self.order_partner_id
+                    )["total_included"]
+                else:
+                    total_tax_included_price += base
+            return total_tax_included_price
         return sum(self._get_lines_with_price().mapped(price_type))
 
     def _check_validity(self):

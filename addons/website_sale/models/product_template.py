@@ -819,16 +819,6 @@ class ProductTemplate(models.Model):
                 product, combination_info
             )
 
-        if (
-            self.type == "combo"
-            and website.show_line_subtotals_tax_selection == "tax_included"
-            and not all(
-                tax.price_include
-                for tax in self.sudo().combo_ids.combo_item_ids.product_id.taxes_id
-            )
-        ):
-            combination_info["tax_disclaimer"] = self.env._("Taxes calculated at checkout.")
-
         return combination_info
 
     def _get_additional_combination_info(
@@ -886,7 +876,7 @@ class ProductTemplate(models.Model):
         # Apply taxes
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
         taxes = self.env["account.tax"]
-        if product_taxes:
+        if product_taxes or product_or_template.type == "combo":
             taxes = fiscal_position.map_tax(product_taxes)
             # We do not apply taxes on the compare_list_price value because it's meant to be
             # a strict value displayed as is.
@@ -1027,6 +1017,55 @@ class ProductTemplate(models.Model):
 
         return attr_images
 
+    def _apply_taxes_to_combo_heuristic(
+        self, price, currency, *, product=None, product_taxes=None, taxes=None, tax_display=None
+    ):
+        base_price = self.env["product.product"]._get_tax_included_unit_price_from_price(
+            price, product_taxes, product_taxes_after_fp=taxes
+        )
+        combos = product.sudo().combo_ids
+        combo_base_prices = {
+            combo: combo.currency_id._convert(
+                combo.base_price, currency, self.env.company, fields.Date.context_today(self)
+            )
+            for combo in combos
+        }
+        total_combo_base_price = sum(combo_base_prices.values())
+        combo_prices = {
+            combo: currency.round(base * base_price / (total_combo_base_price or 1))
+            for combo, base in combo_base_prices.items()
+        }
+        combo_price_delta = base_price - sum(combo_prices.values())
+        if combo_price_delta and combos:
+            combo_prices[combos[-1]] += combo_price_delta
+
+        # Heuristic: Pick the cheapest combo item of each choice
+        assumed_combo_items = combos.mapped(
+            lambda c: (
+                min(c.combo_item_ids, key=lambda item: item.product_id.lst_price + item.extra_price)
+                if c.combo_item_ids
+                else self.env["product.combo.item"]
+            )
+        )
+
+        bases_by_tax = {}
+        for item in assumed_combo_items:
+            if not item:
+                continue
+            prorated_base = combo_prices[item.combo_id] + item.extra_price
+            item_taxes = item.product_id.taxes_id._filter_taxes_by_company()
+            bases_by_tax[item_taxes] = bases_by_tax.get(item_taxes, 0.0) + prorated_base
+
+        approx_price = 0.0
+        for item_taxes, base in bases_by_tax.items():
+            if item_taxes:
+                approx_price += item_taxes.compute_all(
+                    base, currency, 1, product=None, partner=self.env.user.partner_id
+                )[tax_display]
+            else:
+                approx_price += base
+        return approx_price
+
     def _apply_taxes_to_price(
         self,
         price,
@@ -1039,6 +1078,21 @@ class ProductTemplate(models.Model):
         website=None,
     ):
         product = product or self.env["product.product"]
+        if not tax_display:
+            show_tax = (
+                website or self.env["website"].get_current_website()
+            ).show_line_subtotals_tax_selection
+            tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
+
+        if self.type == "combo" and tax_display == "total_included":
+            return self._apply_taxes_to_combo_heuristic(
+                price,
+                currency,
+                product=product or self,
+                product_taxes=product_taxes,
+                taxes=taxes,
+                tax_display=tax_display,
+            )
 
         if product_taxes is None:
             product_taxes = self.sudo().taxes_id._filter_taxes_by_company()
@@ -1058,12 +1112,6 @@ class ProductTemplate(models.Model):
         tax_details = taxes.compute_all(
             price, currency, 1, product or self, self.env.user.partner_id
         )
-
-        if not tax_display:
-            show_tax = (
-                website or self.env.website
-            ).show_line_subtotals_tax_selection
-            tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         return tax_details[tax_display]
 
