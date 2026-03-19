@@ -157,7 +157,11 @@ class MailMessage(models.Model):
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                     },
-                    "thread": {"model": values["model"], "id": values["res_id"]},
+                    "thread": {
+                       "has_mail_thread": isinstance(self.env[values["model"]], self.pool["mail.thread"]),
+                       "id": values["res_id"],
+                       "model": values["model"],
+                   },
                 }
             )
         return vals_list
