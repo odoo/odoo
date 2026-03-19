@@ -37,6 +37,7 @@ declare module "models" {
         default_display_mode: "video_full_screen" | false | undefined,
         fetchChannelMembers(): Promise<void>,
         firstUnreadMessage: Message,
+        has_mail_thread: boolean | undefined,
         hasOtherMembersTyping: boolean,
         readonly hasMemberList: boolean,
         readonly hasSeenFeature: boolean,

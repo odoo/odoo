@@ -205,6 +205,8 @@ export class Thread extends Record {
             this.onPinStateUpdated();
         },
     });
+    /** @type {Boolean|undefined} */
+    has_mail_thread;
     mainAttachment = Record.one("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
