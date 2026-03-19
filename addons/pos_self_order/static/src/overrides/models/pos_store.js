@@ -23,4 +23,9 @@ patch(PosStore.prototype, {
             params: { data: user_data },
         });
     },
+    async printQrReceipt() {
+        const order = this.getOrder();
+        await this.syncAllOrders({ orders: [order] });
+        return await this.ticketPrinter.printQrReceipt({ order });
+    },
 });

@@ -31,6 +31,17 @@ export class SelfOrderRouter extends Reactive {
         return url.searchParams.get("table_identifier");
     }
 
+    getOrderUuid() {
+        const url = new URL(browser.location.href);
+        return url.searchParams.get("order_uuid");
+    }
+
+    removeOrderUuid() {
+        const url = new URL(browser.location.href);
+        url.searchParams.delete("order_uuid");
+        history.replaceState({}, "", url);
+    }
+
     back() {
         if (!this.historyPage.length) {
             // We use the browser history, so if the user arrives on a page with a back button from a link,
@@ -39,9 +50,23 @@ export class SelfOrderRouter extends Reactive {
             return;
         }
 
+        const prevOrderUuid = this.getOrderUuid();
+
+        const onPopState = () => {
+            window.removeEventListener("popstate", onPopState);
+
+            if (!prevOrderUuid && this.getOrderUuid()) {
+                this.removeOrderUuid();
+                this.navigate("default");
+            }
+
+            this.path = window.location.pathname;
+            this.historyPage = window.location.pathname;
+        };
+
+        window.addEventListener("popstate", onPopState);
+
         history.back();
-        this.path = window.location.pathname;
-        this.historyPage = window.location.pathname;
     }
 
     /**

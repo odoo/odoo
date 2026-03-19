@@ -5,6 +5,7 @@ from . import pos_category
 from . import pos_config
 from . import pos_order
 from . import pos_order_line
+from . import pos_order_receipt
 from . import pos_restaurant
 from . import pos_payment_method
 from . import pos_self_order_custom_link

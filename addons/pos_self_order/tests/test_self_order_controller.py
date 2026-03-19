@@ -334,6 +334,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         return {
             'access_token': self.pos_config.access_token,
             'table_identifier': self.pos_table_1.identifier,
+            'order_uuid': None,
             'order': {
                 'table_id': self.pos_table_1.id,
                 'company_id': self.env.company.id,

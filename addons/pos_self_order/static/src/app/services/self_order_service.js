@@ -231,6 +231,12 @@ export class SelfOrder extends Reactive {
      * scanned another QR code after creating the order.
      */
     get currentTable() {
+        const orderUuid = this.router.getOrderUuid();
+        if (orderUuid) {
+            const order = this.models["pos.order"].find((o) => o.uuid === orderUuid);
+            return order?.table_id || null;
+        }
+
         const tableIdentifier = this.router.getTableIdentifier();
         const table = this.models["restaurant.table"].find((t) => t.identifier === tableIdentifier);
         return table || null;
@@ -812,6 +818,7 @@ export class SelfOrder extends Reactive {
                     order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
+                    order_uuid: this.router.getOrderUuid(),
                 }
             );
             const result = this.models.connectNewData(data);
@@ -839,6 +846,7 @@ export class SelfOrder extends Reactive {
 
     async getUserDataFromServer(tokens = []) {
         const tableIdentifier = this.router.getTableIdentifier([]);
+        const orderUuid = this.router.getOrderUuid();
         const dbAccessToken = this.models["pos.order"]
             .filter((o) => o.state === "draft" && o.isSynced && o.access_token)
             .map((order) => ({
@@ -855,15 +863,18 @@ export class SelfOrder extends Reactive {
         }));
 
         const accessTokens = [...dbAccessToken, ...argTokens];
-        if (Object.keys(accessTokens).length === 0 && !tableIdentifier) {
+        if (Object.keys(accessTokens).length === 0 && !tableIdentifier && !orderUuid) {
             return;
         }
+
+        const previousOrder = this.currentOrder;
 
         try {
             const data = await rpc(`/pos-self-order/get-user-data/`, {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
                 table_identifier: tableIdentifier,
+                order_uuid: orderUuid,
             });
             const result = this.models.connectNewData(data);
             const openOrder = result["pos.order"]?.find((o) => o.state === "draft");
@@ -883,6 +894,13 @@ export class SelfOrder extends Reactive {
                     lines: [["link", lineCmd]],
                 });
                 openOrder.recomputeChanges();
+            } else if (orderUuid && !openOrder) {
+                this.router.removeOrderUuid();
+                if (previousOrder.uuid !== orderUuid) {
+                    this.notification.add(_t("You can no longer order through this link"), {
+                        type: "danger",
+                    });
+                }
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
         } catch (error) {

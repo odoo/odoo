@@ -7,8 +7,11 @@ from odoo.http import request
 
 class PosSelfKiosk(http.Controller):
     @http.route(["/pos-self/<config_id>", "/pos-self/<config_id>/<path:subpath>"], auth="public", website=True, sitemap=True)
-    def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, subpath=None):
-        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
+    def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None, subpath=None):
+        pos_config, _, config_access_token, error_redirect = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
+        if error_redirect:
+            raise werkzeug.exceptions.NotFound()
+
         return request.render(
                 'pos_self_order.index',
                 {
@@ -27,24 +30,28 @@ class PosSelfKiosk(http.Controller):
             )
 
     @http.route("/pos-self/data/<config_id>", type='jsonrpc', auth='public', website=True)
-    def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None):
-        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
+    def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
+        pos_config, _, config_access_token, _ = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
         data = pos_config.load_self_data()
+        if order_uuid:
+            orders = pos_config.env['pos.order'].sudo().search([("uuid", "=", order_uuid)], limit=1)
+            data['pos.order'] = pos_config.env['pos.order']._load_pos_data_read(orders, pos_config)
         data['pos.config'][0]['access_token'] = config_access_token
         return data
 
     @http.route("/pos-self/receipt-template/<config_id>", type='jsonrpc', auth='public')
-    def get_self_ordering_receipt_template(self, config_id=None, access_token=None, table_identifier=None):
-        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
+    def get_self_ordering_receipt_template(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
+        pos_config, _, _, _ = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
         return pos_config.env['pos.order'].get_receipt_template_for_pos_frontend()
 
     @http.route("/pos-self/relations/<config_id>", type='jsonrpc', auth='public')
-    def get_self_ordering_relations(self, config_id=None, access_token=None, table_identifier=None):
-        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
+    def get_self_ordering_relations(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
+        pos_config, _, _, _ = self._verify_entry_access(config_id, access_token, table_identifier, order_uuid)
         return pos_config.load_data_params()
 
-    def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None):
+    def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None, order_uuid=None):
         table_sudo = False
+        error_redirect = False
 
         if not config_id or not config_id.isnumeric():
             raise werkzeug.exceptions.NotFound()
@@ -69,11 +76,25 @@ class PosSelfKiosk(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         if pos_config and pos_config.has_active_session and pos_config.self_ordering_mode == 'mobile':
-            table_sudo = table_identifier and (
-                request.env["restaurant.table"]
-                .sudo()
-                .search([("identifier", "=", table_identifier), ("active", "=", True)], limit=1)
-            )
+            if config_access_token:
+                config_access_token = pos_config.access_token
+
+            if order_uuid and table_identifier:
+                order_sudo = request.env["pos.order"].sudo().search([("uuid", "=", order_uuid)], limit=1)
+                table_sudo = request.env["restaurant.table"].sudo().search([("identifier", "=", table_identifier), ("active", "=", True)], limit=1)
+                if not order_sudo or not table_sudo or order_sudo.table_id.id != table_sudo.id:
+                    error_redirect = True
+                    table_sudo = False
+                else:
+                    # Everything matches perfectly
+                    table_sudo = order_sudo.table_id
+            elif order_uuid:
+                order_sudo = request.env["pos.order"].sudo().search([("uuid", "=", order_uuid)], limit=1)
+                if order_sudo and order_sudo.table_id and order_sudo.table_id.active:
+                    table_sudo = order_sudo.table_id
+            elif table_identifier:
+                table_sudo = request.env["restaurant.table"].sudo().search([("identifier", "=", table_identifier), ("active", "=", True)], limit=1)
+
             if table_sudo and table_sudo.parent_id:
                 table_sudo = table_sudo.parent_id
         # In mobile mode, always set config_access_token (needed for notification), even without an active session
@@ -83,4 +104,4 @@ class PosSelfKiosk(http.Controller):
             config_access_token = ''
 
         table = table_sudo.sudo(False).with_company(company).with_user(user) if table_sudo else False
-        return pos_config, table, config_access_token
+        return pos_config, table, config_access_token, error_redirect
