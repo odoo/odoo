@@ -179,7 +179,7 @@ export class ShortCutPlugin extends Plugin {
         );
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
-            if (command) {
+            if (command && (!command.isAvailable || command.isAvailable(selection))) {
                 if (lineBreak) {
                     this.dependencies.split.splitBlockSegments();
                 }

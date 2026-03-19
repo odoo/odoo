@@ -1798,6 +1798,27 @@ test("'checklist' toolbar option is not available when 'allowChecklist' = false"
     expect("button[name='checklist']").toHaveCount(0);
 });
 
+test("typing '[] ' does not create a checklist when 'allowChecklist' is false", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: "<p><br></p>",
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowChecklist': false}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "[] ");
+    expect(queryOne(".odoo-editor-editable")).toHaveInnerHTML("<p>[] </p>");
+});
+
 describe("sandbox", () => {
     const recordWithComplexHTML = {
         id: 1,
