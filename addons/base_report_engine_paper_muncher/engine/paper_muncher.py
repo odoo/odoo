@@ -3,6 +3,7 @@
 import logging
 
 import subprocess
+import os
 from collections.abc import Mapping, Sequence
 from datetime import datetime, timezone
 from email.utils import format_datetime
@@ -74,7 +75,7 @@ def run_paper_muncher(
 
     if FEATURE_FLAGS:
         extra_args += ['--feature', '*=on']
-        extra_args += ['--debug', '*=on']
+        extra_args += ['--debug', 'http-client=on']
         extra_args += ['--margins', 'none']
 
     if paperformat and paperformat.format:
@@ -90,7 +91,6 @@ def run_paper_muncher(
             "Ensure it is installed and available in the system PATH."
         )
 
-    # hack for multi body
     if len(bodies) == 1:
         return run_process(binary, extra_args, documents[0])
     return run_process_multi(binary, extra_args, documents)
@@ -108,6 +108,10 @@ def run_process_multi(
     _logger.info("Binary: %s", binary)
     _logger.info("Extra args: %s", extra_args)
 
+    env = os.environ.copy()
+    # Disable ANSI color codes in subprocess logs to prevent parsing errors.
+    env['NO_COLOR'] = '1'
+
     for i, doc in enumerate(documents):
         doc_preview = doc[:200] if len(doc) > 200 else doc
         _logger.info("Document[%d]: %d bytes, preview: %r", i, len(doc), doc_preview)
@@ -120,6 +124,7 @@ def run_process_multi(
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            env=env,
     ) as process:
         _logger.info("Paper Muncher process started: pid=%d", process.pid)
         try:
@@ -185,11 +190,16 @@ def run_process(
         extra_args,
         content,
 ):
+    env = os.environ.copy()
+    # Disable ANSI color codes in subprocess logs to prevent parsing errors.
+    env['NO_COLOR'] = '1'
+
     with subprocess.Popen(
             [binary, "pipe:", '-o', "pipe:"] + extra_args,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            env=env,
     ) as process:
         try:
             consume_paper_muncher_request(process.stdout)
@@ -223,76 +233,5 @@ def run_process(
         if process.poll() is not None:
             raise RuntimeError("Paper Muncher crashed while sending HTML content")
 
-        print("Doc content",content)
-        _serve_requests(process, [content])
-        return _finalize_and_read(process)
-
-
-def _finalize_and_read(process):
-    """Envoie la réponse finale OK, ferme stdin, lit stdout/stderr et effectue
-    les vérifications de terminaison du processus. Retourne les bytes PDF.
-    """
-    now = datetime.now(timezone.utc)
-    final_response = (
-                         b"HTTP/1.1 200 OK\r\n"
-                         b"Date: %(date)s\r\n"
-                         b"Server: %(server)s\r\n"
-                         b"\r\n"
-                     ) % {
-                         b'date': format_datetime(now, usegmt=True).encode(),
-                         b'server': SERVER_SOFTWARE.encode(),
-                     }
-
-    try:
-        _safe_write(process, final_response)
-        process.stdin.flush()
-        process.stdin.close()
-    except TimeoutError:
-        raise
-
-    if process.poll() is not None:
-        raise RuntimeError("Paper Muncher crashed before returning PDF")
-
-    try:
-        rendered_content = read_all_with_timeout(process.stdout)
-        stderr_output = read_all_with_timeout(process.stderr)
-    except (EOFError, TimeoutError):
-        try:
-            process.kill()
-        except Exception:
-            pass
-        try:
-            process.wait()
-        except Exception:
-            pass
-        raise
-
-    if stderr_output:
-        _logger.warning(
-            "Paper Muncher error output: %s",
-            stderr_output.decode('utf-8', errors='replace'),
-        )
-
-    try:
-        process.wait(timeout=5)
-    except subprocess.TimeoutExpired:
-        try:
-            process.kill()
-        except Exception:
-            pass
-        try:
-            process.wait()
-        except Exception:
-            pass
-        _logger.warning(
-            "Paper Muncher did not terminate in time, forcefully killed it"
-        )
-
-    if process.returncode != 0:
-        _logger.warning("Paper Muncher exited with code %d", process.returncode)
-
-    if not rendered_content.startswith(b'%PDF-'):
-        raise RuntimeError("Paper Muncher did not return valid PDF content")
-
-    return rendered_content
+        return _serve_requests(process, [content])
 

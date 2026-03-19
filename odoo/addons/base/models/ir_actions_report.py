@@ -528,6 +528,7 @@ class IrActionsReport(models.Model):
             # Only one record: append the whole PDF.
             if len(res_ids_wo_stream) == 1:
                 collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
+                print("RETURN 1")
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
@@ -542,6 +543,7 @@ class IrActionsReport(models.Model):
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids_wo_stream[i]]['stream'] = stream
+                print("RETURN 2")
                 return collected_streams
 
             # In cases where the number of res_ids != the number of pages,
@@ -584,6 +586,8 @@ class IrActionsReport(models.Model):
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream
+                    print("RETURN 3")
+
                     return collected_streams
                 else:
                     for res_id in res_ids_wo_stream:
@@ -591,6 +595,7 @@ class IrActionsReport(models.Model):
                         collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
+        print("RETURN 4")
         return collected_streams
 
     def _prepare_pdf_report_attachment_vals_list(self, report, streams):
@@ -712,6 +717,9 @@ class IrActionsReport(models.Model):
 
         if res_ids:
             _logger.info("The PDF report has been generated for model: %s, records %s.", report_sudo.model, str(res_ids))
+
+        with open('/tmp/debug_odoo_final.pdf', 'wb') as f:
+            f.write(pdf_content)
 
         return pdf_content, 'pdf'
 

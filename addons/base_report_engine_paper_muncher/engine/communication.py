@@ -10,11 +10,10 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from email.utils import format_datetime
-from itertools import count
 from typing import BinaryIO, Optional, IO
 from wsgiref.types import WSGIEnvironment
 from lxml import etree, html
-from PyPDF2 import PdfMerger
+import subprocess
 
 from werkzeug.test import create_environ, run_wsgi_app
 
@@ -92,7 +91,7 @@ def read_all_with_timeout(
     """
     fd = file_object.fileno()
     data = bytearray()
-    deadline = time.monotonic() + timeout +1
+    deadline = time.monotonic() + timeout
 
     with selectors.DefaultSelector() as selector:
         selector.register(fd, selectors.EVENT_READ)
@@ -102,7 +101,6 @@ def read_all_with_timeout(
                 break
             data.extend(chunk)
         else:
-            print(data.decode('utf-8', errors='replace'))
             raise TimeoutError("Timeout while reading data")
     _logger.debug(
         "Elapsed time reading: %.3f seconds",
@@ -371,138 +369,226 @@ def make_multi_docs_html(bodies, header='', footer=''):
     return documents
 
 
-def _serve_requests(process, documents):
-    """Read the requests from paper-muncher and serve either `documents`, or an internal answer  send by
-     `generate_odoo_http_response`.
+def consume_headers(buffer: bytearray) -> tuple[Optional[str], Optional[dict[str, str]]]:
+    """Parse and remove HTTP request line and headers from the start of the buffer.
 
-    Lève et tue le processus en cas d'EOF ou Timeout.
+    :param bytearray buffer: The buffer containing incoming data.
+    :return: A tuple of (request_line, headers) if a full headers block was found,
+             otherwise (None, None).
     """
-    _logger.info("_serve_requests: Starting request loop, %d documents available", len(documents))
-    documents_served = set()  # Track which document indices we've served
+    # Look for the end of the HTTP headers (double CRLF or double LF)
+    headers_end = buffer.find(b'\r\n\r\n')
+    sep_len = 4
+    if headers_end == -1:
+        headers_end = buffer.find(b'\n\n')
+        sep_len = 2
+        if headers_end == -1:
+            return None, None
 
-    for request_no in count(start=1):
-        # Check if process exited prematurely
-        poll_result = process.poll()
-        if poll_result is not None:
-            _logger.warning("Request #%d: Process already exited with code %d", request_no, poll_result)
-            # This might be normal - Paper Muncher may have finished
-            break
+    headers_data = buffer[:headers_end]
+    lines = headers_data.split(b'\n')
+    
+    # Strip \r and decode as text
+    decoded_lines = [line.strip(b'\r').decode('utf-8', errors='replace') for line in lines]
+    
+    request_line = decoded_lines[0] if decoded_lines else ""
+    headers = {}
+    
+    for line in decoded_lines[1:]:
+        if not line:
+            continue
+        parts = line.split(':', 1)
+        if len(parts) == 2:
+            headers[parts[0].strip().lower()] = parts[1].strip()
 
-        # Use shorter timeout if we've already served all documents
-        all_docs_served = len(documents_served) >= len(documents)
-        timeout_to_use = 5 if all_docs_served else DEFAULT_READLINE_TIMEOUT
+    # Remove the headers and the separator from the buffer
+    del buffer[:headers_end + sep_len]
+    
+    return request_line, headers
 
-        _logger.info("=== Request #%d: Waiting for Paper Muncher request (pid=%d, docs=%d/%d, timeout=%ds) ===",
-                     request_no, process.pid, len(documents_served), len(documents), timeout_to_use)
-        try:
-            path = read_paper_muncher_request(process.stdout, timeout=timeout_to_use)
-            _logger.info("Request #%d: Received path=%r", request_no, path)
-        except EOFError as e:
-            # EOF typically means Paper Muncher closed its output - it's generating the PDF
-            _logger.info("Request #%d: EOF from Paper Muncher - assuming PDF generation started", request_no)
-            break
-        except TimeoutError as e:
-            stderr_output = read_all_with_timeout(process.stderr)
-            if stderr_output:
-                _logger.warning(
-                    "Paper Muncher error output: %s",
-                    stderr_output.decode('utf-8', errors='replace'),
-                )
-            if all_docs_served:
-                # Timeout after serving all docs is probably normal - Paper Muncher is rendering
-                _logger.info("Request #%d: Timeout after all documents served - assuming PDF generation started", request_no)
+
+def _serve_requests(process, documents):
+    _logger.info("_serve_requests: Starting multiplexed loop")
+    documents_served = set()
+
+    # We use a selector to monitor both stdout (requests) and stderr (logs)
+    selector = selectors.DefaultSelector()
+    selector.register(process.stdout, selectors.EVENT_READ, data='stdout')
+    selector.register(process.stderr, selectors.EVENT_READ, data='stderr')
+
+    # Line buffers for partial reads
+    stdout_buffer = bytearray()
+    stderr_buffer = bytearray()
+
+    try:
+        while True:
+            # Check if process died
+            if process.poll() is not None:
                 break
-            _logger.error("Request #%d: Timeout before all documents served (%d/%d): %s",
-                          request_no, len(documents_served), len(documents), e)
-            try:
-                process.kill()
-            except Exception:
-                pass
-            try:
-                process.wait()
-            except Exception:
-                pass
-            raise
 
-        if path is None:
-            _logger.info("Request #%d: Received PUT request (end of requests)", request_no)
-            break
+            # Wait for data on either pipe (timeout helps check process status)
+            events = selector.select(timeout=1.0)
 
-        # Accepte '/0.html', '0.html' ou '0.html?foo'
-        m = re.match(r'^/?(?P<index>\d+)\.html(?:\?.*)?$', path)
-        is_document = bool(m)
+            for key, mask in events:
+                if key.data == 'stderr':
+                    # DRAIN STDERR: Read logs so the worker doesn't block
+                    # Using a large read to clear the buffer quickly
+                    log_data = os.read(process.stderr.fileno(), 65536)
+                    if not log_data:
+                        selector.unregister(process.stderr)
+                    else:
+                        stderr_buffer.extend(log_data)
+                        while b'\n' in stderr_buffer:
+                            line_end = stderr_buffer.find(b'\n') + 1
+                            line = stderr_buffer[:line_end].decode('utf-8', errors='replace').rstrip('\r\n')
+                            del stderr_buffer[:line_end]
+                            if line:
+                                _logger.warning("Worker Log: %s", line)
 
-        _logger.info("Request #%d: path=%r is_document=%s (documents_count=%d)",
-                     request_no, path, is_document, len(documents))
+                elif key.data == 'stdout':
+                    # PROCESS REQUESTS: Read chunk from stdout
+                    chunk = os.read(process.stdout.fileno(), DEFAULT_CHUNK_SIZE)
+                    if not chunk: # EOF
+                        return
 
+                    stdout_buffer.extend(chunk)
+
+                    while True:
+                        request_line, headers = consume_headers(stdout_buffer)
+                        if request_line is None:
+                            break
+
+                        if request_line.startswith('GET'):
+                            _handle_single_request(process, request_line, documents, documents_served)
+                        elif request_line.startswith('PUT'):
+                            print(f"PUT RECEIVED {request_line} headers: {headers}, still have {stdout_buffer}")
+
+                            return _finalize_and_read(process, stdout_buffer)
+                            if len(documents_served) >= len(documents):
+                                # TODO Handle PUT request body reading and processing
+                                return
+
+    finally:
+        selector.close()
+
+
+def _finalize_and_read(process, current_buffer):
+    """Envoie la réponse finale OK, ferme stdin, lit stdout/stderr et effectue
+    les vérifications de terminaison du processus. Retourne les bytes PDF.
+    """
+    now = datetime.now(timezone.utc)
+    final_response = (
+                         b"HTTP/1.1 200 OK\r\n"
+                         b"Date: %(date)s\r\n"
+                         b"Server: %(server)s\r\n"
+                         b"\r\n"
+                     ) % {
+                         b'date': format_datetime(now, usegmt=True).encode(),
+                         b'server': SERVER_SOFTWARE.encode(),
+                     }
+
+    try:
+        _safe_write(process, final_response)
+        process.stdin.flush()
+        process.stdin.close()
+    except TimeoutError:
+        raise
+
+    if process.poll() is not None:
+        raise RuntimeError("Paper Muncher crashed before returning PDF")
+
+    try:
+        rendered_content = bytes(current_buffer + read_all_with_timeout(process.stdout))
+        stderr_output = read_all_with_timeout(process.stderr)
+    except (EOFError, TimeoutError):
         try:
-            if is_document:
-                index = int(m.group('index'))
-                _logger.info("Request #%d: Document request for index=%d", request_no, index)
-                if index < 0 or index >= len(documents):
-                    _logger.error("Request #%d: Invalid index %d (must be 0-%d)",
-                                  request_no, index, len(documents) - 1)
-                    try:
-                        process.kill()
-                    except Exception:
-                        pass
-                    try:
-                        process.wait()
-                    except Exception:
-                        pass
-                    raise RuntimeError(f"Paper Muncher requested invalid document index: {index}")
-                content = documents[index]
-                _logger.info("Request #%d: Serving document[%d] (%d bytes)",
-                             request_no, index, len(content))
-                now = datetime.now(timezone.utc)
-                response_headers = (
-                                       b"HTTP/1.1 200 OK\r\n"
-                                       b"Content-Length: %(length)d\r\n"
-                                       b"Content-Type: text/html\r\n"
-                                       b"Date: %(date)s\r\n"
-                                       b"Server: %(server)s\r\n"
-                                       b"\r\n"
-                                   ) % {
-                                       b'length': len(content.encode()),
-                                       b'date': format_datetime(now, usegmt=True).encode(),
-                                       b'server': SERVER_SOFTWARE.encode(),
-                                   }
-                _safe_write(process, response_headers)
-                _safe_write(process, content.encode())
-                process.stdin.flush()
-                documents_served.add(index)  # Track that we've served this document
-                _logger.info("Request #%d: Document[%d] sent successfully (total docs served: %d/%d)",
-                             request_no, index, len(documents_served), len(documents))
-            else:
-                _logger.info("Request #%d: Asset request for path=%s", request_no, path)
-                for chunk in generate_odoo_http_response(path):
-                    _safe_write(process, chunk)
-                process.stdin.flush()
-                _logger.info("Request #%d: Asset %s sent successfully", request_no, path)
-        except TimeoutError as e:
-            _logger.error("Request #%d: Timeout while writing: %s", request_no, e)
-            # _safe_write a déjà tenté de tuer le process
-            raise
-        except Exception as e:
-            _logger.error("Request #%d: Unexpected error: %s", request_no, e, exc_info=True)
-            try:
-                process.kill()
-            except Exception:
-                pass
-            try:
-                process.wait()
-            except Exception:
-                pass
-            raise
+            process.kill()
+        except Exception:
+            pass
+        try:
+            process.wait()
+        except Exception:
+            pass
+        raise
 
-        if process.poll() is not None:
-            _logger.error("Request #%d: Paper Muncher crashed!", request_no)
-            raise RuntimeError(
-                "Paper Muncher crashed while serving asset"
-                f" {request_no}: {path}"
-            )
+    if stderr_output:
+        _logger.warning(
+            "Paper Muncher error output: %s",
+            stderr_output.decode('utf-8', errors='replace'),
+        )
 
-    _logger.info("_serve_requests: Request loop completed successfully")
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        try:
+            process.kill()
+        except Exception:
+            pass
+        try:
+            process.wait()
+        except Exception:
+            pass
+        _logger.warning(
+            "Paper Muncher did not terminate in time, forcefully killed it"
+        )
+
+    if process.returncode != 0:
+        _logger.warning("Paper Muncher exited with code %d", process.returncode)
+
+    print(rendered_content[:200].decode('utf-8', errors='replace'))
+
+    if not rendered_content.startswith(b'%PDF-'):
+        raise RuntimeError("Paper Muncher did not return valid PDF content")
+
+    return rendered_content
+
+
+def _handle_single_request(process, request_line, documents, documents_served):
+    """Extracted logic to handle a single protocol request."""
+    parts = request_line.split(' ')
+    if len(parts) < 2:
+        return
+
+    method, path = parts[0], parts[1]
+
+    if method != 'GET':
+        raise ValueError(
+            f"Unexpected HTTP method: {method} in line: {request_line}")
+
+
+    _logger.info("Processing %s %s", method, path)
+
+    # Document vs Asset logic
+    document = re.match(r'^/?(?P<index>\d+)\.html(?:\?.*)?$', path)
+    if document:
+        index = int(document.group('index'))
+        _logger.info("Request #: Document request for index=%d", index)
+        content = documents[index]
+        now = datetime.now(timezone.utc)
+        response_headers = (
+                               b"HTTP/1.1 200 OK\r\n"
+                               b"Content-Length: %(length)d\r\n"
+                               b"Content-Type: text/html\r\n"
+                               b"Date: %(date)s\r\n"
+                               b"Server: %(server)s\r\n"
+                               b"\r\n"
+                           ) % {
+                               b'length': len(content.encode()),
+                               b'date': format_datetime(now, usegmt=True).encode(),
+                               b'server': SERVER_SOFTWARE.encode(),
+                           }
+        _safe_write(process, response_headers)
+        _safe_write(process, content.encode())
+        process.stdin.flush()
+        documents_served.add(index)
+    else:
+        # Asset logic
+        for chunk in generate_odoo_http_response(path):
+            _safe_write(process, chunk)
+
+    process.stdin.flush()
+    _logger.info("Request #: Asset %s sent successfully", path)
+
 
 
 def _safe_write(process, data: bytes) -> None:
