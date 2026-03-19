@@ -453,3 +453,14 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(UnsafeFunctionError):
             safe_checker.check(__import__)
         safe_checker.check(safe_eval._import)
+
+    def test_trust_registry(self):
+        # Trust recordset
+        safe_checker.check(self.env['res.partner'])  # Serialisation hook
+        # Trust recordset method
+        safe_checker.check(self.env['res.partner'].create)  # Regex `odoo.orm.models.*`
+        # Trust model
+        safe_checker.check(self.env.registry['res.partner'])  # Serialisation hook
+        # Not trust model functions
+        with self.assertRaises(UnsafeFunctionError):
+            safe_checker.check(self.env.registry['res.partner'].create)
