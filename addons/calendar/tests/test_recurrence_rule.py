@@ -32,7 +32,7 @@ class TestRecurrenceRule(TransactionCase):
         recurrence = self.env['calendar.recurrence'].create({
             'rrule_type': 'daily',
             'interval': 2,
-            'end_type': '',
+            'end_type': False,
             'event_tz': 'UTC',
         })
         self.assertEqual(recurrence.name, 'Every 2 Days')
@@ -70,7 +70,7 @@ class TestRecurrenceRule(TransactionCase):
             'tue': True,
             'wed': True,
             'interval': 2,
-            'end_type': '',
+            'end_type': False,
             'event_tz': 'UTC',
         })
         self.assertEqual(recurrence.name, 'Every 2 Weeks on Tuesday, Wednesday')
@@ -108,7 +108,7 @@ class TestRecurrenceRule(TransactionCase):
             'month_by': 'day',
             'byday': '1',
             'weekday': 'MON',
-            'end_type': '',
+            'end_type': False,
             'event_tz': 'UTC',
         })
         self.assertEqual(recurrence.name, 'Every 2 Months on the First Monday')
@@ -146,7 +146,7 @@ class TestRecurrenceRule(TransactionCase):
             'month_by': 'date',
             'day': 27,
             'weekday': 'MON',
-            'end_type': '',
+            'end_type': False,
             'event_tz': 'UTC',
         })
         self.assertEqual(recurrence.name, 'Every 2 Months day 27')
@@ -175,7 +175,7 @@ class TestRecurrenceRule(TransactionCase):
         recurrence = self.env['calendar.recurrence'].create({
             'rrule_type': 'yearly',
             'interval': 2,
-            'end_type': '',
+            'end_type': False,
             'event_tz': 'UTC',
         })
         self.assertEqual(recurrence.name, 'Every 2 Years')

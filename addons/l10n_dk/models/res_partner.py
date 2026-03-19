@@ -72,7 +72,7 @@ class ResPartner(models.Model):
             if country_code == 'DK' and not partner.nemhandel_identifier_type:
                 partner.nemhandel_identifier_type = '0184'
             elif country_code != 'DK':
-                partner.nemhandel_identifier_type = ''
+                partner.nemhandel_identifier_type = False
 
     @api.depends('country_code', 'vat', 'company_registry', 'nemhandel_identifier_type')
     def _compute_nemhandel_identifier_value(self):

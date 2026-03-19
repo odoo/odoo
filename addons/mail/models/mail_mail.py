@@ -279,7 +279,7 @@ class MailMail(models.Model):
                     )
                 (notifications - failed).sudo().write({
                     'notification_status': 'sent',
-                    'failure_type': '',
+                    'failure_type': False,
                     'failure_reason': '',
                 })
                 if failed:

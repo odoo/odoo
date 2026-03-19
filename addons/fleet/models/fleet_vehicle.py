@@ -331,7 +331,7 @@ class FleetVehicle(models.Model):
             else:
                 record.contract_renewal_overdue = False
                 record.contract_renewal_due_soon = False
-                record.contract_state = ""
+                record.contract_state = False
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet

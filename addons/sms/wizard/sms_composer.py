@@ -345,7 +345,7 @@ class SmsComposer(models.TransientModel):
                 failure_type = 'sms_number_format' if recipients['number'] else 'sms_number_missing'
             else:
                 state = 'outgoing'
-                failure_type = ''
+                failure_type = False
 
             result[record.id] = {
                 'body': all_bodies[record.id],
