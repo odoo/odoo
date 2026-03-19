@@ -1418,6 +1418,63 @@ class TestStockQuant(TestStockCommon):
         )
         self.assertEqual(quant.inventory_quantity, 0)
 
+    def test_request_quant_relocation(self):
+        different_location = self.env['stock.location'].create({
+            'name': 'Different Location',
+            'usage': 'internal',
+            'location_id': self.stock_location.warehouse_id.view_location_id.id,
+        })
+        quant_1 = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'quantity': 10,
+        })
+        quant_2 = self.env['stock.quant'].create({
+            'location_id': self.shelf_2.id,
+            'product_id': self.productA.id,
+            'quantity': 15,
+        })
+        quant_3 = self.env['stock.quant'].create({
+            'location_id': different_location.id,
+            'product_id': self.productA.id,
+            'quantity': 20,
+        })
+        package = self.env['stock.package'].create({'name': 'PACK001'})
+        wizard = self.env['stock.quant.relocate'].create({
+            'quant_ids': quant_1,
+            'message': "Product needs relocation",
+            'dest_location_id': self.stock_location.id,
+            'dest_package_id': package.id,
+        })
+        wizard.action_request_quants_relocation()
+        picking = self.env['stock.picking'].search([('origin', '=', 'Relocation Request: Product needs relocation')])
+        self.assertTrue(picking)
+        self.assertEqual(picking.move_ids.package_ids, wizard.dest_package_id)
+
+        # Multi-location quants relocation request with common internal parent
+        wizard = self.env['stock.quant.relocate'].create({
+            'quant_ids': quant_1 + quant_2,
+            'message': "Merged Transfer",
+            'dest_location_id': self.stock_location.id,
+        })
+        wizard.action_request_quants_relocation()
+        picking = self.env['stock.picking'].search([('origin', '=', 'Relocation Request: Merged Transfer')])
+        # Same products should be merged into the same move with a common parent
+        self.assertEqual(len(picking.move_ids), 1)
+        self.assertEqual(len(picking.move_line_ids), 2)
+        self.assertEqual(picking.location_id, self.stock_location)
+
+        # Multi-location quants relocation request with no common internal parent
+        wizard = self.env['stock.quant.relocate'].create({
+            'quant_ids': quant_2 + quant_3,
+            'message': "Different Transfers",
+            'dest_location_id': self.stock_location.id,
+        })
+        wizard.action_request_quants_relocation()
+        picking = self.env['stock.picking'].search([('origin', '=', 'Relocation Request: Different Transfers')])
+        self.assertEqual(len(picking), 2)
+        self.assertEqual(picking[0].location_id, different_location)
+
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
