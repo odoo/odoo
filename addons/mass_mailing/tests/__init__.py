@@ -13,3 +13,4 @@ from . import test_mailing_ui
 from . import test_mass_mailing_snippets
 from . import test_utm
 from . import test_mailing_retry
+from . import test_contact_to_mailing_list

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="mass_mailing_view_partner_tree" model="ir.ui.view">
+        <field name="name">res.partner.view.list.inherit.mass.mail</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_add_to_mailing_list" 
+                    type="object" string="Add to Mailing Lists"
+                    groups="mass_mailing.group_mass_mailing_user"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

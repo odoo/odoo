@@ -6,3 +6,4 @@ from . import mailing_contact_import
 from . import mailing_contact_to_list
 from . import mailing_mailing_test
 from . import mailing_mailing_schedule_date
+from . import contact_to_mailing_list
