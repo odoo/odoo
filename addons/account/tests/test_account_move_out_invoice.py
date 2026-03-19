@@ -4921,6 +4921,69 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'balance': 851053.94},
         ])
 
+    def test_tax_on_line_and_currency_rate_change(self):
+        eur = self.setup_other_currency('EUR')
+        percent_tax = self.company_data['default_tax_sale']
+        percent_tax.amount = 10  # for easiness of calculation
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': eur.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'price_unit': 100,
+                    'tax_ids': [percent_tax.id]
+                }),
+            ],
+        })
+        invoice.write({
+            'invoice_currency_rate': 2,
+            'invoice_line_ids': [Command.update(invoice.invoice_line_ids.id, {'price_unit': 1000})]
+        })
+
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        # tax_base_amount = total(price_unit) / invoice_currency_rate
+        # balance = tax_base_amount * percent_tax.amount % * -1
+        self.assertRecordValues(tax_line, [
+            {
+                'tax_base_amount': 500,  # 1000 / 2
+                'balance': -50,  # 500 * 10% * -1
+                'tax_line_id': percent_tax.id,
+            }
+        ])
+
+        invoice.invoice_line_ids = [
+            Command.create({
+                'name': 'test line',
+                'price_unit': 20,
+                'tax_ids': [percent_tax.id]
+            })
+        ]
+        invoice.write({
+            'invoice_currency_rate': 3,
+            'invoice_line_ids': [Command.update(invoice.invoice_line_ids[0].id, {'price_unit': 10})]
+        })
+
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertRecordValues(tax_line, [
+            {
+                'tax_base_amount': 10,  # (20 + 10) / 3
+                'balance': -1,  # 10 * 10% * -1
+                'tax_line_id': percent_tax.id,
+            }
+        ])
+
+        invoice.invoice_currency_rate = 1
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertRecordValues(tax_line, [
+            {
+                'tax_base_amount': 30,  # (20 + 10) / 1
+                'balance': -3,  # 30 * 10% * -1
+                'tax_line_id': percent_tax.id,
+            }
+        ])
+
     def test_tax_recomputed_when_changing_base_lines(self):
         percent_tax = self.company_data['default_tax_sale']
 
