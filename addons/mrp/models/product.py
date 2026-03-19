@@ -363,6 +363,19 @@ class ProductProduct(models.Model):
                 kit_products |= kit.product_id
             else:
                 kit_products |= kit.product_tmpl_id.product_variant_ids
+        product_boms_per_picking = {}
+        unique_combinations = {
+            (bom.picking_type_id, bom.company_id)
+            for bom in kit_boms
+        }
+        for picking_id, company_id in unique_combinations:
+            product_boms = {}
+            product_boms.update(kit_boms._bom_find(kit_products, picking_type=picking_id,
+                company_id=company_id.id, bom_type='phantom'))
+            for product in kit_products:
+                product_boms.setdefault(product, self.env['mrp.bom'])
+            product_boms_per_picking[picking_id, company_id] = product_boms
+        kit_products = kit_products.with_context(product_boms_per_picking=product_boms_per_picking)
         for product in kit_products:
             if OPERATORS[operator](product.qty_available, value):
                 product_ids.append(product.id)
