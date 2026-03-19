@@ -117,7 +117,9 @@ PID_COLORS = (
     GREEN, BLUE, MAGENTA, CYAN,
     HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE,
 )
-
+if os.environ.get('ODOO_PY_COLORS_NOPID'):
+    TRUE_COLOR_PATTERN = f"\033[%dm%s{RESET_SEQ}"
+    PID_COLORS = [0]
 
 class PerfFilter(logging.Filter):
 
@@ -172,10 +174,7 @@ class ColoredFormatter(logging.Formatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
-        if tools.config['workers']:
-            record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.process % len(PID_COLORS)], record.process)
-        else:
-            record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.thread % len(PID_COLORS)], record.process)
+        record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.thread_native % len(PID_COLORS)], record.thread_native)
         return super().format(record)
 
 
@@ -183,6 +182,7 @@ class LogRecord(logging.LogRecord):
     def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None, **kwargs):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
         self.perf_info = ""
+        self.thread_native = threading.get_native_id()
         self.dbname = getattr(threading.current_thread(), 'dbname', '?')
 
 
