@@ -7,14 +7,6 @@ class TestIrRulesSomeObj(models.Model):
 
     val = fields.Integer()
     categ_id = fields.Many2one('test_ir_rules.obj_categ')
-    parent_id = fields.Many2one('test_ir_rules.some_obj')
-    company_id = fields.Many2one('res.company')
-    forbidden = fields.Integer(
-        groups='test_orm.test_ir_rules_group,base.group_portal',
-        default=5,
-    )
-    forbidden2 = fields.Integer(groups='test_orm.test_ir_rules_group')
-    forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
 
 
 class TestIrRulesObjCateg(models.Model):
