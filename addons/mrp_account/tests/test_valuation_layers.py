@@ -13,6 +13,18 @@ class TestMrpValuationStandard(TestBomPriceCommon):
             ('account_id', '=', self.account_production.id),
         ], order='date, id')
 
+    def test_mo_journal_entry_ref_matches_mo_name(self):
+        self.glass.categ_id = self.category_fifo_auto
+
+        self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+
+        account_moves = (mo.move_raw_ids + mo.move_finished_ids).account_move_id
+        self.assertTrue(account_moves, "Expected accounting entries to be created for the manufacturing order.")
+        self.assertEqual(set(account_moves.mapped('ref')), {mo.name})
+
     def test_fifo_fifo_1(self):
         self.glass.categ_id = self.category_fifo
         self.dining_table.categ_id = self.category_fifo
