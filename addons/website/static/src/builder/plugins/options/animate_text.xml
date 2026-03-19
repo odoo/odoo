@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="website_builder.AnimateText">
-        <button t-custom-ref="root" class="btn btn-light" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title" t-att="{ disabled: state.isDisabled }" t-on-click="this.onClick">
+        <button t-custom-ref="root" class="btn btn-light" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title" t-att="{ disabled: this.state.isDisabled }" t-on-click="this.onClick">
             <span class="fa fa-play fa-fw"></span>
         </button>
     </t>

@@ -5,8 +5,8 @@
 <t t-name="html_builder.SnippetViewer">
     <div t-custom-ref="content"
          class="row g-0 o_snippets_preview_row"
-         t-att-class="{ 'flex-row-reverse': props.frontendDirection !== backendDirection }"
-         t-att-dir="props.frontendDirection">
+         t-att-class="{ 'flex-row-reverse': this.props.frontendDirection !== this.backendDirection }"
+         t-att-dir="this.props.frontendDirection">
         <div class="col-lg-6" t-foreach="this.getSnippetColumns()" t-as="snippetsColumn" t-key="snippetsColumn_index">
             <t t-foreach="snippetsColumn" t-as="snippet" t-key="snippet.id">
                 <div t-on-click="() => this.onClick(snippet)"
@@ -28,11 +28,11 @@
                 <div t-if="snippet.isCustom" class="d-grid mt-2 mx-5 gap-2 d-md-flex justify-content-md-end o_custom_snippet_edit">
                     <span class="w-100" t-out="snippet.title"></span>
                     <button class="o_btn_reset me-md-2" t-on-click="() => this.onClickRename(snippet)" title="Rename">
-                        <span class="visually-hidden" t-out="getRenameBtnLabel(snippet.title)"/>
+                        <span class="visually-hidden" t-out="this.getRenameBtnLabel(snippet.title)"/>
                         <span class="fa fa-pencil"/>
                     </button>
                     <button class="o_btn_reset" t-on-click="() => this.onClickDelete(snippet)" title="Remove">
-                        <span class="visually-hidden" t-out="getDeleteBtnLabel(snippet.title)"/>
+                        <span class="visually-hidden" t-out="this.getDeleteBtnLabel(snippet.title)"/>
                         <span class="fa fa-trash"/>
                     </button>
                 </div>

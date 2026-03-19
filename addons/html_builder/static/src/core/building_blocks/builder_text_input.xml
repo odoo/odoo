@@ -4,10 +4,10 @@
 <t t-name="html_builder.BuilderTextInput">
     <BuilderComponent>
         <BuilderTextInputBase
-                t-props="textInputBaseProps"
-                commit="commit"
-                preview="preview"
-                value="state.value"
+                t-props="this.textInputBaseProps"
+                commit="this.commit"
+                preview="this.preview"
+                value="this.state.value"
                 classes="'o-hb-input-field-text'"
                 inputClasses="'o-hb-input-text'"
         />

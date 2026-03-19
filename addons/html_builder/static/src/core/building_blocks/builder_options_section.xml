@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BuilderOptionsSection">
-    <div class="options-container mb-1" t-att-data-container-title="props.title" t-att-class="props.containerClass">
-        <div t-if="props.title" class="options-container-header d-flex align-items-center">
-            <span class="options-container-label ps-2 py-2" t-out="props.title"/>
+    <div class="options-container mb-1" t-att-data-container-title="this.props.title" t-att-class="this.props.containerClass">
+        <div t-if="this.props.title" class="options-container-header d-flex align-items-center">
+            <span class="options-container-label ps-2 py-2" t-out="this.props.title"/>
         </div>
         <div class="we-bg-options-container pb-3">
             <t t-slot="default"/>

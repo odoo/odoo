@@ -12,7 +12,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{ this.size }}">
                     <div class="modal-content" t-att-class="this.props.contentClass" t-att-style="this.contentStyle">
                         <header t-if="this.props.header" class="modal-header">
-                            <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
+                            <t t-slot="header" close="this.data.close" isFullscreen="this.isFullscreen">
                                 <t t-call="web.Dialog.header">
                                     <t t-set="fullscreen" t-value="this.isFullscreen"/>
                                     <t t-set="onExpand" t-value="this.props.onExpand"/>

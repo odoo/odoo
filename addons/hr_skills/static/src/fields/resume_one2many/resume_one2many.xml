@@ -2,11 +2,11 @@
 <odoo>
     <t t-name="hr_skills.ResumeListRenderer" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer">
         <xpath expr="//table" position="attributes">
-            <attribute name="t-attf-class" add="table-borderless {{ !showTable ? 'd-none' : ''}}" remove="table-striped" separator=" "/>
+            <attribute name="t-attf-class" add="table-borderless {{ !this.showTable ? 'd-none' : ''}}" remove="table-striped" separator=" "/>
         </xpath>
         <xpath expr="//table" position="after">
-            <t t-if="!showTable">
-                <button t-on-click="props.onAdd" class="btn btn-secondary ms-4 mt-3" t-if="isEditable">
+            <t t-if="!this.showTable">
+                <button t-on-click="this.props.onAdd" class="btn btn-secondary ms-4 mt-3" t-if="this.isEditable">
                     Create Resume Lines
                 </button>
             </t>
@@ -16,7 +16,7 @@
             <tr>
                 <th style="width: 32px; min-width: 32px;"></th>
                 <th class="w-100"></th>
-                <th t-if="isEditable" class="o_list_actions_header" style="width: 32px; min-width: 32px"></th>
+                <th t-if="this.isEditable" class="o_list_actions_header" style="width: 32px; min-width: 32px"></th>
             </tr>
         </xpath>
         <xpath expr="//div[@name='no_skills']" position="replace"/>

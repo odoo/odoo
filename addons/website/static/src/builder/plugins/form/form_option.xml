@@ -195,12 +195,12 @@
             action="'toggleRequired'" actionParam="'s_website_form_required'"
         />
     </BuilderRow>
-    <t t-if="domStateCurrentFieldInput.nodeName === 'SELECT'">
+    <t t-if="this.domStateCurrentFieldInput.nodeName === 'SELECT'">
         <BuilderRow label.translate="Allow Empty">
             <BuilderCheckbox id="'allow_empty_opt'" action="'toggleAllowEmpty'"/>
         </BuilderRow>
         <BuilderRow label.translate="Placeholder" level="1">
-            <BuilderTextInput t-if="isActiveItem('allow_empty_opt')" action="'setEmptyPlaceholder'" placeholder.translate="Please choose any one option"/>
+            <BuilderTextInput t-if="this.isActiveItem('allow_empty_opt')" action="'setEmptyPlaceholder'" placeholder.translate="Please choose any one option"/>
         </BuilderRow>
     </t>
     <BuilderRow label.translate="Max # of Files">

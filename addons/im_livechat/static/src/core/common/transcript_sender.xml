@@ -3,7 +3,7 @@
     <t t-name="im_livechat.TranscriptSender">
         <div class="o-livechat-TranscriptSender">
             <div class="input-group">
-                <input t-custom-ref="input" t-on-keydown="this.onKeydown" t-custom-model="state.email" t-att-disabled="this.isInputDisabled" type="text" class="form-control" t-att-class="{'bg-view': !this.isInputDisabled}" placeholder="mail@example.com" />
+                <input t-custom-ref="input" t-on-keydown="this.onKeydown" t-custom-model="this.state.email" t-att-disabled="this.isInputDisabled" type="text" class="form-control" t-att-class="{'bg-view': !this.isInputDisabled}" placeholder="mail@example.com" />
                 <button class="btn btn-primary" type="button" data-action="sendTranscript" t-att-disabled="this.isButtonDisabled" t-on-click="this.onClickSend">
                     <i class="fa" t-att-class="{
                         'fa-circle-o-notch fa-spin': this.state.status === this.STATUS.SENDING,

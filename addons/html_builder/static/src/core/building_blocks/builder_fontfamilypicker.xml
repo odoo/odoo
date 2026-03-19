@@ -3,8 +3,8 @@
 
 <t t-name="html_builder.BuilderFontFamilyPicker">
     <BuilderSelect className="'o-hidden-font-family-picker'">
-        <t t-foreach="fonts" t-as="font" t-key="font_index">
-            <BuilderSelectItem t-props="forwardProps(font)">
+        <t t-foreach="this.fonts" t-as="font" t-key="font_index">
+            <BuilderSelectItem t-props="this.forwardProps(font)">
                 <div class="d-flex justify-content-between align-items-center">
                     <span t-attf-style="font-family: {{font.styleFontFamily}};" class="text-truncate d-flex align-items-center">
                         <i t-if="font.type === 'cloud'" role="button" class="me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>

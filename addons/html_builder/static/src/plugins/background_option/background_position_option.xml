@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BackgroundPositionOption">
-    <t t-if="isActiveItem('toggle_bg_image_id')">
+    <t t-if="this.isActiveItem('toggle_bg_image_id')">
         <BuilderRow label.translate="Position" level="2">
             <BuilderSelect action="'backgroundType'" preview="false">
                 <BuilderSelectItem actionValue="'cover'">Cover</BuilderSelectItem>
@@ -10,7 +10,7 @@
             </BuilderSelect>
             <BuilderButton icon="'fa-arrows-alt'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
+        <BuilderContext t-if="this.isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
             <BuilderRow label.translate="Width" level="3">
                 <BuilderNumberInput actionParam="'width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>

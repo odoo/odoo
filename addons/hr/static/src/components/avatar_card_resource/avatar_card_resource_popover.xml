@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
     <t t-inherit="resource_mail.AvatarCardResourcePopover" t-inherit-mode="extension">
         <xpath expr="//span[hasclass('o_card_avatar_im_status')]" position="after">
-            <span t-elif="employee?.show_hr_icon_display" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_employee_presence_status bg-inherit">
+            <span t-elif="this.employee?.show_hr_icon_display" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_employee_presence_status bg-inherit">
                 <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                <i t-if="employee?.hr_icon_display == 'presence_present'" class="fa fa-fw fa-circle text-success" title="Present" role="img" aria-label="Present"/>
+                <i t-if="this.employee?.hr_icon_display == 'presence_present'" class="fa fa-fw fa-circle text-success" title="Present" role="img" aria-label="Present"/>
                 <!-- Employee is not present/connected and it is normal according to his work schedule -->
-                <i t-if="employee?.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle text-warning" title="Absent" role="img" aria-label="Absent"/>
+                <i t-if="this.employee?.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle text-warning" title="Absent" role="img" aria-label="Absent"/>
                 <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                <i t-if="employee?.hr_icon_display == 'presence_out_of_working_hour'" class="fa fa-fw fa-circle text-muted" title="Off-Hours" role="img" aria-label="Off-Hours"/>
+                <i t-if="this.employee?.hr_icon_display == 'presence_out_of_working_hour'" class="fa fa-fw fa-circle text-muted" title="Off-Hours" role="img" aria-label="Off-Hours"/>
                 <!-- Homeworking info -->
-                <i t-if="employee?.hr_icon_display === 'presence_home'" class="fa fa-fw fa-home text-success me-1" title="At Home - Present" role="img" aria-label="At Home"/>
-                <i t-if="employee?.hr_icon_display === 'presence_office'" class="fa fa-fw fa-building text-success me-1" title="At Office - Present" role="img" aria-label="At Office"/>
-                <i t-if="employee?.hr_icon_display === 'presence_other'" class="fa fa-fw fa-map-marker text-success me-1" title="Present" role="img" aria-label="At Other"/>
+                <i t-if="this.employee?.hr_icon_display === 'presence_home'" class="fa fa-fw fa-home text-success me-1" title="At Home - Present" role="img" aria-label="At Home"/>
+                <i t-if="this.employee?.hr_icon_display === 'presence_office'" class="fa fa-fw fa-building text-success me-1" title="At Office - Present" role="img" aria-label="At Office"/>
+                <i t-if="this.employee?.hr_icon_display === 'presence_other'" class="fa fa-fw fa-map-marker text-success me-1" title="Present" role="img" aria-label="At Other"/>
             </span>
         </xpath>
     </t>

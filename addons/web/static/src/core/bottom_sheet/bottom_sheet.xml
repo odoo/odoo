@@ -60,7 +60,7 @@
 
                         <!-- Render slot content if provided -->
                         <t t-else="">
-                            <t t-slot="default" close="close" back="back"/>
+                            <t t-slot="default" close="this.close" back="this.back"/>
                         </t>
                     </div>
                 </div>

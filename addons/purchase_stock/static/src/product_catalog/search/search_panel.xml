@@ -9,15 +9,15 @@
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
             <attribute name="t-att-class">
-                suggest.suggestToggle.isOn ? 'mt-4' : 'mt-5'
+                this.suggest.suggestToggle.isOn ? 'mt-4' : 'mt-5'
             </attribute>
             <attribute name="class" separator=" " remove="mt-5"/>
         </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
-            <t t-if="displaySuggest">
+            <t t-if="this.displaySuggest">
                 <section class="pb-4 mt-4 border-bottom">
                     <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-                    <t t-if="suggest.suggestToggle.isOn">
+                    <t t-if="this.suggest.suggestToggle.isOn">
                         <div class="o_suggest_feature">
                             <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
                             <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>

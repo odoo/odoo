@@ -79,7 +79,7 @@
                                 <t t-set="choice_index" t-value="choice_index" />
                             </t>
                         </t>
-                        <t t-if="this.props.slots and this.props.slots.bottomArea" t-slot="bottomArea" data="state"/>
+                        <t t-if="this.props.slots and this.props.slots.bottomArea" t-slot="bottomArea" data="this.state"/>
                     </div>
                 </t>
             </Dropdown>

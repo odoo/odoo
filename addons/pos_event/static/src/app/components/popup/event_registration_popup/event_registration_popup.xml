@@ -12,7 +12,7 @@
                     <t t-out="choice.name"/>
                 </option>
             </select>
-            <input t-else="" class="form-control flex-grow-1" t-att-class="getValidationClass(question, stateObject, ticketIndex)" t-custom-model="stateObject[question.id]"
+            <input t-else="" class="form-control flex-grow-1" t-att-class="this.getValidationClass(question, stateObject, ticketIndex)" t-custom-model="stateObject[question.id]"
                 t-on-blur="() => this.markTouched(question.id, ticketIndex)"/>
         </div>
     </t>

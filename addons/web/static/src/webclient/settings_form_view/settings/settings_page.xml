@@ -24,7 +24,7 @@
                     animationType="'forwards'">
                 <div class="settings" t-custom-ref="settings">
                     <t t-slot="NoContentHelper" t-if="this.props.slots['NoContentHelper'].isVisible"/>
-                    <t t-slot="default" selectedTab="state.selectedTab"/>
+                    <t t-slot="default" selectedTab="this.state.selectedTab"/>
                 </div>
             </ActionSwiper>
         </div>

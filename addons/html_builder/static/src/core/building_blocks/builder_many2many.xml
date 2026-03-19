@@ -4,12 +4,12 @@
 <t t-name="html_builder.BuilderMany2Many">
     <BuilderComponent>
 	    <BasicMany2Many
-	        model="state.searchModel"
-	        limit="props.limit"
-	        domain="props.domain"
-	        fields="props.fields"
-	        selection="domState.selection"
-	        setSelection="setSelection.bind(this)"
+	        model="this.state.searchModel"
+	        limit="this.props.limit"
+	        domain="this.props.domain"
+	        fields="this.props.fields"
+	        selection="this.domState.selection"
+	        setSelection="this.setSelection.bind(this)"
 	    />
 	</BuilderComponent>
 </t>

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="stock.ForecastWidget">
         <span title="Forecasted Report"
-              t-on-click="this._openReport" t-att="resId ? {} : {'disabled': ''}"
+              t-on-click="this._openReport" t-att="this.resId ? {} : {'disabled': ''}"
               class="badge rounded-pill align-middle"
               t-att-class="this.decoration"
         >

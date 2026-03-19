@@ -1,7 +1,7 @@
 <templates>
 
     <t t-name="web.ClocReport">
-        <Dialog title="dialogTitle" footer="true">
+        <Dialog title="this.dialogTitle" footer="true">
             <table class="table table-sm table-hover align-baseline">
                 <colgroup>
                     <col />
@@ -38,7 +38,7 @@
                 </tbody>
             </table>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="props.close">Close</button>
+                <button class="btn btn-primary" t-on-click="this.props.close">Close</button>
             </t>
         </Dialog>
     </t>

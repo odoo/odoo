@@ -8,7 +8,7 @@
         <t t-component="this.components.ControlPanel" slots="this.controlPanelSlots" t-if="this.props.display.controlPanel" display="this.props.display.controlPanel"/>
         <main t-custom-ref="content" class="o_content" t-attf-class="{{this.props.className}}" t-att-class="{ 'o_component_with_search_panel': this.props.display.searchPanel }">
             <t t-component="this.components.SearchPanel" t-if="this.props.display.searchPanel"/>
-            <t t-slot="default" contentRef="contentRef" />
+            <t t-slot="default" contentRef="this.contentRef" />
         </main>
     </t>
 

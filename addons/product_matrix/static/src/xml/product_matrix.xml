@@ -38,7 +38,7 @@
                                     onClick="this.select();"
                                     t-att="{'ptav_ids': cell.ptav_ids, 'value': cell.qty}"
                                     t-att-class="{ 'opacity-25': cell.qty === 0 }"
-                                    t-on-input="toggleOpacity"
+                                    t-on-input="this.toggleOpacity"
                                 />
                             </div>
                             <span t-else=""
@@ -65,7 +65,7 @@
             accurate to display it.
             -->
         <span class="variant_price_extra" style="white-space: nowrap;">
-            <t t-out="format(cell)"/>
+            <t t-out="this.format(cell)"/>
         </span>
     </span>
 </template>

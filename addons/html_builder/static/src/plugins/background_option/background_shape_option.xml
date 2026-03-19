@@ -9,16 +9,16 @@
                 extraClasses="'btn-secondary'"
                 fullHeight="true"
                 darkBackground="true">
-                <t t-out="state.shapeName"/>
+                <t t-out="this.state.shapeName"/>
                 <t t-set-slot="content" t-slot-scope="panel">
                     <BackgroundShapeSelector
                         onClose="panel.close"
                         shapeActionId="'setBackgroundShape'"
                         buttonWrapperClassName="'o-hb-bg-shape-btn'"
                         selectorTitle.translate="Background Shapes"
-                        shapeGroups="getBackgroundShapeGroups()"
+                        shapeGroups="this.getBackgroundShapeGroups()"
                         imgThroughDiv="true"
-                        getShapeUrl="getShapeStyleUrl"
+                        getShapeUrl="this.getShapeStyleUrl"
                     />
                 </t>
             </BuilderSlidingPanel>
@@ -29,14 +29,14 @@
                 preview="false"
                 icon="'oi-close'"
                 className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
-                t-if="state.hasShape"/>
+                t-if="this.state.hasShape"/>
             </div>
             <BuilderButton
                 title.translate="Show/Hide on Mobile"
                 action="'showOnMobile'"
                 preview="false"
                 className="'o-hb-btn-has-img-icon o_hb_device btn-danger-color-active'"
-                t-if="state.hasShape">
+                t-if="this.state.hasShape">
                 <Image src="'/html_builder/static/img/options/mobile_invisible.svg'" style="'width: 12px'" />
             </BuilderButton>
     </BuilderRow>
@@ -67,7 +67,7 @@
                 actionParam="'y'"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Speed" level="1" t-if="state.isAnimated" preview="false">
+        <BuilderRow label.translate="Speed" level="1" t-if="this.state.isAnimated" preview="false">
             <BuilderRange
                 action="'setBgAnimationSpeed'"
                 min="-2"

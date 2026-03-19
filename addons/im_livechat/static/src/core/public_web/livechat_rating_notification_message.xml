@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.RatingNotificationMessage">
         <div class="d-flex gap-1 fw-bold">
-            <img class="o_livechat_emoji_rating" t-att-src="rating_image_url"/>
-            <t t-out="title"/>
+            <img class="o_livechat_emoji_rating" t-att-src="this.rating_image_url"/>
+            <t t-out="this.title"/>
         </div>
-        <div t-out="feedback"/>
+        <div t-out="this.feedback"/>
         <div class="text-end">
-            <a class="btn btn-link m-0" t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}" target="_blank">
+            <a class="btn btn-link m-0" t-attf-href="/odoo/discuss?active_id=discuss.channel_{{this.channel.id}}" target="_blank">
                 View Chat <i class="oi oi-arrow-right"/>
             </a>
         </div>

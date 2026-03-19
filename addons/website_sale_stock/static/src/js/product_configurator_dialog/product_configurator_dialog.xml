@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
     <t t-inherit="sale.ProductConfiguratorDialog" t-inherit-mode="extension">
         <button name="website_sale_product_configurator_continue_button" position="attributes">
-            <attribute name="t-att-disabled" add="!areQuantitiesAllowed()" separator=" || "/>
+            <attribute name="t-att-disabled" add="!this.areQuantitiesAllowed()" separator=" || "/>
         </button>
         <button name="website_sale_product_configurator_checkout_button" position="attributes">
-            <attribute name="t-att-disabled" add="!areQuantitiesAllowed()" separator=" || "/>
+            <attribute name="t-att-disabled" add="!this.areQuantitiesAllowed()" separator=" || "/>
         </button>
     </t>
 </templates>

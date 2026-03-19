@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_safaricom.MpesaTransactionPopup" owl="1">
-        <Dialog title="Select M-Pesa Transaction" bodyClass="'d-flex flex-column justify-content-center'" size="'lg'">
+        <Dialog title="this.Select this.M-this.Pesa this.Transaction" bodyClass="'d-flex flex-column justify-content-center'" size="'lg'">
             <div class="popup">
                 <!-- QR Code Display -->
-                <t t-if="props.qrCode and state.showQrCode">
+                <t t-if="this.props.qrCode and this.state.showQrCode">
                     <div class="text-center mb-4">
                         <h5 class="mb-3">Scan to Pay with M-Pesa</h5>
-                        <img t-att-src="'data:image/png;base64,' + props.qrCode"
+                        <img t-att-src="'data:image/png;base64,' + this.props.qrCode"
                              alt="M-Pesa QR Code"
                              class="border border-2 p-2 rounded"
                              style="max-width: 300px;"/>
@@ -17,8 +17,8 @@
                 <!-- Search Bar -->
                 <div class="mb-3">
                     <Input
-                        tModel="[state, 'searchQuery']"
-                        placeholder="Search by name or phone..."
+                        tModel="[this.state, 'searchQuery']"
+                        placeholder="this.Search this.by this.name or this.phone..."
                         icon="{ type: 'fa', value: 'fa-search' }"
                         class="'w-100'"
                     />
@@ -53,11 +53,11 @@
                 </table>
 
                 <div class="d-flex gap-2 mt-3">
-                    <button class="btn btn-primary" t-on-click="updateTransactions">
+                    <button class="btn btn-primary" t-on-click="this.updateTransactions">
                         <i class="fa fa-refresh"/> Refresh
                     </button>
-                    <button class="btn btn-secondary" t-on-click="cancel">Cancel</button>
-                    <button class="btn btn-secondary ms-auto" t-on-click="toggleQrCode">
+                    <button class="btn btn-secondary" t-on-click="this.cancel">Cancel</button>
+                    <button class="btn btn-secondary ms-auto" t-on-click="this.toggleQrCode">
                         <i class="fa fa-qrcode"/>
                     </button>
                 </div>

@@ -47,7 +47,7 @@
         <t t-call="website.InputURLAutoComplete"/>
     </xpath>
     <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
-        <attribute name="t-on-click">onClickForcePreviewMode</attribute>
+        <attribute name="t-on-click">this.onClickForcePreviewMode</attribute>
     </xpath>
 </t>
 

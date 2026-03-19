@@ -11,7 +11,7 @@
         <xpath expr="//img" position="attributes">
             <attribute
                 name="t-attf-class"
-                add="{{ env.isSmall ? 'rounded-circle' : 'rounded' }}"
+                add="{{ this.env.isSmall ? 'rounded-circle' : 'rounded' }}"
                 separator=" "/>
         </xpath>
         <xpath expr="//button[hasclass('o_select_file_button')]" position="attributes">

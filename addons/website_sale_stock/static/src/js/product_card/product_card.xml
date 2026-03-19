@@ -6,14 +6,14 @@
                 name="t-attf-class"
                 remove="cursor-pointer"
                 add="{{
-                    props.product.isQuantityAllowed(props.quantity)
+                    this.props.product.isQuantityAllowed(this.props.quantity)
                     ? 'cursor-pointer' : 'unselectable-card border'
                 }}"
                 separator=" "
             />
             <attribute
                 name="t-att-tabindex"
-                add="props.product.isQuantityAllowed(props.quantity) ? '0' : '-1'"
+                add="this.props.product.isQuantityAllowed(this.props.quantity) ? '0' : '-1'"
             />
         </article>
         <h6 name="product_card_title" position="after">
@@ -39,21 +39,21 @@
         <img name="product_card_image" position="attributes">
             <attribute
                 name="t-att-class"
-                add="{'opacity-50': !props.product.isQuantityAllowed(props.quantity)}"
+                add="{'opacity-50': !this.props.product.isQuantityAllowed(this.props.quantity)}"
                 separator=" "
             />
         </img>
         <h6 name="product_card_title" position="attributes">
             <attribute
                 name="t-att-class"
-                add="{'opacity-50': !props.product.isQuantityAllowed(props.quantity)}"
+                add="{'opacity-50': !this.props.product.isQuantityAllowed(this.props.quantity)}"
                 separator=" "
             />
         </h6>
         <xpath expr="//div[hasclass('text-muted')]" position="attributes">
             <attribute
                 name="t-att-class"
-                add="{'d-none': !props.product.isQuantityAllowed(props.quantity)}"
+                add="{'d-none': !this.props.product.isQuantityAllowed(this.props.quantity)}"
                 separator=" "
             />
         </xpath>

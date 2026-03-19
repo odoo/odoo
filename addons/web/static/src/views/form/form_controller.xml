@@ -38,7 +38,7 @@
                         </t>
                     </t>
 
-                    <t t-component="this.props.Renderer" record="this.model.root" Compiler="this.props.Compiler" readonly="(this.props.readonly or !this.canEdit)  and !model.root.isNew" archInfo="this.archInfo" translateAlert="this.translateAlert" onNotebookPageChange.bind="this.onNotebookPageChange" activeNotebookPages="this.props.state and this.props.state.activeNotebookPages"/>
+                    <t t-component="this.props.Renderer" record="this.model.root" Compiler="this.props.Compiler" readonly="(this.props.readonly or !this.canEdit)  and !this.model.root.isNew" archInfo="this.archInfo" translateAlert="this.translateAlert" onNotebookPageChange.bind="this.onNotebookPageChange" activeNotebookPages="this.props.state and this.props.state.activeNotebookPages"/>
                 </Layout>
             </div>
         </div>
