@@ -47,6 +47,7 @@ declare module "models" {
         executeCommand: (command: unknown, body: string) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
+        has_mail_thread: boolean | undefined;
         leaveChannel: () => Promise<void>;
         leaveChannelProcess: () => Promise<void>;
         leaveChannelRpc: () => Promise<void>;
