@@ -134,7 +134,7 @@ class AccountAccount(models.Model):
         comodel_name='account.account',
         string="Parent Account",
         domain="['!', ('id', 'child_of', id)]",
-        ondelete='set null',
+        ondelete='restrict',
         context={'active_test': False},
         check_company=True,
     )
