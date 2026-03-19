@@ -119,7 +119,7 @@ class AccountMoveSend(models.AbstractModel):
                 attachment_name = attachment['name']
             attachment_data = results.get(attachment_name, {})
             if attachment_data.get('signed') and (signed_data := attachment_data.get('signed_data')):
-                move.l10n_it_edi_attachment_file = signed_data.encode()
+                move.l10n_it_edi_attachment_file = base64.b64encode(signed_data.encode())
                 # Show that those moves couldn't be sent
             if 'error_message' in attachment_data:
                 moves_data[move]['error'] = {'error_title': attachment_data['error_message']}
