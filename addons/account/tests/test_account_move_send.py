@@ -478,6 +478,17 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             content='access_token=',
         )
 
+    def test_invoice_email_subtitle_from_sale_order(self):
+        """ Test email notification subtitle for Invoice created from Sale Order. """
+        self.ensure_installed('sale')
+        self.product_a.taxes_id = False
+        self.env.user.group_ids |= self.env.ref('sales_team.group_sale_salesman')
+        sale_order = self._create_sale_order_one_line(product_id=self.product_a.id, partner_id=self.partner_a.id)
+        invoice = sale_order._create_invoices()
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], f"{invoice.display_name} - {self.partner_a.name}")
+        self.assertIn('1,000', context.get('subtitles')[1])
+
 
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
