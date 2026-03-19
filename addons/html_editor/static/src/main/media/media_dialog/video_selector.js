@@ -187,11 +187,11 @@ export class VideoSelector extends Component {
         );
     }
 
-    get value() {
-        if (this.option.id === "start_from" && this.option.value !== "00:00") {
-            return this.convertSecondsToTimestamp(this.option.value);
+    value(option) {
+        if (option.id === "start_from" && option.value !== "00:00") {
+            return this.convertSecondsToTimestamp(option.value);
         }
-        return this.option.value;
+        return option.value;
     }
 
     async onChangeOption(optionId) {

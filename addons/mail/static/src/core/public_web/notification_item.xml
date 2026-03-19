@@ -35,7 +35,7 @@
                     <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': this.props.textTruncate, 'text-start': !this.props.textTruncate, 'small': !this.ui.isSmall, 'o-muted': this.props.muted }" t-att-style="this.props.textMaxLine !== undefined ? this.webkitLineClamp(this.props.textMaxLine) : ''">
                         <t t-slot="body-icon"/>
                         <MessageSeenIndicator t-if="this.message?.showSeenIndicator(this.props.thread)" message="this.message"/>
-                        <t t-if="this.props.slots?.body" name="this.notificationBody" t-slot="body"/>
+                        <t t-if="this.props.slots?.body" name="notificationBody" t-slot="body"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-start position-relative">
