@@ -1073,6 +1073,24 @@ def add_monitoring(code):
 
 @functools.cache
 def _initialize_safe_whitelist():
+    # Wrapped modules
+    safe_whitelist.add_class('datetime.date')
+    safe_whitelist.add_class('datetime.datetime')
+    safe_whitelist.add_class('datetime.time')
+    safe_whitelist.add_class('datetime.timedelta')
+    safe_whitelist.add_class('datetime.timezone')
+    safe_whitelist.add_class('datetime.tzinfo')
+    safe_whitelist.add_class('dateutil.tz.tz.tzutc')
+    safe_whitelist.add_function('dateutil.parser.isoparser.isoparser.isoparse')
+    safe_whitelist.add_function('dateutil.parser._parser.parse')
+    safe_whitelist.add_class('dateutil.relativedelta.relativedelta')
+    safe_whitelist.add_class('dateutil.rrule.rrule')
+    safe_whitelist.add_class('dateutil.rrule.rruleset')
+    safe_whitelist.add_instance('dateutil.rrule._rrulestr')
+    safe_whitelist.add_function('time.time')
+    safe_whitelist.add_function('time.strptime')
+    safe_whitelist.add_function('time.strftime')
+    safe_whitelist.add_function('time.sleep')
     # Monkey patches
     safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
     safe_whitelist.add_function('odoo._monkeypatches.*')
@@ -1135,17 +1153,6 @@ def _initialize_safe_whitelist():
     # Cursor
     safe_whitelist.add_function('cursor.fetchall')
     safe_whitelist.add_function('cursor.fetchone')
-    # Dates - Times - Timezone
-    safe_whitelist.add_class('datetime.date')
-    safe_whitelist.add_class('datetime.datetime')
-    safe_whitelist.add_class('datetime.time')
-    safe_whitelist.add_class('datetime.timedelta')
-    safe_whitelist.add_class('datetime.timezone')
-    safe_whitelist.add_class('datetime.tzinfo')
-    safe_whitelist.add_class('dateutil.relativedelta.relativedelta')
-    safe_whitelist.add_instance('pytz.tzfile.UTC')
-    safe_whitelist.add_function('pytz.tzinfo.DstTzInfo.localize')
-    safe_whitelist.add_function('pytz.UTC.localize')
     # Collections
     safe_whitelist.add_class('collections.defaultdict')
     safe_whitelist.add_class('collections.OrderedDict')

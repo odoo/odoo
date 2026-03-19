@@ -14,6 +14,9 @@ from odoo.tools.safe_eval import (
     safe_checker,
     safe_eval,
     UnsafeClassError,
+    UnsafeFunctionError,
+    UnsafeInstanceError,
+    UnsafeModuleError,
     UnsafePolicy,
 )
 
@@ -386,3 +389,67 @@ class TestSafeEvalRuntime(TransactionCase):
         # Ensure controlled builtins are trusted
         for obj in _BUILTINS.values():
             safe_checker.check(obj)
+
+    def test_trust_wrapped_modules(self):
+        # Modules is not verified
+        import datetime  # noqa: PLC0415
+        import dateutil  # noqa: PLC0415
+        import dateutil.parser  # noqa: PLC0415
+        import dateutil.relativedelta  # noqa: PLC0415
+        import dateutil.rrule  # noqa: PLC0415
+        import dateutil.tz  # noqa: PLC0415
+        import json  # noqa: PLC0415
+        import time  # noqa: PLC0415
+
+        modules = (
+            datetime,
+            dateutil,
+            dateutil.parser,
+            dateutil.relativedelta,
+            dateutil.rrule,
+            dateutil.tz,
+            json,
+            time,
+        )
+        for module in modules:
+            with self.assertRaises(UnsafeModuleError):
+                safe_checker.check(module)
+
+        # Only wrapped modules can be used
+        import odoo.tools.safe_eval as safe_eval  # noqa: PLC0415
+
+        modules = (
+            safe_eval.datetime,
+            safe_eval.dateutil,
+            safe_eval.dateutil.parser,
+            safe_eval.dateutil.relativedelta,
+            safe_eval.dateutil.rrule,
+            safe_eval.dateutil.tz,
+            safe_eval.json,
+            safe_eval.time,
+        )
+        for module in modules:
+            safe_checker.check(module)
+
+        # Objects of authorised modules must be trusted
+        objs = (
+            datetime.date, datetime.datetime, datetime.time, datetime.timedelta,
+            datetime.timezone, datetime.tzinfo,
+            dateutil.tz.UTC, dateutil.tz.tzutc,
+            dateutil.parser.isoparse, dateutil.parser.parse,
+            dateutil.relativedelta.relativedelta,
+            dateutil.rrule.rrule, dateutil.rrule.rruleset, dateutil.rrule.rrulestr,
+            time.time, time.strptime, time.strftime, time.sleep,
+        )
+        for obj in objs:
+            safe_checker.check(obj)
+
+        # Specific test for monkeypatched `ZoneInfo` class
+        with self.assertRaises(UnsafeInstanceError):
+            safe_checker.check(dateutil.tz.gettz)
+        safe_checker.check(safe_eval.dateutil.tz.gettz)
+
+        # Specific test for import
+        with self.assertRaises(UnsafeFunctionError):
+            safe_checker.check(__import__)
+        safe_checker.check(safe_eval._import)
