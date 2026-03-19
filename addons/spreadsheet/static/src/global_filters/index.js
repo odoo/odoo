@@ -24,6 +24,7 @@ invalidateEvaluationCommands.add("SET_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("SET_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("UPDATE_OBJECT_DOMAINS");
+readonlyAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
 inverseCommandRegistry
     .add("EDIT_GLOBAL_FILTER", identity)
