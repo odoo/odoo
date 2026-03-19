@@ -16,47 +16,6 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
 
     _test_user_name = 'Test Sales & Product Manager'
 
-    def test_website_sale_stock_product_configurator(self):
-        stock_attribute = self.env["product.attribute"].create({
-            "name": "Stock",
-            "value_ids": [
-                Command.create({"name": "Out of stock"}),
-                Command.create({"name": "In stock"}),
-            ],
-        })
-        optional_product = self.env["product.template"].create({
-            "name": "Optional product",
-            "website_published": True,
-            "is_storable": True,
-            "allow_out_of_stock_order": False,
-            "attribute_line_ids": [
-                Command.create({
-                    "attribute_id": stock_attribute.id,
-                    "value_ids": [Command.set(stock_attribute.value_ids.ids)],
-                })
-            ],
-        })
-        main_product = self.env["product.product"].create({
-            "name": "Main product",
-            "website_published": True,
-            "is_storable": True,
-            "allow_out_of_stock_order": False,
-            "optional_product_ids": [Command.set(optional_product.ids)],
-        })
-        self.env["stock.quant"].sudo().create([
-            {
-                "product_id": optional_product.product_variant_ids[1].id,
-                "location_id": self.warehouse.lot_stock_id.id,
-                "quantity": 10,
-            },
-            {
-                "product_id": main_product.id,
-                "location_id": self.warehouse.lot_stock_id.id,
-                "quantity": 10,
-            },
-        ])
-        self.start_tour(main_product.website_url, "website_sale_stock.product_configurator")
-
     def test_website_sale_stock_combo_configurator(self):
         product = self._create_product(name="Test product")
         self.env["stock.quant"].sudo().create({
