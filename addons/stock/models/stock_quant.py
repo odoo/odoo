@@ -588,6 +588,7 @@ class StockQuant(models.Model):
             'single_product': self.env.context.get("single_product", False)
         }
         return {
+            'name': self.env._('Relocate'),
             'res_model': 'stock.quant.relocate',
             'views': [[False, 'form']],
             'target': 'new',
