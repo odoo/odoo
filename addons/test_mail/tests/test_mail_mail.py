@@ -1024,7 +1024,7 @@ class TestMailMailServer(MailCommon):
         email content.
 
         The feature is tested in the following conditions:
-        - using a specified server or the default one (to test command ICP parameter)
+        - using a specified server or the default one
         - in batch mode
         - with mail that exceed (with one or more attachments) or not the limit
         - with attachment owned by a business record or not: attachments not owned by a
@@ -1053,7 +1053,7 @@ class TestMailMailServer(MailCommon):
                 (3, self.env['ir.mail_server'], True, True),
                 # 1 attachment: exceed max size
                 (1, self.env['ir.mail_server'], True, True),
-                # Same as above with a specific server. Note that the default and server max_email size are reversed.
+                # Same as above with a specific server as the max_email_size is global
                 (1, test_mail_server, True, False),
                 (3, test_mail_server, True, True),
                 (1, test_mail_server, True, True),
@@ -1064,15 +1064,9 @@ class TestMailMailServer(MailCommon):
             # Setup max email size to check that the right maximum is used (default or mail server one)
             if expected_is_links:
                 max_size_test_succeed = max_size_always_exceed * n_attachment
-                max_size_test_fail = max_size_never_exceed
             else:
                 max_size_test_succeed = max_size_never_exceed
-                max_size_test_fail = max_size_always_exceed * n_attachment
-            if mail_server:
-                self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_fail)
-                mail_server.max_email_size = max_size_test_succeed
-            else:
-                self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_succeed)
+            self.env['ir.config_parameter'].sudo().set_float('base.default_max_email_size', max_size_test_succeed)
 
             attachments = self.env['ir.attachment'].sudo().create([{
                 'name': f'attachment{idx_attachment}',
