@@ -479,8 +479,8 @@ class SaleOrderLine(models.Model):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         domain = Domain("product_id.product_tmpl_id", operator, value)
-        if operator == 'in' and False in value:  # relation may be falsy
-            domain |= Domain('product_id', '=', False)
+        if operator == "in" and False in value:  # relation may be falsy
+            domain |= Domain("product_id", "=", False)
         return domain
 
     @api.depends("product_id")
@@ -962,44 +962,20 @@ class SaleOrderLine(models.Model):
         # Compute the combo product's price.
         combo_line = self._get_linked_line()
         combo_product_price = combo_line._get_display_price_ignore_combo()
-        # Compute the combos' base prices.
-        combo_base_prices = {
-            combo_id: combo_id.currency_id._convert(
-                from_amount=combo_id.base_price,
-                to_currency=self.currency_id,
-                company=self.company_id,
-                date=self.order_id.date_order,
-            )
-            for combo_id in combo_line.product_template_id.sudo().combo_ids
-        }
-        total_combo_base_price = sum(combo_base_prices.values())
-        # Compute the prorated combo prices. When all combos have a zero base price, prorating by
-        # base price would assign the whole combo product's price to a single combo (via
-        # combo_price_delta below), making one combo item show the full price while the others
-        # show 0. Distribute the price evenly instead.
-        if total_combo_base_price:
-            combo_prices = {
-                combo_id: self.currency_id.round(
-                    base_price * combo_product_price / total_combo_base_price
-                )
-                for (combo_id, base_price) in combo_base_prices.items()
-            }
-        else:
-            even_share = self.currency_id.round(combo_product_price / len(combo_base_prices))
-            combo_prices = {combo_id: even_share for combo_id in combo_base_prices}
-        # Compute the delta between the combo product's price and the sum of its combo prices.
-        # Ideally, this should be 0, but division in python isn't perfect, so we may need to adjust
-        # the combo prices to make the delta 0.
-        combo_price_delta = combo_product_price - sum(combo_prices.values())
-        if combo_price_delta:
-            combo_prices[combo_line.product_template_id.sudo().combo_ids[-1]] += combo_price_delta
+        combo_prices = self.env["product.template"]._get_combo_choice_prices(
+            combo_line.product_template_id,
+            combo_product_price,
+            self.currency_id,
+            self.company_id,
+            self.order_id.date_order,
+        )
         # Add the extra price of this combo item, as well as the extra prices of any `no_variant`
         # attributes to the combo price.
         extra_price = self.combo_item_id.currency_id._convert(
             from_amount=self.combo_item_id.extra_price
             + self.product_id._get_no_variant_attributes_price_extra(
                 self.product_no_variant_attribute_value_ids
-            ),
+            ),  # TODO(loti): consider pricelist when computing extra price.
             to_currency=self.currency_id,
             company=self.company_id,
             date=self.order_id.date_order,
@@ -1306,7 +1282,16 @@ class SaleOrderLine(models.Model):
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ) and line._affects_qty_invoiced(invoice_line):
                     if line.is_downpayment:
-                        if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
+                        if not line.currency_id.is_zero(
+                            sum(
+                                invoice_lines.filtered(
+                                    lambda l: (
+                                        l.move_id.state != "cancel"
+                                        or l.move_id.payment_state == "invoicing_legacy"
+                                    )
+                                ).mapped("balance")
+                            )
+                        ):
                             invoiced_qties[line] = 1
                             line.qty_invoiced = 1
                         else:
@@ -1576,9 +1561,7 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.depends(
-        "discount", "price_total", "product_uom_qty", "qty_invoiced_posted"
-    )
+    @api.depends("discount", "price_total", "product_uom_qty", "qty_invoiced_posted")
     def _compute_amount_to_invoice(self):
         for line in self:
             if line.product_uom_qty:
@@ -2270,7 +2253,7 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def _date_in_the_past(self):
-        if not "accrual_entry_date" in self.env.context:
+        if "accrual_entry_date" not in self.env.context:
             return False
         accrual_date = fields.Date.from_string(self.env.context["accrual_entry_date"])
         return accrual_date and accrual_date < fields.Date.context_today(self)

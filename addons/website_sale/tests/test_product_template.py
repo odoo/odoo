@@ -11,16 +11,16 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
-        'website.group_website_designer',  # website config (currency_id, restricted_uom_ids, ...)
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
+        "website.group_website_designer",  # website config (currency_id, restricted_uom_ids, ...)
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     def test_website_sale_get_configurator_display_price(self):
-        self.website.show_line_subtotals_tax_selection = "tax_included"
+        self.website.tax_display = "tax_included"
         tax = self.env["account.tax"].sudo().create({"name": "Test tax", "amount": 10})
         product = self._create_product(list_price=100, taxes_id=[Command.link(tax.id)])
 
@@ -247,7 +247,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 "compute_price": "discount",
                 "price_discount": 50.0,
                 "min_quantity": 6.0,
-            }),
+            })
         ]
         with self.mock_request(
             sale_order_id=self.cart.id, website_sale_current_pl=pricelist.id
@@ -257,3 +257,46 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 website_sale_product_page=True
             )._get_combination_info(product_id=self.product.id, add_qty=1)
             self.assertEqual(product_page_info["price"], self.product.list_price / 2)
+
+    def test_combo_display_price_heuristic(self):
+        """
+        Test that tax-inclusive combo price is estimated by picking cheapest item of each combo
+        choice.
+        """
+        self.website.tax_display = "tax_included"
+        tax_10 = self.env["account.tax"].create({"name": "Tax 10%", "amount": 10.0})
+
+        product_a1 = self._create_product(list_price=20.0, taxes_id=[Command.link(tax_10.id)])
+        product_a2 = self._create_product(list_price=30.0, taxes_id=[Command.link(tax_10.id)])
+        product_b1 = self._create_product(list_price=90.0)
+        product_b2 = self._create_product(list_price=80.0)
+
+        combo_a = self.env["product.combo"].create({
+            "name": "Combo choice A",
+            "combo_item_ids": [
+                Command.create({"product_id": product_a1.id}),
+                Command.create({"product_id": product_a2.id}),
+            ],
+        })
+        combo_b = self.env["product.combo"].create({
+            "name": "Combo choice B",
+            "combo_item_ids": [
+                Command.create({"product_id": product_b1.id}),
+                Command.create({"product_id": product_b2.id}),
+            ],
+        })
+        combo_tmpl = self._create_product(
+            name="Combo product",
+            list_price=95.0,
+            type="combo",
+            combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
+        ).product_tmpl_id
+
+        with self.mock_request():
+            price = combo_tmpl._apply_taxes_to_price(95.0, self.currency, website=self.website)
+
+        # combo_a.base_price=20, combo_b.base_price=80; total=100
+        # combo_a's price is 20/100*95=19; cheapest item (product_a1) has 10% tax → 20.90
+        # combo_b's price is' 80/100*95=76; cheapest item (product_b2) has 15% default tax → 87.40
+        # Total: 20.90 + 87.40 = 108.30
+        self.assertAlmostEqual(price, 108.30)
