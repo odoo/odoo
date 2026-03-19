@@ -84,6 +84,7 @@ export class ShortCutPlugin extends Plugin {
                 }
             );
         }
+        this.shorthands = this.getResource("shorthands");
     }
 
     destroy() {
@@ -122,12 +123,10 @@ export class ShortCutPlugin extends Plugin {
             leftLeaf = leftDOMPath.next().value;
         }
         const precedingText = blockEl.textContent.substring(0, spaceOffset - 1);
-        const matchedShortcut = this.getResource("shorthands").find(({ pattern }) =>
-            pattern.test(precedingText)
-        );
+        const matchedShortcut = this.shorthands.find(({ pattern }) => pattern.test(precedingText));
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
-            if (command) {
+            if (command && command.isAvailable(selection)) {
                 this.dependencies.selection.setSelection({
                     anchorNode: blockEl.firstChild,
                     anchorOffset: 0,
