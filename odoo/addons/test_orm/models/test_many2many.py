@@ -52,35 +52,16 @@ class TestMany2manyAttachment(models.Model):
         for rec in self:
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
-    # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, *args, **kwargs):
-        if not self:
-            return None
-        comodel = self.env[self.res_model]
-        if 'res_id' in fnames and 'attachment_ids' in comodel:
-            record = comodel.browse(self.res_id)
-            record.invalidate_recordset(['attachment_ids'])
-            record.modified(['attachment_ids'])
-        return super().modified(fnames, *args, **kwargs)
-
 
 class TestMany2manyAttachmentHost(models.Model):
     _name = 'test_many2many.attachment.host'
     _description = 'Attachment Host'
 
-    attachment_ids = fields.One2many(
-        'test_many2many.attachment', 'res_id', bypass_search_access=True,
-        domain=lambda self: [('res_model', '=', self._name)],
-    )
     m2m_attachment_ids = fields.Many2many(
         'test_many2many.attachment', bypass_search_access=True,
     )
 
     real_binary = fields.Binary(attachment=True)
-    real_attachment_ids = fields.One2many(
-        'ir.attachment', 'res_id', bypass_search_access=True,
-        domain=lambda self: [('res_model', '=', self._name)],
-    )
     real_m2m_attachment_ids = fields.Many2many(
         'ir.attachment', bypass_search_access=True,
     )
