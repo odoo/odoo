@@ -23,7 +23,7 @@ PY_OPERATORS = {
 
 class StockLot(models.Model):
     _name = 'stock.lot'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'barcode.uniqueness.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True
     _order = 'name, id'
@@ -106,9 +106,6 @@ class StockLot(models.Model):
         domain = [('product_id', 'in', self.product_id.ids),
                   ('name', 'in', self.mapped('name'))]
         groupby = ['company_id', 'product_id', 'name']
-        if any(not lot.company_id for lot in self):
-            # We need to check across other companies to not have duplicates between 'no-company' and a company.
-            self = self.sudo()
         records = self.with_context(skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
         error_message_lines = set()
         cross_lots = {}
