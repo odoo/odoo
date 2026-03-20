@@ -202,6 +202,16 @@ test("404 page in translate mode", async () => {
     expect(".o_popover .o_edit_website_dropdown_item:contains('Create page')").toHaveCount(1);
 });
 
+test("color span is inserted in a.btn (and s_badge) with a background to show the translation state", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: `<a class="btn">Hello</a> <span class="s_badge">Badge</span>`,
+        }),
+    });
+    expect(":iframe a .o_translation_state_inner_span").toHaveCount(1);
+    expect(":iframe .s_badge .o_translation_state_inner_span").toHaveCount(1);
+});
+
 test("translate attribute", async () => {
     const resultSave = [];
     onRpc("/website/field/translation/update", async (data) => {
