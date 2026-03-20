@@ -33,6 +33,7 @@ declare module "plugins" {
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
     import { mark_translatable_nodes } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
+    import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
     interface SharedMethods {
@@ -94,6 +95,7 @@ declare module "plugins" {
         // Data
         searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
+        force_background_translation_state_selectors: force_background_translation_state_selectors;
         theme_options: theme_options;
         visibility_selector_parameters: visibility_selector_parameters;
     }
