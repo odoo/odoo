@@ -308,17 +308,16 @@ class Im_LivechatChannel(models.Model):
                 Command.create({"livechat_member_type": "visitor", "guest_id": guest.id})
             )
         visitor_user = self.env["res.users"]
-        if not self.env.user._is_public():
+        if not self.env.user._is_public() and self.env.user != agent:
             visitor_user = self.env.user
-            if visitor_user and visitor_user != agent:
-                members_to_add.append(
-                    Command.create(
-                        {
-                            "livechat_member_type": "visitor",
-                            "partner_id": visitor_user.partner_id.id,
-                        }
-                    )
+            members_to_add.append(
+                Command.create(
+                    {
+                        "livechat_member_type": "visitor",
+                        "partner_id": visitor_user.partner_id.id,
+                    }
                 )
+            )
 
         channel_name = self._get_channel_name(
             visitor_user=visitor_user,
@@ -355,10 +354,11 @@ class Im_LivechatChannel(models.Model):
         if operator_model == 'chatbot.script':
             channel_name = chatbot_script.title
         else:
-            channel_name = ' '.join([
+            member_names = [
                 visitor_user.display_name if visitor_user else guest.name,
                 agent.livechat_username or agent.name
-            ])
+            ]
+            channel_name = " ".join(filter(None, member_names))
         return channel_name
 
     def _get_operator_info(self, /, *, lang, country_id, previous_operator_id=None, chatbot_script_id=None, **kwargs):
