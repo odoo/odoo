@@ -484,11 +484,19 @@ class HrEmployee(models.Model):
         return versions
 
     def _get_first_version_date(self, no_gap=True):
-        versions = self._get_first_versions_filtered(no_gap=no_gap)
+        if 'active_test' not in self.env.context:
+            self_ctx = self.with_context(active_test=self.active)
+        else:
+            self_ctx = self
+        versions = self_ctx._get_first_versions_filtered(no_gap=no_gap)
         return min(versions.mapped('date_start')) if versions else False
 
     def _get_first_contract_date(self, no_gap=True):
-        versions = self._get_first_versions_filtered(no_gap=no_gap).filtered(lambda x: x.contract_date_start)
+        if 'active_test' not in self.env.context:
+            self_ctx = self.with_context(active_test=self.active)
+        else:
+            self_ctx = self
+        versions = self_ctx._get_first_versions_filtered(no_gap=no_gap).filtered(lambda x: x.contract_date_start)
         return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')
