@@ -23,6 +23,7 @@ patch(PosStore.prototype, {
             // Update payment status based on callback
             if (payload.success) {
                 paymentLine.transaction_id = payload.transaction_id;
+                paymentLine.safaricom_transaction_id = payload.transaction_id;
                 paymentLine.card_type = "M-Pesa";
                 if (payload.phone_number) {
                     paymentLine.cardholder_name = payload.phone_number;

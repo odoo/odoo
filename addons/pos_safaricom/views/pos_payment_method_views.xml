@@ -11,9 +11,12 @@
                         <group>
                             <field name="safaricom_test_mode" widget="boolean_toggle"/>
                             <field name="safaricom_payment_type" required="payment_provider == 'safaricom'"/>
+                            <field name="safaricom_identifier_type" required="payment_provider == 'safaricom'"/>
                             <field name="consumer_key" password="True" required="payment_provider == 'safaricom'"/>
                             <field name="consumer_secret" password="True" required="payment_provider == 'safaricom'"/>
                             <field name="business_short_code" required="payment_provider == 'safaricom'"/>
+                            <field name="safaricom_till_number" invisible="safaricom_identifier_type != 'till'" required="payment_provider == 'safaricom' and safaricom_identifier_type == 'till'"/>
+                            <field name="safaricom_paybill_number" invisible="safaricom_identifier_type != 'paybill'" required="payment_provider == 'safaricom' and safaricom_identifier_type == 'paybill'"/>
                             <field name="passkey" password="True" invisible="safaricom_payment_type != 'mpesa_express'" required="payment_provider == 'safaricom' and safaricom_payment_type == 'mpesa_express'"/>
                         </group>
                         <separator string="Lipa na M-PESA Configuration" invisible="safaricom_payment_type != 'lipa_na_mpesa'"/>
