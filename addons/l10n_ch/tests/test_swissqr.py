@@ -234,7 +234,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
 
         # All Printable codepoints in range U+0020 - U+017F are allowed
         # plus U+00AD {SOFT HYPHEN} and U+0218, U+0219, U+021A, U+021B, U+20AC
-        str_allowed = ''.join(UNICODE_ALLOWED - {'\u00A0'})  # NO-BREAK SPACE is replaced by SPACE
+        str_allowed = ''.join(sorted(UNICODE_ALLOWED - {'\u00A0'}))  # NO-BREAK SPACE is replaced by SPACE
 
         # Not allowed chars
         str_rejected = ''.join({chr(ucode) for ucode in range(0x2100)} - UNICODE_ALLOWED - space_chars)
@@ -242,7 +242,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         filter_text = self.env['res.partner.bank']._l10n_ch_filter_text
 
         self.assertEqual(filter_text('\t   Aaa    \n  Bb   '), 'Aaa Bb')
-        self.assertEqual(filter_text(str_allowed), str_allowed)
+        self.assertEqual(filter_text(str_allowed), str_allowed.strip())  # UNICODE_ALLOWED can have a space at the start
         self.assertEqual(filter_text(str_rejected), '')
         self.assertEqual(filter_text(None), '')
         self.assertEqual(filter_text(False), '')
