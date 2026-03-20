@@ -20161,3 +20161,46 @@ test(`custom button that creates record in list with sample data`, async () => {
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
     expect(`.o_data_row`).toHaveCount(1);
 });
+
+test.tags("desktop");
+test(`select menu navigation with hot keys`, async () => {
+    Bar._fields.stage = fields.Selection({
+        selection: [
+            ["aab", "aab"],
+            ["aac", "aac"],
+        ],
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <field name="o2m">
+                    <list editable="top">
+                        <field name="stage"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    await contains(".o_field_x2many_list_row_add button").click();
+    await contains(`.o_field_widget[name=o2m] .o_data_row [name=stage] input`).click();
+    await press("Tab");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+
+    await contains(".o_field_x2many_list_row_add button").click();
+    await contains(`.o_field_widget[name=o2m] .o_data_row [name=stage] input`).click();
+    await press("ArrowLeft");
+    await animationFrame();
+    await press("ArrowLeft");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+
+    await contains(`.o_form_button_save`).click();
+    expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["aab", "aac"]);
+});
