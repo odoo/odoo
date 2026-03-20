@@ -62,7 +62,7 @@
                 <attribute name="readonly" add="is_reward_line" separator=" or "/>
             </xpath>
             <xpath expr="//list//field[@name='tax_ids']" position="attributes">
-                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+                <attribute name="readonly" add="is_reward_line and state in ['draft', 'sent']" separator=" or "/>
             </xpath>
             <group name="note_group" position="after">
                 <group class="d-flex flex-row-reverse oe_subtotal_footer border-0">
