@@ -1219,3 +1219,14 @@ class TestTax(TestTaxCommon):
             ],
             res
         )
+
+    def test_product_correct_rounding_tax_string(self):
+        """To verify that the tax string computation correctly rounds the price to the expected precision"""
+
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).write({'digits': 7})
+        product = self.env['product.template'].create({
+            'name': 'Test Product',
+            'list_price': 19.8347107,
+            'taxes_id': [Command.set([self.tax_21_percent.id])],
+        })
+        self.assertEqual(product.tax_string.replace('\xa0', ' '), '(= $ 24.00 Incl. Taxes)')

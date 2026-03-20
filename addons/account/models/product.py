@@ -95,7 +95,7 @@ class ProductTemplate(models.Model):
 
     def _construct_tax_string(self, price):
         currency = self.currency_id
-        res = self.taxes_id._filter_taxes_by_company(self.env.company).compute_all(
+        res = self.taxes_id._filter_taxes_by_company(self.env.company).with_context(round_base=False).compute_all(
             price, product=self, partner=self.env['res.partner']
         )
         joined = []
