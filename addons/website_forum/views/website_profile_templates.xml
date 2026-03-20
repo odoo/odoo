@@ -41,7 +41,7 @@
                 <div role="tabpanel" t-attf-class="o_wforum_profile_tab tab-pane o_wprofile_forum_activity #{ 'show active' if active_tab == 'activities' else '' }" id="activities"
                      t-att-data-active-tab="activities_active_tab">
                     <h5 class="border-bottom pb-1 d-flex align-items-start align-items-md-center justify-content-between">
-                        <div>Activities</div>
+                        <div>Activity</div>
                         <div class="d-flex flex-wrap gap-1">
                             <div class="m-auto"/>
                             <div class="dropdown" id="o_wprofile_forum_activity_filter" role="tablist">
@@ -206,18 +206,21 @@
     <template id="display_activities" name="Forum Profile Activities">
         <t t-if="activities">
             <div t-foreach="activities" t-as="activity" class="card mb-2">
+                <t t-set="date" t-value="format_datetime(activity[0])"/>
+                <t t-set="label" t-value="activity[1]"/>
+                <t t-set="post" t-value="activity[2]"/>
+
                 <div class="card-body">
-                    <span t-out="activity.subtype_id.name" class="badge text-bg-info me-2 mt-1"/>
-                    <span t-field="activity.date" t-options='{"format": "short"}' class="me-2"/>
-                    <t t-set="post" t-value="posts[activity.res_id]"/>
-                    <span t-if="post[1]">
-                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
-                            <span t-out="post[0].name"/>
+                    <span t-out="label" class="badge text-bg-info me-2 mt-1"/>
+                    <span t-out="date" class="me-2"/>
+                    <span t-if="post.parent_id">
+                        <a t-attf-href="/forum/#{ slug(post.forum_id) }/#{ slug(post.parent_id) }#answer-#{post.id}">
+                            <span t-out="post.parent_id.name"/>
                         </a>
                     </span>
-                    <span t-if="not post[1]">
-                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }">
-                            <span t-out="post[0].name"/>
+                    <span t-else="">
+                        <a t-attf-href="/forum/#{ slug(post.forum_id) }/#{ slug(post) }">
+                            <span t-out="post.name"/>
                         </a>
                     </span>
                 </div>
