@@ -157,7 +157,6 @@ test("Datasource link is removed when a pivot is deleted", async function () {
     });
     model.dispatch("REMOVE_PIVOT", { pivotId });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
@@ -176,7 +175,6 @@ test("Datasource link is removed when a list is deleted", async function () {
     });
     model.dispatch("REMOVE_ODOO_LIST", { listId });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
@@ -198,7 +196,6 @@ test("Datasource link is removed when an odoo chart is deleted", async function 
         sheetId: model.getters.getActiveSheetId(),
     });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
