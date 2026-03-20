@@ -17,6 +17,7 @@ import re
 import difflib
 import pprint
 import requests
+from collections import defaultdict
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
@@ -1461,6 +1462,88 @@ class AccountTestInvoicingCommon(ProductCommon):
                     )
                 else:
                     raise
+
+    def _assert_iap_valid_xml(self, xml_element: str | bytes | etree._Element):
+        """
+        Helper to validate the xml_element against xsd and schematron files on the IAP server.
+        This function can only be run in EXTERNAL_MODE!
+
+        :param xml_element: the _Element/str/bytes content to be validated
+        :return:
+        """
+        assert 'EXTERNAL_MODE' in config['test_tags'], "Can only be run in EXTERNAL_MODE"
+
+        def format_errors(errors: list[str] | dict[str, list[str]]) -> str:
+            if not errors:
+                return ''
+
+            if isinstance(errors, list):
+                return ' - ' + '\n - '.join(errors)
+
+            return '\n'.join(
+                f'{group}\n{format_errors(group_errors)}\n' for group, group_errors in errors.items()
+            )
+
+        if isinstance(xml_element, etree._Element):
+            xml_element = etree.tostring(xml_element, encoding='UTF-8')
+        if isinstance(xml_element, bytes):
+            xml_element = xml_element.decode('utf-8')
+
+        common_payload = {
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'params': {
+                'file_content': xml_element,
+            },
+        }
+
+        # Get file details
+        details_response = requests.post(url='https://iap-services.odoo.com/file_validator/get/details', json=common_payload, timeout=5)
+        self.assertEqual(details_response.status_code, 200)
+        details_json = details_response.json()['result']
+
+        # XSD validation
+        xsd_payload = {
+            **common_payload,
+            'params': {
+                **common_payload['params'],
+                'xsd_name': details_json['xsd_name'],
+            },
+        }
+
+        xsd_response = requests.post(url='https://iap-services.odoo.com/file_validator/validate/xsd', json=xsd_payload, timeout=5)
+        self.assertEqual(xsd_response.status_code, 200)
+        xsd_json = xsd_response.json()['result']
+        self.assertFalse(bool(xsd_json['errors']), f"Call to xsd validator failed:\n\n{format_errors(xsd_json['errors'])}")
+        self.assertFalse(bool(xsd_json['xsd_errors']), f"XSD validation failed with following error(s):\n\n{format_errors(xsd_json['xsd_errors'])}")
+
+        # Schematron validation
+        schematron_payload = {
+            **common_payload,
+            'params': {
+                **common_payload['params'],
+                'script_name': 'lxml',
+            },
+        }
+
+        schematron_validation_errors = defaultdict(list)
+        fail_on_warning = 'EXTERNAL_MODE_FAIL_ON_WARNING' in config['test_tags']
+        with requests.Session() as session:
+            for schematron_name in details_json['schematrons']:
+                schematron_payload['params']['schematron_name'] = schematron_name
+
+                schematron_response = session.post(url='https://iap-services.odoo.com/file_validator/validate/schematron', json=schematron_payload, timeout=5)
+                self.assertEqual(schematron_response.status_code, 200, f"Schematron call failed for '{schematron_name}'")
+                schematron_json = schematron_response.json()['result']
+
+                self.assertFalse(bool(schematron_json['errors']), f"Error for schematron '{schematron_name}': \n\n{format_errors(schematron_json['errors'])}")
+
+                if schematron_json['fatals']:
+                    schematron_validation_errors[schematron_name].extend(schematron_json['fatals'])
+                if fail_on_warning and schematron_json['warnings']:
+                    schematron_validation_errors[schematron_name].extend(schematron_json['warnings'])
+
+        self.assertFalse(bool(schematron_validation_errors), f"Schematron validation failed with following error(s):\n\n{format_errors(schematron_validation_errors)}")
 
     @classmethod
     def _turn_node_as_dict_hierarchy(cls, node, path=''):
