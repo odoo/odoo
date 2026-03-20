@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import users, HttpCase, tagged
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
@@ -224,3 +224,24 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         self.url_open('/web_editor/field/translation/update', data=json.dumps(payload), headers=self.headers)
         self.assertEqual('Todos os blogs', blog_post.with_context(lang=br_lang.code).content)
         self.assertEqual('Updated blogs', blog_post.with_context(lang=en_lang.code).content)
+
+    def test_cannot_delete_field_used_in_website_blog(self):
+        self.partner_model = self.env['ir.model'].search([('model', '=', 'res.partner')])
+        self.test_field = self.env['ir.model.fields'].create({
+            'name': 'x_test_field',
+            'model_id': self.partner_model.id,
+            'ttype': 'char',
+            'field_description': 'test',
+        })
+        self.env['blog.post'].create({
+            'name': 'Test Blog',
+            'content': f'''
+                <form data-model_name="res.partner">
+                    <input name="{self.test_field.name}">
+                </form>
+            ''',
+        })
+        with self.assertRaisesRegex(ValidationError, f"The field '{self.test_field.name}' cannot be deleted because it is referenced in a website view."):
+            self.test_field.unlink()
+
+        self.assertTrue(self.test_field.exists())
