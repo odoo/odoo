@@ -19,7 +19,14 @@ class DiscussChannelWebclientController(WebclientController):
         store.add_global_values(
             has_unpinned_channels=request.env["discuss.channel.member"]
             .sudo()
-            .search_count([("is_self", "=", True), ("is_pinned", "=", False)], limit=1)
+            .search_count(
+                [
+                    ("is_self", "=", True),
+                    ("is_pinned", "=", False),
+                    ("channel_id.active", "=", True),
+                ],
+                limit=1,
+            )
             > 0,
         )
 
@@ -106,9 +113,18 @@ class DiscussChannelWebclientController(WebclientController):
     @classmethod
     def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
         members = request.env["discuss.channel.member"].search_fetch(
-            [("is_self", "=", True), ("is_pinned", "=", True)],
+            [
+                ("is_self", "=", True),
+                ("is_pinned", "=", True),
+                ("channel_id.active", "=", True),
+                ("mute_until_dt", "=", False),
+            ],
         )
-        members_with_unread = members.filtered(lambda member: member.message_unread_counter)
+        members_with_unread = members.filtered(
+            lambda member: (
+                member.message_unread_counter or member.channel_id.message_needaction_counter
+            )
+        )
         res.attr("initChannelsUnreadCounter", len(members_with_unread))
         # fetch channels data before calling super to benefit from prefetching (channel info might
         # prefetch a lot of data that super could use, about the current user in particular)
