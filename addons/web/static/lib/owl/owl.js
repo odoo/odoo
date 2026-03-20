@@ -4601,6 +4601,7 @@
             if (ast.context) {
                 ctxVar = generateId("ctx");
                 this.addLine(`let ${ctxVar} = ${compileExpr(ast.context)};`);
+                this.addLine(`${ctxVar}.this = ${ctxVar}`);
             }
             const isDynamic = INTERP_REGEXP.test(ast.name);
             const subTemplate = isDynamic ? interpolate(ast.name) : "`" + ast.name + "`";
