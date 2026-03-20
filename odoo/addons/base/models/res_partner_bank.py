@@ -231,7 +231,7 @@ class ResPartnerBank(models.Model):
             ('partner_id', 'child_of', partner.commercial_partner_id.id),
         ])
         if not bank_account:
-            if not allow_company_account_creation and partner.id in self.env['res.company']._get_company_partner_ids():
+            if not allow_company_account_creation and partner.id in self.env['res.company']._cached_data()['partner_id']:
                 raise UserError(_(
                     "Please add your own bank account manually: %(account_number)s (%(partner)s)",
                     account_number=account_number,
