@@ -546,7 +546,7 @@ export const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6"
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !isParagraphRelatedElement(node);
+    return !isParagraphRelatedElement(node) && isBlock(node);
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
