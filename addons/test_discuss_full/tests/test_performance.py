@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from unittest.mock import patch, PropertyMock
@@ -234,6 +235,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             name="group restricted channel 2", group_id=self.env.ref("base.group_user").id
         )
         self.channel_channel_group_2._add_members(users=self.users[0] | self.users[2] | self.users[6] | self.users[7] | self.users[13])
+        self.channel_channel_group_3 = Channel._create_channel(
+            name="group restricted channel 3 (archived)", group_id=self.env.ref("base.group_user").id
+        )
+        self.channel_channel_group_3._add_members(users=self.users[0] | self.users[2])
+        self.channel_channel_group_4 = Channel._create_channel(
+            name="group restricted channel 4 (muted)", group_id=self.env.ref("base.group_user").id
+        )
+        self.channel_channel_group_4._add_members(users=self.users[0] | self.users[2])
         # create chats
         self.channel_chat_1 = Channel._get_or_create_chat((self.users[0] + self.users[14]).partner_id.ids)
         self.channel_chat_2 = Channel._get_or_create_chat((self.users[0] + self.users[15]).partner_id.ids)
@@ -280,7 +289,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         }, cookies={
             self.guest._cookie_name: self.guest._format_auth_cookie(),
         })
-        # add needaction
+        # add needaction messages
         self.users[0].notification_type = 'inbox'
         message_0 = self.channel_channel_public_1.message_post(
             body="test",
@@ -294,6 +303,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         # add bookmark
         message_0.bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
         self.env.company.sudo().name = 'YourCompany'
+        # add unread messages
+        self.channel_channel_group_3.with_user(self.users[2]).message_post(
+            body="archived_channel's message",
+            message_type="comment",
+            author_id=self.users[2].partner_id.id,
+        )
+        self.channel_channel_group_4.with_user(self.users[2]).message_post(
+            body="muted_channel's message",
+            message_type="comment",
+            author_id=self.users[2].partner_id.id,
+        )
         # add folded channel
         members = self.channel_chat_1.channel_member_ids
         member = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
@@ -319,6 +339,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.authenticate(self.users[2].login, self.password)
         self._add_reactions(message_0, ["😊", "😁"])
         self._add_reactions(message_1, ["😊", "😁", "👍"])
+        # add archive / muted on channels
+        self.channel_channel_group_3.active = False
+        channel_group_4_member = self.channel_channel_group_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id)
+        channel_group_4_member.mute_until_dt = datetime.max
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 
     def _add_reactions(self, message, reactions):
@@ -528,7 +552,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "bookmark",
                     "model": "mail.box",
                 },
-                "initChannelsUnreadCounter": 3,
+                "initChannelsUnreadCounter": 4,
             },
         }
 
@@ -550,6 +574,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_channel(self.channel_channel_public_2),
                 self._expected_result_for_channel(self.channel_channel_group_1),
                 self._expected_result_for_channel(self.channel_channel_group_2),
+                self._expected_result_for_channel(self.channel_channel_group_4),
                 self._expected_result_for_channel(self.channel_chat_1),
                 self._expected_result_for_channel(self.channel_chat_2),
                 self._expected_result_for_channel(self.channel_chat_3),
@@ -565,6 +590,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._res_for_member(self.channel_channel_group_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_4, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
                 self._res_for_member(self.channel_chat_2, self.users[0].partner_id),
@@ -599,6 +625,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_message(self.channel_channel_public_2),
                 self._expected_result_for_message(self.channel_channel_group_1),
                 self._expected_result_for_message(self.channel_channel_group_2),
+                self._expected_result_for_message(self.channel_channel_group_4),
                 self._expected_result_for_message(self.channel_livechat_1),
                 self._expected_result_for_message(self.channel_livechat_2),
             ),
@@ -615,6 +642,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_thread(self.channel_channel_public_2),
                 self._expected_result_for_thread(self.channel_channel_group_1),
                 self._expected_result_for_thread(self.channel_channel_group_2),
+                self._expected_result_for_thread(self.channel_channel_group_4),
                 self._expected_result_for_thread(self.channel_livechat_1),
                 self._expected_result_for_thread(self.channel_livechat_2),
             ),
@@ -789,6 +817,29 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "parent_channel_id": False,
                 "uuid": channel.uuid,
             }
+        if channel == self.channel_channel_group_4:
+            return {
+                "avatar_cache_key": channel.avatar_cache_key,
+                "channel_type": "channel",
+                "create_uid": self.env.user.id,
+                "default_display_mode": False,
+                "description": False,
+                "discuss_category_id": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
+                "group_ids": [],
+                "group_public_id": self.env.ref("base.group_user").id,
+                "id": channel.id,
+                "is_editable": True,
+                "is_readonly": False,
+                "last_interest_dt": last_interest_dt,
+                "member_count": 2,
+                "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "name": "group restricted channel 4 (muted)",
+                "parent_channel_id": False,
+                "uuid": channel.uuid,
+            }
         if channel == self.channel_group_1:
             return {
                 "avatar_cache_key": channel.avatar_cache_key,
@@ -948,6 +999,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         member_12 = members.filtered(lambda m: m.partner_id == self.users[12].partner_id)
         member_14 = members.filtered(lambda m: m.partner_id == self.users[14].partner_id)
         member_15 = members.filtered(lambda m: m.partner_id == self.users[15].partner_id)
+        first_message = channel.message_ids.sorted(lambda message: message.id)[:1]
         last_message = channel._get_last_messages()
         last_message_of_partner_0 = self.env["mail.message"].search(
             Domain("author_id", "=", member_0.partner_id.id)
@@ -1058,6 +1110,46 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_id": self.users[0].partner_id.id,
                 "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
+                "unpin_dt": False,
+                "channel_id": channel.id,
+            }
+        if channel == self.channel_channel_group_4 and partner == self.users[0].partner_id:
+            return {
+                "channel_role": "owner",
+                "create_date": member_0_create_date,
+                "custom_notifications": False,
+                "id": member_0.id,
+                "is_favorite": False,
+                "last_interest_dt": member_0_last_interest_dt,
+                "message_unread_counter": 1,
+                "message_unread_counter_bus_id": bus_last_id,
+                "mute_until_dt": "9999-12-31 23:59:59",
+                "last_seen_dt": member_0_last_seen_dt,
+                "new_message_separator": first_message.id + 1,
+                "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
+                "seen_message_id": first_message.id,
+                "unpin_dt": False,
+                "channel_id": channel.id,
+            }
+        if channel == self.channel_channel_group_4 and partner == self.users[2].partner_id:
+            return {
+                "channel_role": False,
+                "create_date": member_0_create_date,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "fetched_message_id": first_message.id,
+                "id": member_2.id,
+                "is_favorite": False,
+                "last_interest_dt": member_0_last_interest_dt,
+                "message_unread_counter": 1,
+                "message_unread_counter_bus_id": bus_last_id,
+                "mute_until_dt": "9999-12-31 23:59:59",
+                "last_seen_dt": member_0_last_seen_dt,
+                "new_message_separator": first_message.id + 1,
+                "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
+                "seen_message_id": first_message.id,
                 "unpin_dt": False,
                 "channel_id": channel.id,
             }
@@ -1518,6 +1610,40 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "trackingValues": [],
                 "write_date": write_date,
             }
+        if channel == self.channel_channel_group_4:
+            return {
+                "attachment_ids": [],
+                "author_guest_id": False,
+                "author_id": user_2.partner_id.id,
+                "body": ["markup", "<p>muted_channel's message</p>"],
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "group restricted channel 4 (muted)",
+                "email_from": '"test2" <test2@example.com>',
+                "id": last_message.id,
+                "incoming_email_cc": False,
+                "incoming_email_to": False,
+                "is_bookmarked": False,
+                "message_link_preview_ids": [],
+                "message_type": "comment",
+                "model": "discuss.channel",
+                "needaction": False,
+                "notification_ids": [],
+                "parent_id": False,
+                "partner_ids": [],
+                "pinned_at": False,
+                "rating_id": False,
+                "reactions": [],
+                "record_name": "group restricted channel 4 (muted)",
+                "reply_to": '"test2" <catchall.test@test.mycompany.com>',
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "subject": False,
+                "subtype_id": self.env.ref("mail.mt_note").id,
+                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "trackingValues": [],
+                "write_date": write_date,
+            }
         if channel == self.channel_livechat_1:
             return {
                 "attachment_ids": [],
@@ -1861,6 +1987,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {**common_data, "display_name": "group restricted channel 1"}
         if channel == self.channel_channel_group_2:
             return {**common_data, "display_name": "group restricted channel 2"}
+        if channel == self.channel_channel_group_4:
+            return {**common_data, "display_name": "group restricted channel 4 (muted)"}
         if channel == self.channel_livechat_1:
             return {**common_data, "display_name": "test1 Ernest Employee"}
         if channel == self.channel_livechat_2:

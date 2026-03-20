@@ -18,6 +18,7 @@ const StorePatch = {
             this.channels.status !== "fetched"
                 ? this.initChannelsUnreadCounter
                 : Object.values(this.store["discuss.channel"].records).filter(
+                      // Same conditions as the computed value of `initChannelsUnreadCounter`
                       (channel) =>
                           channel.self_member_id?.is_pinned &&
                           !channel.self_member_id?.mute_until_dt &&
