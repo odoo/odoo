@@ -139,10 +139,24 @@ class Data_RecycleModel(models.Model):
             if recycle_model.include_archived:
                 model = model.with_context(active_test=False)
             records_to_recycle = model.search(rule_domain)
+
+            # Get IDs of records currently matching the recycle rule (current_ids)
+            # and IDs of records already in the recycle records (existing_ids).
+            current_ids = set(records_to_recycle.ids)
+            existing_ids = set(mapped_existing_records[recycle_model])
+            # Remove recycle records for records that no longer match the recycle rule.
+            ids_to_remove = existing_ids - current_ids
+
+            if ids_to_remove:
+                self.env['data_recycle.record'].search([
+                    ('recycle_model_id', '=', recycle_model.id),
+                    ('res_id', 'in', ids_to_remove)
+                ]).unlink()
+
             records_to_create = [{
                 'res_id': record.id,
                 'recycle_model_id': recycle_model.id,
-            } for record in records_to_recycle if record.id not in mapped_existing_records[recycle_model]]
+            } for record in records_to_recycle if record.id not in existing_ids]
 
             if recycle_model.recycle_mode == 'automatic':
                 for records_to_create_batch in split_every(DR_CREATE_STEP_AUTO, records_to_create):

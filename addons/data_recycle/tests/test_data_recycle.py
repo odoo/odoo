@@ -84,3 +84,14 @@ class TestDataRecycle(TransactionCase):
         self.recycle_model.include_archived = True
         self.recycle_model._recycle_records()
         self.assertEqual(len(self.recycle_model.recycle_record_ids), 5)
+
+    def test_recycle_record_removed_when_no_longer_matching(self):
+        """ Ensure recycle records are removed when a record no longer matches rules. """
+        self.recycle_model._recycle_records()
+        self.assertEqual(len(self.recycle_model.recycle_record_ids), 5)
+        # Modify one old server so it no longer matches the time rule (date <= today - 1 year).
+        self.old_servers[0].date = Date.today()
+        self.recycle_model._recycle_records()
+        self.assertEqual(len(self.recycle_model.recycle_record_ids), 4, "Expected 4 recycle records after one record no longer matching any rule.")
+        current_recycle_record_ids = set(self.recycle_model.recycle_record_ids.mapped('res_id'))
+        self.assertNotIn(self.old_servers[0].id, current_recycle_record_ids, "Expected the recycle record linked to the modified server to have been removed.")
