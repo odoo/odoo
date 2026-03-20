@@ -43,7 +43,8 @@ SERIAL_PREFIX_FORMAT_HELP_TEXT = """
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _name = 'product.product'
+    _inherit = ['product.product', 'barcode.uniqueness.mixin']
 
     stock_quant_ids = fields.One2many('stock.quant', 'product_id') # used to compute quantities
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
@@ -516,6 +517,12 @@ class ProductProduct(models.Model):
             product.reordering_min_qty = product_min_qty_sum
             product.reordering_max_qty = product_max_qty_sum
 
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        super()._check_barcode_uniqueness()
+        for company_id, barcodes_within_company in self._get_barcodes_by_company():
+            self._check_duplicated_barcodes(barcodes_within_company, company_id)
+
     @api.onchange('tracking')
     def _onchange_tracking(self):
         if any(product.tracking in ['lot', 'serial'] and product.qty_available > 0 for product in self):
@@ -674,6 +681,9 @@ class ProductProduct(models.Model):
                 'active': vals['active']
             })
         return super().write(vals)
+
+    def _get_models_to_skip(self):
+        return ['product.uom']
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         return defaultdict(float), defaultdict(float)
@@ -1325,3 +1335,17 @@ class UomUom(models.Model):
         else:
             computed_qty = self._compute_quantity(qty, procurement_uom, rounding_method='HALF-UP')
         return (computed_qty, procurement_uom)
+
+
+class ProductUom(models.Model):
+    _name = 'product.uom'
+    _inherit = ['product.uom', 'barcode.uniqueness.mixin']
+
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        super()._check_barcode_uniqueness()
+        for company_id, barcodes_within_company in self._group_barcodes_by_company():
+            self._check_duplicated_barcodes(barcodes_within_company, company_id)
+
+    def _get_models_to_skip(self):
+        return ['product.product']
