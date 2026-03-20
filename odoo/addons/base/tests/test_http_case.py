@@ -83,7 +83,7 @@ class TestChromeBrowser(HttpCase):
         super().setUp()
         screencasts_dir = config['screencasts'] or config['screenshots']
         with patch.dict(config.options, {'screencasts': screencasts_dir, 'screenshots': config['screenshots']}):
-            self.browser = ChromeBrowser(self)
+            self.browser = ChromeBrowser(type(self))
         self.addCleanup(self.browser.stop)
         self.addCleanup(self.browser.clear)
 
