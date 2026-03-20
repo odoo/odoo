@@ -67,6 +67,7 @@ class Im_LivechatChannel(models.Model):
         "Agents Connected", compute="_compute_available_operator_ids"
     )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
+    script_external_text = fields.Char('Script (external) Text', compute='_compute_script_external')
     nbr_channel = fields.Integer('Number of conversations in the past 30 days', compute='_compute_nbr_channel', store=False, readonly=True)
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction")
     rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction")
@@ -232,7 +233,9 @@ class Im_LivechatChannel(models.Model):
         for record in self:
             values["channel_id"] = record.id
             values["url"] = record.get_base_url()
-            record.script_external = self.env['ir.qweb']._render('im_livechat.external_loader', values) if record.id else False
+            script_external = self.env['ir.qweb']._render('im_livechat.external_loader', values) if record.id else False
+            record.script_external = script_external
+            record.script_external_text = str(script_external) if script_external else False
 
     def _compute_web_page_link(self):
         for record in self:
