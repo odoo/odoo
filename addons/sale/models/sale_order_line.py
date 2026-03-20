@@ -1057,7 +1057,9 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def _get_delivered_quantity_by_analytic_domain(self):
-        return Domain("amount", "<=", 0.0)
+        # amount = -(unit_amount x price), so a negative unit_amount results in a
+        # positive amount, which would be excluded by amount <= 0 alone.
+        return Domain.OR([Domain("amount", "<=", 0.0), Domain("unit_amount", "<", 0.0)])
 
     def _get_downpayment_state(self):
         self.ensure_one()
