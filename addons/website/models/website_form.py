@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from lxml import etree
+from lxml import html
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -167,7 +167,7 @@ class IrModelFields(models.Model):
                 domain = [(field_name, 'ilike', f'data-model_name="{field.model}"')]
                 records = self.env[model_name].with_context(active_test=False).search(domain)
                 for record in records:
-                    arch_parsed = etree.fromstring(record[field_name])
+                    arch_parsed = html.fromstring(record[field_name])
                     xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
                     if arch_parsed.xpath(xpath_selector):
                         raise ValidationError(_(
