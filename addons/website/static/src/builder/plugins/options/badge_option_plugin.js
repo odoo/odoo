@@ -19,4 +19,13 @@ class BadgeOptionPlugin extends Plugin {
         unsplittable_node_predicates: (node) => node.classList?.contains("s_badge"),
     };
 }
+
+export class BadgeTranslationPlugin extends Plugin {
+    static id = "badgeTranslation";
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        force_background_translation_state_selectors: "span.s_badge",
+    };
+}
+
 registry.category("website-plugins").add(BadgeOptionPlugin.id, BadgeOptionPlugin);
