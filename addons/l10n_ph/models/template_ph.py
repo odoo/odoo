@@ -18,37 +18,41 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.ph',
-                'bank_account_code_prefix': '1000',
-                'cash_account_code_prefix': '1001',
+                'bank_account_code_prefix': '1020',
+                'cash_account_code_prefix': '1010',
                 'transfer_account_code_prefix': '1002',
-                'account_default_pos_receivable_account_id': 'l10n_ph_account_110003',
-                'income_currency_exchange_account_id': 'l10n_ph_account_710100',
-                'expense_currency_exchange_account_id': 'l10n_ph_account_710101',
-                'account_journal_suspense_account_id': 'l10n_ph_account_100000',
-                'default_cash_difference_income_account_id': 'l10n_ph_account_710102',
-                'default_cash_difference_expense_account_id': 'l10n_ph_account_710103',
-                'account_sale_tax_id': 'l10n_ph_account_tax_sale_vat_12',
-                'account_purchase_tax_id': 'l10n_ph_account_tax_purchase_vat_12',
-                'income_account_id': 'l10n_ph_account_430400',
-                'expense_account_id': 'l10n_ph_account_620000',
-                'receivable_account_id': 'l10n_ph_account_110000',
-                'payable_account_id': 'l10n_ph_account_200000',
-                'transfer_account_id': 'l10n_ph_account_100201',
-                'account_stock_valuation_id': 'l10n_ph_account_110300',
+                'account_default_pos_receivable_account_id': 'l10n_ph_account_103020',
+                'income_currency_exchange_account_id': 'l10n_ph_account_704010',
+                'expense_currency_exchange_account_id': 'l10n_ph_account_801010',
+                'account_journal_suspense_account_id': 'l10n_ph_account_102040',
+                'default_cash_difference_income_account_id': 'l10n_ph_account_705010',
+                'default_cash_difference_expense_account_id': 'l10n_ph_account_804010',
+                'account_sale_tax_id': 'l10n_ph_tax_sale_12',
+                'account_purchase_tax_id': 'l10n_ph_tax_purchase_12',
+                'income_account_id': 'l10n_ph_account_401010',
+                'expense_account_id': 'l10n_ph_account_603090',
+                'receivable_account_id': 'l10n_ph_account_103010',
+                'payable_account_id': 'l10n_ph_account_201010',
+                'transfer_account_id': 'l10n_ph_account_102050',
+                'account_stock_valuation_id': 'l10n_ph_account_105010',
+                'account_journal_early_pay_discount_gain_account_id': 'l10n_ph_account_705020',
+                'account_journal_early_pay_discount_loss_account_id': 'l10n_ph_account_804010',
+                'deferred_revenue_account_id': 'l10n_ph_account_203020',
+                'deferred_expense_account_id': 'l10n_ph_account_107030',
             },
         }
 
     @template('ph', 'account.journal')
     def _get_ph_account_journal(self):
         return {
-            "bank": {"default_account_id": "l10n_ph_account_100001"},
+            "bank": {"default_account_id": "l10n_ph_account_102010"},
         }
 
     @template('ph', 'account.account')
     def _get_ph_account_account(self):
         return {
-            'l10n_ph_account_110300': {
-                'account_stock_expense_id': 'l10n_ph_account_510000',
-                'account_stock_variation_id': 'l10n_ph_account_511900',
+            'l10n_ph_account_105010': {
+                'account_stock_expense_id': 'l10n_ph_account_500000',
+                'account_stock_variation_id': 'l10n_ph_account_502040',
             },
         }
