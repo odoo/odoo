@@ -98,14 +98,13 @@
             <value eval="{'state': 'paid'}"/>
         </function>
 
-        <function model="pos.session" name="post_closing_cash_details" eval="[[ref('pos_closed_session_1')], 2225.31]" />
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_1_2')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
 
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_1')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
-            eval="[[ref('pos_closed_session_1')]]" />
-
+        <function model="pos.session" name="close_session_from_ui"
+                eval="[[ref('pos_closed_session_1')]]" />
         <!-- Closed Session 2 (Today) -->
 
         <record id="pos_closed_session_2" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
@@ -202,15 +201,13 @@
             <value eval="{'state': 'paid'}"/>
         </function>
 
-        <function model="pos.session" name="post_closing_cash_details"
-                eval="[[ref('pos_closed_session_2')], 2243.57]" />
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_2_2')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
 
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_2')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_2')]]" />
-
         <!-- Closed Session 3 (1 month ago) -->
 
         <record id="pos_closed_session_3" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
@@ -318,15 +315,13 @@
             <value eval="{'state': 'paid'}"/>
         </function>
 
-        <function model="pos.session" name="post_closing_cash_details"
-                eval="[[ref('pos_closed_session_3')], 2243.57]" />
+         <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_3_2')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
 
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_3')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_3')]]" />
-
         <!-- Closed Session 4 (2 month ago) -->
 
         <record id="pos_closed_session_4" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
@@ -380,13 +375,12 @@
             <value eval="{'state': 'paid'}"/>
         </function>
 
-        <function model="pos.session" name="post_closing_cash_details"
-                eval="[[ref('pos_closed_session_4')], 2243.57]" />
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_4_1')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
 
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_4')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_4')]]" />
     </data>
 </odoo>

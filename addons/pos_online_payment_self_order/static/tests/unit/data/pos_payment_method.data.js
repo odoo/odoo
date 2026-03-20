@@ -2,14 +2,10 @@ import { patch } from "@web/core/utils/patch";
 import { PosPaymentMethod } from "@point_of_sale/../tests/unit/data/pos_payment_method.data";
 
 patch(PosPaymentMethod.prototype, {
-    _load_pos_data_fields() {
-        return [...super._load_pos_data_fields(), "is_online_payment"];
-    },
-
     _load_pos_self_data_read(records) {
         return [
             ...super._load_pos_self_data_read(records),
-            ...records.filter((record) => record.is_online_payment),
+            ...records.filter((record) => record.type === "online"),
         ];
     },
 });
@@ -19,14 +15,11 @@ PosPaymentMethod._records = [
     {
         id: 99,
         name: "Online payment",
-        is_cash_count: false,
-        split_transactions: false,
-        type: "bank",
+        type: "online",
         image: false,
         sequence: 1,
         payment_method_type: "none",
         payment_provider: false,
         default_qr: false,
-        is_online_payment: true,
     },
 ];

@@ -81,7 +81,7 @@ class TestPosStockMargin(TestPosMargin):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.5)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
     @skip('Temporary to fast merge new valuation')
     def test_avco_margin_closing_time(self):

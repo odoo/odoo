@@ -62,7 +62,6 @@ export function settleCustomerAccount(
     orderPrefix,
     orderSuffix = "",
     checkYear = false,
-    orderSettlement = false,
     availability = true
 ) {
     const steps = [
@@ -71,10 +70,9 @@ export function settleCustomerAccount(
         },
         clickPartnerOptions(`${partner}`),
     ];
-    const buttonText = orderSettlement ? "Settle orders" : "Settle invoices";
     steps.push(
         ...[
-            clickDropDownItemText(buttonText),
+            clickDropDownItemText("Settle invoices"),
             clickSettleOrderName(orderPrefix, orderSuffix, checkYear, availability),
         ]
     );

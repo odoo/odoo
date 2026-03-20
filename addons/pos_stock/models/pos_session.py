@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.tools import float_compare, float_is_zero, split_every
 from odoo.tools.constants import PREFETCH_MAX
 
@@ -18,6 +18,12 @@ class PosSession(models.Model):
         for session in self:
             session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids)])
             session.failed_pickings = bool(self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids), ('state', '!=', 'done')], limit=1))
+
+    @api.depends('sales_move_id', 'refunds_move_id')
+    def _compute_move_ids(self):
+        super()._compute_move_ids()
+        for session in self:
+            session.move_ids |= session.picking_ids.move_ids.account_move_id
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -39,17 +45,13 @@ class PosSession(models.Model):
         pos_data_fields.append('update_stock_at_closing')
         return pos_data_fields
 
-    def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-        res = super()._validate_session(balancing_account, amount_to_balance, bank_payment_method_diffs)
-        # Make sure to trigger reordering rules
-        self.picking_ids.move_ids.sudo()._trigger_scheduler()
-        return res
-
-    def _process_session_validation(self, balancing_account, amount_to_balance, bank_payment_method_diffs):
+    def close_session_from_ui(self, payment_method_closing={}):
+        result = super().close_session_from_ui(payment_method_closing)
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
             self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing()
-        super()._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
+        self.picking_ids.move_ids.sudo()._trigger_scheduler()
+        return result
 
     def _create_picking_at_end_of_session(self):
         self.ensure_one()
@@ -76,8 +78,7 @@ class PosSession(models.Model):
 
     def _get_account_move_data(self, bank_payment_method_diffs):
         data = super()._get_account_move_data(bank_payment_method_diffs)
-        data = self._create_stock_valuation_lines(data)
-        return data
+        return self._create_stock_valuation_lines(data)
 
     def _get_rounding_difference_vals(self, amount, amount_converted):
         if self.config_id.cash_rounding:
@@ -92,6 +93,7 @@ class PosSession(models.Model):
             if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) < 0:   # profit
                 partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
                 return self._credit_amounts(partial_args, amount, amount_converted)
+        return None
 
     def _create_non_reconciliable_move_lines(self, data):
         data = super()._create_non_reconciliable_move_lines(data)
@@ -105,7 +107,7 @@ class PosSession(models.Model):
 
         MoveLine.create(
             [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
-            + rounding_vals
+            + rounding_vals,
         )
 
         return data
@@ -148,38 +150,92 @@ class PosSession(models.Model):
         config_vals['update_stock_at_closing'] = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
         return config_vals
 
-    def _accumulate_amounts(self, data):
-        data = super()._accumulate_amounts(data)
-        amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0}  # noqa: E731
-        stock_expense = defaultdict(amounts)
-        stock_return = defaultdict(amounts)
-        stock_valuation = defaultdict(amounts)
-        all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
-        if all_picking_ids:
-            # Combine stock lines
-            stock_move_sudo = self.env['stock.move'].sudo()
-            stock_moves = stock_move_sudo.search([
-                ('picking_id', 'in', all_picking_ids),
+    def _prepare_session_closing_extra_line_commands(self, orders, refund, payments=[]):
+        lines = super()._prepare_session_closing_extra_line_commands(orders, refund, payments)
+        not_linked_to_order = self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+        linked_to_order = orders.filtered(lambda order: not order.shipping_date).picking_ids.ids
+        all_picking_ids = not_linked_to_order + linked_to_order
+
+        if not all_picking_ids:
+            return lines
+
+        stock_move_sudo = self.env['stock.move'].sudo()
+        stock_moves = stock_move_sudo.search([
+            ('picking_id', 'in', all_picking_ids),
+            ('product_id.valuation', '=', 'real_time'),
+            ('product_id.is_storable', '=', True),
+        ])
+
+        for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
+            for move in stock_moves_batch:
+                product_accounts = move.with_company(move.company_id).product_id._get_product_accounts()
+                exp_key = product_accounts['expense']
+                stock_key = product_accounts['stock_valuation']
+                signed_product_qty = move.uom_id._compute_quantity(
+                    move.product_uom_qty,
+                    move.product_id.uom_id,
+                    round=False,
+                )
+
+                if move._is_in():
+                    signed_product_qty *= -1
+
+                amount = signed_product_qty * move._get_price_unit()
+                lines.append(Command.create({
+                    'name': move.product_id.display_name,
+                    'account_id': exp_key.id,
+                    'partner_id': self.config_id.default_partner_id.id,
+                    'quantity': signed_product_qty,
+                    'amount_currency': amount,
+                    'balance': amount,
+                }))
+                lines.append(Command.create({
+                    'name': move.product_id.display_name,
+                    'account_id': stock_key.id,
+                    'partner_id': self.config_id.default_partner_id.id,
+                    'quantity': -signed_product_qty,
+                    'amount_currency': -amount,
+                    'balance': -amount,
+                }))
+
+        return lines
+
+    def _create_partial_reversal_move_from_session_closing(self, order):
+        move = super()._create_partial_reversal_move_from_session_closing(order)
+        if order.picking_ids.ids:
+            reverse_move_lines = []
+            commercial_partner = order.partner_id.commercial_partner_id
+            stock_moves = self.env['stock.move'].sudo().search([
+                ('picking_id', 'in', order.picking_ids.ids),
                 ('product_id.valuation', '=', 'real_time'),
-                ('product_id.is_storable', '=', True),
             ])
-            for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
-                for move in stock_moves_batch:
-                    product_accounts = move.with_company(move.company_id).product_id._get_product_accounts()
-                    exp_key = product_accounts['expense']
-                    stock_key = product_accounts['stock_valuation']
-                    signed_product_qty = move.uom_id._compute_quantity(move.product_uom_qty, move.product_id.uom_id, round=False)
-                    if move._is_in():
-                        signed_product_qty *= -1
-                    amount = signed_product_qty * move._get_price_unit()
-                    stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-                    if move._is_in():
-                        stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-                    else:
-                        stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
-        data.update({
-            'stock_expense': stock_expense,
-            'stock_return': stock_return,
-            'stock_valuation': stock_valuation,
-        })
-        return data
+
+            for stock_move in stock_moves:
+                product_ctx = stock_move.with_company(stock_move.company_id).product_id
+                product_accounts = product_ctx._get_product_accounts()
+                expense_account = product_accounts['expense']
+                stock_account = product_accounts['stock_valuation']
+                balance = stock_move.value if stock_move.is_out else -stock_move.value
+
+                reverse_move_lines.append(Command.create({
+                    'name': _("Stock variation for %s", stock_move.product_id.name),
+                    'account_id': expense_account.id,
+                    'partner_id': commercial_partner.id,
+                    'currency_id': order.company_id.currency_id.id,
+                    'amount_currency': -balance,
+                    'balance': -balance,
+                }))
+                reverse_move_lines.append(Command.create({
+                    'name': _("Stock variation for %s", stock_move.product_id.name),
+                    'account_id': stock_account.id,
+                    'partner_id': commercial_partner.id,
+                    'currency_id': order.company_id.currency_id.id,
+                    'amount_currency': balance,
+                    'balance': balance,
+                }))
+
+            move.write({
+                'line_ids': reverse_move_lines,
+            })
+
+        return move

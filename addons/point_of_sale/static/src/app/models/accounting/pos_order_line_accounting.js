@@ -186,7 +186,7 @@ export class PosOrderlineAccounting extends Base {
             product_uom_id: product.uom_id,
             product_id: product,
             rate: 1.0,
-            is_refund: this.qty * priceUnit < 0,
+            is_refund: this.order_id.is_refund,
             ...customValues,
         };
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {

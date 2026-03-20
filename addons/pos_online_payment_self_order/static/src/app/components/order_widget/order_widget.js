@@ -8,7 +8,7 @@ patch(OrderDisplay.prototype, {
         const type = this.selfOrder.config.self_ordering_mode;
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const isOnlinePayment = this.selfOrder.models["pos.payment.method"].find(
-            (p) => p.is_online_payment
+            (p) => p.type === "online"
         );
         const order = this.selfOrder.currentOrder;
         const service = this.selfOrder.config.self_ordering_service_mode;

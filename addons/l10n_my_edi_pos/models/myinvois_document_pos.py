@@ -208,7 +208,7 @@ class MyInvoisDocumentPoS(models.Model):
         """
         if record and record._name == 'pos.order':
             AccountTax = self.env["account.tax"]
-            base_lines = record._prepare_tax_base_line_values()
+            base_lines = record.lines._prepare_base_lines_for_taxes_computation()
             AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
             return base_lines

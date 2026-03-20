@@ -60,7 +60,6 @@ export class PosSession extends models.ServerModel {
             "stop_at",
             "payment_method_ids",
             "state",
-            "cash_register_balance_start",
             "access_token",
         ];
     }
@@ -173,7 +172,6 @@ export class PosSession extends models.ServerModel {
             stop_at: false,
             payment_method_ids: [2, 1],
             state: "opening_control",
-            cash_register_balance_start: 0.0,
             access_token: "e09c4843-c913-463a-959d-b9e235881201",
         },
     ];

@@ -46,7 +46,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
     def test_negative_margin(self):
         """
@@ -78,7 +78,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), -0.92)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
     def test_full_margin(self):
         """
@@ -110,7 +110,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[2].margin_percent, 1)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
     def test_tax_margin(self):
         """
@@ -144,7 +144,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
     def test_other_currency_margin(self):
         """
@@ -182,7 +182,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
         # set the config back
         self.config = current_config
@@ -224,7 +224,7 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[2].margin_percent, 0.4167)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
         # set the config back
         self.config = current_config
@@ -241,9 +241,11 @@ class TestPosMargin(TestPoSCommon):
         self.open_new_session()
 
         # create orders
-        orders = [self.create_ui_order_data([(product1, -1)]),
-                  self.create_ui_order_data([(product2, -1)]),
-                  self.create_ui_order_data([(product1, -2), (product2, -2)])]
+        orders = [
+            self.create_ui_order_data([(product1, -1)], pos_order_ui_args={'is_refund': True}),
+            self.create_ui_order_data([(product2, -1)], pos_order_ui_args={'is_refund': True}),
+            self.create_ui_order_data([(product1, -2), (product2, -2)], pos_order_ui_args={'is_refund': True}),
+        ]
 
         # sync orders
         self.env['pos.order'].sync_from_ui(orders)
@@ -259,4 +261,4 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()

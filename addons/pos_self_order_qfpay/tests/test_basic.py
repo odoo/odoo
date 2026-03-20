@@ -26,6 +26,7 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
             'self_ordering_service_mode': 'counter',
             'payment_method_ids': [Command.create({
                 'name': 'Qfpay',
+                'type': 'bank',
                 "qfpay_pos_key": "my_qfpay_pos_key",
                 "qfpay_notification_key": "my_qfpay_notification_key",
                 "payment_provider": "qfpay",
@@ -39,6 +40,7 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
         cls.env['pos.payment.method'].create({
             'name': 'Qfpay 2',
             'payment_provider': 'qfpay',
+            'type': 'bank',
         })
 
     def test_kiosk_qfpay(self):

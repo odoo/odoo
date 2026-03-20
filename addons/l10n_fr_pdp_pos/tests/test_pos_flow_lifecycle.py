@@ -124,7 +124,7 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
                 self.create_ui_order_data(**order_vals)
                 for order_vals in orders
             ])
-            session.action_pos_session_validate()
+            session.close_session_from_ui()
         return session
 
     def _create_pos_order_data(self, lines, payments=None):
@@ -169,11 +169,11 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             self._create_pos_order_data([(self.pos_product, 1)]),
         ])
 
-        pos_move = session.move_id
+        pos_move = session.sales_move_id
         self.assertTrue(pos_move)
         self.assertTrue(pos_move._l10n_fr_pdp_reports_pos_is_transaction_entry())
         self.assertRecordValues(pos_move, [{
-            'move_type': 'entry',
+            'move_type': 'out_invoice',
             'l10n_fr_pdp_flow_10_operation_type': 'sale',
             'l10n_fr_pdp_flow_10_report_type': 'transaction',
             'l10n_fr_pdp_status': 'pending',
@@ -190,7 +190,7 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             self._create_pos_order_data([(self.pos_product, 1)]),
         ])
 
-        xml = self._build_flow_xml(session.move_id.l10n_fr_pdp_last_flow_id)
+        xml = self._build_flow_xml(session.sales_move_id.l10n_fr_pdp_last_flow_id)
         self.assertFalse(xml.findall('./TransactionsReport/Invoice'))
         transaction = xml.find('./TransactionsReport/Transactions')
         self.assertEqual(transaction.findtext('CategoryCode'), 'TLB1')
@@ -202,7 +202,7 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             self._create_pos_order_data([(self.pos_product, 1), (self.pos_service, 1)]),
         ])
 
-        transactions = self._transaction_nodes(session.move_id.l10n_fr_pdp_last_flow_id)
+        transactions = self._transaction_nodes(session.sales_move_id.l10n_fr_pdp_last_flow_id)
         amounts_by_category = {
             transaction.findtext('CategoryCode'): float(transaction.findtext('TaxExclusiveAmount'))
             for transaction in transactions
@@ -220,8 +220,8 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             self._create_pos_order_data([(self.pos_product, 2)]),
         ])
 
-        flow = first_session.move_id.l10n_fr_pdp_last_flow_id
-        self.assertEqual(second_session.move_id.l10n_fr_pdp_last_flow_id, flow)
+        flow = first_session.sales_move_id.l10n_fr_pdp_last_flow_id
+        self.assertEqual(second_session.sales_move_id.l10n_fr_pdp_last_flow_id, flow)
         transaction = self._transaction_nodes(flow)[0]
         self.assertAlmostEqual(float(transaction.findtext('TaxExclusiveAmount')), 300.0, places=2)
         self.assertAlmostEqual(float(transaction.findtext('TaxTotal')), 60.0, places=2)
@@ -231,7 +231,7 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             self._create_pos_order_data([(self.pos_product, 1)]),
         ])
 
-        self.assertFalse(session.move_id._l10n_fr_pdp_get_matched_transactions())
+        self.assertFalse(session.sales_move_id._l10n_fr_pdp_get_matched_transactions())
         payment_flows = self.env['l10n.fr.pdp.reports.flow'].search([
             ('company_id', '=', self.company.id),
             ('operation_type', '=', 'sale'),
@@ -263,9 +263,9 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             ),
         ])
 
-        transaction_flow = session.move_id.l10n_fr_pdp_last_flow_id
+        transaction_flow = session.sales_move_id.l10n_fr_pdp_last_flow_id
         self.assertEqual(len(session.order_ids), 5)
-        self.assertEqual(transaction_flow._get_moves(), session.move_id)
+        self.assertEqual(transaction_flow._get_moves(), session.sales_move_id)
 
         transactions = {
             node.findtext('CategoryCode'): node
@@ -295,7 +295,7 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
         session = self._create_closed_pos_session([
             self._create_pos_order_data([(self.pos_product, 1)]),
         ])
-        flow = session.move_id.l10n_fr_pdp_last_flow_id
+        flow = session.sales_move_id.l10n_fr_pdp_last_flow_id
 
         self._run_send_cron('2025-09-20', identifier='POS-FLOW-SENT')
 
@@ -304,14 +304,14 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             'state': 'sent',
         }])
         self.assertTrue(flow.payload_id)
-        self.assertIn(session.move_id, flow.sent_move_ids)
+        self.assertIn(session.sales_move_id, flow.sent_move_ids)
 
     def test_pos_closing_entry_uses_correct_flow_period(self):
         session = self._create_closed_pos_session([
             self._create_pos_order_data([(self.pos_product, 1)]),
         ], date='2025-09-13')
 
-        self.assertRecordValues(session.move_id.l10n_fr_pdp_last_flow_id, [{
+        self.assertRecordValues(session.sales_move_id.l10n_fr_pdp_last_flow_id, [{
             'period_start': fields.Date.to_date('2025-09-11'),
             'period_end': fields.Date.to_date('2025-09-20'),
             'due_period_start': fields.Date.to_date('2025-09-30'),

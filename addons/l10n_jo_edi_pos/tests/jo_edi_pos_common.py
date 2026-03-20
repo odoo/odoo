@@ -56,6 +56,7 @@ class JoEdiPosCommon(JoEdiCommon, TestPoSCommon, TestPointOfSaleHttpCommon):
                 order_line.write(line_write_vals)
             del refund_vals['lines']
         order_refund.write(refund_vals)
+        order_refund._compute_prices()
 
         self._pay_order(order_refund, payments, default_payment)
 

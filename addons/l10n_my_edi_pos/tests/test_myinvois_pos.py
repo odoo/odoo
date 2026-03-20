@@ -36,6 +36,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
         })
         cash_payment = cls.env['pos.payment.method'].create({
             'name': 'Cash Payment',
+            'type': 'cash',
             'journal_id': cash_journal.id,
             'receivable_account_id': cls.pos_receivable_cash.id,
             'company_id': cls.env.company.id,
@@ -100,6 +101,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
         })
         cash_payment_usd = cls.env['pos.payment.method'].create({
             'name': 'Cash Payment',
+            'type': 'cash',
             'journal_id': cash_journal_usd.id,
             'receivable_account_id': cls.pos_receivable_cash.id,
             'company_id': cls.env.company.id,
@@ -391,6 +393,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
                 second_order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
             # Consolidate them
+            self.config.journal_id.currency_id = self.env.ref('base.USD')
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
                 'date_to': '2025-01-31',
@@ -588,6 +591,9 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                             'refunded_orderline_id': first_order.lines[0].id,
                         },
                     ],
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                 })
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
@@ -619,6 +625,9 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                             'refunded_orderline_id': first_order.lines[0].id,
                         },
                     ],
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                 })
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
@@ -724,6 +733,9 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 # Fails, you shouldn't invoice an order that hasn't been sent to myinvois yet.
                 with self.assertRaises(UserError):
                     self._create_order({
+                        'pos_order_ui_args': {
+                            'is_refund': True,
+                        },
                         'pos_order_lines_ui_args': [
                             {
                                 'product': self.product_one,
@@ -733,6 +745,9 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                         ], 'customer': self.invoicing_customer, 'is_invoiced': True,
                     })
                 self._create_order({
+                    'pos_order_ui_args': {
+                        'is_refund': True,
+                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -820,6 +835,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 fifth_order = self._create_order({'pos_order_lines_ui_args': [(product_1, 1.0), (product_2, 1.0)]})
 
             # Consolidate them
+            self.config.journal_id.currency_id = self.env.ref('base.USD')
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
                 'date_to': '2025-01-31',
@@ -871,13 +887,16 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 fifth_order = self._create_order({'pos_order_lines_ui_args': [(product_1, 1.0), (product_2, 1.0)]})
 
             # Consolidate them
+            self.config.journal_id.currency_id = self.env.ref('base.USD')  # Crappy patch
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
                 'date_to': '2025-01-31',
                 'consolidation_type': 'pos',
             })
             wizard.button_consolidate()
-            consolidated_invoice = (first_order | second_order | third_order | fourth_order | fifth_order).consolidated_invoice_ids
+            orders = (first_order | second_order | third_order | fourth_order | fifth_order)
+            self.assertEqual(orders.currency_id.name, 'USD')
+            consolidated_invoice = orders.consolidated_invoice_ids
             # We expect a single invoice
             self.assertEqual(len(consolidated_invoice), 1)
             # Add an export custom number; it doesn't make much sense in this flow but supporting it may be useful.
@@ -914,7 +933,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 "pos_order_lines_ui_args": [(self.product_one, 1.0)],
             })
 
-        self.assertFalse(order.account_move)
+        self.assertFalse(order.is_singly_invoiced)
 
         url = f"/pos/ticket/validate?access_token={order.access_token}"
         response = self.url_open(url)  # GET request to get csrf token
@@ -1022,8 +1041,10 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
     def with_pos_session(self):
         session = self.open_new_session(0.0)
         yield session
-        session.post_closing_cash_details(0.0)
-        session.close_session_from_ui()
+        cash_pm = self.config._get_cash_payment_method()
+        session.close_session_from_ui({
+            cash_pm.id: 0,
+        })
 
     def _create_order(self, ui_data):
         return next(iter(self._create_orders([ui_data]).values()))

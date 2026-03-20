@@ -236,14 +236,14 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "test_sub_categories_products_displayed")
 
         # Consultation
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        self.pos_config.current_session_id.close_session_from_ui()
         self.pos_config.write({'self_ordering_mode': 'consultation'})
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_sub_categories_products_displayed")
 
         # Kiosk
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+        self.pos_config.current_session_id.close_session_from_ui()
         self.pos_config.write({'self_ordering_mode': 'kiosk'})
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()

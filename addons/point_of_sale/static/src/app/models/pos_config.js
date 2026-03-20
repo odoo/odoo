@@ -66,7 +66,7 @@ export class PosConfig extends Base {
         return this.cash_rounding && !this.only_round_cash_method;
     }
     get canInvoice() {
-        return Boolean(this.raw.invoice_journal_id);
+        return Boolean(this.raw.journal_id);
     }
 
     get isShareable() {

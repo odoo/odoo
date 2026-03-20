@@ -22,6 +22,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.cash_payment_method.receivable_account_id = False
         cls.product.write({
             'name': "Real time valo product",
             'categ_id': cls.category,
@@ -67,8 +68,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
 
         # validate the session
         current_session_id = self.pos_config.current_session_id
-        current_session_id.post_closing_cash_details(100.0)
-        current_session_id.close_session_from_ui()
+        current_session_id.close_session_from_ui({self.cash_payment_method.id: 100.0})
         return current_session_id
 
     def test_inventory_valuation_session_closing_no_invoice(self):
@@ -79,7 +79,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
         current_session_id = self.create_pay_order_close()
 
         valuation_account = self.category.property_stock_valuation_account_id
-        valuation_lines = current_session_id.move_id.line_ids.filtered(lambda line: line.account_id == valuation_account)
+        valuation_lines = current_session_id.move_ids.line_ids.filtered(lambda line: line.account_id == valuation_account)
 
         self.assertEqual(len(valuation_lines), 1)
         self.assertEqual(valuation_lines.credit, 20.0)
@@ -92,7 +92,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
         current_session_id = self.create_pay_order_close()
 
         valuation_account = self.category.property_stock_valuation_account_id
-        valuation_lines = current_session_id.move_id.line_ids.filtered(lambda line: line.account_id == valuation_account)
+        valuation_lines = current_session_id.move_ids.line_ids.filtered(lambda line: line.account_id == valuation_account)
 
         self.assertEqual(len(valuation_lines), 1)
         self.assertEqual(valuation_lines.credit, 20.0)
@@ -106,7 +106,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
         current_session_id = self.create_pay_order_close()
 
         valuation_account = self.category.property_stock_valuation_account_id
-        valuation_lines = current_session_id.move_id.line_ids.filtered(lambda line: line.account_id == valuation_account)
+        valuation_lines = current_session_id.move_ids.line_ids.filtered(lambda line: line.account_id == valuation_account)
 
         self.assertEqual(len(valuation_lines), 1)
         self.assertEqual(valuation_lines.credit, 20.0)
