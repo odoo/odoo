@@ -2,7 +2,8 @@ import base64
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
+from cryptography.hazmat.primitives.asymmetric import dsa, ec, ed25519, rsa, x25519
+from cryptography.hazmat.primitives.serialization import pkcs12
 from datetime import datetime, timedelta, timezone
 
 from odoo.exceptions import UserError
@@ -68,6 +69,57 @@ class TestKeysCertificates(TransactionCase):
                 format=serialization.PublicFormat.SubjectPublicKeyInfo,
             )),
         })
+
+    def _generate_keys(self, n=1):
+        for _ in range(n):
+            yield rsa.generate_private_key(public_exponent=65537, key_size=2048)
+
+    def _search_certificate(self, subject_common_name):
+        return self.env['certificate.certificate'].with_context(active_test=False).search([
+            ('subject_common_name', '=', subject_common_name),
+        ])
+
+    def _build_pem_bundle(self, key, certs):
+        return b"".join([
+            key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.NoEncryption(),
+            ),
+            *(cert.public_bytes(serialization.Encoding.PEM) for cert in certs),
+        ])
+
+    def _build_test_cert(self, subject_cn, issuer_cn, subject_key, issuer_key=None, issuer_pub_key=None, rsa_padding=None):
+        if not issuer_key:
+            issuer_key = subject_key
+        if not issuer_pub_key:
+            issuer_pub_key = subject_key.public_key()
+
+        time_now = datetime.now(timezone.utc)
+        builder = x509.CertificateBuilder().subject_name(
+            x509.Name([x509.NameAttribute(x509.oid.NameOID.COMMON_NAME, subject_cn)]),
+        ).issuer_name(
+            x509.Name([x509.NameAttribute(x509.oid.NameOID.COMMON_NAME, issuer_cn)]),
+        ).public_key(
+            subject_key.public_key(),
+        ).serial_number(
+            x509.random_serial_number(),
+        ).not_valid_before(
+            time_now - timedelta(days=1),
+        ).not_valid_after(
+            time_now + timedelta(days=10),
+        )
+
+        ski = x509.SubjectKeyIdentifier.from_public_key(subject_key.public_key())
+        builder = builder.add_extension(ski, critical=False)
+
+        aki = x509.AuthorityKeyIdentifier.from_issuer_public_key(issuer_pub_key)
+        builder = builder.add_extension(aki, critical=False)
+
+        # Ed25519/Ed448 sign without a hash. RSA-PSS needs an explicit padding.
+        algorithm = None if isinstance(issuer_key, ed25519.Ed25519PrivateKey) else hashes.SHA256()
+        extra = {'rsa_padding': rsa_padding} if rsa_padding else {}
+        return builder.sign(issuer_key, algorithm, **extra)
 
     def test_ec_key_generated(self):
         private_key = self.env['certificate.key']._generate_ec_private_key(self.env.company)
@@ -161,3 +213,234 @@ class TestKeysCertificates(TransactionCase):
                 'content': base64.b64encode(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
                 'public_key_id': self.test_key_2_public.id,
             })
+
+    def test_pem_chain_extraction(self):
+        """ Test that a PEM bundle is correctly split, CAs are archived, and links are established. """
+        root_key, int_key, leaf_key = self._generate_keys(3)
+
+        # Build the chain (Root -> Intermediate -> Leaf)
+        root_cert = self._build_test_cert("Test Root CA", "Test Root CA", root_key)
+        int_cert = self._build_test_cert("Test Intermediate CA", "Test Root CA", int_key, root_key,
+                                         root_key.public_key())
+        leaf_cert = self._build_test_cert("Test Leaf", "Test Intermediate CA", leaf_key, int_key,
+                                          int_key.public_key())
+
+        bundle_pem = self._build_pem_bundle(leaf_key, [leaf_cert, int_cert, root_cert])
+
+        leaf_record = self.env['certificate.certificate'].create({
+            'name': 'Test Chain Upload',
+            'content': base64.b64encode(bundle_pem),
+        })[0]
+
+        # The intermediate and root should have been created in the background as archived
+        int_record = self._search_certificate('Test Intermediate CA')
+        root_record = self._search_certificate('Test Root CA')
+
+        self.assertRecordValues(leaf_record, [{
+            'active': True,
+            'content_format': 'pem',
+            'subject_common_name': 'Test Leaf',
+            'issuer_cert_id': int_record.id,
+        }])
+        self.assertRecordValues(int_record, [{'active': False, 'issuer_cert_id': root_record.id}])
+        self.assertRecordValues(root_record, [{'active': False, 'issuer_cert_id': False}])
+
+        # Verify the business method returns the full ordered chain
+        chain = leaf_record._get_certificate_chain()
+        self.assertEqual(chain.ids, [leaf_record.id, int_record.id, root_record.id])
+
+        # Generate a second leaf certificate signed by the same Intermediate CA
+        leaf_key_2 = next(self._generate_keys())
+        leaf_cert_2 = self._build_test_cert("Test Leaf 2", "Test Intermediate CA", leaf_key_2, int_key,
+                                            int_key.public_key())
+
+        # Same Intermediate and Root as the first bundle
+        bundle_pem_2 = self._build_pem_bundle(leaf_key_2, [leaf_cert_2, int_cert, root_cert])
+
+        leaf_record_2 = self.env['certificate.certificate'].create({
+            'name': 'Test Chain Upload 2',
+            'content': base64.b64encode(bundle_pem_2),
+        })[0]
+
+        int_records_after = self._search_certificate('Test Intermediate CA')
+        root_records_after = self._search_certificate('Test Root CA')
+
+        # Ensure no duplicate CAs were created (count must still be 1)
+        self.assertEqual(len(int_records_after), 1, "Duplicate Intermediate CA was created.")
+        self.assertEqual(len(root_records_after), 1, "Duplicate Root CA was created.")
+
+        # Assert the second leaf was created successfully and linked to the existing Intermediate CA
+        self.assertRecordValues(leaf_record_2, [{
+            'subject_common_name': 'Test Leaf 2',
+            'issuer_cert_id': int_record.id,
+        }])
+
+    def test_pkcs12_chain_extraction(self):
+        """ Test that a password-protected PKCS12 bundle is correctly split, CAs are archived, and links are established. """
+        root_key, int_key, leaf_key = self._generate_keys(3)
+
+        # Build the chain (Root -> Intermediate -> Leaf)
+        root_cert = self._build_test_cert("PKCS12 Root CA", "PKCS12 Root CA", root_key)
+        int_cert = self._build_test_cert("PKCS12 Intermediate CA", "PKCS12 Root CA", int_key, root_key,
+                                         root_key.public_key())
+        leaf_cert = self._build_test_cert("PKCS12 Leaf", "PKCS12 Intermediate CA", leaf_key, int_key,
+                                          int_key.public_key())
+
+        # Create a password-protected PKCS12 binary archive
+        password = "password"
+        p12_der = pkcs12.serialize_key_and_certificates(
+            name=b"test_pkcs12_bundle",
+            key=leaf_key,
+            cert=leaf_cert,
+            cas=[int_cert, root_cert],
+            encryption_algorithm=serialization.BestAvailableEncryption(password.encode()),
+        )
+
+        leaf_record = self.env['certificate.certificate'].create({
+            'name': 'Test PKCS12 Chain Upload',
+            'content': base64.b64encode(p12_der),
+            'pkcs12_password': password,
+        })[0]
+
+        # The intermediate and root should have been created in the background as archived
+        int_record = self._search_certificate('PKCS12 Intermediate CA')
+        root_record = self._search_certificate('PKCS12 Root CA')
+
+        self.assertRecordValues(leaf_record, [{
+            'active': True,
+            'content_format': 'pkcs12',
+            'subject_common_name': 'PKCS12 Leaf',
+            'issuer_cert_id': int_record.id,
+        }])
+        self.assertRecordValues(int_record, [{'active': False, 'issuer_cert_id': root_record.id}])
+        self.assertRecordValues(root_record, [{'active': False, 'issuer_cert_id': False}])
+        self.assertTrue(leaf_record.private_key_id, "Private key should be auto-computed from the PKCS12 archive")
+
+        # Verify the business method returns the full ordered chain
+        chain = leaf_record._get_certificate_chain()
+        self.assertEqual(chain.ids, [leaf_record.id, int_record.id, root_record.id])
+
+    def test_certificate_on_update(self):
+        """ Test that a password-protected PKCS12 bundle is correctly split after updating the content """
+        root_key, int_key, leaf_key = self._generate_keys(3)
+
+        # Build the chain (Root -> Intermediate -> Leaf)
+        root_cert = self._build_test_cert("PKCS12 Root CA", "PKCS12 Root CA", root_key)
+        int_cert = self._build_test_cert("PKCS12 Intermediate CA", "PKCS12 Root CA", int_key, root_key,
+                                         root_key.public_key())
+        leaf_cert = self._build_test_cert("PKCS12 Leaf", "PKCS12 Intermediate CA", leaf_key, int_key,
+                                          int_key.public_key())
+
+        # Create a password-protected PKCS12 binary archive
+        password = 'password'
+        p12_der = pkcs12.serialize_key_and_certificates(
+            name=b"test_pkcs12_bundle",
+            key=leaf_key,
+            cert=leaf_cert,
+            cas=[int_cert, root_cert],
+            encryption_algorithm=serialization.BestAvailableEncryption(password.encode()),
+        )
+
+        # Create a temporary certificate with different content
+        leaf_record = self.env['certificate.certificate'].create({
+            'name': 'Test PKCS12 Certificate',
+            'pkcs12_password': 'example',
+            'content': base64.b64encode(file_open('certificate/tests/data/cert.pfx', 'rb').read()),
+        })
+        self.assertEqual(leaf_record.content_format, 'pkcs12')
+
+        # Update the content of the certificate with the chain p12
+        leaf_record.write({
+            'content': base64.b64encode(p12_der),
+            'pkcs12_password': password,
+        })
+
+        # The intermediate and root should have been created in the background as archived
+        int_record = self._search_certificate('PKCS12 Intermediate CA')
+        root_record = self._search_certificate('PKCS12 Root CA')
+
+        self.assertRecordValues(leaf_record, [{
+            'content_format': 'pkcs12',
+            'issuer_cert_id': int_record.id,
+        }])
+        self.assertRecordValues(int_record, [{'active': False, 'issuer_cert_id': root_record.id}])
+        self.assertRecordValues(root_record, [{'active': False, 'issuer_cert_id': False}])
+
+    def test_unrelated_certificates_filtered(self):
+        """ Test that unrelated certificates in a bundle are ignored and not created. """
+        leaf_key, unrelated_key = self._generate_keys(2)
+
+        leaf_cert = self._build_test_cert("Test Leaf", "Test Leaf", leaf_key)
+        unrelated_cert = self._build_test_cert("Random Unrelated Cert", "Random Unrelated Cert", unrelated_key)
+
+        # Create a PEM bundle with the key, the valid leaf, and an unrelated cert
+        bundle_pem = self._build_pem_bundle(leaf_key, [leaf_cert, unrelated_cert])
+
+        leaf_record = self.env['certificate.certificate'].create({
+            'name': 'Test Unrelated Upload',
+            'content': base64.b64encode(bundle_pem),
+        })[0]
+
+        # Ensure the unrelated cert was not created in the database
+        unrelated_record = self._search_certificate('Random Unrelated Cert')
+
+        self.assertTrue(leaf_record.private_key_id)
+        self.assertFalse(unrelated_record)
+        self.assertEqual(len(leaf_record._get_certificate_chain()), 1)
+
+    def test_is_issued_by(self):
+        """ The signature-based issuer check must accept valid issuers across RSA,
+        RSA-PSS, ECDSA, Ed25519 and DSA, and reject impostors and key/algorithm mismatches. """
+        Cert = self.env['certificate.certificate']
+
+        rsa_ca_key, rsa_leaf_key, rsa_other_key = self._generate_keys(3)
+        ec_ca_key, ec_leaf_key = ec.generate_private_key(ec.SECP256R1()), ec.generate_private_key(ec.SECP256R1())
+        ed_ca_key, ed_leaf_key = ed25519.Ed25519PrivateKey.generate(), ed25519.Ed25519PrivateKey.generate()
+        dsa_ca_key, dsa_leaf_key = dsa.generate_private_key(2048), dsa.generate_private_key(2048)
+
+        rsa_ca = self._build_test_cert("RSA CA", "RSA CA", rsa_ca_key)
+        ec_ca = self._build_test_cert("EC CA", "EC CA", ec_ca_key)
+        ed_ca = self._build_test_cert("Ed CA", "Ed CA", ed_ca_key)
+        dsa_ca = self._build_test_cert("DSA CA", "DSA CA", dsa_ca_key)
+
+        valid_chains = [
+            (self._build_test_cert("RSA Leaf", "RSA CA", rsa_leaf_key, rsa_ca_key, rsa_ca_key.public_key()), rsa_ca),  # RSA PKCS#1 v1.5
+            (self._build_test_cert("EC Leaf", "EC CA", ec_leaf_key, ec_ca_key, ec_ca_key.public_key()), ec_ca),       # ECDSA
+            (self._build_test_cert("Ed Leaf", "Ed CA", ed_leaf_key, ed_ca_key, ed_ca_key.public_key()), ed_ca),       # Ed25519
+            (self._build_test_cert("DSA Leaf", "DSA CA", dsa_leaf_key, dsa_ca_key, dsa_ca_key.public_key()), dsa_ca),  # DSA
+        ]
+
+        for child, issuer in valid_chains:
+            self.assertTrue(Cert._is_issued_by(child, issuer))
+
+        # Correct issuer name but signed by a different key.
+        impostor = self._build_test_cert("RSA Leaf", "RSA CA", rsa_leaf_key, rsa_other_key, rsa_other_key.public_key())
+        self.assertFalse(Cert._is_issued_by(impostor, rsa_ca))
+
+        # Issuer name does not match the certificate's issuer.
+        self.assertFalse(Cert._is_issued_by(valid_chains[0][0], ec_ca))
+
+        # Key-type / signature-algorithm mismatch must be rejected without raising.
+        # Ex: Ed25519-signed certificate cannot have been issued by an RSA key.
+        ed_named_rsa = self._build_test_cert("RSA CA", "RSA CA", ed_leaf_key, ed_ca_key, ed_ca_key.public_key())
+        self.assertFalse(Cert._is_issued_by(ed_named_rsa, rsa_ca))
+
+        # A signature we cannot mathematically verify (an issuer key type we do not support for
+        # signatures, here X25519) still resolves the issuer through the AKI/SKI match.
+        x25519_key = x25519.X25519PrivateKey.generate()
+        unsupported_ca = self._build_test_cert("X25519 CA", "X25519 CA", x25519_key, rsa_ca_key, rsa_ca_key.public_key())
+        unsupported_leaf = self._build_test_cert("X25519 Leaf", "X25519 CA", rsa_leaf_key, rsa_ca_key, x25519_key.public_key())
+
+        # Cannot be proven cryptographically
+        self.assertIsNone(Cert._is_issued_by(unsupported_leaf, unsupported_ca))
+
+        # The certificate still links to the CA through the matching SKI.
+        ca_record = Cert.create({
+            'name': 'X25519 CA',
+            'content': base64.b64encode(unsupported_ca.public_bytes(serialization.Encoding.DER)),
+        })
+        leaf_record = Cert.create({
+            'name': 'X25519 Leaf',
+            'content': base64.b64encode(unsupported_leaf.public_bytes(serialization.Encoding.DER)),
+        })
+        self.assertEqual(leaf_record.issuer_cert_id, ca_record)
