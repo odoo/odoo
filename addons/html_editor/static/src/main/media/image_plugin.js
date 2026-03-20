@@ -14,18 +14,18 @@ import { isElementOverlappingAnyFloatingImage } from "@html_editor/utils/dom_inf
 import { ImageAlignSelector } from "./image_align_selector";
 
 const IMAGE_PADDING = [
-    { name: "None", value: 0 },
-    { name: "Small", value: 1 },
-    { name: "Medium", value: 2 },
-    { name: "Large", value: 3 },
-    { name: "XL", value: 5 },
+    { name: _t("None"), value: 0 },
+    { name: _t("Small"), value: 1 },
+    { name: _t("Medium"), value: 2 },
+    { name: _t("Large"), value: 3 },
+    { name: _t("XL"), value: 5 },
 ];
 
 const IMAGE_SIZE = [
-    { name: "Default", value: "" },
-    { name: "100%", value: "100%" },
-    { name: "50%", value: "50%" },
-    { name: "25%", value: "25%" },
+    { name: _t("Default"), value: "" },
+    { name: _t("100%"), value: "100%" },
+    { name: _t("50%"), value: "50%" },
+    { name: _t("25%"), value: "25%" },
 ];
 
 const IMAGE_ALIGNMENT = [
