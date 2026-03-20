@@ -16,6 +16,7 @@ from odoo.tools.float_utils import float_is_zero
 class StockPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = 'stock.package'
+    _inherit = ['barcode.uniqueness.mixin']
     _description = "Package"
     _order = 'name, id'
     _parent_name = 'parent_package_id'
