@@ -103,7 +103,7 @@ export class Call extends Component {
     }
 
     get minimized() {
-        if (this.rtc.isFullscreen || !this.channel || this.channel.activeRtcSession) {
+        if (this.rtc.isFullscreen || !this.channel || this.mainRtcSessions.length) {
             return false;
         }
         if (!this.isActiveCall || this.channel.videoCount === 0 || this.props.compact) {
@@ -116,27 +116,74 @@ export class Call extends Component {
         return this.props.channel || this.rtc.channel;
     }
 
+    /**
+     * @param {import("models").RtcSession} session
+     * @returns {import("@mail/discuss/call/common/rtc_service").VideoType}
+     */
+    getSessionMainType(session) {
+        let type = session.mainVideoStreamType;
+        if (type === "screen" && !session.is_screen_sharing_on) {
+            type = "camera";
+        }
+        if (type === "camera" && !session.is_camera_on) {
+            type = "screen";
+        }
+        if (type !== "camera" && type !== "screen") {
+            type = session.is_screen_sharing_on ? "screen" : "camera";
+        }
+        return type;
+    }
+
+    /**
+     * @param {import("models").RtcSession} session
+     * @returns {CardData}
+     */
+    makeSessionCard(session) {
+        const type = this.getSessionMainType(session);
+        return {
+            key: "session_" + session.id,
+            session,
+            type,
+            videoStream: session.getStream(type),
+        };
+    }
+
+    get mainRtcSessions() {
+        const mainSessions = [];
+        const activeSession = this.channel.activeRtcSession;
+        if (activeSession?.in(this.channel.rtc_session_ids)) {
+            mainSessions.push(activeSession);
+        }
+        for (const session of this.channel.pinnedRtcSessions) {
+            if (!mainSessions.some((currentSession) => currentSession.eq(session))) {
+                mainSessions.push(session);
+            }
+        }
+        return mainSessions;
+    }
+
+    get hasMainRtcSessions() {
+        return Boolean(this.mainRtcSessions.length);
+    }
+
     /** @returns {CardData[]} */
     get visibleMainCards() {
-        const activeSession = this.channel.activeRtcSession;
+        const [activeSession] = this.mainRtcSessions;
         if (!activeSession) {
             this.state.insetCard = undefined;
             return this.channel.visibleCards;
         }
-        const type = activeSession.mainVideoStreamType;
+        if (this.mainRtcSessions.length > 1) {
+            this.state.insetCard = undefined;
+            return this.mainRtcSessions.map((session) => this.makeSessionCard(session));
+        }
+        const type = this.getSessionMainType(activeSession);
         if (type === "screen" || activeSession.is_screen_sharing_on) {
             this.setInset(activeSession, type === "camera" ? "screen" : "camera");
         } else {
             this.state.insetCard = undefined;
         }
-        return [
-            {
-                key: "session_" + activeSession.id,
-                session: activeSession,
-                type,
-                videoStream: activeSession.getStream(type),
-            },
-        ];
+        return [this.makeSessionCard(activeSession)];
     }
 
     get sidebarCards() {
@@ -182,14 +229,14 @@ export class Call extends Component {
 
     get hasSidebarButton() {
         return Boolean(
-            this.channel.activeRtcSession &&
+            this.hasMainRtcSessions &&
                 this.state.overlay &&
                 (!this.props.compact || this.rtc.isFullscreen)
         );
     }
 
     get isControllerFloating() {
-        return this.rtc.isFullscreen || (this.channel.activeRtcSession && !this.ui.isSmall);
+        return this.rtc.isFullscreen || (this.hasMainRtcSessions && !this.ui.isSmall);
     }
 
     onMouseleaveMain(ev) {

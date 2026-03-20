@@ -58,7 +58,7 @@
                     <ActionList actions="this.layoutActions" inline="true"/>
                 </div>
             </div>
-            <div t-if="this.state.sidebar and this.channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
+            <div t-if="this.state.sidebar and this.hasMainRtcSessions" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
                 <CallParticipantCard t-foreach="this.sidebarCards" t-as="cardData" t-key="cardData.key"
                     cardData="cardData"
                     className="'o-discuss-Call-sidebarCard w-100 p-1'"

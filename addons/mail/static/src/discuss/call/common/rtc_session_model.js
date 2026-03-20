@@ -97,6 +97,8 @@ export class RtcSession extends Record {
     is_deaf;
     /** @type {boolean} */
     is_muted;
+    /** @type {boolean} */
+    is_pinned = false;
     // Client data
     /** @type {HTMLAudioElement} */
     audioElement;

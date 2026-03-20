@@ -58,6 +58,15 @@
                     <span t-if="this.rtcSession.is_muted and !this.rtcSession.is_deaf" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="muted" aria-label="muted">
                         <i class="fa fa-microphone-slash"/>
                     </span>
+                    <span t-if="this.rtcSession.is_pinned or this.rootHover.isHover"
+                        role="button"
+                        class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg"
+                        t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall, 'bg-primary': this.rtcSession.is_pinned }"
+                        t-att-title="this.pinButtonLabel"
+                        t-att-aria-label="this.pinButtonLabel"
+                        t-on-click="this.rtcSession.is_pinned ? this.unpin : this.pin">
+                        <i class="fa fa-thumb-tack" />
+                    </span>
                 </div>
                 <CallDropdown t-if="this.isContextMenuAvailable and ((!this.isMobileOS and this.rootHover.isHover) or (this.isMobileOS and !this.props.minimized))" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
                     <button class="o-discuss-CallParticipantCard-contextButton position-absolute top-0 end-0 btn btn-secondary btn-sm rounded-circle border-0 smaller p-1" title="Participant options">

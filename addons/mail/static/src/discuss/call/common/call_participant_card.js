@@ -11,6 +11,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
@@ -168,6 +169,32 @@ export class CallParticipantCard extends Component {
 
     get isActiveRtcSession() {
         return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession);
+    }
+
+    get pinButtonLabel() {
+        return this.rtcSession?.is_pinned ? _t("Unpin") : _t("Pin to screen");
+    }
+
+    pin(ev) {
+        ev.stopPropagation();
+        const session = this.rtcSession;
+        const channel = session?.channel;
+        if (!session || !channel) {
+            return;
+        }
+        session.is_pinned = true;
+        session.mainVideoStreamType =
+            this.props.cardData.type || (session.is_screen_sharing_on ? "screen" : "camera");
+    }
+
+    unpin(ev) {
+        ev.stopPropagation();
+        const session = this.rtcSession;
+        const channel = session.channel;
+        if (!channel || !session?.is_pinned) {
+            return;
+        }
+        session.is_pinned = false;
     }
 
     async onClick(ev) {

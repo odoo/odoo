@@ -166,6 +166,9 @@ const DiscussChannelPatch = {
         return !this.store.rtc.isFullscreen && this.hasRtcSessionActive;
     },
     focusAvailableVideo() {
+        if (this.rtc_session_ids.some((session) => session.is_pinned)) {
+            return;
+        }
         if (
             !this.store.settings.useCallAutoFocus ||
             !(
@@ -191,6 +194,9 @@ const DiscussChannelPatch = {
      * @param {import("models").RtcSession} session
      */
     updateCallFocusStack(session) {
+        if (this.rtc_session_ids.some((rtcSession) => rtcSession.is_pinned)) {
+            return;
+        }
         if (
             this.notEq(this.store.rtc?.channel) ||
             session.eq(this.store.rtc.selfSession) ||
@@ -213,6 +219,9 @@ const DiscussChannelPatch = {
     },
     get hasRtcSessionActive() {
         return this.rtc_session_ids.length > 0;
+    },
+    get pinnedRtcSessions() {
+        return this.rtc_session_ids.filter((session) => session.is_pinned);
     },
 };
 patch(DiscussChannel.prototype, DiscussChannelPatch);
