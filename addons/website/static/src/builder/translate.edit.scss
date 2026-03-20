@@ -1,20 +1,16 @@
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    &, &[data-oe-field="mega_menu_content"] * {
-        background-color: rgba($o-we-content-to-translate-color, 0.5) !important;
-    }
+    --text-translate-highlight-color: #{rgba($o-we-content-to-translate-color, 0.5)};
 
     &[data-oe-translation-state="translated"] {
-        &, &[data-oe-field="mega_menu_content"] * {
-            background-color: rgba($o-we-translated-content-color, 0.5) !important;
-        }
+        --text-translate-highlight-color: #{rgba($o-we-translated-content-color, 0.5)};
     }
 
     &.o_dirty, &.oe_translated, .oe_translated {
-        background-color: rgba($o-we-translated-content-color, 0.25) !important;
-
-        &[data-oe-field="mega_menu_content"] * {
-            background-color: rgba($o-we-translated-content-color, 0.25) !important;
-        }
+        --text-translate-highlight-color: #{rgba($o-we-translated-content-color, 0.25)};
+    }
+    
+    &, .oe_translated, &[data-oe-field="mega_menu_content"] *, .o_translation_state_inner_span {
+        background-color: var(--text-translate-highlight-color) !important;
     }
 }
 
