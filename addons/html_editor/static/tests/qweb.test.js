@@ -305,7 +305,7 @@ test("select text inside t-out", async () => {
     );
 });
 
-test("select text inside t-esc", async () => {
+test("select text inside t-out", async () => {
     const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
         config,
     });
@@ -315,7 +315,7 @@ test("select text inside t-esc", async () => {
             '<p data-selection-placeholder=""><br></p>'
     );
 
-    setSelection({ anchorNode: el.querySelector("t[t-esc]").childNodes[0], anchorOffset: 1 });
+    setSelection({ anchorNode: el.querySelector("t[t-out]").childNodes[0], anchorOffset: 1 });
 
     await tick();
     expect(getContent(el)).toBe(
