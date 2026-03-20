@@ -12,6 +12,10 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10"),
             ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.validateButtonIsHighlighted(),
+            PaymentScreen.clickValidate(),
+            Dialog.cancel(),
             PaymentScreen.totalIs("48.0"),
             PaymentScreen.emptyPaymentlines("48.0"),
 
