@@ -7,4 +7,3 @@ class TestQwebFloatDecimalPrecisionTest(models.Model):
 
     float = fields.Float()
     float_2 = fields.Float(digits=(16, 2))
-    float_4 = fields.Float(digits=(16, 4))
