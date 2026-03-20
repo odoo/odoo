@@ -54,6 +54,7 @@
                 <field name="scope"/>
                 <separator/>
                 <filter string="General" name="scope_general" domain="[('scope','=','general')]" help="General certificates"/>
+                <filter string="Certificate Authority" name="scope_ca" domain="[('scope','=','ca'), ('active','in',[True, False])]" help="CA certificates"/>
                 <separator/>
                 <filter string="Valid" name="valid" domain="[('is_valid','=',True)]" help="Valid certificates"/>
                 <filter string="Invalid" name="not_valid" domain="[('is_valid','=',False)]" help="Not valid certificates"/>
