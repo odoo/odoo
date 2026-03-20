@@ -129,7 +129,7 @@ registerWebsitePreviewTour(
                         clientY: y,
                         pointerType: "mouse",
                     });
-                    (type === "pointermove" ? window : overlayEl).dispatchEvent(event);
+                    (type === "pointermove" ? document : overlayEl).dispatchEvent(event);
                 };
 
                 // Trigger pointer down
