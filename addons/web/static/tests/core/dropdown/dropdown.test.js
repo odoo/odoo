@@ -29,6 +29,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useActiveElement } from "@web/core/ui/ui_service";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
@@ -173,6 +174,42 @@ test("close on outside click", async () => {
         await click(".o_bottom_sheet_backdrop");
     } else {
         await click("div.outside");
+    }
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+});
+
+test("close on click outside an active element", async () => {
+    class ActiveElementDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <div t-ref="active">
+                <Dropdown>
+                    <button>Dropdown</button>
+                    <t t-set-slot="content">
+                        <DropdownItem class="'item-a'">Item A</DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+        `;
+
+        setup() {
+            useActiveElement("active");
+        }
+    }
+
+    await mountWithCleanup(ActiveElementDropdown);
+
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(".outside");
     }
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
@@ -723,7 +760,7 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
     expect(DROPDOWN_ITEM).toHaveClass(["selected", "focus"]);
 });
 
-test("don't close dropdown outside the active element", async () => {
+test("don't close parent dropdown when clicking in a child active element", async () => {
     const env = await makeMockEnv();
 
     // This test checks that if a dropdown element opens a dialog with a dropdown inside,
