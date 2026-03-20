@@ -883,10 +883,6 @@ export class TicketScreen extends Component {
             text: _t("Ongoing"),
             indented: true,
         });
-        states.set("RECEIPT", {
-            text: _t("Receipt"),
-            indented: true,
-        });
         if (this.pos.config.set_tip_after_payment) {
             states.set("OPEN", { text: _t("Open"), indented: true });
             states.set("TIPPING", { text: _t("Tipping"), indented: true });

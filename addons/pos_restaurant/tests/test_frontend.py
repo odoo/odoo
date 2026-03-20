@@ -842,7 +842,6 @@ class TestFrontend(TestFrontendCommon):
             'preparation_printer_ids': [Command.set([preparation_printer.id])],
             'receipt_printer_ids': [Command.set([receipt_printer.id])],
             'iface_print_auto': True,
-            'iface_print_skip_screen': True,
             'other_devices': True,
             'preparation_devices': True,
         })
