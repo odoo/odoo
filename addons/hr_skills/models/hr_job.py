@@ -22,6 +22,11 @@ class HrJob(models.Model):
         compute="_compute_skill_ids",
         store=True,
     )
+    skill_proficiency_ids = fields.Many2many(
+        'hr.skill.proficiency',
+        compute='_compute_skill_proficiency_ids',
+        store=True,
+    )
 
     @api.depends("job_skill_ids")
     def _compute_current_job_skill_ids(self):
@@ -52,12 +57,26 @@ class HrJob(models.Model):
         for job in self:
             job.skill_ids = job.job_skill_ids.skill_id
 
+    @api.depends('job_skill_ids.skill_id', 'job_skill_ids.skill_level_id')
+    def _compute_skill_proficiency_ids(self):
+        for job in self:
+            job.skill_proficiency_ids = self.env['hr.skill.proficiency']._get_or_create_proficiencies(job.job_skill_ids)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             vals_job_skill = vals.pop("current_job_skill_ids", []) + vals.get("job_skill_ids", [])
             vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(vals_job_skill, self)
         return super().create(vals_list)
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('job_skill_ids'):
+            res['job_skill_ids']['searchable'] = False
+        if res.get('current_job_skill_ids'):
+            res['current_job_skill_ids']['searchable'] = False
+        return res
 
     def write(self, vals):
         if "current_job_skill_ids" in vals or "job_skill_ids" in vals:

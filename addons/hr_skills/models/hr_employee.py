@@ -21,6 +21,7 @@ class HrEmployee(models.Model):
     current_employee_skill_ids = fields.One2many('hr.employee.skill',
         compute='_compute_current_employee_skill_ids', readonly=False)
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_user")
+    skill_proficiency_ids = fields.Many2many('hr.skill.proficiency', compute='_compute_skill_proficiency_ids', store=True)
     certification_ids = fields.One2many('hr.employee.skill', compute='_compute_certification_ids', readonly=False)
     display_certification_page = fields.Boolean(compute="_compute_display_certification_page")
 
@@ -34,6 +35,11 @@ class HrEmployee(models.Model):
     def _compute_skill_ids(self):
         for employee in self:
             employee.skill_ids = employee.employee_skill_ids.skill_id
+
+    @api.depends('employee_skill_ids.skill_id', 'employee_skill_ids.skill_level_id')
+    def _compute_skill_proficiency_ids(self):
+        for employee in self:
+            employee.skill_proficiency_ids = self.env['hr.skill.proficiency']._get_or_create_proficiencies(employee.employee_skill_ids)
 
     @api.depends('employee_skill_ids')
     def _compute_certification_ids(self):
@@ -212,3 +218,10 @@ class HrEmployee(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         res.many("employee_skill_ids", ["color", "display_name"])
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('employee_skill_ids'):
+            res['employee_skill_ids']['searchable'] = False
+        return res
