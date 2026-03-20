@@ -646,7 +646,7 @@ describe("Selection collapsed", () => {
                         '<p><span class="a">ab</span></p><p><span class="b">[]cd</span></p>',
                     stepFunction: splitBlock,
                     contentAfter:
-                        '<p><span class="a">ab</span></p><p><span class="b">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
+                        '<p><span class="a">ab</span></p><p><span class="b" data-oe-zws-empty-inline="">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
                 });
             });
 
