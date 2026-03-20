@@ -181,7 +181,7 @@ export class TablePlugin extends Plugin {
         can_contain_selection_placeholder_predicates: (container) => {
             if (container.nodeName === "TABLE") {
                 return false;
-            } else if (["TD", "TH"].includes(container.nodeName)) {
+            } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
                 return true;
             }
         },

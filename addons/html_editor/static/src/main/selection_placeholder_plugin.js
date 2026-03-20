@@ -5,6 +5,7 @@ import {
     allowsParagraphRelatedElements,
     isEmpty,
     isNotEditableNode,
+    isPhrasingContent,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -38,20 +39,16 @@ export class SelectionPlaceholderPlugin extends Plugin {
             }
         },
         is_selection_blocker_predicates: (blocker) => {
-            if (
-                (blocker.nodeType === Node.ELEMENT_NODE &&
-                    blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
-                !isBlock(blocker)
-            ) {
-                return false;
-            } else if (isNotEditableNode(blocker)) {
-                return true;
+            if (isNotEditableNode(blocker)) {
+                return isBlock(blocker);
             }
         },
         can_contain_selection_placeholder_predicates: (container) => {
-            if (!container.isContentEditable || !allowsParagraphRelatedElements(container)) {
-                return false;
-            } else if (container.getAttribute("contenteditable") === "true") {
+            if (
+                container.getAttribute("contenteditable") === "true" &&
+                !isPhrasingContent(container) &&
+                allowsParagraphRelatedElements(container)
+            ) {
                 return true;
             }
         },

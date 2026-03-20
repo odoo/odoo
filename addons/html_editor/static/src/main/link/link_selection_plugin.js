@@ -46,18 +46,6 @@ export class LinkSelectionPlugin extends Plugin {
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
 
-        /** Predicates */
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "BUTTON" || container.nodeName === "A") {
-                // We sometimes have buttons or links that are blocks with
-                // contenteditable=true but we never want to insert a paragraph
-                // in them.
-                // Note: this can be removed if `allowsParagraphRelatedElements`
-                // is adapted to return false in these cases.
-                return false;
-            }
-        },
-
         system_classes: ["o_link_in_selection"],
     };
 
