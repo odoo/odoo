@@ -31,7 +31,7 @@ def make_efactura_request(session, company, endpoint, params, data=None) -> dict
     url = f"https://api.anaf.ro/{send_mode}/FCTEL/rest/{endpoint}"
     if endpoint in ['upload', 'uploadb2c', 'transformare']:
         method = 'POST'
-    elif endpoint in ['stareMesaj', 'descarcare', 'listaMesajePaginatieFactura']:
+    elif endpoint in ['stareMesaj', 'descarcare', 'listaMesajeFactura', 'listaMesajePaginatieFactura']:
         method = 'GET'
     else:
         return {'error': company.env._('Unknown endpoint.')}
@@ -108,14 +108,14 @@ def _request_ciusro_fetch_status(company, key_loading, session):
     it will return one of the following three possible objects:
 
     - {'error': `str`} ~ failing response from a bad request
-    - {'key_download': `str`, 'state_status': ['nok', 'ok']} ~ The response was successful, and we can use this key to download the answer.
-    If the document was accepted, 'state_status' will be ``ok``. Otherwise, it will be ``nok``.
+    - {'key_download': `str`, 'state_status': ['nok', 'ok', 'XML cu erori nepreluat de sistem']} ~ The response was successful, and we can use this key to download the answer.
+    If the document was accepted, 'state_status' will be ``ok``. Otherwise, it will be ``nok`` or special case ``XML cu erori nepreluat de sistem`` if the XML was not accepted by SPV due to errors but it was not rejected either, meaning that the supplier will need to correct the XML and resend it.
     - {} ~ (empty dict) The response was successful but the SPV haven't finished processing the XML yet.
 
     :param company: ``res.company`` object
     :param key_loading: Content of ``key_loading`` received from ``_request_ciusro_send_invoice``
     :param session: ``requests.Session()`` object
-    :return: {'error': `str`} | {'key_download': `str`, 'state_status': ['nok', 'ok']} | {}
+    :return: {'error': `str`} | {'key_download': `str`, 'state_status': ['nok', 'ok', 'XML cu erori nepreluat de sistem']} | {}
     """
     result = make_efactura_request(
         session=session,
@@ -132,7 +132,7 @@ def _request_ciusro_fetch_status(company, key_loading, session):
         return {'error': '\n'.join(error_element.get('errorMessage') for error_element in error_elements)}
 
     state_status = root.get('stare')
-    if state_status in ('nok', 'ok'):
+    if state_status != 'in prelucrare':
         return {'key_download': root.get('id_descarcare'), 'state_status': state_status}
     return {}
 
@@ -145,6 +145,11 @@ def _request_ciusro_download_answer(company, key_download, session):
     - the original invoice and/or the failing response from a bad request / unaccepted XML answer from the SPV
     - the necessary signature information to be stored from the SPV
 
+    It could return also a JSON with an error message if the SPV response cannot be parsed or if the SPV returned an error.
+    {
+        "eroare": "Id descarcare introdus= 123a nu este un numar intreg",
+        "titlu": "Descarcare mesaj"
+    }
     :param company: ``res.company`` object
     :param key_download: Content of `key_download` received from `_request_ciusro_send_invoice`
     :param session: ``requests.Session()`` object
@@ -213,12 +218,12 @@ def _request_ciusro_download_answer(company, key_download, session):
 
     except zipfile.BadZipFile:
         try:
-            msg_content = json.loads(result['content'].decode())
+            msg_content = json.loads(result.get('content', b''))
         except ValueError:
             return {'error': company.env._("The SPV data could not be parsed.")}
 
-        if eroare := msg_content.get('eroare'):
-            return {'error': eroare}
+        if error := msg_content.get('eroare'):
+            return {'error': error}
 
     return {'error': company.env._("The SPV data could not be parsed.")}
 
@@ -226,12 +231,12 @@ def _request_ciusro_download_answer(company, key_download, session):
 def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1):
     """
     This method makes a "Fetch Messages" (GET/listaMesajePaginatieFactura) request to the Romanian SPV.
-    After processing the response, if messages were indeed fetched, it will fetch the content
-    of said messages. It used the pagination system of the SPV to make sure all messages are fetched,
-    by default only the first 500 are shown, so in case of bigger comapnies, this method needs to be paginated.
+    and process the response, getting the list of messages and errors. It used the pagination system of
+    the SPV to make sure all messages are fetched, by default only the first 500 are shown, so in case
+    of bigger comapnies, this method needs to be paginated.
 
-    Possible returns:
-    Returns a dict with messages and errors keys,  messages is a list of all messages obtained from SPV and
+    Returns:
+    Returns a dict with messages and errors keys, messages is a list of all messages obtained from SPV and
     errors is a list of all errors encountered during the pagination request or the fetching of the message content.
     - {messages: [`dict`], errors: [`str`]}
     where `dict` is {
@@ -247,60 +252,41 @@ def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1)
     :param company: ``res.company`` object
     :param session: ``requests.Session()`` object
     :param nb_days(optional,default=1): ``int`` the number of days for which the request should be made, min=1, max=60
-    :return: {'error': `str`} | {'sent_invoices_messages': [`dict`], 'sent_invoices_refused_messages': [`dict`], 'received_bills_messages': [`dict`]}
     """
-    def pagination_request(session, company, params):
-        pagina = params.get("pagina", 1)
-        start_time = params.get("start_time")
-        end_time = params.get("end_time")
-        numar_total_pagini = 1
-        messages = params.get("messages", [])
-        errors = params.get("errors", [])
-        result = make_efactura_request(
-            session=session,
-            company=company,
-            endpoint='listaMesajePaginatieFactura',
-            params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': pagina},
-        )
-
-        page_messages = []
-        if 'error' not in result:
-            try:
-                msg_content = json.loads(result['content'])
-                page_messages = msg_content.get('mesaje', [])
-                numar_total_pagini = msg_content.get('numar_total_pagini', 1)
-                if eroare := msg_content.get('eroare'):
-                    errors.append(eroare)
-            except ValueError:
-                errors.append(company.env._("The SPV data from page %s could not be parsed.") % pagina)
-        else:
-            msg_content = json.loads(result['content'])
-            if eroare := msg_content.get('eroare'):
-                errors.append(eroare)
-        messages += page_messages
-        if pagina < numar_total_pagini:
-            params.update(
-                {
-                    "pagina": pagina + 1,
-                    "messages": messages,
-                    "errors": errors
-                }
-            )
-            return pagination_request(session, company, params)
-        return {'messages': messages, 'errors': errors}
-    start_time = end_time = 0
-    end_time = datetime.now()
-    start_time = end_time - timedelta(days=nb_days)
-    start_time = str(start_time.timestamp() * 1e3).split(".")[0]
-    end_time = str(end_time.timestamp() * 1e3).split(".")[0]
-
-    message_response = pagination_request(
+    messages = []
+    errors = []
+    nb_days = max(1, min(nb_days, 60))  # Ensure nb_days is between 1 and 60 as per SPV limits
+    start_time = str((datetime.now() - timedelta(days=nb_days)).timestamp() * 1e3).split(".")[0]
+    end_time = str(datetime.now().timestamp() * 1e3).split(".")[0]
+    page_number = 1
+    result = make_efactura_request(
         session=session,
         company=company,
-        params={'start_time': start_time, 'end_time': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': 1, 'messages': [], 'errors': []},
+        endpoint='listaMesajePaginatieFactura',
+        params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': page_number},
     )
 
-    return message_response
+    total_page_number = result.get('numar_total_pagini', 1)
+    while page_number <= total_page_number:
+        if page_number > 1:
+            result = make_efactura_request(
+                session=session,
+                company=company,
+                endpoint='listaMesajePaginatieFactura',
+                params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': page_number},
+            )
+        if 'content' in result:
+            result = json.loads(result['content'])
+
+        messages += result.get('mesaje', [])
+        if result.get("error"):
+            errors.append(result.get("error"))
+        if result.get("eroare"):
+            errors.append(result.get("eroare"))
+
+        page_number += 1
+
+    return {'messages': messages, 'errors': errors}
 
 
 def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
@@ -354,22 +340,38 @@ def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
     }
 
 
-def _request_ciusro_xml_to_pdf(company, xml_data, inv_type, validate_xml):
+def _request_ciusro_xml_to_pdf(company, xml_data):
     """
     This method makes a 'transformare' request to get the official PDF of an invoice.
-
+    The response can be the PDF file if the transformation is successful, or a json
+    with some error messages if the transformation failed.
+    {
+    "stare": "nok",
+    "Messages": [
+        {
+        "message": "Valorile acceptate pentru parametrul standard sunt FACT1 si FCN"
+        }
+    ],
+    "trace_id": "4506b709-92d1-4efe-b286-e652624ba2fb"
+    }
     :param company: ``res.company`` object
     :param xml_data: String of XML data to be sent
-    :param inv_type: String, invoice type, either 'FACT1' or 'CN' depending on the move_type of the invoice
-    :param validate_xml: String, either 'DA' or 'NU', depending on whether the XML needs validation
     :return: response dict from E-Factura
     """
-    #
-    return make_efactura_request(
+    # TO-DO: Migrate in next release to parameters instead of context for
+    # better clarity and maintainability
+    inv_type = company.env.context.get("render_anaf_pdf_type", "FACT1")
+    result = make_efactura_request(
         session=requests,
         company=company,
         endpoint='transformare',
         params={'standard': inv_type,
-                'novld': validate_xml},
+                'novld': 'DA'},
         data=xml_data,
     )
+    # If result is of type json, we need to handle the error messages received from SPV, otherwise we return the PDF content
+    if 'stare' in result:
+        # Get the error messages from the response and return them in a string separated by \n
+        error_messages = [message.get('message') for message in result.get('Messages', [])]
+        return {'error': '\n'.join(error_messages)}
+    return result
