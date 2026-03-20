@@ -705,27 +705,24 @@ class TestHrEmployee(TestHrCommon):
             'contract_date_start': date(2025, 1, 1)
         })
 
-        archived_emp, out_working_emp = self.env['hr.employee'].create([
-            {'name': 'Archived Employee', 'active': False},
-            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False},
-        ])
+        out_working_emp = self.env['hr.employee'].create(
+            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False}
+        )
 
         self.env["mail.presence"]._update_presence(present_user_a)
         self.env["mail.presence"]._update_presence(present_user_b)
 
         employee_per_presence_state = self.env['hr.employee'].with_context(active_test=False)._read_group(
-            domain=[('id', 'in', (present_user_a.employee_ids + present_user_b.employee_ids + absent_user.employee_ids + archived_emp + out_working_emp).ids)],
+            domain=[('id', 'in', (present_user_a.employee_ids + present_user_b.employee_ids + absent_user.employee_ids + out_working_emp).ids)],
             groupby=['hr_presence_state'],
             aggregates=['id:recordset'],
         )
-        self.assertEqual(len(employee_per_presence_state), 4)
+        self.assertEqual(len(employee_per_presence_state), 3)
         for presence_state, employees in employee_per_presence_state:
             if presence_state == 'present':
                 self.assertEqual(employees.ids, [present_user_a.employee_ids.id, present_user_b.employee_ids.id])
             if presence_state == 'absent':
                 self.assertEqual(employees.ids, [absent_user.employee_ids.id])
-            if presence_state == 'archive':
-                self.assertEqual(employees.ids, [archived_emp.id])
             if presence_state == 'out_of_working_hour':
                 self.assertEqual(employees.ids, [out_working_emp.id])
 

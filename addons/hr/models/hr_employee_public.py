@@ -43,7 +43,6 @@ class HrEmployeePublic(models.Model):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('archive', 'Archived'),
         ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', default='out_of_working_hour')
     hr_icon_display = fields.Selection(
         selection='_get_selection_hr_icon_display',

@@ -116,7 +116,6 @@ class HrEmployee(models.Model):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('archive', 'Archived'),
         ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', compute_sql='_compute_sql_presence_state', compute_sudo=False, default='out_of_working_hour')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
@@ -124,7 +123,6 @@ class HrEmployee(models.Model):
         ('presence_present', 'Present'),
         ('presence_out_of_working_hour', 'Off-Hours'),
         ('presence_absent', 'Absent'),
-        ('presence_archive', 'Archived'),
         ('presence_home', 'At Home'),
         ('presence_office', 'At Office'),
         ('presence_other', 'At Other'),
@@ -1064,8 +1062,6 @@ class HrEmployee(models.Model):
                     state = 'present'
                 elif presence_status == "offline" and employee.id in working_now_list:
                     state = 'absent'
-            if not employee.active:
-                state = 'archive'
             employee.hr_presence_state = state
 
     def _compute_sql_presence_state(self, table):
