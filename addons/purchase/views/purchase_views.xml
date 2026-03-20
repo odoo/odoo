@@ -312,7 +312,10 @@
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
                                                     <field name="product_qty"/>
-                                                    <field name="uom_id" groups="uom.group_uom" required="not display_type and not is_downpayment" widget="many2one_uom"/>
+                                                    <field name="uom_id" groups="uom.group_uom"
+                                                        readonly="state in ('purchase', 'cancel') or is_downpayment"
+                                                        required="not display_type and not is_downpayment"
+                                                        widget="many2one_uom" options="{'no_create': True, 'no_open': True}"/>
                                                 </div>
                                                 <field name="qty_received_method" invisible="1"/>
                                                 <field name="qty_received" string="Received Quantity" invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual'"/>
