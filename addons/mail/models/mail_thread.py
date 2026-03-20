@@ -1566,11 +1566,11 @@ class MailThread(models.AbstractModel):
             elif message.get_content_type() == 'text/html':
                 # we only strip_classes here everything else will be done in by html field of mail.message
                 body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
-        else:
+        elif message.is_multipart():
             alternative = False
             mixed = False
             html = False
-            for part in message.walk():
+            for part in message.get_payload():
                 if message_dict.get('is_bounce') and body:
                     # bounce email, keep only the first body and ignore
                     # the parent email that might be added at the end
