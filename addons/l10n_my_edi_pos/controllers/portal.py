@@ -106,11 +106,3 @@ class L10nMYPortalAccount(PortalAccount):
                 )
 
         return invalid_fields, missing_fields, error_messages
-
-    def _get_mandatory_address_fields(self, country_sudo):
-        field_names = super()._get_mandatory_address_fields(country_sudo)
-
-        if country_sudo.code == 'MY':
-            field_names.add('state_id')
-
-        return field_names

@@ -30,3 +30,9 @@ class ResPartner(models.Model):
         frontend_writable_fields.add('l10n_pe_district')
 
         return frontend_writable_fields
+
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+        if self.env.company.country_code == country_sudo.code == "PE":
+            mandatory_fields.add('l10n_pe_district')
+        return mandatory_fields

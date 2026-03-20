@@ -70,7 +70,7 @@ class Cart(PaymentPortal):
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
-        values.update(request.website._get_checkout_step_values())
+        values.update(request.website._get_checkout_step_values("/shop/cart"))
         values.update(self._cart_values(**post))
         values.update(self._prepare_order_history())
         return request.render("website_sale.cart", values)
@@ -201,15 +201,14 @@ class Cart(PaymentPortal):
                 added_qty_per_line[product_values["line_id"]] = product_values["added_qty"]
 
         warning = values.pop("warning", "")
-        if is_combo and order_sudo._check_combo_quantities(updated_line):
+        if is_combo and (changed_reason := order_sudo._check_combo_quantities(updated_line)):
             # If quantities were modified through `_check_combo_quantities`, the added qty per line
-            # must be adapted accordingly, and the returned warning should be the final one saved
-            # on the combo line.
+            # must be adapted accordingly, and the final returned warning should be the reason.
             added_qty_per_line = {
                 line.id: updated_line.product_uom_qty
                 for line in (updated_line + updated_line.linked_line_ids)
             }
-            warning = updated_line.shop_warning
+            warning = changed_reason
             values["quantity"] = updated_line.product_uom_qty
 
         # Recompute delivery prices & other cart stuff (loyalty rewards)
@@ -232,6 +231,8 @@ class Cart(PaymentPortal):
             notifications.append({"type": "item_added", "data": notification})
 
         if warning:
+            # Store the warning on the order line so the cart page can show its source to the user.
+            (updated_line or order_sudo)._add_warning_alert(warning)
             notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
         return {
@@ -249,28 +250,24 @@ class Cart(PaymentPortal):
 
         IrUiView = self.env["ir.ui.view"]
         order_sudo = request.cart
-        values["website_sale.cart_lines"] = IrUiView._render_template(
-            "website_sale.cart_lines",
-            {
-                "website_sale_order": order_sudo,
-                "date": fields.Date.today(),
-                "suggested_products": order_sudo._cart_accessories(),
-            },
-        )
+        values.update(self._get_updated_cart_page_values(order_sudo))
+        # If the cart was empty, no cart summary was rendered on the page. However, we just
+        # added a product, so render it now.
         values["website_sale.shorter_cart_summary"] = IrUiView._render_template(
             "website_sale.shorter_cart_summary",
             {
                 "website_sale_order": order_sudo,
                 "show_shorter_cart_summary": True,
                 **self._get_express_shop_payment_values(order_sudo),
-                **request.website._get_checkout_step_values(),
+                **request.website._get_checkout_step_values("/shop/cart"),
             },
         )
+        # Products already in the cart should not appear in quick reorder suggestions.
+        # We just added one, so refresh the quick reorder view.
         values["website_sale.quick_reorder_history"] = IrUiView._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
-        values["cart_ready"] = order_sudo._is_cart_ready()
         return values
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
@@ -321,7 +318,6 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
-        IrUiView = self.env["ir.ui.view"]
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
@@ -332,32 +328,42 @@ class Cart(PaymentPortal):
             ].id
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
-
-        values["cart_quantity"] = order_sudo.cart_quantity
-        values["cart_ready"] = order_sudo._is_cart_ready()
-        values["amount"] = order_sudo.amount_total
-        values["minor_amount"] = (
-            order_sudo
-            and payment_utils.to_minor_currency_units(
-                order_sudo.amount_total, order_sudo.currency_id
-            )
-        ) or 0.0
-        values["website_sale.cart_lines"] = IrUiView._render_template(
-            "website_sale.cart_lines",
-            {
-                "website_sale_order": order_sudo,
-                "date": fields.Date.today(),
-                "suggested_products": order_sudo._cart_accessories(),
-            },
-        )
-        values["website_sale.total"] = IrUiView._render_template(
-            "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
-        )
-        values["website_sale.quick_reorder_history"] = IrUiView._render_template(
+        values.update(self._get_updated_cart_page_values(order_sudo))
+        # Products already in the cart should not appear in quick reorder suggestions.
+        # Since we might have cleared the line (quantity == 0), we need to refresh the view.
+        values["website_sale.quick_reorder_history"] = request.env["ir.ui.view"]._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
         return values
+
+    def _get_updated_cart_page_values(self, order_sudo):
+        """Construct the values needed to update the UI after a cart update.
+
+        :param sale.order order_sudo: The current cart order.
+        :rtype: dict
+        """
+        IrUiView = self.env["ir.ui.view"]
+
+        return {
+            "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
+            "cart_quantity": order_sudo.cart_quantity,
+            "amount": order_sudo.amount_total,
+            "minor_amount": payment_utils.to_minor_currency_units(
+                order_sudo.amount_total, order_sudo.currency_id
+            ),
+            "website_sale.cart_lines": IrUiView._render_template(
+                "website_sale.cart_lines",
+                {
+                    "website_sale_order": order_sudo,
+                    "date": fields.Date.today(),
+                    "suggested_products": order_sudo._cart_accessories(),
+                },
+            ),
+            "website_sale.total": IrUiView._render_template(
+                "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
+            ),
+        }
 
     def _total_values(self):
         """Pass additional values when rendering the 'website_sale.total' template."""

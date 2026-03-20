@@ -80,7 +80,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
             'carrier_number_2': order_sudo.l10n_tw_edi_carrier_number_2,
         }
         values = self._get_render_context(order_sudo, default_vals)
-        values.update(request.website._get_checkout_step_values())
+        values.update(request.website._get_checkout_step_values('/shop/l10n_tw_invoicing_info'))
         return request.render('l10n_tw_edi_ecpay_website_sale.l10n_tw_edi_invoicing_info', values)
 
     @route('/shop/l10n_tw_invoicing_info/submit', type='http', auth='public', methods=['POST'], website=True, sitemap=False)
@@ -133,13 +133,12 @@ class WebsiteSaleL10nTW(WebsiteSale):
         order_sudo.write(vals_to_write)
 
         if not errors:
-            request.httprequest.path = '/shop/l10n_tw_invoicing_info'
             return request.redirect(
-                request.website._get_checkout_step_values()['next_website_checkout_step_href']
+                request.website._get_next_breadcrumb_step_href('/shop/l10n_tw_invoicing_info')
             )
 
         values = self._get_render_context(order_sudo, default_vals, errors)
-        values.update(request.website._get_checkout_step_values())
+        values.update(request.website._get_checkout_step_values('/shop/l10n_tw_invoicing_info'))
         return request.render('l10n_tw_edi_ecpay_website_sale.l10n_tw_edi_invoicing_info', values)
 
     @http.route("/payment/ecpay/check_mobile_barcode/<int:sale_order_id>", type="jsonrpc", auth="public")

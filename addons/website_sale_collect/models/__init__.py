@@ -7,6 +7,7 @@ from . import (
     product_template,
     res_config_settings,
     sale_order,
+    sale_order_line,
     stock_warehouse,
     website,
 )

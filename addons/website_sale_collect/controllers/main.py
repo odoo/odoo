@@ -54,25 +54,6 @@ class WebsiteSaleCollect(WebsiteSale):
             and order_sudo.partner_shipping_id.pickup_location_data
         ):
             res["insufficient_stock_data"] = order_sudo._get_insufficient_stock_data(
-                order_sudo.partner_shipping_id.pickup_location_data.get("id")
+                order_sudo.partner_shipping_id.pickup_location_data.get("id"), add_alerts=True
             )
         return res
-
-    def _get_shop_payment_errors(self, order):
-        """Override of `website_sale` to includes errors if no pickup location is selected or some
-        products are unavailable."""
-        errors = super()._get_shop_payment_errors(order)
-        if order._has_deliverable_products() and order.carrier_id.delivery_type == "in_store":
-            if not order.partner_shipping_id.pickup_location_data:
-                errors.append((
-                    self.env._("Sorry, we are unable to ship your order."),
-                    self.env._("Please choose a store to collect your order."),
-                ))
-            else:
-                selected_wh_id = order.partner_shipping_id.pickup_location_data["id"]
-                if not order._is_in_stock(selected_wh_id):
-                    errors.append((
-                        self.env._("Sorry, we are unable to ship your order."),
-                        self.env._("Some products are not available in the selected store."),
-                    ))
-        return errors

@@ -130,6 +130,7 @@
             "website/static/src/interactions/multirange_input.js",
             "website_sale/static/src/xml/website_sale_image_viewer.xml",
             "website_sale/static/src/xml/website_sale_product_availability.xml",
+            "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
             "website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.js",
             "website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml",
@@ -208,6 +209,7 @@
             "website_sale/static/src/js/comparison_utils.js",
             "website_sale/static/src/js/wishlist_utils.js",
             "website_sale/static/src/js/website_sale_utils.js",
+            "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',

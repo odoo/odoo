@@ -83,7 +83,7 @@ export class CartLine extends Interaction {
         wSaleUtils.updateCartNavBar(data);
         wSaleUtils.updateQuickReorderSidebar(data);
         this.services['public.interactions'].startInteractions(cart);
-        wSaleUtils.showWarning(data.warning);
+        this.services.cart.showWarning(data.warning);
         // Propagate the change to the express checkout forms.
         this.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
     }

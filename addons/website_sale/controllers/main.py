@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
-import json
 from collections import defaultdict
 from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urlparse
@@ -1167,11 +1166,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         try_skip_step = str2bool(try_skip_step or "false")
         order_sudo = request.cart
+
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/checkout", order_sudo
+        ):
+            return request.redirect(redirect)
+
         request.session["sale_last_order_id"] = order_sudo.id
-
-        if redirection := self._check_cart_and_addresses(order_sudo):
-            return redirection
-
         checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
 
         can_skip_delivery = True  # Delivery is only needed for deliverable products.
@@ -1188,7 +1189,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
-        checkout_page_values.update(request.website._get_checkout_step_values())
+        checkout_page_values.update(request.website._get_checkout_step_values("/shop/checkout"))
         if try_skip_step and can_skip_delivery:
             return request.redirect(checkout_page_values["next_website_checkout_step_href"])
 
@@ -1210,7 +1211,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             ),
             "only_services": order_sudo.only_services,
-            **self._prepare_address_data(partner_sudo, **kwargs),
+            **self._prepare_address_data(partner_sudo, order_sudo=order_sudo, **kwargs),
             "address_url": "/shop/address",
         }
 
@@ -1235,10 +1236,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: str
         """
         use_delivery_as_billing = str2bool(use_delivery_as_billing or "false")
-
         order_sudo = request.cart
-        if redirection := self._check_cart(order_sudo):
-            return redirection
+
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/address", order_sudo
+        ):
+            return request.redirect(redirect)
 
         # Retrieve the partner whose address to update, if any, and its address type.
         partner_sudo, address_type = self._prepare_address_update(
@@ -1259,7 +1262,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params,
         )
-        address_form_values.update(request.website._get_checkout_step_values())
+        address_form_values.update(request.website._get_checkout_step_values("/shop/address"))
         return request.render("website_sale.address", address_form_values)
 
     def _prepare_address_form_values(self, *args, callback="", order_sudo=False, **kwargs):
@@ -1339,8 +1342,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: str
         """
         order_sudo = request.cart
-        if redirection := self._check_cart(order_sudo):
-            return json.dumps({"redirectUrl": redirection.location})
+        redirect_dict = {}
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/address", order_sudo
+        ):
+            # Delay the redirection to save the address update
+            redirect_dict["redirectUrl"] = redirect
 
         # Retrieve the partner whose address to update, if any, and its address type.
         partner_sudo, address_type = self._prepare_address_update(
@@ -1363,7 +1370,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
 
         if feedback_dict.get("invalid_fields"):
-            return json.dumps(feedback_dict)  # Return if error when creating/updating partner.
+            # Return if error when creating/updating partner.
+            return request.make_json_response(feedback_dict)
 
         is_anonymous_cart = order_sudo._is_anonymous_cart()
         is_main_address = is_anonymous_cart or order_sudo.partner_id.id == partner_sudo.id
@@ -1387,12 +1395,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # Unsubscribe the public partner if the cart was previously anonymous.
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
 
-        return json.dumps(feedback_dict)
+        if redirect_dict:
+            # Redirect after the address is complete and saved
+            return request.make_json_response(redirect_dict)
 
-    def _needs_address(self):
-        if cart := request.cart:
-            return cart._needs_customer_address()
-        return super()._needs_address()
+        return request.make_json_response(feedback_dict)
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
         """Find the partner whose address to update and return it along with its address type.
@@ -1655,12 +1662,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that this option is activated
         extra_step = request.website.viewref("website_sale.extra_info")
         if not extra_step.active:
-            return request.redirect("/shop/payment")
+            return request.redirect(
+                request.website._get_next_breadcrumb_step_href("/shop/extra_info")
+            )
 
-        # check that cart is valid
         order_sudo = request.cart
-        if redirection := self._check_cart(order_sudo):
-            return redirection
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/extra_info", order_sudo
+        ):
+            return request.redirect(redirect)
 
         values = {
             "website_sale_order": order_sudo,
@@ -1670,7 +1680,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "order": order_sudo,
         }
 
-        values.update(request.website._get_checkout_step_values())
+        values.update(request.website._get_checkout_step_values("/shop/extra_info"))
 
         return request.render("website_sale.extra_info", values)
 
@@ -1680,9 +1690,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         checkout_page_values = {
             "sale_order": order,
             "website_sale_order": order,
-            "errors": self._get_shop_payment_errors(order),
+            "cart_has_blocking_alerts": order._has_blocking_alerts(),
             "partner": order.partner_invoice_id,
             "order": order,
+            "only_services": order.only_services,
+            **request.website._get_checkout_step_values("/shop/payment"),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
@@ -1693,41 +1705,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "landing_route": "/shop/payment/validate",
             "sale_order_id": order.id,  # Allow Stripe to check if tokenization is required.
         }
+        if checkout_page_values["cart_has_blocking_alerts"]:
+            payment_form_values.pop("payment_methods_sudo", "")
+            payment_form_values.pop("tokens_sudo", "")
         return checkout_page_values | payment_form_values
-
-    def _get_shop_payment_errors(self, order):
-        """Check that there is no error that should block the payment.
-
-        :param sale.order order: The sales order to pay
-        :return: A list of errors (error_title, error_message)
-        :rtype: list[tuple]
-        """
-        errors = []
-
-        if order._has_deliverable_products():
-            if not order._get_delivery_methods():
-                errors.append((
-                    self.env._("Sorry, we are unable to ship your order."),
-                    self.env._(
-                        "No delivery method is available for your current order and shipping"
-                        " address. Please contact us for more information."
-                    ),
-                ))
-            dm_id = order.carrier_id
-            commitment_date = order.commitment_date
-            if (
-                dm_id.enable_delivery_estimate
-                and commitment_date
-                and commitment_date.date().isoformat() not in dm_id._get_estimate_delivery_days()
-            ):
-                errors.append((
-                    self.env._("Sorry, we are unable to ship your order."),
-                    self.env._(
-                        "The selected delivery date is no longer available."
-                        " Please pick another delivery date."
-                    ),
-                ))
-        return errors
 
     @route(
         "/shop/payment",
@@ -1747,21 +1728,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
            paying / canceling.
         """
         order_sudo = request.cart
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/payment", order_sudo
+        ):
+            return request.redirect(redirect)
 
-        if redirection := self._check_cart_and_addresses(order_sudo):
-            return redirection
-
-        order_sudo._recompute_cart()
-        render_values = self._get_shop_payment_values(order_sudo, **post)
-        render_values["only_services"] = order_sudo and order_sudo.only_services
-
-        if render_values["errors"]:
-            render_values.pop("payment_methods_sudo", "")
-            render_values.pop("tokens_sudo", "")
-
-        render_values.update(request.website._get_checkout_step_values())
-
-        return request.render("website_sale.payment", render_values)
+        # Ensure the prices are up to date and final
+        order_sudo._update_cart_taxes_and_prices()
+        return request.render(
+            "website_sale.payment", self._get_shop_payment_values(order_sudo, **post)
+        )
 
     @route("/shop/payment/validate", type="http", auth="public", website=True, sitemap=False)
     def shop_payment_validate(self, sale_order_id=None, **_post):
@@ -1783,19 +1759,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect(SHOP_PATH)
 
-        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != "sale" else []
-        if errors:
-            first_error = errors[0]  # only display first error
-            error_msg = f"{first_error[0]}\n{first_error[1]}"
-            raise ValidationError(error_msg)
-
         tx_sudo = order_sudo.get_portal_last_transaction()
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(SHOP_PATH)
 
-        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != "sale":
-            order_sudo._check_cart_is_ready_to_be_paid()
-            # Only confirm the order if it wasn't already confirmed.
+        if not order_sudo.amount_total and not tx_sudo and order_sudo.state == "draft":
+            # Customer didn't go through /shop/payment/transaction since there is nothing to pay,
+            # confirm the order if it is valid.
+            if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+                "/shop/payment/transaction", order_sudo
+            ):
+                return request.redirect(redirect)
+
             order_sudo._validate_order()
 
         # clean context and session, then redirect to the confirmation page
@@ -1904,85 +1879,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ]
                 return request.make_response(pdf, headers=pdfhttpheaders)
         return request.redirect(SHOP_PATH)
-
-    # === CHECK METHODS === #
-
-    def _check_cart_and_addresses(self, order_sudo):
-        """Check whether the cart and its addresses are valid, and redirect to the appropriate page
-        if not.
-
-        :param sale.order order_sudo: The cart to check.
-        :return: None if both the cart and its addresses are valid; otherwise, a redirection to the
-                 appropriate page.
-        """
-        if redirection := self._check_cart(order_sudo):
-            return redirection
-
-        if redirection := self._check_addresses(order_sudo):
-            return redirection
-
-    def _check_cart(self, order_sudo):
-        """Check whether the cart is a valid, and redirect to the appropriate page if not.
-
-        The cart is only valid if:
-
-        - it exists and is in the draft state;
-        - it contains products (i.e., order lines);
-        - either the user is logged in, or public orders are allowed.
-
-        :param sale.order order_sudo: The cart to check.
-        :return: None if the cart is valid; otherwise, a redirection to the appropriate page.
-        """
-        # Check that the cart exists and is in the draft state.
-        if not order_sudo or order_sudo.state != "draft":
-            request.session["sale_order_id"] = None
-            request.session["sale_transaction_id"] = None
-            return request.redirect(SHOP_PATH)
-
-        # Check that the cart is not empty.
-        if not order_sudo.order_line:
-            return request.redirect("/shop/cart")
-
-        # Check that public orders are allowed.
-        if self.env.user._is_public() and request.website.account_on_checkout == "mandatory":
-            return request.redirect("/web/login?redirect=/shop/checkout")
-
-    def _check_addresses(self, order_sudo):
-        """Check whether the cart's addresses are complete and valid.
-
-        The addresses are complete and valid if:
-
-        - at least one address has been added;
-        - the delivery address is complete;
-        - the billing address is complete.
-
-        :param sale.order order_sudo: The cart whose addresses to check.
-        None if the cart is valid; otherwise, a redirection to the appropriate page.
-        :return: None if the cart's addresses are complete and valid; otherwise, a redirection to
-                 the appropriate page.
-        """
-        # Check that an address has been added.
-        if order_sudo._is_anonymous_cart():
-            return request.redirect("/shop/address")
-
-        # Check that the delivery address is complete.
-        delivery_partner_sudo = order_sudo.partner_shipping_id
-        if (
-            not order_sudo.only_services
-            and not self._check_delivery_address(delivery_partner_sudo)
-            and delivery_partner_sudo._can_be_edited_by_current_customer(order_sudo=order_sudo)
-        ):
-            return request.redirect(
-                f"/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery"
-            )
-        # Check that the billing address is complete.
-        invoice_partner_sudo = order_sudo.partner_invoice_id
-        if not self._check_billing_address(
-            invoice_partner_sudo
-        ) and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo=order_sudo):
-            return request.redirect(
-                f"/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing"
-            )
 
     # ------------------------------------------------------
     # Edit

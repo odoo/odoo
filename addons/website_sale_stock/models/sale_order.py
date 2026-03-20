@@ -3,7 +3,6 @@
 import json
 
 from odoo import fields, models
-from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -53,9 +52,6 @@ class SaleOrder(models.Model):
             )
             self.partner_shipping_id = address or self.partner_id
 
-    def _get_free_qty(self, product):
-        return product.with_context(warehouse_id=self._get_shop_warehouse_id()).free_qty
-
     def _get_shop_warehouse_id(self):
         """Return the warehouse to use for shop availability checks.
 
@@ -69,23 +65,3 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return self.website_id.warehouse_id.id
-
-    def _check_cart_is_ready_to_be_paid(self):
-        values = [line.shop_warning for line in self.order_line if not line._check_availability()]
-        if values:
-            raise ValidationError(" ".join(values))
-        return super()._check_cart_is_ready_to_be_paid()
-
-    def _filter_can_send_abandoned_cart_mail(self):
-        """Filter sale orders on their product availability."""
-        return (
-            super()
-            ._filter_can_send_abandoned_cart_mail()
-            .filtered(lambda so: so._all_product_available())
-        )
-
-    def _all_product_available(self):
-        self.ensure_one()
-        if not (lines := self.order_line):
-            return True
-        return not any(product._is_sold_out() for product in lines.product_id)

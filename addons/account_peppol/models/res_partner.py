@@ -274,6 +274,15 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+
+        sending_method = kwargs.get('invoice_sending_method')
+        if sending_method == 'peppol':
+            mandatory_fields.update({'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'})
+
+        return mandatory_fields
+
     def _get_partners_to_skip_peppol_computation(self):
         return self.env['res.company'].search([
             ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),

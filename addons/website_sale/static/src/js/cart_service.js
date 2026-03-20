@@ -246,6 +246,7 @@ export class CartService {
      * @returns {void}
      */
     showWarning(warningMessage) {
+        if (!warningMessage) return;
         this._showCartNotification({
             type: 'warning',
             data: { 'warning_message': warningMessage },

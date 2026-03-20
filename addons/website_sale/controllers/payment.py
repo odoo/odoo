@@ -50,7 +50,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(self.env._("The order has been cancelled."))
 
-        order_sudo._check_cart_is_ready_to_be_paid()
+        # Ensure the cart is still valid before proceeding any further.
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/payment/transaction", order_sudo
+        ):
+            return {
+                "state": "error",
+                "state_message": order_sudo._join_alert_messages(),
+                "redirect": redirect,
+            }
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({

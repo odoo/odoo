@@ -251,7 +251,7 @@ class CustomerPortal(Controller):
         }
         return request.render('portal.my_addresses', values)
 
-    def _prepare_address_data(self, partner_sudo, **_kwargs):
+    def _prepare_address_data(self, partner_sudo, **kwargs):
         """Provide the data of the current customer addresses.
 
         Gives the addresses the customer can use, including:
@@ -260,7 +260,7 @@ class CustomerPortal(Controller):
               he cannot edit those addresses.
 
         :param res.partner partner_sudo: The current user partner.
-        :param dict _kwargs: unused parameters available for potential overrides.
+        :param dict kwargs: Forwarded to underlying methods and available for potential overrides.
         :return: A dictionary holding the current customer billing and delivery addresses.
         :rtype: dict
         """
@@ -280,11 +280,11 @@ class CustomerPortal(Controller):
         if partner_sudo != commercial_partner_sudo:  # Child of the commercial partner.
             # Don't display the commercial partner's addresses if they are not complete, as its
             # children can't edit them.
-            if not self._check_billing_address(commercial_partner_sudo):
+            if not commercial_partner_sudo._check_billing_address(**kwargs):
                 billing_partners_sudo = billing_partners_sudo.filtered(
                     lambda p: p.id != commercial_partner_sudo.id
                 )
-            if not self._check_delivery_address(commercial_partner_sudo):
+            if not commercial_partner_sudo._check_delivery_address(**kwargs):
                 delivery_partners_sudo = delivery_partners_sudo.filtered(
                     lambda p: p.id != commercial_partner_sudo.id
                 )
@@ -293,74 +293,6 @@ class CustomerPortal(Controller):
             'billing_addresses': billing_partners_sudo,
             'delivery_addresses': delivery_partners_sudo,
         }
-
-    def _check_billing_address(self, partner_sudo):
-        """ Check that all mandatory billing fields are filled for the given partner.
-
-        :param res.partner partner_sudo: The partner whose billing address to check.
-        :return: Whether all mandatory fields are filled.
-        :rtype: bool
-        """
-        mandatory_billing_fields = self._get_mandatory_billing_address_fields(
-            partner_sudo.country_id
-        )
-        return all(partner_sudo.read(mandatory_billing_fields)[0].values())
-
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        """ Return the set of mandatory billing field names.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory billing field names.
-        :rtype: set
-        """
-        base_fields = {'name', 'email'}
-        if not self._needs_address():
-            return base_fields
-        base_fields.add('phone')  # not required for quick checkout (event)
-        return base_fields | self._get_mandatory_address_fields(country_sudo)
-
-    def _check_delivery_address(self, partner_sudo):
-        """ Check that all mandatory delivery fields are filled for the given partner.
-
-        :param res.partner partner_sudo: The partner whose delivery address to check.
-        :return: Whether all mandatory fields are filled.
-        :rtype: bool
-        """
-        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
-            partner_sudo.country_id
-        )
-        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
-
-    def _get_mandatory_delivery_address_fields(self, country_sudo):
-        """ Return the set of mandatory delivery field names.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory delivery field names.
-        :rtype: set
-        """
-        base_fields = {'name', 'email'}
-        if not self._needs_address():
-            return base_fields
-        base_fields.add('phone')  # not required for quick checkout (event)
-        return base_fields | self._get_mandatory_address_fields(country_sudo)
-
-    def _needs_address(self):
-        """ Hook meant to be overridden in other modules. """
-        return True
-
-    def _get_mandatory_address_fields(self, country_sudo):
-        """ Return the set of common mandatory address fields.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of common mandatory address field names.
-        :rtype: set
-        """
-        field_names = {'street', 'city', 'country_id'}
-        if country_sudo.state_required:
-            field_names.add('state_id')
-        if country_sudo.zip_required:
-            field_names.add('zip')
-        return field_names
 
     @route(
         '/my/address',
@@ -794,16 +726,20 @@ class CustomerPortal(Controller):
         country_id = address_values.get('country_id')
         country = request.env['res.country'].browse(country_id)
         if address_type == 'delivery' or use_delivery_as_billing:
-            required_field_set |= self._get_mandatory_delivery_address_fields(country)
+            required_field_set |= self.env["res.partner"]._get_mandatory_delivery_address_fields(
+                country, **kwargs
+            )
         if address_type == 'billing' or use_delivery_as_billing:
-            required_field_set |= self._get_mandatory_billing_address_fields(country)
+            required_field_set |= self.env["res.partner"]._get_mandatory_billing_address_fields(
+                country, **kwargs
+            )
             if not is_commercial_address:
                 commercial_fields = ResPartnerSudo._commercial_fields()
                 for fname in commercial_fields:
                     if fname in required_field_set and fname not in address_values:
                         required_field_set.remove(fname)
 
-        address_fields = self._get_mandatory_address_fields(country)
+        address_fields = self.env["res.partner"]._get_mandatory_address_fields(country, **kwargs)
         if any(address_values.get(fname) for fname in address_fields):
             # If the customer provided any address information, they should provide their whole
             # address, even if the address wasn't required (e.g. the order only contains services).
@@ -876,9 +812,13 @@ class CustomerPortal(Controller):
     def portal_address_country_info(self, country, address_type, **kw):
         address_fields = country.get_address_fields()
         if address_type == 'billing':
-            required_fields = self._get_mandatory_billing_address_fields(country)
+            required_fields = self.env["res.partner"]._get_mandatory_billing_address_fields(
+                country, **kw
+            )
         else:
-            required_fields = self._get_mandatory_delivery_address_fields(country)
+            required_fields = self.env["res.partner"]._get_mandatory_delivery_address_fields(
+                country, **kw
+            )
         return {
             'fields': address_fields,
             'zip_before_city': (
