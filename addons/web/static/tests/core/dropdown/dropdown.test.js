@@ -215,6 +215,50 @@ test("close on click outside an active element", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
+test("close on click outside when the opening active element was removed", async () => {
+    class ActiveElementDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <div t-if="state.showActive" t-ref="active">
+                <button class="active-button">Active</button>
+            </div>
+            <Dropdown>
+                <button>Dropdown</button>
+                <t t-set-slot="content">
+                    <DropdownItem class="'item-a'">Item A</DropdownItem>
+                </t>
+            </Dropdown>
+        `;
+
+        setup() {
+            this.state = useState({ showActive: true });
+            useActiveElement("active");
+        }
+    }
+
+    const comp = await mountWithCleanup(ActiveElementDropdown);
+
+    const activeEl = queryOne(".active-button").parentElement;
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    comp.state.showActive = false;
+    await animationFrame();
+    expect(activeEl.isConnected).toBe(false);
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(".outside");
+    }
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+});
+
 test("close on outside click in shadow dom", async () => {
     class DropdownInShadowDom extends Component {
         static components = { SimpleDropdown };
