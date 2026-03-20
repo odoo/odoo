@@ -151,7 +151,7 @@ class IrAttachment(models.Model):
             with open(full_path, 'rb') as f:
                 return f.read(size)
         except OSError:
-            _logger.info("_read_file reading %s", full_path, exc_info=True)
+            _logger.debug("_read_file reading %s", full_path, exc_info=True)
         return b''
 
     @api.model
