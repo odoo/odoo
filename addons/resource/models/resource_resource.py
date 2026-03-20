@@ -260,7 +260,7 @@ class ResourceResource(models.Model):
             If the employee is not assigned any calendar and no hours_per_week or hours_per_day are defined, he's considered as Fully flexible.
         """
         self.ensure_one()
-        return self._is_fully_flexible() or bool(not self.calendar_id and self.hours_per_week and self.hours_per_day)
+        return self._is_fully_flexible() or not self.calendar_id
 
     def _get_flexible_resources_default_work_intervals(self, start, end):
         assert start.tzinfo and end.tzinfo
@@ -399,7 +399,7 @@ class ResourceResource(models.Model):
     def _get_flexible_resource_work_hours(self, intervals, flexible_resources_hours_per_day, flexible_resources_hours_per_week, work_hours_per_day=None):
         assert self._is_flexible()
 
-        if self._is_fully_flexible():
+        if self._is_fully_flexible() or not self.hours_per_day:
             return round(sum_intervals(intervals), 2)
 
         # start and end for each Interval have the same day thanks to schedule_intervals_per_resource_id format for flexible employees
