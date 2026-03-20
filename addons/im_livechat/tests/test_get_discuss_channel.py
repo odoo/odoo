@@ -241,7 +241,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ('partner_id', '=', operator.partner_id.id),
         ]
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
-        self.assertEqual(channel_info["name"], "Michel Michel Operator")
+        self.assertEqual(channel_info["name"], "Michel Operator")
         self.assertEqual(channel_info['country_id'], False)
         self.assertEqual(
             data["res.partner"],
