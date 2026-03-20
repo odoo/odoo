@@ -158,7 +158,7 @@ class CertificateCertificate(models.Model):
         for ext in x509_extensions:
             builder = builder.add_extension(ext[0], critical=ext[1])
 
-        private_key = serialization.load_pem_private_key(journal.company_id.l10n_sa_private_key_id.pem_key, password=None)
+        private_key = serialization.load_pem_private_key(journal.company_id.l10n_sa_private_key_id.pem_key.content, password=None)
         request = builder.sign(private_key, hashes.SHA256())
 
         return request.public_bytes(serialization.Encoding.PEM)
