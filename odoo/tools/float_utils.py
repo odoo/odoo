@@ -14,6 +14,7 @@ __all__ = [
     "float_round",
     "float_split",
     "float_split_str",
+    "float_parse_str",
 ]
 
 
@@ -371,6 +372,95 @@ def float_invert(value: float) -> float:
         # invert exponent by changing sign, and coefficient by dividing by its square
         result = float(f'{coefficient}e{-int(exponent)}') / float(coefficient)**2
     return result
+
+
+def float_parse_str(value):
+    """
+    Parse a localized amount string into (int_part, dec_part) as strings,
+    without relying on locale settings.
+    Detects the number format (European/US) purely from the string structure.
+
+    Clear cases:
+        '1334'         -> ('1334', '0')    plain integer
+        '1.334,00'     -> ('1334', '00')   European format (dot=thousands, comma=decimal)
+        '1,334.00'     -> ('1334', '00')   US format (comma=thousands, dot=decimal)
+        '1.334.567,89' -> ('1334567', '89')
+        '1,334,567.89' -> ('1334567', '89')
+        '1.50'         -> ('1', '50')      unambiguous decimal
+        '1,5'          -> ('1', '5')       unambiguous European decimal
+
+    Ambiguous cases (raises ValueError):
+        '1.000'  -> could be 1000 (thousands) or 1.0 (decimal)
+        '1,000'  -> could be 1000 (thousands) or 1.0 (decimal)
+
+    :param value:   The amount string to parse.
+    :return:        Tuple of (int_part, dec_part) as strings e.g. ('1334', '07')
+    :raises ValueError: If the string is ambiguous or unparseable.
+    """
+    if not value:
+        return ('0', '0')
+
+    value = value.strip()
+    commas = value.count(',')
+    dots = value.count('.')
+    last_comma, last_dot = value.rfind(','), value.rfind('.')
+    comma_distance = len(value) - 1 - last_comma if last_comma >= 0 else -1
+    dot_distance = len(value) - 1 - last_dot if last_dot >= 0 else -1
+
+    match (commas, dots):
+        case (0, 0):
+            # '1334' — plain integer
+            tsep, dsep = ',', '.'
+        case (int() as c, 0) if c > 1:
+            # '1,334,567' — multiple commas can only be thousands separators
+            tsep, dsep = ',', '.'
+        case (0, int() as d) if d > 1:
+            # '1.334.567' — multiple dots can only be thousands separators
+            tsep, dsep = '.', ','
+        case (int() as c, 1) if c > 1:
+            # '1,334,567.89' — commas=thousands, dot=decimal
+            tsep, dsep = ',', '.'
+        case (1, int() as d) if d > 1:
+            # '1.334.567,89' — dots=thousands, comma=decimal
+            tsep, dsep = '.', ','
+        case (1, 1):
+            # Both present exactly once — whichever is last is the decimal separator
+            # '1.334,00' — comma is last → comma=decimal, dot=thousands
+            # '1,334.00' — dot is last   → dot=decimal, comma=thousands
+            if last_comma > last_dot:
+                tsep, dsep = '.', ','
+            else:
+                tsep, dsep = ',', '.'
+        case (0, 1):
+            # Only a dot — ambiguous if exactly 3 digits follow it
+            # '1.000' could be 1000 or 1.0
+            # '1.50'  is clearly 1.5
+            if dot_distance == 3 and value[:last_dot].isdigit():
+                raise ValueError(
+                    f"Ambiguous amount {value!r}: could be "
+                    f"{value.replace('.', '')} (thousands) "
+                    f"or {value} (decimal)."
+                )
+            tsep, dsep = ',', '.'
+        case (1, 0):
+            # Only a comma — ambiguous if exactly 3 digits follow it
+            # '1,000' could be 1000 or 1.0
+            # '1,50'  is clearly 1.5
+            if comma_distance == 3 and value[:last_comma].isdigit():
+                raise ValueError(
+                    f"Ambiguous amount {value!r}: could be "
+                    f"{value.replace(',', '')} (thousands) "
+                    f"or {value.replace(',', '.')} (decimal)."
+                )
+            tsep, dsep = '.', ','
+        case _:
+            raise ValueError(f"Unrecognized number format: {value!r}")
+
+    # Strip thousands separator then split on decimal separator
+    parts = value.replace(tsep, '').split(dsep)
+    if len(parts) == 2:
+        return (parts[0], parts[1])   # ('1334', '07') — keeps leading zeros
+    return (parts[0], '0')            # ('1334', '0')  — no decimal part
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str
+from odoo.tools import float_compare, float_is_zero, float_parse_str, float_repr, float_round, float_split, float_split_str
 
 
 class TestFloatPrecision(TransactionCase):
@@ -289,3 +289,34 @@ class TestFloatPrecision(TransactionCase):
         amount_test = currency.amount_to_text(0.28)
         self.assertNotEqual(amount_test, amount_target,
                             "Amount in text should not depend on float representation")
+
+    def test_split_amount_string(self):
+        test_cases = [
+            # Plain integer
+            ('1334', ('1334', '0')),
+            ('', ('0', '0')),
+
+            # European format: dot=thousands, comma=decimal
+            ('1.334,00', ('1334', '00')),
+            ('1.334,07', ('1334', '07')),   # leading zero preserved
+            ('1.334.567,89', ('1334567', '89')),
+
+            # US format: comma=thousands, dot=decimal
+            ('1,334.00', ('1334', '00')),
+            ('1,334,567.89', ('1334567', '89')),
+
+            # Unambiguous decimals
+            ('1.50', ('1', '50')),
+            ('1,5', ('1', '5')),
+            ('1.0', ('1', '0')),
+            ('1.00', ('1', '00')),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                self.assertEqual(float_parse_str(value), expected)
+
+    def test_split_amount_string_ambiguous(self):
+        for value in ('1.000', '1,000'):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    float_parse_str(value)
