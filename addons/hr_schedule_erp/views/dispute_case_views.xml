@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_schedule_dispute_case_view_tree" model="ir.ui.view">
+        <field name="name">hr.schedule.dispute.case.tree</field>
+        <field name="model">hr.schedule.dispute.case</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="service_session_id"/>
+                <field name="auxiliar_id"/>
+                <field name="cliente_id"/>
+                <field name="horas_erp"/>
+                <field name="horas_cliente"/>
+                <field name="diferencia"/>
+                <field name="estado_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_schedule_dispute_case_view_form" model="ir.ui.view">
+        <field name="name">hr.schedule.dispute.case.form</field>
+        <field name="model">hr.schedule.dispute.case</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_review" type="object" string="Marcar en revisión"
+                            invisible="estado_id != 'abierta'"/>
+                    <button name="action_resolve" type="object" string="Resolver"
+                            class="btn-primary" invisible="estado_id == 'resuelta'"/>
+                    <field name="estado_id" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="service_session_id"/>
+                            <field name="auxiliar_id" readonly="1"/>
+                            <field name="cliente_id" readonly="1"/>
+                            <field name="tipo_discrepancia"/>
+                        </group>
+                        <group>
+                            <field name="horas_erp"/>
+                            <field name="horas_cliente"/>
+                            <field name="diferencia" readonly="1"/>
+                            <field name="resolucion_id"/>
+                        </group>
+                    </group>
+                    <field name="motivo_resolucion"/>
+                    <group>
+                        <field name="resuelto_por_id" readonly="1"/>
+                        <field name="fecha_resolucion" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_schedule_dispute_case_action" model="ir.actions.act_window">
+        <field name="name">Disputes</field>
+        <field name="res_model">hr.schedule.dispute.case</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="hr_schedule_dispute_menu" name="Disputes" parent="hr_schedule_menu" action="hr_schedule_dispute_case_action" sequence="60"/>
+</odoo>

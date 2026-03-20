@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_schedule_auxiliar_view_tree" model="ir.ui.view">
+        <field name="name">hr.schedule.auxiliar.tree</field>
+        <field name="model">hr.schedule.auxiliar</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="cedula"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="estado_id"/>
+                <field name="documentacion_vigente"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_schedule_auxiliar_view_form" model="ir.ui.view">
+        <field name="name">hr.schedule.auxiliar.form</field>
+        <field name="model">hr.schedule.auxiliar</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="cedula"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="estado_id"/>
+                            <field name="documentacion_vigente"/>
+                            <field name="fecha_vencimiento_docs"/>
+                            <field name="puede_editar_programacion"/>
+                        </group>
+                    </group>
+                    <field name="grupo_ids" widget="many2many_tags"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_schedule_auxiliar_action" model="ir.actions.act_window">
+        <field name="name">Support Personnel</field>
+        <field name="res_model">hr.schedule.auxiliar</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="hr_schedule_auxiliar_menu" name="Support Personnel" parent="hr_schedule_menu" action="hr_schedule_auxiliar_action" sequence="20"/>
+</odoo>
