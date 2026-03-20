@@ -252,26 +252,6 @@ class TestViewsCreativeworkEdition(models.Model):
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
 
-class TestViewsCreativeworkBook(models.Model):
-    _name = 'test_views.creativework.book'
-    _description = 'Test ORM Creative Work Book'
-
-    name = fields.Char()
-    editions = fields.One2many(
-        'test_views.creativework.edition', 'res_id', domain=[('res_model', '=', 'test_views.creativework.book')],
-    )
-
-
-class TestViewsCreativeworkMovie(models.Model):
-    _name = 'test_views.creativework.movie'
-    _description = 'Test ORM Creative Work Movie'
-
-    name = fields.Char()
-    editions = fields.One2many(
-        'test_views.creativework.edition', 'res_id', domain=[('res_model', '=', 'test_views.creativework.movie')],
-    )
-
-
 class TestViewsMixed(models.Model):
     _name = 'test_views.mixed'
     _description = 'Test ORM Mixed'
