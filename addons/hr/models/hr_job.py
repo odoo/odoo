@@ -35,7 +35,6 @@ class HrJob(models.Model):
         domain=_recruiter_domain,
         check_company=True,
         default=lambda self: self.env.user.employee_id,
-        groups="hr.group_hr_user",
         tracking=True,
         help="The Recruiter will be the default value for all Applicants in this job \
             position. The Recruiter is automatically added to all meetings with the Applicant.",
