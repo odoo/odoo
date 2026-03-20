@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from uuid import uuid4
+
 from markupsafe import Markup
 
-from odoo import api, Command, fields, models, _
-from odoo.tools import float_is_zero
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Command
+from odoo.tools import float_is_zero
 
 
 class PosOrderLine(models.Model):
@@ -83,7 +85,7 @@ class PosOrderLine(models.Model):
     @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
     def _compute_refund_qty(self):
         for orderline in self:
-            refund_order_line = orderline.refund_orderline_ids.filtered(lambda l: l.order_id.state != 'cancel')
+            refund_order_line = orderline.refund_orderline_ids.filtered(lambda line: line.order_id.state != 'cancel')
             orderline.refunded_qty = -sum(refund_order_line.mapped('qty'))
 
     def _prepare_refund_data(self, refund_order):
@@ -132,7 +134,7 @@ class PosOrderLine(models.Model):
     def _unlink_except_order_state(self):
         if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
             raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
-        for line in self.filtered(lambda l: l.order_id.config_id.order_edit_tracking):
+        for line in self.filtered(lambda line: line.order_id.config_id.order_edit_tracking):
             line.order_id.has_deleted_line = True
             body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
             line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
@@ -145,22 +147,28 @@ class PosOrderLine(models.Model):
 
     def _compute_amount_line_all(self, qty=None):
         self.ensure_one()
-        sign = -1 if self.order_id.is_refund else 1
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        line_qty = qty or (self.qty * sign)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, line_qty, product=self.product_id, partner=self.order_id.partner_id)
+        line_qty = qty or self.qty
+        line_qty = -abs(line_qty) if self.order_id.is_refund_or_negative() else line_qty  # All lines quantity must be negative in refund
+        taxes = tax_ids_after_fiscal_position.compute_all(
+            price,
+            self.order_id.currency_id,
+            line_qty,
+            product=self.product_id,
+            partner=self.order_id.partner_id,
+        )
         return {
-            'price_subtotal_incl': taxes['total_included'],
-            'price_subtotal': taxes['total_excluded'],
+            'price_subtotal_incl': abs(taxes['total_included']),  # Line prices are always positive
+            'price_subtotal': abs(taxes['total_excluded']),  # Line prices are always positive
         }
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             price = self.order_id.pricelist_id._get_product_price(
-                self.product_id, self.qty or 1.0, currency=self.currency_id
+                self.product_id, self.qty or 1.0, currency=self.currency_id,
             )
             self.tax_ids = self.product_id.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
             tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids)
@@ -192,9 +200,7 @@ class PosOrderLine(models.Model):
         """
         Compute the total cost of the order lines.
         """
-        for line in self:
-            if line.is_total_cost_computed:
-                continue
+        for line in self.filtered(lambda line: not line.is_total_cost_computed):
             product = line.product_id
             cost_currency = product.sudo().cost_currency_id
             product_cost = line._get_product_cost(at_closing)
@@ -210,69 +216,15 @@ class PosOrderLine(models.Model):
     @api.depends('price_subtotal', 'total_cost')
     def _compute_margin(self):
         for line in self:
-            sign = -1 if line.order_id.is_refund else 1
+            sign = -1 if line.order_id.is_refund_or_negative() else 1
             if line.product_id.type == 'combo':
                 line.margin = 0
                 line.margin_percent = 0
             else:
                 line.margin = (line.price_subtotal * sign) - line.total_cost
-                line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) \
-                                        and line.margin / (line.price_subtotal * sign) \
+                line.margin_percent = (not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding)
+                                        and line.margin / (line.price_subtotal * sign)) \
                                         or 0
-
-    def _prepare_base_line_for_taxes_computation(self):
-        self.ensure_one()
-        commercial_partner = self.order_id.partner_id.commercial_partner_id
-        fiscal_position = self.order_id.fiscal_position_id
-        line = self.with_company(self.order_id.company_id)
-        account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
-        if not account:
-            raise UserError(_(
-                "Please define income account for this product: '%(product)s' (id:%(id)d).",
-                product=line.product_id.name, id=line.product_id.id,
-            ))
-
-        if fiscal_position:
-            account = fiscal_position.map_account(account)
-
-        is_refund_order = line.order_id.is_refund or line.order_id.amount_total < 0.0
-        is_refund_line = line.qty * line.price_unit < 0
-
-        lang = line.order_id.partner_id.lang or self.env.user.lang
-        product_name = line.product_id.with_context(lang=lang).display_name
-
-        product_full_name = line.with_context(lang=lang).full_product_name
-        if product_full_name:
-            product_code = f"[{line.with_context(lang=lang).product_id.code}] " if line.product_id.code else ""
-            product_name = product_code + product_full_name
-
-        if line.product_id.description_sale:
-            product_name += '\n' + line.product_id.with_context(lang=lang).description_sale
-        return {
-            **self.env['account.tax']._prepare_base_line_for_taxes_computation(
-                line,
-                partner_id=commercial_partner,
-                currency_id=self.order_id.currency_id,
-                rate=self.order_id.currency_rate,
-                product_id=line.product_id,
-                tax_ids=line.tax_ids_after_fiscal_position,
-                price_unit=line.price_unit,
-                quantity=line.qty * (-1 if is_refund_order else 1),
-                discount=line.discount,
-                account_id=account,
-                is_refund=is_refund_line,
-                sign=1 if is_refund_order else -1,
-            ),
-            'uom_id': line.product_uom_id,
-            'name': product_name,
-        }
-
-    def _prepare_tax_base_line_values(self):
-        """
-        Convert pos order lines into dictionaries that would be used to compute taxes later.
-        :return: A list of python dictionaries (see '_prepare_base_line_for_taxes_computation' in account.tax).
-        """
-        return [line._prepare_base_line_for_taxes_computation() for line in self]
 
     def _get_discount_amount(self):
         self.ensure_one()
@@ -288,3 +240,48 @@ class PosOrderLine(models.Model):
 
     def _has_discount(self):
         return self.discount > 0
+
+    ##############################################################
+    #                 Accounting related methods                 #
+    ##############################################################
+    def _prepare_base_lines_for_taxes_computation(self):
+        base_lines = []
+        is_order_refund = self.order_id.is_refund_or_negative()  # All lines are refunds or not
+        commercial_partner = self.order_id.partner_id.commercial_partner_id
+        fiscal_position = self.order_id.fiscal_position_id
+
+        for record in self:
+            line = record.with_company(record.order_id.company_id)
+            lang = line.order_id.partner_id.lang or record.env.user.lang
+            account = line.product_id._get_product_accounts()['income'] or record.order_id.config_id.journal_id.default_account_id
+            product_name = line.with_context(lang=lang).full_product_name or line.product_id.with_context(lang=lang).display_name
+
+            if not account:
+                raise UserError(_(
+                    "Please define income account for this product: '%(product)s' (id:%(id)d).",
+                    product=line.product_id.name, id=line.product_id.id,
+                ))
+
+            if fiscal_position:
+                account = fiscal_position.map_account(account)
+
+            base_lines.append({
+                **record.env['account.tax']._prepare_base_line_for_taxes_computation(
+                    line,
+                    partner_id=commercial_partner,
+                    currency_id=record.order_id.currency_id,
+                    rate=record.order_id.currency_rate,
+                    product_id=line.product_id,
+                    tax_ids=line.tax_ids_after_fiscal_position,
+                    price_unit=line.price_unit,
+                    quantity=line.qty * (-1 if is_order_refund else 1),
+                    discount=line.discount,
+                    account_id=account,
+                    is_refund=is_order_refund,
+                    sign=-1 if is_order_refund else 1,
+                ),
+                'uom_id': line.product_uom_id,
+                'name': product_name,
+            })
+
+        return base_lines

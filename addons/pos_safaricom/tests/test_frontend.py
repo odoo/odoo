@@ -31,6 +31,7 @@ class TestSafaricomHttpCommon(TestPointOfSaleHttpCommon):
             mpesa_express_method = cls.env['pos.payment.method'].create({
                 'name': 'M-PESA Express',
                 'journal_id': cls.bank_journal.id,
+                'type': 'bank',
                 'payment_provider': 'safaricom',
                 'safaricom_payment_type': 'mpesa_express',
                 'safaricom_test_mode': True,
@@ -44,6 +45,7 @@ class TestSafaricomHttpCommon(TestPointOfSaleHttpCommon):
             lipa_na_mpesa_method = cls.env['pos.payment.method'].create({
                 'name': 'Lipa na M-PESA',
                 'journal_id': cls.bank_journal.id,
+                'type': 'bank',
                 'payment_provider': 'safaricom',
                 'safaricom_payment_type': 'lipa_na_mpesa',
                 'safaricom_test_mode': True,

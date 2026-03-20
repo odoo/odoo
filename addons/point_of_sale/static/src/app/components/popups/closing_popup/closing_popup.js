@@ -4,13 +4,11 @@ import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/c
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
 import { Component, proxy } from "@odoo/owl";
-import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
-import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
 import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
 
@@ -192,132 +190,77 @@ export class ClosePosPopup extends Component {
         if (!syncSuccess) {
             return;
         }
-        if (this.pos.config.cash_control) {
-            const response = await this.pos.data.call(
-                "pos.session",
-                "post_closing_cash_details",
-                [this.pos.session.id],
-                {
-                    counted_cash: parseFloat(
-                        this.state.payments[this.props.default_cash_details.id].counted
-                    ),
-                }
+
+        try {
+            const context = {
+                device_identifier: this.pos.device.identifier,
+            };
+            const amountByPaymentMethod = Object.entries(this.state.payments).reduce(
+                (acc, [id, { counted }]) => {
+                    acc[id] = parseFloat(counted);
+                    return acc;
+                },
+                {}
             );
-
-            if (!response.successful) {
-                return this.handleClosingError(response);
-            }
-        }
-
-        try {
-            await this.pos.data.call("pos.session", "update_closing_control_state_session", [
-                this.pos.session.id,
-                this.state.notes,
-            ]);
-        } catch (error) {
-            // We have to handle the error manually otherwise the validation check stops the script.
-            // In case of "rescue session", we want to display the next popup with "handleClosingError".
-            // FIXME
-            if (!error.data && error.data.message !== "This session is already closed.") {
-                throw error;
-            }
-        }
-
-        try {
-            const bankPaymentMethodDiffPairs = this.props.non_cash_payment_methods
-                .filter((pm) => pm.type == "bank")
-                .map((pm) => [pm.id, this.getDifference(pm.id)]);
             const response = await this.pos.data.call(
                 "pos.session",
                 "close_session_from_ui",
-                [this.pos.session.id, bankPaymentMethodDiffPairs],
-                {
-                    context: {
-                        device_identifier: this.pos.device.identifier,
-                    },
-                }
+                [this.pos.session.id, amountByPaymentMethod],
+                { context }
             );
-            if (!response.successful) {
+            if (!response.status) {
                 return this.handleClosingError(response);
             }
+
             this.pos.session.state = "closed";
             try {
                 await this.pos.ticketPrinter.printSaleDetailsReceipt({ download: true });
             } finally {
                 this.pos.router.close();
             }
-        } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                throw error;
-            } else {
-                await this.handleClosingControlError();
-            }
         } finally {
             localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
         }
     }
-    async handleClosingControlError() {
-        this.dialog.add(
-            AlertDialog,
-            {
-                title: _t("Closing session error"),
-                body: _t(
-                    "An error has occurred when trying to close the session.\n" +
-                        "You will be redirected to the back-end to manually close the session."
-                ),
-            },
-            {
-                onClose: () => {
-                    this.dialog.add(
-                        FormViewDialog,
-                        {
-                            resModel: "pos.session",
-                            resId: this.pos.session.id,
-                        },
-                        {
-                            onClose: async () => {
-                                const session = await this.pos.data.read("pos.session", [
-                                    this.pos.session.id,
-                                ]);
-                                if (session[0] && session[0].state === "closed") {
-                                    this.pos.router.close();
-                                } else {
-                                    this.pos.redirectToBackend();
-                                }
-                            },
-                        }
-                    );
-                },
-            }
-        );
-    }
     async handleClosingError(response) {
-        this.dialog.add(ConfirmationDialog, {
-            title: response.title || "Oh snap !",
-            body: response.message,
-            confirmLabel: _t("Review Orders"),
-            cancelLabel: _t("Cancel Orders"),
-            confirm: () => {
-                if (!response.redirect) {
-                    this.props.close();
-                    this.pos.navigate("TicketScreen");
+        if (response.type === "session_already_closed") {
+            return await makeAwaitable(
+                this.dialog,
+                AlertDialog,
+                {
+                    title: _t("Session Already Closed"),
+                    body: response.message,
+                },
+                {
+                    onClose: () => {
+                        window.location.reload();
+                    },
                 }
-            },
-            cancel: async () => {
-                if (!response.redirect) {
-                    const now = DateTime.now();
-                    const ordersDraft = this.pos.models["pos.order"].filter(
-                        (o) => !o.finalized && !(o.preset_time && o.preset_time > now)
-                    );
-                    await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
-                    this.closeSession();
-                }
-            },
-            dismiss: async () => {},
-        });
-
-        if (response.redirect) {
-            this.pos.router.close();
+            );
+        } else if (response.type === "draft_orders") {
+            return await makeAwaitable(this.dialog, ConfirmationDialog, {
+                title: response.title || "Oh snap !",
+                body: response.message,
+                confirmLabel: _t("Review Orders"),
+                cancelLabel: _t("Cancel Orders"),
+                confirm: () => {
+                    if (!response.redirect) {
+                        this.props.close();
+                        this.pos.navigate("TicketScreen");
+                    }
+                },
+                cancel: async () => {
+                    if (!response.redirect) {
+                        const now = DateTime.now();
+                        const ordersDraft = this.pos.models["pos.order"].filter(
+                            (o) => !o.finalized && !(o.preset_time && o.preset_time > now)
+                        );
+                        await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
+                        this.closeSession();
+                    }
+                },
+                dismiss: async () => {},
+            });
         }
     }
     getMovesTotalAmount() {

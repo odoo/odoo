@@ -29,7 +29,7 @@ class TestUi(TestFrontendCommon, OnlinePaymentCommon):
         })
         cls.online_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Online payment',
-            'is_online_payment': True,
+            'type': 'online',
             'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
         })
 
@@ -63,7 +63,7 @@ class TestSelfOrderOnlinePayment(TestUi):
 
         online_payment_method = self.env['pos.payment.method'].create({
             'name': 'Online payment B',
-            'is_online_payment': True,
+            'type': 'online',
             'company_id': company_b.id,
             'online_payment_provider_ids': [Command.set([provider_b.id])],
         })
@@ -74,7 +74,6 @@ class TestSelfOrderOnlinePayment(TestUi):
             'module_pos_restaurant': True,
             'company_id': company_b.id,
             'journal_id': test_sale_journal.id,
-            'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [Command.set([online_payment_method.id])],
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',

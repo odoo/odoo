@@ -18,8 +18,8 @@ test("[Old Tour] pos_basic_order_01_multi_payment_and_change", async () => {
     product1.product_variant_ids[0].lst_price = 5.1;
     product1.taxes_id = [];
 
-    const cashPm = store.models["pos.payment.method"].find((pm) => pm.is_cash_count);
-    const cardPm = store.models["pos.payment.method"].find((pm) => !pm.is_cash_count);
+    const cashPm = store.models["pos.payment.method"].find((pm) => pm.type === "cash");
+    const cardPm = store.models["pos.payment.method"].find((pm) => pm.type === "bank");
     const order = store.addNewOrder();
     order.pricelist_id = false;
 

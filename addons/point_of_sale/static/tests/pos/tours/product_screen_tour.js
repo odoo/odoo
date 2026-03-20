@@ -1217,7 +1217,7 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
                 ...["+/-"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Test Product 2", "-1.0"),
             ]),
-            ProductScreen.totalAmountIs("7,771.01"),
+            ProductScreen.totalAmountIs("7,771.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

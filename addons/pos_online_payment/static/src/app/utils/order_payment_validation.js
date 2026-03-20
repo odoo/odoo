@@ -9,7 +9,7 @@ import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 patch(OrderPaymentValidation.prototype, {
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
-            (line) => line.payment_method_id.is_online_payment && line.getPaymentStatus() !== "done"
+            (line) => line.payment_method_id.type === "online" && line.getPaymentStatus() !== "done"
         );
     },
     checkRemainingOnlinePaymentLines(unpaidAmount) {
@@ -50,7 +50,7 @@ patch(OrderPaymentValidation.prototype, {
             return false;
         }
 
-        if (!this.payment_methods_from_config.some((pm) => pm.is_online_payment)) {
+        if (!this.payment_methods_from_config.some((pm) => pm.type === "online")) {
             return true;
         }
 

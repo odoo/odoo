@@ -18,7 +18,7 @@ class TestPosMrp(CommonPosMrpTest):
             ]
         })
 
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        self.pos_config_usd.current_session_id.close_session_from_ui()
         self.assertEqual(order.lines[0].total_cost, 20.0)
 
     @skip('Temporary to fast merge new valuation')
@@ -60,7 +60,7 @@ class TestPosMrp(CommonPosMrpTest):
             lambda l: l.product_id == self.product_product_kit_three).credit, 30.0)
         self.assertEqual(interim_line.filtered(
             lambda l: l.product_id == self.product_product_kit_three).debit, 0.0)
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        self.pos_config_usd.current_session_id.close_session_from_ui()
 
     @skip('Temporary to fast merge new valuation')
     def test_bom_kit_different_uom_invoice_valuation(self):
@@ -119,7 +119,7 @@ class TestPosMrp(CommonPosMrpTest):
             ]
         })
 
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        self.pos_config_usd.current_session_id.close_session_from_ui()
         self.assertRecordValues(order.lines, [
             {'product_id': kit_1.id, 'total_cost': 10.0},
             {'product_id': kit_2.id, 'total_cost': 20.0},
@@ -235,7 +235,7 @@ class TestPosMrp(CommonPosMrpTest):
             'payment_method_id': self.cash_payment_method.id
         })
         order_payment.with_context(**payment_context).check()
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        self.pos_config_usd.current_session_id.close_session_from_ui()
         self.assertRecordValues(order.lines, [
             {'product_id': product_2.id, 'total_cost': 20},
             {'product_id': product_1.id, 'total_cost': 10},
@@ -322,10 +322,10 @@ class TestPosMrp(CommonPosMrpTest):
         self.pos_config_usd.open_ui()
         current_session = self.pos_config_usd.current_session_id
         pos_order_data = {
-                'amount_paid': 100,
+                'amount_paid': 200,
                 'amount_return': 0,
                 'amount_tax': 0,
-                'amount_total': 100,
+                'amount_total': 200,
                 'date_order': fields.Datetime.to_string(fields.Datetime.now()),
                 'fiscal_position_id': False,
                 'lines': [
@@ -358,7 +358,7 @@ class TestPosMrp(CommonPosMrpTest):
                 'sequence_number': 2,
                 'payment_ids': [
                     Command.create({
-                        'amount': 100,
+                        'amount': 200,
                         'name': fields.Datetime.now(),
                         'payment_method_id': self.cash_payment_method.id
                     })
@@ -428,12 +428,12 @@ class TestPosMrp(CommonPosMrpTest):
         })
 
         current_session = self.pos_config_usd.current_session_id
-        current_session.action_pos_session_closing_control()
+        current_session.close_session_from_ui()
 
         accounts = self.product_product_kit_one.product_tmpl_id.get_product_accounts()
-        expense_line = current_session.move_id.line_ids.filtered(
+        expense_line = current_session.move_ids.line_ids.filtered(
             lambda l: l.account_id.id == accounts['expense'].id)
-        interim_line = current_session.move_id.line_ids.filtered(
+        interim_line = current_session.move_ids.line_ids.filtered(
             lambda l: l.account_id.id == accounts['stock_valuation'].id)
 
         self.assertEqual(expense_line.debit, 1000.0)

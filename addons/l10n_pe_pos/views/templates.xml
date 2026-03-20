@@ -8,7 +8,7 @@
             <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
         </xpath>
         <xpath expr="//div[@id='get_my_invoice']/.." position="after">
-            <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'PE' and not pos_order.is_invoiced">
+            <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'PE' and not pos_order.is_singly_invoiced">
                 Invoice not available. You can contact us for more info.
             </h4>
         </xpath>

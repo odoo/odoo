@@ -194,7 +194,7 @@ class PosOrder(models.Model):
             'clave_regimen': clave_regimen,
         })
 
-        base_lines = self.lines._prepare_tax_base_line_values()
+        base_lines = self.lines._prepare_base_lines_for_taxes_computation()
         vals['tax_details'] = self.env['l10n_es_edi_verifactu.document']._get_tax_details(base_lines, company)
 
         return vals

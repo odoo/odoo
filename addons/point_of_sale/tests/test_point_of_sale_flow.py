@@ -1,13 +1,11 @@
 import odoo
 
-from freezegun import freeze_time
 from unittest.mock import patch
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -54,17 +52,18 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.assertAlmostEqual(order.amount_total, order.amount_paid)
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
-        self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count)
+        self.assertTrue(refund.payment_ids.payment_method_id.type == 'cash')
         # refund lines should be positive
         self.assertEqual(refund.lines[0].price_subtotal_incl, 10.0)
         self.assertEqual(refund.lines[1].price_subtotal_incl, 20.0)
 
         current_session = self.pos_config_usd.current_session_id
-        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
-            lambda payment: payment.payment_method_id.type == 'cash').mapped('amount')
-        )
-        current_session.post_closing_cash_details(total_cash_payment)
-        current_session.close_session_from_ui()
+        closing_data = current_session.get_closing_control_data()
+        cash_details = closing_data['default_cash_details']
+        expected_cashbox_amount = cash_details['payment_amount']
+        current_session.close_session_from_ui({
+            self.cash_payment_method.id: expected_cashbox_amount,
+        })
         self.assertEqual(current_session.state, 'closed')
 
     def test_refund_multiple_payment_rounding(self):
@@ -101,102 +100,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(refund.amount_paid, -10.0)
         self.assertEqual(refund.state, 'paid')
 
-    def test_order_partial_refund_rounding(self):
-        """ This test ensures that the refund amound of a partial order corresponds to
-        the price of the item, without rounding. """
-        self.account_cash_rounding_down.rounding = 5.0
-        self.pos_config_usd.write({
-            'rounding_method': self.account_cash_rounding_down.id,
-            'cash_rounding': True,
-        })
-
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        # order total will be 34.5 with 4.5 taxes excluded, with rounding 10 should be paid
-        order, _ = self.create_backend_pos_order({
-            'line_data': [
-                {'product_id': self.ten_dollars_with_15_excl.product_variant_id.id, 'qty': 3},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 34.5},
-            ],
-        })
-
-        self.assertEqual(order._get_rounded_amount(order.amount_total), order.amount_paid)
-        refund_action = order.refund()
-        refund = self.env['pos.order'].browse(refund_action['res_id'])
-
-        with Form(refund) as refund_form:
-            with refund_form.lines.edit(0) as line:
-                line.qty = 1
-        refund = refund_form.save()
-
-        self.assertEqual(refund.amount_total, 10.0)
-        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
-        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': refund.amount_total,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-        refund_payment.with_context(**payment_context).check()
-        self.assertEqual(refund.state, 'paid')
-        current_session.action_pos_session_closing_control()
-        self.assertEqual(current_session.state, 'closed')
-
-    def test_order_partial_refund(self):
-        """ The purpose of this test is to make a partial refund of a pos order.
-        The amount to refund should depend on the article returned and once the
-        payment made, the refund order should be marked as paid."""
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        # order total will be 30 with 3.52 taxes included
-        order, _ = self.create_backend_pos_order({
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 20},
-            ]
-        })
-
-        refund_action = order.refund()
-        refund = self.env['pos.order'].browse(refund_action['res_id'])
-
-        with Form(refund) as refund_form:
-            with refund_form.lines.edit(0) as line:
-                line.qty = 0
-        refund = refund_form.save()
-
-        self.assertEqual(refund.amount_total, -20.0)
-
-        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
-        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': refund.amount_total,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-        refund_payment.with_context(**payment_context).check()
-
-        self.assertEqual(refund.state, 'paid')
-
-        refund_action = order.refund()
-        remaining_refund = self.env['pos.order'].browse(refund_action['res_id'])
-        self.assertEqual(remaining_refund.amount_total, -10.0)
-
-        payment_context = {"active_ids": remaining_refund.ids, "active_id": remaining_refund.id}
-        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': remaining_refund.amount_total,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-        refund_payment.with_context(**payment_context).check()
-
-        self.assertEqual(remaining_refund.state, 'paid')
-
-        current_session.action_pos_session_closing_control()
-        self.assertEqual(current_session.state, 'closed')
-
     def test_pos_orders_count(self):
         parent_partner = self.env['res.partner'].create({
             'name': 'Parent Partner',
@@ -231,59 +134,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(len(order_2), 1, "Expected 1 order directly on child partner")
         self.assertEqual(parent_partner.pos_order_count, 2, "Parent partner should see 2 orders including child’s")
         self.assertEqual(child_partner.pos_order_count, 1, "Child partner should see only their own order")
-
-    def test_order_to_payment_currency(self):
-        """
-            In order to test the Point of Sale in module, I will do a full flow
-            from the sale to the payment and invoicing. I will use two products,
-            one with price including a 10% tax, the other one with 5% tax
-            excluded from the price.
-
-            The order will be in a different currency than the company currency.
-        """
-        self.env.cr.execute(
-            "UPDATE res_company SET currency_id = %s WHERE id = %s",
-            [self.env.ref('base.USD').id, self.env.company.id])
-
-        # Demo data are crappy, clean-up the rates
-        self.env['res.currency.rate'].search([]).unlink()
-        self.env['res.currency.rate'].create({
-            'name': '2010-01-01',
-            'rate': 2.0,
-            'currency_id': self.env.ref('base.EUR').id,
-        })
-
-        order, _ = self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_mobt.id,
-                'pricelist_id': self.partner_mobt.property_product_pricelist.id,
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_no_tax.product_variant_id.id},
-                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
-                {'payment_method_id': self.bank_payment_method.id},
-            ],
-            'pos_config': self.pos_config_eur,
-        })
-
-        self.assertEqual(order.amount_total, 30)
-        self.assertEqual(order.amount_paid, 30)
-        self.assertEqual(order.state, 'paid')
-        current_session = self.pos_config_eur.current_session_id
-        current_session.action_pos_session_validate()
-        self.assertTrue(current_session.move_id)
-        debit_lines = current_session.move_id.mapped('line_ids.debit')
-        credit_lines = current_session.move_id.mapped('line_ids.credit')
-        amount_currency_lines = current_session.move_id.mapped('line_ids.amount_currency')
-        for a, b in zip(sorted(debit_lines), [0.0, 15.0]):
-            self.assertAlmostEqual(a, b)
-        for a, b in zip(sorted(credit_lines), [0.0, 15.0]):
-            self.assertAlmostEqual(a, b)
-        for a, b in zip(sorted(amount_currency_lines), [-30, 30]):
-            self.assertAlmostEqual(a, b)
 
     def test_order_to_invoice_no_tax(self):
         order, _ = self.create_backend_pos_order({
@@ -326,7 +176,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         for iline in invoice.invoice_line_ids:
             self.assertFalse(iline.tax_ids)
 
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        self.pos_config_usd.current_session_id.close_session_from_ui()
 
     def test_order_to_invoice_uses_correct_shipping_address(self):
         """
@@ -373,46 +223,11 @@ class TestPointOfSaleFlow(CommonPosTest):
             "The shipping address should be 'Delivery Address 2' as selected in the POS order."
         )
 
-    def test_order_with_deleted_tax(self):
-        order, _ = self.create_backend_pos_order({
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_excl.product_variant_id.id},
-            ],
-        })
-
-        untax, atax = self.compute_tax(self.ten_dollars_with_10_excl.product_variant_id, 10.0)
-        self.ten_dollars_with_10_excl.taxes_id.active = False
-        current_session = self.pos_config_usd.current_session_id
-        payment = self.env['pos.make.payment'].create({
-            'config_id': self.pos_config_usd.id,
-            'amount': untax + atax,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-        payment.with_context(active_ids=order.ids, active_id=order.id).check()
-        self.assertEqual(order.state, 'paid', "Order should be in paid state.")
-
-        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
-            lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-
-        # close session (should not fail here)
-        # We don't call `action_pos_session_closing_control` to force the failed
-        # closing which will return the action because the internal rollback call messes
-        # with the rollback of the test runner. So instead, we directly call the method
-        # that returns the action by specifying the imbalance amount.
-        action = current_session._close_session_action(1.0)
-        wizard = self.env['pos.close.session.wizard'].browse(action['res_id'])
-        wizard.with_context(action['context']).close_session()
-
-        diff_line = current_session.move_id.line_ids.filtered(
-            lambda line: line.name == 'Difference at closing PoS session')
-        self.assertAlmostEqual(diff_line.credit, 1.0, msg="Missing amount of 1.0")
-
     def test_pos_order_invoice_payment_term(self):
         """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
-            'split_transactions': True,
+            'type': 'pay_later',
         })
         payment_methods = self.pos_config_usd.payment_method_ids | self.customer_account_payment_method
         self.pos_config_usd.write({'payment_method_ids': [Command.set(payment_methods.ids)]})
@@ -480,191 +295,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
         self.assertEqual(order.account_move.amount_residual, 20)
 
-    def test_sale_order_postponed_invoicing(self):
-        """
-            Test the flow of creating an invoice later, after the POS session
-            has been closed and everything has been processed. Process should:
-                - Create a new misc entry, that will revert part of the POS
-                    closing entry.
-                - Create the move and associating payment(s) entry, as it would
-                    do when closing with invoice.
-                - Reconcile the receivable lines from the created misc entry
-                    with the ones from the created payment(s)
-        """
-        tags = self.setup_tags()
-        with freeze_time('2020-01-01'):
-            order, _ = self.create_backend_pos_order({
-                'line_data': [
-                    {'product_id': self.twenty_dollars_with_15_excl.product_variant_id.id},
-                ],
-                'payment_data': [
-                    {'payment_method_id': self.bank_payment_method.id, 'amount': 23.0},
-                ],
-            })
-            self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-
-            # Check the closing entry.
-            closing_entry = order.session_move_id
-            self.assertRecordValues(closing_entry.line_ids.sorted(), [{
-                    'balance': -3.0,
-                    'account_id': self.company_data['default_account_tax_sale'].id,
-                    'tax_ids': [],
-                    'tax_tag_ids': tags[1].ids,
-                    'reconciled': False
-                }, {
-                    'balance': -20.0,
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'tax_ids': self.tax_sale_a.ids,
-                    'tax_tag_ids': tags[0].ids,
-                    'reconciled': False
-                }, {
-                    'balance': 23.0,
-                    'account_id': self.company_data['default_account_receivable'].id,
-                    'tax_ids': [],
-                    'tax_tag_ids': [],
-                    'reconciled': True
-            }])
-
-        with freeze_time('2020-01-03'):
-            order.partner_id = self.partner_adgu.id
-            order.action_pos_order_invoice()
-
-        # Check the reverse moves, one for the closing entry, one for the statement lines.
-        reverse_closing_entries = self.env['account.move'].search([
-            ('id', '!=', closing_entry.id),
-            ('company_id', '=', self.env.company.id),
-            ('statement_line_id', '=', False),
-            ('move_type', '=', 'entry'),
-            ('state', '=', 'posted'),
-        ])
-        self.assertRecordValues(reverse_closing_entries[0].line_ids.sorted(), [{
-                'balance': 3.0,
-                'account_id': self.company_data['default_account_tax_sale'].id,
-                'tax_ids': [],
-                'tax_tag_ids': tags[1].ids,
-                'reconciled': False
-            }, {
-                'balance': 20.0,
-                'account_id': self.company_data['default_account_revenue'].id,
-                'tax_ids': self.tax_sale_a.ids,
-                'tax_tag_ids': tags[0].ids,
-                'reconciled': False
-            }, {
-                'balance': -23.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'reconciled': True
-        }])
-        self.assertRecordValues(reverse_closing_entries[2].line_ids.sorted(), [{
-                'balance': -23.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'reconciled': True
-            }, {
-                'balance': 23.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'reconciled': True
-        }])
-
-    def test_sale_order_postponed_invoicing_storno(self):
-        """
-            Test the flow of creating an invoice later, after the POS session
-            has been closed and everything has been processed. Process should:
-                - Create a new misc entry, that will revert part of the POS
-                    closing entry.
-                - Create the move and associating payment(s) entry, as it would
-                    do when closing with invoice.
-                - Reconcile the receivable lines from the created misc entry
-                    with the ones from the created payment(s)
-            This test is the same as test_sale_order_postponed_invoicing but
-            with the storno feature enabled.
-        """
-        self.env.company.account_storno = True
-
-        tags = self.setup_tags()
-        with freeze_time('2020-01-01'):
-            order, _ = self.create_backend_pos_order({
-                'line_data': [
-                    {'product_id': self.twenty_dollars_with_15_excl.product_variant_id.id},
-                ],
-                'payment_data': [
-                    {'payment_method_id': self.bank_payment_method.id, 'amount': 23.0},
-                ],
-            })
-            self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-
-            # Check the closing entry.
-            closing_entry = order.session_move_id
-            self.assertRecordValues(closing_entry.line_ids.sorted(), [{
-                    'balance': -3.0,
-                    'debit': 0.0,
-                    'credit': 3.0,
-                    'account_id': self.company_data['default_account_tax_sale'].id,
-                    'tax_ids': [],
-                    'tax_tag_ids': tags[1].ids,
-                    'reconciled': False,
-                }, {
-                    'balance': -20.0,
-                    'debit': 0.0,
-                    'credit': 20.0,
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'tax_ids': self.tax_sale_a.ids,
-                    'tax_tag_ids': tags[0].ids,
-                    'reconciled': False,
-                }, {
-                    'balance': 23.0,
-                    'debit': 23.0,
-                    'credit': 0.0,
-                    'account_id': self.company_data['default_account_receivable'].id,
-                    'tax_ids': [],
-                    'tax_tag_ids': [],
-                    'reconciled': True,
-            }])
-
-        with freeze_time('2020-01-03'):
-            order.partner_id = self.partner_adgu.id
-            order.action_pos_order_invoice()
-
-        # Check the reverse moves, one for the closing entry, one for the statement lines.
-        reverse_closing_entries = self.env['account.move'].search([
-            ('id', '!=', closing_entry.id),
-            ('company_id', '=', self.env.company.id),
-            ('statement_line_id', '=', False),
-            ('move_type', '=', 'entry'),
-            ('state', '=', 'posted'),
-        ])
-        self.assertRecordValues(reverse_closing_entries[0].line_ids.sorted(), [{
-                'balance': 3.0,
-                'debit': 0.0,
-                'credit': -3.0,
-                'account_id': self.company_data['default_account_tax_sale'].id,
-                'tax_ids': [],
-                'tax_tag_ids': tags[1].ids,
-                'reconciled': False,
-            }, {
-                'balance': 20.0,
-                'debit': 0.0,
-                'credit': -20.0,
-                'account_id': self.company_data['default_account_revenue'].id,
-                'tax_ids': self.tax_sale_a.ids,
-                'tax_tag_ids': tags[0].ids,
-                'reconciled': False,
-            }, {
-                'balance': -23.0,
-                'debit': -23.0,
-                'credit': 0.0,
-                'account_id': self.company_data['default_account_receivable'].id,
-                'tax_ids': [],
-                'tax_tag_ids': [],
-                'reconciled': True,
-        }])
-        self.assertTrue(all(amount >= 0 for amount in reverse_closing_entries[1:].line_ids.mapped('debit') + reverse_closing_entries[1:].line_ids.mapped('credit')),
-                "Non-reverse entries should have positive debit or credit amounts.")
-
     def test_order_pos_tax_same_as_company(self):
         """
             Test that when the default_pos_receivable_account and the partner
@@ -693,32 +323,6 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.assertEqual(order.account_move.amount_residual, 0)
 
-    def test_journal_entries_category_without_account(self):
-        # Set company's default accounts to false
-        self.env.company.income_account_id = False
-        self.env.company.expense_account_id = False
-        self.twenty_dollars_with_10_incl.write({
-            'property_account_income_id': False,
-            'property_account_expense_id': False,
-        })
-        account = self.env['account.account'].create({
-            'name': 'Account for category without account',
-            'code': 'X1111',
-        })
-
-        self.pos_config_usd.journal_id.default_account_id = account.id
-        self.create_backend_pos_order({
-            'line_data': [
-                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 20},
-            ],
-        })
-        current_session = self.pos_config_usd.current_session_id
-        current_session.action_pos_session_closing_control()
-        self.assertEqual(current_session.move_id.line_ids[0].account_id.id, account.id)
-
     def test_order_refund_with_invoice(self):
         """This test make sure that credit notes of pos orders are correctly
            linked to the original invoice."""
@@ -740,7 +344,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             ]
         })
 
-        current_session.action_pos_session_closing_control()
+        current_session.close_session_from_ui()
         invoices = self.env['account.move'].search([('move_type', '=', 'out_invoice')], order='id desc', limit=1)
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
@@ -781,50 +385,12 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
 
         current_session = self.pos_config_usd.current_session_id
-        current_session.action_pos_session_closing_control()
+        current_session.close_session_from_ui()
         refund_payment = refund.payment_ids[0]
         self.assertEqual(refund_payment.amount, -25.0)
         self.assertEqual(refund.amount_total, -23.00)
         self.assertEqual(refund.amount_paid, -25.0)
         self.assertEqual(current_session.state, 'closed')
-
-    def test_pos_branch_account(self):
-        branch = self.env['res.company'].create({
-            'name': 'Sub Company',
-            'parent_id': self.env.company.id,
-            'chart_template': self.env.company.chart_template,
-            'country_id': self.env.company.country_id.id,
-        })
-        self.env.cr.precommit.run()
-        self.env.user.group_ids += self.env.ref('point_of_sale.group_pos_manager')
-        bank_payment_method = self.bank_payment_method.copy()
-        bank_payment_method.company_id = branch.id
-        sub_pos_config = self.env['pos.config'].with_company(branch).create({
-            'name': 'Main',
-            'journal_id': self.company_data['default_journal_sale'].id,
-            'invoice_journal_id': self.company_data['default_journal_sale'].id,
-            'payment_method_ids': [(4, bank_payment_method.id)],
-        })
-
-        sub_pos_config.open_ui()
-        current_session = sub_pos_config.current_session_id
-        self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_moda.id,
-                'pricelist_id': sub_pos_config.pricelist_id.id,
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': bank_payment_method.id},
-            ],
-            'pos_config': sub_pos_config,
-        })
-
-        current_session = sub_pos_config.current_session_id
-        sub_pos_config.current_session_id.action_pos_session_closing_control()
-        self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
     def test_pos_branch_payment_method_config(self):
         """ This test checks that we don't set a config on a payment
@@ -842,11 +408,74 @@ class TestPointOfSaleFlow(CommonPosTest):
         sub_pos_config = self.env['pos.config'].with_company(branch).create({
             'name': 'Main',
             'journal_id': self.company_data['default_journal_sale'].id,
-            'invoice_journal_id': self.company_data['default_journal_sale'].id,
         })
 
         with self.assertRaises(ValidationError, msg="The points of sale for the payment method Bank must belong to its company."):
             bank_payment_method.write({"config_ids": sub_pos_config.ids})
+
+    def test_order_unexisting_lots(self):
+        self.ten_dollars_with_10_incl.product_variant_id.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{
+                'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
+                'pack_lot_ids': [[0, 0, {'lot_name': '1001'}]],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ],
+        })
+
+        self.pos_config_usd.current_session_id.close_session_from_ui()
+        order_lot_id = order.picking_ids.move_line_ids.lot_id
+        self.assertEqual(order_lot_id.name, '1001')
+        self.assertTrue(all(
+            quant.lot_id == order_lot_id
+            for quant in self.env['stock.quant'].search([
+                ('product_id', '=', self.ten_dollars_with_10_incl.product_variant_id.id)
+            ])
+        ))
+
+    def test_order_existing_lot_gs1_nomenclature(self):
+        """An existing lot whose name is also a valid GS1 barcode (e.g. "10156":
+        AI "10" -> Batch/Lot) must still be found when the order is validated,
+        instead of being recreated and raising a duplicate lot error.
+        """
+        if not self.env['ir.module.module'].search_count([('name', '=', 'stock_barcode'), ('state', '=', 'installed')]):
+            self.skipTest("stock_barcode is not installed")
+        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.env.company.nomenclature_id = gs1_nomenclature
+        self.pos_config_usd.picking_type_id.write({
+            'use_create_lots': True,
+            'use_existing_lots': True,
+        })
+        product = self.ten_dollars_with_10_incl.product_variant_id
+        product.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+
+        order_data = {
+            'line_data': [{
+                'product_id': product.id,
+                'pack_lot_ids': [Command.create({'lot_name': '10156'})],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ],
+        }
+        order1, _ = self.create_backend_pos_order(order_data)
+        lot = order1.picking_ids.move_line_ids.lot_id
+        self.assertEqual(lot.name, '10156')
+
+        order2, _ = self.create_backend_pos_order(order_data)
+        self.pos_config_usd.current_session_id.close_session_from_ui()
+
+        self.assertEqual(order2.state, 'done')
+        self.assertEqual(order2.picking_ids.move_line_ids.lot_id, lot)
 
     def test_pos_creation_in_branch(self):
         branch = self.env['res.company'].create({
@@ -859,24 +488,13 @@ class TestPointOfSaleFlow(CommonPosTest):
             "name": "Branch Point of Sale"
         })
 
-    def test_state_when_closing_register(self):
-        self.create_backend_pos_order({
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
-            ],
-        })
-        current_session = self.pos_config_usd.current_session_id
-        current_session.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_payment_method.id: 5.00})
-        self.assertEqual(current_session.state, 'closed')
-
     def test_change_with_card_only(self):
         """Test that the change is not skipped if order was overpaid only with card"""
         self.pos_config_usd.open_ui()
         pos_session = self.pos_config_usd.current_session_id
-        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        cash_payment_method = pos_session.payment_method_ids.filtered(
+            lambda pm: pm.type == 'cash',
+        )[:1]
         product_order = {
             'amount_paid': 500,
             'amount_return': -50,
@@ -918,12 +536,12 @@ class TestPointOfSaleFlow(CommonPosTest):
         order_account_move = pos_order.account_move
         self.assertEqual(order_account_move.amount_total, pos_order.amount_total)
 
-        account_moves = self.env['account.move'].search([('pos_payment_ids', 'in', pos_order.payment_ids.ids)])
-        self.assertEqual(len(account_moves), 2)
-        self.assertRecordValues(account_moves.sorted(), [
-            {'amount_total': 50},
-            {'amount_total': 500},
-        ])
+        payment_term = order_account_move.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term',
+        )
+        payment_amount = payment_term.mapped('amount_currency')
+        self.assertEqual(len(payment_term), 2)
+        self.assertEqual(payment_amount, [500.0, -50.0])
 
     def test_refund_qty_refund_cancel(self):
         """
@@ -1088,114 +706,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             "Invoice should not use journal bank account when not allowed."
         )
 
-    def test_order_invoiced_after_session_closed(self):
-        """Test that an order can be invoiced after its session is closed.
-        Scenario:
-            1. Create a POS session and two orders:
-            - Order A: Not to be invoiced immediately.
-            - Order B: To be invoiced immediately.
-            2. Close the POS session.
-            3. Ensure:
-            - Both orders have `reversed_move_ids` unset.
-            4. Assign a partner to Order A and invoice it AFTER the session is closed.
-            - Confirm that `reversed_move_ids` is set accordingly.
-        """
-        order_data = {
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 30},
-            ],
-        }
-
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        order_no_invoice, _ = self.create_backend_pos_order({**order_data, 'to_invoice': False, 'partner_id': False})
-        order_invoiced_immediate, _ = self.create_backend_pos_order({**order_data, 'to_invoice': True, 'partner_id': self.partner.id})
-
-        total_cash_payment = sum(
-            current_session.mapped('order_ids.payment_ids')
-            .filtered(lambda p: p.payment_method_id.type == 'cash')
-            .mapped('amount')
-        )
-        current_session.post_closing_cash_details(total_cash_payment)
-        current_session.close_session_from_ui()
-
-        # Ensure the session is closed
-        self.assertEqual(current_session.state, 'closed')
-
-        # Initial state: no reversal moves for both orders
-        self.assertFalse(order_no_invoice.reversed_move_ids,
-                        "Order with 'to_invoice' = False should have no reversal moves after session is closed.")
-        self.assertFalse(order_invoiced_immediate.reversed_move_ids,
-                        "Immediate invoiced order should have no reversal moves after session is closed.")
-
-        # Now, set a partner and invoice the order after the session is closed
-        order_no_invoice.partner_id = self.partner
-        order_no_invoice.action_pos_order_invoice()
-
-        # Confirm that reversal move(s) are now set
-        reversal_moves = self.env['account.move'].search([('reversed_pos_order_id', '=', order_no_invoice.id)])
-        self.assertEqual(order_no_invoice.reversed_move_ids, reversal_moves,
-                        "Reversal move should be set for the order invoiced after the session is closed.")
-
-    def test_payment_difference_accounting_items(self):
-        """Verify that the amount of the accounting items are correct when closing a session with a payment difference."""
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product',
-            'lst_price': 100,
-        })
-        # Make a sale paid by bank
-        self.pos_config_usd.open_ui()
-        session_id = self.pos_config_usd.current_session_id
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session_id.id,
-            'partner_id': False,
-            'lines': [Command.create({
-                'name': 'OL/0001',
-                'product_id': self.product1.id,
-                'price_unit': 100.00,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': False,
-                'price_subtotal': 100.00,
-                'price_subtotal_incl': 100.00,
-            })],
-            'pricelist_id': self.pos_config_usd.pricelist_id.id,
-            'amount_paid': 100.00,
-            'amount_total': 100.00,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        # Make payment
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.bank_payment_method.id
-        })
-        order_payment.with_context(**payment_context).check()
-
-        session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_payment_method.id: -10.00})
-        self.bank_payment_move = session_id._get_related_account_moves().filtered(lambda move: 'Combine Bank' in move.ref)
-        self.assertRecordValues(self.bank_payment_move.line_ids.sorted('balance'), [{
-            'balance': -100.0,
-            'account_id': self.bank_payment_method.receivable_account_id.id,
-        },
-        {
-            'balance': 10.0,
-            'account_id': self.bank_payment_method.journal_id.loss_account_id.id,
-        },
-        {
-            'balance': 90.0,
-            'account_id': self.bank_payment_move.payment_ids.outstanding_account_id.id,
-        }])
-
     def test_invoice_rounding_overpaid_backend(self):
         rouding_method = self.env['account.cash.rounding'].create({
             'name': 'Rounding up',
@@ -1221,9 +731,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         current_session = self.pos_config_usd.current_session_id
 
         pos_order_data = {
-            'amount_paid': 149.99,
+            'amount_paid': 150,  # Should correspond to the total paid in payment_ids
             'amount_tax': 0,
-            'amount_return': 0.01,
+            'amount_return': 0,  # Is computed by sync_from_ui
             'amount_total': 149.99,
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
             'fiscal_position_id': False,
@@ -1255,9 +765,12 @@ class TestPointOfSaleFlow(CommonPosTest):
         }
         self.env['pos.order'].sync_from_ui([pos_order_data])
 
-        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-        current_session.close_session_from_ui()
+        closing_data = current_session.get_closing_control_data()
+        cash_details = closing_data['default_cash_details']
+        expected_cashbox_amount = cash_details['payment_amount']
+        current_session.close_session_from_ui({
+            self.cash_payment_method.id: expected_cashbox_amount,
+        })
 
         pos_order = self.env['pos.order'].search([])
         pos_order.action_pos_order_invoice()
@@ -1328,26 +841,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertNotIn(paid_order_2.id, order_ids)
         self.assertIn(cancelled_order.id, order_ids)
 
-    def test_session_name_gap(self):
-        self.pos_config_usd.open_ui()
-        session = self.pos_config_usd.current_session_id
-        session.set_opening_control(0, None)
-        current_session_name = session.name
-        session.action_pos_session_closing_control()
-
-        self.pos_config_usd.open_ui()
-        session = self.pos_config_usd.current_session_id
-
-        def _post_cash_details_message_patch(*_args, **_kwargs):
-            raise UserError('Test Error')
-
-        with patch.object(self.env.registry.models['pos.session'], "_post_cash_details_message", _post_cash_details_message_patch):
-            with self.assertRaises(UserError):
-                session.set_opening_control(0, None)
-
-        session.set_opening_control(0, None)
-        self.assertEqual(int(session.name.split('/')[1]), int(current_session_name.split('/')[1]) + 1)
-
     def test_open_ui_missing_country(self):
         """ Test that a POS can not be opened if it has no country """
         self.pos_config_usd.company_id.account_fiscal_country_id = False
@@ -1378,7 +871,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'name': 'Main',
             'company_id': branch.id,
         })
-        config.payment_method_ids.filtered(lambda pm: pm.is_cash_count).unlink()
+        config.payment_method_ids.filtered(lambda pm: pm.type == 'cash').unlink()
 
         config.open_ui()
         current_session = config.current_session_id
@@ -1440,56 +933,6 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         with self.assertRaises(ValidationError, msg='You cannot delete a customer that has point of sales orders. You can archive it instead.'):
             partner.unlink()
-
-    def test_split_payment_linked_to_accounting_partner(self):
-        self.bank_payment_method.write({'split_transactions': True})
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        child_partner = self.env['res.partner'].create({
-            'name': 'partner1 child',
-            'parent_id': self.partner.id
-        })
-        product_order = {
-            'amount_paid': 750,
-            'amount_tax': 0,
-            'amount_return': 0,
-            'amount_total': 750,
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'fiscal_position_id': False,
-            'lines': [[0, 0, {
-                'discount': 0,
-                'price_unit': 750.0,
-                'product_id': self.product.id,
-                'price_subtotal': 750.0,
-                'price_subtotal_incl': 750.0,
-                'tax_ids': [[6, False, []]],
-                'qty': 1,
-            }]],
-            'name': 'Order 12345-123-1234',
-            'partner_id': child_partner.id,
-            'session_id': current_session.id,
-            'sequence_number': 2,
-            'payment_ids': [[0, 0, {
-                'amount': 750,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.bank_payment_method.id
-            }]],
-            'uuid': '12345-123-1234',
-            'user_id': self.env.uid,
-            'to_invoice': False}
-
-        self.env['pos.order'].sync_from_ui([product_order])
-        current_session.close_session_from_ui()
-        order_balance = current_session.move_id.line_ids.filtered(
-            lambda l: l.account_id.account_type == "asset_receivable"
-            and l.partner_id == self.partner
-        ).balance
-        payment_balance = current_session.bank_payment_ids.move_id.line_ids.filtered(
-            lambda l: l.account_id.account_type == "asset_receivable"
-            and l.partner_id == self.partner
-        ).balance
-        self.assertEqual(order_balance + payment_balance, 0)
 
     def test_draft_orders_products_loading(self):
         """ Test that products are correctly loaded when limited product loading is enabled and there are draft orders. """
@@ -1581,39 +1024,8 @@ class TestPointOfSaleFlow(CommonPosTest):
         methods = self.env['pos.payment.method'].browse(pm_ids)[:3]
         self.assertEqual(methods.mapped('name'), ['Cash', 'Card', 'Customer Account'])
         self.assertEqual(methods.mapped('sequence'), [1, 2, 4])
-        new_pm = self.env['pos.payment.method'].create({'name': 'Quick Pay'})
+        new_pm = self.env['pos.payment.method'].create({'name': 'Quick Pay', 'type': 'bank'})
         self.assertEqual(new_pm.sequence, 5)
-
-    def test_order_invoiced_customer_account_after_session_closed(self):
-        """Test that an order paid via customer account can be invoiced after its session is closed.
-           Then make sure that the reversal move is reconciled with the PoS session account move line so that only the invoice remains open.
-        """
-        order_data = {
-            'line_data': [
-                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.credit_payment_method.id, 'amount': 20},
-            ],
-            'order_data': {
-                'partner_id': self.partner.id,
-            },
-        }
-
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        order_no_invoice, _ = self.create_backend_pos_order({**order_data, 'to_invoice': False})
-
-        current_session.close_session_from_ui()
-        self.assertEqual(current_session.state, 'closed')
-
-        order_no_invoice.action_pos_order_invoice()
-        customer_account_receivable_entry = current_session.move_id.line_ids.filtered(lambda l: l.partner_id == self.partner)
-        reversal_receivable_entry = order_no_invoice.reversed_move_ids.line_ids.filtered(lambda l: l.account_id == self.partner.property_account_receivable_id)
-        self.assertTrue(customer_account_receivable_entry.reconciled)
-        self.assertTrue(reversal_receivable_entry.reconciled)
-        self.assertEqual(customer_account_receivable_entry.reconciled_lines_ids, reversal_receivable_entry)
 
     def test_add_two_lines_with_same_uuid_through_sync_from_ui(self):
         """Test that adding two lines with the same UUID doesn't cause issues."""
@@ -1694,7 +1106,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         """Ensure POS payments create correct inbound/outbound payments and accounts and related journal items"""
 
         def _do_pos_transaction(amount, split, index):
-            self.bank_payment_method.write({'split_transactions': split})
             self.pos_config_usd.open_ui()
             current_session = self.pos_config_usd.current_session_id
             product_order = {
@@ -1731,28 +1142,29 @@ class TestPointOfSaleFlow(CommonPosTest):
             for idx, (amount, split) in enumerate([(100, False), (-100, False), (100, True), (-100, True)])
         ]
         payments = self.env['account.payment'].search([('pos_session_id', 'in', session_ids)], order='id')
+        receivable_account_id = self.env['pos.session'].browse(session_ids)._get_receivable_account()
         self.assertRecordValues(
             payments,
             [
                 {
                     "payment_type": "inbound",
                     "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
-                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                    "destination_account_id": receivable_account_id.id,
                 },
                 {
                     "payment_type": "outbound",
                     "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
-                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                    "destination_account_id": receivable_account_id.id,
                 },
                 {
                     "payment_type": "inbound",
                     "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
-                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                    "destination_account_id": receivable_account_id.id,
                 },
                 {
                     "payment_type": "outbound",
                     "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
-                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                    "destination_account_id": receivable_account_id.id,
                 },
             ],
         )
@@ -1761,13 +1173,13 @@ class TestPointOfSaleFlow(CommonPosTest):
             move_lines = payment.move_id.line_ids.sorted('balance')
             if payment.payment_type == "inbound":
                 self.assertRecordValues(move_lines, [
-                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                    {'account_id': receivable_account_id.id},
                     {'account_id': self.bank_payment_method.outstanding_account_id.id},
                 ])
             else:
                 self.assertRecordValues(move_lines, [
                     {'account_id': self.bank_payment_method.outstanding_account_id.id},
-                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                    {'account_id': receivable_account_id.id},
                 ])
 
     def test_pricelist_item_date_loading(self):

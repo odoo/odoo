@@ -1,5 +1,6 @@
 from datetime import UTC
-from odoo import api, Command, fields, models
+
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -42,7 +43,7 @@ class PosOrderLine(models.Model):
         groups = self.sudo().env['stock.quant']._read_group(
             domain=domain,
             groupby=['lot_id'],
-            aggregates=['quantity:sum']
+            aggregates=['quantity:sum'],
         )
 
         result = []
@@ -82,7 +83,7 @@ class PosOrderLine(models.Model):
         else:
             date_deadline = self.order_id.date_order
 
-        values = {
+        return {
             'date_planned': date_deadline,
             'date_deadline': date_deadline,
             'route_ids': self.order_id.config_id.route_id,
@@ -91,7 +92,6 @@ class PosOrderLine(models.Model):
             'company_id': self.order_id.company_id,
             'reference_ids': self.order_id.stock_reference_ids,
         }
-        return values
 
     def _launch_stock_rule_from_pos_order_lines(self):
         procurements = []
@@ -122,7 +122,7 @@ class PosOrderLine(models.Model):
             pickings_to_confirm = order.picking_ids
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
-                tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking in ['lot', 'serial'])
+                tracked_lines = order.lines.filtered(lambda line: line.product_id.tracking in ['lot', 'serial'])
                 lines_by_tracked_product = tracked_lines.grouped('product_id')
                 pickings_to_confirm.action_confirm()
                 for product, lines in lines_by_tracked_product.items():

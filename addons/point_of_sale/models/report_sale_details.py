@@ -105,7 +105,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             for line in order.lines:
                 if order.config_id.module_pos_discount and line.product_id.id == order.config_id.discount_product_id.id:
                     continue
-                if not line.order_id.is_refund:
+                if not line.order_id.is_refund_or_negative():
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
@@ -126,13 +126,13 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         if payment_ids:
             method_name = self.env['pos.payment.method']._field_to_sql('method', 'name')
             self.env.cr.execute(SQL("""
-                SELECT method.id as id, payment.session_id as session, %(method_name)s as name, method.is_cash_count as cash,
+                SELECT method.id as id, payment.session_id as session, %(method_name)s as name, method.type = 'cash' as cash,
                      sum(amount) total, method.journal_id journal_id
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id
                     AND payment.id IN %(payment_ids)s
-                GROUP BY method.name, method.is_cash_count, payment.session_id, method.id, journal_id
+                GROUP BY method.name, cash, payment.session_id, method.id, journal_id
                 ORDER BY method.id, payment.session_id
             """, method_name=method_name, payment_ids=tuple(payment_ids)))
             payments = self.env.cr.dictfetchall()
@@ -169,20 +169,15 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
         for session in sessions:
             cash_counted = 0
-            if session.cash_register_balance_end_real:
-                cash_counted = session.cash_register_balance_end_real
+            if session.closing_balance:
+                cash_counted = session.closing_balance
             is_cash_method = False
             for payment in payments:
                 account_payments = self.env['account.payment'].sudo().search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
                         payment_method = self.env['pos.payment.method'].browse(payment['id'])
-                        ref_value = "Closing difference in %s (%s)" % (payment['name'], session.name)
-                        # We add the journal to the query to benefit from index `account_move_journal_id_company_id_idx`
-                        account_move = self.env['account.move'].search([
-                            ('ref', '=', ref_value),
-                            ('journal_id', '=', payment_method.journal_id.id),
-                        ], limit=1)
+                        account_move = session.correction_move_ids
                         if account_move:
                             is_loss = any(l.account_id == payment_method.journal_id.loss_account_id for l in account_move.line_ids)
                             is_profit = any(l.account_id == payment_method.journal_id.profit_account_id for l in account_move.line_ids)
@@ -212,17 +207,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                             payment['count'] = True
                     else:
                         is_cash_method = True
-                        payment['final_count'] = payment['total'] + session.cash_register_balance_start + session.cash_real_transaction
+                        payment['final_count'] = payment['total'] + session.opening_balance
                         payment['money_counted'] = cash_counted
                         payment['money_difference'] = payment['money_counted'] - payment['final_count']
                         cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
                         cash_in_out_list = []
                         cash_in_count = 0
                         cash_out_count = 0
-                        if session.cash_register_balance_start > 0:
+                        if session.opening_balance > 0:
                             cash_in_out_list.append({
                                 'name': _('Cash Opening'),
-                                'amount': session.cash_register_balance_start,
+                                'amount': session.opening_balance,
                             })
                         for cash_move in cash_moves:
                             if cash_move.amount > 0:
@@ -241,15 +236,15 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             if not is_cash_method:
                 cash_name = _('Cash %(session_name)s', session_name=session.name)
                 previous_session = self.env['pos.session'].search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
-                final_count = previous_session.cash_register_balance_end_real + session.cash_real_transaction
-                cash_difference = session.cash_register_balance_end_real - final_count
+                final_count = previous_session.closing_balance
+                cash_difference = session.closing_balance - final_count
                 cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)], order='date asc')
                 cash_in_out_list = []
 
-                if previous_session.cash_register_balance_end_real > 0:
+                if previous_session.closing_balance > 0:
                     cash_in_out_list.append({
                         'name': _('Cash Opening'),
-                        'amount': previous_session.cash_register_balance_end_real,
+                        'amount': previous_session.closing_balance,
                     })
 
                 # If there is a cash difference, we remove the last cash move which is the cash difference
@@ -265,7 +260,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     'name': cash_name,
                     'total': 0,
                     'final_count': final_count,
-                    'money_counted': session.cash_register_balance_end_real,
+                    'money_counted': session.closing_balance,
                     'money_difference': cash_difference,
                     'cash_moves': cash_in_out_list,
                     'count': True,
@@ -452,7 +447,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
             taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl
 
-        refund_sign = -1 if line.order_id.is_refund else 1
+        refund_sign = -1 if line.order_id.is_refund_or_negative() else 1
         taxes['base_amount'] += line.price_subtotal * refund_sign
         return products, taxes
 

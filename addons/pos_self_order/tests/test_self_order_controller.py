@@ -3,7 +3,7 @@
 import json
 import uuid
 from unittest.mock import patch
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
@@ -21,19 +21,29 @@ class TestSelfOrderController(SelfOrderCommonTest):
         return response.json().get('result')
 
     def test_get_orders_by_access_token(self):
+        self.cola.taxes_id = False
         self.pos_config.self_ordering_mode = 'mobile'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, '')
 
         order_data = self._create_order_data(
-            state='paid',
+            state='draft',
             product=self.cola,
             qty=3,
-            price_unit=1.0,
-            price_subtotal_incl=0
+            price_unit=2.2,
+            price_subtotal_incl=6.6,
         )
+
         data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
         order1 = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+        order1.payment_ids.create({
+            'payment_method_id': self.bank_payment_method.id,
+            'amount': 6.6,
+            'payment_date': datetime.now(),
+            'pos_order_id': order1.id,
+        })
+        order1.amount_paid = 6.6
+        order1.action_pos_order_paid()
 
         order_data = self._create_order_data(
             state='draft',
@@ -356,7 +366,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
                     'tax_ids': [(6, 0, product.taxes_id.ids)],
                     'price_subtotal_incl': price_subtotal_incl or 0,
                 }]],
-                'payment_ids': payments,
+                'payment_ids': payments or [],
             }
         }
 

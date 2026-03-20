@@ -59,7 +59,6 @@ class CommonPosTest(AccountTestInvoicingCommon):
         self.pos_config_usd = self.env['pos.config'].create({
             'name': 'PoS Config USD',
             'journal_id': self.company_data['default_journal_sale'].id,
-            'invoice_journal_id': self.company_data['default_journal_sale'].id,
             'payment_method_ids': [
                 (4, self.credit_payment_method.id),
                 (4, self.bank_payment_method.id),
@@ -118,18 +117,20 @@ class CommonPosTest(AccountTestInvoicingCommon):
     def create_payment_methods(self):
         self.cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash',
+            'type': 'cash',
             'receivable_account_id': self.company_data['default_account_receivable'].id,
             'journal_id': self.company_data['default_journal_cash'].id,
         })
         self.bank_payment_method = self.env['pos.payment.method'].create({
             'name': 'Bank',
+            'type': 'bank',
             'journal_id': self.company_data['default_journal_bank'].id,
             'receivable_account_id': self.company_data['default_account_receivable'].id,
         })
         self.credit_payment_method = self.env['pos.payment.method'].create({
             'name': 'Credit',
             'receivable_account_id': self.company_data['default_account_receivable'].id,
-            'split_transactions': True,
+            'type': 'pay_later',
         })
 
     def create_pos_categories(self):
@@ -307,7 +308,7 @@ class CommonPosTest(AccountTestInvoicingCommon):
             'amount_tax': 0,
             'amount_return': 0,
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'company_id': self.env.company.id,
+            'company_id': pos_config.company_id.id,
             'session_id': pos_config.current_session_id.id,
             'lines': [
                 Command.create({
@@ -409,7 +410,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         })
         # Set Point of Sale configurations
         # basic_config
-        #   - derived from 'point_of_sale.pos_config_main' with added invoice_journal_id and credit payment method.
+        #   - derived from 'point_of_sale.pos_config_main' with added journal_id and credit payment method.
         # other_currency_config
         #   - pos.config set to have currency different from company currency.
         cls.basic_config = cls._create_basic_config()
@@ -448,7 +449,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
     def _create_basic_config(cls):
         config = cls.env['pos.config'].create({
             'name': 'PoS Shop Test',
-            'invoice_journal_id': cls.invoice_journal.id,
+            'journal_id': cls.invoice_journal.id,
             'available_pricelist_ids': cls.currency_pricelist.ids,
             'pricelist_id': cls.currency_pricelist.id,
         })
@@ -459,32 +460,24 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         else:
             cls.cash_pm1 = cls.env['pos.payment.method'].create({
                 'name': 'Cash',
+                'type': 'cash',
                 'journal_id': cls.company_data['default_journal_cash'].id,
                 'receivable_account_id': cls.pos_receivable_cash.id,
                 'company_id': cls.env.company.id,
             })
         cls.bank_pm1 = cls.env['pos.payment.method'].create({
             'name': 'Bank',
+            'type': 'bank',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
             'company_id': cls.env.company.id,
         })
-        cls.cash_split_pm1 = cls.cash_pm1.copy(default={
-            'name': 'Split (Cash) PM',
-            'split_transactions': True,
-            'journal_id': cls.env['account.journal'].create({
-                                'name': "Cash",
-                                'code': "CSH %s" % config.id,
-                                'type': 'cash',
-                            }).id
-        })
         cls.bank_split_pm1 = cls.bank_pm1.copy(default={
             'name': 'Split (Bank) PM',
-            'split_transactions': True,
         })
-        cls.pay_later_pm = cls.env['pos.payment.method'].create({'name': 'Pay Later', 'split_transactions': True})
-        config.write({'payment_method_ids': [(4, cls.cash_split_pm1.id), (4, cls.bank_split_pm1.id), (4, cls.cash_pm1.id), (4, cls.bank_pm1.id), (4, cls.pay_later_pm.id)]})
+        cls.pay_later_pm = cls.env['pos.payment.method'].create({'name': 'Pay Later', 'type': 'pay_later'})
+        config.write({'payment_method_ids': [(4, cls.bank_split_pm1.id), (4, cls.cash_pm1.id), (4, cls.bank_pm1.id), (4, cls.pay_later_pm.id)]})
         return config
 
     @classmethod
@@ -501,14 +494,6 @@ class TestPoSCommon(AccountTestInvoicingCommon):
             'company_id': cls.company.id,
             'code': 'CSHO',
             'sequence': 10,
-            'currency_id': cls.other_currency.id
-        })
-        other_invoice_journal = cls.env['account.journal'].create({
-            'name': 'Customer Invoice Other',
-            'type': 'sale',
-            'company_id': cls.company.id,
-            'code': 'INVO',
-            'sequence': 11,
             'currency_id': cls.other_currency.id
         })
         other_sales_journal = cls.env['account.journal'].create({
@@ -533,11 +518,13 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         })
         cls.cash_pm2 = cls.env['pos.payment.method'].create({
             'name': 'Cash Other',
+            'type': 'cash',
             'journal_id': other_cash_journal.id,
             'receivable_account_id': cls.pos_receivable_cash.id,
         })
         cls.bank_pm2 = cls.env['pos.payment.method'].create({
             'name': 'Bank Other',
+            'type': 'bank',
             'journal_id': other_bank_journal.id,
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
@@ -545,7 +532,6 @@ class TestPoSCommon(AccountTestInvoicingCommon):
 
         config = cls.env['pos.config'].create({
             'name': 'Shop Other',
-            'invoice_journal_id': other_invoice_journal.id,
             'journal_id': other_sales_journal.id,
             'use_pricelist': True,
             'available_pricelist_ids': other_pricelist.ids,
@@ -712,19 +698,19 @@ class TestPoSCommon(AccountTestInvoicingCommon):
                 tax_ids.compute_all(price_unit_after_discount, self.currency, quantity)
                 if tax_ids
                 else {
-                    'total_excluded': price_unit * quantity,
-                    'total_included': price_unit * quantity,
+                    'total_excluded': price_unit_after_discount * quantity,
+                    'total_included': price_unit_after_discount * quantity,
                 }
             )
             return (0, 0, {
                 'id': randint(1, 1000000),
                 'price_unit': price_unit,
                 'product_id': product.id,
-                'price_subtotal': tax_values['total_excluded'],
-                'price_subtotal_incl': tax_values['total_included'],
+                'price_subtotal': abs(tax_values['total_excluded']),  # Must never be negative, qty is used to determine the sign of the amounts
+                'price_subtotal_incl': abs(tax_values['total_included']),  # Must never be negative, qty is used to determine the sign of the amounts
                 'qty': quantity,
                 'tax_ids': [(6, 0, tax_ids.ids)],
-                **kwargs
+                **kwargs,
             })
 
         def create_payment(payment_method, amount):
@@ -743,9 +729,17 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         ]
 
         # 2. generate the payments
-        total_amount_incl = sum(line[2]['price_subtotal_incl'] for line in order_lines)
+        total_amount_incl = 0
+        total_amount_base = 0
+        for line in order_lines:
+            line_sign = 1 if line[2]['qty'] >= 0 else -1
+            line_price = line[2]['price_subtotal_incl'] * line_sign
+            base_price = line[2]['price_subtotal'] * line_sign
+
+            total_amount_incl += line_price
+            total_amount_base += base_price
         if payments is None:
-            default_cash_pm = self.config.payment_method_ids.filtered(lambda pm: pm.is_cash_count and not pm.split_transactions)[:1]
+            default_cash_pm = self.config.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[:1]
             if not default_cash_pm:
                 raise Exception('There should be a cash payment method set in the pos.config.')
             payments = [create_payment(default_cash_pm, total_amount_incl)]
@@ -756,7 +750,6 @@ class TestPoSCommon(AccountTestInvoicingCommon):
             ]
 
         # 3. complete the fields of the order_data
-        total_amount_base = sum(line[2]['price_subtotal'] for line in order_lines)
         return {
             'amount_paid': sum(payment[2]['amount'] for payment in payments),
             'amount_return': 0,
@@ -826,10 +819,9 @@ class TestPoSCommon(AccountTestInvoicingCommon):
             _logger.info('DONE: Call of before_closing_cb.')
         self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
         _logger.info('DONE: Checks for journal entries before closing the session.')
-        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        cash_payment_method = pos_session.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[:1]
         total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
-        pos_session.post_closing_cash_details(total_cash_payment)
-        pos_session.close_session_from_ui()
+        pos_session.close_session_from_ui({cash_payment_method.id: total_cash_payment})
         after_closing_cb = args.get('after_closing_cb')
         if after_closing_cb:
             after_closing_cb()
@@ -858,7 +850,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
 
         for uid in orders_map:
             order = orders_map[uid]
-            if not order.is_invoiced:
+            if not order.is_singly_invoiced:
                 continue
             invoice = order.account_move
             # allow not checking the invoice since pos is not creating the invoices
@@ -889,22 +881,15 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         currency_rounding = pos_session.currency_id.rounding
 
         # check expected session journal entry
-        self._assert_account_move(pos_session.move_id, expected_values['session_journal_entry'])
+        self._assert_account_move(pos_session.sales_move_id, expected_values['session_journal_entry'])
         _logger.info("DONE: Check of the session's account move.")
 
         # check expected cash journal entries
-        for statement_line in pos_session.statement_line_ids:
+        for statement_line in pos_session.bank_statement_line_ids:
             def statement_line_predicate(args):
                 return tools.float_is_zero(statement_line.amount - args[0], precision_rounding=currency_rounding)
             self._find_then_assert_values(statement_line.move_id, expected_values['cash_statement'], statement_line_predicate)
         _logger.info("DONE: Check of cash statement lines.")
-
-        # check expected bank payments
-        for bank_payment in pos_session.bank_payment_ids:
-            def bank_payment_predicate(args):
-                return tools.float_is_zero(bank_payment.amount - args[0], precision_rounding=currency_rounding)
-            self._find_then_assert_values(bank_payment.move_id, expected_values['bank_payments'], bank_payment_predicate)
-        _logger.info("DONE: Check of bank account payments.")
 
     def _find_then_assert_values(self, account_move, source_of_expected_vals, predicate):
         expected_move_vals = next(move_vals for args, move_vals in source_of_expected_vals if predicate(args))

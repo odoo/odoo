@@ -23,7 +23,7 @@ export class InvoiceButton extends Component {
         if (!this.props.order) {
             return false;
         }
-        return Boolean(this.props.order.raw.account_move);
+        return Boolean(this.props.order.is_singly_invoiced);
     }
     get commandName() {
         return _t("Invoice");

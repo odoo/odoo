@@ -198,7 +198,7 @@ class PosController(PortalAccount):
         pos_order = pos_order.with_company(pos_order.company_id).with_context(allowed_company_ids=pos_order.company_id.ids)
 
         # If the order was already invoiced, return the invoice directly by forcing the access token so that the non-connected user can see it.
-        if pos_order.account_move and pos_order.account_move.is_sale_document():
+        if pos_order.is_singly_invoiced:
             return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
 
         if not request.env['res.company']._with_locked_records(pos_order, allow_raising=False):

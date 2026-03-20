@@ -17,6 +17,7 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
         # Create Viva.com payment method
         viva_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Viva',
+            'type': 'bank',
             'journal_id': cls.bank_journal.id,
             'payment_provider': 'viva_com',
             'viva_com_merchant_id': 'test-merchant-id',

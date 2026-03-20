@@ -15,6 +15,7 @@ class TestQFPayPoS(TestPointOfSaleHttpCommon):
             "payment_method_ids": [
                 Command.create({
                     "name": "QFPay",
+                    'type': 'bank',
                     "qfpay_pos_key": "my_qfpay_pos_key",
                     "qfpay_notification_key": "my_qfpay_notification_key",
                     "payment_provider": "qfpay",

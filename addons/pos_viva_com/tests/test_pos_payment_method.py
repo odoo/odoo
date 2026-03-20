@@ -17,6 +17,7 @@ class TestVivaComBearerTokenAcl(AccountTestInvoicingCommon):
         cls.viva_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'Viva ACL Test',
             'journal_id': bank_journal.id,
+            'type': 'bank',
             'payment_method_type': 'terminal',
             'payment_provider': 'viva_com',
             'viva_com_merchant_id': 'm',

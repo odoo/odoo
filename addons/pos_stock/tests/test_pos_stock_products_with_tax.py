@@ -139,6 +139,7 @@ class TestPosStockProductsWithTax(TestPosStockCommon):
         xx_cash_journal = self.company_data['default_journal_cash'].copy({'company_id': branch_xx.id})
         xx_cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'XX Cash Payment',
+            'type': 'cash',
             'receivable_account_id': xx_account_receivable.id,
             'journal_id': xx_cash_journal.id,
             'company_id': branch_xx.id,

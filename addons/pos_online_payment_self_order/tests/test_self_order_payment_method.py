@@ -13,7 +13,7 @@ class TestSelfOrderOnlinePaymentMethod(SelfOrderCommonTest, OnlinePaymentCommon)
         self.online_payment_method = self.env["pos.payment.method"].create({
             "name": "Online",
             "journal_id": self.bank_journal.id,
-            "is_online_payment": True,
+            "type": 'online',
             "online_payment_provider_ids": [Command.set([self.dummy_provider.id])],
         })
 

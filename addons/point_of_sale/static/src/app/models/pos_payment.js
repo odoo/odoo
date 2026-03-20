@@ -180,7 +180,7 @@ export class PosPayment extends Base {
         if (this.payment_interface) {
             return this.payment_interface.canBeAdjusted(this.uuid);
         }
-        return !this.payment_method_id.is_cash_count && !this.useBankQrCode;
+        return this.payment_method_id.type !== "cash" && !this.useBankQrCode;
     }
 
     async adjustAmount(amount) {

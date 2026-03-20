@@ -10,7 +10,7 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 class TestBackend(TestPoSCommon):
 
     def test_onchange_payment_provider(self):
-        pm = self.env['pos.payment.method'].create({'name': 'Test PM'})
+        pm = self.env['pos.payment.method'].create({'name': 'Test PM', 'type': 'bank'})
         with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \
              patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]), \
              patch.object(PosPaymentMethod, '_get_cash_machine_selection', return_value=[('cash_1', 'Cash Machine 1'), ('cash_2', 'Cash Machine 2')]):
@@ -65,7 +65,7 @@ class TestBackend(TestPoSCommon):
             self.assertEqual(pm.payment_method_type, 'cash_machine')
 
     def test_onchange_payment_method_type(self):
-        pm = self.env['pos.payment.method'].create({'name': 'Test PM'})
+        pm = self.env['pos.payment.method'].create({'name': 'Test PM', 'type': 'bank'})
         with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \
              patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]), \
              patch.object(PosPaymentMethod, '_get_cash_machine_selection', return_value=[('cash_1', 'Cash Machine 1'), ('cash_2', 'Cash Machine 2')]):

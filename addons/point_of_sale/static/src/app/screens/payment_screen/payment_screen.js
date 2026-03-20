@@ -43,6 +43,12 @@ export class PaymentScreen extends Component {
         onMounted(this.onMounted);
     }
 
+    get isForcedToInvoice() {
+        // When using customer account, is now mandatory to create an invoice.
+        const payments = this.currentOrder.payment_ids;
+        return payments.some((p) => p.payment_method_id.type === "pay_later");
+    }
+
     get configPaymentMethods() {
         return this.pos.config.paymentMethods;
     }
@@ -202,14 +208,6 @@ export class PaymentScreen extends Component {
         }
     }
     async toggleIsToInvoice() {
-        if (!this.pos.config.canInvoice) {
-            this.notification.add(
-                _t("To enable invoice creation, please add a journal for it in the settings."),
-                { type: "warning" }
-            );
-            return;
-        }
-
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
     }
     async addTip() {

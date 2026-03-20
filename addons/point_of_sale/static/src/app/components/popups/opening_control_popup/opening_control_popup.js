@@ -27,7 +27,7 @@ export class OpeningControlPopup extends Component {
         this.state = proxy({
             notes: "",
             openingCash: this.env.utils.formatCurrency(
-                this.pos.session.cash_register_balance_start || 0,
+                this.pos.config._last_opening_balance || 0,
                 false
             ),
             ordersByPreset: [],
@@ -100,6 +100,6 @@ export class OpeningControlPopup extends Component {
         this.state.openingCash = this.env.utils.parseAndFormatCurrency(this.state.openingCash);
     }
     get cashMethodCount() {
-        return this.pos.config.payment_method_ids.filter((pm) => pm.is_cash_count).length;
+        return this.pos.config.payment_method_ids.filter((pm) => pm.type === "cash").length;
     }
 }
