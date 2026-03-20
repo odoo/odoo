@@ -8,9 +8,7 @@ class TestReadGroupingSetsAggregate(models.Model):
 
     key = fields.Integer()
     value = fields.Integer("Value")
-    numeric_value = fields.Float(digits=(4, 2))
     partner_id = fields.Many2one('res.partner')
-    display_name = fields.Char(store=True)
 
 
 class TestReadGroupingSetsUser(models.Model):
@@ -46,37 +44,5 @@ class TestReadGroupingSetsTask(models.Model):
         'user_id',
         string="Customers",
     )
-    tag_ids = fields.Many2many(
-        'test_read_grouping_sets.tag',
-        'test_read_grouping_sets_task_tag_rel',
-        'task_id',
-        'tag_id',
-        string="Tags",
-    )
-    active_tag_ids = fields.Many2many(
-        'test_read_grouping_sets.tag',
-        'test_read_grouping_sets_task_tag_rel',
-        'task_id',
-        'tag_id',
-        string="Active Tags",
-        domain=[('active', '=', True)],
-    )
-    all_tag_ids = fields.Many2many(
-        'test_read_grouping_sets.tag',
-        'test_read_grouping_sets_task_tag_rel',
-        'task_id',
-        'tag_id',
-        string="All Tags",
-        context={'active_test': False},
-    )
-    date = fields.Date()
     integer = fields.Integer()
     key = fields.Char()
-
-
-class TestReadGroupingSetsTag(models.Model):
-    _name = 'test_read_grouping_sets.tag'
-    _description = "Project tag"
-
-    name = fields.Char(required=True)
-    active = fields.Boolean(default=True)
