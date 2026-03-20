@@ -62,7 +62,7 @@
         <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer" t-on-click="this.toggleSidebar">
             <div class="d-flex">
                 <button title="Open sidebar" aria-label="Open sidebar" class="btn btn-light btn-sm m-1 mb-2 p-2">
-                    <i class="fa fa-angle-double-right"/>
+                    <i class="oi oi-lg oi-panel-right fa-flip-horizontal"/>
                 </button>
                 <div class="mx-auto" t-if="this.loader.getActiveDashboard()">
                     <span class="fw-bolder" t-out="this.activeDashboardGroupName"/>
@@ -76,7 +76,7 @@
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
         <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative pt-4">
             <button title="Close sidebar" aria-label="Close sidebar" t-if="!this.env.isSmall and this.loader.getActiveDashboard()" class="btn btn-light btn-sm end-0 m-1 mb-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="this.toggleSidebar">
-                <i class="fa fa-fw fa-angle-double-left"/>
+                <i class="oi oi-lg oi-panel-right fa-flip-horizontal"/>
             </button>
             <div class="mt-2"/>
             <section t-foreach="this.getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category mt-4">
