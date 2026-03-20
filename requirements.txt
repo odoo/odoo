@@ -36,8 +36,9 @@ idna==3.10 ; python_version >= '3.13'  # (Trixie)
 Jinja2==3.0.3 ; python_version < '3.11'  # (Jammy)
 Jinja2==3.1.2 ; python_version >= '3.11' and python_version < '3.13'
 Jinja2==3.1.6 ; python_version >= '3.13'  # (Trixie)
-libsass==0.20.1 ; python_version < '3.11'
-libsass==0.22.0 ; python_version >= '3.11'  # (Noble) Mostly to have a wheel package
+libsass==0.20.1 ; python_version < '3.11'  # (Jammy)
+libsass==0.22.0 ; python_version >= '3.11' and python_version < '3.13'
+libsass==0.23.0 ; python_version >= '3.13'  # (Trixie)
 lxml==4.8.0 ; python_version <= '3.10'
 lxml==4.9.3 ; python_version > '3.10' and python_version < '3.12' # min 4.9.2, pinning 4.9.3 because of missing wheels for darwin in 4.9.3
 lxml==5.2.1 ; python_version >= '3.12' and python_version < '3.13'  # (Noble - removed html clean)
