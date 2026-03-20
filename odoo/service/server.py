@@ -1698,6 +1698,7 @@ def preload_registries(dbnames):
                     if post_install_suite.has_http_case():
                         with registry.cursor() as cr:
                             env = api.Environment(cr, api.SUPERUSER_ID, {})
+                            env.registry._assertion_report = registry._assertion_report
                             env['ir.qweb']._pregenerate_assets_bundles()
                     result = loader.run_suite(post_install_suite, global_report=registry._assertion_report)
                     registry._assertion_report.update(result)
