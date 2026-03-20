@@ -83,7 +83,8 @@ python-dateutil==2.9.0 ; python_version >= '3.13'  # (Trixie)
 python-ldap==3.4.0 ; sys_platform != 'win32' and python_version < '3.12' # min version = 3.2.0 (Focal with security backports)
 python-ldap==3.4.4 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble) Mostly to have a wheel package
 python-stdnum==1.17 ; python_version < '3.11'  # (jammy)
-python-stdnum==1.19 ; python_version >= '3.11'
+python-stdnum==1.19 ; python_version >= '3.11' and python_version < '3.13'
+python-stdnum==1.20 ; python_version >= '3.13'  # (Trixie)
 pytz  # no version pinning to avoid OS perturbations
 pyusb==1.2.1
 qrcode==7.3.1 ; python_version < '3.11'  # (jammy)
