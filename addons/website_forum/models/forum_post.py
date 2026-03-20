@@ -49,6 +49,7 @@ class ForumPost(models.Model):
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
     write_date = fields.Datetime('Updated on', index=True, readonly=True)
+    write_date_content = fields.Datetime('Content Updated on')
     last_activity_date = fields.Datetime(
         'Last activity on', readonly=True, required=True, default=fields.Datetime.now,
         help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
@@ -366,6 +367,9 @@ class ForumPost(models.Model):
             forum.check_access('write')
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
+
+        if 'content' in vals or 'name' in vals:
+            vals['write_date_content'] = self.env.cr.now()
 
         tag_ids = False
         if 'tag_ids' in vals:
