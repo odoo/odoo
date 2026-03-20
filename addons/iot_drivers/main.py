@@ -87,6 +87,7 @@ class Manager(Thread):
             'token': helpers.get_token(),
             'version': self.version,
             'name': socket.gethostname(),  # TODO: remove when v18.0 is deprecated (backward compatibility)
+            "l10n_eg_proxy_token": helpers.get_conf("proxy_access_token", "default"),
         }
         devices_list = {}
         for device in self.previous_iot_devices.values():

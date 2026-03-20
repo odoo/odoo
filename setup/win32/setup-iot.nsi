@@ -89,6 +89,7 @@ RequestExecutionLevel admin
 !insertmacro GetOptions
 
 Var /GLOBAL cmdLineParams
+Var /GLOBAL ProxyTokenPwd
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
@@ -216,6 +217,11 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     AccessControl::GrantOnFile "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
     nsExec::ExecToLog 'netsh advfirewall firewall add rule name="Odoo IoT Box ${VERSION}" dir=in action=allow protocol=TCP localport=80,443,8069,9000,9050,7784,33334 enable=yes profile=public,private'
+
+    nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\odoo\odoo-bin" genproxytoken'
+    pop $0
+    pop $ProxyTokenPwd
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "proxy_access_token" "$ProxyTokenPwd"
 
     Call RestartOdooService
 SectionEnd
