@@ -114,7 +114,7 @@ export class CaptionPlugin extends Plugin {
         if (!image) {
             return;
         }
-        const block = closestBlock(image);
+        const block = closestBlock(image.parentElement);
         return (
             block.nodeName === "FIGURE" && !!block.querySelector("[data-embedded='caption'] input")
         );
@@ -140,16 +140,12 @@ export class CaptionPlugin extends Plugin {
         // Move the image within a figure element.
         const figure = this.document.createElement("figure");
         const link = image.parentElement.nodeName === "A" && image.parentElement;
-        if (link && (link.previousSibling || link.nextSibling)) {
+        const target = link || image;
+        const blockEl = closestBlock(target.parentElement);
+        if ((target.nextSibling || target.previousSibling) && isParagraphRelatedElement(blockEl)) {
             // <p>wx<a><img/></a>yz</p> => <p>wx</p><p><a><img/></a></p><p>yz</p>
-            this.dependencies.split.splitAroundUntil(link, closestBlock(link));
-        } else if (
-            !link &&
-            (image.previousSibling || image.nextSibling) &&
-            isParagraphRelatedElement(closestBlock(image))
-        ) {
             // <p>wx<img/>yz</p> => <p>wx</p><p><img/></p><p>yz</p>
-            const block = this.dependencies.split.splitAroundUntil(image, closestBlock(image));
+            const block = this.dependencies.split.splitAroundUntil(target, blockEl);
             if (isBlock(block.previousSibling) && !isVisible(block.previousSibling)) {
                 block.previousSibling.remove();
             }

@@ -1453,3 +1453,44 @@ test("Should be able to revert image replace", async () => {
     const input = el.querySelector("input");
     expect(input.value).toBe(captionText);
 });
+
+test("should toggle caption on an image with display:block (add and remove caption)", async () => {
+    const captionId = 1;
+    const { el, editor } = await setupEditorWithEmbeddedCaption(
+        `<img class="img-fluid test-image o_editable_media" style="display:block" src="${base64Img}">`
+    );
+    await animationFrame();
+    await toggleCaption();
+    await animationFrame();
+    const input = queryOne("figure > figcaption > input");
+    expect(input.value).toBe("");
+    expect(editor.document.activeElement).toBe(input);
+    // Remove the editor selection for the test because it's irrelevant
+    // since the focus is not in it.
+    const selection = editor.document.getSelection();
+    selection.removeAllRanges();
+    await waitForNone(".o-we-toolbar");
+    expect(getContent(el)).toBe(
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" style="display:block" src="${base64Img}" data-caption-id="${captionId}" data-caption="">
+                <figcaption ${getFigcaptionAttributes(captionId, "", true)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        )
+    );
+    await click("img");
+    const captionButton = ".o-we-toolbar button[name='image_caption']";
+    await waitFor(captionButton);
+    expect(captionButton).toHaveClass("active");
+    await click(captionButton);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>[<img class="img-fluid test-image" style="display:block" src="${base64Img}" data-caption="">]</p>
+        `)
+    );
+});
