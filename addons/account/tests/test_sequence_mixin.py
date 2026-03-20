@@ -760,6 +760,15 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.create_move(date='2021-01-01', post=True)
         mock.assert_called_once()
 
+    def test_flushing_savepoint_rollback_should_clear_cache(self):
+        self.assertFalse(self.env['account.move']._get_sequence_cache(), 'The cache should be empty at this point')
+        with self.env.cr.savepoint() as sp:
+            self.create_move(date='2021-01-01', post=True)
+            self.assertTrue(self.env['account.move']._get_sequence_cache(), 'The cache should have been filled')
+            sp.rollback()
+            self.assertFalse(self.env['account.move']._get_sequence_cache(), 'The cache should have been cleared')
+
+
 @tagged('post_install', '-at_install')
 class TestSequenceGaps(TestSequenceMixinCommon):
     @classmethod
