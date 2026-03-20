@@ -12,7 +12,9 @@ class ProductTemplate(models.Model):
     def create(self, vals_list):
         """Override of `product` to set a default image for gift cards."""
         templates = super().create(vals_list)
-        if templates and self.env.context.get("loyalty_is_gift_card_product"):
+        if templates and self.env.context.get(
+            "loyalty_is_gift_card_product"
+        ):  # TODO(loti): doesn't work very well.
             with file_open("loyalty/static/img/gift_card.png", "rb") as file:
                 templates.image_1920 = BinaryBytes(file.read())
         return templates

@@ -109,7 +109,10 @@ class LoyaltyProgram(models.Model):
         ],
         required=True,
         default="promotion",
-    )
+    )  # TODO(loti): should this really be a model field? Or simply used to initialize some fields?
+    # Because no matter the type, you can still do whatever in the rules and rewards. It seems like this only constrains `applies_on` and `trigger`.
+    # TODO(loti): gift cards and eWallets might be better off in a separate model.
+    # TODO(loti): it seems weird that all programs use points and loyalty cards. It's probably possible to do without for some
     date_from = fields.Date(
         string="Start Date",
         help="The start date is included in the validity period of this program",
@@ -579,7 +582,9 @@ class LoyaltyProgram(models.Model):
             domain = rule._get_valid_product_domain()
             if domain:
                 rule_products[rule] = products.filtered_domain(domain)
-            elif not domain and rule.program_type != "gift_card":
+            elif (
+                not domain and rule.program_type != "gift_card"
+            ):  # TODO(loti): why not gift card? (see https://www.odoo.com/odoo/project.task/3415384) Probably also true for eWallet, but fixed in sale/SO model (fix in SO seems nicer)
                 rule_products[rule] = products
             else:
                 continue

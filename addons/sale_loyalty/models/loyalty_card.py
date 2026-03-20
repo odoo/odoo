@@ -17,7 +17,7 @@ class LoyaltyCard(models.Model):
         string="Sale Order Customer", comodel_name="res.partner", related="order_id.partner_id"
     )
 
-    def _get_default_template(self):
+    def _get_default_template(self):  # TODO(loti): should this really be an override?
         default_template = super()._get_default_template()
         if not default_template:
             default_template = self.env.ref(
@@ -45,7 +45,9 @@ class LoyaltyCard(models.Model):
         read_group_res = self.env["sale.order.line"]._read_group(
             [("coupon_id", "in", self.ids)], ["coupon_id"], ["__count"]
         )
-        count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
+        count_per_coupon = {
+            coupon.id: count for coupon, count in read_group_res
+        }  # TODO(loti): can probably be avoided with a better read_group.
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
 

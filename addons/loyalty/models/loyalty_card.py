@@ -103,8 +103,8 @@ class LoyaltyCard(models.Model):
             return f"{int(points)} {self.point_name or ''}"
         return f"{points:.2f} {self.point_name or ''}"
 
-    # Meant to be overriden
     def _compute_use_count(self):
+        """To be overridden."""
         self.use_count = 0
 
     def _get_default_template(self):
@@ -120,7 +120,7 @@ class LoyaltyCard(models.Model):
         ).partner_id
 
     def _get_signature(self):
-        """To be overriden."""
+        """To be overridden."""
         self.ensure_one()
 
     def _has_source_order(self):

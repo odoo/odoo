@@ -19,7 +19,11 @@ class ProductProduct(models.Model):
                         ("active", "=", True),
                         "|",
                         ("discount_line_product_id", "in", self.ids),
-                        ("discount_product_ids", "in", self.ids),
+                        (
+                            "discount_product_ids",
+                            "in",
+                            self.ids,
+                        ),  # TODO(loti): not really needed but ok
                     ],
                     limit=1,
                 )
@@ -35,7 +39,7 @@ class ProductProduct(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_loyalty_products(self):
-        product_data = [
+        product_data = [  # TODO(loti): not a nice name.
             self.env.ref("loyalty.gift_card_product_50", False),
             self.env.ref("loyalty.ewallet_product_50", False),
         ]

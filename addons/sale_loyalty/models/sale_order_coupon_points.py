@@ -11,7 +11,9 @@ class SaleOrderCouponPoints(models.Model):
         comodel_name="sale.order", ondelete="cascade", required=True, index=True
     )
     coupon_id = fields.Many2one(comodel_name="loyalty.card", ondelete="cascade", required=True)
-    points = fields.Float(required=True)
+    points = fields.Float(
+        required=True
+    )  # TODO(loti): investigate how useful this model is. It only seems to keep track of points from a given coupon for a given SO.
 
     _order_coupon_unique = models.Constraint(
         "UNIQUE (order_id, coupon_id)", "The coupon points entry already exists."
