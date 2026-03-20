@@ -374,11 +374,11 @@ class PurchaseOrderLine(models.Model):
         # This way, we shoud not lose any valuable information.
         if line_description and product_id.name != line_description:
             res['name'] = (res['name'] + '\n' + line_description).strip()
-        res['date_planned'] = values.get('date_planned')
+        res['date_planned'] = fields.Datetime.to_datetime(values.get('date_planned'))
         # The date must be day before or equal at the supplier target day
         if po.partner_id.group_rfq == 'week' and po.partner_id.group_on != 'default':
             delta_days = (7 + int(po.partner_id.group_on) - res['date_planned'].isoweekday()) % 7
-            res['date_planned'] = fields.Datetime.to_datetime(res['date_planned']) + relativedelta(days=delta_days)
+            res['date_planned'] = res['date_planned'] + relativedelta(days=delta_days)
             if not po.date_planned or po.date_planned >= res['date_planned']:
                 # date_order was computed based on procurement date_planned. If the PO date_planned is
                 # shifted, we also need to shift the date_order.
