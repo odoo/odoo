@@ -12,6 +12,8 @@
         'data/l10n_in.section.alert.csv',
         'data/account_tax_report_tcs_data.xml',
         'data/account_tax_report_tds_data.xml',
+        'data/account_tax_report_tcs_it_act_25_data.xml',
+        'data/account_tax_report_tds_it_act_25_data.xml',
         'wizard/l10n_in_withhold_wizard.xml',
         'views/l10n_in_section_alert_views.xml',
         'views/account_account_views.xml',
