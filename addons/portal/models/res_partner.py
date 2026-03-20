@@ -53,3 +53,70 @@ class ResPartner(models.Model):
             ('id', 'child_of', self.ids),
             '|', ('type', 'in', ['delivery', 'other']), ('id', '=', self.id),
         ])
+
+    def _check_billing_address(self, **kwargs):
+        """Check that all mandatory billing fields are filled for the given partner.
+
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        self.ensure_one()
+        mandatory_billing_fields = self._get_mandatory_billing_address_fields(
+            self.country_id, **kwargs
+        )
+        return all(self.read(mandatory_billing_fields)[0].values())
+
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        """Return the set of mandatory billing field names.
+
+        :return: The set of mandatory billing field names.
+        :rtype: set
+        """
+        base_fields = {'name', 'email'}
+        if not self._needs_address(**kwargs):
+            return base_fields
+        base_fields.add('phone')  # not required for quick checkout (event)
+        return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
+
+    def _check_delivery_address(self, **kwargs):
+        """Check that all mandatory delivery fields are filled for the given partner.
+
+        :param res.partner partner_sudo: The partner whose delivery address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        self.ensure_one()
+        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
+            self.country_id, **kwargs
+        )
+        return all(self.read(mandatory_delivery_fields)[0].values())
+
+    def _get_mandatory_delivery_address_fields(self, country_sudo, **kwargs):
+        """Return the set of mandatory delivery field names.
+
+        :return: The set of mandatory delivery field names.
+        :rtype: set
+        """
+        base_fields = {'name', 'email'}
+        if not self._needs_address(**kwargs):
+            return base_fields
+        base_fields.add('phone')  # not required for quick checkout (event)
+        return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
+
+    def _needs_address(self, **_kwargs):
+        """Hook meant to be overridden in other modules."""
+        return True
+
+    def _get_mandatory_address_fields(self, country_sudo, **_kwargs):
+        """Return the set of common mandatory address fields.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of common mandatory address field names.
+        :rtype: set
+        """
+        field_names = {'street', 'city', 'country_id'}
+        if country_sudo.state_required:
+            field_names.add('state_id')
+        if country_sudo.zip_required:
+            field_names.add('zip')
+        return field_names

@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import io
+import json
 from contextlib import contextmanager
 
 from PIL import Image
 
 from odoo.fields import Command
-from odoo.tools import BinaryBytes, lazy
+from odoo.tools import BinaryBytes, json_default, lazy
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.http_routing.tests.common import MockRequest as websiteMockRequest
@@ -147,5 +148,9 @@ class WebsiteSaleCommon(DeliveryCommon):
         request_env = self.env(user=user)
         website = website.with_env(request_env)
 
+        def make_json_response(data, *_args, **_kwargs):
+            return json.dumps(data, ensure_ascii=False, default=json_default)
+
         with MockRequest(request_env, website=website, **kwargs) as request:
+            request.make_json_response = make_json_response
             yield request

@@ -271,11 +271,18 @@ class SaleOrder(models.Model):
             .filtered(lambda sol: not sol.is_reward_line)
         )
 
-    def _recompute_cart(self):
-        """Recompute cart with loyalty programs and rewards applied."""
-        self._update_programs_and_rewards()
-        self._auto_apply_rewards()
-        super()._recompute_cart()
+    def _update_cart_taxes_and_prices(self, **kwargs):
+        """Override of `website_sale` to ensure rewards are up to date before paying."""
+        changed = super()._update_cart_taxes_and_prices(**kwargs)
+
+        # self._update_programs_and_rewards() is already called by self._recompute_prices()
+        if self._auto_apply_rewards():
+            self._add_warning_alert(
+                self.env._("Applied rewards have changed. Please review your cart.")
+            )
+            return True
+
+        return changed
 
     def _get_promotion_progress_bars(self):
         """Return progress data for auto-applied promotion programs whose only unmatched

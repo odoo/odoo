@@ -1,5 +1,6 @@
 import { CustomerAddress } from '@portal/interactions/address';
 import { patch } from '@web/core/utils/patch';
+import { AlertBanner } from '@website_sale/js/components/alert_banner/alert_banner';
 
 patch(CustomerAddress.prototype, {
     // /shop/address
@@ -14,5 +15,24 @@ patch(CustomerAddress.prototype, {
             submitButton.addEventListener('click', boundSaveAddress);
             this.registerCleanup(() => submitButton.removeEventListener('click', boundSaveAddress));
         });
+        // Display errors as nice alerts at the top of the checkout page.
+        this.errorsDiv = document.getElementById('checkout_alerts') ?? this.errorsDiv;
+        this.errorCleanups = [];
     },
+
+    _replaceErrorMessages(messages) {
+        this._cleanupErrorComponents();
+        super._replaceErrorMessages(messages);
+    },
+
+    _renderErrorMessage(message) {
+        this.errorCleanups.push(
+            this.mountComponent(this.errorsDiv, AlertBanner, {level: 'danger', message})
+        );
+    },
+
+    _cleanupErrorComponents() {
+        this.errorCleanups.forEach(cleanup => cleanup());
+        this.errorCleanups = [];
+    }
 });

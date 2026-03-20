@@ -22,15 +22,6 @@ class PortalAccount(CustomerPortal):
             })
         return rendering_values
 
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
-
-        sending_method = request.params.get('invoice_sending_method')
-        if sending_method == 'peppol':
-            mandatory_fields.update({'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'})
-
-        return mandatory_fields
-
     def _validate_address_values(self, address_values, *args, **kwargs):
         # EXTENDS 'portal'
         invalid_fields, missing_fields, error_messages = super()._validate_address_values(

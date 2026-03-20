@@ -3,7 +3,6 @@
 import json
 from unittest import skip
 
-from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -112,37 +111,12 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
-    def test_free_qty_calculated_from_max_in_store_wh_if_no_dm_on_order(self):
-        """Test that if no delivery method is set on the order, the free quantity is the
-        maximum available in all warehouses associated with the in-store delivery method.
-        """
-        warehouse_2 = self._create_warehouse()
-        self._add_product_qty_to_wh(self.storable_product.id, 15, warehouse_2.lot_stock_id.id)
-        self.in_store_dm.warehouse_ids = [Command.link(warehouse_2.id)]
-        # Ensure website has a warehouse and in-store DM is published
-        self.website.warehouse_id = self.warehouse
-        self.in_store_dm.is_published = True
-        # Create an order without a carrier.
-        so = self._create_so()
-        free_qty = so._get_free_qty(self.storable_product)
-        # Should be max(10 [WH1], 15 [WH2]) -> 15
-        self.assertEqual(free_qty, 15)
-
-    def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
-        self.warehouse_2 = self._create_warehouse()
-        self.website.warehouse_id = self.warehouse_2
-        so = self._create_in_store_delivery_order()
-        so.warehouse_id = self.warehouse
-        free_qty = so._get_free_qty(self.storable_product)
-        self.assertEqual(free_qty, 10)
-
     def test_prevent_buying_out_of_stock_products(self):
         cart = self._create_in_store_delivery_order(
             order_line=[Command.create({"product_id": self.product_2.id, "product_uom_qty": 5.0})]
         )
         cart.warehouse_id = self.warehouse
-        with self.assertRaises(ValidationError):
-            cart._check_cart_is_ready_to_be_paid()
+        self.assertFalse(cart._is_cart_ready_for_payment())
 
     def test_product_in_stock_is_available(self):
         cart = self._create_in_store_delivery_order(

@@ -562,11 +562,10 @@ class TestCheckoutAddress(WebsiteSaleCommon):
                 partner_id=bad_invoicing.id, address_type="billing"
             )
             self.assertEqual(so.partner_invoice_id, bad_invoicing)
-            redirection = self.WebsiteSaleController._check_addresses(so)
-            self.assertTrue(redirection is not None)
+            redirect = self.env["website.checkout.step"]._check_shop_address_completion(so)
+            self.assertTrue(redirect is not None)
             self.assertEqual(
-                redirection.location,
-                f"/shop/address?partner_id={bad_invoicing.id}&address_type=billing",
+                redirect, f"/shop/address?partner_id={bad_invoicing.id}&address_type=billing"
             )
 
             # reset to valid one
@@ -578,11 +577,10 @@ class TestCheckoutAddress(WebsiteSaleCommon):
                 partner_id=bad_shipping.id, address_type="delivery"
             )
             self.assertEqual(so.partner_shipping_id, bad_shipping)
-            redirection = self.WebsiteSaleController._check_addresses(so)
-            self.assertTrue(redirection is not None)
+            redirect = self.env["website.checkout.step"]._check_shop_address_completion(so)
+            self.assertTrue(redirect is not None)
             self.assertEqual(
-                redirection.location,
-                f"/shop/address?partner_id={bad_shipping.id}&address_type=delivery",
+                redirect, f"/shop/address?partner_id={bad_shipping.id}&address_type=delivery"
             )
 
             # reset to valid one

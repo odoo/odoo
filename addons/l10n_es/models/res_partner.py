@@ -49,3 +49,21 @@ class ResPartner(models.Model):
                 and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
                 and vat_number[1:-1].isdigit():
                 partner.is_company = True
+
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        """Require VAT/NIF for Spanish customers in billing addresses on Spanish e-commerce."""
+        field_names = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('vat')
+
+        return field_names
+
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        """Require State for Spanish customers on Spanish e-commerce."""
+        field_names = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('state_id')
+
+        return field_names

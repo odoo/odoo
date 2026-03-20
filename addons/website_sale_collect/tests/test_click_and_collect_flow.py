@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
-
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -27,6 +25,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         Test the basic flow of buying with click and collect as a public user with more than
         one delivery method available.
         """
+        self.website.warehouse_id = self._create_warehouse()  # Only C&C has stock available
         self.start_tour("/shop", "website_sale_collect_widget")
 
     def test_default_location_is_set_for_pick_up_in_store(self):
@@ -55,14 +54,3 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         })
         carrier.delivery_type = "in_store"
         self.assertEqual(carrier.allow_cash_on_delivery, False)
-
-    def test_get_product_available_qty_without_cart_request(self):
-        self.website.warehouse_id = self.warehouse
-
-        with patch(
-            'odoo.addons.website_sale_collect.models.website.request',
-            new=object(),
-        ):
-            qty = self.website._get_product_available_qty(self.storable_product)
-
-        self.assertEqual(qty, 10)

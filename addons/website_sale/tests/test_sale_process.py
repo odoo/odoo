@@ -146,7 +146,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
                 Command.create({"attribute_id": attribute.id, "value_ids": attribute.value_ids})
             ],
         })
-        self.env.ref('website.default_website').write({"google_analytics_key": "G-XXXXXXXXXXX"})
+        self.env.ref("website.default_website").write({"google_analytics_key": "G-XXXXXXXXXXX"})
         self.start_tour("/shop?search=Colored T-Shirt", "website_sale.google_analytics_view_item")
         # Data for google_analytics_add_to_cart
         self.env["product.template"].create({
@@ -192,23 +192,12 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         self.assertEqual(response.url[-13:], "/test/address")
 
         # check that navigation (next and previous checkout steps) are correct
-        allowed_steps_domain = self.website._get_allowed_steps_domain()
-        checkout_step = self.env.ref("website_sale.checkout_step_delivery")
-        previous_step = checkout_step._get_previous_checkout_step(allowed_steps_domain)
-        next_step = checkout_step._get_next_checkout_step(allowed_steps_domain)
         root = lxml.html.fromstring(response.content)
+        self.assertEqual(len(root.xpath('//a[@href="/shop/cart"]//span[text()="Back to cart"]')), 2)
         self.assertEqual(
             len(
                 root.xpath(
-                    f'//a[@href="{previous_step.step_href}"]//span[text()="{previous_step.back_button_label}"]'
-                )
-            ),
-            2,
-        )
-        self.assertEqual(
-            len(
-                root.xpath(
-                    f'//a[@name="website_sale_main_button"][not(@href)]//span[text()="{next_step.main_button_label}"]'
+                    '//a[@name="website_sale_main_button"][not(@href)]//span[text()="Confirm"]'
                 )
             ),
             2,

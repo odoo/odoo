@@ -15,3 +15,14 @@ class ResPartner(models.Model):
         frontend_writable_fields.update({'street_number', 'street_name', 'street_number2'})
 
         return frontend_writable_fields
+
+    def _is_brazilean_fiscal_country(self):
+        return self.env.company.account_fiscal_country_id.code == 'BR'
+
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+        if country_sudo.code == "BR" and self._is_brazilean_fiscal_country():
+            mandatory_fields.update({'street_name', 'street2', 'street_number'})
+            mandatory_fields.remove('street')
+
+        return mandatory_fields

@@ -111,6 +111,12 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+        if self.env.company.country_code == 'AR':
+            mandatory_fields.add('l10n_ar_afip_responsibility_type_id')
+        return mandatory_fields
+
     def _get_validation_module(self):
         self.ensure_one()
         if self.l10n_latam_identification_type_id.l10n_ar_afip_code in ['80', '86']:

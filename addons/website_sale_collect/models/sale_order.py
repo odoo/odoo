@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -38,13 +37,6 @@ class SaleOrder(models.Model):
             )
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
-    def _get_free_qty(self, product):
-        """Override of `website_sale_stock` to consider the maximum available quantity across
-        all in-store warehouses when no delivery method is set on the order yet."""
-        if self.website_id.warehouse_id and self.website_id.in_store_dm_id and not self.carrier_id:
-            return self.website_id.sudo()._get_max_in_store_product_available_qty(product)
-        return super()._get_free_qty(product)
-
     def _set_delivery_method(self, delivery_method, rate=None):
         """Override of `website_sale` to recompute warehouse and fiscal position when a new
         delivery method is not in-store anymore."""
@@ -60,6 +52,12 @@ class SaleOrder(models.Model):
             self._compute_fiscal_position_id()
             if fpos_before != self.fiscal_position_id:
                 self._recompute_taxes()
+
+    def _get_preferred_delivery_method(self, available_delivery_methods):
+        """Override to exclude delivery methods that cannot fulfill the order."""
+        return super()._get_preferred_delivery_method(
+            available_delivery_methods.filtered(self._can_be_delivered_with)
+        )
 
     def set_pickup_location(self, pickup_location_data):
         """Override `website_sale` to set the pickup location for in-store delivery methods.
@@ -79,25 +77,32 @@ class SaleOrder(models.Model):
         if fpos_before != self.fiscal_position_id:
             self._recompute_taxes()
 
-    def _get_shop_warehouse_id(self):
-        """Override of `website_sale_stock` to consider the chosen warehouse."""
-        self.ensure_one()
-        if self.carrier_id.delivery_type == "in_store":
-            return self.warehouse_id.id
-        return super()._get_shop_warehouse_id()
+    def _is_cart_ready_for_delivery(self):
+        """Override of `website_sale` to include errors if no pickup location is selected and to
+        ensure the cart is available in the selected store, even if out-of-stock orders are
+        allowed."""
+        ready = super()._is_cart_ready_for_delivery()
 
-    def _check_cart_is_ready_to_be_paid(self):
-        """Override of `website_sale` to check if all products are in stock in the selected
-        warehouse."""
-        if (
-            self._has_deliverable_products()
-            and self.carrier_id.delivery_type == "in_store"
-            and not self._is_in_stock(self.warehouse_id.id)
-        ):
-            raise ValidationError(
+        in_store = self.carrier_id.delivery_type == "in_store"
+        if in_store and not self.partner_shipping_id.pickup_location_data:
+            self._add_blocking_alert(self.env._("Please choose a store to collect your order."))
+            return False
+
+        # `_is_cart_ready_for_checkout` to checks stock in all available warehouses on the website
+        # (store warehouses included); this checks for the selected warehouse/store only.
+        wh_id = self.warehouse_id.id if in_store else self._get_shop_warehouse_id()
+        if wh_id and not self._is_in_stock(wh_id, add_alerts=True):
+            self._add_blocking_alert(
                 self.env._("Some products are not available in the selected store.")
+                if in_store
+                else self.env._(
+                    "Unfortunately, we can not deliver this order with the selected delivery"
+                    " method. Please update your choice and try again."
+                )
             )
-        return super()._check_cart_is_ready_to_be_paid()
+            return False
+
+        return ready
 
     # === TOOLING ===#
 
@@ -118,22 +123,24 @@ class SaleOrder(models.Model):
 
         return {"default_pickup_locations": default_pickup_locations}
 
-    def _is_in_stock(self, wh_id):
+    def _is_in_stock(self, wh_id, *, add_alerts=False):
         """Check whether all storable products of the cart are in stock in the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
+        :param bool add_alerts: Wheter to add stock alerts on the unavailable order lines.
         :return: Whether all storable products are in stock.
         :rtype: bool
         """
-        return not self._get_insufficient_stock_data(wh_id)
+        return not self._get_insufficient_stock_data(wh_id, add_alerts=add_alerts)
 
-    def _get_insufficient_stock_data(self, wh_id):
+    def _get_insufficient_stock_data(self, wh_id, *, add_alerts=False):
         """Return the mapping of order lines with insufficient stock in the given warehouse to their
         maximum available quantity in the line's UoM.
         If there are multiple order lines for the same product, consider the sum of their
         quantities.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
+        :param bool add_alerts: Wheter to add stock alerts on the unavailable order lines.
         :return: The mapping of order lines to their maximum available quantity.
         :rtype: dict
         """
@@ -152,10 +159,23 @@ class SaleOrder(models.Model):
                 if line_qty_in_uom > free_qty_in_uom:  # Not enough stock.
                     # Set a warning on the order line.
                     insufficient_stock_data[ol] = free_qty_in_uom
-                    ol.shop_warning = self.env._(
-                        "%(available_qty)s/%(line_qty)s available at this location",
-                        available_qty=free_qty_in_uom,
-                        line_qty=int(line_qty_in_uom),
-                    )
+                    if add_alerts:
+                        ol._add_warning_alert(
+                            ol._get_shop_warning_stock(line_qty_in_uom, free_qty_in_uom)
+                        )
                 free_qty -= ol.product_uom_id._compute_quantity(line_qty_in_uom, product.uom_id)
         return insufficient_stock_data
+
+    def _can_be_delivered_with(self, delivery_method):
+        """Determine whether the order can be delivered using the given delivery method.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+
+        if delivery_method.delivery_type == "in_store":
+            wh_ids = delivery_method.warehouse_ids.ids
+        else:
+            wh_ids = [self._get_shop_warehouse_id()]
+
+        return any(map(self._is_in_stock, wh_ids))

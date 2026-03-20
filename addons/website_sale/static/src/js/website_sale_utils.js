@@ -32,7 +32,7 @@ function updateCartNavBar(data) {
 
     updateCartSummary(data);
 
-    if (data.cart_ready) {
+    if (!data.cart_has_blocking_alerts) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {
         document.querySelector("a[name='website_sale_main_button']")?.classList.add('disabled');
@@ -80,31 +80,6 @@ function updateQuickReorderSidebar(data) {
         quickReorderButton.setAttribute('disabled', 'true');
         quickReorderButton.parentElement.title = _t("No previous products available for reorder.");
     }
-}
-
-/**
- * Displays `message` in an alert box at the top of the page if it's a
- * non-empty string.
- *
- * @param {string | null} message
- */
-function showWarning(message) {
-    if (!message) return;
-    document.querySelector('.oe_website_sale')?.querySelector('#data_warning')?.remove();
-
-    const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert', 'alert-danger', 'alert-dismissible');
-    alertDiv.role = 'alert';
-    alertDiv.id = 'data_warning';
-    const closeButton = document.createElement('button');
-    closeButton.classList.add('btn-close');
-    closeButton.type = 'button'; // Avoid default submit type in case of a form.
-    closeButton.dataset.bsDismiss = 'alert';
-    const messageSpan = document.createElement('span');
-    messageSpan.textContent = message;
-    alertDiv.appendChild(closeButton);
-    alertDiv.appendChild(messageSpan);
-    document.querySelector('.oe_website_sale').prepend(alertDiv);
 }
 
 /**
@@ -164,7 +139,6 @@ function clearAttributeValueParams(searchParams) {
 
 export default {
     updateCartNavBar: updateCartNavBar,
-    showWarning: showWarning,
     getSelectedAttributeValues: getSelectedAttributeValues,
     updateQuickReorderSidebar: updateQuickReorderSidebar,
     unslug: unslug,

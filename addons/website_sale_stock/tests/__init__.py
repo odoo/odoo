@@ -2,8 +2,8 @@
 
 from . import (
     test_website_sale_stock_abandoned_cart_email,
+    test_website_sale_stock_checkout,
     test_website_sale_stock_configurators,
-    test_website_sale_stock_delivery,
     test_website_sale_stock_gmc,
     test_website_sale_stock_multilang,
     test_website_sale_stock_product_combo,

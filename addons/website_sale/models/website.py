@@ -8,7 +8,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit
 from lxml import etree
 from requests import RequestException
 
-from odoo import SUPERUSER_ID, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
@@ -1009,58 +1009,72 @@ class Website(models.Model):
                 )
             step.copy({"website_id": self.id, "is_published": is_published})
 
-    def _get_checkout_step(self, href):
-        return (
-            self
-            .env["website.checkout.step"]
-            .sudo()
-            .search([("website_id", "=", self.id), ("step_href", "=", href)], limit=1)
-        )
+    def _get_checkout_step_values(self, href):
+        next_href = self._get_next_breadcrumb_step_href(href)
 
-    def _get_allowed_steps_domain(self):
-        return [("website_id", "=", self.id), ("is_published", "=", True)]
-
-    def _get_checkout_steps(self):
-        return (
-            self
-            .env["website.checkout.step"]
-            .sudo()
-            .search(self._get_allowed_steps_domain(), order="sequence")
-        )
-
-    def _get_checkout_step_values(self):
-        def rewrite(path):
-            return self.env["ir.http"].url_rewrite(path)[0]
-
-        href = rewrite(request.httprequest.path)
-        # /shop/address is associated with the delivery step
-        if href == rewrite("/shop/address"):
-            href = rewrite("/shop/checkout")
-
-        allowed_steps_domain = self._get_allowed_steps_domain()
-        current_step = self.env["website.checkout.step"].sudo()
-        for step in current_step.search(allowed_steps_domain):
-            if rewrite(step.step_href) == href:
-                current_step = step
-                href = step.step_href
-                break
-        next_step = current_step._get_next_checkout_step(allowed_steps_domain)
-        previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
-
-        next_href = next_step.step_href
-        # try_skip_step option required on /shop/checkout next button
-        if next_step.step_href == "/shop/checkout":
-            next_href = "/shop/checkout?try_skip_step=true"
-        # redirect handled by '/shop/address/submit' route when all values are properly filled
-        if request.httprequest.path == rewrite("/shop/address"):
-            next_href = False
+        # /shop/address is a "hidden" step of /shop/checkout
+        if href == "/shop/address":
+            href = "/shop/checkout"
+        current_step_sudo = self._get_checkout_step(href)
+        next_step_sudo = current_step_sudo.browse(self._get_next_breadcrumb_step_id(href))
+        previous_step_sudo = current_step_sudo.browse(self._get_previous_breadcrumb_step_id(href))
 
         return {
-            "current_website_checkout_step_href": href,
-            "previous_website_checkout_step": previous_step,
-            "next_website_checkout_step": next_step,
+            "current_website_checkout_step_href": current_step_sudo.step_href,
+            "previous_website_checkout_step": previous_step_sudo,
+            "next_website_checkout_step": next_step_sudo,
             "next_website_checkout_step_href": next_href,
         }
+
+    def _get_checkout_step(self, href):
+        return self.env["website.checkout.step"].sudo().browse(self._get_checkout_step_id(href))
+
+    @tools.ormcache("self.id", "href")
+    def _get_checkout_step_id(self, href):
+        self.ensure_one()
+        return self.env["website.checkout.step"].sudo()._get_step_by_href(href, self).id
+
+    @tools.ormcache("self.id", "href")
+    def _get_next_breadcrumb_step_id(self, href):
+        current_step_sudo = self._get_checkout_step(href)
+        return current_step_sudo._get_next_steps(
+            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
+        ).id
+
+    @tools.ormcache("self.id", "href")
+    def _get_previous_breadcrumb_step_id(self, href):
+        current_step_sudo = self._get_checkout_step(href)
+        return current_step_sudo._get_previous_steps(
+            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
+        ).id
+
+    def _get_next_breadcrumb_step_href(self, href):
+        # redirect handled by '/shop/address/submit' route when all values are properly filled
+        if href == "/shop/address":
+            return False
+
+        next_step_sudo = (
+            self.env["website.checkout.step"].sudo().browse(self._get_next_breadcrumb_step_id(href))
+        )
+
+        # try_skip_step option required on /shop/checkout next button
+        if next_step_sudo.step_href == "/shop/checkout":
+            return "/shop/checkout?try_skip_step=true"
+        return next_step_sudo.step_href
+
+    def _get_checkout_breadcrumb_steps(self):
+        return (
+            self
+            .env["website.checkout.step"]
+            .sudo()
+            .search(self._get_breadcrumb_checkout_steps_domain(), order="sequence")
+        )
+
+    def _get_breadcrumb_checkout_steps_domain(self):
+        return self._get_allowed_checkout_steps_domain() & Domain("show_in_breadcrumb", "=", True)
+
+    def _get_allowed_checkout_steps_domain(self):
+        return Domain([("website_id", "=", self.id), ("is_published", "=", True)])
 
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""
@@ -1201,10 +1215,6 @@ class Website(models.Model):
 
     def _get_product_available_qty(self, product, **_kwargs):
         """Give the available quantity of a given product.
-
-        NB: this method is only meant to be used on the shop before the checkout.
-        For checkout steps, please use `cart._get_free_qty` instead to consider
-        the chosen warehouse for delivery (website_sale_collect).
 
         :param product: product.product record
         :param dict kwargs: unused parameters, available for overrides

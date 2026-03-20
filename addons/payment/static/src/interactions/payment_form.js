@@ -414,10 +414,7 @@ export class PaymentForm extends Interaction {
                 this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
             ));
             if (processingValues.state === 'error') {
-                this._displayErrorDialog(
-                    _t("Payment processing failed"), processingValues.state_message
-                );
-                this._enableButton(); // The button has been disabled before initiating the flow.
+                this._handlePaymentProcessingError(processingValues);
                 return;
             }
             if (flow === 'redirect') {
@@ -472,6 +469,18 @@ export class PaymentForm extends Interaction {
             });
         }
         return transactionRouteParams;
+    }
+
+    /**
+     * Handle the processing values if the transaction creation failed by displaying a dialog and
+     * re-enabling the payment button.
+     *
+     * @param {Object} processingValues - The response values returned at the transaction creation
+     * @param {string} processingValues.state_message - The error message to display to the user
+     */
+    _handlePaymentProcessingError(processingValues) {
+        this._displayErrorDialog(_t("Payment processing failed"), processingValues.state_message);
+        this._enableButton(); // The button has been disabled before initiating the flow.
     }
 
     /**

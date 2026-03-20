@@ -180,7 +180,7 @@ class Delivery(WebsiteSale):
             )
 
         try:
-            order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
+            order_sudo.with_context(recompute_external_taxes=True)._recompute_taxes()
         except UserError:
             return {"external_tax_error": True}
 
