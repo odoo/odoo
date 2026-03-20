@@ -249,10 +249,13 @@ class StockMove(models.Model):
         if len(self.product_id) > 1:
             return 0
         total_qty = sum(m._get_valued_qty() for m in self)
-        if not total_qty:
-            return 0
-        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' or \
-            (self.product_id.lot_valuated and self.product_id.cost_method == 'average') else self.product_id.standard_price
+        valued_consigned_qty = self._get_valued_consigned_qty()
+        total_valued_qty = total_qty + valued_consigned_qty
+        if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
+            (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
+            return sum(self.mapped('value')) / total_valued_qty
+        else:
+            return self.product_id.standard_price
 
     def _set_value(self, correction_quantity=None):
         """Set the value of the move.
@@ -667,3 +670,6 @@ class StockMove(models.Model):
         total_value = sum(m._get_value() for m in self)
         total_qty = sum(m._get_valued_qty() for m in self)
         return total_value / total_qty if total_qty else 0
+
+    def _get_valued_consigned_qty(self):
+        return sum(self.move_line_ids.filtered(lambda l: l._is_consigned_valued_line()).mapped('quantity_product_uom'))

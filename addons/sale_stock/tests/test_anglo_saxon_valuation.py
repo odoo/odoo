@@ -508,13 +508,106 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.account_income.id,     'debit': 0,     'credit': 12},
             {'account_id': self.account_receivable.id,  'debit': 12,    'credit': 0},
-            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
-            {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 5},
+            {'account_id': self.account_expense.id,     'debit': 5,    'credit': 0},
         ])
         self.assertRecordValues(invoice02.line_ids, [
             # pylint: disable=bad-whitespace
             {'account_id': self.account_income.id,     'debit': 0,     'credit': 12},
             {'account_id': self.account_receivable.id,  'debit': 12,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 5},
+            {'account_id': self.account_expense.id,     'debit': 5,    'credit': 0},
+        ])
+
+    def test_avco_partially_owned_invoice_post_delivery(self):
+        """
+        Avco product with cost of 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice all quantities at once.
+        Make sure the cogs is only for the non consigned product.
+        """
+        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        # Invoice
+        invoice01 = sale_order._create_invoices()
+        invoice01.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
+            {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
+            {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
+        ])
+
+    def test_std_price_partially_owned_invoice_post_delivery(self):
+        """
+        Standard price product with price of 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice all quantities at once.
+        Make sure the cogs is only for the non consigned product.
+        """
+        self.product_standard_auto.invoice_policy = 'delivery'
+        self.product_standard_auto.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product_standard_auto, self.stock_location, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product_standard_auto, self.stock_location, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        # Invoice
+        invoice01 = sale_order._create_invoices()
+        invoice01.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
+            {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
+            {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
+        ])
+
+    def test_fifo_partially_owned_invoice_post_delivery(self):
+        """
+        Fifo product with cost of 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice all quantities at once.
+        Make sure the cogs is only for the non consigned product.
+        """
+        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.stock_location, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.stock_location, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        # Invoice
+        invoice01 = sale_order._create_invoices()
+        invoice01.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
+            {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
             {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
             {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
         ])
@@ -1466,4 +1559,23 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertRecordValues(backorder_cogs_aml, [
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 60.0},
             {'account_id': self.account_expense.id, 'debit': 60.0, 'credit': 0.0},
+        ])
+
+    def test_multi_steps_partially_delivered(self):
+        """Checks that when there is multi steps delivery, if one of the moves of the chain
+        is validated but not the other(s) we fallback on the standard price for the cogs.
+        """
+        self.warehouse.delivery_steps = 'pick_ship'
+        self._make_in_move(self.product_avco_auto, 1, 10)
+        # create a SO
+        sale_order = self._so_deliver(self.product_avco_auto, 1, 1, picking=False)
+        # validate only the first picking of the chain
+        sale_order.picking_ids.button_validate()
+        # validate invoice
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
         ])
