@@ -198,6 +198,7 @@ export class PaymentSafaricom extends PaymentInterface {
             }
             line.setAmount(transaction.amount);
             line.transaction_id = transaction.id;
+            line.safaricom_transaction_id = transaction.trans_id;
             line.card_type = "M-Pesa";
             line.cardholder_name = transaction.phone;
             line.setPaymentStatus("done");

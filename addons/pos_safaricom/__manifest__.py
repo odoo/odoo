@@ -6,6 +6,7 @@
     'data': [
         "views/pos_payment_method_views.xml",
         'security/ir.access.csv',
+        'receipt/pos_order_receipt.xml',
     ],
     "assets": {
         "point_of_sale._assets_pos": [

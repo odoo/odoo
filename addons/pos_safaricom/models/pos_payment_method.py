@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import re
 from datetime import datetime
 
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import hash_sign
 
 TIMEOUT = 10
@@ -18,7 +17,9 @@ class PosPaymentMethod(models.Model):
     # Credentials from Mpesa
     consumer_key = fields.Char(string="Consumer Key")
     consumer_secret = fields.Char(string="Consumer Secret")
-    business_short_code = fields.Char(string="Business Short Code", help="The business short code and till number combination as 'shortcode-tillnumber' (ex: 123456-789012)")
+    business_short_code = fields.Char(string="Business Short Code")
+    safaricom_till_number = fields.Char(string="Till number")
+    safaricom_paybill_number = fields.Char(string="Paybill number")
     passkey = fields.Char(string="Passkey", help="The passkey is used to generate the password for the STK Push")
     safaricom_test_mode = fields.Boolean(string="Test Mode", default=True, help="Use sandbox environment")
     safaricom_payment_type = fields.Selection(
@@ -26,17 +27,14 @@ class PosPaymentMethod(models.Model):
         string="Payment Type",
         default='mpesa_express',
     )
+    safaricom_identifier_type = fields.Selection(
+        selection=[('paybill', 'Paybill number'), ('till', 'Till number')],
+        string="Identifier Type",
+        default='till',
+    )
 
     def _get_terminal_provider_selection(self):
         return super()._get_terminal_provider_selection() + [('safaricom', 'M-Pesa')]
-
-    @api.constrains('business_short_code')
-    def _check_business_short_code(self):
-        validation_error = "The business short code should contain both the short code and the till number seprated by a dash '-' (ex. 123456-789012)"
-        for record in self:
-            if record.business_short_code:
-                if not re.fullmatch(r'[0-9]+-[0-9]+', record.business_short_code):
-                    raise ValidationError(validation_error)
 
     def _get_business_shortcode(self):
         self.ensure_one()
@@ -84,11 +82,6 @@ class PosPaymentMethod(models.Model):
         if self.safaricom_test_mode:
             return 'https://sandbox.safaricom.co.ke/mpesa/qrcode/v1/generate'
         return 'https://api.safaricom.co.ke/mpesa/qrcode/v1/generate'
-
-    def _get_transaction_type(self):
-        if self.safaricom_test_mode:
-            return 'CustomerPayBillOnline'
-        return 'CustomerBuyGoodsOnline'
 
     def _get_bearer_token(self):
         """Get OAuth access token"""
@@ -146,14 +139,16 @@ class PosPaymentMethod(models.Model):
 
             signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", {"payment_method_id": self.id}, expiration_hours=6)
 
+            transactionType, partyB = ('CustomerPayBillOnline', self.safaricom_paybill_number) if self.safaricom_identifier_type == 'paybill' else ('CustomerBuyGoodsOnline', self.safaricom_till_number)
+
             payload = {
                 'BusinessShortCode': self._get_business_shortcode(),
                 'Password': password,
                 'Timestamp': timestamp,
-                'TransactionType': self._get_transaction_type(),
+                'TransactionType': transactionType,
                 'Amount': int(data.get('amount', 0)),
                 'PartyA': phone_number,
-                'PartyB': self._get_till_number(),
+                'PartyB': partyB,
                 'PhoneNumber': phone_number,
                 'CallBackURL': f"{self.get_base_url()}/pos_safaricom/callback?payload={signed_hash_payload}",
                 'AccountReference': data.get('account_reference', 'POS Payment'),
@@ -244,9 +239,10 @@ class PosPaymentMethod(models.Model):
             }
 
             signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", payload_hash, expiration_hours=6)
+            shortcode = self.safaricom_paybill_number if self.safaricom_identifier_type == 'paybill' else self.safaricom_till_number
 
             payload = {
-                'ShortCode': self._get_till_number(),
+                'ShortCode': shortcode,
                 'ResponseType': 'Completed',
                 'ValidationURL': f"{base_url}/c2b/validation/callback?payload={signed_hash_payload}",
                 'ConfirmationURL': f"{base_url}/c2b/confirmation/callback?payload={signed_hash_payload}",
@@ -303,12 +299,14 @@ class PosPaymentMethod(models.Model):
         try:
             access_token = self._get_bearer_token()
 
+            cpi = self.safaricom_paybill_number if self.safaricom_identifier_type == 'paybill' else self.safaricom_till_number
+
             body = {
                 'MerchantName': data.get('name', self.company_id.name),
                 'RefNo': data.get('ref', ''),
                 'Amount': int(data.get('amount', 0)),
                 'TrxCode': data.get('trxCode', 'BG'),
-                'CPI': data.get('cpi', self._get_till_number()),
+                'CPI': data.get('cpi', cpi),
                 'Size': data.get('size', '300'),
             }
 
