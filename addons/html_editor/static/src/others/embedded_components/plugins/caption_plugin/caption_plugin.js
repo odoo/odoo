@@ -29,6 +29,7 @@ export class CaptionPlugin extends Plugin {
             {
                 id: "toggleImageCaption",
                 title: _t("Add/remove a caption"),
+                icon: "html_editor.CaptionIcon",
                 run: this.toggleImageCaption.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -39,7 +40,6 @@ export class CaptionPlugin extends Plugin {
                 description: _t("Add/remove a caption"),
                 groupId: "replace_image",
                 commandId: "toggleImageCaption",
-                text: "Caption",
                 isActive: () => this.hasImageCaption(this.dependencies.image.getTargetedImage()),
             },
         ],

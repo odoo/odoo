@@ -137,6 +137,7 @@ export class ImagePlugin extends Plugin {
                     getDisplay: () => this.imageSize,
                     items: IMAGE_SIZE,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
+                    icon: "fa-expand",
                     onSelected: (item) => {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();
@@ -192,7 +193,7 @@ export class ImagePlugin extends Plugin {
         if (!targetedImg) {
             return "Default";
         }
-        return targetedImg.style.width || "Default";
+        return targetedImg.style.width || `${targetedImg.width}px`;
     }
 
     /**

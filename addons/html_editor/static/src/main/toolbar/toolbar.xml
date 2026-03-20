@@ -25,7 +25,11 @@
                                 t-att-name="button.id"
                                 t-on-click="() => this.onButtonClick(button)"
                             >
-                                <span t-if="button.icon" t-att-class="button.icon.includes('fa-') ? 'fa fa-fw ' + button.icon : 'oi oi-fw ' + button.icon"/>
+                                <t t-if="button.icon">
+                                    <span t-if="button.icon.startsWith('fa-')" t-att-class="'fa fa-fw ' + button.icon"/>
+                                    <span t-elif="button.icon.startsWith('oi-')" t-att-class="'oi oi-fw ' + button.icon"/>
+                                    <t t-else="" t-call="{{ button.icon }}"/>
+                                </t>
                                 <span t-if="button.text" t-out="button.text"/>
                             </button>
                     </t>
