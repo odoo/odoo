@@ -7,9 +7,7 @@ export class PosPaymentMethod extends models.ServerModel {
         return [
             "id",
             "name",
-            "is_cash_count",
             "payment_provider",
-            "split_transactions",
             "type",
             "image",
             "sequence",
@@ -22,9 +20,7 @@ export class PosPaymentMethod extends models.ServerModel {
         {
             id: 2,
             name: "Card",
-            is_cash_count: false,
             payment_provider: false,
-            split_transactions: false,
             type: "bank",
             image: false,
             sequence: 1,
@@ -34,9 +30,7 @@ export class PosPaymentMethod extends models.ServerModel {
         {
             id: 3,
             name: "Customer Account",
-            is_cash_count: false,
             payment_provider: false,
-            split_transactions: true,
             type: "pay_later",
             image: false,
             sequence: 2,
@@ -46,9 +40,7 @@ export class PosPaymentMethod extends models.ServerModel {
         {
             id: 1,
             name: "Cash",
-            is_cash_count: true,
             payment_provider: false,
-            split_transactions: false,
             type: "cash",
             image: false,
             sequence: 0,

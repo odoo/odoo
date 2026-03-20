@@ -56,13 +56,14 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
 
         cls.bank_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'Cash',
-            'journal_id': cls.company_data['default_journal_bank'].id,
+            'type': 'cash',
+            'journal_id': cls.company_data['default_journal_cash'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
-            'outstanding_account_id': cls.outstanding_bank.id,
             'company_id': cls.company.id,
         })
         cls.qris_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'QRIS',
+            'type': 'bank',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,

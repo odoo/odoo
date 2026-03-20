@@ -40,32 +40,36 @@
                                 <span class="o_stat_text">Journal Items</span>
                             </div>
                         </button>
-                        <button
-                            name="show_cash_register"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-bars"
-                            invisible="not cash_control"
-                            groups="account.group_account_readonly">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Cash Register</span>
-                            </div>
-                        </button>
                     </div>
                     <h1 class="oe_title">
                         <field name="name" invisible="name == '/'" class="oe_inline"/>
                     </h1>
                     <group>
-                        <field name="cash_control" invisible="1" />
-                        <field name="user_id" readonly="state != 'opening_control'"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="config_id" readonly="1"/>
-                        <field name="move_id" readonly="1" groups="account.group_account_readonly" />
-                        <field name="start_at" invisible="state == 'opening_control'"/>
-                        <field name="stop_at" invisible="state != 'closed'"/>
-                        <field name="cash_register_balance_start"/>
-                        <field name="cash_register_balance_end_real" invisible="state != 'closed'"/>
+                        <group>
+                            <field name="cash_control" invisible="1" />
+                            <field name="user_id" readonly="state != 'opening_control'"/>
+                            <field name="start_at" invisible="state == 'opening_control'"/>
+                            <field name="stop_at" invisible="state != 'closed'"/>
+                            <field name="opening_balance" widget="monetary" readonly="1"/>
+                            <field name="closing_balance" widget="monetary" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="sales_move_id" readonly="1" />
+                            <field name="refunds_move_id" readonly="1" />
+                        </group>
                     </group>
+                    <notebook>
+                        <page string="Statement lines" name="resource" invisible="not bank_statement_id">
+                            <field name="bank_statement_line_ids">
+                                <list editable="bottom">
+                                    <field name="payment_ref"/>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount" widget="monetary" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
@@ -82,9 +86,6 @@
                 <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
                 <field name="start_at" />
                 <field name="stop_at" />
-                <field name="cash_register_balance_start"/>
-                <field name="cash_register_balance_end_real"/>
-                <field name="cash_register_balance_end"/>
                 <field name="state" widget="badge" decoration-info="state in ('opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
             </list>
         </field>

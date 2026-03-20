@@ -29,7 +29,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         })
         cls.online_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Online payment',
-            'is_online_payment': True,
+            'type': 'online',
             'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
         })
         # Needed to test online payments through the portal

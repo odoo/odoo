@@ -102,7 +102,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
         # Compute values for order lines. In Jordan, because the web-service has absolutely no tolerance,
         # what we do is: use round per line with 9 decimals (yes!)
-        base_lines = pos_order._prepare_tax_base_line_values()
+        base_lines = pos_order.lines._prepare_base_lines_for_taxes_computation()
 
         AccountTax = self.env['account.tax']
         for base_line in base_lines:

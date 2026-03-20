@@ -4,24 +4,6 @@ from odoo import models
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    def _get_sale_key(self, base_line):
-        res = super()._get_sale_key(base_line)
-        if self.config_id.company_id.l10n_in_is_gst_registered:
-            res.update({
-                'uom_id': base_line['uom_id'].id,
-                'l10n_in_hsn_code': base_line['l10n_in_hsn_code'],
-            })
-        return res
-
-    def _get_sale_vals(self, key, sale_vals):
-        res = super()._get_sale_vals(key, sale_vals)
-        if self.config_id.company_id.l10n_in_is_gst_registered:
-            res.update({
-                'l10n_in_hsn_code': key['l10n_in_hsn_code'],
-                'product_uom_id': key['uom_id'],
-            })
-        return res
-
     def set_missing_hsn_codes_in_pos_orders(self):
         self.ensure_one()
         PosOrderLine = self.env['pos.order.line']
@@ -40,7 +22,22 @@ class PosSession(models.Model):
             line.l10n_in_hsn_code = line.product_id.l10n_in_hsn_code
 
         # Lines where product itself is missing HSN
-        missing_hsn_lines = PosOrderLine.search(
+        return PosOrderLine.search(
             base_domain + [('product_id.l10n_in_hsn_code', '=', False)]
         )
-        return missing_hsn_lines
+
+    def _prepare_account_move_line_commands_for_reversal(self, order, invoice_to_reverse):
+        commands = super()._prepare_account_move_line_commands_for_reversal(order, invoice_to_reverse)
+        if not order.config_id.company_id.l10n_in_is_gst_registered:
+            return commands
+
+        product_lines = invoice_to_reverse.line_ids.filtered(
+            lambda line: line.display_type == 'product',
+        )
+
+        for idx, line in enumerate(product_lines):
+            command = commands[idx]
+            command[2]["l10n_in_hsn_code"] = line.l10n_in_hsn_code
+            command[2]["product_uom_id"] = line.product_uom_id.id
+
+        return commands

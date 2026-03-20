@@ -21,6 +21,7 @@ class TestRazorPayPoS(TestPointOfSaleHttpCommon):
         payment_method = cls.env["pos.payment.method"].create(
             {
                 "name": "RazorPay",
+                "type": "bank",
                 "payment_method_type": "terminal",
                 "payment_provider": "razorpay",
                 "razorpay_tid": "my_razorpay_device_serial_no",

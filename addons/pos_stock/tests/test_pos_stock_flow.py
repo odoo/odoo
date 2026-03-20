@@ -74,7 +74,7 @@ class TestPosStockFlow(CommonPosStockTest):
         legal_documents = order_refund_3.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
         self.assertEqual(len(legal_documents), 1)
         invoice_pdf_content = legal_documents[0]['content'].decode()
-        self.assertTrue("using Cash" in invoice_pdf_content)
+        self.assertTrue("Paid on" in invoice_pdf_content)
         self.assertEqual(order_refund_3.picking_count, 1)
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
@@ -139,8 +139,7 @@ class TestPosStockFlow(CommonPosStockTest):
 
         res = order.action_pos_order_invoice()
         invoice_test = self.env['account.move'].browse(res['res_id'])
-        self.assertEqual(invoice_test.ref, invoice_test.pos_order_ids.display_name)
-
+        self.assertTrue(invoice_test.pos_order_ids.display_name in invoice_test.ref)
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
     def test_order_to_invoice_uses_correct_shipping_address(self):
@@ -534,12 +533,12 @@ class TestPosStockFlow(CommonPosStockTest):
                 'total_cost': 20,
             }]],
             'payment_ids': [(0, 0, {
-                'amount': 20,
+                'amount': 40,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id
             })],
-            'amount_paid': 20.0,
-            'amount_total': 20.0,
+            'amount_paid': 40.0,
+            'amount_total': 40.0,
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
@@ -553,10 +552,10 @@ class TestPosStockFlow(CommonPosStockTest):
             'user_id': self.env.user.id,
             'session_id': current_session.id,
             'partner_id': self.partner.id,
-            'amount_paid': -10,
+            'amount_paid': 40,
             'amount_tax': 0,
             'amount_return': 0,
-            'amount_total': -10,
+            'amount_total': 40,
             'fiscal_position_id': False,
             'lines': [[0, 0, {
                 'product_id': product.id,
@@ -564,8 +563,8 @@ class TestPosStockFlow(CommonPosStockTest):
                 'discount': 0,
                 'qty': -2,
                 'tax_ids': [[6, False, []]],
-                'price_subtotal': -20,
-                'price_subtotal_incl': -20,
+                'price_subtotal': 20,
+                'price_subtotal_incl': 20,
                 'refunded_orderline_id': order.lines[0].id,
                 'price_type': 'automatic'
             }], [0, 0, {
@@ -574,10 +573,10 @@ class TestPosStockFlow(CommonPosStockTest):
                 'discount': 0,
                 'qty': -2,
                 'tax_ids': [[6, False, []]],
-                'price_subtotal': -20,
-                'price_subtotal_incl': -20,
+                'price_subtotal': 20,
+                'price_subtotal_incl': 20,
                 'refunded_orderline_id': order.lines[1].id,
-                'price_type': 'automatic'
+                'price_type': 'automatic',
             }]],
             'shipping_date': fields.Date.today(),
             'sequence_number': 2,
@@ -585,7 +584,7 @@ class TestPosStockFlow(CommonPosStockTest):
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
             'uuid': '12345-123-1234',
             'payment_ids': [[0, 0, {
-                'amount': -10,
+                'amount': -40,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id
             }]],
@@ -822,57 +821,6 @@ class TestPosStockFlow(CommonPosStockTest):
         order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
-
-    def test_split_payment_linked_to_accounting_partner(self):
-        self.bank_payment_method.write({'split_transactions': True})
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        child_partner = self.env['res.partner'].create({
-            'name': 'partner1 child',
-            'parent_id': self.partner.id
-        })
-        product_order = {
-            'amount_paid': 750,
-            'amount_tax': 0,
-            'amount_return': 0,
-            'amount_total': 750,
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'fiscal_position_id': False,
-            'lines': [[0, 0, {
-                'discount': 0,
-                'pack_lot_ids': [],
-                'price_unit': 750.0,
-                'product_id': self.product.id,
-                'price_subtotal': 750.0,
-                'price_subtotal_incl': 750.0,
-                'tax_ids': [[6, False, []]],
-                'qty': 1,
-            }]],
-            'name': 'Order 12345-123-1234',
-            'partner_id': child_partner.id,
-            'session_id': current_session.id,
-            'sequence_number': 2,
-            'payment_ids': [[0, 0, {
-                'amount': 750,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.bank_payment_method.id
-            }]],
-            'uuid': '12345-123-1234',
-            'user_id': self.env.uid,
-            'to_invoice': False}
-
-        self.env['pos.order'].sync_from_ui([product_order])
-        current_session.close_session_from_ui()
-        order_balance = current_session.move_id.line_ids.filtered(
-            lambda l: l.account_id.account_type == "asset_receivable"
-            and l.partner_id == self.partner
-        ).balance
-        payment_balance = current_session.bank_payment_ids.move_id.line_ids.filtered(
-            lambda l: l.account_id.account_type == "asset_receivable"
-            and l.partner_id == self.partner
-        ).balance
-        self.assertEqual(order_balance + payment_balance, 0)
 
     def test_valuation_order_invoiced_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.

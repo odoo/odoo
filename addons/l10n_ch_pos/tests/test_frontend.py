@@ -17,7 +17,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_l10n_ch_pos_pay_later_invoice_has_bank_partner(self):
         customer_account_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
-            'split_transactions': True,
+            'type': 'pay_later',
         })
         self.main_pos_config.write({
             'payment_method_ids': [Command.link(customer_account_payment_method.id)],

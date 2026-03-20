@@ -591,7 +591,7 @@ registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Test Product 1", "1"),
             PosLoyalty.enterCode("hellopromo"),
-            PosLoyalty.orderTotalIs("25.87"),
+            PosLoyalty.orderTotalIs("25.88"),
         ].flat(),
 });
 

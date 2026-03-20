@@ -680,8 +680,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             {'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
         self.cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash Test',
+            'type': 'cash',
             'journal_id': self.cash_journal.id,
-            'receivable_account_id': self.main_pos_config.payment_method_ids.filtered(lambda s: s.is_cash_count).receivable_account_id.id
+            'receivable_account_id': self.main_pos_config.payment_method_ids.filtered(lambda s: s.type == 'cash').receivable_account_id.id
         })
 
         self.main_pos_config2 = self.main_pos_config.copy({
@@ -760,9 +761,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             {'name': 'CASH journal', 'type': 'cash', 'code': 'CSHDI'})
         self.cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash Test',
+            'type': 'cash',
             'journal_id': self.cash_journal.id,
             'receivable_account_id': self.main_pos_config.payment_method_ids.filtered(
-                lambda s: s.is_cash_count).receivable_account_id.id
+                lambda s: s.type == 'cash').receivable_account_id.id
         })
 
         self.main_pos_config2 = self.main_pos_config.copy({
@@ -2917,7 +2919,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
             self.skipTest("pos_settle_due module is required for this test")
         if self.main_pos_config.current_session_id:
-            self.main_pos_config.current_session_id.action_pos_session_closing_control()
+            self.main_pos_config.current_session_id.close_session_from_ui()
         LoyaltyProgram = self.env['loyalty.program']
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         self.loyalty_program = self.env['loyalty.program'].create({
@@ -2939,7 +2941,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
-            'split_transactions': True,
+            'type': 'pay_later',
         })
         self.main_pos_config.write({
             'payment_method_ids': [(4, self.customer_account_payment_method.id, 0)],

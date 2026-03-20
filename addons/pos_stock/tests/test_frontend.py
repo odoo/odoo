@@ -80,9 +80,8 @@ class TestUi(TestPosStockHttpCommon):
         # create bank payment method
         bank_pm = self.env['pos.payment.method'].create({
             'name': 'Bank',
+            'type': 'bank',
             'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
-            'is_cash_count': False,
-            'split_transactions': False,
             'company_id': self.env.company.id,
         })
         self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)], 'ship_later': True})

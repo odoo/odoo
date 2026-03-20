@@ -12,11 +12,13 @@ class AccountTax(models.Model):
     def write(self, vals):
         forbidden_fields = {
             'amount_type', 'amount', 'type_tax_use', 'tax_group_id', 'price_include',
-            'price_include_override', 'include_base_amount', 'is_base_affected',
+            'price_include_override', 'include_base_amount', 'is_base_affected', 'active',
         }
         if forbidden_fields & set(vals.keys()):
             lines = self.env['pos.order.line'].sudo().search([
-                ('order_id.session_id.state', '!=', 'closed')
+                '|', ('order_id.session_id.state', '!=', 'closed'),
+                ('tax_ids', 'in', self.ids),
+                ('order_id.state', '=', 'draft'),
             ])
             self_ids = set(self.ids)
             for lines_chunk in map(self.env['pos.order.line'].sudo().browse, split_every(100000, lines.ids)):

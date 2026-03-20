@@ -119,7 +119,7 @@ export class PosOrderAccounting extends Base {
         return this.config.cash_rounding;
     }
     get orderIsRounded() {
-        const cashPm = this.payment_ids.some((p) => p.payment_method_id.is_cash_count);
+        const cashPm = this.payment_ids.some((p) => p.payment_method_id.type === "cash");
         return this.config.hasGlobalRounding || (cashPm && this.config.hasCashRounding);
     }
     get appliedRounding() {
@@ -201,7 +201,7 @@ export class PosOrderAccounting extends Base {
      * The whole order is rounded instead.
      */
     shouldRound(paymentMethod) {
-        return paymentMethod.is_cash_count && this.config.hasCashRounding;
+        return paymentMethod.type === "cash" && this.config.hasCashRounding;
     }
 
     /**
@@ -303,7 +303,7 @@ export class PosOrderAccounting extends Base {
 
         // Cash rounding is added only if the document needs to be globaly rounded.
         // See cash_rounding and only_round_cash_method config fields.
-        const cashRounding = this.config.cash_rounding ? this.config.rounding_method : null;
+        const cashRounding = this.config.hasGlobalRounding ? this.config.rounding_method : null;
         const data = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
             cash_rounding: cashRounding,
         });

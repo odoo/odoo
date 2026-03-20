@@ -22,6 +22,10 @@ class TestL10nInHSNSummaryPos(TestTaxCommonPOS, TestL10nInHSNSummary):
         # are exactly the same.
         tests = self._test_l10n_in_hsn_summary_1()
         test1 = next(tests)
+        self.env.company.write({
+            'street': 'street',
+            'state_id': self.env['res.country.state'].search([], limit=1).id,
+        })
         self.ensure_products_on_document(test1[1], 'product_1')
         with self.with_new_session(user=self.pos_user):
             self.start_pos_tour('test_l10n_in_hsn_summary_pos')

@@ -34,12 +34,14 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
         if self.consolidation_type == 'pos':
             orders_to_consolidate = self.env['pos.order'].search([
                 ("state", "=", "done"),
-                ("account_move", "=", False),
                 ('date_order', '>=', self.date_from),
                 ('date_order', '<=', self.date_to),
                 '|',
                 ('consolidated_invoice_ids', '=', False),
                 ('consolidated_invoice_ids', 'not any', [('myinvois_state', '!=', 'cancelled')])
+            ])
+            orders_to_consolidate = orders_to_consolidate.filtered_domain([
+                ('is_singly_invoiced', '=', False),
             ])
             if not orders_to_consolidate:
                 raise ValidationError(self.env._('Invalid Operation. No order to consolidate.'))
@@ -56,7 +58,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
                         'company_id': config.company_id.id,
                         'currency_id': config.currency_id.id,
                         'pos_config_id': config.id,
-                        'journal_id': config.invoice_journal_id.id,
+                        'journal_id': config.journal_id.id,
                         'is_consolidated_invoice': True,
                         'move_type': 'out_invoice',  # In practice, a consolidated invoice from the PoS can be considered as 'invoice' for the sake of grouping/sequencing
                     })

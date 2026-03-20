@@ -90,14 +90,8 @@
             <field name="amount">6.78</field>
         </record>
 
-        <function model="pos.session" name="post_closing_cash_details" eval="[[ref('pos_closed_session_1')], 2225.31]" />
-
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_1')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
-            eval="[[ref('pos_closed_session_1')]]" />
-
+        <function model="pos.session" name="close_session_from_ui"
+                eval="[[ref('pos_closed_session_1')]]" />
         <!-- Closed Session 2 (Today) -->
 
         <record id="pos_closed_session_2" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
@@ -186,15 +180,8 @@
             <field name="amount">8.36</field>
         </record>
 
-        <function model="pos.session" name="post_closing_cash_details"
-                eval="[[ref('pos_closed_session_2')], 2243.57]" />
-
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_2')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_2')]]" />
-
         <!-- Closed Session 3 (1 month ago) -->
 
         <record id="pos_closed_session_3" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
@@ -294,15 +281,8 @@
             <field name="amount">8.84</field>
         </record>
 
-        <function model="pos.session" name="post_closing_cash_details"
-                eval="[[ref('pos_closed_session_3')], 2243.57]" />
-
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_3')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_3')]]" />
-
         <!-- Closed Session 4 (2 month ago) -->
 
         <record id="pos_closed_session_4" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
@@ -352,13 +332,7 @@
             <field name="amount">6.80</field>
         </record>
 
-        <function model="pos.session" name="post_closing_cash_details"
-                eval="[[ref('pos_closed_session_4')], 2243.57]" />
-
-        <function model="pos.session" name="update_closing_control_state_session"
-            eval="[[ref('pos_closed_session_4')], '']" />
-
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_4')]]" />
     </data>
 </odoo>

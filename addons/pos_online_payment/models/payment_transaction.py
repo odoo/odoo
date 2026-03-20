@@ -36,7 +36,7 @@ class PaymentTransaction(models.Model):
                 if tools.float_compare(tx.amount, 0.0, precision_rounding=pos_order.currency_id.rounding) <= 0:
                     raise ValidationError(_('The payment transaction (%d) has a negative amount.', tx.id))
 
-                if not tx.payment_id: # the payment could already have been created by account_payment module
+                if not tx.payment_id:  # the payment could already have been created by account_payment module
                     tx._create_payment()
                 if not tx.payment_id:
                     raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly', tx.id))

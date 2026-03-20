@@ -42,8 +42,8 @@ class PosSession(models.Model):
         )
         return read_records
 
-    def close_session_from_ui(self, bank_payment_method_diff_pairs=None):
-        result = super().close_session_from_ui(bank_payment_method_diff_pairs)
+    def close_session_from_ui(self, payment_method_closing={}):
+        result = super().close_session_from_ui(payment_method_closing)
 
         if self.config_id.self_ordering_mode in ['kiosk', 'mobile']:
             self.config_id._notify("SESSION_STATE_CHANGED", {})
