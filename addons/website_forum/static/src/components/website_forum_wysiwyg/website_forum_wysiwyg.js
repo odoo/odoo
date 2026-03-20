@@ -67,7 +67,6 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             },
             defaultLinkAttributes: { rel: "ugc noreferrer noopener", target: "_blank" },
             dropImageAsAttachment: true,
-            allowImageTransform: false,
             height: this.props.height,
             allowImageResize: false,
             allowFontFamily: false,

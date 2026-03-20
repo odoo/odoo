@@ -5,7 +5,6 @@ import {
     loadImageInfo,
     cropperDataFieldsWithAspectRatio,
 } from "@html_editor/utils/image_processing";
-import { IMAGE_SHAPES } from "./image_plugin";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -26,6 +25,8 @@ export const cropperAspectRatios = {
     "1/1": { label: "1:1", value: 1 },
     "2/3": { label: "2:3", value: 2 / 3 },
 };
+
+const IMAGE_SHAPES = ["rounded", "rounded-circle", "shadow", "img-thumbnail"];
 
 export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
