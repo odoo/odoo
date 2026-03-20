@@ -1,35 +1,18 @@
 /** @odoo-module */
 
-import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, computed, plugin, props, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
-import { lookup, parseQuery } from "../hoot_utils";
+import { lookup, parseQuery, elSignal } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
-
-/**
- * @typedef {{
- *  multi?: number;
- *  name: string;
- *  hasSuites: boolean;
- *  reporting: import("../hoot_utils").Reporting;
- *  selected: boolean;
- *  unfolded: boolean;
- * }} HootSideBarSuiteProps
- *
- * @typedef {{
- *  reporting: import("../hoot_utils").Reporting;
- *  statusFilter: import("./setup_hoot_ui").StatusFilter | null;
- * }} HootSideBarCounterProps
- *
- * @typedef {{
- * }} HootSideBarProps
- */
+import { getRunnerPlugin } from "./runner_plugin";
+import { UiPlugin } from "./ui_plugin";
 
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean, location: actualLocation, Object, String } = globalThis;
+const { location: actualLocation } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -41,44 +24,44 @@ const SUITE_CLASSNAME = "hoot-sidebar-suite";
 // Exports
 //-----------------------------------------------------------------------------
 
-/**
- * @extends {Component<HootSideBarSuiteProps, import("../hoot").Environment>}
- */
 export class HootSideBarSuite extends Component {
-    static props = {
-        multi: { type: Number, optional: true },
-        name: String,
-        hasSuites: Boolean,
-        reporting: Object,
-        selected: Boolean,
-        unfolded: Boolean,
-    };
-
     static template = xml`
-        <t t-if="props.hasSuites">
+        <t t-if="this.props.hasSuites">
             <i
                 class="fa fa-chevron-right text-xs transition"
                 t-att-class="{
-                    'rotate-90': props.unfolded,
-                    'opacity-25': !props.reporting.failed and !props.reporting.tests
+                    'rotate-90': this.props.unfolded,
+                    'opacity-25': !this.props.reporting.failed and !this.props.reporting.tests
                 }"
             />
         </t>
-        <span t-ref="root" t-att-class="getClassName()" t-out="props.name" />
-        <t t-if="props.multi">
+        <span t-ref="this.rootRef" t-att-class="this.getClassName()" t-out="this.props.name" />
+        <t t-if="this.props.multi">
             <strong class="text-amber whitespace-nowrap me-1">
-                x<t t-out="props.multi" />
+                x<t t-out="this.props.multi" />
             </strong>
         </t>
     `;
 
+    // Props & plugins
+    props = props({
+        "multi?": t.number,
+        name: t.string,
+        hasSuites: t.boolean,
+        reporting: t.object(),
+        selected: t.boolean,
+        unfolded: t.boolean,
+    });
+
+    // Reactive values
+    rootRef = elSignal();
+
     setup() {
-        const rootRef = useRef("root");
         let wasSelected = false;
         useEffect(
             (selected) => {
                 if (selected && !wasSelected) {
-                    rootRef.el.scrollIntoView({
+                    this.rootRef().scrollIntoView({
                         behavior: "smooth",
                         block: "center",
                     });
@@ -104,20 +87,20 @@ export class HootSideBarSuite extends Component {
     }
 }
 
-/** @extends {Component<HootSideBarCounterProps, import("../hoot").Environment>} */
 export class HootSideBarCounter extends Component {
-    static props = {
-        reporting: Object,
-        statusFilter: [String, { value: null }],
-    };
-
     static template = xml`
-        <t t-set="info" t-value="getCounterInfo()" />
+        <t t-set="info" t-value="this.getCounterInfo()" />
         <span
             t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-gray' }} {{ info[1] ? 'font-bold' : '' }}"
             t-out="info[1]"
         />
     `;
+
+    // Props & plugins
+    props = props({
+        reporting: t.object(),
+        statusFilter: t.or([t.string, t.literal(null)]),
+    });
 
     getCounterInfo() {
         const { reporting, statusFilter } = this.props;
@@ -136,18 +119,12 @@ export class HootSideBarCounter extends Component {
     }
 }
 
-/**
- * @extends {Component<HootSideBarProps, import("../hoot").Environment>}
- */
 export class HootSideBar extends Component {
     static components = { HootJobButtons, HootSideBarSuite, HootSideBarCounter };
-
-    static props = {};
-
     static template = xml`
         <div
             class="${HootSideBar.name} flex-col w-64 h-full resize-x shadow bg-gray-200 dark:bg-gray-800 z-1 hidden md:flex"
-            t-on-click.stop="onClick"
+            t-on-click.stop="this.onClick"
         >
             <form class="flex p-2 items-center gap-1">
                 <div class="hoot-search-bar border rounded bg-base w-full">
@@ -155,22 +132,22 @@ export class HootSideBar extends Component {
                         class="w-full rounded px-2 py-1 outline-none"
                         type="search"
                         placeholder="Search suites"
-                        t-ref="search-input"
-                        t-model="state.filter"
-                        t-on-keydown="onSearchInputKeydown"
+                        t-ref="this.searchInputRef"
+                        t-model="this.filter"
+                        t-on-keydown="this.onSearchInputKeydown"
                     />
                 </div>
-                <t t-if="env.runner.hasFilter">
+                <t t-if="this.runner.hasFilter">
                     <button
                         type="button"
                         class="text-primary p-1 transition-colors"
-                        t-att-title="state.hideEmpty ? 'Show all suites' : 'Hide other suites'"
-                        t-on-click.stop="toggleHideEmpty"
+                        t-att-title="this.hideEmpty() ? 'Show all suites' : 'Hide other suites'"
+                        t-on-click.stop="this.toggleHideEmpty"
                     >
-                        <i t-attf-class="fa fa-{{ state.hideEmpty ? 'eye' : 'eye-slash' }}" />
+                        <i t-attf-class="fa fa-{{ this.hideEmpty() ? 'eye' : 'eye-slash' }}" />
                     </button>
                 </t>
-                <t t-set="expanded" t-value="unfoldedIds.size === env.runner.suites.size" />
+                <t t-set="expanded" t-value="this.unfoldedSuites().length === this.runner.suites.size" />
                 <button
                     type="button"
                     class="text-primary p-1 transition-colors"
@@ -180,12 +157,12 @@ export class HootSideBar extends Component {
                     <i t-attf-class="fa fa-{{ expanded ? 'compress' : 'expand' }}" />
                 </button>
             </form>
-            <ul class="overflow-x-hidden overflow-y-auto" t-ref="suites-list">
-                <t t-foreach="filteredSuites" t-as="suite" t-key="suite.id">
+            <ul class="overflow-x-hidden overflow-y-auto" t-ref="this.suitesListRef">
+                <t t-foreach="this.unfoldedSuites()" t-as="suite" t-key="suite.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
                             class="${SUITE_CLASSNAME} flex items-center w-full h-full gap-1 px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
-                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
+                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': this.ui.selectedSuiteId() === suite.id }"
                             t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
                             t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
                             t-on-click.stop="(ev) => this.toggleItem(suite)"
@@ -195,20 +172,20 @@ export class HootSideBar extends Component {
                                 <HootSideBarSuite
                                     multi="suite.config.multi"
                                     name="suite.name"
-                                    hasSuites="hasSuites(suite)"
+                                    hasSuites="this.hasSuites(suite)"
                                     reporting="suite.reporting"
-                                    selected="uiState.selectedSuiteId === suite.id"
-                                    unfolded="unfoldedIds.has(suite.id)"
+                                    selected="this.ui.selectedSuiteId() === suite.id"
+                                    unfolded="this.unfoldedSuites().includes(suite)"
                                 />
                                 <span class="text-gray">
                                     (<t t-out="suite.totalTestCount" />)
                                 </span>
                             </div>
                             <HootJobButtons hidden="true" job="suite" />
-                            <t t-if="env.runner.state.suites.includes(suite)">
+                            <t t-if="this.runner.filteredSuites().includes(suite)">
                                 <HootSideBarCounter
                                     reporting="suite.reporting"
-                                    statusFilter="uiState.statusFilter"
+                                    statusFilter="this.ui.statusFilter()"
                                 />
                             </t>
                         </button>
@@ -218,26 +195,25 @@ export class HootSideBar extends Component {
         </div>
     `;
 
-    filteredSuites = [];
-    runningSuites = new Set();
-    unfoldedIds = new Set();
+    // Props & plugins
+    runner = getRunnerPlugin();
+    ui = plugin(UiPlugin);
+
+    // Reactive values
+    /** @type {ReturnType<typeof elSignal<HTMLInputElement>>} */
+    searchInputRef = elSignal();
+    suitesListRef = elSignal();
+    filter = signal("");
+    hideEmpty = signal(false);
+    suites = signal.Array([]);
+    unfoldedIds = signal.Set(new Set());
+    unfoldedSuites = computed(() => this.getFilteredVisibleSuites());
 
     setup() {
-        const { runner, ui } = this.env;
-
-        this.searchInputRef = useRef("search-input");
-        this.suitesListRef = useRef("suites-list");
-        this.uiState = useState(ui);
-        this.state = useState({
-            filter: "",
-            hideEmpty: false,
-            suites: [],
-            /** @type {Set<string>} */
-            unfoldedIds: new Set(),
-        });
-
-        runner.beforeAll(() => {
-            const singleRootSuite = runner.rootSuites.filter((suite) => suite.currentJobs.length);
+        this.runner.beforeAll(() => {
+            const singleRootSuite = this.runner.rootSuites.filter(
+                (suite) => suite.currentJobs.length
+            );
             if (singleRootSuite.length === 1) {
                 // Unfolds only root suite containing jobs
                 this.unfoldAndSelect(singleRootSuite[0]);
@@ -250,29 +226,24 @@ export class HootSideBar extends Component {
                 this.render();
             }
         });
-
-        onWillRender(() => {
-            [this.filteredSuites, this.unfoldedIds] = this.getFilteredVisibleSuites();
-        });
     }
 
     /**
      * Filters
      */
     getFilteredVisibleSuites() {
-        const { runner } = this.env;
-        const { hideEmpty } = this.state;
-        const allSuites = runner.suites.values();
+        const hideEmpty = this.hideEmpty();
+        const allSuites = this.runner.suites.values();
         let allowedIds;
         let unfoldedIds;
         let rootSuites;
 
         // Filtering suites
 
-        const parsedQuery = parseQuery(this.state.filter);
+        const parsedQuery = parseQuery(this.filter());
         if (parsedQuery.length) {
             allowedIds = new Set();
-            unfoldedIds = new Set(this.state.unfoldedIds);
+            unfoldedIds = new Set(this.unfoldedIds());
             rootSuites = new Set();
             for (const matchingSuite of lookup(parsedQuery, allSuites, "name")) {
                 for (const suite of matchingSuite.path) {
@@ -284,8 +255,8 @@ export class HootSideBar extends Component {
                 }
             }
         } else {
-            unfoldedIds = this.state.unfoldedIds;
-            rootSuites = runner.rootSuites;
+            unfoldedIds = this.unfoldedIds();
+            rootSuites = this.runner.rootSuites;
         }
 
         // Computing unfolded suites
@@ -315,12 +286,12 @@ export class HootSideBar extends Component {
             addSuite(suite);
         }
 
-        return [unfoldedSuites, unfoldedIds];
+        return unfoldedSuites;
     }
 
     getSuiteElements() {
-        return this.suitesListRef.el
-            ? [...this.suitesListRef.el.getElementsByClassName(SUITE_CLASSNAME)]
+        return this.suitesListRef()
+            ? [...this.suitesListRef().getElementsByClassName(SUITE_CLASSNAME)]
             : [];
     }
 
@@ -333,8 +304,8 @@ export class HootSideBar extends Component {
 
     onClick() {
         // Unselect suite when clicking outside of a suite & in the side bar
-        this.uiState.selectedSuiteId = null;
-        this.uiState.resultsPage = 0;
+        this.ui.selectedSuiteId.set(null);
+        this.ui.resultsPage.set(0);
     }
 
     /**
@@ -362,14 +333,14 @@ export class HootSideBar extends Component {
                 return this.selectElementAt(currentTarget, +1);
             }
             case "ArrowLeft": {
-                if (this.state.unfoldedIds.has(suite.id)) {
+                if (this.unfoldedIds().has(suite.id)) {
                     return this.toggleItem(suite, false);
                 } else {
                     return this.selectElementAt(currentTarget, -1);
                 }
             }
             case "ArrowRight": {
-                if (this.state.unfoldedIds.has(suite.id)) {
+                if (this.unfoldedIds().has(suite.id)) {
                     return this.selectElementAt(currentTarget, +1);
                 } else {
                     return this.toggleItem(suite, true);
@@ -406,16 +377,16 @@ export class HootSideBar extends Component {
      */
     toggleExpand(expanded) {
         if (expanded) {
-            this.state.unfoldedIds.clear();
+            this.unfoldedIds().clear();
         } else {
-            for (const { id } of this.env.runner.suites.values()) {
-                this.state.unfoldedIds.add(id);
+            for (const { id } of this.runner.suites.values()) {
+                this.unfoldedIds().add(id);
             }
         }
     }
 
     toggleHideEmpty() {
-        this.state.hideEmpty = !this.state.hideEmpty;
+        this.hideEmpty.set(!this.hideEmpty());
     }
 
     /**
@@ -423,19 +394,19 @@ export class HootSideBar extends Component {
      * @param {boolean} [forceAdd]
      */
     toggleItem(suite, forceAdd) {
-        if (this.uiState.selectedSuiteId !== suite.id) {
-            this.uiState.selectedSuiteId = suite.id;
-            this.uiState.resultsPage = 0;
+        if (this.ui.selectedSuiteId() !== suite.id) {
+            this.ui.selectedSuiteId.set(suite.id);
+            this.ui.resultsPage.set(0);
 
-            if (this.state.unfoldedIds.has(suite.id)) {
+            if (this.unfoldedIds().has(suite.id)) {
                 return;
             }
         }
 
-        if (forceAdd ?? !this.state.unfoldedIds.has(suite.id)) {
+        if (forceAdd ?? !this.unfoldedIds().has(suite.id)) {
             this.unfoldAndSelect(suite);
         } else {
-            this.state.unfoldedIds.delete(suite.id);
+            this.unfoldedIds().delete(suite.id);
         }
     }
 
@@ -443,16 +414,16 @@ export class HootSideBar extends Component {
      * @param {Suite} suite
      */
     unfoldAndSelect(suite) {
-        this.state.unfoldedIds.add(suite.id);
+        this.unfoldedIds().add(suite.id);
 
         while (suite.currentJobs.length === 1) {
             suite = suite.currentJobs[0];
             if (!(suite instanceof Suite)) {
                 break;
             }
-            this.state.unfoldedIds.add(suite.id);
-            this.uiState.selectedSuiteId = suite.id;
-            this.uiState.resultsPage = 0;
+            this.unfoldedIds().add(suite.id);
+            this.ui.selectedSuiteId.set(suite.id);
+            this.ui.resultsPage.set(0);
         }
     }
 }

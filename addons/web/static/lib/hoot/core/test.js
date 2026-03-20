@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markup, reactive } from "@odoo/owl";
+import { markup, proxy, signal } from "@odoo/owl";
 import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 import { Tag } from "./tag";
@@ -48,12 +48,12 @@ export class Test extends Job {
     static ABORTED = 3;
 
     formatted = false;
-    logs = reactive({
+    logs = proxy({
         error: 0,
         warn: 0,
     });
-    /** @type {import("./expect").CaseResult[]} */
-    results = reactive([]);
+    /** @type {import("@odoo/owl").Signal<import("./expect").CaseResult[]>} */
+    results = signal.Array([]);
     /** @type {() => MaybePromise<void> | null} */
     run = null;
     runFnString = "";
@@ -76,12 +76,12 @@ export class Test extends Job {
     }
 
     get duration() {
-        return this.results.reduce((acc, result) => acc + result.duration, 0);
+        return this.results().reduce((acc, result) => acc + result.duration, 0);
     }
 
     /** @returns {import("./expect").CaseResult | null} */
     get lastResults() {
-        return this.results.at(-1);
+        return this.results().at(-1);
     }
 
     cleanup() {
@@ -141,7 +141,7 @@ export class Test extends Job {
         this.setRunFn(null);
         this.runFnString = "";
         this.logs = SHARED_LOGS;
-        this.results = SHARED_RESULTS;
+        this.results.set(SHARED_RESULTS);
     }
 
     reset() {
