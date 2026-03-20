@@ -40,6 +40,7 @@ export class MpesaTransactionPopup extends Component {
                     phone: r.number,
                     amount: r.amount,
                     received_at: r.received_at,
+                    trans_id: r.trans_id,
                 }))
                 .reverse();
         }
@@ -67,7 +68,8 @@ export class MpesaTransactionPopup extends Component {
         return this.state.transactions.filter(
             (transaction) =>
                 transaction.name.toLowerCase().includes(search.toLowerCase()) ||
-                transaction.phone.toLowerCase().includes(search.toLowerCase())
+                transaction.phone.toLowerCase().includes(search.toLowerCase()) ||
+                transaction.trans_id.toLowerCase().includes(search.toLowerCase())
         );
     }
 }
