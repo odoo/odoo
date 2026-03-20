@@ -33,8 +33,9 @@ idna==2.10 ; python_version < '3.11'  # (Jammy) requests 2.25.1 depends on idna<
 idna==3.3 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 idna==3.6 ; python_version >= '3.12' and python_version < '3.13'  # (Noble)
 idna==3.10 ; python_version >= '3.13'  # (Trixie)
-Jinja2==3.0.3 ; python_version <= '3.10'
-Jinja2==3.1.2 ; python_version > '3.10'
+Jinja2==3.0.3 ; python_version < '3.11'  # (Jammy)
+Jinja2==3.1.2 ; python_version >= '3.11' and python_version < '3.13'
+Jinja2==3.1.6 ; python_version >= '3.13'  # (Trixie)
 libsass==0.20.1 ; python_version < '3.11'
 libsass==0.22.0 ; python_version >= '3.11'  # (Noble) Mostly to have a wheel package
 lxml==4.8.0 ; python_version <= '3.10'
