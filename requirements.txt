@@ -66,7 +66,8 @@ psycopg2==2.9.2 ; python_version == '3.10' # (Jammy)
 psycopg2==2.9.5 ; python_version == '3.11'
 psycopg2==2.9.9 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
 psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
-pydot==1.4.2
+pydot==1.4.2 ; python_version < '3.13'
+pydot==2.0.0 ; python_version >= '3.13'  # (Trixie)
 pyopenssl==21.0.0 ; python_version < '3.11'  # (Jammy)
 pyopenssl==23.0.0 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 pyopenssl==24.1.0 ; python_version >= '3.12' and python_version < '3.13' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
