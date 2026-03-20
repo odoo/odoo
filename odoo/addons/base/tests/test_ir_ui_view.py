@@ -1929,6 +1929,9 @@ class TestViews(ViewCase):
             else:
                 kw['type'] = etree.fromstring(arch_db).tag
             kw['arch_db'] = Json({'en_US': arch_db}) if self.env.lang in (None, 'en_US') else Json({'en_US': arch_db, self.env.lang: arch_db})
+        for field_name, field in self.env['ir.ui.view']._fields.items():
+            if field.required and field_name not in kw:
+                kw[field_name] = field.default(self.env['ir.ui.view'])
 
         keys = sorted(kw)
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)

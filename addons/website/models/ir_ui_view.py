@@ -27,12 +27,13 @@ class IrUiView(models.Model):
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
     visibility = fields.Selection(
         [
-            ('', 'Public'),
+            ('public', 'Public'),
             ('connected', 'Signed In'),
             ('restricted_group', 'Restricted Group'),
             ('password', 'With Password')
         ],
-        default='',
+        default='public',
+        required=True,
     )
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
@@ -415,7 +416,7 @@ class IrUiView(models.Model):
 
         visibility = self._get_cached_visibility()
 
-        if visibility and not request.env.user.has_group('website.group_website_designer'):
+        if visibility != 'public' and not request.env.user.has_group('website.group_website_designer'):
             if (visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
             elif visibility == 'password' and \

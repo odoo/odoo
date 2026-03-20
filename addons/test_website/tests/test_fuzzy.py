@@ -108,7 +108,7 @@ class TestAutoComplete(TransactionCase):
 
         test_page.visibility = 'connected'
         self._autocomplete_page('testTotallyUnique', 1, False)
-        test_page.visibility = False
+        test_page.visibility = 'public'
 
         test_page.group_ids = self.env.ref('base.group_public')
         self._autocomplete_page('testTotallyUnique', 1, False)

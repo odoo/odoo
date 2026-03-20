@@ -158,7 +158,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
             if self.can_publish:
                 if self.is_published:
                     # Publish
-                    target.visibility = ''
+                    target.visibility = 'public'
                     target.group_ids -= self._get_ir_ui_view_unpublish_group()
                 else:
                     # Unpublish
