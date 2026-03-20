@@ -21,7 +21,7 @@ test("image can be selected", async () => {
 
     await click("img");
     await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='image_preview']").toHaveCount(1);
+    expect(".btn-group button[name='image_preview']").toHaveCount(1);
     const selectionPlugin = plugins.get("selection");
     expect(selectionPlugin.getTargetedNodes()[0].tagName).toBe("IMG");
 });
@@ -94,34 +94,34 @@ test("Can change the padding of an image", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Small')");
     await animationFrame();
     expect("img").toHaveClass("p-1");
 
-    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Medium')");
     await animationFrame();
     expect("img").not.toHaveClass("p-1");
     expect("img").toHaveClass("p-2");
 
-    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Large')");
     await animationFrame();
     expect("img").not.toHaveClass("p-2");
     expect("img").toHaveClass("p-3");
 
-    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('XL')");
     await animationFrame();
     expect("img").not.toHaveClass("p-3");
     expect("img").toHaveClass("p-5");
 
-    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('None')");
     await animationFrame();
@@ -135,7 +135,7 @@ test("Can undo the image padding", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar div[name='image_padding'] .dropdown-toggle");
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Small')");
     await animationFrame();
