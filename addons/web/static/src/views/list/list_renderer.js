@@ -1418,6 +1418,9 @@ export class ListRenderer extends Component {
         }
 
         const closestCell = ev.target.closest("td, th");
+        if (closestCell.querySelector(".o_select_menu [aria-expanded=true]")) {
+            return;
+        }
 
         if (this.toggleFocusInsideCell(hotkey, closestCell)) {
             return;
