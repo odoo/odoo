@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import re
 from datetime import datetime
 
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import hash_sign
 
 TIMEOUT = 10
@@ -17,7 +18,7 @@ class PosPaymentMethod(models.Model):
     # Credentials from Mpesa
     consumer_key = fields.Char(string="Consumer Key")
     consumer_secret = fields.Char(string="Consumer Secret")
-    business_short_code = fields.Char(string="Business Short Code")
+    business_short_code = fields.Char(string="Business Short Code", help="The business short code and till number combination as 'shortcode-tillnumber' (ex: 123456-789012)")
     passkey = fields.Char(string="Passkey", help="The passkey is used to generate the password for the STK Push")
     safaricom_test_mode = fields.Boolean(string="Test Mode", default=True, help="Use sandbox environment")
     safaricom_payment_type = fields.Selection(
@@ -28,6 +29,22 @@ class PosPaymentMethod(models.Model):
 
     def _get_terminal_provider_selection(self):
         return super()._get_terminal_provider_selection() + [('safaricom', 'M-Pesa')]
+
+    @api.constrains('business_short_code')
+    def _check_business_short_code(self):
+        validation_error = "The business short code should contain both the short code and the till number seprated by a dash '-' (ex. 123456-789012)"
+        for record in self:
+            if record.business_short_code:
+                if not re.fullmatch(r'[0-9]+-[0-9]+', record.business_short_code):
+                    raise ValidationError(validation_error)
+
+    def _get_business_shortcode(self):
+        self.ensure_one()
+        return self.business_short_code.split('-')[0]
+
+    def _get_till_number(self):
+        self.ensure_one()
+        return self.business_short_code.split('-')[1]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -68,6 +85,11 @@ class PosPaymentMethod(models.Model):
             return 'https://sandbox.safaricom.co.ke/mpesa/qrcode/v1/generate'
         return 'https://api.safaricom.co.ke/mpesa/qrcode/v1/generate'
 
+    def _get_transaction_type(self):
+        if self.safaricom_test_mode:
+            return 'CustomerPayBillOnline'
+        return 'CustomerBuyGoodsOnline'
+
     def _get_bearer_token(self):
         """Get OAuth access token"""
         self.ensure_one()
@@ -97,7 +119,7 @@ class PosPaymentMethod(models.Model):
 
     def _get_password(self, timestamp):
         """Generate password for STK Push"""
-        return base64.b64encode(f"{self.business_short_code}{self.passkey}{timestamp}".encode()).decode()
+        return base64.b64encode(f"{self._get_business_shortcode()}{self.passkey}{timestamp}".encode()).decode()
 
     def _format_phone_number(self, phone):
         """Format phone number to Safaricom format (254XXXXXXXXX)"""
@@ -125,13 +147,13 @@ class PosPaymentMethod(models.Model):
             signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", {"payment_method_id": self.id}, expiration_hours=6)
 
             payload = {
-                'BusinessShortCode': self.business_short_code,
+                'BusinessShortCode': self._get_business_shortcode(),
                 'Password': password,
                 'Timestamp': timestamp,
-                'TransactionType': 'CustomerPayBillOnline',
+                'TransactionType': self._get_transaction_type(),
                 'Amount': int(data.get('amount', 0)),
                 'PartyA': phone_number,
-                'PartyB': self.business_short_code,
+                'PartyB': self._get_till_number(),
                 'PhoneNumber': phone_number,
                 'CallBackURL': f"{self.get_base_url()}/pos_safaricom/callback?payload={signed_hash_payload}",
                 'AccountReference': data.get('account_reference', 'POS Payment'),
@@ -209,6 +231,12 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
 
         try:
+            base_url = self.get_base_url()
+            if base_url:
+                base_url = base_url.replace("http://", "https://")
+            else:
+                raise UserError(_("Could not find base url. Please set up web.base.url to a valid https address"))
+
             access_token = self._get_bearer_token()
 
             payload_hash = {
@@ -218,10 +246,10 @@ class PosPaymentMethod(models.Model):
             signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", payload_hash, expiration_hours=6)
 
             payload = {
-                'ShortCode': self.business_short_code,
+                'ShortCode': self._get_till_number(),
                 'ResponseType': 'Completed',
-                'ValidationURL': f"{self.get_base_url()}/c2b/validation/callback?payload={signed_hash_payload}",
-                'ConfirmationURL': f"{self.get_base_url()}/c2b/confirmation/callback?payload={signed_hash_payload}",
+                'ValidationURL': f"{base_url}/c2b/validation/callback?payload={signed_hash_payload}",
+                'ConfirmationURL': f"{base_url}/c2b/confirmation/callback?payload={signed_hash_payload}",
             }
 
             headers = {
@@ -238,7 +266,7 @@ class PosPaymentMethod(models.Model):
             result = response.json()
 
             if result.get('ResponseCode') != '00000000':
-                raise UserError(_("Failed to register URLs"))
+                raise UserError(_("Failed to register URLs: %s", result.get('errorMessage')))
 
         except (requests.exceptions.RequestException, ValueError):
             raise UserError(_("Failed to register URLs. Check your credentials and try again."))
@@ -278,9 +306,9 @@ class PosPaymentMethod(models.Model):
             body = {
                 'MerchantName': data.get('name', self.company_id.name),
                 'RefNo': data.get('ref', ''),
-                'Amount': data.get('amount', 0),
+                'Amount': int(data.get('amount', 0)),
                 'TrxCode': data.get('trxCode', 'BG'),
-                'CPI': data.get('cpi', self.business_short_code),
+                'CPI': data.get('cpi', self._get_till_number()),
                 'Size': data.get('size', '300'),
             }
 
