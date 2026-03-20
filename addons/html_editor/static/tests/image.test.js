@@ -55,6 +55,22 @@ test("Can change an image size", async () => {
     expect(queryOne("img").style.width).toBe("");
 });
 
+test("image should show actual width if set to default size", async () => {
+    await setupEditor(`
+        <img src="${base64Img}" style="width: 50%;">
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    expect(queryOne(".o-we-toolbar .dropdown-toggle[title='Resize image']")).toHaveText("50%");
+    await click(".o-we-toolbar .dropdown-toggle[title='Resize image']");
+    await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('Default')");
+    await animationFrame();
+    expect(queryOne(".o-we-toolbar .dropdown-toggle[title='Resize image']")).toHaveText(
+        queryOne("img").getBoundingClientRect().width + "px"
+    );
+});
+
 test("Can undo the image sizing", async () => {
     const { editor } = await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
