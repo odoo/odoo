@@ -35,6 +35,22 @@ export class CustomizeTab extends Component {
                 this.state.hasContent = true;
             }
         });
+        this.overlayPreviewedEl = null;
+    }
+
+    toggleOverlayPreview(el, show) {
+        if (show && this.overlayPreviewedEl !== el) {
+            if (this.overlayPreviewedEl) {
+                this.env.editor.shared.builderOverlay.hideOverlayPreview(this.overlayPreviewedEl);
+            }
+            this.env.editor.shared.overlayButtons.hideOverlayButtons();
+            this.env.editor.shared.builderOverlay.showOverlayPreview(el);
+            this.overlayPreviewedEl = el;
+        } else if (!show && this.overlayPreviewedEl === el) {
+            this.env.editor.shared.overlayButtons.showOverlayButtons();
+            this.env.editor.shared.builderOverlay.hideOverlayPreview(el);
+            this.overlayPreviewedEl = null;
+        }
     }
 
     getCurrentOptionsContainers() {

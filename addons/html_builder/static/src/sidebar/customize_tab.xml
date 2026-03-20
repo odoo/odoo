@@ -17,6 +17,7 @@
                     compProps="this.customizeComponent.props"/>
                 <t t-else="" t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
+                        toggleOverlayPreview.bind="this.toggleOverlayPreview"
                         snippetModel="this.props.snippetModel"
                         folded="optionsContainer.folded"
                         toggleFold="() => optionsContainer.folded = !optionsContainer.folded"
