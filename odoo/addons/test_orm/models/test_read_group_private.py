@@ -29,17 +29,6 @@ class TestReadGroupPrivateOrder(models.Model):
     _description = 'Sales order'
 
     line_ids = fields.One2many('test_read_group_private.order.line', 'order_id')
-    date = fields.Date()
-    company_dependent_name = fields.Char(company_dependent=True)
-    many2one_id = fields.Many2one('test_read_group_private.order')
-    name = fields.Char()
-    fold = fields.Boolean()
-
-    @property
-    def _order(self):
-        if self.env.context.get('test_read_group_private_order_company_dependent'):
-            return 'company_dependent_name'
-        return super()._order
 
 
 class TestReadGroupPrivateOrderLine(models.Model):
@@ -47,9 +36,7 @@ class TestReadGroupPrivateOrderLine(models.Model):
     _description = 'Sales order line'
 
     order_id = fields.Many2one('test_read_group_private.order')
-    order_expand_id = fields.Many2one('test_read_group_private.order', group_expand='_read_group_expand_full')
     value = fields.Integer()
-    date = fields.Date(related='order_id.date')
 
 
 class TestReadGroupPrivateFillTemporal(models.Model):
@@ -87,13 +74,6 @@ class TestReadGroupPrivateTask(models.Model):
         'user_id',
         string="Collaborators",
     )
-    customer_ids = fields.Many2many(
-        'test_read_group_private.user',
-        'test_read_group_private_task_user_rel_2',
-        'task_id',
-        'user_id',
-        string="Customers",
-    )
     tag_ids = fields.Many2many(
         'test_read_group_private.tag',
         'test_read_group_private_task_tag_rel',
@@ -117,9 +97,6 @@ class TestReadGroupPrivateTask(models.Model):
         string="All Tags",
         context={'active_test': False},
     )
-    date = fields.Date()
-    integer = fields.Integer()
-    key = fields.Char()
 
 
 class TestReadGroupPrivateTag(models.Model):
@@ -157,8 +134,6 @@ class TestReadGroupPrivateRelatedFoo(models.Model):
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
     bar_base_ids = fields.Many2many(related='bar_id.base_ids')
-
-    schedule_datetime = fields.Datetime()
 
 
 class TestReadGroupPrivateRelatedBase(models.Model):
