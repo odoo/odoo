@@ -145,7 +145,7 @@ class ProductTemplate(models.Model):
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
-    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',))
+    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
