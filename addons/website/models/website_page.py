@@ -501,25 +501,7 @@ class WebsitePage(models.Model):
             else:
                 # Search if the page domain can be found thanks to a translation
                 # of language installed on the website.
-                self.env.cr.execute("""
-                    SELECT id
-                    FROM website_page p
-                    WHERE (
-                        p.website_id = %(website_id)s OR p.website_id IS NULL
-                    )
-                    AND EXISTS (
-                        SELECT 1
-                        FROM jsonb_each_text(p.url) AS t(lang, value)
-                        WHERE (
-                            (%(case_sensitive)s AND value = %(req)s)
-                            OR
-                            (NOT %(case_sensitive)s AND lower(value) = lower(%(req)s))
-                        )
-                    )
-                    ORDER BY p.website_id;;
-                """, params={'req': req_page, 'website_id': request.website.id, 'case_sensitive': comparator == '='})
-                res = self.env.cr.fetchall()
-                search_page = len(res) and self.browse(res[0])
+                search_page = self._get_page_from_url(req_page, request.website.id, comparator == '=')
                 if search_page:
                     redirect = request.redirect_query(search_page.sudo().with_context(lang=request.env.lang).url, request.httprequest.args)
                     redirect.set_cookie('frontend_lang', request.env.lang)
@@ -539,3 +521,26 @@ class WebsitePage(models.Model):
                 'view_id': page.view_id.id,
                 'group_ids': page.group_ids.ids,
             }
+
+    def _get_page_from_url(self, url, website_id, case_sensitive):
+        if not isinstance(url, str):
+            return False
+        self.env.cr.execute("""
+            SELECT id
+            FROM website_page p
+            WHERE (
+                p.website_id = %(website_id)s OR p.website_id IS NULL
+            )
+            AND EXISTS (
+                SELECT 1
+                FROM jsonb_each_text(p.url) AS t(lang, url_translated)
+                WHERE (
+                    (%(case_sensitive)s AND url_translated = %(url)s)
+                    OR
+                    (NOT %(case_sensitive)s AND lower(url_translated) = lower(%(url)s))
+                )
+            )
+            ORDER BY p.website_id;;
+        """, params={'url': url, 'website_id': website_id, 'case_sensitive': case_sensitive})
+        res = self.env.cr.fetchall()
+        return len(res) and self.browse(res[0])

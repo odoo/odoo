@@ -265,3 +265,52 @@ class TestTranslateUrl(TestLangUrl):
         self.assertEqual(self.website.homepage_url, page_name_fr)
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'set_homepage_property_of_a_page', login='admin')
         self.assertEqual(self.website.homepage_url, False)
+
+    def test_automatic_link_on_page_translation(self):
+        # If a url is translated, the links to this url that are present on a
+        # page should automatically be translated when changing the website
+        # language.
+        view_with_anchor = self.env['ir.ui.view'].create({
+            'name': 'new_page_with_anchor',
+            'type': 'qweb',
+            'arch': f'<a id="foo" href="{self.name_page_en}">Link to page</a>',
+            'key': 'test.test_translate_url_links',
+        })
+        page_with_anchor_url_en = '/page-link-en'
+        page_with_anchor = self.env['website.page'].create({
+            'name': 'page-link',
+            'view_id': view_with_anchor.id,
+            'url': page_with_anchor_url_en,
+            'website_id': self.website.id,
+        })
+        page_with_anchor_url_fr = '/page-link-fr'
+        page_with_anchor.with_context(lang='fr_FR').url = page_with_anchor_url_fr
+        default_website = self.env.ref('website.default_website')
+        self.page_specific_menu = self.env['website.menu'].create({
+            'name': 'page-link',
+            'page_id': page_with_anchor.id,
+            'website_id': self.website.id,
+            'parent_id': default_website.menu_id.id,
+        })
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
+            self.authenticate('admin', 'admin')
+            r = self.url_open('/fr')
+            # Check that the url in the menu is correct
+            self.assertIn(f'href="/fr{page_with_anchor_url_fr}"', r.text)
+            self.assertNotIn(f'href="{page_with_anchor_url_en}"', r.text)
+            r = self.url_open(f'/fr{page_with_anchor_url_fr}', r.text)
+            # Check that the url in the view is correct
+            self.assertIn(f'href="/fr{self.name_page_fr}"', r.text)
+            self.assertNotIn(f'href="{self.name_page_en}"', r.text)
+
+    def test_translate_url_page_in_lang_selector(self):
+        name_page_en = '/page-specific-en'
+        name_page_fr = '/page-specific-fr'
+        page_info = self.website.new_page(
+            name=name_page_en,
+        )
+        self.env['website.page'].browse(page_info['page_id']).with_context(lang='fr_FR').url = name_page_fr
+        r = self.url_open('/fr' + name_page_fr)
+        self.assertNotIn(f'href="{name_page_fr}"', r.text)
+        self.assertIn(f'href="/fr{name_page_fr}"', r.text)
+        self.assertIn(f'href="{name_page_en}"', r.text)

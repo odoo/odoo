@@ -127,6 +127,7 @@ class IrQweb(models.AbstractModel):
 
         atts = super()._post_processing_att(tagName, atts)
 
+
         website = ir_http.get_request_website()
         if not website and self.env.context.get('website_id'):
             website = self.env['website'].browse(self.env.context['website_id'])

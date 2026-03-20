@@ -79,7 +79,7 @@
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                 <t t-foreach="frontend_languages.values()" t-as="lg">
-                    <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
+                    <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)['location']"
                     t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
                     t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
                     role="menuitem">

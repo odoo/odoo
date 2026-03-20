@@ -1895,7 +1895,7 @@ class Website(models.CachedModel):
             url = '/'
         return self.env['ir.http']._url_localized(
             url=url, lang_code=request.lang.code, canonical_domain=self.get_base_url()
-        )
+        )['location']
 
     def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""
