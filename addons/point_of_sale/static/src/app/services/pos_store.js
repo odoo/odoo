@@ -1612,7 +1612,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    postSyncAllOrders(orders) {}
+    async postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         if (this.data.network.offline) {
             if (options.throw) {

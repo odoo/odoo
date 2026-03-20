@@ -81,7 +81,7 @@ class TestPosStockMargin(TestPosMargin):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.5)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        self.pos_session.close_session_from_ui()
 
     @skip('Temporary to fast merge new valuation')
     def test_avco_margin_closing_time(self):
@@ -141,9 +141,9 @@ class TestPosStockMargin(TestPosMargin):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0)
 
         # close session
+        cash_pm = self.pos_session.config_id._get_cash_payment_method()
         total_cash_payment = sum(self.pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        self.pos_session.post_closing_cash_details(total_cash_payment)
-        self.pos_session.close_session_from_ui()
+        self.pos_session.close_session_from_ui({cash_pm.id: total_cash_payment})
 
         # check margins
         self.assertEqual(self.pos_session.order_ids[0].margin, 26)

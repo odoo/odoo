@@ -223,7 +223,7 @@ class PosConfig(models.Model):
 
     @api.constrains("payment_method_ids", "self_ordering_mode")
     def _onchange_payment_method_ids(self):
-        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count and not pm.payment_provider for pm in record.payment_method_ids) for record in self):
+        if any(record.self_ordering_mode == 'kiosk' and any(pm.type == 'cash' and not pm.payment_provider for pm in record.payment_method_ids) for record in self):
             raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
 
     def _get_qr_code_data(self):
@@ -364,7 +364,7 @@ class PosConfig(models.Model):
             self.current_session_id.order_ids.filtered(lambda o: o.state == 'draft').unlink()
 
         self._notify('STATUS', {'status': 'closed'})
-        return self.current_session_id.action_pos_session_closing_control()
+        return self.current_session_id.close_session_from_ui()
 
     def _compute_status(self):
         for record in self:
@@ -408,7 +408,7 @@ class PosConfig(models.Model):
             'pos_restaurant.drinks',
         ])
         not_cash_payment_methods_ids = self.env['pos.payment.method'].search([
-            ('is_cash_count', '=', False),
+            ('type', '!=', 'cash'),
             ('id', 'in', payment_methods_ids),
         ]).ids
         self.env['pos.config'].create({

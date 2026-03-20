@@ -1,7 +1,6 @@
 import logging
 
 from odoo import api, fields, models
-from odoo.addons.point_of_sale.models.pos_config import format_epson_certified_domain
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +39,6 @@ class ResConfigSettings(models.TransientModel):
     module_pos_qfpay = fields.Boolean(string="QFPay Payment Terminal", help="The transactions are processed by QFPay. Set your QFPay credentials on the related payment method.")
     module_pos_dpopay = fields.Boolean(string="DPO Pay Payment Terminal", help="The transactions are processed by DPO Pay. Set your DPO Pay credentials on the related payment method.")
     module_pos_pricer = fields.Boolean(string="Pricer electronic price tags", help="Display the price of your products through electronic price tags")
-    account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     use_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
     pos_customer_display_bg_img = fields.Image(related='pos_config_id.customer_display_bg_img', readonly=False)
@@ -68,6 +66,7 @@ class ResConfigSettings(models.TransientModel):
     custom_email_placeholder = fields.Char(related='pos_config_id.company_id.email', readonly=False)
     pos_custom_website = fields.Char(related='pos_config_id.custom_website', readonly=False)
     custom_website_placeholder = fields.Char(related='pos_config_id.company_id.website', readonly=False)
+    pos_default_partner_id = fields.Many2one(related='pos_config_id.default_partner_id', readonly=False)
 
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
@@ -85,7 +84,6 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
     pos_iface_tipproduct = fields.Boolean(related='pos_config_id.iface_tipproduct', readonly=False)
-    pos_invoice_journal_id = fields.Many2one(related='pos_config_id.invoice_journal_id', readonly=False)
     pos_use_header_or_footer = fields.Boolean(related='pos_config_id.use_header_or_footer', readonly=False)
     pos_is_margins_costs_accessible_to_every_user = fields.Boolean(related='pos_config_id.is_margins_costs_accessible_to_every_user', readonly=False)
     pos_journal_id = fields.Many2one(related='pos_config_id.journal_id', readonly=False)

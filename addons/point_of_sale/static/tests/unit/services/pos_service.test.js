@@ -608,7 +608,7 @@ describe("pos_store.js", () => {
     test("getPaymentMethodFmtAmount", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
-        const cashPm = store.models["pos.payment.method"].find((pm) => pm.is_cash_count);
+        const cashPm = store.models["pos.payment.method"].find((pm) => pm.type === "cash");
 
         // Case 1: No rounding enabled
         expect(store.getPaymentMethodFmtAmount(cashPm, order)).toBeEmpty();

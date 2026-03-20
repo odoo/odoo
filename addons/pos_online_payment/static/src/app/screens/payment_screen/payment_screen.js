@@ -6,13 +6,13 @@ patch(PaymentScreen.prototype, {
         let configMethods = super.configPaymentMethods;
         // don't allow to update and edit and pay with online payments
         if (this.currentOrder.state === "paid") {
-            configMethods = configMethods.filter((pm) => !pm.is_online_payment);
+            configMethods = configMethods.filter((pm) => pm.type !== "online");
         }
         return configMethods;
     },
     updateSelectedPaymentline() {
         if (
-            this.selectedPaymentLine?.payment_method_id?.is_online_payment &&
+            this.selectedPaymentLine?.payment_method_id?.type === "online" &&
             this.currentOrder.state === "paid"
         ) {
             return;

@@ -96,7 +96,7 @@
             <value eval="{'state': 'paid'}"/>
         </function>
 
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_3')]]" />
 
         <!-- Closed Session 4 -->
@@ -229,7 +229,7 @@
             <value eval="{'state': 'paid'}"/>
         </function>
 
-        <function model="pos.session" name="action_pos_session_closing_control"
+        <function model="pos.session" name="close_session_from_ui"
             eval="[[ref('pos_closed_session_4')]]" />
 
         <!-- Open Session -->

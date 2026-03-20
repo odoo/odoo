@@ -48,7 +48,7 @@ class PosOrder(models.Model):
 
     def action_pos_order_paid(self):
         res = super().action_pos_order_paid()
-        if any(p.payment_method_id._is_online_payment() for p in self.payment_ids):
+        if any(p.payment_method_id.type == 'online' for p in self.payment_ids):
             sale_orders = self.lines.mapped('sale_order_origin_id')
             for so in sale_orders.filtered(lambda s: s.state in ('draft', 'sent')):
                 so.action_confirm()
@@ -77,7 +77,7 @@ class PosOrder(models.Model):
                     continue
 
                 sale_orders += sale_order
-                down_payment_base_lines = pos_order_lines._prepare_tax_base_line_values()
+                down_payment_base_lines = pos_order_lines._prepare_base_lines_for_taxes_computation()
                 AccountTax._add_tax_details_in_base_lines(down_payment_base_lines, sale_order.company_id)
                 AccountTax._round_base_lines_tax_details(down_payment_base_lines, sale_order.company_id)
 
@@ -104,21 +104,38 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
-    def _get_invoice_lines_values(self, line_values, pos_line, move_type):
-        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
-        if pos_line.sale_order_origin_id:
-            inv_line_vals["name"] = pos_line.display_name
-            if inv_line_vals['extra_tax_data'].get('computation_key') == 'down_payment' and pos_line.down_payment_details:
-                downpayment_details = ast.literal_eval(pos_line.down_payment_details)
-                if downpayment_details and downpayment_details[0].get('percentage_value'):
-                    inv_line_vals["name"] += " of " + str(downpayment_details[0].get('percentage_value')) + "%"
-            origin_line = pos_line.sale_order_line_id
-            origin_line._set_analytic_distribution(inv_line_vals)
+    def _prepare_account_move_line_data(self, aggregate=True):
+        lines = super()._prepare_account_move_line_data(aggregate)
 
-        if self.config_id.down_payment_product_id == pos_line.product_id:
-            inv_line_vals["is_downpayment"] = True
+        # When aggregate is True, the lines are already grouped by tax
+        # and revenue account, so we don't want to override the name and
+        # the analytic distribution of the aggregated lines
+        if aggregate:
+            return lines
 
-        return inv_line_vals
+        for line in lines:
+            move = line.get('account.move.line')
+            meta = line.get('metadata')
+            pos_line = meta.get('line') if meta else None
+
+            # In case of line note or section, there is no pos_line
+            # linked, we can skip the rest of the loop
+            if not pos_line:
+                continue
+
+            if pos_line.sale_order_origin_id:
+                move["name"] = pos_line.display_name
+                if move['extra_tax_data'].get('computation_key') == 'down_payment' and pos_line.down_payment_details:
+                    downpayment_details = ast.literal_eval(pos_line.down_payment_details)
+                    if downpayment_details and downpayment_details[0].get('percentage_value'):
+                        move["name"] += " of " + str(downpayment_details[0].get('percentage_value')) + "%"
+                origin_line = pos_line.sale_order_line_id
+                origin_line._set_analytic_distribution(move)
+
+            if self.config_id.down_payment_product_id == pos_line.product_id:
+                move["is_downpayment"] = True
+
+        return lines
 
     def write(self, vals):
         if 'crm_team_id' in vals:

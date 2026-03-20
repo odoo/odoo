@@ -925,7 +925,7 @@ describe("restaurant pos_store.js", () => {
         await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
 
         const cashMethod = store.models["pos.payment.method"].find(
-            (method) => method.is_cash_count
+            (method) => method.type == "cash"
         );
         order.addPaymentline(cashMethod);
         const validation = new OrderPaymentValidation({
@@ -944,7 +944,7 @@ describe("restaurant pos_store.js", () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
         const bankMethod = store.models["pos.payment.method"].find(
-            (method) => !method.is_cash_count
+            (method) => method.type == "bank"
         );
         order.addPaymentline(bankMethod);
         order.payment_ids[0].setAmount(10);

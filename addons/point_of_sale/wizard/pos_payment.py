@@ -31,7 +31,7 @@ class PosMakePayment(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             order_id = self.env['pos.order'].browse(active_id)
-            return order_id.session_id.payment_method_ids.sorted(lambda pm: pm.is_cash_count, reverse=True)[:1]
+            return order_id.session_id.payment_method_ids.sorted(lambda pm: pm.type == 'cash', reverse=True)[:1]
         return False
 
     config_id = fields.Many2one('pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
@@ -48,7 +48,7 @@ class PosMakePayment(models.TransientModel):
         self.ensure_one()
 
         order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
-        if self.payment_method_id.split_transactions and not order.partner_id:
+        if self.payment_method_id.type == 'pay_later' and not order.partner_id:
             raise UserError(_(
                 "Customer is required for %s payment method.",
                 self.payment_method_id.name
@@ -61,7 +61,7 @@ class PosMakePayment(models.TransientModel):
         if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
             order.add_payment({
                 'pos_order_id': order.id,
-                'amount': order._get_rounded_amount(init_data['amount'], payment_method.is_cash_count or not self.config_id.only_round_cash_method),
+                'amount': order._get_rounded_amount(init_data['amount'], payment_method.type == 'cash' or not self.config_id.only_round_cash_method),
                 'name': init_data['payment_name'],
                 'payment_method_id': init_data['payment_method_id'][0],
             })

@@ -1333,7 +1333,6 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
     });
     const bankPm = store.models["pos.payment.method"].create({
         name: "Bank",
-        is_cash_count: false,
         type: "bank",
         payment_method_type: "none",
     });

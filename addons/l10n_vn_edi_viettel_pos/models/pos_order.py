@@ -36,11 +36,11 @@ class PosOrder(models.Model):
 
         return vals
 
-    def _create_invoice(self, move_vals):
+    def _generate_pos_order_invoice(self):
         if self.company_id.country_id.code == 'VN' and self.config_id.l10n_vn_auto_send_to_sinvoice:
             # When auto-sending to SInvoice, we want to skip fetching the SInvoice files
             # right after sending the invoice to reduce the time spent in the POS checkout flow.
             # The SInvoice files will be fetched by printing the invoice from the POS order page
             # or fetched manually in the backend.
-            return super()._create_invoice(move_vals).with_context(skip_fetch_sinvoice_files=True)
-        return super()._create_invoice(move_vals)
+            return super()._generate_pos_order_invoice().with_context(skip_fetch_sinvoice_files=True)
+        return super()._generate_pos_order_invoice()

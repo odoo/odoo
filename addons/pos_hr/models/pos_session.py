@@ -64,7 +64,7 @@ class PosSession(models.Model):
 
     def _aggregate_moves_by_employee(self):
         moves_per_employee = {}
-        for employee, moves in self.sudo().statement_line_ids.grouped('employee_id').items():
+        for employee, moves in self.sudo().bank_statement_line_ids.grouped('employee_id').items():
             moves_per_employee[employee.id] = {
                 'id': employee.id,
                 'name': employee.name,
@@ -91,12 +91,6 @@ class PosSession(models.Model):
         data['default_cash_details']['moves_per_employee'] = self._aggregate_moves_by_employee()
 
         return data
-
-    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, partner_id, extras):
-        vals = super()._prepare_account_bank_statement_line_vals(session, sign, amount, reason, partner_id, extras)
-        if extras.get('employee_id'):
-            vals['employee_id'] = extras['employee_id']
-        return vals
 
     def get_cash_in_out_list(self):
         cash_in_out_list = super().get_cash_in_out_list()

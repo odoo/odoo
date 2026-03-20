@@ -875,6 +875,7 @@ registry.category("web_tour.tours").add("test_discount_count_sale_report", {
             ProductScreen.clickNumpad("%", "5"),
             ProductScreen.totalAmountIs("54.63"),
             PosLoyalty.finalizeOrder("Cash", "54.63"),
+            Chrome.endTour(),
         ].flat(),
 });
 

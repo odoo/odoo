@@ -353,7 +353,7 @@ patch(PosOrder.prototype, {
             won += points - this._getPointsCorrection(program);
             if (coupon_id !== 0) {
                 for (const line of this._get_reward_lines()) {
-                    if (line.coupon_id.id === coupon_id) {
+                    if (line.coupon_id?.id === coupon_id) {
                         spent += line.points_cost;
                     }
                 }

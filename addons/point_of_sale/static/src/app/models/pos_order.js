@@ -141,13 +141,13 @@ export class PosOrder extends PosOrderAccounting {
         if (this.partner_id) {
             return false;
         }
-        const splitPayment = this.payment_ids.some(
-            (payment) => payment.payment_method_id.split_transactions
+        const payLater = this.payment_ids.some(
+            (payment) => payment.payment_method_id.type == "pay_later"
         );
         const invalidPartnerPreset =
             (this.preset_id?.needsName && !this.floating_order_name) ||
             this.preset_id?.needsPartner;
-        return invalidPartnerPreset || this.isToInvoice() || Boolean(splitPayment);
+        return invalidPartnerPreset || this.isToInvoice() || Boolean(payLater);
     }
 
     get presetRequirementsFilled() {
@@ -494,7 +494,7 @@ export class PosOrder extends PosOrderAccounting {
 
     isPaidWithCash() {
         return !!this.payment_ids.find(function (pl) {
-            return pl.payment_method_id.is_cash_count;
+            return pl.payment_method_id.type === "cash";
         });
     }
 

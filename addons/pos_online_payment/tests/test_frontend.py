@@ -68,6 +68,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
         cls.cash_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Cash',
+            'type': 'cash',
             'journal_id': cls.cash_journal.id,
             'receivable_account_id': cls.receivable_cash_account.id,
             'company_id': cls.company.id,
@@ -85,7 +86,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
         cls.online_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Online payment',
-            'is_online_payment': True,
+            'type': 'online',
             'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
         })
 
@@ -99,7 +100,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         cls.pos_config = cls.env['pos.config'].create({
             'name': 'POS OP Test Shop',
             'module_pos_restaurant': False,
-            'invoice_journal_id': cls.sales_journal.id,
             'journal_id': cls.sales_journal.id,
             'payment_method_ids': [Command.link(cls.cash_payment_method.id), Command.link(cls.online_payment_method.id)],
         })
@@ -237,11 +237,13 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertTrue('paid_order' in op_data)
 
         # Simulate the cashier closing the session (to detect eventual accounting issues)
-        total_cash_payment = sum(current_session.order_ids.filtered(lambda o: o.state != 'cancel').payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-        close_result = current_session.close_session_from_ui()
+        cash_pm = self.pos_config._get_cash_payment_method()
+        closing_data = current_session.get_closing_control_data()
+        cash_details = closing_data['default_cash_details']
+        expected_cashbox_amount = cash_details['payment_amount']
+        close_result = current_session.close_session_from_ui({cash_pm.id: expected_cashbox_amount})
 
-        self.assertTrue(close_result['successful'])
+        self.assertTrue(close_result['status'])
         self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')
 
         self.assertEqual(order.state, 'done', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
@@ -325,7 +327,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             self.assertIn("Cannot create a POS online payment without an accounting payment", str(e))
             # Make sure that we can close the session
             session.order_ids.filtered(lambda o: o.state == 'draft').unlink()
-            session.action_pos_session_close()
+            session.close_session_from_ui()
             self.assertEqual(session.state, 'closed')
 
     def test_selected_customer_after_adding_payment_sync(self):
@@ -343,7 +345,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         which payment method requires a customer.
         """
         self.env['res.partner'].create({'name': 'A Test Partner'})
-        online_pm = self.pos_config.payment_method_ids.search([('is_online_payment', '=', True)], limit=1)
+        online_pm = self.pos_config.payment_method_ids.search([('type', '=', 'online')], limit=1)
         self.pos_config.with_user(self.pos_admin).open_ui()
 
         def _get_customer_required_providers_code_patch(self):
@@ -439,10 +441,9 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertAlmostEqual(order.amount_paid, 15.28)
 
         # Simulate the cashier closing the session (to detect eventual accounting issues)
+        cash_pm = self.pos_config._get_cash_payment_method()
         total_cash_payment = sum(current_session.order_ids.filtered(lambda o: o.state != 'cancel').payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-        close_result = current_session.close_session_from_ui()
-        self.assertTrue(close_result['successful'])
+        current_session.close_session_from_ui({cash_pm.id: total_cash_payment})
         self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')
         self.assertEqual(order.state, 'done')
 
@@ -463,4 +464,3 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         cls.cash_payment_method.unlink()
         cls.receivable_cash_account.unlink()
         cls.cash_journal.unlink()
-        cls.account_default_pos_receivable_account_id.unlink()

@@ -168,7 +168,7 @@ export class PosOrderlineAccounting extends Base {
     }
 
     isRefund() {
-        return this.qty * this.price_unit < 0;
+        return this.order_id.isRefund;
     }
 
     /**

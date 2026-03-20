@@ -175,15 +175,13 @@ class PosOrder(models.Model):
     def _l10n_es_tbai_get_values(self):
         self.ensure_one()
 
-        base_lines = self.lines._prepare_tax_base_line_values()
+        base_lines = self.lines._prepare_base_lines_for_taxes_computation()
         for base_line in base_lines:
             base_line['name'] = base_line['record'].name
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id)
 
         for base_line in base_lines:
             sign = base_line['is_refund'] and -1 or 1
-            if base_line['price_unit'] < 0:  # Only happens with discount lines
-                sign *= -1
             base_line['gross_price_unit'] = sign * base_line['gross_price_unit']
             base_line['discount_amount'] = sign * base_line['discount_amount']
             base_line['price_total'] = sign * base_line['price_total']

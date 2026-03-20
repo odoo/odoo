@@ -44,8 +44,8 @@ export const prepareRoundingVals = (store, roundingAmount, roundingMethod, onlyC
     const config = store.config;
     const product1 = store.models["product.template"].get(15);
     const product2 = store.models["product.template"].get(16);
-    const cashPm = store.models["pos.payment.method"].find((pm) => pm.is_cash_count);
-    const cardPm = store.models["pos.payment.method"].find((pm) => !pm.is_cash_count);
+    const cashPm = store.models["pos.payment.method"].find((pm) => pm.type === "cash");
+    const cardPm = store.models["pos.payment.method"].find((pm) => pm.type === "bank");
 
     // Changes prices to have a non rounded change
     product1.list_price = 15.73;

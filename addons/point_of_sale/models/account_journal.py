@@ -47,13 +47,14 @@ class AccountJournal(models.Model):
     def _ensure_company_account_journal(self):
         journal = self.search([
             ('code', '=', 'POSS'),
+            ('type', '=', 'sale'),
             ('company_id', '=', self.env.company.id),
         ], limit=1)
         if not journal:
             journal = self.create({
                 'name': _('Point of Sale'),
                 'code': 'POSS',
-                'type': 'general',
+                'type': 'sale',
                 'company_id': self.env.company.id,
             })
         return journal

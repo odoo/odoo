@@ -27,7 +27,8 @@ class TestUiSEPA(TestPosQrCommon):
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "bank_qr_code",
-            'qr_code_method': "sct_qr"
+            'qr_code_method': "sct_qr",
+            'type': 'bank',
         })
         cls.main_pos_config.write({
             'payment_method_ids': [(4, qr_payment.id)]
@@ -91,7 +92,8 @@ class TestUiCH(TestPosQrCommon):
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "bank_qr_code",
-            'qr_code_method': "ch_qr"
+            'qr_code_method': "ch_qr",
+            'type': 'bank',
         })
         cls.main_pos_config.write({
             'payment_method_ids': [(4, qr_payment.id)]
@@ -153,7 +155,8 @@ class TestUiHK(TestPosQrCommon):
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "bank_qr_code",
-            'qr_code_method': "emv_qr"
+            'qr_code_method': "emv_qr",
+            'type': 'bank',
         })
         cls.main_pos_config.write({
             'payment_method_ids': [(4, qr_payment.id)]
@@ -210,7 +213,8 @@ class TestUIBR(TestPosQrCommon):
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "bank_qr_code",
-            'qr_code_method': "emv_qr"
+            'qr_code_method': "emv_qr",
+            'type': 'bank',
         })
         cls.main_pos_config.write({
             'payment_method_ids': [(4, qr_payment.id)]
