@@ -136,7 +136,7 @@ def _patch_request_ciusro_synchronize_invoices(company, session, nb_days=1):
     }
 
 
-def _patch_request_ciusro_xml_to_pdf(company, xml_data, inv_type, validate_xml):
+def _patch_request_ciusro_xml_to_pdf(company, xml_data):
     # Returns a minimal, valid PDF byte stream
     return {'content': 'JVBERi0xLjEKMSAwIG9iaiA8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PiBlbmRvYmogMiAwIG9iaiA8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PiBlbmRvYmogMyAwIG9iaiA8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCAxIDEgXT4+IGVuZG9iaiB0cmFpbGVyIDw8L1Jvb3QgMSAwIFI+PiAlJUVPRg=='}
 
