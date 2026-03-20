@@ -185,7 +185,7 @@
                 </xpath>
                 <xpath expr="//div[@name='tracking_and_qty_no_stock']" position="replace">
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
-                    <field name="is_storable" groups="!stock.group_production_lot"/>
+                    <field name="is_storable" groups="!stock.group_production_lot" invisible="type != 'consu'"/>
                     <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
                     <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
