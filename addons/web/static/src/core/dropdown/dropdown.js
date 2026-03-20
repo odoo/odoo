@@ -260,6 +260,9 @@ export class Dropdown extends Component {
         if (rootNode instanceof ShadowRoot) {
             target = rootNode.host;
         }
+        if (!this.activeEl?.isConnected) {
+            return true;
+        }
         const targetActiveEl = this.uiService.getActiveElementOf(target);
         return targetActiveEl === this.activeEl || targetActiveEl?.contains(this.activeEl);
     }
