@@ -218,10 +218,7 @@ export class LinkPlugin extends Plugin {
             },
         ],
 
-        toolbar_groups: [
-            withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
-            withSequence(30, { id: "image_link", namespaces: ["image", "icon"] }),
-        ],
+        toolbar_groups: [withSequence(40, { id: "link", namespaces: ["compact", "expanded"] })],
         toolbar_items: [
             {
                 id: "link",
@@ -238,20 +235,20 @@ export class LinkPlugin extends Plugin {
                 commandId: "removeLinkFromSelection",
                 isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
             },
-            {
+            withSequence(20, {
                 id: "link",
-                groupId: "image_link",
+                groupId: "image_actions",
                 commandId: "openLinkTools",
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
-            },
-            {
+            }),
+            withSequence(30, {
                 id: "unlink",
-                groupId: "image_link",
+                groupId: "image_actions",
                 commandId: "removeLinkFromSelection",
                 isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
-            },
+            }),
         ],
 
         powerbox_categories: withSequence(50, { id: "navigation", name: _t("Navigation") }),

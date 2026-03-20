@@ -70,13 +70,13 @@ export class MediaPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_groups: withSequence(31, { id: "replace_image", namespaces: ["image"] }),
+        toolbar_groups: withSequence(31, { id: "image_actions", namespaces: ["image", "icon"] }),
         toolbar_items: [
-            {
+            withSequence(40, {
                 id: "replace_image",
-                groupId: "replace_image",
+                groupId: "image_actions",
                 commandId: "replaceImage",
-            },
+            }),
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         ...(this.config.allowImage && {
