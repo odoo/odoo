@@ -1,0 +1,11 @@
+.o-mail-DiscussSidebarSubchannel {
+    svg {
+        color: var(--mail-DiscussSidebarSubchannel-svgColor, mix($gray-300, $gray-400, 75%));
+        left: 22px;
+        transform: scaleX(1) #{"/* rtl:scaleX(-1) */"};
+    }
+
+    .o-mail-DiscussSidebar-unreadIndicator:not(.o-compact) {
+        left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+    }
+}

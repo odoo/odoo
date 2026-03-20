@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.CashMovePopup">
+        <Dialog header="false">
+            <div class="input-amount d-flex mb-2 gap-2">
+                <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
+                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
+                        Cash In
+                    </button>
+                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
+                        Cash Out
+                    </button>
+                </div>
+                <div t-attf-class="{{this.ui.isSmall ? 'mw-50 h-50' : 'w-25'}}">
+                    <Input tModel="[state, 'amount']"
+                        icon="{type: 'string', value: pos.currency.symbol}"
+                        iconOnLeftSide="pos.currency.position === 'before'"
+                        isValid.bind="env.utils.isValidFloat"
+                        autofocus="true"
+                        getRef="(ref) => this.inputRef = ref"
+                        t-on-click="openNumpadDialog"
+                        readonly="ui.isSmall ? true : false" />
+                </div>
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
+                <label for="reason">Reason</label>
+            </div>
+            <t t-set-slot="footer">
+                <div class="w-100 d-flex flex-wrap justify-content-between gap-2">
+                    <!-- First line of buttons -->
+                    <div class="d-flex gap-2">
+                        <button class="button confirm btn btn-lg lh-lg btn-primary"
+                            t-on-click="confirm"
+                            t-att-disabled="!isValidCashMove()">
+                            Confirm
+                        </button>
+                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
+                            Discard
+                        </button>
+                    </div>
+
+                    <!-- Second line of buttons -->
+                    <div class=" d-flex gap-2">
+                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()">Details</button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_skills.SkillsTag">
+        <BadgeTag cssClass="{'border border-2': this.props.defaultLevel, 'border-dark-subtle': true}" color="this.props.color" onDelete="this.props.onDelete" text="this.props.text" tooltip="this.props.tooltip">
+            <div class="o_tag_badge_text" t-att-class="{'fw-bold': this.props.defaultLevel}" t-out="this.props.text"/>
+        </BadgeTag>
+    </t>
+
+</templates>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_bank_kanban_account" model="ir.ui.view">
+            <field name="name">res.partner.bank.kanban.account</field>
+            <field name="model">res.partner.bank</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="allow_out_payment"/>
+                    <templates>
+                        <t t-name="card">
+                            <t t-value="record.allow_out_payment.raw_value" t-set="trusted"/>
+                            <div class="d-flex">
+                                <i class="fa me-1 align-self-center" 
+                                   t-att-class="{
+                                        'fa-shield text-success': trusted,
+                                        'fa-exclamation-circle text-danger': !trusted,
+                                   }"/>
+                                <field name="display_name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.inherit.account</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">14</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <field name="phishing_warnings" widget="actionable_errors" class="w-100" invisible="not has_phishing_warnings"/>
+                    
+                    <div class="alert alert-warning" role="alert" invisible="not duplicate_bank_partner_ids">
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <span class="me-1">The Bank Account could be a duplicate of</span>
+                                <field name="duplicate_bank_partner_ids" widget="x2many_buttons" string="Partners with same bank"/>
+                            </li>
+                        </ul>
+                    </div>
+                </xpath>
+
+                <xpath expr="//form[@name='bank_account_form']/sheet[1]" position="after">
+                    <chatter/>
+                </xpath>
+
+                <xpath expr="//field[@name='account_number']" position="attributes">
+                    <attribute name="readonly">lock_trust_fields</attribute>
+                    <attribute name="force_save">1</attribute>
+                    <attribute name="widget">account_number</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='holder_name']" position="attributes">
+                    <attribute name="readonly">lock_trust_fields</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='allow_out_payment']" position="before">
+                    <field name="lock_trust_fields" invisible="1"/>
+                    <field name="user_has_group_validate_bank_account" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='allow_out_payment']" position="attributes">
+                    <attribute name="readonly">not user_has_group_validate_bank_account</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_search_inherit" model="ir.ui.view">
+            <field name="name">res.partner.bank.search.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                        <filter string="Trusted" name="trusted" domain="[('allow_out_payment', '=', True)]"/>
+                        <filter string="Untrusted" name="untrusted" domain="[('allow_out_payment', '=', False)]"/>
+                        <filter string="To validate" name="to_validate" domain="[('allow_out_payment', '=', False), ('related_moves', '!=', False)]"/>
+                        <separator/>
+                        <filter string="Customers" name="customer" domain="[('partner_customer_rank','>', 0)]"/>
+                        <filter string="Vendors" name="supplier" domain="[('partner_supplier_rank','>', 0)]"/>
+                        <separator/>
+                        <filter string="Phishing risk" name="high_phishing_risk" domain="[('has_phishing_warnings', '!=', False)]"/>
+                        <separator/>
+                        <filter string="Created On" name="create_date" date="create_date"/>
+                        <group>
+                            <filter string="Created On" name="groupby_create_date" context="{'group_by': 'create_date'}"/>
+                            <filter string="Created By" name="groupby_create_by" context="{'group_by': 'create_uid'}"/>
+                        </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_supplier_accounts" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="base.view_partner_bank_tree"/>
+            <field name="search_view_id" ref="view_partner_bank_search_inherit"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new bank account
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

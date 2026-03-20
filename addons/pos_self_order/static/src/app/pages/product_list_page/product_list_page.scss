@@ -1,0 +1,138 @@
+.o_self_product_list_page {
+
+  .category_list {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+
+  .category_container {
+
+    .category_end {
+      display: none
+    }
+
+    &.has-scroll {
+      .category_end {
+        display: flex;
+      }
+    }
+
+    .category_end {
+      position: relative;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -30px;
+        width: 30px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff);
+        opacity: 0;
+        z-index: 10;
+      }
+
+    }
+
+    &.right-shadow .category_end::before {
+      opacity: 1;
+    }
+
+  }
+
+  .sub_category_container{
+    max-height: 0;
+    opacity: 0;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out, max-height 0.2s ease-out;
+
+    &.show {
+      max-height: 150px;
+      opacity: 1;
+    }
+  }
+
+  .child_category_btn{
+    img {
+      width:  55px;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  .triangle_pointer {
+    border-left: 32px solid transparent;
+    border-right: 32px solid transparent;
+    border-bottom: 12px solid var(--primary);
+    top: -#{map-get($spacers, 2)};
+  }
+
+  .product_img{
+     width: 90px;
+  }
+
+  .product_list{
+    gap: 0.85rem;
+  }
+
+  .product_descr{
+     overflow: hidden;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+
+  @include media-breakpoint-down(sm) {
+     .product_container{
+       padding: 0;
+
+       .product_list{
+         gap: 0;
+       }
+
+        .o_self_product_box{
+          margin-bottom: 1px;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+        }
+    }
+  }
+
+  @include media-breakpoint-down(lg) {
+     .product_container{
+        .o_self_product_box{
+          background: $white;
+        }
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    .product_list{
+      gap: 1.5rem;
+    }
+  }
+}
+
+@include o-kiosk-portrait(){
+
+   .o_self_product_list_page {
+      .child_category_all {
+         min-width: 110px;
+      }
+
+     .category_container {
+       &::after, &::before {
+         display: none !important;
+       }
+     }
+
+     .product_list {
+       gap: 2rem;
+     }
+
+   }
+ }

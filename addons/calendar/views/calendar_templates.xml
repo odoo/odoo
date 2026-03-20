@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template rendered in route auth=None, for anonymous user. This allow them to see meeting details -->
+    <template id="invitation_page_anonymous" name="Calendar Invitation Page for anonymous users">
+        <t t-set="head">
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+        </t>
+        <t t-call="web.layout" head="head">
+
+            <div class="container">
+                <div class="o_logo">
+                    <img t-attf-src="/web/binary/company_logo?company={{ company.id }}" alt="Logo"/>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Calendar Invitation <small><t t-out="event.name"/></small></h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
+                            <span class="float-end badge text-bg-info">
+                                <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
+                                <t t-if="attendee.state == 'declined'">No I'm not going.</t>
+                                <t t-if="attendee.state == 'tentative'">Tentative</t>
+                                <t t-if="attendee.state == 'needsAction'">No feedback yet</t>
+                            </span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="o_event_table table table-striped">
+                                <tr>
+                                    <th>Invitation for</th>
+                                    <td><t t-out="attendee.common_name"/> (<t t-out="attendee.email"/>)</td>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <td><t t-out="event.display_time"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Location</th>
+                                    <td><t t-out="event.location or '-'"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Attendees</th>
+                                    <td>
+                                        <ul>
+                                            <li t-foreach="event.attendee_ids" t-as="attendee" t-attf-class="o_#{attendee.state}">
+                                                <t t-out="attendee.common_name"/>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td><t t-out="event.description or '-'"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

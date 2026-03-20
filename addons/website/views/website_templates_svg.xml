@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website.empty_search_svg">
+        <svg width="100%" height="100" viewBox="0 0 115 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <style>
+                .headShake {
+                    animation: headShake 1.3s ease-in-out forwards;
+                    animation-delay: 0.75s;
+                }
+                @keyframes headShake {
+                    0% {
+                        transform: translateX(0)
+                    }
+
+                    6.5% {
+                        transform: translateX(-6px) rotateY(-9deg)
+                    }
+
+                    18.5% {
+                        transform: translateX(5px) rotateY(7deg)
+                    }
+
+                    31.5% {
+                        transform: translateX(-3px) rotateY(-5deg)
+                    }
+
+                    43.5% {
+                        transform: translateX(2px) rotateY(3deg)
+                    }
+
+                    50% {
+                        transform: translateX(0)
+                    }
+                }
+            </style>
+            <path class="headShake" d="M39.2256 21.8668C46.3304 13.0757 59.2314 11.7663 68.019 19.0611C76.5217 26.1193 77.8477 38.4309 71.3195 47.1853L85.8336 61.6996L81.8665 65.6667L67.5676 51.368C59.9375 57.2137 49.2986 57.044 41.8431 50.8589C33.0555 43.5641 32.1207 30.658 39.2256 21.8668ZM54.9349 20.0096C46.6261 20.0096 39.9791 26.6566 39.9791 34.9654C39.9791 43.2742 46.7923 49.9212 54.9349 49.9212C63.2436 49.9212 69.8906 43.2742 69.8906 34.9654C69.8906 26.6566 63.2436 20.0096 54.9349 20.0096Z" fill="currentColor"/>
+        </svg>
+    </template>
+</odoo>

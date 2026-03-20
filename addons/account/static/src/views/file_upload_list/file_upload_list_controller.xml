@@ -1,0 +1,9 @@
+<templates>
+
+    <t t-name="account.FileuploadListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <t t-call="account.DocumentViewUploadButton"/>
+        </xpath>
+    </t>
+
+</templates>

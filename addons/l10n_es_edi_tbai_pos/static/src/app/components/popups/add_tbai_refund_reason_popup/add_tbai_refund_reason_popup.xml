@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_es_edi_tbai_pos.AddTbaiRefundReasonPopup">
+        <Dialog title.translate="Additional Refund Information">
+            <div class="mb-3">
+                <label for="tbai_refund_reason" class="form-label">TicketBAI Refund Reason: </label>
+                <select class="detail form-select" id="tbai_refund_reason" name="l10n_es_tbai_refund_reason" t-model="state.l10n_es_tbai_refund_reason">
+                    <t t-foreach="pos.config._tbai_refund_reasons" t-as="l10n_es_tbai_refund_reason" t-key="l10n_es_tbai_refund_reason.value">
+                        <option t-att-value="l10n_es_tbai_refund_reason.value"
+                                t-att-selected="l10n_es_tbai_refund_reason.value === state.l10n_es_tbai_refund_reason ? 'selected' : undefined">
+                            <t t-out="l10n_es_tbai_refund_reason.name"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

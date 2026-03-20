@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="auth_passkey.CheckIdentityFormWebAuthN">
+        <input type="hidden" name="webauthn_response"/>
+        <div class="text-center">
+            <i class="fa fa-3x fa-shield" aria-hidden="true"/>
+            <h3>Passkey</h3>
+        </div>
+        <div>
+            When you are ready, authenticate using the button below.
+        </div>
+        <div class="text-center gap-1 d-grid mb-1 pt-3">
+            <button type="submit" class="btn btn-primary">Use passkey</button>
+        </div>
+    </t>
+    <t t-name="auth_passkey.CheckIdentityLinkStringWebAuthN">Use your passkey</t>
+
+</templates>

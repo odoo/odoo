@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.pos_cash_move_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <body>
+                    <div class="pos-receipt">
+                        <div class="w-100 text-center mb-3" name="logo">
+                            <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
+                        </div>
+                        <div class="text-large text-center">
+                            <span t-esc="extra_data['date']" />
+                        </div>
+                        <div class="text-center text-large">
+                            CASH <span t-if="extra_data.get('translated_type')" t-esc="extra_data['translated_type']" />
+                        </div>
+                        <table class="w-100 text-large mt-3">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">AMOUNT</td>
+                                    <td class="text-end" t-esc="extra_data['formatted_amount']"/>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">REASON</td>
+                                    <td class="text-end" t-esc="extra_data['reason']" />
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-call="point_of_sale.company_info_receipt"/>
+                    </div>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>

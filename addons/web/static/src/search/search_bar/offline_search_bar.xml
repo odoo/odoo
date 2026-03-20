@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.OfflineSearchBar">
+        <div t-if="this.visibilityState.showSearchBar" class="o_offline_search_bar input-group" role="search" t-ref="root">
+            <Dropdown
+                state="this.searchBarDropdownState"
+                disabled="this.isSearchMenuDisabled"
+                noClasses="true"
+                position="'bottom-fit'"
+                menuClass="'o_search_bar_menu_offline'"
+                bottomSheet="false"
+            >
+                <div class="d-flex w-100">
+                    <div class="form-control d-print-contents d-flex align-items-center py-1 border-end-0 rounded-end-0" role="search" aria-autocomplete="list">
+                        <i class="d-print-none oi oi-search me-2" role="img"/>
+                        <div class="d-flex flex-grow-1 flex-wrap gap-1 mw-100">
+                            <t t-call="web.OfflineSearchBar.Facets">
+                                <t t-set="facets" t-value="this.currentSearch.facets"/>
+                            </t>
+                            <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="onRemoveSearch">
+                                <i class="oi oi-close small"/>
+                            </div>
+                            <div t-elif="this.currentSearch.facets.length" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 opacity-50" data-tooltip="Can't remove that search">
+                                <i class="oi oi-close small"/>
+                            </div>
+                            <input type="text"
+                                class="o_input d-print-none flex-grow-1 w-auto border-0"
+                                accesskey="Q"
+                                placeholder="Search..."
+                                role="searchbox"
+                                t-att-disabled="this.isSearchMenuDisabled"
+                                t-ref="autofocus"
+                                t-on-input="onSearchInput"
+                                t-on-compositionend="onCompositionEnd"
+                            />
+                        </div>
+                    </div>
+                    <button
+                        class="o_searchview_dropdown_toggler dropdown-toggle d-print-none btn btn-outline-secondary rounded-start-0"
+                        data-hotkey="shift+q"
+                        title="Toggle Search Panel"
+                        t-att-disabled="this.isSearchMenuDisabled"
+                        data-available-offline=""
+                    />
+                </div>
+                <t t-set-slot="content">
+                    <DropdownItem t-foreach="state.searches.slice(0, state.limit)" t-as="search" t-key="search_index"
+                        t-if="search.facets.length"
+                        onSelected="() => this.onSelect(search)"
+                        class="{
+                            'd-flex': true,
+                            'gap-1': true,
+                            'fw-bolder': search.key === this.currentSearch.key
+                        }">
+                        <t t-call="web.OfflineSearchBar.Facets">
+                            <t t-set="facets" t-value="search.facets"/>
+                        </t>
+                    </DropdownItem>
+                    <DropdownItem t-if="state.searches.length > state.limit"
+                        closingMode="'none'"
+                        onSelected.bind="onShowMoreSearches">
+                        <button class="btn btn-link p-0" data-available-offline="">More...</button>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+    <t t-name="web.OfflineSearchBar.Facets">
+        <t t-foreach="facets" t-as="facet" t-key="facet_index">
+            <div class="o_searchview_facet d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap mw-100"
+                role="listitem"
+                aria-label="search"
+                tabindex="0"
+                >
+                <div class="rounded-start-2 px-1 rounded-end-0 p-0"
+                    role="img"
+                    t-att-class="{
+                        'text-bg-action': facet.type == 'groupBy',
+                        'text-bg-primary': facet.type == 'field' || facet.type == 'filter',
+                        'text-bg-favourite': facet.type == 'favorite'
+                    }"
+                    >
+                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+                    <small t-else="" class="px-1" t-esc="facet.title"/>
+                </div>
+                <div class="o_facet_values d-flex flex-wrap align-items-center px-2 rounded-end-2 text-wrap overflow-hidden">
+                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
+                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
+                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facet.tooltip or facetValue"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

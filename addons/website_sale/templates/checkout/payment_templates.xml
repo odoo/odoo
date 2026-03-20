@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- /shop/payment route -->
+    <template id="website_sale.payment" name="Payment">
+        <t t-set="hide_payment_button" t-value="True" t-if="errors or (website_sale_order.amount_total and not (payment_methods_sudo or tokens_sudo))"/>
+        <t t-set="oe_structure">
+            <!--
+                 checkout page. This is append at the of the page in `checkout_layout`. The
+                 templates created in the database to store blocs are hooked using XPath on the
+                 `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                 t-att-id) and each template needs to define a div element. -->
+            <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
+        </t>
+        <t t-call="website_sale.checkout_layout"
+            additional_title.translate="Shop - Select Payment Method"
+            redirect.f="/shop/payment"
+            hide_payment_button="hide_payment_button"
+            oe_structure="oe_structure">
+            <div class="col-12" t-if="errors">
+                <t t-foreach="errors" t-as="error">
+                    <div class="alert alert-danger" t-if="error" role="alert">
+                        <h4>
+                            <t t-out="error[0]" />
+                        </h4>
+                        <t t-out="error[1]" />
+                    </div>
+                </t>
+            </div>
+            <div class="oe_structure clearfix" id="oe_structure_website_sale_payment_1"/>
+
+            <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
+                <div id="payment_method" class="o_not_editable mb-3">
+                    <t t-call="payment.form"/>
+                </div>
+            </div>
+            <h4 t-else="" class="mb-3">
+                Confirm order
+            </h4>
+            <div id="address_on_payment">
+                <t t-call="website_sale.address_on_checkout"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_sale.submit_button" inherit_id="payment.submit_button">
+        <div name="o_payment_default_submit_labels" position="replace">    
+            <t t-if="website_sale_order and not website_sale_order.amount_total">
+                <span name="o_free_order_label" t-field="res_company.free_order_label"/>
+            </t>
+            <t t-else=""> 
+                <t>$0</t>
+            </t>
+        </div>
+    </template>
+    
+</odoo>

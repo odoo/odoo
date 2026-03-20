@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.pdf.quote.builder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_management.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div name="sale_pdf_module_settings" position="inside">
+                <button
+                    name="%(sale_pdf_quote_builder.quotation_document_action)d"
+                    icon="oi-arrow-right"
+                    type="action"
+                    string="Headers/Footers"
+                    class="btn-link"
+                />
+            </div>
+        </field>
+    </record>
+
+</odoo>

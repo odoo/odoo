@@ -1,0 +1,27 @@
+@media (max-width: 767.98px) { /* breakpoint-md */
+    .o_control_panel_main_buttons {
+        /* hide the ellipsis dropdown by default */
+        > .o-control-panel-adaptive-dropdown {
+            display: none;
+        }
+
+        /* hide the visible elements beside the first one and the ellipsis dropdown */
+        > :nth-child(n + 2 of :not(.d-none, .o_hidden, .o-control-panel-adaptive-dropdown)) {
+            display: none !important;
+
+            ~ .o-control-panel-adaptive-dropdown {
+                display: inline-block;
+            }
+        }
+    }
+
+    /* hide the main buttons if the dropdown is empty to not render the gap */
+    .o_control_panel_main_buttons:has(> .o-control-panel-adaptive-dropdown:only-child) {
+        display: none !important;
+    }
+
+    /* hide the first element in the ellipsis dropdown menu */
+    .o-control-panel-adaptive-dropdown.dropdown-menu > :nth-child(1 of :not(.d-none, .o_hidden)) {
+        display: none !important;
+    }
+}

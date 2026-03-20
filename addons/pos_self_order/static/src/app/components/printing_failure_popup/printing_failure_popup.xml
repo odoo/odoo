@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PrintingFailurePopup">
+        <div class="self_order_out_of_paper_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1" t-on-click="() => this.props.close()">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-danger border border-white border-5">
+                                <i class="fa fa-print" aria-hidden="true"/>
+                            </div>
+                            <div>
+                                <h1 class="pt-2 text-center"><t t-esc="this.props.title"/></h1>
+                            </div>
+                            <div class="mt-4 pb-2 fs-3"><t t-esc="this.props.message"/></div>
+                            <div class="pb-4 fs-3">We invite you to get the receipt at the counter. Please remember your order number:</div>
+                            <h1 class="text-center mb-4" t-esc="props.trackingNumber"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

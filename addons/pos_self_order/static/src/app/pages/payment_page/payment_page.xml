@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PaymentPage">
+        <div class="d-flex flex-column flex-grow-1 overflow-y-auto o_self_background o_self_fade"
+        t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto justify-content-center my-auto">
+               <div class="container o_self_container ">
+                    <div t-if="state.selection"  class="grid gap-4 align-items-center justify-content-center p-3 ">
+                        <button
+                            t-foreach="selfOrder.models['pos.payment.method'].getAll()"
+                            t-as="payment_method"
+                            t-key="payment_method.id"
+                            role="button"
+                            class="g-col-12 g-col-md-6 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
+                            t-on-click="() => this.selectMethod(payment_method.id)">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <span t-esc="payment_method.name" />
+                        </button>
+                    </div>
+                    <div class="payment-state-container d-flex flex-column gap-4 align-items-center justify-content-center w-50 mx-auto p-3">
+                        <h1 class="mb-3 text-center">Follow instructions on the terminal</h1>
+                        <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
+                            <i class="fa fa-credit-card-alt fa-3x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+               </div>
+            </div>
+
+            <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">
+                <button class="btn btn-secondary btn-lg" t-if="state.selection || selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="back">Back</button>
+                <button class="btn btn-primary btn-lg" t-if="!state.selection and selfOrder.paymentError" t-on-click="startPayment">Retry</button>
+            </div>
+
+        </div>
+    </t>
+</templates>

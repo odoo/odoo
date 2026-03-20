@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallDropdown">
+        <div class="o-discuss-CallDropdown" t-att-class="props.class">
+            <div class="d-flex h-100" t-ref="trigger" t-on-click="handleClick">
+                <t t-slot="default"/>
+            </div>
+
+            <div t-if="isOpen"
+                 t-ref="menu"
+                 t-on-click="onClickMenu"
+                 class="o-discuss-CallDropdown-content o-dropdown--menu dropdown-menu"
+                 t-att-class="props.menuClass">
+                <t t-slot="content"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

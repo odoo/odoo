@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="resource_mail.KanbanMany2OneAvatarResourceField">
+        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
+        <t t-set="value" t-value="props.record.data[props.name]"/>
+        <KanbanMany2One t-props="m2oProps">
+            <t t-set-slot="avatar">
+                <t t-if="props.record.data.resource_type === 'material'">
+                    <span class="o_avatar o_m2o_avatar">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value.display_name">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                    </span>
+                </t>
+                <t t-elif="props.record.data.resource_type === 'user'">
+                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
+                </t>
+            </t>
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                    <t t-if="autoCompleteItemScope.record.resource_type === 'material'">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="autoCompleteItemScope.record.id">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                    </t>
+                    <t t-elif="autoCompleteItemScope.record.resource_type === 'user'">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
+                    </t>
+                    <span t-out="autoCompleteItemScope.label"/>
+                </span>
+            </t>
+        </KanbanMany2One>
+    </t>
+
+</templates>

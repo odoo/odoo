@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Mercado Pago Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'mercado_pago'">
+                    <field
+                        string="Account Country"
+                        name="mercado_pago_account_country_id"
+                        required="code == 'mercado_pago' and state != 'disabled'"
+                        readonly="mercado_pago_access_token and mercado_pago_is_oauth_supported"
+                        options="{'no_create': True}"
+                    />
+                    <label
+                        for="mercado_pago_access_token"
+                        invisible="not mercado_pago_access_token and mercado_pago_is_oauth_supported"
+                    />
+                    <div
+                        class="o_row"
+                        invisible="not mercado_pago_access_token and mercado_pago_is_oauth_supported"
+                    >
+                        <field
+                            string="Access Token"
+                            name="mercado_pago_access_token"
+                            readonly="mercado_pago_is_oauth_supported"
+                            password="True"
+                        />
+                        <button
+                            string="Disconnect Your Mercado Pago Account"
+                            type="object"
+                            name="action_reset_credentials"
+                            confirm="Are you sure you want to disconnect?"
+                            invisible="not mercado_pago_is_oauth_supported"
+                            class="btn-secondary ms-2"
+                        />
+                    </div>
+                </group>
+            </group>
+            <group name="provider_credentials" position="after">
+                <div
+                    invisible="code != 'mercado_pago' or (mercado_pago_access_token and mercado_pago_public_key) or not mercado_pago_is_oauth_supported"
+                >
+                    <div
+                        class="alert alert-warning mt-2"
+                        role="alert"
+                        invisible="not mercado_pago_access_token and not mercado_pago_public_key"
+                    >
+                        You must renew your connection to Mercado Pago in order to enable the new
+                        Card payment method experience, which allows saving payment details for
+                        recurring payments.
+                    </div>
+                    <button
+                        string="Connect"
+                        type="object"
+                        name="action_start_onboarding"
+                        class="btn-primary"
+                        invisible="mercado_pago_access_token and not mercado_pago_public_key"
+                        colspan="2"
+                    />
+                </div>
+            </group>
+        </field>
+    </record>
+
+</odoo>

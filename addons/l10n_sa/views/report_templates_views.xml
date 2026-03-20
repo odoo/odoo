@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sa.external_layout_footer_content" inherit_id="web.external_layout_footer_content">
+        <xpath expr="//div[hasclass('o_footer_pager_pdf')]" position="before">
+            <span t-if="report_type == 'pdf' and additional_footer_text" class="text-muted mb-1" t-out="additional_footer_text"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_standard" inherit_id="web.external_layout_standard">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_folder" inherit_id="web.external_layout_folder">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <t t-set="header_shape_height" position="after">
+            <t t-set="header_shape_height" t-if="o and o._name == 'account.move' and o.country_code == 'SA'">215</t>
+        </t>
+    </template>
+    <template id="l10n_sa_external_layout_wave" inherit_id="web.external_layout_wave">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_center" inherit_id="web.external_layout_center">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_dual" inherit_id="web.external_layout_dual">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_lines" inherit_id="web.external_layout_lines">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+    </template>
+</odoo>

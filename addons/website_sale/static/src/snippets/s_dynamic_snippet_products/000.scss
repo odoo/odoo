@@ -1,0 +1,56 @@
+.s_dynamic_snippet_products {
+    .s_dynamic_snippet_row.row {
+        --gutter-x: var(--o-wsale-products-grid-gap, 16px);
+    }
+
+    .carousel-item {
+        padding-top: var(--o-carousel-item-padding-v);
+        padding-bottom: var(--o-carousel-item-padding-v);
+    }
+
+    &.o_wsale_products_opt_design_grid .s_dynamic_snippet_row.row {
+        --gutter-x: 0;
+        --o-wsale-card-border-width: 1px 1px 1px 0;
+
+        > div:first-of-type {
+            --o-wsale-card-border-width: 1px;
+        }
+    }
+
+    // Align the arrows vertically with the images for the "Thumbnails" card design
+    &:where(.o_wsale_products_opt_design_thumbs:not(.o_arrows_bottom)) {
+        @include media-breakpoint-up(md) {
+            .s_dynamic_snippet_arrows {
+                top: var(--o-carousel-item-padding-v);
+                transform: none;
+            }
+
+            .o_carousel_arrow_wrap {
+                display: flex;
+                aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
+                width: var(--o-carousel-item-width-percentage);
+            }
+        }
+
+        @include media-breakpoint-up(lg) {
+            &:where(:not(.o_carousel_multi_items)) > :where(:not(.container-fluid)) {
+                .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
+                    .o_carousel_arrow_wrap {
+                        --o-wsale-card-thumb-aspect-ratio: none;
+                    }
+                }
+            }
+        }
+    }
+}
+.s_dynamic_snippet_products:not(.o_arrows_bottom) .container-fluid .s_dynamic_snippet_content {
+    @include media-breakpoint-up(md) {
+        // Prevented horizontal overflow of control buttons.
+        .carousel-control-prev {
+            transform: translateX(50%); 
+        }
+        .carousel-control-next {
+            transform: translateX(-50%); 
+        }
+    }
+}

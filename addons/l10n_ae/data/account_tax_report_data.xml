@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">VAT201 Form</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_base" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tax_report_tax" model="account.report.column">
+                <field name="name">VAT Amount</field>
+                <field name="expression_label">tax</field>
+            </record>
+            <record id="tax_report_adj" model="account.report.column">
+                <field name="name">Adjustment</field>
+                <field name="expression_label">adj</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_all_sales" model="account.report.line">
+                <field name="name">VAT on Sales and all other Outputs</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_standard_rated_supplies" model="account.report.line">
+                        <field name="name">1. Standard rated supplies in:</field>
+                        <field name="code">uae_1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_standard_rated_supplies_abu_dhabi" model="account.report.line">
+                                <field name="name">a. Abu Dhabi</field>
+                                <field name="code">uae_1a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_abu_dhabi_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(a)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_abu_dhabi_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(a)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_abu_dhabi_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_supplies_dubai" model="account.report.line">
+                                <field name="name">b. Dubai</field>
+                                <field name="code">uae_1b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_dubai_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(b)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_dubai_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(b)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_dubai_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_supplies_sharjah" model="account.report.line">
+                                <field name="name">c. Sharjah</field>
+                                <field name="code">uae_1c</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_sharjah_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(c)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_sharjah_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(c)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_sharjah_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_supplies_ajman" model="account.report.line">
+                                <field name="name">d. Ajman</field>
+                                <field name="code">uae_1d</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_ajman_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(d)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_ajman_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(d)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_ajman_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_supplies_umm_al_quwain" model="account.report.line">
+                                <field name="name">e. Umm Al Quwain</field>
+                                <field name="code">uae_1e</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_umm_al_quwain_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(e)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_umm_al_quwain_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(e)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_umm_al_quwain_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_supplies_ras_al_khaima" model="account.report.line">
+                                <field name="name">f. Ras Al-Khaima</field>
+                                <field name="code">uae_1f</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_ras_al_khaima_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(f)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_ras_al_khaima_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(f)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_ras_al_khaima_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_supplies_fujairah" model="account.report.line">
+                                <field name="name">g. Fujairah</field>
+                                <field name="code">uae_1g</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_standard_rated_supplies_fujairah_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(g)T</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_fujairah_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-1(g)B</field>
+                                    </record>
+                                    <record id="tax_report_line_standard_rated_supplies_fujairah_adj" model="account.report.expression">
+                                        <field name="label">adj</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_tax_refund_tourist" model="account.report.line">
+                        <field name="name">2. Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme</field>
+                        <field name="code">uae_2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_tax_refund_tourist_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2T</field>
+                            </record>
+                            <record id="tax_report_line_tax_refund_tourist_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_supplies_reverse_charge" model="account.report.line">
+                        <field name="name">3. Supplies subject to reverse charge provisions</field>
+                        <field name="code">uae_3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_supplies_reverse_charge_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3T</field>
+                            </record>
+                            <record id="tax_report_line_supplies_reverse_charge_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_zero_rated_supplies" model="account.report.line">
+                        <field name="name">4. Zero-rated supplies</field>
+                        <field name="code">uae_4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_zero_rated_supplies_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_exempt_supplies" model="account.report.line">
+                        <field name="name">5. Exempt supplies</field>
+                        <field name="code">uae_5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_exempt_supplies_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_import_uae" model="account.report.line">
+                        <field name="name">6. Goods imported into the UAE</field>
+                        <field name="code">uae_6</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_import_uae_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6T</field>
+                            </record>
+                            <record id="tax_report_line_import_uae_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_adjustment_import_uae" model="account.report.line">
+                        <field name="name">7. Adjustments to goods imported into the UAE</field>
+                        <field name="code">uae_7</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_adjustment_import_uae_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_7.base*0.05</field>
+                            </record>
+                            <record id="tax_report_line_adjustment_import_uae_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_all_sales_total" model="account.report.line">
+                        <field name="name">8. Totals</field>
+                        <field name="code">uae_8</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_all_sales_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_1a.tax + uae_1b.tax + uae_1c.tax + uae_1d.tax + uae_1e.tax + uae_1f.tax + uae_1g.tax + uae_2.tax + uae_3.tax + uae_6.tax + uae_7.tax</field>
+                            </record>
+                            <record id="tax_report_line_all_sales_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_1a.base + uae_1b.base + uae_1c.base + uae_1d.base + uae_1e.base + uae_1f.base + uae_1g.base + uae_2.base + uae_3.base + uae_4.base + uae_5.base + uae_6.base + uae_7.base</field>
+                            </record>
+                            <record id="tax_report_line_all_sales_total_adj" model="account.report.expression">
+                                <field name="label">adj</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_1a.adj + uae_1b.adj + uae_1c.adj + uae_1d.adj + uae_1e.adj + uae_1f.adj + uae_1g.adj</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_all_expense" model="account.report.line">
+                <field name="name">VAT on Expenses and All Other Inputs</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_standard_rated_expense" model="account.report.line">
+                        <field name="name">9. Standard rated expenses</field>
+                        <field name="code">uae_9</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_standard_rated_expense_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9T</field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_expense_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9B</field>
+                            </record>
+                            <record id="tax_report_line_standard_rated_expense_adj" model="account.report.expression">
+                                <field name="label">adj</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_expense_supplies_reverse" model="account.report.line">
+                        <field name="name">10. Supplies subject to the reverse charge provisions</field>
+                        <field name="code">uae_10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_expense_supplies_reverse_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10T</field>
+                            </record>
+                            <record id="tax_report_line_expense_supplies_reverse_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_all_expense_total" model="account.report.line">
+                        <field name="name">11. Totals</field>
+                        <field name="code">uae_11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_all_expense_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_9.tax + uae_10.tax</field>
+                            </record>
+                            <record id="tax_report_line_all_expense_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_9.base + uae_10.base</field>
+                            </record>
+                            <record id="tax_report_line_all_expense_total_adj" model="account.report.expression">
+                                <field name="label">adj</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_9.adj</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_net_vat_due" model="account.report.line">
+                <field name="name">Net VAT Due</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_total_value_due_tax_period" model="account.report.line">
+                        <field name="name">12. Total value of due tax for the period</field>
+                        <field name="code">uae_12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_total_value_due_tax_period_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_8.tax + uae_8.adj</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_total_value_recoverable_tax_period" model="account.report.line">
+                        <field name="name">13. Total value of recoverable tax for the period</field>
+                        <field name="code">uae_13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_total_value_recoverable_tax_period_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_11.tax + uae_11.adj</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_net_vat_due_period" model="account.report.line">
+                        <field name="name">14. Payable tax for the period</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_net_vat_due_period_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">uae_12.tax-uae_13.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

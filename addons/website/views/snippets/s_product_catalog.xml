@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" name="Pricelist">
+    <section class="s_product_catalog oe_img_bg o_bg_img_center oe_custom_bg pt64 pb64" style="background-image: url('/web/image/website.s_product_catalog_default_image');" data-vcss="002">
+        <div class="o_we_bg_filter bg-white-85"/>
+        <div class="container">
+            <h2 class="h3-fs" style="text-align: center;">Our Menu</h2>
+            <p class="lead" style="text-align: center;">Handcrafted Delights: Everything Homemade, Just for You.</p>
+            <p><br/></p>
+            <div class="row">
+                <div class="col-lg-6 pt16 pb16">
+                    <h3 class="h4-fs">Pastries</h3>
+                    <ul class="list-unstyled my-3">
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Croissant"
+                            price.translate="$1.50"
+                            description.translate="A buttery, flaky pastry with a golden-brown crust, perfect for breakfast or a light snack."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Cinnamon Roll"
+                            price.translate="$3.00"
+                            description.translate="Soft, sweet dough rolled with cinnamon and sugar, topped with a rich cream cheese frosting."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Sourdough Bread"
+                            price.translate="$5.00"
+                            description.translate="A crusty loaf with a chewy interior, made with a naturally fermented sourdough starter for a tangy flavor."/>
+                    </ul>
+                </div>
+                <div class="col-lg-6 pt16 pb16">
+                    <h3 class="h4-fs">Cakes</h3>
+                    <ul class="list-unstyled my-3">
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Classic Cheesecake"
+                            price.translate="$25.00"
+                            description.translate="A creamy, smooth cheesecake with a graham cracker crust, topped with a layer of fresh fruit or chocolate ganache."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Red Velvet Cake"
+                            price.translate="$28.00"
+                            description.translate="A moist, red-hued cake with layers of cream cheese frosting, perfect for any special occasion."/>
+                        <t t-call="website.s_product_catalog_dish"
+                            name.translate="Carrot Cake"
+                            price.translate="$26.00"
+                            description.translate="A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, topped with a tangy cream cheese frosting."/>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_product_catalog_dish">
+    <li class="s_product_catalog_dish mb-4" data-name="Product">
+        <p class="s_product_catalog_dish_title d-flex align-items-baseline fw-bold">
+            <span class="d-flex flex-grow-1 align-items-center">
+                <span t-out="name" class="s_product_catalog_dish_name"/>
+                <span class="s_product_catalog_dish_dot_leaders flex-grow-1 ms-2 border-top"/>
+            </span>
+            <span t-out="price" class="s_product_catalog_dish_price ms-auto ps-3"/>
+        </p>
+        <p t-if="description" t-out="description" class="s_product_catalog_dish_description d-block mt-2 pe-5 text-muted"/>
+    </li>
+</template>
+
+<asset id="website.s_product_catalog_001_scss" name="Product catalog 001 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_product_catalog/001.scss</path>
+</asset>
+
+</odoo>

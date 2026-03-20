@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[contains(text(), 'Install App')]" position="before">
+            <DropdownItem t-if="ui.isSmall and pos.config.module_pos_restaurant" onSelected="() => pos.redirectToQrForm()">
+                Get QR Codes
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

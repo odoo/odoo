@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_vat" position="before">
+            <div t-if="is_used_as_billing and is_latam_country" class="col-xl-6 mb-3">
+                <label class="col-form-label" for="l10n_latam_identification_type_id">
+                    Identification Type
+                </label>
+                <select
+                    t-if="is_commercial_address and can_edit_vat"
+                    name="l10n_latam_identification_type_id"
+                    class="form-select"
+                >
+                    <option value="">Identification Type...</option>
+                    <option
+                        t-foreach="identification_types"
+                        t-as="id_type"
+                        t-att-value="id_type.id"
+                        t-att-selected="id_type.id == identification_type.id"
+                        t-out="id_type.name"
+                    />
+                </select>
+                <p
+                    t-else=""
+                    class="form-control"
+                    t-out="identification_type.name"
+                    readonly="1"
+                    title="Changing Identification type is not allowed once document(s) have been
+                        issued for your account. Please contact us directly for this operation."
+                />
+                <input
+                    t-if="not (is_commercial_address and can_edit_vat)"
+                    type="hidden"
+                    readonly="1"
+                    name="l10n_latam_identification_type_id"
+                    t-att-value="identification_type.id"
+                />
+            </div>
+        </div>
+    </template>
+
+</odoo>

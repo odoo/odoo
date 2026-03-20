@@ -1,0 +1,38 @@
+.oe_module_flag {
+    position: absolute;
+    left: calc(var(--KanbanRecord-padding-h) * -0.5);
+    top: calc(var(--KanbanRecord-padding-v) * -1);
+    font: 27px icon;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.o_modules_kanban .o_kanban_record > aside {
+    position: relative;
+}
+
+.o_kanban_view.o_modules_kanban .o_kanban_renderer .o_kanban_record .o_dropdown_kanban,
+.o_modules_field .o_modules_kanban .o_kanban_renderer .o_kanban_record .o_dropdown_kanban {
+    visibility: visible;
+    opacity: 0.5;
+}
+
+.o_kanban_view.o_modules_kanban .o_kanban_renderer .o_kanban_record:hover .o_dropdown_kanban,
+.o_kanban_view.o_modules_kanban .o_kanban_renderer .o_kanban_record .o_dropdown_kanban.show {
+    opacity: 1;
+}
+
+.o_modules_field .o_modules_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 280px;
+    --KanbanRecord-width-small: 280px;
+    .o_module_uninstalled {
+        /* img 50px + border 1px x 2 + padding 8px x 2 */
+        height: 68px;
+    }
+}
+
+.o_module_form.o_form_view .oe_avatar > img {
+    border: none;
+    box-shadow: none;
+    max-width: 70px;
+    max-height: 70px;
+}

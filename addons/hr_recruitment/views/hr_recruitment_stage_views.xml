@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="hr_job_stage_act" model="ir.actions.act_window">
+            <field name="name">Recruitment / Applicants Stages</field>
+            <field name="res_model">hr.recruitment.stage</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new stage in the recruitment process
+                </p><p>
+                    Define here your stages of the recruitment process, for example:
+                    qualification call, first interview, second interview, refused,
+                    hired.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_recruitment_stage_tree">
+            <field name="name">hr.recruitment.stage.list</field>
+            <field name="model">hr.recruitment.stage</field>
+            <field name="arch" type="xml">
+                <list string="Stages">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="rotting_threshold_days" optional="hide"/>
+                    <field name="fold"/>
+                    <field name="hired_stage"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_hr_recruitment_stage_kanban" model="ir.ui.view">
+            <field name="name">hr.recruitment.stage.kanban</field>
+            <field name="model">hr.recruitment.stage</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field class="fw-bolder" name="name"/>
+                            <div class="d-flex">
+                                Folded in Recruitment Pipe:
+                                <field name="fold" class="ms-1" widget="boolean"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_recruitment_stage_form">
+            <field name="name">hr.recruitment.stage.form</field>
+            <field name="model">hr.recruitment.stage</field>
+            <field name="arch" type="xml">
+                <form string="Stage">
+                <field name="is_warning_visible" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Qualification"/></h1>
+                    </div>
+                    <group>
+                        <group name="configuration">
+                            <field name="template_id" placeholder="No email"
+                                domain= "[('model_id.model', '=', 'hr.applicant')]"
+                                options="{'no_quick_create': True}"/>
+                            <label for="hired_stage"/>
+                            <div>
+                                <field name="hired_stage"/>
+                                <div invisible="not is_warning_visible" class="text-danger">
+                                    <span class="fa fa-exclamation-triangle pe-1"/>
+                                    All applications will lose their hired date and hired status.
+                                </div>
+                            </div>
+                            <label for="rotting_threshold_days" string="Rotting in" invisible="hired_stage"/>
+                            <div invisible="hired_stage">
+                                <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
+                                <span>days</span>
+                            </div>
+                        </group>
+                        <group name="details">
+                            <field name="job_ids" string="Job Positions" widget="many2many_tags"
+                                placeholder="Show for all positions"/>
+                            <field name="fold" string="Fold by Default"/>
+                        </group>
+                    </group>
+                    <separator string="Requirements"/>
+                    <field name="requirements" placeholder="What are the requirements to move an applicant to this stage?"/>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_recruitment_stage_act" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">hr.recruitment.stage</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" ref="hr_recruitment_stage_tree"/>
+            <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new stage in the recruitment process
+            </p><p>
+                Don't forget to specify the department if your recruitment process
+                is different according to the job position.
+            </p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,53 @@
+.o_add_snippet_dialog {
+    max-height: $modal-lg !important;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+
+        aside {
+            input[type="search"] {
+                // Chromium-based browsers render a "cancel" button by default.
+                // When visible, adapt its position in order to visually
+                // "replace" the magnify icon.
+                &::-webkit-search-cancel-button {
+                    transform: translateX(map-get($spacers, 3));
+                }
+
+                &:not(:placeholder-shown) + .input-group-text {
+                    display: none;
+
+                    // Preserve Firefox from chromium adaptations
+                    @media screen and (min--moz-device-pixel-ratio:0) {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        .list-group {
+            --list-group-border-radius: 0;
+            --list-group-active-bg: #{$o-brand-primary};
+            --list-group-active-border-color: #{$o-brand-primary};
+            --list-group-active-color: #{color-contrast($o-brand-primary)};
+
+            min-width: 200px;
+            max-width: 250px;
+        }
+    }
+
+    .o_add_snippet_dialog_search {
+        background-color: var(--SearchBar-bg-color, #{$o-white});
+    }
+}
+.o_add_snippet_dialog_iframe_loader {
+    // This loader will appear after a 1s delay, ensuring it doesn't disrupt the
+    // experience for users with a good connection.
+    visibility: hidden;
+    animation: showLoader 0s 1s forwards;
+}
+@keyframes showLoader {
+    to {
+        visibility: visible;
+    }
+}

@@ -1,0 +1,19 @@
+<templates id="template">
+    <t t-name="mass_mailing.ThemeLayout">
+        <div data-name="Mailing" class="o_layout oe_unremovable oe_unmovable"
+            t-att-class="className" t-att-style="layoutStyles">
+            <t t-if="nowrap" t-call="mass_mailing.ThemeStructure"/>
+            <t t-else="" t-call="mass_mailing.ThemeWrapper"/>
+        </div>
+    </t>
+    <t t-name="mass_mailing.ThemeWrapper">
+        <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+            <div class="row mw-100 mx-0">
+                <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure" t-out="html"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="mass_mailing.ThemeStructure">
+        <div class="oe_structure" t-out="html"/>
+    </t>
+</templates>

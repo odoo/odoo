@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="employee_niv_resume_line" model="hr.resume.line">
+            <field name="employee_id" ref="hr.employee_niv"/>
+            <field name="name">Basics of Furniture Creation</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-1)).strftime('%Y-09-17')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_training"/>
+            <field name="course_type">elearning</field>
+            <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
+            <field name="description">
+                Learned core principles of furniture design and construction through hands-on projects and material exploration.
+            </field>
+        </record>
+
+        <record id="employee_vad_resume_line" model="hr.resume.line">
+            <field name="employee_id" ref="hr.employee_vad"/>
+            <field name="name">Taking care of Trees</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-2)).strftime('%Y-12-02')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_training"/>
+            <field name="course_type">elearning</field>
+            <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+            <field name="description">
+                Gained essential knowledge in tree maintenance, health assessment, and pruning techniques.
+            </field>
+        </record>
+
+        <record id="employee_chs_resume_line" model="hr.resume.line">
+            <field name="employee_id" ref="hr.employee_chs"/>
+            <field name="name">Choose your wood!</field>
+            <field name="date_start" eval="(datetime.now()+relativedelta(years=-3)).strftime('%Y-03-09')"/>
+            <field name="line_type_id" ref="hr_skills.resume_type_training"/>
+            <field name="course_type">elearning</field>
+            <field name="channel_id" ref="website_slides.slide_channel_demo_3_furn0"/>
+            <field name="description">
+                Explored wood types, properties, and selection criteria for various woodworking applications.
+            </field>
+        </record>
+    </data>
+</odoo>

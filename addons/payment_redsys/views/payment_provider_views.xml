@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Redsys Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group invisible="code != 'redsys'">
+                    <field
+                        string="Merchant Code"
+                        name="redsys_merchant_code"
+                        required="code == 'redsys' and state != 'disabled'"
+                    />
+                    <field
+                        string="Merchant Terminal"
+                        name="redsys_merchant_terminal"
+                        required="code == 'redsys' and state != 'disabled'"
+                    />
+                    <field
+                        string="Secret Key"
+                        name="redsys_secret_key"
+                        required="code == 'redsys' and state != 'disabled'"
+                        password="True"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

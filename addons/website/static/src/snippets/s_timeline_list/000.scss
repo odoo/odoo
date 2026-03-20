@@ -1,0 +1,12 @@
+.s_timeline_list {
+    --o-dot-left: calc(var(--o-timeline-dot-size, 24px) * 0.5);
+    --o-dot-line-left: calc(var(--o-timeline-dot-size, 24px) * 0.5);
+
+    .s_timeline_list_row {
+        padding-left: calc(var(--o-timeline-dot-size, 24px) * 1.25);
+
+        &:last-of-type .o_dot_line {
+            display: none;
+        }
+    }
+}

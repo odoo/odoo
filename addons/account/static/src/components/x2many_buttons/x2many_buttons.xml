@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="account.X2ManyButtons">
+        <div class="d-flex align-items-center">
+            <t t-foreach="this.currentField.records.slice(0, props.nbRecordsShown)" t-as="record" t-key="record.id">
+                <button class="btn btn-link p-0"
+                        t-on-click="() => this.openFormAndDiscard(record.resId)"
+                        t-att-data-hotkey="`shift+${record_index + 1}`"
+                        t-out="record.data.display_name"/>
+                <span t-if="!record_last" class="pe-1">,</span>
+            </t>
+            <t t-if="this.currentField.count gt props.nbRecordsShown">
+                <button class="btn btn-link p-0" t-on-click="() => this.openTreeAndDiscard()" data-hotkey="shift+4">... (View all)</button>
+            </t>
+        </div>
+    </t>
+</templates>

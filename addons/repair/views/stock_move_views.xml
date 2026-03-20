@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="action_repair_move_lines">
+        <field name="name">Inventory Moves</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('move_id.repair_id', '=', active_id)]</field>
+    </record>
+
+</odoo>

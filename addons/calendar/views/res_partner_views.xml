@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+        <!-- Add contextual button on partner form view -->
+        <record id="view_partners_form" model="ir.ui.view">
+            <field name="name">res_partner.view.form.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" type="object"
+                            name="schedule_meeting"
+                            icon="fa-calendar"
+                            context="{'partner_id': id, 'partner_name': name}">
+                            <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                </data>
+            </field>
+        </record>
+
+</odoo>

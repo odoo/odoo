@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+
+    <template id="ticket_validation_screen" inherit_id="point_of_sale.ticket_validation_screen">
+        <!-- We do not let the user create the invoice by themselves. That is why we hide the
+        "Get my Invoice" button -->
+        <xpath expr="//div[@id='get_my_invoice']" position="attributes">
+            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
+        </xpath>
+        <xpath expr="//div[@id='get_my_invoice']/.." position="after">
+            <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'PE' and not pos_order.is_invoiced">
+                Invoice not available. You can contact us for more info.
+            </h4>
+        </xpath>
+
+        <!-- If the user is NOT logged in we should hide the partner form, this one lost functionality
+        because the get my invoice button is not shown and then the partner info is never saved. In they
+        want they can sign up and fill data from there -->
+        <xpath expr="//div[hasclass('portal_details')]" position="attributes">
+            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
+        </xpath>
+        <xpath expr="//div[@id='get_info_div']" position="attributes">
+            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
+        </xpath>
+        <xpath expr="//div[@id='get_info_div']" position="after">
+            <h4 t-elif="pos_order.company_id.country_code == 'PE'">
+                Please
+                <a
+                    role="button"
+                    t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token"
+                    style="margin-top: -11px"
+                >
+                    Sign in
+                </a>
+                in order to save your contact info
+            </h4>
+        </xpath>
+
+        <!-- Show PE fields preview info, and show warning is a required field need to be completed -->
+        <xpath expr="//t[@id='partner_vat']" position="before">
+            <t t-if="pos_order.company_id.country_code == 'PE'">
+                <t t-if="partner.l10n_latam_identification_type_id">
+                    <t t-out="partner.l10n_latam_identification_type_id.name" /> -
+                </t>
+                <t t-else="">
+                    <span class="text-danger">* Please configure your Identification Type</span><br />
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@id='partner_vat']" position="after">
+            <t t-else="">
+                <span class="text-danger">* Please configure your Identification Number</span><br />
+            </t>
+        </xpath>
+
+    </template>
+
+</odoo>

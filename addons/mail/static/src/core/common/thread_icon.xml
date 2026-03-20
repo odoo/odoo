@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadIcon">
+        <t t-set="class" t-value="'o-mail-ThreadIcon d-flex ' + props.className + ' ' + attClassObjectToString({
+            'fa-lg': props.size === 'lg' or props.size === 'large',
+            'o-xsmaller': props.size === 'sm' or props.size === 'small',
+        })"/>
+        <t t-set="attr" t-value="{ 'class': class }"/>
+        <t name="extra"/>
+        <t t-if="channel?.channel_type === 'channel'">
+            <div t-if="!channel.group_public_id" class="fa fa-globe o-fs-small" t-att="attr" title="Public Channel"/>
+        </t>
+        <t t-elif="channel?.channel_type === 'group'">
+            <t name="group"/>
+        </t>
+        <t t-elif="channel?.showImStatus and channel?.channel_type?.includes('chat') and correspondent">
+            <t name="chat">
+                <t name="chat_static">
+                    <ImStatus t-if="correspondent.im_status" className="class" member="correspondent" size="props.size" typing="props.typing"/>
+                    <div t-else="" class="d-flex rounded-circle bg-inherit">
+                        <i class="fa-fw" t-att="attr" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+        <t t-elif="props.thread.model === 'mail.box'">
+            <div t-if="props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att="attr"/>
+            <div t-elif="props.thread.id === 'bookmark'" class="fa fa-fw fa-bookmark-o" t-att="attr"/>
+            <div t-elif="props.thread.id === 'history'" class="fa fa-fw fa-history" t-att="attr"/>
+        </t>
+    </t>
+
+</templates>

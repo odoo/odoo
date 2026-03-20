@@ -1,0 +1,14 @@
+[data-oe-local-overlay-id=oe-power-buttons-overlay] {
+    width: auto;
+
+    .power_button {
+        &:hover {
+            background-color: $o-gray-300;
+            border-radius: 5px;
+        }
+
+        &:not(:hover) {
+            opacity: 0.3;
+        }
+    }
+}

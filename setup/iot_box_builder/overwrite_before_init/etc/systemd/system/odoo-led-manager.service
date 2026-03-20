@@ -1,0 +1,12 @@
+[Unit]
+Description=Odoo LED Status Indicator: makes LEDs blink based on Odoo status
+
+[Service]
+Type=simple
+User=root
+ExecStart=/etc/led_manager.sh
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

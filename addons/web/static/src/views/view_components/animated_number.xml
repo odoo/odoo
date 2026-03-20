@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.AnimatedNumber">
+        <div class="o_animated_number ms-2 text-900 text-nowrap cursor-default" t-att-class="state.value !== props.value ? props.animationClass : ''" t-att-data-tooltip="props.title">
+            <t t-slot="prefix"/>
+            <b t-esc="format(state.value)" />
+            <sup
+                t-if="props.currencies?.length > 1"
+                class="p-1 fw-bolder text-info"
+                t-on-mouseover.stop="openMultiCurrencyPopover"
+                t-on-touchstart.stop="openMultiCurrencyPopover"
+            >?</sup>
+        </div>
+    </t>
+
+</templates>

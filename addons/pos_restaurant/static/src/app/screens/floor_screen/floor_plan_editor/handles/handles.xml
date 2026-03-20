@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_editor.handle_overlay">
+        <div class="o_fp_handles position-absolute" t-ref="handles"  t-att-class="{'d-none': !props.floorElement, 'o_fp_strict_mode': isStrictMode}"  style="display:none" t-on-mousedown.stop="startDrag" t-on-touchstart.stop="startDrag"  >
+
+            <t t-if="!resizeLineEnds and !resizeSides">
+                 <div class="o_fp_handle o_fp_side o_fp_side_y n cursor-default" />
+                 <div class="o_fp_handle o_fp_side o_fp_side_x e cursor-default"/>
+                 <div class="o_fp_handle o_fp_side o_fp_side_x w cursor-default"/>
+                 <div class="o_fp_handle o_fp_side o_fp_side_y s cursor-default"/>
+            </t>
+            <t t-else="">
+                <t t-if="!showVerticalHandles">
+                 <div class="o_fp_handle o_fp_side o_fp_side_y n cursor-default" />
+                 <div class="o_fp_handle o_fp_side o_fp_side_y s cursor-default"/>
+               </t>
+                <t t-else="">
+                    <div class="o_fp_handle o_fp_side o_fp_side_y n" data-p="n" t-att-class="{'d-none': !resizeSides }" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+                    <div class="o_fp_handle o_fp_side o_fp_side_y s" data-p="s" t-att-class="{'d-none': !resizeSides }" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+               </t>
+                <div class="o_fp_handle o_fp_side o_fp_side_x e" data-p="e" t-att-class="{'d-none': !resizeSides}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+                <div class="o_fp_handle o_fp_side o_fp_side_x w" data-p="w" t-att-class="{'d-none': !resizeSides}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+               </t>
+
+            <div class="o_fp_handle o_fp_corner ne" data-p="ne" t-att-class="{'d-none': !resizeCorners}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+            <div class="o_fp_handle o_fp_corner nw" data-p="nw" t-att-class="{'d-none': !resizeCorners}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+            <div class="o_fp_handle o_fp_corner se" data-p="se" t-att-class="{'d-none': !resizeCorners}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+            <div class="o_fp_handle o_fp_corner sw" data-p="sw" t-att-class="{'d-none': !resizeCorners}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+
+            <div class="o_fp_handle o_fp_line line_start" data-p="line-start" t-att-class="{'d-none': !resizeLineEnds}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+            <div class="o_fp_handle o_fp_line line_end" data-p="line-end" t-att-class="{'d-none': !resizeLineEnds}" t-on-mousedown.stop="startResize" t-on-touchstart.stop="startResize"><span class="o_fp_handle_indicator"/></div>
+
+            <div class="o_fp_rotation_handle" t-att-data-position-override="state.rotationHandlePosition">
+                <div class="o_fp_rotation_handle_inner">
+                   <div class="o_fp_handle_indicator" t-on-mousedown.stop="startRotate" t-on-touchstart.stop="startRotate"><i class="fa fa-refresh"/></div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

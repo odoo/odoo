@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="website_slides_forum_public" model="ir.rule">
+        <field name="name">Website forum: User can only access to forum related to public courses</field>
+        <field name="model_id" ref="website_forum.model_forum_forum"/>
+        <field name="domain_force">[('slide_channel_ids.website_published', '=', True), ('slide_channel_ids.visibility', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="website_slides_forum_signed_in_user" model="ir.rule">
+        <field name="name">Website forum: Signed In user can only access to forum related to courses</field>
+        <field name="model_id" ref="website_forum.model_forum_forum"/>
+        <field name="domain_force">[
+            '&amp;',
+                ('slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('slide_channel_ids.is_member', '=', True)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="website_slides_forum_website_slides_officer" model="ir.rule">
+        <field name="name">Website forum: website slides officer can access all forum</field>
+        <field name="model_id" ref="website_forum.model_forum_forum"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('website_slides.group_website_slides_officer'))]"/>
+    </record>
+
+    <record id="website_slides_forum_public_post" model="ir.rule">
+        <field name="name">Website forum post: User can only access to post linked to forum related to followed courses</field>
+        <field name="model_id" ref="website_forum.model_forum_post"/>
+        <field name="domain_force">[('forum_id.slide_channel_ids.website_published', '=', True), ('forum_id.slide_channel_ids.visibility', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="website_slides_forum_post_signed_in_user" model="ir.rule">
+        <field name="name">Website forum: Signed In user can only access to post linked to forum related to courses</field>
+        <field name="model_id" ref="website_forum.model_forum_post"/>
+        <field name="domain_force">[
+            '&amp;',
+                ('forum_id.slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('forum_id.slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('forum_id.slide_channel_ids.is_member', '=', True)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="website_slides_forum_website_slides_officer_post" model="ir.rule">
+        <field name="name">Website forum post: website slides officer can access all post</field>
+        <field name="model_id" ref="website_forum.model_forum_post"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('website_slides.group_website_slides_officer'))]"/>
+    </record>
+
+    <record id="website_slides_forum_public_tag" model="ir.rule">
+        <field name="name">Website slides forum tag: Public User can only access to tag linked to forum related to public courses</field>
+        <field name="model_id" ref="website_forum.model_forum_tag"/>
+        <field name="domain_force">[('forum_id.slide_channel_ids.website_published', '=', True), ('forum_id.slide_channel_ids.visibility', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="website_slides_forum_tag_signed_in_user" model="ir.rule">
+        <field name="name">Website forum: Signed In users can access tags linked to public or connected users-visibility courses</field>
+        <field name="model_id" ref="website_forum.model_forum_tag"/>
+        <field name="domain_force">[
+            '&amp;',
+                ('forum_id.slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('forum_id.slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('forum_id.slide_channel_ids.is_member', '=', True)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="website_slides_forum_website_slides_officer_tag" model="ir.rule">
+        <field name="name">Website slides forum tag: website slides officer can access all tag</field>
+        <field name="model_id" ref="website_forum.model_forum_tag"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('website_slides.group_website_slides_officer'))]"/>
+    </record>
+</odoo>

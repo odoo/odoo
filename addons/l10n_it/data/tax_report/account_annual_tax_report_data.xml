@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_annual_report_vat" model="account.report">
+        <field name="name">Annual Tax Report</field>
+        <field name="name@it">Resoconto fiscale annuale</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.it"/>
+        <field name="availability_condition">country</field>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="filter_hierarchy">never</field>
+        <field name="integer_rounding">HALF-UP</field>
+        <field name="use_sections" eval="True"/>
+        <field name="section_report_ids" eval="[Command.set([ref('l10n_it.tax_annual_report_vat_va'),
+                                                            ref('l10n_it.tax_annual_report_vat_ve'),
+                                                            ref('l10n_it.tax_annual_report_vat_vf'),
+                                                            ref('l10n_it.tax_annual_report_vat_vh'),
+                                                            ref('l10n_it.tax_annual_report_vat_vj'),
+                                                            ref('l10n_it.tax_annual_report_vat_vl')])]"/>
+    </record>
+</odoo>

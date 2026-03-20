@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_monthly_report_vat" model="account.report">
+        <field name="name">Monthly VAT Report</field>
+        <field name="name@it">Liquidazione periodica IVA</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.it"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="integer_rounding"></field>
+        <field name="column_ids">
+            <record id="tax_monthly_report_vat_debit" model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="name@it">Debito</field>
+                <field name="expression_label">debit</field>
+            </record>
+            <record id="tax_monthly_report_vat_credit" model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="name@it">Credito</field>
+                <field name="expression_label">credit</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_monthly_report_line_vp1" model="account.report.line">
+                <field name="name">VP1</field>
+                <field name="name@it">VP1</field>
+                <field name="code">VP1</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp1_subcontracting" model="account.report.line">
+                        <field name="name">VP1 - Subcontracting</field>
+                        <field name="name@it">VP1 - Subappaltatore</field>
+                        <field name="code">xml_subcontracting</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp1_subcontracting_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">boolean</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp1_exceptional_events" model="account.report.line">
+                        <field name="name">VP1 - Exceptional Events</field>
+                        <field name="name@it">VP1 - Eventi Eccezionali</field>
+                        <field name="code">xml_exceptional_events</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp1_exceptional_events_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">boolean</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp1_extraordinary_operations" model="account.report.line">
+                        <field name="name">VP1 - Extraordinary Operations</field>
+                        <field name="name@it">VP1 - Operazioni Straordinarie</field>
+                        <field name="code">xml_extraordinary_operations</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp1_extraordinary_operations_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">boolean</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_operazione_imponibile" model="account.report.line">
+                <field name="name">Taxable transactions</field>
+                <field name="name@it">Operazioni imponibili</field>
+                <field name="code">h1</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp2" model="account.report.line">
+                        <field name="name">VP2 - Total active transactions</field>
+                        <field name="name@it">VP2 - Totale operazioni attive</field>
+                        <field name="code">VP2</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp2_debit" model="account.report.expression">
+                                <field name="label">debit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-02</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp3" model="account.report.line">
+                        <field name="name">VP3 - Total passive transactions</field>
+                        <field name="name@it">VP3 - Totale operazioni passive</field>
+                        <field name="code">VP3</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp3_debit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">03</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_iva" model="account.report.line">
+                <field name="name">VAT</field>
+                <field name="name@it">IVA</field>
+                <field name="code">h2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp4" model="account.report.line">
+                        <field name="name">VP4 - VAT due</field>
+                        <field name="name@it">VP4 - IVA esigibile</field>
+                        <field name="code">VP4</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp4_debit" model="account.report.expression">
+                                <field name="label">debit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4v</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp5" model="account.report.line">
+                        <field name="name">VP5 - VAT Deductible</field>
+                        <field name="name@it">VP5 - IVA detraibile</field>
+                        <field name="code">VP5</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp5_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5v</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_saldi_riporti_e_interessi" model="account.report.line">
+                <field name="name">Balances, carryovers and interest</field>
+                <field name="name@it">Saldi, riporti e interessi</field>
+                <field name="code">h3</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp6" model="account.report.line">
+                        <field name="name">VP6 - VAT due/deductible</field>
+                        <field name="name@it">VP6 - IVA dovuta o a credito</field>
+                        <field name="code">VP6</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp6_vp6a_debit" model="account.report.expression">
+                                <field name="label">debit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP4.debit - VP5.credit</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="blank_if_zero" eval="True"/>
+                            </record>
+                            <record id="tax_monthly_report_line_vp6_vp6b_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP5.credit - VP4.debit</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="blank_if_zero" eval="True"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp7" model="account.report.line">
+                        <field name="name">VP7 - Previous period debt not to exceed 100,00</field>
+                        <field name="name@it">VP7 - Debito periodo precedente non superiore 100,00</field>
+                        <field name="code">VP7</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp7_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-vp7</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp7_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_debit</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp7_debit" model="account.report.expression">
+                                <field name="label">debit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP7._applied_carryover_debit + VP7.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp8" model="account.report.line">
+                        <field name="name">VP8 - Previous period credit</field>
+                        <field name="name@it">VP8 - Credito periodo precedente</field>
+                        <field name="code">VP8</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp8_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp8</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp8_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_credit</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp8_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP8._applied_carryover_credit + VP8.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp9" model="account.report.line">
+                        <field name="name">VP9 - Previous year credit</field>
+                        <field name="name@it">VP9 - Credito anno precedente</field>
+                        <field name="code">VP9</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp9_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp9</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp9_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp9_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP9._applied_carryover_balance + VP9.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp10" model="account.report.line">
+                        <field name="name">VP10 - EU car payments</field>
+                        <field name="name@it">VP10 - Versamenti auto UE</field>
+                        <field name="code">VP10</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp10_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp11" model="account.report.line">
+                        <field name="name">VP11 - Tax Credit</field>
+                        <field name="name@it">VP11 - Credito d'imposta</field>
+                        <field name="code">VP11</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp11_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp12" model="account.report.line">
+                        <field name="name">VP12 - Interest due for quarterly settlements</field>
+                        <field name="name@it">VP12 - Interessi dovuti per liquidazioni trimestrali</field>
+                        <field name="code">VP12</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp12_debit" model="account.report.expression">
+                                <field name="label">debit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-vp12</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_monthly_report_line_vp13" model="account.report.line">
+                        <field name="name">VP13 - Down payment due</field>
+                        <field name="name@it">VP13 - Acconto dovuto</field>
+                        <field name="code">VP13</field>
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp13_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp13</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_monthly_report_line_conto_corrente_iva" model="account.report.line">
+                <field name="name">VAT account</field>
+                <field name="name@it">Conto IVA</field>
+                <field name="code">h4</field>
+                <field name="children_ids">
+                    <record id="tax_monthly_report_line_vp14" model="account.report.line">
+                        <field name="name">VP14 - VAT payable</field>
+                        <field name="name@it">VP14 - IVA da versare</field>
+                        <field name="code">VP14</field>
+
+                        <field name="expression_ids">
+                            <record id="tax_monthly_report_line_vp14_vp14a_debit" model="account.report.expression">
+                                <field name="label">debit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(VP6.debit + VP7.debit + VP12.debit) - (VP8.credit + VP9.credit + VP10.credit + VP11.credit + VP13.credit)</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp14_vp14a_carryover" model="account.report.expression">
+                                <field name="label">_carryover_debit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP14.debit</field>
+                                <field name="subformula">if_between(EUR(0), EUR(100))</field>
+                                <field name="carryover_target">VP7._applied_carryover_debit</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp14_vp14b_credit" model="account.report.expression">
+                                <field name="label">credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(VP6.credit + VP8.credit + VP9.credit + VP10.credit + VP11.credit + VP13.credit) - (VP7.debit + VP12.debit)</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="tax_monthly_report_line_vp14_vp14b_carryover" model="account.report.expression">
+                                <field name="label">_carryover_credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP14.credit</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="carryover_target">VP8._applied_carryover_credit</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

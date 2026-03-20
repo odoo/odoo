@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="diot_report" model="account.report">
+        <field name="name">DIOT</field>
+        <field name="name@es_419">DIOT</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="filter_unfold_all" eval="False"/>
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_partner" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="diot_report_paid_8_n_wnc" model="account.report.column">
+                <field name="name">Paid 8 % Northern</field>
+                <field name="expression_label">paid_8_n_wnc</field>
+                <field name="sequence">10</field>
+            </record>
+            <record id="diot_report_paid_8_n_r" model="account.report.column">
+                <field name="name">Refunds 8 % Northern</field>
+                <field name="expression_label">refunds_8_n</field>
+                <field name="sequence">11</field>
+            </record>
+            <record id="diot_report_paid_8_s_wnc" model="account.report.column">
+                <field name="name">Paid 8 % Southern</field>
+                <field name="expression_label">paid_8_s_wnc</field>
+                <field name="sequence">12</field>
+            </record>
+            <record id="diot_report_paid_8_s_r" model="account.report.column">
+                <field name="name">Refunds 8 % Southern</field>
+                <field name="expression_label">refunds_8_s</field>
+                <field name="sequence">13</field>
+            </record>
+            <record id="diot_report_paid_16_wnc" model="account.report.column">
+                <field name="name">Paid 16%</field>
+                <field name="name@es_419">Pagado al 16%</field>
+                <field name="expression_label">paid_16_wnc</field>
+                <field name="sequence">14</field>
+            </record>
+            <record id="diot_report_paid_16_r" model="account.report.column">
+                <field name="name">Refunds 16%</field>
+                <field name="expression_label">refunds_16</field>
+                <field name="sequence">15</field>
+            </record>
+            <record id="diot_report_paid_16_imp_wnc" model="account.report.column">
+                <field name="name">Importation 16%</field>
+                <field name="name@es_419">Importación al 16%</field>
+                <field name="expression_label">paid_16_imp_wnc</field>
+                <field name="sequence">16</field>
+            </record>
+            <record id="diot_report_paid_16_imp_r" model="account.report.column">
+                <field name="name">Refunds Importation 16%</field>
+                <field name="expression_label">refunds_16_imp</field>
+                <field name="sequence">17</field>
+            </record>
+            <record id="diot_report_paid_16_imp_int_wnc" model="account.report.column">
+                <field name="name">Intangible Imports 16%</field>
+                <field name="expression_label">paid_16_imp_int_wnc</field>
+                <field name="sequence">18</field>
+            </record>
+            <record id="diot_report_paid_16_imp_int_r" model="account.report.column">
+                <field name="name">Refunds Intangible Imports 16%</field>
+                <field name="expression_label">refunds_16_imp_int</field>
+                <field name="sequence">19</field>
+            </record>
+
+            <record id="diot_report_paid_8_n" model="account.report.column">
+                <field name="name">Paid 8 % N. - Creditable</field>
+                <field name="expression_label">paid_8_tax</field>
+                <field name="sequence">20</field>
+            </record>
+            <record id="diot_report_paid_8_s" model="account.report.column">
+                <field name="name">Paid 8 % S. - Creditable</field>
+                <field name="expression_label">paid_8_s_tax</field>
+                <field name="sequence">21</field>
+            </record>
+            <record id="diot_report_paid_16" model="account.report.column">
+                <field name="name">Paid 16% - Creditable</field>
+                <field name="expression_label">paid_16_tax</field>
+                <field name="sequence">22</field>
+            </record>
+            <record id="diot_report_paid_16_imp" model="account.report.column">
+                <field name="name">Importation 16% - Creditable</field>
+                <field name="expression_label">importation_16_tax</field>
+                <field name="sequence">23</field>
+            </record>
+            <record id="diot_report_paid_16_imp_int" model="account.report.column">
+                <field name="name">Intangible Imports 16% - Creditable</field>
+                <field name="expression_label">paid_16_imp_int_tax</field>
+                <field name="sequence">24</field>
+            </record>
+
+            <record id="diot_report_paid_8_n_nc" model="account.report.column">
+                <field name="name">Paid 8 % N. - Non-Creditable</field>
+                <field name="expression_label">paid_8_non_cred_tax</field>
+                <field name="sequence">25</field>
+            </record>
+            <record id="diot_report_paid_8_s_nc" model="account.report.column">
+                <field name="name">Paid 8 % S. - Non-Creditable</field>
+                <field name="expression_label">paid_8_s_nc_tax</field>
+                <field name="sequence">26</field>
+            </record>
+            <record id="diot_report_paid_16_nc" model="account.report.column">
+                <field name="name">Paid 16% - Non-Creditable</field>
+                <field name="name@es_419">Pagado al 16% - No acreditable</field>
+                <field name="expression_label">paid_16_non_cred_tax</field>
+                <field name="sequence">27</field>
+            </record>
+            <record id="diot_report_paid_16_imp_nc" model="account.report.column">
+                <field name="name">Importation 16% - Non-Creditable</field>
+                <field name="expression_label">paid_16_imp_nc_tax</field>
+                <field name="sequence">28</field>
+            </record>
+            <record id="diot_report_paid_16_imp_int_nc" model="account.report.column">
+                <field name="name">Intangible Imports 16% - Non-Creditable</field>
+                <field name="expression_label">paid_16_imp_int_nc_tax</field>
+                <field name="sequence">29</field>
+            </record>
+
+            <record id="diot_report_withheld" model="account.report.column">
+                <field name="name">Withheld</field>
+                <field name="name@es_419">Retenido</field>
+                <field name="expression_label">withheld</field>
+                <field name="sequence">30</field>
+            </record>
+            <record id="diot_report_exempt_imp" model="account.report.column">
+                <field name="name">Exempt Imports</field>
+                <field name="expression_label">exempt_imp</field>
+                <field name="sequence">31</field>
+            </record>
+            <record id="diot_report_exempt" model="account.report.column">
+                <field name="name">Exempt</field>
+                <field name="name@es_419">Exento</field>
+                <field name="expression_label">exempt</field>
+                <field name="sequence">32</field>
+            </record>
+            <record id="diot_report_paid_0" model="account.report.column">
+                <field name="name">Paid 0%</field>
+                <field name="name@es_419">Pagado al 0%</field>
+                <field name="expression_label">paid_0</field>
+                <field name="sequence">33</field>
+            </record>
+            <record id="diot_report_no_obj" model="account.report.column">
+                <field name="name">No Tax Object</field>
+                <field name="expression_label">no_obj</field>
+                <field name="sequence">34</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="diot_report_line" model="account.report.line">
+                <field name="name">DIOT</field>
+                <field name="name@es_419">DIOT</field>
+                <field name="groupby">partner_id, id</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_mx_diot_paid_8_tag" model="account.report.expression">
+                        <field name="label">paid_8</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% N.</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_non_cred_tag" model="account.report.expression">
+                        <field name="label">paid_8_non_cred</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% N. NO ACREDITABLE</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_tax_tag" model="account.report.expression">
+                        <field name="label">paid_8_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% N. TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_non_cred_tax_tag" model="account.report.expression">
+                        <field name="label">paid_8_non_cred_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% N. NO ACREDITABLE TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_s_tag" model="account.report.expression">
+                        <field name="label">paid_8_s</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% S.</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_s_nc_tag" model="account.report.expression">
+                        <field name="label">paid_8_s_nc</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% S. NO ACREDITABLE</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_s_tax_tag" model="account.report.expression">
+                        <field name="label">paid_8_s_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% S. TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_s_nc_tax_tag" model="account.report.expression">
+                        <field name="label">paid_8_s_nc_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 8% S. NO ACREDITABLE TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_tag" model="account.report.expression">
+                        <field name="label">paid_16</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16%</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_non_cred_tag" model="account.report.expression">
+                        <field name="label">paid_16_non_cred</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% NO ACREDITABLE</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_tax_tag" model="account.report.expression">
+                        <field name="label">paid_16_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_non_cred__tax_tag" model="account.report.expression">
+                        <field name="label">paid_16_non_cred_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% NO ACREDITABLE TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_importation_16_tag" model="account.report.expression">
+                        <field name="label">importation_16</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP</field>
+                    </record>
+                    <record id="tax_report_mx_diot_16_imp_nc_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_nc</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP NO ACREDITABLE</field>
+                    </record>
+                    <record id="tax_report_mx_diot_importation_16_tax_tag" model="account.report.expression">
+                        <field name="label">importation_16_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_16_imp_nc_tax_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_nc_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP NO ACREDITABLE TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_16_imp_int_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_int</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP INT</field>
+                    </record>
+                    <record id="tax_report_mx_diot_16_imp_int_nc_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_int_nc</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP INT NO ACREDITABLE</field>
+                    </record>
+                    <record id="tax_report_mx_diot_16_imp_int_tax_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_int_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP INT TAX</field>
+                    </record>
+                    <record id="tax_report_mx_diot_16_imp_int_nc_tax_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_int_nc_tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 16% IMP INT NO ACREDITABLE TAX</field>
+                    </record>
+
+                    <record id="tax_report_mx_diot_refunds_8_n_tag" model="account.report.expression">
+                        <field name="label">refunds_8_n</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Refunds 8% N.</field>
+                    </record>
+                    <record id="tax_report_mx_diot_refunds_8_s_tag" model="account.report.expression">
+                        <field name="label">refunds_8_s</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Refunds 8% S.</field>
+                    </record>
+                    <record id="tax_report_mx_diot_refunds_16_tag" model="account.report.expression">
+                        <field name="label">refunds_16</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Refunds 16%</field>
+                    </record>
+                    <record id="tax_report_mx_diot_refunds_16_imp_tag" model="account.report.expression">
+                        <field name="label">refunds_16_imp</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Refunds 16% IMP</field>
+                    </record>
+                    <record id="tax_report_mx_diot_refunds_16_imp_int_tag" model="account.report.expression">
+                        <field name="label">refunds_16_imp_int</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Refunds 16% IMP INT</field>
+                    </record>
+
+                    <record id="tax_report_mx_diot_paid_8_n_wnc_tag" model="account.report.expression">
+                        <field name="label">paid_8_n_wnc</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 8% N.'), ('tax_tag_ids', '=', 'DIOT: 8% N.'), ('tax_tag_ids', '=', 'DIOT: 8% N. NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 8% N. NO ACREDITABLE')]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_8_s_wnc_tag" model="account.report.expression">
+                        <field name="label">paid_8_s_wnc</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 8% S.'), ('tax_tag_ids', '=', 'DIOT: 8% S.'), ('tax_tag_ids', '=', 'DIOT: 8% S. NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 8% S. NO ACREDITABLE')]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_wnc_tag" model="account.report.expression">
+                        <field name="label">paid_16_wnc</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 16%'), ('tax_tag_ids', '=', 'DIOT: 16%'), ('tax_tag_ids', '=', 'DIOT: 16% NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 16% NO ACREDITABLE')]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_imp_wnc_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_wnc</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 16% IMP'), ('tax_tag_ids', '=', 'DIOT: 16% IMP'), ('tax_tag_ids', '=', 'DIOT: 16% IMP NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 16% IMP NO ACREDITABLE')]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+                    <record id="tax_report_mx_diot_paid_16_imp_int_wnc_tag" model="account.report.expression">
+                        <field name="label">paid_16_imp_int_wnc</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 16% IMP INT'), ('tax_tag_ids', '=', 'DIOT: 16% IMP INT'), ('tax_tag_ids', '=', 'DIOT: 16% IMP INT NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 16% IMP INT NO ACREDITABLE')]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+
+                    <record id="tax_report_mx_diot_paid_0_tag" model="account.report.expression">
+                        <field name="label">paid_0</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: 0%</field>
+                    </record>
+                    <record id="tax_report_mx_diot_exempt_tag" model="account.report.expression">
+                        <field name="label">exempt</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: Exento</field>
+                    </record>
+                    <record id="tax_report_mx_diot_exempt_imp_tag" model="account.report.expression">
+                        <field name="label">exempt_imp</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: Exento Imports</field>
+                    </record>
+                    <record id="tax_report_mx_diot_withheld_tag" model="account.report.expression">
+                        <field name="label">withheld</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Retención</field>
+                    </record>
+                    <record id="tax_report_mx_diot_refunds_tag" model="account.report.expression">
+                        <field name="label">refunds</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-DIOT: Refunds</field>
+                    </record>
+                    <record id="tax_report_mx_diot_no_obj_tag" model="account.report.expression">
+                        <field name="label">no_obj</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DIOT: No Tax Object</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,9 @@
+<templates>
+    <t t-name="mass_mailing.FontFamilyPicker">
+        <BuilderSelect className="props.extraClass" action="this.props.action" actionParam="this.props.actionParam">
+            <t t-foreach="this.FONT_FAMILIES" t-as="fontFamily" t-key="fontFamily">
+                <BuilderSelectItem t-out="fontFamily" actionValue="fontFamily_value"/>
+            </t>
+        </BuilderSelect>
+    </t>
+</templates>

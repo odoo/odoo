@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.LanguageSelector">
+        <button t-if="languages.length > 1" t-on-click="openLanguages"
+                class="o_self_language_selector btn btn-light btn-lg border-light d-flex align-items-center px-3" t-attf-class="{{ props.extraClass }}">
+            <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}"/>
+            <span t-esc="currentLanguage.display_name" class="ms-3"></span>
+        </button>
+    </t>
+</templates>

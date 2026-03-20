@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.partnership</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='website_partnership_settings']" position="inside">
+                <a class="oe_link fw-bold" href="/partners" target="_blank" invisible="not module_website_partnership">
+                    <i class="oi oi-arrow-right"/>
+                    Edit Page
+                </a>
+            </xpath>
+        </field>
+    </record>
+</odoo>

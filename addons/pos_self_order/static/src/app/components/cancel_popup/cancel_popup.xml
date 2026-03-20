@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.CancelPopup">
+        <div class="self_order_cancel_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-warning border border-white border-5">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"/>
+                            </div>
+                            <div class="mt-4 pb-4 mt-lg-5 pb-lg-5 text-center fs-2">
+                                Are you sure you want to cancel this order?
+                            </div>
+                            <div class="d-grid d-md-flex flex-wrap justify-content-md-center gap-2 gap-md-3">
+                                <button type="button" class="btn btn-primary kiosk-p-btn-lg popup_button" t-on-click="() => this.confirm()">Cancel Order</button>
+                                <button type="button" class="btn btn-secondary kiosk-p-btn-lg popup_button" t-on-click="() => this.props.close()">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

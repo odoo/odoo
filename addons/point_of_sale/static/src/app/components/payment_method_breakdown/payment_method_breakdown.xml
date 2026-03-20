@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.PaymentMethodBreakdown">
+        <AccordionItem disabled="props.transactions.length === 0">
+            <t t-set-slot="header">
+                <div class="name-amount d-flex justify-content-between w-100">
+                    <span t-esc="props.title"/>
+                    <span>
+                        <span class="cash-sign me-1" t-esc="props.total_amount &lt; 0 ? '-' : '+'" />
+                        <t t-esc="env.utils.formatCurrency(Math.abs(props.total_amount))"/>
+                    </span>
+                </div>
+            </t>
+            <t t-set-slot="content">
+                <div class="border-start small text-muted d-flex flex-column ps-2 ms-1">
+                    <div t-foreach="props.transactions" t-as="payment" t-key="payment.id" class="d-flex justify-content-between">
+                        <span t-esc="payment.name"/>
+                        <span>
+                            <span class="cash-sign me-1" t-esc="payment.amount &lt; 0 ? '-' : '+'" />
+                            <t t-esc="env.utils.formatCurrency(Math.abs(payment.amount))"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </AccordionItem>
+    </t>
+</templates>

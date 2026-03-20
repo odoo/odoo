@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.SelectLotPopup">
+        <Dialog size="'md'">
+            <t t-set-slot="header">
+                <h4 class="modal-title title">
+                    <span t-esc="props.title"/> <span class="fst-italic" t-esc="props.name"/>
+                </h4>
+            </t>
+            <div t-ref="root" class="lot-container" t-on-keydown="onKeyDown">
+                <t t-if="!props.isSingleItem" t-foreach="state.values" t-as="v" t-key="v.id">
+                    <div class="lot-item input-group mb-2">
+                        <span class="form-control" t-esc="v.text"/>
+                        <button class="btn btn-danger" t-on-click="() => this.removeItem(v.id)">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                </t>
+                <AutoComplete
+                    placeholder.translate="Lot/Serial number"
+                    sources="getSources()"
+                    value="state.value"
+                    autoSelect="true"
+                    autofocus="true"
+                    input="inputRef"
+                />
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary btn-lg" t-on-click="confirm">Apply</button>
+                <button class="btn btn-secondary btn-lg" t-on-click="close">Discard</button>
+            </t>
+       </Dialog>
+    </t>
+</templates>

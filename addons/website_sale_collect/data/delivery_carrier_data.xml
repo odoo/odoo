@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="carrier_pick_up_in_store" model="delivery.carrier" forcecreate="0">
+        <field name="name">Pick up in store</field>
+        <field name="delivery_type">in_store</field>
+        <field name="product_id" ref="website_sale_collect.product_pick_up_in_store"/>
+        <field name="website_id" ref="website.default_website"/>
+        <field name="prod_environment" eval="True"/>
+    </record>
+
+</odoo>

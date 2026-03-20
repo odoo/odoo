@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.pos_sale_details_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <body>
+                    <div class="pos-receipt">
+                        <div class="w-100 text-center mb-3" name="logo">
+                            <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
+                        </div>
+
+
+                        <t t-set="products" t-value="extra_data['sold']"/>
+                        <t t-if="len(products)">
+                            <div class="text-large text-center text-bold">
+                                SOLD:
+                            </div>
+                            <t t-call="point_of_sale.pos_sale_details_receipt_product_line"/>
+                        </t>
+
+                        <t t-set="products" t-value="extra_data['refund']"/>
+                        <t t-if="len(products)">
+                            <hr class="my-2" style="border: none; border-top: 2px dashed black;"/>
+                            <div class="text-large text-center text-bold">
+                                REFUNDED:
+                            </div>
+                            <t t-call="point_of_sale.pos_sale_details_receipt_product_line"/>
+                        </t>
+
+
+                        <hr class="my-2" style="border: none; border-top: 2px dashed black;"/>
+                        <div class="text-large text-center text-bold">
+                            PAYMENTS:
+                        </div>
+                        <table class="w-100">
+                            <tbody>
+                                <tr t-foreach="extra_data['payments']" t-as="payment" class="text-normal">
+                                    <td class="text-start w-70 overflow-hidden" t-out="payment['name']" />
+                                    <td class="text-end w-50 " t-out="payment['total']" />
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr class="my-2" style="border: none; border-top: 2px dashed black;"/>
+                        <div class="text-large text-center text-bold">
+                            TAXES:
+                        </div>
+                        <table class="w-100">
+                            <tbody>
+                                <tr t-foreach="extra_data['taxes']" t-as="tax" class="text-normal">
+                                    <td class="text-start w-70 text-break" t-out="tax['name']" />
+                                    <td class="text-end w-50 " t-out="tax['tax_amount']" />
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr class="my-2" style="border: none; border-top: 2px dashed black;"/>
+                        <div class="text-large text-center text-bold">
+                            TOTAL:
+                        </div>
+                        <table class="w-100">
+                            <tbody>
+                                <tr class="text-normal">
+                                    <td class="text-start w-70 text-break">Total paid</td>
+                                    <td class="text-end w-50 " t-out="extra_data['total_paid']" />
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-call="point_of_sale.company_info_receipt" />
+                    </div>
+                </body>
+            </html>
+        </template>
+        <template id="point_of_sale.pos_sale_details_receipt_product_line">
+            <div t-foreach="products" t-as="category" class="w-100">
+                <table class="w-100">
+                    <tbody>
+                        <tr>
+                            <td class="text-start text-bold text-large">
+                                <t t-out="category['total_quantity']" />x <t t-out="category['category_name']" />
+                            </td>
+                            <td t-out="category['total']" class="text-end text-bold text-large" />
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="w-100">
+                    <tbody>
+                        <tr t-foreach="category['products']" t-as="line" class="text-normal">
+                            <td class="text-start w-70 text-break">
+                                <t t-out="line['quantity']"/>x <t t-out="line['name']" />
+                            </td>
+                            <td class="text-end w-50" t-out="line['total_paid']" />
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo>

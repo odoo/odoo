@@ -1,0 +1,25 @@
+.o_field_res_user_group_ids_privilege {
+    @mixin o-custom-checkbox($color) {
+        $background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" stroke="#{$color}" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/></svg>');
+        border-color: $color;
+        background-image: escape-svg($background) !important;
+    }
+
+    .o_is_disjoint:not(.o_is_implied) .o-checkbox > input {
+        background-color: $danger;
+        border-color: $danger;
+    }
+    .o_is_implied:not(.o_is_disjoint) .o-checkbox > input {
+        @include o-custom-checkbox($form-check-input-checked-bg-color);
+    }
+    .o_is_implied.o_is_disjoint .o-checkbox > input {
+        @include o-custom-checkbox($danger);
+    }
+
+    .o_group_info_button.fa-info-circle {
+        opacity: 0.2;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+.o_todo_form_view {
+    .o_form_sheet_bg {
+        .o_form_sheet {
+            .oe_title {
+                max-width: initial;
+            }
+
+            .o_widget_todo_archived > .ribbon {
+                margin-top: 0px;
+            }
+        }
+    }
+    .o_task_state_widget {
+        font-size: large;
+    }
+    @include media-breakpoint-up(xxl) {
+        .o_widget_todo_chatter_panel {
+            width: 35%;
+        }
+    }
+    @include media-breakpoint-down(xxl) {
+        .o_widget_todo_chatter_panel {
+            min-width: 100%;
+        }
+    }
+}
+
+.o_todo_hide_avatar .o_avatar {
+    display: none;
+}

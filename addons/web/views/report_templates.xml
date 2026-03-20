@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Private templates used internally by reports -->
+
+    <template id="report_layout" name="Report layout">&lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')"
+              t-att-data-report-margin-top="data_report_margin_top"
+              t-att-data-report-header-spacing="data_report_header_spacing"
+              t-att-data-report-dpi="data_report_dpi"
+              t-att-data-report-landscape="data_report_landscape"
+              t-att-web-base-url="web_base_url">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="initial-scale=1"/>
+                <title><t t-out="title or 'Odoo Report'"/></title>
+                <t t-call-assets="web.report_assets_common" t-autoprefix="true"/>
+                <!-- Temporary code: only used to maintain CSS for legacy HTML reports (full width...) -->
+                <!-- Should be removed once the reports are fully converted. -->
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', () =&gt; {
+                        if (window.self !== window.top) {
+                            document.body.classList.add("o_in_iframe", "container-fluid");
+                            document.body.classList.remove("container");
+                        }
+                    });
+                </script>
+            </head>
+            <body t-attf-class="o_body_html {{'container' if not full_width else 'container-fluid'}} overflow-x-hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                <div id="wrapwrap">
+                    <main>
+                        <t t-out="0"/>
+                    </main>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="report_preview_layout" name="Report layout">&lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')"
+              t-att-data-report-margin-top="data_report_margin_top"
+              t-att-data-report-header-spacing="data_report_header_spacing"
+              t-att-data-report-dpi="data_report_dpi"
+              t-att-data-report-landscape="data_report_landscape"
+              t-att-web-base-url="web_base_url"
+        >
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="initial-scale=1"/>
+                <title><t t-out="title or 'Odoo Report'"/></title>
+                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <style>
+                    <t t-out="preview_css"/>
+
+                    /**
+                        Some css is overridden as it doesn't work properly in the preview.
+                        Before generating 'real' reports, a lot of processing is applied. It is therefore quite
+                        complicated to have an almost exact replica of the pdf report.
+                        This changes down here are hacks to make the preview look as good as possible.
+                    **/
+                    .article {
+                        z-index: -2;
+                    }
+
+                    .loading-spinner {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        border-top: 8px solid #e3e3e3;
+                        border-radius: 50%;
+                        width: 60px;
+                        height: 60px;
+                        animation: spin 1s linear infinite;
+                    }
+
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            </head>
+            <body class="o_body_html container-fluid" style="overflow:hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                <!-- display a spinner instead of the iframe content until the stylesheet is loaded -->
+                <div id="wrapwrap" class="d-block d-flex flex-column h-100" style="display:none;">
+                    <t t-out="0"/>
+                </div>
+                <div class="loading-spinner d-none"/>
+            </body>
+        </html>
+    </template>
+
+    <template id="html_container">
+        <t t-set="body_classname" t-value="'container'"/>
+        <t t-call="web.report_layout">
+            <t t-out="0"/>
+        </t>
+    </template>
+
+    <template id="html_preview_container">
+        <t t-call="web.report_preview_layout">
+            <t t-out="0"/>
+        </t>
+    </template>
+
+
+    <template id="report_invoice_wizard_preview">
+        <t t-set="is_preview" t-value="True"/>
+        <t t-call="web.html_preview_container">
+            <t t-set="address">
+                <address class="mb-0" itemscope="itemscope"
+                        itemtype="http://schema.org/Organization">
+                    <div>
+                        <span itemprop="name">Acme Corporation</span>
+                    </div>
+                    <div itemprop="address" itemscope="itemscope"
+                        itemtype="http://schema.org/PostalAddress">
+                        <div class="d-flex align-items-baseline">
+                            <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                                Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
+                        </div>
+                    </div>
+                </address>
+            </t>
+            <t t-set="layout_document_title">
+                <span>Invoice</span>
+                <span>INV/2023/00003</span>
+            </t>
+            <t
+                t-call="web.external_layout"
+                address="address"
+                layout_document_title="layout_document_title"
+            >
+                <div class="page">
+                    <div id="informations" class="row mb-4">
+                        <div class="col" name="invoice_date">
+                            <strong>Invoice Date</strong>
+                            <div>07/08/2020</div>
+                        </div>
+                        <div class="col" name="due_date">
+                            <strong>Due Date</strong>
+                            <div>08/07/2020</div>
+                        </div>
+                    </div>
+                    <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
+                        <thead>
+                            <tr>
+                                <th name="th_description" class="text-start"><span>Description</span></th>
+                                <th name="th_quantity" class="text-end"><span>Quantity</span></th>
+                                <th name="th_priceunit" class="text-end d-md-table-cell text-nowrap"><span>Unit Price</span></th>
+                                <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
+                                <th name="th_subtotal" class="text-end">
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <tr>
+                                <td class="w-100" name="account_invoice_line_name">
+                                    <span>
+                                        [FURN_8999] Three-Seat Sofa<br/>
+                                        Three Seater Sofa with Lounger in Steel Grey Colour
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span>5.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span class="text-nowrap">1,500.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="text-end o_price_total">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td name="account_invoice_line_name"><span>[FURN_8220] Four Person Desk<br/>
+                                    Four person modern office workstation</span></td>
+                                <td class="text-end">
+                                    <span>5.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span class="text-nowrap">2,350.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="text-end o_price_total">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-100" name="account_invoice_line_name">
+                                    <span>
+                                        [FURN_7777] Office Chair<br/>
+                                        Comfortable yellow chair for daily work
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span>20.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-nowrap">70.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="o_price_total text-end">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">1,400.00</span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-100" name="account_invoice_line_name">
+                                    <span>
+                                        Chair floor protection<br/>
+                                        Office chairs can harm your floor: protect it
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span>20.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-nowrap">12.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="o_price_total text-end">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">240.00</span></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="right-elements" class="float-end ms-auto">
+                        <div id="total" class="clearfix row mt-n3">
+                            <div class="ms-auto">
+                                <table class="o_total_table table table-borderless">
+                                    <tbody>
+                                        <tr class="o_subtotal">
+                                            <td>
+                                                <strong>Untaxed Amount</strong>
+                                            </td>
+                                            <td class="text-end">
+                                                <span>$ <span class="oe_currency_value">24,090.00</span></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="o_taxes">
+                                            <td>
+                                                <span class="text-nowrap">Tax 15%</span>
+                                            </td>
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap">$ 3,613.50</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="o_total">
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-end">
+                                                <strong class="text-nowrap">
+                                                    $ <span class="oe_currency_value">27,703.50</span>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="payment_term" class="mt-4">
+                        <div class="mb-3">
+                            <p name="payment_term">
+                                <span>Payment terms: 30 Days</span>
+                            </p>
+                            <p name="payment_communication">
+                                Payment Communication: <b><span>INV/2023/00003</span></b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="minimal_layout">
+        &lt;!DOCTYPE html&gt;
+        <html style="height: 0;">
+            <head>
+                <base t-att-href="base_url"/>
+                <t t-call-assets="web.report_assets_pdf" t-js="false" t-autoprefix="true"/>
+                <t t-call-assets="web.report_assets_common" t-js="false" t-autoprefix="true"/>
+                <t t-call-assets="web.report_assets_pdf" t-css="false"/>
+                <meta charset="utf-8"/>
+                <script t-if="subst">
+                    function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                            var z = x[i].split('=', 2);
+                            vars[z[0]] = unescape(z[1]);
+                        }
+                        var x = ['sitepage', 'sitepages', 'section', 'subsection', 'subsubsection'];
+                        var z = {'sitepage': 'page', 'sitepages': 'topage'};
+                        for (var i in x) {
+                            var y = document.getElementsByClassName(z[x[i]] || x[i])
+                            for (var j=0; j&lt;y.length; ++j)
+                                y[j].textContent = vars[x[i]];
+                        }
+
+                        var index = vars['webpage'].split('.', 4)[3];
+                        var header = document.getElementById('minimal_layout_report_headers');
+                        if(header){
+                            var companyHeader = header.children[index];
+                            header.textContent = '';
+                            header.appendChild(companyHeader);
+                        }
+                        var footer = document.getElementById('minimal_layout_report_footers');
+                        if(footer){
+                            var companyFooter = footer.children[index];
+                            footer.textContent = '';
+                            footer.appendChild(companyFooter);
+                        }
+                    }
+                </script>
+            </head>
+            <body t-attf-class="o_body_pdf {{env['ir.actions.report'].get_paperformat_by_xmlid(report_xml_id).css_margins and 'o_css_margins'}} container overflow-hidden" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                <t t-out="body"/>
+            </body>
+        </html>
+    </template>
+
+    <!-- External layouts styles -->
+
+    <template id="address_layout">
+        <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ms-auto'"/>
+        <div t-if="address" t-attf-class="address row {{custom_address_spacing or 'mb-4'}}" title="This block is not always present depending on the printed document.">
+            <t t-if="information_block">
+                <t t-set="colclass" t-value="'col-5 offset-1'"/>
+                <div name="information_block" class="col-6">
+                    <t t-out="information_block or None">
+                        <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
+                            <strong>Information block</strong>
+                            <div>Usually contains a source address or a complementary address.</div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <div name="address" t-att-class="not custom_layout_address and colclass or information_block and colclass">
+                <t t-out="address or None">
+                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
+                        <strong>Address block</strong>
+                        <div>Usually contains the address of the document's recipient.</div>
+                    </div>
+                </t>
+            </div>
+        </div>
+        <div class="oe_structure" t-else=""></div>
+    </template>
+
+    <template id="company_address_list">
+        <ul class="list-unstyled" name="company_address_list">
+            <li t-if="company.is_company_details_empty">
+                <span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                        <strong>Company address block</strong>
+                        <div>Contains the company address.</div>
+                    </div>
+                </span>
+            </li>
+            <li t-else="">
+                <span t-field="company.company_details">
+                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                        <strong>Company details block</strong>
+                        <div>Contains the company details.</div>
+                    </div>
+                </span>
+            </li>
+            <li t-if="not forced_vat"/>
+            <li t-else="">
+                <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                <span t-out="forced_vat">US12345671</span>
+            </li>
+        </ul>
+    </template>
+
+    <template id="external_layout_footer_content">
+        <div t-attf-class="o_footer_content {{footer_content_classes}}">
+            <table class="table-borderless w-100">
+                <t t-set="footer_additionnal_content">
+                    <strong
+                        t-if="not is_html_empty(company.report_header) and is_tagline_footer"
+                        t-field="company.report_header"
+                        class="o_company_tagline"
+                        t-attf-class="{{is_centered_footer and 'w-100' or 'text-nowrap'}}"
+                    >
+                        Company tagline
+                    </strong>
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
+                </t>
+                <t t-set="footer_pager">
+                    <div t-if="report_type == 'pdf'" class="o_footer_pager o_footer_pager_pdf text-nowrap text-muted">Page <span class="page"/> / <span class="topage"/></div>
+                    <div t-if="is_preview" class="o_footer_pager text-nowrap text-muted">Page 1 / 1</div>
+                </t>
+                <tr>
+                    <td class="o_footer_content_text align-top" t-att-rowspan="not is_centered_footer and 2">
+                        <div t-field="company.report_footer"/>
+                    </td>
+                    <td t-if="not is_centered_footer" class="align-top text-end ps-3">
+                        <t t-out="footer_additionnal_content"/>
+                    </td>
+                </tr>
+                <tr t-if="not is_centered_footer and (is_preview or report_type == 'pdf')">
+                    <td class="align-bottom text-end ps-3">
+                        <t t-out="footer_pager"/>
+                    </td>
+                </tr>
+                <tr t-elif="is_centered_footer">
+                    <td class="align-top text-center">
+                        <t t-out="footer_additionnal_content"/>
+                        <t t-out="footer_pager"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+    <template id="external_layout_body">
+        <t
+            t-set="external_layout_body_style_classes"
+            t-value="
+                company.report_tables_id == 'light' and 'o_report_layout_standard o_table_standard' or
+                company.report_tables_id == 'bold' and 'o_report_layout_bold o_table_bold' or
+                company.report_tables_id == 'boxed' and 'o_report_layout_boxed o_table_boxed' or
+                company.report_tables_id == 'striped' and 'o_report_layout_striped o_table_striped' or
+                company.report_tables_id == 'bubble' and 'o_report_layout_bubble o_table_boxed-rounded' or
+                company.report_tables_id == 'column' and 'o_report_layout_column o_table_column' or ''
+            "
+        />
+        <div
+            t-attf-class="o_company_#{company.id}_layout article {{external_layout_body_style_classes}} {{snail_mail_compatible and 'o_snail_mail' or ''}}"
+            t-att-data-oe-model="o and o._name"
+            t-att-data-oe-id="o and o.id"
+            t-att-data-oe-lang="o and o.env.context.get('lang')"
+        >
+            <t t-if="customized_address_layout" t-out="customized_address_layout"/>
+            <t t-elif="not hide_recipient_address" t-call="web.address_layout"/>
+
+            <!-- Required for multiple invoice sending, the heading tag in the
+                body is used to identify invoices -->
+            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title" class="opacity-0 mb-0 h-0"/>
+            <h2 t-if="not hide_title" t-out="layout_document_title"/>
+            <t t-out="0"/>
+        </div>
+    </template>
+
+    <template id="external_layout_standard">
+        <div t-attf-class="o_company_#{company.id}_layout header">
+            <table class="table-borderless">
+                <tr>
+                    <td t-if="company.logo" class="align-top pe-3">
+                        <img class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </td>
+                    <td class="align-top text-start">
+                        <t t-call="web.company_address_list"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout_body" snail_mail_compatible="True">
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <t
+                t-call="web.external_layout_footer_content"
+                is_tagline_footer="True"
+                is_centered_footer="True"
+                footer_content_classes="'border-top pt-2 text-center'"
+            />
+        </div>
+    </template>
+
+    <template id="external_layout_wave">
+        <t t-set="header_shape_height" t-value="'230'"/>
+
+        <div t-attf-class="o_company_#{company.id}_layout header {{report_type != 'pdf' and 'h-0'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 top-0 w-100 z-n1" preserveAspectRatio="none" t-att-height="header_shape_height" viewBox="0 0 1000 240" fill="none">
+                <path d="M1000 230.734C937.384 240.621 803.83 250.266 562.185 220.602C311.343 189.809 104.626 201.375 0 211.598V0.5H1000V230.734Z" t-att-fill="company.primary_color" fill-opacity=".1"/>
+            </svg>
+
+            <div class="d-flex justify-content-between">
+                <div class="w-50">
+                    <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                </div>
+                <div name="company_address" class="w-50 text-end">
+                    <t t-call="web.company_address_list"/>
+                </div>
+            </div>
+        </div>
+        <t t-call="web.external_layout_body" custom_layout_address="True">
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}} w-100" preserveAspectRatio="none" t-att-height="report_type == 'pdf' and '180'" viewBox="0 0 1000 180" fill="none">
+                <path d="M427.731 19.757C686.904 51.3469 898.971 38.039 1000 27.6922V180H0V8.20934C66.363 -0.991089 198.347 -8.20218 427.731 19.757Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
+            </svg>
+            <t
+                t-call="web.external_layout_footer_content"
+                is_centered_footer="True"
+                footer_content_classes="(report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5 ' or '') + 'pt-5 text-center'"
+            />
+        </div>
+    </template>
+
+    <template id="external_layout_bubble">
+        <div t-attf-class="o_company_#{company.id}_layout header {{report_type == 'pdf' and 'pt-5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100">
+                <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
+            </svg>
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-if="company.report_header" class="o_company_tagline fw-bold p-0 pe-2">
+                            <span t-field="company.report_header">
+                                Company tagline
+                            </span>
+                        </td>
+                        <td class="p-0 text-end">
+                            <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <div name="company_address">
+                                <t t-call="web.company_address_list"/>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <t t-set="customized_address_layout">
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
+                            <t t-call="web.address_layout" custom_layout_address="True"/>
+                        </td>
+                        <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                            <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                    <tr t-if="information_block">
+                        <td colspan="2" class="align-bottom p-0">
+                            <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </t>
+        <t t-call="web.external_layout_body"
+            hide_title="True"
+            customized_address_layout="customized_address_layout">
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none">
+                <path d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
+            </svg>
+            <t
+                t-call="web.external_layout_footer_content"
+                is_centered_footer="True"
+                footer_content_classes="(report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5' or '') + ' pt-4 text-center'"
+            />
+        </div>
+    </template>
+
+    <template id="external_layout_folder">
+        <t t-set="header_shape_height" t-value="'174'"/>
+        <div t-attf-class="o_company_#{company.id}_layout header {{report_type != 'pdf' and 'h-0'}}">
+            <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none">
+                    <rect width="100%" t-att-height="header_shape_height"/>
+                </svg>
+                <div class="o_folder_adaptative_shape d-flex flex-start position-relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="d-block flex-grow-1" fill="none" height="100%">
+                        <rect width="100%" height="100%"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="o_folder_angle_shape" width="80" height="100%" viewBox="0 0 80 48" fill="none">
+                        <path d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
+                    </svg>
+                    <h2 t-attf-class="{{layout_document_title and 'o_folder_title mt-2 text-nowrap' or 'w-25'}}">
+                        <t t-out="layout_document_title"/>
+                    </h2>
+                </div>
+            </div>
+            <div class="o_folder_company_info d-flex justify-content-between">
+                <div class="w-50">
+                    <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                </div>
+                <div name="company_address" class="w-50 text-end">
+                    <t t-call="web.company_address_list"/>
+                </div>
+            </div>
+        </div>
+        <t t-set="customized_address_layout">
+            <div class="pt-2">
+                <t t-call="web.address_layout" custom_layout_address="True"/>
+            </div>
+        </t>
+        <t t-call="web.external_layout_body"
+            hide_title="True"
+            customized_address_layout="customized_address_layout">
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <t t-call="web.external_layout_footer_content" footer_content_classes="'border-top pt-2'"/>
+        </div>
+    </template>
+
+    <template id="external_layout_center">
+        <div t-attf-class="o_company_#{company.id}_layout header">
+            <div class="o_layout_center_header">
+                <table class="w-100 table-borderless">
+                    <tr>
+                        <td class="align-top" style="width: 33.33%;">
+                            <t t-call="web.company_address_list"/>
+                        </td>
+                        <td class="align-top text-center" style="width: 33.33%;">
+                            <img t-if="company.logo" class="o_company_logo_mid mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                        </td>
+                        <td class="align-top text-end" style="width: 33.33%;">
+                            <t t-call="web.address_layout" custom_layout_address="True" information_block="False" custom_address_spacing="'mb-0'"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+            <div class="mb-3" t-if="information_block" t-out="information_block"/>
+            <h2 t-out="layout_document_title"/>
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <t t-call="web.external_layout_footer_content" is_centered_footer="True" footer_content_classes="'text-center'"/>
+        </div>
+    </template>
+
+
+    <template id="external_layout_dual">
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_dual_header header">
+            <svg xmlns="http://www.w3.org/2000/svg" class="position-absolute start-0 top-0 z-n1" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none">
+                <path d="M0 0h1000v16L0 60z" t-att-fill="company.primary_color" fill-opacity=".15"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="position-absolute start-0 top-0 z-n1" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none">
+                <path d="M0 0h80L0 160z" t-att-fill="company.secondary_color" fill-opacity=".15"/>
+            </svg>
+            <table class="w-100 table-borderless">
+                <tr>
+                    <td class="align-top pe-2">
+                        <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </td>
+                    <td class="align-top ps-2 text-end">
+                        <t t-call="web.company_address_list"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout_body" custom_layout_address="True">
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_dual_footer footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed o_dual_shape_1' or 'position-absolute bottom-0'}} start-0" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none">
+                <path d="M0 0h1000v16L0 60z" t-att-fill="company.primary_color" fill-opacity=".15" transform="rotate(180 500 30)"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} end-0" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none">
+                <path d="M0 0h80L0 160z" t-att-fill="company.secondary_color" fill-opacity=".15" transform="rotate(180 40 80)"/>
+            </svg>
+            <t
+                t-call="web.external_layout_footer_content"
+                footer_content_classes="(report_type != 'pdf' and 'mx-5' or '')"
+                is_tagline_footer="True"
+            />
+        </div>
+    </template>
+
+    <template id="external_layout_lines">
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_lines_header header">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} z-n1" t-attf-style="{{report_type == 'pdf' and 'top: -50mm; right: -108mm;' or 'top: -142mm; right: -110mm'}}" t-att-width="report_type == 'pdf' and '1064' or '100%'" t-att-height="report_type == 'pdf' and '748' or '100%'" viewBox="0 0 1423 1061" fill="none">
+                <path class="o_lines_path_1" d="M1422.5 907h-210c-168.64-9.078-185.42-238.3-199-382C999.921 381.3 860.195 256 657 256c-119.89 0-341.722-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_2" d="M1397.72 924.056h-210c-168.64-9.078-185.42-238.3-198.997-382-13.579-143.7-153.305-269-356.5-269-119.891 0-341.722-.533-405.5-111-8.834-15-28-52.5-28-145"/>
+                <path class="o_lines_path_3" d="M1372.94 941.111h-210c-168.64-9.077-185.417-238.3-198.996-382-13.578-143.7-153.305-269-356.5-269-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_4" d="M1348.17 958.167h-210c-168.648-9.078-185.424-238.3-199.003-382-13.579-143.701-153.305-269-356.5-269-119.89 0-341.722-.533-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_5" d="M1323.39 975.222h-210c-168.646-9.077-185.423-238.3-199.001-382s-153.305-269-356.5-269c-119.891 0-341.722-.532-405.5-111-8.834-15-28-52.5-28-145"/>
+                <path class="o_lines_path_6" d="M1298.61 992.278h-210c-168.643-9.078-185.42-238.3-198.999-382-13.578-143.7-153.305-269-356.5-269-119.89 0-341.721-.533-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_7" d="M1273.83 1009.33h-210c-168.642-9.07-185.418-238.296-198.997-381.997-13.579-143.7-153.305-269-356.5-269-119.89 0-341.722-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_8" d="M1249.06 1026.39h-210c-168.649-9.08-185.426-238.301-199.004-382.001s-153.305-269-356.5-269c-119.891 0-341.722-.533-405.5-111-8.834-15-28-52.5-28-145"/>
+                <path class="o_lines_path_9" d="M1224.28 1043.44h-210c-168.647-9.07-185.424-238.296-199.003-381.996s-153.305-269-356.5-269c-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_10" d="M1199.5 1060.5h-210c-168.645-9.08-185.421-238.3-199-382s-153.305-269-356.5-269c-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+            </svg>
+            <table class="w-100 table-borderless">
+                <tr>
+                    <td class="align-top text-start">
+                        <t t-call="web.company_address_list"/>
+                    </td>
+                    <td class="align-top text-end">
+                        <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+            <h2 class="text-center" t-out="layout_document_title"/>
+            <t t-call="web.address_layout" custom_layout_address="True" information_block="False"/>
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="o_company_#{company.id}_layout footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} start-0" style="top: -4mm" width="100%" height="206" viewBox="0 0 1508 206" fill="none">
+                <path class="o_lines_path_1" d="M1 144C476.147 225.333 1031.85 225.333 1507 144"/>
+                <path class="o_lines_path_2" d="M1 123.571C476.147 204.905 1031.85 204.905 1507 123.571"/>
+                <path class="o_lines_path_3" d="M1 103.143C476.147 184.476 1031.85 184.476 1507 103.143"/>
+                <path class="o_lines_path_4" d="M1 82.7144C476.147 164.048 1031.85 164.048 1507 82.7144"/>
+                <path class="o_lines_path_5" d="M1 62.2856C476.147 143.619 1031.85 143.619 1507 62.2856"/>
+                <path class="o_lines_path_6" d="M1 41.8569C476.147 123.19 1031.85 123.19 1507 41.8569"/>
+                <path class="o_lines_path_7" d="M1 21.4287C476.147 102.762 1031.85 102.762 1507 21.4287"/>
+                <path class="o_lines_path_8" d="M1 1C476.147 82.3333 1031.85 82.3333 1507 1"/>
+            </svg>
+            <t
+                t-call="web.external_layout_footer_content"
+                is_tagline_footer="True"
+                footer_content_classes="(report_type != 'pdf' and 'mx-5' or '')"
+            />
+        </div>
+    </template>
+
+    <!-- Public api: layout to t-call from reports -->
+    <template id="external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t
+            t-if="company.external_report_layout_id"
+            t-call="{{company.external_report_layout_id.sudo().key}}"
+        >
+            <t t-out="0"/>
+        </t>
+        <t t-else="" t-call="web.external_layout_standard">
+            <t t-out="0"/>
+        </t>
+    </template>
+
+    <template id="internal_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+                <div class="col-3">
+                    <span t-out="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                </div>
+                <div class="col-2 offset-2 text-center">
+                    <span t-out="company.name"/>
+                </div>
+                <div class="col-2 offset-3 text-end">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><span class="page"/></li>
+                        <li class="list-inline-item">/</li>
+                        <li class="list-inline-item"><span class="topage"/></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+          <t t-out="0"/>
+        </div>
+    </template>
+
+    <template id="basic_layout">
+        <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-out="0"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Customize the company form view by adding paperformat field as well as demo reports -->
+    <!-- Demo reports definition -->
+    <template id="preview_internalreport">
+        <t t-set="company" t-value="env.company"/>
+        <t t-call="web.html_container" o="res_company">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <p>This is a sample of an internal report.</p>
+                </div>
+            </t>
+        </t>
+    </template>
+    <template id="preview_externalreport">
+        <t t-set="company" t-value="env.company"/>
+        <t t-call="web.html_container" o="res_company">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <p>This is a sample of an external report.</p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="preview_layout_report">
+        <t t-set="company" t-value="env.company"/>
+        <t t-call="web.html_container" o="res_company">
+            <t t-call="web.report_invoice_wizard_preview"/>
+        </t>
+    </template>
+
+    <template id="styles_company_report">
+        <t t-foreach="company_ids" t-as="company" t-translation="off">
+            <t t-set="forced_vat" t-value="False"/>
+            <t t-set="font" t-value="company.font or 'Lato'" />
+            <t t-set="primary" t-value="company.primary_color or '#212529'" />
+            <t t-set="secondary" t-value="company.secondary_color or '#212529'" />
+            <t t-set="layout" t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
+            // Simplified color-contrast function to replicate bootstrap in report preview.
+            @function preview-color-contrast($background) {
+                @if (lightness($background) &gt; 50) {
+                    @return black;
+                } @else {
+                    @return white;
+                }
+            }
+
+            .o_company_<t t-out='company.id'/>_layout {
+                font-family: <t t-out="font" />;
+
+                h2 {
+                    color: <t t-out='primary'/>;
+                }
+
+                #informations strong {
+                    color: <t t-out='secondary'/>;
+                }
+
+                .o_total strong {
+                    color: <t t-out='primary'/>;
+                }
+
+                .o_company_tagline {
+                    color: <t t-out='primary'/>
+                }
+
+                <t t-if="company.report_tables_id == 'boxed'">
+                    &amp;.o_report_layout_boxed {
+                        #total .o_total td {
+                            background-color: <t t-out='primary'/>;
+
+                            strong {
+                                color: preview-color-contrast(<t t-out='primary'/>);
+                            }
+                        }
+                    }
+                </t>
+                <t t-elif="company.report_tables_id == 'bold'" >
+                    &amp;.o_report_layout_bold {
+                        th {
+                            color: <t t-out='primary'/>;
+                            border-color: <t t-out='primary'/>;
+                        }
+
+                        td, table {
+                            border-color: mix(white, <t t-out='primary'/>, 40%) !important;
+                        }
+                    }
+                </t>
+                <t t-elif="company.report_tables_id == 'striped'" >
+                    &amp;.o_report_layout_striped {
+                        table:not(.o_ignore_layout_styling) {
+                            th {
+                                color: <t t-out='secondary'/> !important;
+                            }
+                            tbody tr {
+                                &amp;:first-child, &amp;:last-child {
+                                    border-color: <t t-out='secondary'/>;
+                                }
+                                &amp;.o_line_section td {
+                                    background-color: <t t-out='secondary'/> !important;
+                                    color: preview-color-contrast(<t t-out='secondary'/>) !important;
+                                }
+
+                                &amp;.o_line_subsection td {
+                                    background-color: mix(white, <t t-out='secondary'/>, 40%) !important;
+                                    color: preview-color-contrast(mix(white, <t t-out='secondary'/>, 40%)) !important;
+                                }
+
+                                &amp;:nth-child(odd) td {
+                                    background-color: mix(white, <t t-out='secondary'/>, 90%);
+                                }
+                            }
+                        }
+
+                        .o_total_table:not(.o_ignore_layout_styling) {
+                            tr:first-child {
+                                border-color: transparent;
+                            }
+                            tr:nth-child(odd) td {
+                                background-color: mix(white, <t t-out='secondary'/>, 90%);
+                            }
+                        }
+                    }
+                </t>
+                <t t-elif="company.report_tables_id == 'bubble'">
+                    &amp;.o_report_layout_bubble {
+                        #informations {
+                            border-color: <t t-out='secondary'/>;
+                            background-color: mix(white, <t t-out='secondary'/>, 92%);
+                        }
+
+                        table:not(.o_ignore_layout_styling)::before {
+                            border-color: <t t-out='primary'/> !important;
+                        }
+
+                        thead th, #total .o_total td {
+                            background-color: <t t-out='primary'/>;
+                            color: preview-color-contrast(<t t-out='primary'/>);
+
+                            strong {
+                                color: preview-color-contrast(<t t-out='primary'/>);
+                            }
+                        }
+                    }
+                </t>
+                <t t-elif="company.report_tables_id == 'column'" >
+                    &amp;.o_report_layout_column {
+                        table:not(.o_ignore_layout_styling) {
+                            th {
+                                background-color: <t t-out='secondary'/>;
+                                color: preview-color-contrast(<t t-out='secondary'/>);
+                            }
+                        }
+
+                        #informations &gt; div.col {
+                            border-color: <t t-out='secondary'/>;
+                        }
+                    }
+                </t>
+                <t t-if="layout == 'web.external_layout_folder'">
+                    &amp; .o_folder_header_container {
+                        rect, path {
+                            fill: mix(white, <t t-out='primary'/>, 92%);
+                        }
+                    }
+                </t>
+                <t t-elif="layout == 'web.external_layout_center'">
+                    &amp; .o_layout_center_header {
+                        background-color: mix(white, <t t-out='primary'/>, 90%);
+                    }
+                </t>
+                <t t-elif="layout == 'web.external_layout_lines'">
+                    @for $i from 1 through 10 {
+                        .o_lines_path_#{$i} {
+                            stroke: mix(white, <t t-out='primary'/>, $i * 8%);
+                        }
+                    }
+                </t>
+            }
+        </t>
+    </template>
+
+    <record id="action_report_internalpreview" model="ir.actions.report">
+        <field name="name">Preview Internal Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_internalreport</field>
+        <field name="report_file">web.preview_internalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_externalpreview" model="ir.actions.report">
+        <field name="name">Preview External Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_externalreport</field>
+        <field name="report_file">web.preview_externalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_layout_preview" model="ir.actions.report">
+        <field name="name">Report Layout Preview</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_layout_report</field>
+        <field name="report_file">web.preview_layout_report</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

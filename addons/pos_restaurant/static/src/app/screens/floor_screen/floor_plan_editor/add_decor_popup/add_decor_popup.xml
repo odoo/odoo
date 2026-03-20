@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_editor.add_decor_popup">
+         <Dialog bodyClass="'o_fp_decor_menu'" size="'lg'" footer="false">
+             <t t-set-slot="header">
+                <button type="button" t-on-click="this.props.close" class="btn-close" aria-label="Close" tabindex="-1"/>
+            </t>
+            <h3 class="mb-3">Walls</h3>
+             <div class="d-flex flex-wrap gap-3">
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('h')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="bg-black w-100" style="height:4px;"/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('v')">
+                  <div class="decor_item d-flex justify-content-center align-items-center">
+                      <div class="bg-black h-100" style="width:4px;"/>
+                  </div>
+                 </button>
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('top-left')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="border-black" style="border:4px solid;  border-right:0; border-bottom:0; width:36px; height:36px"/>
+                     </div>
+                 </button>
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('top-right')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="border-black" style="border:4px solid;  border-left:0; border-bottom:0; width:36px; height:36px"/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('bottom-left')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="border-black" style="border:4px solid;  border-right:0; border-top:0; width:36px; height:36px"/>
+                     </div>
+                 </button>
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('bottom-right')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="border-black" style="border:4px solid;  border-left:0; border-top:0; width:36px; height:36px"/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addWall('top-left-right')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="border-black" style="border:4px solid; border-bottom:0; width:36px; height:36px"/>
+                     </div>
+                 </button>
+             </div>
+
+             <div class="d-flex flex-wrap gap-3 mb-3 mt-4">
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addDoor('h')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="w-100" style="border:2px solid; border-left:0; border-right:0; height:6px"/>
+                     </div>
+                  </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addDoor('v')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="h-100" style="border:2px solid; border-top:0; border-bottom:0; width:6px"/>
+                     </div>
+                  </button>
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addDoor('-45')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="w-100" style="border:2px solid; border-left:0; border-right:0; height:6px; transform:rotate(-45deg)"/>
+                     </div>
+                  </button>
+                 <button class="btn btn-outline-secondary p-3"  t-on-click="()=>this.addDoor('45')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="w-100" style="border:2px solid;  border-left:0; border-right:0; height:6px; transform:rotate(45deg)"/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addImageAsset('door.svg')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <img t-att-src="this.getAssetUrl('door.svg')" style="width:100%"/>
+                     </div>
+                 </button>
+             </div>
+             <h3 class="mb-3 mt-4">Images</h3>
+             <div class="d-flex flex-wrap gap-3 align-items-center ">
+                  <button class="btn btn-outline-secondary p-2" t-on-click="()=>this.addImageAsset('plant.svg')">
+                     <div class="d-flex justify-content-center align-items-center" style="width:50px; height:50px;">
+                         <img t-att-src="this.getAssetUrl('plant.svg')" style="width:50px"/>
+                     </div>
+                 </button>
+                  <button class="btn btn-outline-secondary p-2" t-on-click="()=>this.addImageAsset('toilet.svg')">
+                     <div class="d-flex justify-content-center align-items-center" style="width:50px; height:50px;">
+                         <img t-att-src="this.getAssetUrl('toilet.svg')" style="width:50px"/>
+                     </div>
+                 </button>
+                <button class="btn btn-lg btn-link " t-on-click="()=>this.addImage()">
+                    <i class="fa fa-plus me-1"/>Add image
+                </button>
+             </div>
+
+             <h3 class="mb-3 mt-4">Shapes</h3>
+             <div class="d-flex flex-wrap gap-3 align-items-center mb-3 ">
+                  <button class="btn btn-outline-secondary p-3" t-on-click="addText">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                        <span class="fw-bold fs-4">Text</span>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3"  t-on-click="()=>this.addLine()">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="bg-black w-100" style="height:2px;"/>
+                     </div>
+                 </button>
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addLine('dashed')">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class=" w-100" style="border-top:2px dashed"/>
+                     </div>
+                 </button>
+                  <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addRect()">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class=" w-100" style="border:2px solid; height:24px"/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addSquare()">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class=" " style="border:2px solid; width:30px; height:30px "/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addCircle()">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class=" " style="border:2px solid; width:30px; height:30px; border-radius:999rem "/>
+                     </div>
+                 </button>
+                 <button class="btn btn-outline-secondary p-3" t-on-click="()=>this.addOval()">
+                     <div class="decor_item d-flex justify-content-center align-items-center">
+                         <div class="w-100" style="border:2px solid; height:24px; border-radius:24px"/>
+                     </div>
+                 </button>
+             </div>
+         </Dialog>
+    </t>
+</templates>

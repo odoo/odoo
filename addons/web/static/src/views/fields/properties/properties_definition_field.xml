@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertiesDefinitionField" t-inherit="web.PropertiesField" t-inherit-mode="primary">
+        <xpath expr="//PropertyValue" position="replace"/>
+        <xpath expr="//div[hasclass('o_inner_group')]" position="inside">
+            <div t-if="displayAddWorksheetPropertyButton"
+                class="o_field_property_add d-none d-sm-block"
+                t-att-class="{'g-col-2': props.columns !== 1}"
+                style="margin-top: -0.5em;">
+                <button
+                    class="btn btn-link text-break m-0"
+                    t-on-click="onPropertyCreateEmpty">
+                    <i class="fa fa-plus"/>
+                    Add Property
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

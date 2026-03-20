@@ -1,0 +1,21 @@
+.o-mail-MessageInReply-author {
+    opacity: 50%;
+}
+
+.o-mail-MessageInReply-core {
+    background-color: rgba($gray-100, .35) !important;
+
+    &.o-blue {
+        border-left-color: mix($gray-100, $info, 50%) !important
+    }
+    &.o-green {
+        border-left-color: mix($gray-100, $success, 50%) !important
+    }
+    &.o-orange {
+        border-left-color: mix($gray-100, $warning, 40%) !important
+    }
+
+    &:hover {
+        filter: brightness(1.1);
+    }
+}

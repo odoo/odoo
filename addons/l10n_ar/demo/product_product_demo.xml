@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_product_quote_despacho" model="product.product">
+        <field name="name">Import Clearance</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="default_code">ARCA_DESPACHO</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+    </record>
+
+    <record id="product_product_tasa_estadistica" model="product.product">
+        <field name="name">Statistics Rate</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="default_code">ARCA_TASA_EST</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+    </record>
+
+    <record id="product_product_arancel" model="product.product">
+        <field name="name">Tariff</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="default_code">ARCA_ARANCEL</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+    </record>
+
+    <record id="product_product_servicio_de_guarda" model="product.product">
+        <field name="name">Guard Service</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="default_code">ARCA_SERV_GUARDA</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+    </record>
+
+    <record id="product_product_exento" model="product.product">
+        <field name="name">Book "Development in Odoo" (VAT Exempt)</field>
+        <field name="categ_id" ref="product.product_category_goods"/>
+        <field name="standard_price">100.0</field>
+        <field name="list_price">80.0</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">EXENTO</field>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Exempt')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Exempt')]"/>
+    </record>
+
+    <record id="product_product_cero" model="product.product">
+        <field name="name">Non-industrialized animals and vegetables (VAT Zero)</field>
+        <field name="categ_id" ref="product.product_category_goods"/>
+        <field name="standard_price">200.0</field>
+        <field name="list_price">160.0</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">CERO</field>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 0%')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 0%')]"/>
+    </record>
+    <record id="product_product_no_gravado" model="product.product">
+        <field name="name">Untaxed concepts (VAT NT)</field>
+        <field name="categ_id" ref="product.product_category_goods"/>
+        <field name="standard_price">50.0</field>
+        <field name="list_price">40.0</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">NOGRAVADO</field>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+    </record>
+    <record id="product_product_telefonia" model="product.product">
+        <field name="name">Telephone service (VAT 27)</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="standard_price">250.0</field>
+        <field name="list_price">130.0</field>
+        <field name="type">service</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="default_code">TELEFONIA</field>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 27%')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 27%')]"/>
+    </record>
+
+    <record id="product.product_product_2" model="product.product">
+        <field name="standard_price">45.5</field>
+    </record>
+
+    <!-- VAT 10,5% -->
+
+    <record id="product.product_product_25" model="product.product">
+        <!-- agregamos percecipn aplicada y sufrida tambien -->
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
+        <field name="standard_price">3280.0</field>
+    </record>
+
+    <record id="product.product_product_27" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
+        <field name="standard_price">4500.0</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value model="product.product" eval="obj().search([('taxes_id', '=', False)]).ids"/>
+        <value
+            model="account.tax"
+            eval="{
+                'taxes_id': [(4, obj().search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('tax_group_id', '=', ref('account.%s_tax_group_iva_21' % ref('base.company_ri'))),
+                    ('company_id', '=', ref('base.company_ri'))
+                ]).id)]}"
+        />
+    </function>
+
+</odoo>

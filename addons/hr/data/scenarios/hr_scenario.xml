@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Department -->
+        <record id="dep_rd" model="hr.department" forcecreate="1">
+            <field name="name">Research &amp; Development</field>
+            <field name="color" eval="10"/>
+        </record>
+        <record id="dep_management" model="hr.department" forcecreate="1">
+            <field name="name">Management</field>
+            <field name="color" eval="5"/>
+        </record>
+
+        <!-- Job -->
+        <record id="job_consultant" model="hr.job" forcecreate="1">
+            <field name="name">Consultant</field>
+            <field name="no_of_recruitment">5</field>
+            <field name="contract_type_id" ref="hr.contract_type_interim"/>
+            <field name="description">We are currently looking for someone like that to join our Consultant team.</field>
+        </record>
+        <record id="job_developer" model="hr.job" forcecreate="1">
+            <field name="name">Experienced Developer</field>
+            <field name="department_id" ref="hr.dep_rd"/>
+            <field name="no_of_recruitment">5</field>
+            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+            <field name="description">We are currently looking for someone like that to join our Web team.
+                Someone who can snap out of coding and perform analysis or meet clients to explain the technical
+                possibilities that can meet their needs.</field>
+        </record>
+        <record id="job_ceo" model="hr.job" forcecreate="1">
+            <field name="name">Chief Executive Officer</field>
+            <field name="department_id" ref="dep_management"/>
+            <field name="description">
+                Demonstration of different Odoo services for each client and convincing the client about functionality of
+                the application.
+                The candidate should have excellent communication skills.
+                Relationship building and influencing skills
+                Expertise in New Client Acquisition (NCAs) and Relationship Management.
+                Gathering market and customer information.
+                Coordinating with the sales and support team for adopting different strategies
+                Reviewing progress and identifying opportunities and new areas for development.
+                Building strong relationships with clients / customers for business growth profitability.
+                Keep regular interaction with key clients for better extraction and expansion.
+            </field>
+            <field name="requirements">
+                MBA in Marketing is must.
+                Good Communication skills.
+                Only Fresher's can apply.
+                Candidate should be ready to work in young and dynamic environment..
+                Candidate should be able to work in “start- up” fast paced environment,hands on attitude.
+                Honest,approachable and fun team player.
+                Result driven.
+                Excellent analytical skills, ability to think logically and "out of the box"
+            </field>
+            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+        </record>
+
+        <!-- Employee category -->
+        <record id="employee_category_4" model="hr.employee.category" forcecreate="1">
+            <field name="name">Employee</field>
+            <field name="color" eval="6"/>
+        </record>
+        <record id="employee_category_5" model="hr.employee.category" forcecreate="1">
+            <field name="name">Consultant</field>
+            <field name="color" eval="4"/>
+        </record>
+        <record id="employee_category_demo" model="hr.employee.category" forcecreate="1">
+            <field name="name">Demo</field>
+            <field name="color" eval="6"/>
+        </record>
+
+        <!-- Partner -->
+        <record id="work_contact_eg" model="res.partner" forcecreate="1">
+            <field name="name">Emma Granger</field>
+            <field name="email">granger@mycompany.example.com</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_awa-image.jpg"/>
+            <field name="street">260 Broadway</field>
+            <field name="city">New York</field>
+            <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
+            <field name="zip">10007</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="tz">Europe/Brussels</field>
+            <field name="function">Agile Consultant</field>
+            <field name="phone">(555)-768-6230</field>
+        </record>
+        <record id="work_contact_mw" model="res.partner" forcecreate="1">
+            <field name="name">Michael Williams</field>
+            <field name="email">williams@mycompany.example.com</field>
+            <field name="image_1920" type="base64" file="hr/static/img/partner_root-image.jpg"/>
+            <field name="street">260 RoadStreet</field>
+            <field name="city">New York</field>
+            <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
+            <field name="zip">10019</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="tz">Europe/Brussels</field>
+            <field name="function">Chief Executive Officer</field>
+            <field name="phone">(555)-768-6230</field>
+        </record>
+        <record id="work_contact_sj" model="res.partner" forcecreate="1">
+            <field name="name">Simon Jones</field>
+            <field name="email">jones@mycompany.example.com</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
+            <field name="street">260 Broadway</field>
+            <field name="city">New York</field>
+            <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
+            <field name="zip">10007</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="tz">Europe/Brussels</field>
+            <field name="function">Agile Consultant</field>
+            <field name="phone">(555)-768-6230</field>
+        </record>
+
+        <!-- Employee -->
+        <record id="employee_mw" model="hr.employee" forcecreate="1">
+            <field name="active">True</field>
+            <field name="name">Michael Williams</field>
+            <field name="private_street">349-943 Miania St.</field>
+            <field name="certificate">master</field>
+            <field name="private_zip">58198</field>
+            <field name="private_city">Williston</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_phone">+1 555-555-5757</field>
+            <field name="work_email">williams@mycompany.example.com</field>
+            <field name="department_id" ref="hr.dep_administration"/>
+            <field name="job_id" ref="job_ceo"/>
+            <field name="job_title">Chief Executive Officer</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
+            <field name="image_1920" type="base64" file="hr/static/img/partner_root-image.jpg"/>
+            <field name="work_phone">(555)-768-6230</field>
+            <field name="mobile_phone">(555)-768-6235</field>
+            <field name="work_contact_id" ref="work_contact_mw"/>
+        </record>
+        <record id="employee_eg" model="hr.employee" forcecreate="1">
+            <field name="active">True</field>
+            <field name="name">Emma Granger</field>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="private_street">361-7936 Feugiat St.</field>
+            <field name="marital">married</field>
+            <field name="certificate">master</field>
+            <field name="private_zip">58521</field>
+            <field name="private_city">Williston</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_phone">+1 555-555-5757</field>
+            <field name="work_email">granger@mycompany.example.com</field>
+            <field name="job_id" ref="job_consultant"/>
+            <field name="job_title">Consultant</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_5'), ref('employee_category_demo')])]"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_awa-image.jpg"/>
+            <field name="work_phone">(555)-768-6230</field>
+            <field name="mobile_phone">(555)-768-6235</field>
+            <field name="work_contact_id" ref="work_contact_eg"/>
+            <field name="coach_id" ref="employee_mw"/>
+            <field name="parent_id" ref="employee_mw"/>
+        </record>
+        <record id="employee_sj" model="hr.employee" forcecreate="1">
+            <field name="active">True</field>
+            <field name="name">Simon Jones</field>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="private_street">349-943 Miania St.</field>
+            <field name="certificate">master</field>
+            <field name="private_zip">58198</field>
+            <field name="private_city">Williston</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_phone">+1 555-555-5757</field>
+            <field name="work_email">jones@mycompany.example.com</field>
+            <field name="job_id" ref="job_developer"/>
+            <field name="job_title">Experienced Developer</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
+            <field name="work_phone">(555)-768-6230</field>
+            <field name="mobile_phone">(555)-768-6235</field>
+            <field name="work_contact_id" ref="work_contact_sj"/>
+            <field name="coach_id" ref="employee_mw"/>
+            <field name="parent_id" ref="employee_mw"/>
+        </record>
+    </data>
+</odoo>

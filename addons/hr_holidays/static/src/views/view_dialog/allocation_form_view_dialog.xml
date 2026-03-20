@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.AllocationFormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <button
+                class="btn btn-primary o_form_button_save"
+                t-on-click="saveButtonClicked"
+                data-hotkey="q">
+                <span>Submit Request</span>
+            </button>
+        </xpath>
+    </t>
+</templates>

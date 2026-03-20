@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_supported_payment_methods" name="Supported Payment Methods">
+        <!-- `o_not_editable` prevents the user from selecting content inside the snippet like
+             images as they will not be saved either way.
+             `data-oe-protected` prevents the history plugin from registering DOM changes in this
+             element, otherwise a warning is logged when reverting previewed changes.
+        -->
+        <div
+            class="s_supported_payment_methods o_not_editable"
+            data-limit="6"
+            data-height="30px"
+            data-oe-protected="true"
+        />
+    </template>
+
+    <asset id="s_supported_payment_methods_OOO_xml" name="Supported Payment Methods 000 XML">
+        <bundle>web.assets_frontend</bundle>
+        <path>/website_payment/static/src/snippets/s_supported_payment_methods/000.xml</path>
+    </asset>
+
+    <asset id="s_supported_payment_methods_OOO_edit_xml" name="Supported Payment Methods 000 XML (edit)">
+        <bundle>website.assets_inside_builder_iframe</bundle>
+        <path>/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml</path>
+    </asset>
+
+</odoo>

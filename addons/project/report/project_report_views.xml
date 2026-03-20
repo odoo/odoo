@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_task_project_user_pivot" model="ir.ui.view">
+            <field name="name">report.project.task.user.pivot</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <pivot string="Tasks Analysis" display_quantity="1" sample="1" js_class="project_task_analysis_pivot">
+                    <field name="project_id" type="row"/>
+                    <field name="working_hours_open" widget="timesheet_uom"/>
+                    <field name="working_hours_close" widget="timesheet_uom"/>
+                    <field name="nbr" invisible="1"/>
+                    <field name="rating_avg" invisible="1"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- We need to create an fsm view here so that we can prevent the
+        remaining_hours_so field from being automatically added to the fsm view
+        when installing the sale_timesheet module -->
+        <record id="view_task_project_user_fsm_pivot_base" model="ir.ui.view">
+            <field name="name">report.project.task.user.pivot</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="view_task_project_user_pivot"/>
+            <field name="mode">primary</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <pivot position="inside"/>
+            </field>
+        </record>
+
+        <record id="view_task_project_user_graph" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <graph string="Tasks Analysis" sample="1" js_class="project_task_analysis_graph">
+                     <field name="project_id"/>
+                     <field name="stage_id"/>
+                     <field name="nbr" invisible="1"/>
+                     <field name="working_hours_open" widget="float_time"/>
+                     <field name="working_hours_close" widget="float_time"/>
+                     <field name="rating_avg" invisible="1"/>
+                 </graph>
+             </field>
+        </record>
+
+
+        <!-- We need to create an fsm view here so that we can prevent the
+        remaining_hours_so field from being automatically added to the fsm view
+        when installing the sale_timesheet module -->
+        <record id="view_task_project_user_fsm_graph_base" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="view_task_project_user_graph"/>
+            <field name="mode">primary</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <graph position="inside"/>
+            </field>
+        </record>
+
+        <record id="view_task_project_user_search" model="ir.ui.view">
+            <field name="name">report.project.task.user.search</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_search_form_project_fsm_base"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <search position="attributes">
+                    <attribute name="string">Tasks Analysis</attribute>
+                </search>
+            </field>
+        </record>
+
+       <record id="action_project_task_user_tree" model="ir.actions.act_window">
+            <field name="name">Tasks Analysis</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="path">tasks-analysis</field>
+            <field name="domain">[('has_template_ancestor', '=', False)]</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="view_task_project_user_search"/>
+            <field name="context">{'group_by': [], 'graph_measure': '__count__'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p><p>
+                    Analyze the progress of your projects and the performance of your employees.
+                </p>
+            </field>
+        </record>
+</odoo>

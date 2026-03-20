@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report_vat" model="account.report">
+        <field name="name">VAT Return</field>
+        <field name="name@nl">Btw-aangifte</field>
+        <field name="name@fr">Déclaration de TVA</field>
+        <field name="name@de">MwSt.-Erklärung</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_vat_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@nl">Saldo</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@de">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_title_operations" model="account.report.line">
+                <field name="name">Operations</field>
+                <field name="name@nl">Handelingen</field>
+                <field name="name@fr">Opérations</field>
+                <field name="name@de">Umsätze</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_title_operations_sortie" model="account.report.line">
+                        <field name="name">II Outgoing</field>
+                        <field name="name@nl">II Uitgaand</field>
+                        <field name="name@fr">II A la sortie</field>
+                        <field name="name@de">II Ausgänge</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_00" model="account.report.line">
+                                <field name="name">00 - Operations subject to a special regulation</field>
+                                <field name="name@nl">00 - Handelingen onderworpen aan een bijzondere regeling</field>
+                                <field name="name@fr">00 - Opérations soumises à un régime particulier</field>
+                                <field name="name@de">00 - Umsätze, die einer Sonderregelung unterliegen</field>
+                                <field name="code">c00</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_00_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-00</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_01" model="account.report.line">
+                                <field name="name">01 - Operations subject to 6% VAT</field>
+                                <field name="name@nl">01 - Handelingen onderworpen aan 6% btw</field>
+                                <field name="name@fr">01 - Opérations soumises à la TVA de 6%</field>
+                                <field name="name@de">01 - Umsätze, die einer MwSt. von 6 % unterliegen</field>
+                                <field name="code">c01</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_01_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-01</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_02" model="account.report.line">
+                                <field name="name">02 - Operations subject to 12% VAT</field>
+                                <field name="name@nl">02 - Handelingen onderworpen aan 12% btw</field>
+                                <field name="name@fr">02 - Opérations soumises à la TVA de 12%</field>
+                                <field name="name@de">02 - Umsätze, die einer MwSt. von 12 % unterliegen</field>
+                                <field name="code">c02</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_02_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-02</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_03" model="account.report.line">
+                                <field name="name">03 - Operations subject to 21% VAT</field>
+                                <field name="name@nl">03 - Handelingen onderworpen aan 21% btw</field>
+                                <field name="name@fr">03 - Opérations soumises à la TVA de 21%</field>
+                                <field name="name@de">03 - Umsätze, die einer MwSt. von 21 % unterliegen</field>
+                                <field name="code">c03</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_03_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-03</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_44" model="account.report.line">
+                                <field name="name">44 - Intra-Community services</field>
+                                <field name="name@nl">44 - Intracommunautaire diensten</field>
+                                <field name="name@fr">44 - Services intracommunautaires</field>
+                                <field name="name@de">44 - Innergemeinschaftliche Dienstleistungen</field>
+                                <field name="code">c44</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_44_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-44</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_45" model="account.report.line">
+                                <field name="name">45 - Operations subject to VAT due by the co-contractor</field>
+                                <field name="name@nl">45 - Handelingen waarvoor de btw verschuldigd is door de medecontractant</field>
+                                <field name="name@fr">45 - Opérations pour lesquelles la TVA est due par le cocontractant</field>
+                                <field name="name@de">45 - Umsätze, die der MwSt. unterliegen und die vom Vertragspartner zu zahlen sind</field>
+                                <field name="code">c45</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_45_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-45</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_title_operations_sortie_46" model="account.report.line">
+                                <field name="name">46 - Exempted intra-Community deliveries and ABC sales</field>
+                                <field name="name@nl">46 - Vrijgestelde intracommunautaire leveringen en ABC-verkopen</field>
+                                <field name="name@fr">46 - Livraisons intracommunautaires exemptées et ventes ABC</field>
+                                <field name="name@de">46 - Steuerfreie innergemeinschaftliche Lieferungen und ABC-Geschäfte</field>
+                                <field name="code">c46</field>
+                                <field name="aggregation_formula">c46L.balance + c46T.balance</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_46L" model="account.report.line">
+                                        <field name="name">46L - Exempted intra-Community deliveries</field>
+                                        <field name="name@nl">46L - Vrijgestelde intracommunautaire leveringen</field>
+                                        <field name="name@fr">46L - Livraisons intracommunautaires exemptées</field>
+                                        <field name="name@de">46L - Steuerfreie innergemeinschaftliche Lieferungen</field>
+                                        <field name="code">c46L</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_46L_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-46L</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_46T" model="account.report.line">
+                                        <field name="name">46T - ABC sales</field>
+                                        <field name="name@nl">46T - ABC-verkopen</field>
+                                        <field name="name@fr">46T - Ventes ABC</field>
+                                        <field name="name@de">46T - ABC-Geschäfte</field>
+                                        <field name="code">c46T</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_46T_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-46T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_47" model="account.report.line">
+                                <field name="name">47 - Other exempted operations and operations carried out abroad</field>
+                                <field name="name@nl">47 - Andere vrijgestelde handelingen en andere handelingen verricht in het buitenland</field>
+                                <field name="name@fr">47 - Autres opérations exemptées et opérations effectuées à l'étranger</field>
+                                <field name="name@de">47 - Andere steuerfreie Umsätze und andere im Ausland bewirkte Umsätze</field>
+                                <field name="code">c47</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_47_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-47</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_title_operations_sortie_48" model="account.report.line">
+                                <field name="name">48 - Credit notes for operations in grids [44] and [46]</field>
+                                <field name="name@nl">48 - Creditnota's met betrekking tot de handelingen ingeschreven in de roosters [44] en [46]</field>
+                                <field name="name@fr">48 - Notes de crédit relatives aux opérations inscrites en grilles [44] et [46]</field>
+                                <field name="name@de">48 - Gutschriften, die sich auf Umsätze in den Rastern [44] und [46] beziehen</field>
+                                <field name="code">c48</field>
+                                <field name="aggregation_formula">c48s44.balance + c48s46L.balance + c48s46T.balance</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_48s44" model="account.report.line">
+                                        <field name="name">48s44 - Credit notes for operations in grid [44]</field>
+                                        <field name="name@nl">48s44 - Creditnota's met betrekking tot de handelingen ingeschreven in rooster [44]</field>
+                                        <field name="name@fr">48s44 - Notes de crédit relatives aux opérations inscrites en grille [44]</field>
+                                        <field name="name@de">48s44 - Gutschriften, die sich auf Umsätze in Raster [44] beziehen</field>
+                                        <field name="code">c48s44</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_48s44_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">48s44</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_48s46L" model="account.report.line">
+                                        <field name="name">48s46L - Credit notes for operations in grid [46L]</field>
+                                        <field name="name@nl">48s46L - Creditnota's met betrekking tot de handelingen ingeschreven in rooster [46L]</field>
+                                        <field name="name@fr">48s46L - Notes de crédit relatives aux opérations inscrites en grille [46L]</field>
+                                        <field name="name@de">48s46L - Gutschriften, die sich auf Umsätze in Raster [46L] beziehen</field>
+                                        <field name="code">c48s46L</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_48s46L_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">48s46L</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_48s46T" model="account.report.line">
+                                        <field name="name">48s46T - Credit notes for operations in grid [46T]</field>
+                                        <field name="name@nl">48s46T - Creditnota's met betrekking tot de handelingen ingeschreven in rooster [46T]</field>
+                                        <field name="name@fr">48s46T - Notes de crédit relatives aux opérations inscrites en grille [46T]</field>
+                                        <field name="name@de">48s46T - Gutschriften, die sich auf Umsätze in Raster [46T] beziehen</field>
+                                        <field name="code">c48s46T</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_48s46T_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">48s46T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_49" model="account.report.line">
+                                <field name="name">49 - Credit notes for other operations in part II</field>
+                                <field name="name@nl">49 - Creditnota's met betrekking tot de andere handelingen van deel II</field>
+                                <field name="name@fr">49 - Notes de crédit relatives aux autres opérations de la partie II</field>
+                                <field name="name@de">49 - Gutschriften, die sich auf die übrigen Umsätze aus Rahmen II beziehen</field>
+                                <field name="code">c49</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_49_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">49</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_title_operations_entree" model="account.report.line">
+                        <field name="name">III Incoming</field>
+                        <field name="name@nl">III Inkomend</field>
+                        <field name="name@fr">III A l'entrée</field>
+                        <field name="name@de">III Eingänge</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_81" model="account.report.line">
+                                <field name="name">81 - Trade goods, raw materials and consumables</field>
+                                <field name="name@nl">81 - Handelsgoederen, grond- en hulpstoffen</field>
+                                <field name="name@fr">81 - Marchandises, matières premières et matières auxiliaires</field>
+                                <field name="name@de">81 - Handelsgüter, Roh- und Hilfsstoffe</field>
+                                <field name="code">c81</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_81_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">81</field>
+                                    </record>
+                                    <record id="tax_report_line_81_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="tax_report_line_81_balance_unbound" model="account.report.expression">
+                                        <field name="label">balance_unbound</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c81._applied_carryover_balance + c81.tag</field>
+                                    </record>
+                                    <record id="tax_report_line_81_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c81.balance_unbound</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_81_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c81.balance_unbound</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_82" model="account.report.line">
+                                <field name="name">82 - Services and miscellaneous goods</field>
+                                <field name="name@nl">82 - Diensten en diverse goederen</field>
+                                <field name="name@fr">82 - Services et biens divers</field>
+                                <field name="name@de">82 - Leistungen und verschiedene Güter</field>
+                                <field name="code">c82</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_82_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">82</field>
+                                    </record>
+                                    <record id="tax_report_line_82_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="tax_report_line_82_balance_unbound" model="account.report.expression">
+                                        <field name="label">balance_unbound</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c82._applied_carryover_balance + c82.tag</field>
+                                    </record>
+                                    <record id="tax_report_line_82_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c82.balance_unbound</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_82_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c82.balance_unbound</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_83" model="account.report.line">
+                                <field name="name">83 - Investment goods</field>
+                                <field name="name@nl">83 - Bedrijfsmiddelen</field>
+                                <field name="name@fr">83 - Biens d'investissement</field>
+                                <field name="name@de">83 - Investitionsgüter</field>
+                                <field name="code">c83</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_83_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">83</field>
+                                    </record>
+                                    <record id="tax_report_line_83_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="tax_report_line_83_balance_unbound" model="account.report.expression">
+                                        <field name="label">balance_unbound</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c83._applied_carryover_balance + c83.tag</field>
+                                    </record>
+                                    <record id="tax_report_line_83_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c83.balance_unbound</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_83_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c83.balance_unbound</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_84" model="account.report.line">
+                                <field name="name">84 - Credit notes for operations in grids [86] and [88]</field>
+                                <field name="name@nl">84 - Creditnota's met betrekking tot de handelingen ingeschreven in de roosters [86] en [88]</field>
+                                <field name="name@fr">84 - Notes de crédits reçues relatives aux opérations inscrites en grilles [86] et [88]</field>
+                                <field name="name@de">84 - Gutschriften, die sich auf Umsätze in Raster [86] und [88] beziehen</field>
+                                <field name="code">c84</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_84_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-84</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_85" model="account.report.line">
+                                <field name="name">85 - Credit notes received relating to other operations in part III</field>
+                                <field name="name@nl">85 - Creditnota's met betrekking tot de andere handelingen van deel III</field>
+                                <field name="name@fr">85 - Notes de crédits reçues relatives aux autres opérations de la partie III</field>
+                                <field name="name@de">85 - Gutschriften, die sich auf die übrigen Umsätze aus Rahmen III beziehen</field>
+                                <field name="code">c85</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_85_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-85</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_86" model="account.report.line">
+                                <field name="name">86 - Intra-Community acquisitions and ABC sales</field>
+                                <field name="name@nl">86 - Intracommunautaire verwervingen en ABC-verkopen</field>
+                                <field name="name@fr">86 - Acquisitions intracommunautaires et ventes ABC</field>
+                                <field name="name@de">86 - Innergemeinschaftliche Erwerbe und ABC-Geschäfte</field>
+                                <field name="code">c86</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_86_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">86</field>
+                                    </record>
+                                    <record id="tax_report_line_86_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="tax_report_line_86_balance_unbound" model="account.report.expression">
+                                        <field name="label">balance_unbound</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c86._applied_carryover_balance + c86.tag</field>
+                                    </record>
+                                    <record id="tax_report_line_86_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c86.balance_unbound</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_86_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c86.balance_unbound</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_87" model="account.report.line">
+                                <field name="name">87 - Other operations subject to VAT</field>
+                                <field name="name@nl">87 - Andere handelingen waarvoor de btw verschuldigd is</field>
+                                <field name="name@fr">87 - Autres opérations soumises à la TVA</field>
+                                <field name="name@de">87 - Sonstige Umsätze, die der MwSt. unterliegen</field>
+                                <field name="code">c87</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_87_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">87</field>
+                                    </record>
+                                    <record id="tax_report_line_87_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="tax_report_line_87_balance_unbound" model="account.report.expression">
+                                        <field name="label">balance_unbound</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c87._applied_carryover_balance + c87.tag</field>
+                                    </record>
+                                    <record id="tax_report_line_87_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c87.balance_unbound</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_87_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c87.balance_unbound</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_88" model="account.report.line">
+                                <field name="name">88 - Intra-Community services with reverse charge</field>
+                                <field name="name@nl">88 -  Intracommunautaire diensten met verlegging van heffing</field>
+                                <field name="name@fr">88 - Services intracommunautaires avec report de perception</field>
+                                <field name="name@de">88 - Innergemeinschaftliche Leistungen mit Umkehrung der Steuerschuldnerschaft</field>
+                                <field name="code">c88</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_88_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">88</field>
+                                    </record>
+                                    <record id="tax_report_line_88_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="tax_report_line_88_balance_unbound" model="account.report.expression">
+                                        <field name="label">balance_unbound</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c88._applied_carryover_balance + c88.tag</field>
+                                    </record>
+                                    <record id="tax_report_line_88_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c88.balance_unbound</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_88_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c88.balance_unbound</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_taxes" model="account.report.line">
+                <field name="name">Taxes</field>
+                <field name="name@nl">Belastingen</field>
+                <field name="name@fr">Taxes</field>
+                <field name="name@de">Steuern</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_title_taxes_dues" model="account.report.line">
+                        <field name="name">IV Due</field>
+                        <field name="name@nl">IV Verschuldigd</field>
+                        <field name="name@fr">IV Dues</field>
+                        <field name="name@de">IV Geschuldet</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_54" model="account.report.line">
+                                <field name="name">54 - VAT on operations in grids [01], [02] and [03]</field>
+                                <field name="name@nl">54 - Btw op de handelingen aangegeven in de roosters [01], [02] en [03]</field>
+                                <field name="name@fr">54 - TVA relative aux opérations déclarées en grilles [01], [02] et [03]</field>
+                                <field name="name@de">54 - MwSt. auf Umsätze in den Rastern [01], [02] und [03]</field>
+                                <field name="code">c54</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_54_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-54</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_55" model="account.report.line">
+                                <field name="name">55 - VAT on operations in grids [86] and [88]</field>
+                                <field name="name@nl">55 - Btw op de handelingen aangegeven in de roosters [86] en [88]</field>
+                                <field name="name@fr">55 - TVA relative aux opérations déclarées en grilles [86] et [88]</field>
+                                <field name="name@de">55 - MwSt. auf Umsätze in den Rastern [86] und [88]</field>
+                                <field name="code">c55</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_55_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-55</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_56" model="account.report.line">
+                                <field name="name">56 - VAT on operations in grid [87], with the exception of imports with reverse charge</field>
+                                <field name="name@nl">56 - Btw op de handelingen aangegeven in rooster [87], met uitzondering van invoeren met verlegging van heffing</field>
+                                <field name="name@fr">56 - TVA relative aux opérations déclarées en grille [87], à l'exception des importations avec report de perception</field>
+                                <field name="name@de">56 - MwSt. auf Umsätze in Raster [87], ausschließlich der Einfuhren mit Umkehrung der Steuerschuldnerschaft</field>
+                                <field name="code">c56</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_56_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-56</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_57" model="account.report.line">
+                                <field name="name">57 - VAT on import with reverse charge</field>
+                                <field name="name@nl">57 - Btw op invoeren met verlegging van heffing</field>
+                                <field name="name@fr">57 - TVA relative aux importations avec report de perception</field>
+                                <field name="name@de">57 - MwSt. auf Einfuhren mit Umkehrung der Steuerschuldnerschaft</field>
+                                <field name="code">c57</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_57_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-57</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_61" model="account.report.line">
+                                <field name="name">61 - Various VAT regularizations in favor of the State</field>
+                                <field name="name@nl">61 - Diverse btw-regularisaties in het voordeel van de Staat</field>
+                                <field name="name@fr">61 - Diverses régularisations TVA en faveur de l'Etat</field>
+                                <field name="name@de">61 - Verschiedene MwSt.-Regelungen zugunsten des Staates</field>
+                                <field name="code">c61</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_61_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">61</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_63" model="account.report.line">
+                                <field name="name">63 - VAT to be paid back on credit notes received</field>
+                                <field name="name@nl">63 - Terug te storten btw vermeld op ontvangen creditnota's</field>
+                                <field name="name@fr">63 - TVA à reverser mentionnée sur les notes de crédit reçues</field>
+                                <field name="name@de">63 - Zurückzuzahlende MwSt., die auf erhaltenen Gutschriften angegeben ist</field>
+                                <field name="code">c63</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_63_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-63</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_title_taxes_deductibles" model="account.report.line">
+                        <field name="name">V Deductible</field>
+                        <field name="name@nl">V Aftrekbaar</field>
+                        <field name="name@fr">V Déductibles</field>
+                        <field name="name@de">V Abzugsfähig</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_59" model="account.report.line">
+                                <field name="name">59 - Deductible VAT</field>
+                                <field name="name@nl">59 - Aftrekbare btw</field>
+                                <field name="name@fr">59 - TVA déductible</field>
+                                <field name="name@de">59 - Abzugsfähige MwSt.</field>
+                                <field name="code">c59</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_59_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">59</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_62" model="account.report.line">
+                                <field name="name">62 - Various VAT regularizations in favor of the declarant</field>
+                                <field name="name@nl">62 - Diverse btw-regularisaties in het voordeel van de aangever</field>
+                                <field name="name@fr">62 - Diverses régularisations TVA en faveur du déclarant</field>
+                                <field name="name@de">62 - Verschiedene MwSt.-Regelungen zugunsten des Anmeldepflichtigen</field>
+                                <field name="code">c62</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_62_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">62</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_64" model="account.report.line">
+                                <field name="name">64 - VAT to be recovered on credit notes issued</field>
+                                <field name="name@nl">64 - Te recupereren btw vermeld op uitgereikte creditnota's</field>
+                                <field name="name@fr">64 - TVA à récupérer mentionnée sur les notes de crédit délivrées</field>
+                                <field name="name@de">64 - Zurückzuerhaltende MwSt., die auf ausgestellten Gutschriften angegeben ist</field>
+                                <field name="code">c64</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_64_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">64</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_title_taxes_soldes" model="account.report.line">
+                        <field name="name">VI Balance</field>
+                        <field name="name@nl">VI Saldo</field>
+                        <field name="name@fr">Solde VI</field>
+                        <field name="name@de">VI Saldo</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_71" model="account.report.line">
+                                <field name="name">71 - Taxes due to the State</field>
+                                <field name="name@nl">71 - Aan de Staat verschuldigde belasting</field>
+                                <field name="name@fr">71 - Taxe due à l'Etat</field>
+                                <field name="name@de">71 - Dem Staat geschuldete Steuer</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_71_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(c54.balance + c55.balance + c56.balance + c57.balance + c61.balance + c63.balance) - (c59.balance + c62.balance + c64.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_72" model="account.report.line">
+                                <field name="name">72 - Amount owed by the State</field>
+                                <field name="name@nl">72 - Sommen verschuldigd door de Staat</field>
+                                <field name="name@fr">72 - Sommes dues par l'Etat</field>
+                                <field name="name@de">72 - Vom Staat geschuldeter Betrag</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_72_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(c59.balance + c62.balance + c64.balance) - (c54.balance + c55.balance + c56.balance + c57.balance + c61.balance + c63.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

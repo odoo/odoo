@@ -1,0 +1,37 @@
+.o_snippet_override_invisible {
+    display: block !important;
+    opacity: 70%;
+    position: relative;
+
+    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+        // e.g. Useful if "Height" option (50% or 100%) is enabled.
+        display: flex !important;
+    }
+
+    &::before {
+        position: absolute;
+        // Content is 0px wide => use available width.
+        width: -webkit-fill-available;
+        width: -moz-available;
+        right: 20px;
+        z-index: 100;
+        background-color: $o-we-color-accent;
+        font-size: 0px;
+        pointer-events: none;
+        content: "."; // Content is mandatory.
+    }
+
+    &.d-md-none::before, &.d-lg-none::before {
+        height: 50px;
+        -webkit-mask: url("/html_builder/static/img/options/desktop_invisible.svg") no-repeat 100% 100%;
+    }
+
+    &:not(.d-md-none):not(.d-lg-none)::before {
+        height: 30px;
+        -webkit-mask: url("/html_builder/static/img/options/mobile_invisible.svg") no-repeat 100% 100%;
+    }
+}
+
+.o_conditional_hidden {
+    display: none !important;
+}

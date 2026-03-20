@@ -1,0 +1,24 @@
+declare module "models" {
+    export interface DiscussChannel {
+        storeAsActiveLivechats: Store;
+    }
+    export interface Message {
+        disableChatbotAnswers: boolean;
+    }
+    export interface Store {
+        activeLivechats: DiscussChannel[];
+        guest_token: null;
+        livechat_available: boolean;
+        livechat_rule: LivechatChannelRule;
+    }
+    export interface Thread {
+        _prevComposerDisabled: boolean;
+        _toggleChatbot: boolean;
+        chatbotTypingMessage: Message;
+        hasWelcomeMessage: Readonly<boolean>;
+        isLastMessageFromCustomer: Readonly<boolean>;
+        livechatWelcomeMessage: Message;
+        readyToSwapDeferred: Deferred;
+        requested_by_operator: boolean;
+    }
+}

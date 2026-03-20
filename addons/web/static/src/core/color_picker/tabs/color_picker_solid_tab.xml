@@ -1,0 +1,26 @@
+<templates xml:space="preserve">
+<t t-name="web.ColorPickerSolidTab">
+    <div class="d-flex flex-column align-items-center p-1"
+        t-on-click="props.onColorClick" t-on-mouseover="props.onColorPointerOver"
+        t-on-mouseout="props.onColorPointerOut" t-on-focusin="props.onFocusin" t-on-focusout="props.onFocusout" t-ref="solidTabRef"
+        t-on-keydown="props.colorPickerNavigation">
+        <div class="o_colorpicker_section">
+            <t t-foreach="props.defaultThemeColorVars" t-as="color" t-key="color">
+                <button t-att-data-color="color" t-att-class="{'selected': color === props.defaultColorSet}"
+                    t-att-style="`background-color: var(--${props.cssVarColorPrefix + color})` + (color_index === 3 ? '; grid-column: 5' : '')"
+                    class="btn p-0 o_color_button o_color_picker_button"/>
+            </t>
+        </div>
+
+        <div class="o_color_section">
+            <t t-foreach="props.defaultColors" t-as="line" t-key="line_index">
+                <t t-foreach="line" t-as="color" t-key="color_index">
+                    <button class="o_color_button o_color_picker_button btn p-0"
+                        t-att-class="{'selected': color === props.currentCustomColor.toUpperCase() and !props.defaultColorSet}"
+                        t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                </t>
+            </t>
+        </div>
+    </div>
+</t>
+</templates>

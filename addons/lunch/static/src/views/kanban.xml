@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="lunch.KanbanRenderer">
+        <div class="o_lunch_content d-flex flex-column flex-md-row h-100">
+            <div class="o_lunch_content_container flex-grow-1">
+                <t t-call="lunch.WebKanbanRenderer"/>
+            </div>
+            <LunchDashboard openOrderLine.bind="openOrderLine"/>
+        </div>
+    </t>
+
+    <t t-name="lunch.WebKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <t t-if="showNoContentHelper" position="after">
+            <t t-call="lunch.NoContentHelper"/>
+        </t>
+    </t>
+</templates>

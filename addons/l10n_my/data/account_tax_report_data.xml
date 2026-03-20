@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+
+    <record id="tax_report_sst_02_b2" model="account.report">
+        <field name="name">SST-02 (B2, C, D, E)</field>
+        <field name="country_id" ref="base.my"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_my_tax_report_sst_02_b2_balance_a" model="account.report.column">
+                <field name="name">At Rate</field>
+                <field name="name@ms_MY">Berkadar</field>
+                <field name="expression_label">balance_a</field>
+            </record>
+            <record id="l10n_my_tax_report_sst_02_b2_balance_b" model="account.report.column">
+                <field name="name">Sold Quantity</field>
+                <field name="name@ms_MY">Kuantiti Jualan</field>
+                <field name="expression_label">balance_b</field>
+            </record>
+            <record id="l10n_my_tax_report_sst_02_b2_balance_c" model="account.report.column">
+                <field name="name">Taxable Sales</field>
+                <field name="name@ms_MY">Nilai Jualan Bercukai</field>
+                <field name="expression_label">balance_c</field>
+            </record>
+            <record id="l10n_my_tax_report_sst_02_b2_balance_d" model="account.report.column">
+                <field name="name">Tax Payable</field>
+                <field name="name@ms_MY">Nilai Cukai Kena Bayar</field>
+                <field name="expression_label">balance_d</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_my_sst_part_b2" model="account.report.line">
+                <field name="name">Part B2: VALUE OF TAX PAYABLE FOR GOODS (SALES, DISPOSED, OWN USE) / SERVICES (SERVICES PERFORMED / OWN USE)</field>
+                <field name="name@ms_MY">BAHAGIAN B2: NILAI CUKAI YANG KENA DIBAYAR ATAS BARANGAN (JUALAN / PELUPUSAN / KEGUNAAN SENDIRI) / PERKHIDMATAN (PERKHIDMATAN DIBERIKAN / KEGUNAAN SENDIRI)</field>
+                <field name="code">SST02_B2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_taxable_per_rate" model="account.report.line">
+                        <field name="name">11) Total Value of Tax Payable as Per Tax Rate</field>
+                        <field name="name@ms_MY">11) Jumlah Nilai Jualan dan Cukai Yang Kena dibayar Mengikut Kadar Cukai</field>
+                        <field name="code">SST02_TVTPR</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_my_sst_taxable_5" model="account.report.line">
+                                <field name="name">a) Taxable Goods at 5% Rate</field>
+                                <field name="name@ms_MY">a) Barang Bercukai Berkadar 5%</field>
+                                <field name="code">SST02_5</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_taxable_5_tag_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_11A_C</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_5_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_11A_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_taxable_10" model="account.report.line">
+                                <field name="name">b) Taxable Goods at 10% Rate</field>
+                                <field name="name@ms_MY">b) Barang Bercukai Berkadar 10%</field>
+                                <field name="code">SST02_10</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_taxable_10_tag_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_11B_C</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_10_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_11B_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_services_other_than_group_h" model="account.report.line">
+                                <field name="name">c) Taxable Services other than from Group H</field>
+                                <field name="name@ms_MY">c) Perkhidmatan Bercukai selain dari Kumpulan H</field>
+                                <field name="code">SST02_6_8</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_my_sst_services_other_than_group_h_6" model="account.report.line">
+                                        <field name="name">6%</field>
+                                        <field name="code">SST02_6</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_my_sst_services_other_than_group_h_6_tag_c" model="account.report.expression">
+                                                <field name="label">balance_c</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11C_C6</field>
+                                            </record>
+                                            <record id="l10n_my_sst_services_other_than_group_h_6_tag_d" model="account.report.expression">
+                                                <field name="label">balance_d</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11C_D6</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_my_sst_services_other_than_group_h_8" model="account.report.line">
+                                        <field name="name">8%</field>
+                                        <field name="code">SST02_8</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_my_sst_services_other_than_group_h_8_tag_c" model="account.report.expression">
+                                                <field name="label">balance_c</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11C_C8</field>
+                                            </record>
+                                            <record id="l10n_my_sst_services_other_than_group_h_8_tag_d" model="account.report.expression">
+                                                <field name="label">balance_d</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11C_D8</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_services_group_h" model="account.report.line">
+                                <field name="name">d) Taxable Services from Group H</field>
+                                <field name="name@ms_MY">d) Perkhidmatan Bercukai dari Kumpulan H</field>
+                                <field name="code">SST02_H</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_my_sst_services_group_h_8" model="account.report.line">
+                                        <field name="name">8%</field>
+                                        <field name="code">SST02_H_8</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_my_sst_services_group_h_8_tag_c" model="account.report.expression">
+                                                <field name="label">balance_c</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11D_C8</field>
+                                            </record>
+                                            <record id="l10n_my_sst_services_group_h_8_tag_d" model="account.report.expression">
+                                                <field name="label">balance_d</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11D_D8</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_my_sst_services_group_h_25" model="account.report.line">
+                                        <field name="name">Units @ RM25</field>
+                                        <field name="code">SST02_H_25</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_my_sst_services_group_h_25_tag_c" model="account.report.expression">
+                                                <field name="label">balance_c</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11D_C25</field>
+                                            </record>
+                                            <record id="l10n_my_sst_services_group_h_25_tag_d" model="account.report.expression">
+                                                <field name="label">balance_d</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_11D_D25</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_tax_payable_total_value" model="account.report.line">
+                        <field name="name">12) Total Value of Tax Payable</field>
+                        <field name="name@ms_MY">12) Jumlah Nilai Cukai Yang Kena Dibayar</field>
+                        <field name="code">SST02_PTV</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_tax_payable_total_value_agg_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SST02_5.balance_d + SST02_10.balance_d + SST02_6.balance_d + SST02_8.balance_d + SST02_H_8.balance_d + SST02_H_25.balance_d</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_tax_deduction" model="account.report.line">
+                        <field name="name">13) Amount of Tax Deduction</field>
+                        <field name="name@ms_MY">13) Amaun Potongan Cukai</field>
+                        <field name="code">SST02_ATD</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_my_sst_tax_deduction_from_cn" model="account.report.line">
+                                <field name="name">a) Tax Deduction from Credit Note</field>
+                                <field name="name@ms_MY">a) Potongan Cukai Melalui Nota Kredit</field>
+                                <field name="code">SST02_CN</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_tax_deduction_cn_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02_13A_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_sale_tax_deduction" model="account.report.line">
+                                <field name="name">b) Sales Tax Deduction</field>
+                                <field name="name@ms_MY">b) Potongan Cukai Jualan</field>
+                                <field name="code">SST02_SAD</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_sale_tax_deduction_agg_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SST02_SAD.sub_balance_5 * 0.02 + SST02_SAD.sub_balance_10 * 0.04</field>
+                                    </record>
+                                    <record id="l10n_my_sst_sale_tax_deduction_tag_5" model="account.report.expression">
+                                        <field name="label">sub_balance_5</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02_13_B5</field>
+                                    </record>
+                                    <record id="l10n_my_sst_sale_tax_deduction_tag_10" model="account.report.expression">
+                                        <field name="label">sub_balance_10</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02_13_B10</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_service_tax_deduction" model="account.report.line">
+                                <field name="name">c) Service Tax Deduction</field>
+                                <field name="name@ms_MY">c) Potongan Cukai Perkhidmatan</field>
+                                <field name="code">SST02_SED</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_service_tax_deduction_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_tax_deduction_adjustment" model="account.report.line">
+                        <field name="name">13A) Adjustment under Sales Tax Deduction</field>
+                        <field name="name@ms_MY">13A) Pelarasan di bawah Potong Cukai Jualan</field>
+                        <field name="code">SST02_TDA</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_tax_deduction_adjustment_tag_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_tax_payable_total_before_penalty" model="account.report.line">
+                        <field name="name">14) Total Tax Payable Before Penalty Imposed</field>
+                        <field name="name@ms_MY">14) Jumlah Cukai Yang Kena Dibayar Seblum Penalti Dikenakan</field>
+                        <field name="code">SST02_PTBP</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_tax_payable_total_before_penalty_agg_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SST02_PTV.balance_d - SST02_CN.balance_d - SST02_SAD.balance_d - SST02_SED.balance_d - SST02_TDA.balance_d</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_penalty_amount" model="account.report.line">
+                        <field name="name">15) Penalty Rate / Penalty Amount</field>
+                        <field name="name@ms_MY">15) Kadar Penalti</field>
+                        <field name="code">SST02_P</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_penalty_amount_ext_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_total_including_penalty" model="account.report.line">
+                        <field name="name">16) Total of Tax Payable Inclusive Penalty</field>
+                        <field name="name@ms_MY">16) Jumlah Cukai Kena Dibayar Termasuk Penalti</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_total_including_penalty_agg_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SST02_PTBP.balance_d + SST02_P.balance_d</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_part_c" model="account.report.line">
+                <field name="name">Part C: GOODS UNDER SCHEDULE 2, SALES TAX ORDER (TAX RATE) 2018</field>
+                <field name="name@ms_MY">BAHAGIAN C: BARANG-BARANG DI BAWAH JADUAL KEDUA, PERINTAH CUKAI JUALAN (KADAR CUKAI) 2018</field>
+                <field name="code">SST02_C</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_taxable_per_rate_of_tax" model="account.report.line">
+                        <field name="name">17) Total Value of Tax Payable as per rate of tax</field>
+                        <field name="name@ms_MY">17) Jumlah Nilai Jualan dan Cukai Yang Kena dibayar mengikut kadar cukai</field>
+                        <field name="code">SST02_TVTPRT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_my_sst_taxable_per_rate_of_tax_per_litre" model="account.report.line">
+                                <field name="name">At Rate (Per Litre)</field>
+                                <field name="name@ms_MY">Berkadar (Per Liter)</field>
+                                <field name="code">SST02_ARPL</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_litre_ext_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_litre_agg_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SST02_ARPL.balance_d/SST02_ARPL.balance_a</field>
+                                        <field name="subformula">ignore_zero_division</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_litre_tag_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_17A_C</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_litre_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_17A_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_taxable_per_rate_of_tax_per_kilogram" model="account.report.line">
+                                <field name="name">At Rate (Per Kilogram)</field>
+                                <field name="name@ms_MY">Berkadar (Per Kilogram)</field>
+                                <field name="code">SST02_ARPK</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_kilogram_ext_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_kilogram_agg_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SST02_ARPK.balance_d/SST02_ARPK.balance_a</field>
+                                        <field name="subformula">ignore_zero_division</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_kilogram_tag_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_17B_C</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_per_kilogram_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_17B_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_taxable_per_rate_of_tax_ad_volerum" model="account.report.line">
+                                <field name="name">At Rate (ad-volerum)</field>
+                                <field name="name@ms_MY">Berkadar (ad-volerum)</field>
+                                <field name="code">SST02_ARAV</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_ad_volerum_agg_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SST02_ARAV.balance_d/SST02_ARAV.balance_c</field>
+                                        <field name="subformula">ignore_zero_division</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_ad_volerum_tag_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_17C_C</field>
+                                    </record>
+                                    <record id="l10n_my_sst_taxable_per_rate_of_tax_ad_volerum_tag_d" model="account.report.expression">
+                                        <field name="label">balance_d</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_17C_D</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_part_d" model="account.report.line">
+                <field name="name">Part D: SALES / SERVICES EXEMPTED FROM TAX</field>
+                <field name="name@ms_MY">BAHAGIAN D: JUALAN / PERKHIDMATAN YANG DIKECUALIKAN CUKAI</field>
+                <field name="code">SST02_D</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_sales_of_taxable_services_and_goods" model="account.report.line">
+                        <field name="name">18) Sales of Taxable Goods / Taxable Services</field>
+                        <field name="name@ms_MY">18) Jualan Barang-Barang Bercukai / Perkhidmatan Bercukai</field>
+                        <field name="code">SST02_STGS</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_my_sst_export_special_area_designated_area" model="account.report.line">
+                                <field name="name">a) Export / Special Area / Designated Area</field>
+                                <field name="name@ms_MY">a) Eksport / Kawasan Khas / Kawasan Ditetapkan</field>
+                                <field name="code">SST02_ESADA</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_sales_of_taxable_services_and_goods_tag_c" model="account.report.expression">
+                                        <field name="label">balance_c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-SST02_18A_C</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_local_sale_exempted_to_person_under_sales_tax" model="account.report.line">
+                                <field name="name">b) Local sales exempted to person under the Sales Tax (Person Exempted From Payment of Sales Tax) Order 18:-</field>
+                                <field name="name@ms_MY">b) Jualan Tempatan Kepada Orang di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai Jualan) 2018:</field>
+                                <field name="code">SST02_LSE</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_my_sst_class_of_person" model="account.report.line">
+                                        <field name="name">1) Schedule A (Class of Person)</field>
+                                        <field name="name@ms_MY">1) Jadual A (Kumpulan Orang)</field>
+                                        <field name="code">SST02_ESA</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_my_sst_class_of_person_tag_c" model="account.report.expression">
+                                                <field name="label">balance_c</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_18B_1C</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_my_sst_manufacturer_of_specific_non_taxable_goods" model="account.report.line">
+                                        <field name="name">2) Schedule B (Manufacturer of specific non taxable goods)</field>
+                                        <field name="name@ms_MY">2) Jadual B (Pengilang Spesifik Barang Tidak Bercukai)</field>
+                                        <field name="code">SST02_ESB</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_my_sst_manufacturer_of_specific_non_taxable_goods_tag_c" model="account.report.expression">
+                                                <field name="label">balance_c</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-SST02_18B_2C</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_my_sst_registered_manufacturer" model="account.report.line">
+                                        <field name="name">3) Schedule C (Registered Manufacturer)</field>
+                                        <field name="name@ms_MY">3) Jadual C (Pengilang Berdaftar)</field>
+                                        <field name="code">SST02_ESC</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_my_sst_registered_manufacturer_item_1_and_2" model="account.report.line">
+                                                <field name="name">i) Item 1 and 2 (Purchase / Importation of Raw Materials / Components / Packaging Materials Exempted From Sales Tax)</field>
+                                                <field name="name@ms_MY">i) Butiran 1 dan 2 (Pembelian / Pengimportan Bahan Mentah / Komponen / Bahan Pembungkusan Yang Dikecualikan Cukai Jualan)</field>
+                                                <field name="code">SST02_ESC12</field>
+                                                <field name="hierarchy_level">7</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_my_sst_registered_manufacturer_item_1_and_2_tag_c" model="account.report.expression">
+                                                        <field name="label">balance_c</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">-SST02_18B_3IC</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_my_sst_registered_manufacturer_item_3_and_4" model="account.report.line">
+                                                <field name="name">ii) Item 3 and 4 (Purchase / Importation of Raw Materials / Components / Packaging Materials on behalf of Registered Manufactuer Exempted From Sales Tax).</field>
+                                                <field name="name@ms_MY">ii) Butiran 3 dan 4 (Pembelian / Pengimportan Bahan Mentah / Komponen / Bahan Pembungkusan Bagi Pihak Pengilang Berdaftar Yang Dikecualikan Cukai Jualan)</field>
+                                                <field name="code">SST02_ESC34</field>
+                                                <field name="hierarchy_level">7</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_my_sst_registered_manufacturer_item_3_and_4_tag_c" model="account.report.expression">
+                                                        <field name="label">balance_c</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">-SST02_18B_3IIC</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_my_sst_registered_manufacturer_item_5" model="account.report.line">
+                                                <field name="name">iii) Item 5 (Value of Work Performed Exmpted from Sales Tax).</field>
+                                                <field name="name@ms_MY">iii) Butiran 5 (Nilai Kerja Dilakukan Yang Dikecualikan Cukai Jualan)</field>
+                                                <field name="code">SST02_ESC5</field>
+                                                <field name="hierarchy_level">7</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_my_sst_registered_manufacturer_item_5_tag_c" model="account.report.expression">
+                                                        <field name="label">balance_c</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">-SST02_18B_3IIIC</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_total_value_of_exempted_taxable_services" model="account.report.line">
+                        <field name="name">c) Total Value of Exempted Taxable Services</field>
+                        <field name="name@ms_MY">c) Jumlah Nilai Perkhidmatan Bercukai Yang Dikecualikan</field>
+                        <field name="code">SST02_TVETS</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_total_value_of_exempted_taxable_services_tag_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SST02_18C_C</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_part_e" model="account.report.line">
+                <field name="name">Part E: PURCHASE UNDER THE SCHEDULE C, SALES TAX (PERSON EXEMPTED FROM PAYMENT OF SALES TAX)</field>
+                <field name="name@ms_MY">BAHAGIAN E: BELIAN DI BAWAH JADUAL C, PERINTAH CUKAI JUALAN (ORANG YANG DIKECUALIKAN DARIPADA PEMBAYARAN CUKAI JUALAN) 2018</field>
+                <field name="code">SST02_ESCP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_purchase_under_schedule_c_item_1_and_2" model="account.report.line">
+                        <field name="name">19) Item 1 and 2 (Purchase / Importation of Raw Materials / Components / Packaging Materials Exempted From Sales Tax)</field>
+                        <field name="name@ms_MY">19) Butiran 1 dan 2 (Pembelian / Pengimportan Bahan Mentah / Komponen / Bahan Pembungkusan Yang Dikecualikan Cukai Jualan)</field>
+                        <field name="code">SST02_ESCP_12</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_purchase_under_schedule_c_item_1_and_2_tag_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SST02_19C</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_purchase_under_schedule_c_item_3_and_4" model="account.report.line">
+                        <field name="name">20) Item 3 and 4 (Purchase / Importation of Raw Materials / Components / Packaging Materials on behalf  Registered Manufacturer Exempted From Sales Tax)</field>
+                        <field name="name@ms_MY">20) Butiran 3 dan 4 (Pembelian / Pengimportan Bahan Mentah / Komponen / Bahan Pembungkusan Bagi Pihak Pengilang Berdaftar Yang Dikecualikan Cukai Jualan)</field>
+                        <field name="code">SST02_ESCP_34</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_purchase_under_schedule_c_item_3_and_4_tag_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SST02_20C</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_purchase_under_schedule_c_item_5" model="account.report.line">
+                        <field name="name">21) Item 5 (Value of Work Performed Exempted from Sales Tax)</field>
+                        <field name="name@ms_MY">21) Butiran 5 (Nilai Kerja Dilakukan Yang Dikecualikan Cukai Jualan)</field>
+                        <field name="code">SST02_ESCP_5</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_my_sst_purchase_under_schedule_c_item_5_tag_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SST02_21C</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="tax_report_sst_02_a_b" model="account.report">
+        <field name="name">SST-02A (B)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.my"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="sequence">2</field>
+        <field name="column_ids">
+            <record id="l10n_my_tax_report_sst_02_a_b_balance_a" model="account.report.column">
+                <field name="name">Taxable Service</field>
+                <field name="name@ms_MY">Perkhidmatan Bercukai</field>
+                <field name="expression_label">balance_a</field>
+            </record>
+            <record id="l10n_my_tax_report_sst_02_a_b_balance_b" model="account.report.column">
+                <field name="name">Tax Payable</field>
+                <field name="name@ms_MY">Nilai Cukai Kena Bayar</field>
+                <field name="expression_label">balance_b</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_my_sst_part_b" model="account.report.line">
+                <field name="name">Part B: Service Details</field>
+                <field name="name@ms_MY">BAHAGIAN B: MAKLUMAT PERKHIDMATAN</field>
+                <field name="code">SST02A_B</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_total_value_of_tax_payable" model="account.report.line">
+                        <field name="name">10) Total Value of Tax Payable as Per Tax Rate.</field>
+                        <field name="name@ms_MY">10) Jumlah Nilai Jualan dan Cukai Yang Kena dibayar Mengikut Kadar Cukai</field>
+                        <field name="code">SST02A_10</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_my_sst_value_of_imported_services" model="account.report.line">
+                                <field name="name">a) Value Of Imported Services</field>
+                                <field name="name@ms_MY">a) Nilai Perkhidmatan Diimport</field>
+                                <field name="code">SST02A_VOI</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_value_of_imported_services_tag_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02A_10A_A</field>
+                                    </record>
+                                    <record id="l10n_my_sst_value_of_imported_services_tag_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02A_10A_B</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_my_sst_total_value_of_tax_payable_others" model="account.report.line">
+                                <field name="name">b) Others</field>
+                                <field name="name@ms_MY">b) Lain-lain</field>
+                                <field name="code">SST02A_VOA</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_my_sst_total_value_of_tax_payable_others_tag_a" model="account.report.expression">
+                                        <field name="label">balance_a</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02A_10B_A</field>
+                                    </record>
+                                    <record id="l10n_my_sst_total_value_of_tax_payable_others_tag_b" model="account.report.expression">
+                                        <field name="label">balance_b</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">SST02A_10B_B</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

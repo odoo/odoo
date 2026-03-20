@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PartnerLine">
+        <t t-if="ui.isSmall">
+            <div class="partner-info d-flex flex-column p-1 border-bottom" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
+                t-on-click="() => this.props.onClickPartner(props.partner)">
+                <div class="d-flex justify-content-between align-items-center p-1">
+                    <div>
+                        <b t-esc="props.partner.name or ''" />
+                        <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
+                    </div>
+                    <Dropdown t-if="this.pos.cashier._role !== 'minimal'">
+                        <button class="btn btn-ligth fa fa-bars" />
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected="() => props.onClickEdit(props.partner)">
+                                Edit Details
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => props.onClickOrders(props.partner)">
+                                All Orders
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </div>
+                <div class="partner-line-adress p-1" t-if="props.partner.pos_contact_address" t-esc="props.partner.pos_contact_address" />
+                <div class="partner-line-email p-1">
+                    <div class="mb-1" t-if="props.partner.phone">
+                        <i class="fa fa-fw fa-phone me-2" /><t t-esc="props.partner.phone" />
+                    </div>
+                    <div t-if="props.partner.email" class="email-field mb-1">
+                        <i class="fa fa-fw fa-paper-plane-o me-2" /><t t-esc="props.partner.email" />
+                    </div>
+                </div>
+                <div class="p-1">
+                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag-mobile d-inline-block d-lg-none btn btn-light border">
+                        <i class="fa fa-times me-1"></i>
+                        <span>UNSELECT</span>
+                    </button>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <tr class="partner-line partner-info" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
+                t-on-click="() => this.props.onClickPartner(props.partner)">
+                <td class="text-break w-25">
+                    <b t-esc="props.partner.name or ''" />
+                    <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
+                </td>
+                <td>
+                    <div class="partner-line-adress" t-if="props.partner.pos_contact_address" t-esc="props.partner.pos_contact_address" />
+                </td>
+                <td class="partner-line-email ">
+                    <div t-if="props.partner.phone">
+                        <i class="fa fa-fw fa-phone me-2"/><t t-esc="props.partner.phone"/>
+                    </div>
+                    <div t-if="props.partner.email" class="email-field">
+                        <i class="fa fa-fw fa-paper-plane-o me-2"/><t t-esc="props.partner.email" />
+                    </div>
+                </td>
+                <!-- FIXME: this should be in pos_settle_due, not here -->
+                <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
+                <td class="edit-partner-button-cell align-middle pe-0">
+                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag d-lg-inline-block d-none btn btn-link btn-lg mt-1 float-end">
+                        <i class="fa fa-check"/>
+                    </button>
+                </td>
+                <td class="edit-partner-button-cell align-middle">
+                    <t t-if="this.pos.cashier._role !== 'minimal'">
+                        <Dropdown>
+                            <button class="btn btn-light btn-lg lh-lg border float-end">
+                                <i class="fa fa-fw fa-bars"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <DropdownItem onSelected="() => props.onClickEdit(props.partner)">
+                                    Edit Details
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => props.onClickOrders(props.partner)">
+                                    All Orders
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                    </t>
+                </td>
+            </tr>
+        </t>
+    </t>
+
+</templates>

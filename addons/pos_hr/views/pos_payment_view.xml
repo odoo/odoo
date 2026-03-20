@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_payment_tree_inherit" model="ir.ui.view">
+        <field name="name">pos.payment.list.inherit</field>
+        <field name="model">pos.payment</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

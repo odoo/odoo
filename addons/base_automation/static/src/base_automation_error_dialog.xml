@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="base_automation.ErrorDialog" t-inherit="web.ErrorDialog" t-inherit-mode="primary">
+        <xpath expr="//div[@role='alert']" position="attributes">
+            <attribute name="class" add="o_base_automation_error" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@role='alert']/p[1]" position="after">
+            <p class="mt-2">
+                The error occurred during the execution of the automation rule
+                "<t t-esc="automationName"/>"
+                (ID: <t t-esc="automationId"/>).
+            </p>
+            <p t-if="!isUserAdmin">
+                You can ask an administrator to disable or fix this automation.
+            </p>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='footer']" position="inside">
+            <t t-if="isUserAdmin">
+                <button class="btn btn-secondary ms-auto ms-md-2 o_disable_action_button" t-on-click.prevent="disableAutomation">Disable</button>
+                <button class="btn btn-secondary ms-auto ms-md-2 o_edit_action_button" t-on-click.prevent="editAutomation">Edit</button>
+            </t>
+        </xpath>
+    </t>
+</templates>

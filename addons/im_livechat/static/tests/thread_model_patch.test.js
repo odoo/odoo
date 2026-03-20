@@ -1,0 +1,132 @@
+import {
+    click,
+    contains,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test, waitFor } from "@odoo/hoot";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { defineLivechatModels } from "./livechat_test_helpers";
+
+import { rpc } from "@web/core/network/rpc";
+import { press } from "@odoo/hoot-dom";
+
+describe.current.tags("desktop");
+defineLivechatModels();
+
+test("Thread name unchanged when inviting new users", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "James" });
+    pyEnv["res.partner"].create({
+        name: "James",
+        user_ids: [userId],
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
+    await click("button[title='Members']");
+    await click("button[title='Invite People']");
+    await click("input", {
+        parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
+    });
+    await click("button:enabled", { text: "Invite" });
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await contains(".o-discuss-ChannelMember", { text: "James" });
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
+});
+
+test("Display livechat custom username if defined", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, {
+        user_livechat_username: "livechat custom username",
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "hello");
+    await press("Enter");
+    await contains(".o-mail-Message-author", { text: "livechat custom username" });
+});
+
+test("Display livechat custom name in typing status", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "James" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "James",
+        user_ids: [userId],
+        user_livechat_username: "livechat custom username",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: partnerId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await withUser(userId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
+    );
+    await contains(".o-discuss-Typing", { text: "livechat custom username is typing..." });
+});
+
+test("Display name changes according to member type", async () => {
+    const pyEnv = await startServer();
+    const janePartnerId = pyEnv["res.partner"].create({
+        name: "Jane",
+        user_ids: [Command.create({ name: "jane" })],
+    });
+    const johnPartnerId = pyEnv["res.partner"].create({
+        name: "John",
+        user_ids: [Command.create({ name: "john" })],
+    });
+    const [chatAsNonMember, chatAsVisitor, chatAsAgent] = pyEnv["discuss.channel"].create([
+        { channel_type: "livechat", channel_member_ids: [] },
+        { channel_type: "livechat", channel_member_ids: [] },
+        { channel_type: "livechat", channel_member_ids: [] },
+    ]);
+    pyEnv["discuss.channel.member"].create([
+        {
+            channel_id: chatAsVisitor,
+            partner_id: serverState.partnerId,
+            livechat_member_type: "visitor",
+        },
+        { channel_id: chatAsVisitor, partner_id: janePartnerId, livechat_member_type: "agent" },
+        {
+            channel_id: chatAsAgent,
+            partner_id: serverState.partnerId,
+            livechat_member_type: "agent",
+        },
+        { channel_id: chatAsAgent, partner_id: johnPartnerId, livechat_member_type: "visitor" },
+        { channel_id: chatAsNonMember, partner_id: johnPartnerId, livechat_member_type: "visitor" },
+        { channel_id: chatAsNonMember, partner_id: janePartnerId, livechat_member_type: "agent" },
+    ]);
+    await start();
+    await openDiscuss(chatAsNonMember);
+    await waitFor(".o-mail-DiscussContent-threadName[title=John]");
+    await openDiscuss(chatAsVisitor);
+    await waitFor(".o-mail-DiscussContent-threadName[title=Jane]");
+    await openDiscuss(chatAsAgent);
+    await waitFor(".o-mail-DiscussContent-threadName[title=John]");
+});

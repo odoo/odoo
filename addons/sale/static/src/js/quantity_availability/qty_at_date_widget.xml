@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="sale.QtyAtDate">
+        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
+            t-on-click="showPopup"
+            t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''"
+            t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue }}"
+        />
+    </t>
+
+    <t t-name="sale.QtyAtDatePopover">
+        <div class="p-2">
+            <h6>Availability</h6>
+            <table class="table table-borderless table-sm">
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong t-out="availableLabel"/>
+                            <br/>
+                        </td>
+                        <td class="text-end">
+                            <b t-out='props.record.data.qty_available_today'
+                             t-att-class="props.record.data.qty_available_today &lt; props.calcData.leftToDeliver ? 'text-danger': ''"/>
+                            <t t-out='props.record.data.product_uom_id[1]'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
+                        <td class="text-end">
+                            <b t-out='props.record.data.virtual_available_at_date'
+                            t-att-class="props.record.data.qty_available_today &lt; props.calcData.leftToDeliver ? 'text-danger': ''"/>
+                            <t t-out='props.record.data.product_uom_id[1]'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</template>

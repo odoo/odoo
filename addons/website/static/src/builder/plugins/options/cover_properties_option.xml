@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CoverPropertiesOption">
+<BuilderContext action="'markCoverPropertiesToBeSaved'">
+    <BuilderRow label.translate="Background">
+        <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
+        <BuilderColorPicker title.translate="Color" styleAction="'background-color'"/>
+        <BuilderButtonGroup>
+            <BuilderButton action="'setCoverBackground'" actionParam="true" preview="false" title.translate="Image" className="'ms-auto fa fa-fw fa-camera'"/>
+            <BuilderButton action="'setCoverBackground'" actionParam="false" title.translate="None" className="'fa fa-fw fa-ban'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Size" t-if="this.state.useSize">
+        <BuilderSelect>
+            <BuilderSelectItem t-foreach="coverSizeClasses" t-as="className" t-key="className" classAction="className" t-out="coverSizeLabel(className)"/>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Filter Intensity" applyTo="':scope > .o_record_cover_filter'">
+        <BuilderSelect>
+            <BuilderSelectItem styleAction="'opacity'" styleActionValue="'0'" classAction="''">None</BuilderSelectItem>
+            <BuilderSelectItem styleAction="'opacity'" styleActionValue="'0.2'" classAction="'oe_black'">Low</BuilderSelectItem>
+            <BuilderSelectItem styleAction="'opacity'" styleActionValue="'0.4'" classAction="'oe_black'">Medium</BuilderSelectItem>
+            <BuilderSelectItem styleAction="'opacity'" styleActionValue="'0.6'" classAction="'oe_black'">High</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Text Alignment" t-if="this.state.useTextAlign">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'text-center'">Centered</BuilderSelectItem>
+            <BuilderSelectItem classAction="'text-end'">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</BuilderContext>
+</t>
+
+</templates>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
+        <xpath expr="//t[@t-name='extra_infos']" position="inside">
+            <t t-if="props.thread.livechatVisitorMember?.partner_id?.opportunity_ids?.length" t-call="im_livechat.LivechatChannelInfoList.info_links">
+                <t t-set="title">Open leads</t>
+                <t t-set="templateParams"
+                    t-value="{
+                        title,
+                        'info_records': props.thread.livechatVisitorMember?.partner_id?.opportunity_ids,
+                        'model': 'crm.lead'
+                    }"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>

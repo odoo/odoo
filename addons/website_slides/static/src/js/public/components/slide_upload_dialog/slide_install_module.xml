@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_slides.SlideInstallModule">
+        <span
+            t-if="state.status === 'installing'"
+            class="spinner-border spinner-border-sm me-1"
+        />
+        <t t-out="state.message"/>
+        <t t-portal="'#o_w_slide_upload_btns'">
+            <button
+                class="btn btn-primary"
+                t-att-disabled="state.status === 'installing'"
+                t-on-click="installModule"
+            >
+                <span t-if="state.status === 'failure'">Retry</span>
+                <span t-else="">Install</span>
+            </button>
+        </t>
+    </t>
+</templates>

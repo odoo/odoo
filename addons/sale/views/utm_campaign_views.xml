@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="utm_campaign_view_kanban" model="ir.ui.view">
+        <field name="name">utm.campaign.view.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/div" position="inside">
+                <a t-if="record.invoiced_amount" href="#" title="Revenues" role="button"
+                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_invoiced"
+                    class="btn-outline-primary rounded-pill me-1 order-1">
+                    <span class="badge">
+                        <field name="currency_id" invisible="True"/>
+                        <field name="invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </span>
+                </a>
+                <a t-if="record.quotation_count" href="#" title="Quotations" role="button"
+                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_quotations"
+                    class="btn-outline-primary rounded-pill me-1 order-2">
+                    <span class="badge">
+                        <i class="fa fa-fw fa-money me-1" aria-label="Quotations" role="img"/>
+                        <field name="quotation_count"/>
+                    </span>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="utm_campaign_view_form" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_redirect_to_invoiced"
+                    type="object" class="oe_stat_button order-1" icon="fa-usd" groups="sales_team.group_sale_salesman">
+                    <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
+                </button>
+                <button name="action_redirect_to_quotations"
+                    type="object" class="oe_stat_button order-2" icon="fa-money" groups="sales_team.group_sale_salesman">
+                    <field name="quotation_count" widget="statinfo" string="Quotations"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

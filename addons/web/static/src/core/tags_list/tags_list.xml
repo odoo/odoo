@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TagsList">
+        <t t-foreach="this.visibleTags" t-as="tag" t-key="tag.id or tag_index">
+            <t t-slot="default" t-props="tag"/>
+        </t>
+        <t t-set="invisibleTagCount" t-value="this.invisibleTags.length"/>
+        <t t-if="invisibleTagCount">
+            <span class="o_tags_list_counter o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo" t-on-click.stop="">
+                <span t-out="invisibleTagCount gt 9 ? '9+' : '+' + invisibleTagCount"/>
+            </span>
+        </t>
+    </t>
+
+    <t t-name="web.TagsList.Tooltip">
+        <t t-foreach="tags" t-as="tag" t-key="tag_index">
+            <div t-esc="tag"/>
+        </t>
+    </t>
+
+</templates>

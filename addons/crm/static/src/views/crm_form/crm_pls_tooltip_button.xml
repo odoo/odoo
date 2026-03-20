@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="crm.PlsTooltipButton">
+        <a class="o_crm_pls_tooltip_button border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
+            role="button"
+            title="See AI-computed chances details"
+            aria-label="See AI-computed chances details"
+            t-on-click.prevent.stop="onClickPlsTooltipButton">
+            <img class="m-1" role="img" src="/crm/static/src/img/pls-tooltip-ai-icon.png" alt="AI"/>
+        </a>
+    </t>
+
+    <t t-name="crm.PlsTooltip">
+        <div class="o_crm_pls_tooltip py-1">
+            <t t-set="isSampleData" t-value="props.probability === 0.0"/>
+            <t t-set="positiveDefault" t-value="props.probability >= 50.0  &amp;&amp; !props.top3Data?.length"/>
+            <t t-set="negativeDefault" t-value="props.probability &lt; 50.0 &amp;&amp; !props.low3Data?.length"/>
+            <div class="d-flex px-2 mb-1">
+                <div class="d-inline-block me-3 o_crm_pls_tooltip_wheel position-relative">
+                    <svg class="position-absolute" width="60" height="60" viewBox="0 0 60 60">
+                        <circle class="o_crm_tooltip_wheel_bg_circle"
+                            cx="30" cy="30" r="25" fill="none" stroke-width="4"/>
+                        <circle cx="30" cy="30" r="25" fill="none" stroke-width="4"
+                                t-att-stroke-dasharray="props.dashArrayVals"/>
+                    </svg>
+                    <div class="position-absolute d-flex">
+                        <span class="m-auto fw-bolder">
+                            <t t-out="props.probability"/>%
+                        </span>
+                    </div>
+                </div>
+                <div class="d-inline-block d-flex flex-column justify-content-center">
+                    <div t-if="isSampleData" class="text-primary fw-bold text-uppercase">sample data</div>
+                    <div t-if="props.teamName &amp;&amp; !isSampleData">AI-computed chances of winning for</div>
+                    <div t-else="">AI-computed chances of winning</div>
+                    <div t-if="!isSampleData" class="fw-bolder fs-3">
+                        <t t-if="props.teamName" t-out="props.teamName"/>
+                        <t t-else="">this lead</t>
+                    </div>
+                </div>
+            </div>
+            <div t-if="positiveDefault || props.top3Data?.length"
+                t-attf-class="mb-3 {{isSampleData ? 'o_crm_pls_tooltip_section_sample' : ''}}">
+                <h5 class="bg-primary-subtle py-2 px-2">
+                    <span>Top Positives</span>
+                    <span t-if="isSampleData" class="text-primary fw-normal ms-2">(sample data)</span>
+                </h5>
+                <t t-call="crm.PlsTooltipSectionContent">
+                    <t t-set="iconClasses" t-value="'oi oi-arrow-up-right text-success'"/>
+                    <t t-set="sectionEntries" t-value="props.top3Data"/>
+                    <t t-set="teamName" t-value="props.teamName"/>
+                    <t t-set="useDefault" t-value="positiveDefault"/>
+                </t>
+            </div>
+            <div t-if="negativeDefault || props.low3Data?.length"
+                t-attf-class="mb-3 {{isSampleData ? 'o_crm_pls_tooltip_section_sample' : ''}}">
+                <h5 class="bg-primary-subtle py-2 px-2">
+                    <span>Top Negatives</span>
+                    <span t-if="isSampleData" class="text-primary fw-normal ms-2">(sample data)</span>
+                </h5>
+                <t t-call="crm.PlsTooltipSectionContent">
+                    <t t-set="iconClasses" t-value="'oi oi-arrow-down-right text-danger'"/>
+                    <t t-set="sectionEntries" t-value="props.low3Data"/>
+                    <t t-set="teamName" t-value="props.teamName"/>
+                    <t t-set="useDefault" t-value="negativeDefault"/>
+                </t>
+            </div>
+            <div class="o_crm_pls_tooltip_footer d-flex justify-content-between text-muted fs-xs mt-3 px-2">
+                <span t-if="isSampleData" class="text-primary fw-bold">Close opportunities to get insights.</span>
+                <span t-else="">Computed by Odoo AI using your data.</span>
+                <a role="button" class="ms-2 btn-link"
+                    href="https://www.odoo.com/documentation/latest/applications/sales/crm/track_leads/lead_scoring.html#predictive-lead-scoring" target="_blank">
+                    <i class="fa fa-info-circle pe-1"/>Learn More
+                </a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="crm.PlsTooltipSectionContent">
+        <div t-foreach="sectionEntries" t-as="group" t-key="group_index"
+            t-attf-class="px-2 py-1 {{group.field === 'tag_id' ? 'd-flex align-items-center' : ''}}">
+            <span t-attf-class="{{iconClasses}} o_crm_pls_tooltip_icon me-1"/>
+            <t t-if="group.field === 'stage_id'">
+                <span class="fw-bolder"><t t-out="group.value"/></span>
+                <span class="mx-1">stage</span>
+            </t>
+            <t t-elif="group.field === 'tag_id'">
+                <span>Tagged as</span>
+                <span t-attf-class="o_tag o_tag_color_{{group.color || 0}} o_badge badge rounded-pill fw-bolder mx-1">
+                    <span class="o_tag_badge_text" t-out="group.value"/>
+                </span>
+            </t>
+            <t t-elif="['state_id', 'country_id'].includes(group.field)">
+                <span>Located in</span>
+                <span class="fw-bolder mx-1"><t t-out="group.value"/></span>
+            </t>
+            <t t-elif="group.field === 'phone_state'">
+                <t t-if="group.value === 'correct'">
+                    <span>Has a</span>
+                    <span class="fw-bolder mx-1">valid phone number</span>
+                </t>
+                <t t-elif="group.value === 'incorrect'">
+                    <span>Does not have a</span>
+                    <span class="fw-bolder mx-1">valid phone number</span>
+                </t>
+                <t t-else="">
+                    <span>Does not have a</span>
+                    <span class="fw-bolder mx-1">phone number</span>
+                </t>
+            </t>
+            <t t-elif="group.field === 'email_state'">
+                <t t-if="group.value === 'correct'">
+                    <span>Has a</span>
+                    <span class="fw-bolder mx-1">valid email address</span>
+                </t>
+                <t t-elif="group.value === 'incorrect'">
+                    <span>Does not have a</span>
+                    <span class="fw-bolder mx-1">valid email address</span>
+                </t>
+                <t t-else="">
+                    <span>Does not have an</span>
+                    <span class="fw-bolder mx-1">email address</span>
+                </t>
+            </t>
+            <t t-elif="group.field === 'source_id'">
+                <span>Source is</span>
+                <span class="fw-bolder mx-1"><t t-out="group.value"/></span>
+            </t>
+            <t t-elif="group.field === 'lang_id'">
+                <span>Language is</span>
+                <span class="fw-bolder mx-1"><t t-out="group.value"/></span>
+            </t>
+            <t t-else="">
+                <span>Field</span><span class="mx-1"><t t-out="group.field"/></span>
+                <span>has value</span><span class="fw-bolder mx-1"><t t-out="group.value"/></span>
+            </t>
+        </div>
+        <div t-if="useDefault" class="px-2 py-1">
+            <span t-attf-class="{{iconClasses}} o_crm_pls_tooltip_icon me-1"/>
+            <span class="">Historic win rate</span>
+            <span t-if="teamName" class="fw-bolder">
+                (<span class="me-1" t-out="teamName"/><span>team</span>)
+            </span>
+        </div>
+    </t>
+
+</templates>

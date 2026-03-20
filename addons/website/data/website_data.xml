@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Group multi website -->
+    <record id="group_multi_website" model="res.groups">
+        <field name="name">Multi-website</field>
+    </record>
+
+    <!-- Action Jump on website action -->
+    <record id="action_website" model="ir.actions.act_url">
+        <field name="name">Website</field>
+        <field name="url">/</field>
+        <field name="target">self</field>
+    </record>
+
+
+    <!-- Template for home and contactus -->
+    <template id="website.homepage" name="Home">
+        <t t-call="website.layout" pageName.f="homepage">
+            <div id="wrap" class="oe_structure oe_empty"/>
+        </t>
+    </template>
+    <template id="website.contactus" name="Contact Us">
+        <t t-call="website.layout"
+            logged_partner="env['website.visitor']._get_visitor_from_request().partner_id">
+            <t t-set="contactus_form_values" t-value="{
+                'email_to': res_company.email,
+                'name': request.params.get('name', ''),
+                'phone': request.params.get('phone', ''),
+                'email_from': request.params.get('email_from', ''),
+                'company': request.params.get('company', ''),
+                'subject': request.params.get('subject', ''),
+            }"/>
+            <span class="hidden" data-for="contactus_form" t-att-data-values="contactus_form_values"/>
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_form_aside pt48 pb120" data-snippet="s_form_aside" data-name="Form Aside" data-oe-shape-data="{'shape': 'html_builder/Connections/14', 'colors': {'c5': 'o-color-1'}, 'showOnMobile': true}" style="position: relative;">
+                    <div class="o_we_shape o_html_builder_Connections_14 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Connections/14.svg?c5=o-color-1');"/>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 order-lg-0" style="order: 1;">
+                                <h1 class="h2-fs">Contact us</h1>
+                                <p class="lead">
+                                    Contact us about anything related to our company or services.
+                                </p>
+                                <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                                    <div class="container">
+                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
+                                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact1">
+                                                        <span class="s_website_form_label_content">Name</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact1" type="text" placeholder="John Doe" class="form-control s_website_form_input" name="name" required="" data-fill-with="name"/>
+                                                </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact2">
+                                                        <span class="s_website_form_label_content">Phone Number</span>
+                                                    </label>
+                                                    <input id="contact2" type="tel" placeholder="+1 555-555-5556" class="form-control s_website_form_input" name="phone" data-fill-with="phone"/>
+                                                </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact3">
+                                                        <span class="s_website_form_label_content">Email</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact3" type="email" placeholder="example@mail.com" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
+                                                </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact4">
+                                                        <span class="s_website_form_label_content">Company</span>
+                                                    </label>
+                                                    <input id="contact4" type="text" placeholder="ACME Corp" class="form-control s_website_form_input" name="company" data-fill-with="parent_name"/>
+                                                </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact5">
+                                                        <span class="s_website_form_label_content">Subject</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact5" type="text" placeholder="Describe your request" class="form-control s_website_form_input" name="subject" required=""/>
+                                                </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact6">
+                                                        <span class="s_website_form_label_content">Message</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <textarea id="contact6" placeholder="Write down your message" class="form-control s_website_form_input" name="description" required="" rows="6"></textarea>
+                                                    <div class="s_website_form_field_description small form-text text-muted">We typically respond within 1-2 business days.</div>
+                                                </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_dnone">
+                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact7">
+                                                            <span class="s_website_form_label_content">Email To</span>
+                                                        </label>
+                                                        <div class="col-sm">
+                                                            <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-0 py-2 col-12 s_website_form_submit s_website_form_no_submit_label text-end" data-name="Submit Button">
+                                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                                    <span id="s_website_form_result"></span>
+                                                    <a href="#" role="button" class="btn btn-primary s_website_form_send">Send Message</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-12 col-lg-5 offset-lg-1 pt0 pb32 order-lg-0" style="order: 0;">
+                                <img src="/web/image/website.s_form_aside_default_image" class="img img-fluid rounded" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_title o_cc o_cc4 pt136 pb128" data-vcss="001" data-snippet="s_title" data-name="Title">
+                    <div class="container">
+                        <h2 class="display-4-fs" style="text-align: center;">50,000+ companies use our services <br/>to grow their businesses.</h2>
+                        <p class="lead" style="text-align: center;">Join us and make your company a better place.</p>
+                    </div>
+                </section>
+                <section class="s_faq_list pt120 pb56" data-snippet="s_faq_list" data-name="FAQ List" data-oe-shape-data="{'shape': 'html_builder/Connections/14', 'colors': {'c5': 'o-color-1'}, 'flip': ['y'], 'showOnMobile': true}">
+                    <div class="o_we_shape o_html_builder_Connections_14 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Connections/14.svg?c5=o-color-1&amp;flip=y'); background-position: 50% 0%;"/>
+                    <div class="container">
+                        <div class="row s_nb_column_fixed">
+                            <div class="col-lg-12 pb24">
+                                <h2 class="h3-fs">Need help?</h2>
+                                <p class="lead">In this section, you can address common questions efficiently.</p>
+                            </div>
+                            <div class="col-lg-4 pt16 pb16">
+                                <h3 class="h6-fs"><strong>What sets us apart?</strong></h3>
+                                <p>We deliver personalized solutions, ensuring that every customer receives top-tier service tailored to their needs.</p>
+                            </div>
+                            <div class="col-lg-4 pt16 pb16">
+                                <h3 class="h6-fs"><strong>Is the website user-friendly?</strong></h3>
+                                <p>Our website is designed for easy navigation, allowing you to find the information you need quickly and efficiently.</p>
+                            </div>
+                            <div class="col-lg-4 pt16 pb16">
+                                <h3 class="h6-fs"><strong>Can you trust our partners?</strong></h3>
+                                <p>We collaborate with trusted, high-quality partners to bring you reliable and top-notch products and services.</p>
+                            </div>
+                            <div class="col-lg-4 pt16 pb16">
+                                <h3 class="h6-fs"><strong>What support do we offer?</strong></h3>
+                                <p>We provide 24/7 support through various channels, including live chat, email, and phone, to assist with any queries.</p>
+                            </div>
+                            <div class="col-lg-4 pt16 pb16">
+                                <h3 class="h6-fs"><strong>How is your data secured?</strong></h3>
+                                <p>Your data is protected by advanced encryption and security protocols, keeping your personal information safe.</p>
+                            </div>
+                            <div class="col-lg-4 pt16 pb16">
+                                <h3 class="h6-fs"><strong>Are links to other websites approved?</strong></h3>
+                                <p>Although this Website may be linked to other websites, we are not, directly or indirectly, implying any approval.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="s_hr pt32 pb32" data-snippet="s_hr" data-name="Separator">
+                    <hr class="w-100 mx-auto"/>
+                </div>
+                <section class="s_accordion_image pt64 pb120" data-snippet="s_accordion_image" data-name="Accordion Image">
+                    <div class="container">
+                        <div class="row align-items-start">
+                            <div class="col-lg-7 pt16">
+                                <section class="s_map pt248 pb248 rounded-3" data-map-type="m" data-map-zoom="12" data-snippet="s_map" data-map-address="250 Executive Park Blvd, Suite 3400 San Francisco California (US) United States" data-name="Map">
+                                    <div class="map_container o_not_editable">
+                                        <div class="css_non_editable_mode_hidden">
+                                            <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
+                                                An address must be specified for a map to be embedded
+                                            </div>
+                                        </div>
+                                        <iframe class="s_map_embedded o_not_editable" src="https://maps.google.com/maps?q=250%20Executive%20Park%20Blvd%2C%20Suite%203400%20San%20Francisco%20California%20(US)%20United%20States&amp;t=m&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" aria-label="Map"></iframe>
+                                        <div class="s_map_color_filter"></div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-lg-4 offset-lg-1 pt24">
+                                <h2 class="h3-fs">Come Visit Us</h2>
+                                <p class="lead">Easy ways to reach us, no matter your favorite transport.</p>
+                                <div class="s_accordion" data-snippet="s_accordion" data-name="Accordion" data-vcss="000">
+                                    <div id="o_contactus_accordion" class="s_accordion_highlight accordion">
+                                        <div class="accordion-item position-relative z-1" data-name="Accordion Item">
+                                            <button type="button" id="o_contactus_accordion_btn_1" class="accordion-header accordion-button justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" data-bs-target="#o_contactus_accordion_1" aria-controls="o_contactus_accordion_1" data-bs-toggle="collapse" aria-expanded="true"><span class="flex-grow-1">By Train</span></button>
+                                            <div id="o_contactus_accordion_1" class="accordion-collapse collapse show" data-bs-parent="#o_contactus_accordion" role="region" aria-labelledby="o_contactus_accordion_btn_1">
+                                                <div class="accordion-body">
+                                                    <p>Take BART to Balboa Park Station. From there, board the 29 bus toward Bayview and get off at Executive Park. The building at 250 Executive Park Blvd, Suite 3400, is just a short walk from the stop.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item position-relative z-1" data-name="Accordion Item">
+                                            <button type="button" id="o_contactus_accordion_btn_2" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" data-bs-target="#o_contactus_accordion_2" aria-controls="o_contactus_accordion_2" data-bs-toggle="collapse" aria-expanded="false"><span class="flex-grow-1">By Car</span></button>
+                                            <div id="o_contactus_accordion_2" class="accordion-collapse collapse" data-bs-parent="#o_contactus_accordion" role="region" aria-labelledby="o_contactus_accordion_btn_2">
+                                                <div class="accordion-body">
+                                                    <p>From downtown San Francisco, follow US-101 South and exit at Bayshore Boulevard. Turn left onto Executive Park Blvd, then continue straight until you reach 250 Executive Park Blvd. Parking is available on-site near Suite 3400.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item position-relative z-1" data-name="Accordion Item">
+                                            <button type="button" id="o_contactus_accordion_btn_3" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" data-bs-target="#o_contactus_accordion_3" aria-controls="o_contactus_accordion_3" data-bs-toggle="collapse" aria-expanded="false"><span class="flex-grow-1">By Bike</span></button>
+                                            <div id="o_contactus_accordion_3" class="accordion-collapse collapse" data-bs-parent="#o_contactus_accordion" role="region" aria-labelledby="o_contactus_accordion_btn_3">
+                                                <div class="accordion-body">
+                                                    <p>Cyclists can follow the Bay Trail south from downtown and connect through Geneva Avenue. Head toward Executive Park Blvd, where bike racks are available at 250 Executive Park Blvd, Suite 3400.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <record id="website.contactus_thanks" model="website.page">
+        <field name="name">Thanks (Contact us)</field>
+        <field name="type">qweb</field>
+        <field name="url">/contactus-thank-you</field>
+        <field name="website_indexed" eval="False"/>
+        <field name="is_published">True</field>
+        <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="key">website.contactus_thanks</field>
+        <field name="arch" type="xml">
+            <t name="Thanks (Contact us)" t-name="website.contactus_thanks">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                        <section class="s_text_block pt80 pb80" data-snippet="s_text_block" data-name="Thank You Section">
+                            <div class="container s_allow_columns">
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align: center;">
+                                        <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
+                                        <h1 class="fw-bolder">Thank You!</h1>
+                                        <p class="lead">Your message has been sent. <br/>We will get back to you shortly.</p>
+                                        <a href="/">Go to Homepage</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Lead Generation' data-event-params='{"CTA": "Contact Us"}' />
+                </t>
+            </t>
+        </field>
+    </record>
+
+    <!-- Template for cookie (optional) -->
+    <template id="cookie_policy" name="Cookie Policy">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="s_cta_mockups o_cc o_cc2 pt64 pb64 o_colored_level oe_unremovable" data-snippet="s_cta_mockups" data-name="Call to Action Mockups">
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="9">
+                            <div class="o_grid_item g-height-6 g-col-lg-4 col-lg-4 o_colored_level oe_unremovable" style="grid-area: 3 / 1 / 9 / 5; z-index: 2;">
+                                <h1 class="h3-fs">Manage Your Cookie Preferences</h1>
+                                <p class="lead">We use cookies to enhance your experience on our website and personalize content. You have full control over your choices and can update your preferences at any time.</p>
+                                <a href="#" class="o_cookies_bar_toggle btn btn-primary btn-md rounded-circle oe_unremovable">Update My Cookie Preferences</a>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-9 g-col-lg-7 col-lg-7 o_colored_level" style="grid-area: 1 / 6 / 10 / 13; z-index: 1;">
+                                <img src="html_editor/image_shape/website.s_cta_mockups_default_image/html_builder/devices/macbook_front.svg" class="img img-fluid" data-shape="html_builder/devices/macbook_front" data-format-mimetype="image/webp" data-file-name="s_cta_mockups.webp" alt="" loading="lazy" data-mimetype="image/webp" style=""/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image o_snippet_mobile_invisible g-height-8 g-col-lg-2 col-lg-2 d-none d-lg-block o_colored_level" style="grid-area: 2 / 6 / 10 / 8; z-index: 3;" data-invisible="1">
+                                <img src="html_editor/image_shape/website.s_cta_mockups_default_image_1/html_builder/devices/iphone_front_portrait.svg" class="img img-fluid" data-shape="html_builder/devices/iphone_front_portrait" data-format-mimetype="image/webp" data-file-name="s_cta_mockups_1.webp" alt="" loading="lazy" data-mimetype="image/webp" style=""/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="pt8 pb8">
+                    <div class="container">
+                        <h2 class="pt16 h2-fs">Cookie Policy</h2>
+                        <p>
+                            Cookies are small bits of text sent by our servers to your computer or device when you access our services.
+                            They are stored in your browser and later sent back to our servers so that we can provide contextual content.
+                            Without cookies, using the web would be a much more frustrating experience.
+                            We use them to support your activities on our website. For example, your session (so you don't have to login again) or your shopping cart.
+                            <br/>
+                            Cookies are also used to help us understand your preferences based on previous or current activity on our website (the pages you have
+                            visited), your language and country, which enables us to provide you with improved services.
+                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer
+                            better site experiences and tools in the future.
+                        </p>
+                        <p>
+                            Here is an overview of the cookies that may be stored on your device when you visit our website:
+                        </p>
+                        <div class="table-responsive">
+                            <table class="small table table-bordered text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" style="width: 20%">Category of Cookie</th>
+                                        <th scope="col" style="width: 50%; min-width: 200px;">Purpose</th>
+                                        <th scope="col" style="width: 30%">Examples</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p>Session &amp; Security<br/>(essential)</p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                Authenticate users, protect user data and allow the website to deliver the services users expects,
+                                                such as maintaining the content of their cart, or allowing file uploads.
+                                            </p>
+                                            <p>The website will not work properly if you reject or discard those cookies.</p>
+                                        </td>
+                                        <td>
+                                            session_id (Odoo)<br/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Preferences<br/>(essential)</p>
+                                        </td>
+                                        <td>
+                                            <p>Remember information about the preferred look or behavior of the website, such as your preferred language or region.</p>
+                                            <p>Your experience may be degraded if you discard those cookies, but the website will still work.</p>
+                                        </td>
+                                        <td>
+                                            frontend_lang (Odoo)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interaction History<br/>(optional)</td>
+                                        <td>
+                                            <p>
+                                                Used to collect information about your interactions with the website, the pages you've seen,
+                                                and any specific marketing campaign that brought you to the website.
+                                            </p>
+                                            <p>We may not be able to provide the best service to you if you reject those cookies, but the website will work.</p>
+                                        </td>
+                                        <td>
+                                            im_livechat_previous_operator (Odoo)<br/>
+                                            utm_campaign (Odoo)<br/>
+                                            utm_source (Odoo)<br/>
+                                            utm_medium (Odoo)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Advertising &amp; Marketing<br/>(optional)</p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                Used to make advertising more engaging to users and more valuable to publishers and advertisers,
+                                                such as providing more relevant ads when you visit other websites that display ads or to improve reporting on ad campaign performance.
+                                            </p>
+                                            <p>Note that some third-party services may install additional cookies on your browser in order to identify you.</p>
+                                            <p>
+                                                You may opt-out of a third-party's use of cookies by visiting the <a class="o_translate_inline" href="https://optout.networkadvertising.org/?c=1" rel="nofollow">Network Advertising Initiative opt-out page</a>.
+                                                The website will still work if you reject or discard those cookies.
+                                            </p>
+                                        </td>
+                                        <td>
+                                            __gads (Google)<br/>
+                                            __gac (Google)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Analytics<br/>(optional)</p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                Understand how visitors engage with our website, via Google Analytics.
+                                                Learn more about <a class="o_translate_inline" href="https://support.google.com/analytics/answer/11397207?hl=en">Analytics cookies and privacy information.</a>
+                                            </p>
+                                            <p>The website will still work if you reject or discard those cookies.</p>
+                                        </td>
+                                        <td>
+                                            _ga (Google)<br/>
+                                            _gat (Google)<br/>
+                                            _gid (Google)<br/>
+                                            _gac_* (Google)
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>
+                            You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.
+                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies.
+                        </p>
+                        <p>We do not currently support Do Not Track signals, as there is no industry standard for compliance.</p>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Template configurator (optional) -->
+    <template id="website.aboutus" name="About Us">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg_wrap">
+                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+                        </span>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>About us</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="website.our_services" name="Services">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg_wrap">
+                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+                        </span>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Services</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="pricing" name="Pricing">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg_wrap">
+                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+                        </span>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Pricing</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="privacy_policy" name="Privacy Policy">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg_wrap">
+                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+                        </span>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Privacy Policy</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Configurator page features -->
+    <record id="feature_page_about_us" model="website.configurator.feature">
+        <field name="name">About Us</field>
+        <field name="description">Info and stats about your company</field>
+        <field name="iap_page_code">about_us</field>
+        <field name="sequence">1</field>
+        <field name="page_view_id" ref="aboutus"/>
+        <field name="icon">fa-building</field>
+        <field name="menu_company">True</field>
+        <field name="menu_sequence">50</field>
+        <field name="feature_url">/about-us</field>
+    </record>
+    <record id="feature_page_our_services" model="website.configurator.feature">
+        <field name="name">Services</field>
+        <field name="description">Description of your services offer</field>
+        <field name="iap_page_code">our_services</field>
+        <field name="sequence">3</field>
+        <field name="page_view_id" ref="our_services"/>
+        <field name="icon">fa-handshake-o</field>
+        <field name="menu_sequence">30</field>
+        <field name="feature_url">/our-services</field>
+    </record>
+    <record id="feature_page_pricing" model="website.configurator.feature">
+        <field name="name">Pricing Plan</field>
+        <field name="description">Useful if you sell subscriptions</field>
+        <field name="iap_page_code">pricing</field>
+        <field name="sequence">4</field>
+        <field name="page_view_id" ref="pricing"/>
+        <field name="icon">fa-random</field>
+        <field name="menu_sequence">35</field>
+        <field name="feature_url">/pricing</field>
+    </record>
+
+    <!-- Configurator apps features -->
+    <record id="feature_module_news" model="website.configurator.feature">
+        <field name="name">News</field>
+        <field name="description">Blogging and posting relevant content</field>
+        <field name="sequence">6</field>
+        <field name="website_config_preselection">blog</field>
+        <field name="module_id" ref="base.module_website_blog"/>
+        <field name="icon">fa-rss</field>
+        <field name="menu_company">True</field>
+        <field name="menu_sequence">40</field>
+        <field name="feature_url">/blog</field>
+    </record>
+    <record id="feature_module_career" model="website.configurator.feature">
+        <field name="name">Career</field>
+        <field name="description">Publish job opportunities</field>
+        <field name="sequence">8</field>
+        <field name="module_id" ref="base.module_website_hr_recruitment"/>
+        <field name="icon">fa-address-card</field>
+    </record>
+    <record id="feature_module_shop" model="website.configurator.feature">
+        <field name="name">Shop</field>
+        <field name="description">Sell more with an eCommerce</field>
+        <field name="sequence">9</field>
+        <field name="website_config_preselection">online_store</field>
+        <field name="module_id" ref="base.module_website_sale"/>
+        <field name="icon">fa-shopping-cart</field>
+        <field name="menu_sequence">15</field>
+        <field name="feature_url">/shop</field>
+    </record>
+    <record id="feature_module_event" model="website.configurator.feature">
+        <field name="name">Events</field>
+        <field name="description">Publish on-site and online events</field>
+        <field name="sequence">10</field>
+        <field name="website_config_preselection">event</field>
+        <field name="module_id" ref="base.module_website_event"/>
+        <field name="icon">fa-ticket</field>
+        <field name="menu_sequence">20</field>
+        <field name="feature_url">/event</field>
+    </record>
+    <record id="feature_module_live_chat" model="website.configurator.feature">
+        <field name="name">Live Chat</field>
+        <field name="description">Chat with visitors to improve traction</field>
+        <field name="sequence">12</field>
+        <field name="module_id" ref="base.module_website_livechat"/>
+        <field name="icon">fa-comments</field>
+    </record>
+    <record id="feature_module_elearning" model="website.configurator.feature">
+        <field name="name">eLearning</field>
+        <field name="description">Share knowledge publicly or for a fee</field>
+        <field name="sequence">13</field>
+        <field name="website_config_preselection">elearning</field>
+        <field name="module_id" ref="base.module_website_slides"/>
+        <field name="icon">fa-graduation-cap</field>
+        <field name="menu_sequence">25</field>
+        <field name="feature_url">/slides</field>
+    </record>
+
+    <data noupdate="1">
+        <!-- Default pagese -->
+        <record id="homepage_page" model="website.page">
+            <field name="is_published">True</field>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="url">/</field>
+            <field name="view_id" ref="homepage"/>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the homepage of the website</field>
+        </record>
+        <record id="contactus_page" model="website.page">
+            <field name="url">/contactus</field>
+            <field name="is_published">True</field>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="view_id" ref="contactus"/>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the contact us page of the website</field>
+        </record>
+        <record id="privacy_policy_page" model="website.page">
+            <field name="url">/privacy</field>
+            <field name="view_id" ref="privacy_policy"/>
+            <field name="is_published">True</field>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the privacy policy page of the website</field>
+        </record>
+
+        <!-- Default Menu to store module menus for new website -->
+        <record id="main_menu" model="website.menu">
+          <field name="name">Default Main Menu</field>
+          <field name="url">/default-main-menu</field>
+        </record>
+        <record id="menu_home" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/</field>
+            <field name="page_id" ref="website.homepage_page"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+
+        <!-- Default Website -->
+        <record id="default_website" model="website">
+            <field name="name">My Website</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="user_id" ref="base.public_user"/>
+        </record>
+    </data>
+</odoo>

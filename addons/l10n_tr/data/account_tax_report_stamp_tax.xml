@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="stamp_tax_report" model="account.report">
+        <field name="name">Stamp Tax Report</field>
+        <field name="name@tr">Damga Vergisi Raporu</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.tr"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="stamp_tax_base_column" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@tr">Temel</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="stamp_tax_tax_column" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@tr">Vergi</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="stamp_tax_sale" model="account.report.line">
+                <field name="name">Sales Tax</field>
+                <field name="name@tr">Satış Vergisi</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="stamp_tax_sale_line_0948" model="account.report.line">
+                        <field name="name">Stamp Tax 0.948%</field>
+                        <field name="name@tr">Damga Vergisi %0.948</field>
+                        <field name="code">1STMP</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_sale_line_0948_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1_B</field>
+                            </record>
+                            <record id="stamp_tax_sale_line_0948_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1_T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="stamp_tax_sale_line_0759" model="account.report.line">
+                        <field name="name">Stamp Tax 0.759%</field>
+                        <field name="name@tr">Damga Vergisi %0.759</field>
+                        <field name="code">2STMP</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_sale_line_0759_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2_B</field>
+                            </record>
+                            <record id="stamp_tax_sale_line_0759_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2_T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="stamp_tax_sale_line_0189" model="account.report.line">
+                        <field name="name">Stamp Tax 0.189%</field>
+                        <field name="name@tr">Damga Vergisi %0.189</field>
+                        <field name="code">3STMP</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_sale_line_0189_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3_B</field>
+                            </record>
+                            <record id="stamp_tax_sale_line_0189_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3_T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="stamp_tax_sale_total" model="account.report.line">
+                        <field name="name">Total</field>
+                        <field name="name@tr">Toplam</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_sale_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1STMP.base + 2STMP.base + 3STMP.base</field>
+                            </record>
+                            <record id="stamp_tax_sale_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1STMP.tax + 2STMP.tax + 3STMP.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="stamp_tax_purchase" model="account.report.line">
+                <field name="name">Purchase Tax</field>
+                <field name="name@tr">Alım Vergisi</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="stamp_tax_purchase_line_0948" model="account.report.line">
+                        <field name="name">Stamp Tax 0.948%</field>
+                        <field name="name@tr">Damga Vergisi %0.948</field>
+                        <field name="code">4STMP</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_purchase_line_0948_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4_B</field>
+                            </record>
+                            <record id="stamp_tax_purchase_line_0948_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4_T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="stamp_tax_purchase_line_0759" model="account.report.line">
+                        <field name="name">Stamp Tax 0.759%</field>
+                        <field name="name@tr">Damga Vergisi %0.759</field>
+                        <field name="code">5STMP</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_purchase_line_0759_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5_B</field>
+                            </record>
+                            <record id="stamp_tax_purchase_line_0759_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5_T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="stamp_tax_purchase_line_0189" model="account.report.line">
+                        <field name="name">Stamp Tax 0.189%</field>
+                        <field name="name@tr">Damga Vergisi %0.189</field>
+                        <field name="code">6STMP</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_purchase_line_0189_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6_B</field>
+                            </record>
+                            <record id="stamp_tax_purchase_line_0189_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6_T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="stamp_tax_purchase_total" model="account.report.line">
+                        <field name="name">Total</field>
+                        <field name="name@tr">Toplam</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="stamp_tax_purchase_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">4STMP.base + 5STMP.base + 6STMP.base</field>
+                            </record>
+                            <record id="stamp_tax_purchase_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">4STMP.tax + 5STMP.tax + 6STMP.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocTable">
+    <div class="overflow-auto w-100 p-1">
+        <table class="o-doc-table rounded bg-1 w-100">
+            <tr t-if="props.data.headers" class="bg-1">
+                <th
+                    t-foreach="props.data.headers"
+                    t-as="header"
+                    t-key="header_index"
+                    t-on-click="() => this.onRowHeaderClick(header_index)"
+                    class="position-relative text-nowrap text-start cursor-pointer user-select-none pt-1 pb-1 ps-2"
+                    t-attf-style="width: {{ 100 / props.data.headers.length }}%"
+                >
+                    <span class="me-2" t-out="header"></span>
+                    <i
+                        t-att-class="getSortIcon(header_index)"
+                        aria-hidden="true"
+                    ></i>
+                </th>
+            </tr>
+
+            <tr
+                t-foreach="items"
+                t-as="rows"
+                t-key="rows_index"
+                class="bg-1"
+                t-att-class="{ 'o-doc-active': rows_index === props.activeIndex }"
+                t-att-id="getId(rows)"
+            >
+                <td
+                    t-foreach="rows"
+                    t-as="row"
+                    t-key="row_index"
+                    class="text-start"
+                >
+                    <i
+                        t-if="row.subData"
+                        class="fa fa-bars o-doc-sub-table-btn d-inline me-1 cursor-pointer"
+                        aria-hidden="true"
+                        t-on-click="(ev) => this.showSubTable(ev, row.subData)"
+                    />
+
+                    <t t-if="row and row.type == 'tooltip'">
+                        <i
+                            class="fa fa-question-circle"
+                            aria-hidden="true"
+                            t-if="row.value"
+                            t-on-mouseover="(ev) => this.showDynamicTooltip(ev, row.value)"
+                            t-on-mouseleave="() => this.hideDynamicTooltip()"
+                        ></i>
+                    </t>
+                    <t t-else="" t-tag="getTag(row)" t-att-class="getClass(row)" t-out="getValue(row)"/>
+
+                    <a
+                        t-if="row.relation"
+                        class="cursor-pointer text-muted ms-1"
+                        href="#"
+                        t-on-click="() => this.goToModel(row.relation)"
+                    >
+                        <t t-out="row.relation"/>
+                        <i
+                            class="fa fa-external-link ps-1 d-inline"
+                            aria-hidden="true"
+                        ></i>
+                    </a>
+                </td>
+            </tr>
+
+            <tr t-if="items.length === 0 and props.data.headers" class="bg-1">
+                <td t-foreach="props.data.headers" t-as="row" t-key="row_index" t-attf-style="width: {{ 100 / props.data.headers.length }}%" class="text-start text-muted">
+                    <t t-if="row_index === 0">
+                        No Data
+                    </t>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div
+        t-if="state.subTable"
+        class="o-doc-sub-table overflow-auto position-fixed bg-1 p-1 shadow border z-index-1 rounded"
+        t-att-style="state.subTableStyle"
+        t-ref="subTableRef"
+    >
+        <DocTable data="state.subTable"/>
+    </div>
+    <div
+        class="o-doc-dynamic-tooltip"
+        t-att-style="state.tooltipStyle"
+        t-ref="tooltipRef"
+    >
+        <t t-out="state.tooltipContent"/>
+    </div>
+</t>
+
+</templates>

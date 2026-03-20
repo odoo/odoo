@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Display a "lock/unlock" icon for the picking in the done and cancelled states -->
+    <t t-name="stock.PickingLockedStatusBarField.ItemLabel">
+        <span t-esc="item.label"/>
+        <t t-if="['done', 'cancel'].includes(item.value) and item.isSelected">
+            <i t-attf-class="fa fa-fw ms-1 #{isLocked ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
+        </t>
+    </t>
+
+    <t t-name="stock.PickingLockedStatusBarField" t-inherit="web.StatusBarField" t-inherit-mode="primary">
+        <xpath expr="//button[@t-esc='item.label']" position="inside">
+            <t t-call="stock.PickingLockedStatusBarField.ItemLabel"/>
+        </xpath>
+        <xpath expr="//button[@t-esc='item.label']" position="attributes">
+            <attribute name="t-esc"/>
+        </xpath>
+
+        <!-- For Mobile view -->
+        <xpath expr="//t[@t-out='getCurrentLabel()']" position="replace">
+            <t t-set="item" t-value="currentItem"/>
+            <t t-call="stock.PickingLockedStatusBarField.ItemLabel"/>
+        </xpath>
+    </t>
+</templates>

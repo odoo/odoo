@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <t t-inherit="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//a[@id='external_link']" position="attributes">
+            <attribute name="t-if">data.external_url &amp;&amp; !data.course_url</attribute>
+        </xpath>
+        <xpath expr="//a[@id='external_link']" position="after">
+            <a id="course_link" t-attf-href="#{data.course_url}" target="_blank" t-if="data.course_url"
+                style="font-size: 1rem;" class="ms-2 fa fa-external-link btn-secondary"/>
+        </xpath>
+    </t>
+</odoo>

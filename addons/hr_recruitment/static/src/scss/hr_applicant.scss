@@ -1,0 +1,27 @@
+.o_applicant_interviewer_form {
+    .o-mail-Chatter-sendMessage,
+    .o-mail-Chatter-logNote,
+    .o-mail-Thread-empty {
+        display: none;
+    }
+}
+
+.o_form_view.o_applicant_form .o_form_renderer {
+    &.o_form_readonly {
+        .o_field_empty:empty {
+            min-height: unset;
+        }
+    }
+
+    &.o_form_editable {
+        .oe_title {
+            max-width: unset;
+        }
+    }
+}
+
+.o_hr_applicant_view_activity {
+    .o_m2o_avatar {
+        margin-right: 0px !important;
+    }
+}

@@ -1,0 +1,248 @@
+import { toRaw } from "@odoo/owl";
+
+import { _t } from "@web/core/l10n/translation";
+import { download } from "@web/core/network/download";
+import { registry } from "@web/core/registry";
+import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
+import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { rpc } from "@web/core/network/rpc";
+
+const { DateTime } = luxon;
+
+export const messageActionsRegistry = registry.category("mail.message/actions");
+
+/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
+/** @typedef {import("models").Message} Message */
+/** @typedef {import("models").Thread} Thread */
+/**
+ * @typedef {ActionDefinition} MessageActionDefinition
+ */
+/**
+ * @param {string} id
+ * @param {MessageActionDefinition} definition
+ */
+export function registerMessageAction(id, definition) {
+    messageActionsRegistry.add(id, definition);
+}
+
+registerMessageAction("reaction", {
+    component: QuickReactionMenu,
+    componentProps: ({ message, owner }) => ({
+        message,
+        action: messageActionsRegistry.get("reaction"),
+        messageActive: owner.isActive,
+    }),
+    componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
+    condition: ({ message, thread }) => message.canAddReaction(thread),
+    icon: "oi oi-smile-add",
+    name: _t("Add a Reaction"),
+    onSelected({ owner }) {
+        const anchorEl = owner.isMessageContextMenu
+            ? owner.anchor.el
+            : owner.root?.el?.querySelector(`[name="${this.id}"]`);
+        return owner.reactionPicker.open({ el: anchorEl });
+    },
+    setup: ({ message, owner, thread }) =>
+        (owner.reactionPicker = useEmojiPicker(undefined, {
+            onSelect: (emoji) => {
+                const reaction = message.reactions.find(
+                    ({ content, personas }) =>
+                        content === emoji && thread.effectiveSelf.in(personas)
+                );
+                if (!reaction) {
+                    message.react(emoji);
+                }
+            },
+        })),
+    sequence: 10,
+});
+registerMessageAction("reply-to", {
+    condition: ({ message: msg, thread: thr }) => {
+        const message = toRaw(msg);
+        const thread = toRaw(thr);
+        return (
+            message.canReplyTo(thread) ||
+            (!["discuss.channel", "mail.box"].includes(thread?.model) &&
+                message.isNote &&
+                !message.isSelfAuthored)
+        );
+    },
+    icon: "fa fa-reply",
+    name: _t("Reply"),
+    onSelected: ({ message: msg, owner, thread: thr }) => {
+        const message = toRaw(msg);
+        const thread = toRaw(thr);
+        const composer = thread.composer;
+        if (message.eq(composer.replyToMessage)) {
+            composer.replyToMessage = undefined;
+            return;
+        }
+        if (["discuss.channel", "mail.box"].includes(thread.model)) {
+            composer.replyToMessage = message;
+        }
+        if (thread.channel) {
+            return;
+        }
+        if (!message.isSelfAuthored && message.model !== "discuss.channel") {
+            const mentionText = `@${message.authorName} `;
+            if (!composer.composerText.includes(mentionText)) {
+                composer.mentionedPartners.add(message.author);
+                composer.insertText(mentionText, 0, { moveCursorToEnd: true });
+            }
+        }
+        owner.env.inChatter?.toggleComposer("note", { force: true });
+        if (!composer.isFocused) {
+            composer.autofocus++;
+        }
+    },
+    sequence: ({ message, store, thread }) =>
+        thread?.eq(store.inbox) || message.isSelfAuthored ? 55 : 20,
+});
+registerMessageAction("add-bookmark", {
+    condition: ({ message }) => message.canToggleBookmark && !message.is_bookmarked,
+    icon: "fa fa-bookmark-o",
+    name: _t("Bookmark"),
+    onSelected: ({ message }) => message.addBookmark(),
+    sequence: 30,
+});
+registerMessageAction("remove-bookmark", {
+    condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
+    icon: "fa fa-bookmark",
+    name: _t("Remove from Bookmarks"),
+    onSelected: ({ message, thread }) => message.removeBookmark(thread),
+    sequence: 30,
+});
+registerMessageAction("mark-as-read", {
+    condition: ({ store, thread }) => thread?.eq(store.inbox),
+    icon: "fa fa-check",
+    name: _t("Mark as Read"),
+    onSelected: ({ message }) => message.setDone(),
+    sequence: 40,
+});
+registerMessageAction("mark-as-unread", {
+    condition: ({ message, thread }) => message.canMarkAsUnread(thread),
+    icon: "fa fa-eye-slash",
+    name: _t("Mark as Unread"),
+    onSelected: ({ message, thread }) => message.markAsUnread(thread),
+    sequence: 40,
+});
+registerMessageAction("reactions", {
+    condition: ({ message }) => message.reactions.length,
+    icon: "fa fa-smile-o",
+    name: _t("View Reactions"),
+    onSelected: ({ message, owner, store }) => {
+        store.env.services.dialog.add(MessageReactionMenu, { message }, { context: owner });
+    },
+    sequence: 50,
+});
+registerMessageAction("unfollow", {
+    condition: ({ message, thread }) => message.canUnfollow(thread),
+    icon: "fa fa-user-times",
+    name: _t("Unfollow"),
+    onSelected: ({ message }) => message.unfollow(),
+    sequence: 60,
+});
+registerMessageAction("edit", {
+    condition: ({ message }) => message.editable,
+    icon: "fa fa-pencil",
+    name: _t("Edit"),
+    onSelected: ({ message, owner, thread }) => {
+        message.enterEditMode(thread);
+        owner.optionsDropdown?.close();
+    },
+    sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
+});
+registerMessageAction("delete", {
+    condition: ({ message }) => message.deletable,
+    icon: "fa fa-trash",
+    name: _t("Delete"),
+    onSelected: ({ message, owner }) => toRaw(message).showDeleteConfirm(owner),
+    sequence: 120,
+    tags: ACTION_TAGS.DANGER,
+});
+registerMessageAction("download_files", {
+    condition: ({ message, store }) =>
+        message.attachment_ids.length > 1 && store.self_user?.share === false,
+    icon: "fa fa-download",
+    name: _t("Download Files"),
+    onSelected: ({ message }) =>
+        download({
+            data: {
+                file_ids: message.attachment_ids.map((rec) => rec.id),
+                zip_name: `attachments_${DateTime.local().toFormat("HHmmddMMyyyy")}.zip`,
+            },
+            url: "/mail/attachment/zip",
+        }),
+    sequence: 55,
+});
+registerMessageAction("toggle-translation", {
+    condition: ({ message }) => message.isTranslatable,
+    icon: ({ message }) =>
+        `fa fa-language ${message.showTranslation ? "o-mail-Message-translated" : ""}`,
+    name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),
+    onSelected: ({ message }) => message.onClickToggleTranslation(),
+    sequence: 100,
+});
+registerMessageAction("copy-message", {
+    condition: ({ message }) => !message.isBodyEmpty,
+    onSelected: ({ message }) => message.copyMessageText(),
+    name: _t("Copy Text"),
+    icon: "fa fa-copy",
+    sequence: () => (isMobileOS() ? 30 : 105),
+});
+registerMessageAction("copy-link", {
+    condition: ({ message, thread }) =>
+        message.message_type &&
+        message.message_type !== "user_notification" &&
+        thread &&
+        (!thread.access_token || thread.hasReadAccess),
+    icon: "fa fa-link",
+    name: _t("Copy Link"),
+    onSelected: ({ message }) => message.copyLink(),
+    sequence: 110,
+});
+registerMessageAction("end-poll", {
+    condition: ({ message }) =>
+        message.poll && !message.poll.end_message_id && message.poll.createdBySelf,
+    icon: " oi oi-view-cohort",
+    name: _t("End Poll"),
+    onSelected: ({ message }) => rpc("/mail/poll/end", { poll_id: message.poll.id }),
+    sequence: 115,
+});
+
+export class MessageAction extends Action {
+    /** @type {() => Message} */
+    messageFn;
+    /** @type {() => Thread} */
+    threadFn;
+    /**
+     * @param {Object} param0
+     * @param {Thread|() => Thread} thread
+     */
+    constructor({ message, thread }) {
+        super(...arguments);
+        this.messageFn = typeof message === "function" ? message : () => message;
+        this.threadFn = typeof thread === "function" ? thread : () => thread;
+    }
+
+    get params() {
+        return Object.assign(super.params, { message: this.messageFn(), thread: this.threadFn() });
+    }
+}
+
+class UseMessageActions extends UseActions {
+    ActionClass = MessageAction;
+}
+
+/**
+ * @param {Object} [params0={}]
+ * @param {Message|() => Message} [message]
+ * @param {Thread|() => Thread} [thread] when set, the thread the message is being viewed
+ */
+export function useMessageActions({ message, thread } = {}) {
+    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, { message, thread });
+}

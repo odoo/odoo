@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_restaurant.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <div name="cashier_name" position="after">
+                <div class="w-100 text-center mb-2" t-if="conditions['module_pos_restaurant'] and extra_data['table_name']">
+                    Table <t t-out="extra_data['table_name']" />, Guest <t t-out="order['customer_count'] or 'N/A'" />
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

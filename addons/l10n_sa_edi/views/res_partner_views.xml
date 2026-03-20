@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.l10n_sa_edi.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]"  position="after">
+                    <field name="l10n_sa_edi_additional_identification_scheme" invisible="'SA' not in fiscal_country_codes or country_code != 'SA'"/>
+                    <field name="l10n_sa_edi_additional_identification_number" string="Identification Number" invisible="'SA' not in fiscal_country_codes or country_code != 'SA' or l10n_sa_edi_additional_identification_scheme == 'TIN'"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

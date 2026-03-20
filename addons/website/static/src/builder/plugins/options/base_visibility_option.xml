@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.BaseVisibilityOption">
+    <BuilderRow label="props.label" tooltip="props.tooltip" t-if="!props.visibilityOpt or !this.isActiveItem(props.visibilityOpt)">
+        <BuilderSelect action="props.visibilityAction">
+            <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'" t-if="hasPageOption(props.overlay)">Over The Content</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'regular'">Regular</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="isActiveItem('overTheContent')">
+        <BuilderRow label.translate="Background" level="props.level" t-if="props.bgColor and hasPageOption(props.bgColor)">
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Text Color" level="props.level" t-if="props.textColor and hasPageOption(props.textColor)">
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

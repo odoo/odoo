@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ActionPanel">
+        <ResizablePanel t-if="props.resizable and !env.inChatWindow and !env.inChatter and !ui.isSmall" class="classNames" handleSide="'start'" initialWidth="initialWidth" minWidth="minWidth">
+            <t t-call="mail.ActionPanel.content"/>
+        </ResizablePanel>
+        <div t-else="" t-att-class="classNames">
+            <t t-call="mail.ActionPanel.content"/>
+        </div>
+    </t>
+
+    <t t-name="mail.ActionPanel.content">
+        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1 pb-1': env.inChatWindow, 'ps-1 pe-2 pb-2': !env.inChatWindow and !env.inMeetingView, 'o-ps-2_5 pe-2': env.inMeetingChat, 'ps-1': env.inMeetingView and !env.inMeetingChat }">
+            <div class="d-flex align-items-center gap-1">
+                <button t-if="env.closeActionPanel and env.inChatWindow" class="btn p-1 opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="env.closeActionPanel">
+                    <i class="oi oi-arrow-left fa-fw"/>
+                </button>
+                <i t-if="props.icon" class="text-muted fa-fw" t-att-class="props.icon"/>
+                <p t-if="props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-esc="props.title"/>
+                <button t-if="env.closeActionPanel and !env.inChatWindow" class="btn p-1 opacity-75 opacity-100-hover ms-auto" title="Close panel" t-on-click.stop="env.closeActionPanel">
+                    <i class="oi oi-close fa-fw"/>
+                </button>
+            </div>
+            <t t-slot="header"/>
+        </div>
+        <div class="px-1 d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-ref="contentRef">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+</templates>

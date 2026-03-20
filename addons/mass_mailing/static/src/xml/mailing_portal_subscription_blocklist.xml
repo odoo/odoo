@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.portal.blocklist_update_info">
+        <span>
+            <t t-if="infoKey == 'blocklist_add'">
+                <i class="fa fa-check me-1"/>
+                <span>Email added to our blocklist</span>
+            </t>
+            <t t-elif="infoKey == 'blocklist_remove'">
+                <i class="fa fa-check me-1"/>
+                <span>Email removed from our blocklist</span>
+            </t>
+            <t t-else="">
+                <i class="fa fa-exclamation-triangle me-1"/>
+                <span>An error occurred. Please retry later.</span>
+            </t>
+        </span>
+    </t>
+</templates>

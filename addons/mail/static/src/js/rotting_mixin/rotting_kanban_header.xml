@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.RottingKanbanHeader" t-inherit="web.KanbanHeader" t-inherit-mode="primary">
+        <xpath expr="//ColumnProgress" position="attributes">
+            <attribute name="progressBarState">props.progressBarState</attribute>
+            <attribute name="onRotIconClicked.bind">onRotIconClicked</attribute>
+        </xpath>
+    </t>
+</templates>

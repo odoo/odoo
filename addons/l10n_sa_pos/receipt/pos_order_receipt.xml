@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_sa_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <div name="logo" position="after">
+                <div class="text-center mt-1 mb-3" t-if="conditions.get('code_sa')">
+                    <img t-att-src="image['sa_qr_code']" alt="QR Code" class="w-50 sa-qr-code" />
+                </div>
+            </div>
+            <t t-set="show_title" position="after">
+                <t t-set="show_title" t-if="True"/>
+            </t>
+            <t t-set="show_simplified_title" position="after">
+                <t t-set="show_simplified_title"
+                    t-if="conditions.get('code_sa')"
+                    t-value="not conditions.get('l10n_gcc_is_settlement') and conditions.get('code_sa') and (not partner or not partner['is_company'])"/>
+            </t>
+        </template>
+
+        <template id="l10n_sa_pos.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="after">
+                <div name="order_reason" t-if="conditions.get('code_sa') and order['l10n_sa_reason_value']">
+                    <div class="mt-3 mb-3 text-center">
+                        <span t-if="not conditions.get('l10n_gcc_dual_language_receipt')">Reason:</span>
+                        <span t-else="">Reason / سبب إصدار الإشعار من الأسباب التالية</span>
+                        <br/><span t-out="order['l10n_sa_reason_value']"/>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

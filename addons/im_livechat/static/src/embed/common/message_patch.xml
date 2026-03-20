@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='messageContent']" position="replace">
+            <div t-if="props.isTypingMessage">
+                <img height="30" t-att-src="url('/im_livechat/static/src/img/chatbot_is_typing.gif')"/>
+            </div>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//*[hasclass('o-mail-Message-textContent')]" position="after">
+            <ul class="p-0 m-0" t-if="props.message.chatbotStep?.answer_ids.length and !props.message.chatbotStep.selectedAnswer">
+                <li class="list-unstyled" t-foreach="props.message.chatbotStep?.answer_ids" t-as="answer" t-key="answer.id">
+                    <button t-esc="answer.name" t-att-disabled="props.message.disableChatbotAnswers" t-on-click="() => this.answerChatbot(answer)" class="btn btn-outline-primary w-100 mt-2 py-2"/>
+                </li>
+            </ul>
+        </xpath>
+    </t>
+</templates>

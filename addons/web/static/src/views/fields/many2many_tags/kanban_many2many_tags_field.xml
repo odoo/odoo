@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanMany2ManyTagsField">
+        <div class="d-flex flex-wrap gap-1">
+            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                <Tag color="tag.props.color" text="tag.props.text"/>
+            </t>
+        </div>
+    </t>
+</templates>

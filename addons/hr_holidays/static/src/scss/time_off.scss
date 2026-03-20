@@ -1,0 +1,161 @@
+.modal-content {
+    .o_hr_leave_form {
+        .o_form_sheet_bg {
+            padding-right: 0;
+            min-height: 160px;
+            overflow: hidden;
+            .ribbon {
+                & span {
+                    --ribbon-font-size: 14px !important;
+                }
+            }
+            .o_form_statusbar {
+                padding-right: 16px;
+            }
+        }
+        .o_form_sheet {
+            padding-top: 0;
+            padding-right: 16px;
+            padding-bottom: 0;
+        }
+        .o_hr_leave_content {
+            padding-top: 8px;
+        }
+    }
+}
+.o_hr_leave_form {
+    .o_form_sheet {
+        padding-top: 0;
+        padding-right: 16px;
+        padding-bottom: 0;
+    }
+    .o_hr_leave_content {
+        .o_group {
+            margin: 0;
+        }
+        .o_hr_leave_title, .o_hr_leave_subtitle {
+            line-height: 1.2;
+            font-weight: 500;
+            margin-bottom: 8px;
+            * {
+                margin-bottom: 0;
+            }
+        }
+        .o_hr_leave_title {
+            font-size: 1.8rem;
+        }
+        .o_hr_leave_subtitle {
+            font-size: 1.2rem;
+        }
+        .col_left {
+            padding-top: 16px;
+        }
+        .col_right {
+            .sub_table {
+                background-color: map-get($grays, '200');
+                border-radius: 0.25rem;
+            }
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+        .o_hr_leave_date {
+            display: flex;
+            flex-direction: row;
+            @include media-breakpoint-down(lg) {
+                flex-direction: column;
+            }
+            @include media-breakpoint-down(md) {
+                flex-direction: row;
+            }
+        }
+    }
+}
+
+.o_cw_popover_holidays {
+    max-width: 448px !important;
+    min-width: 250px;
+    width: fit-content;
+}
+
+.o_kanban_renderer {
+    .o_kanban_record.o_hr_holidays_kanban {
+        min-height: 105px;
+        .ribbon {
+            --Ribbon-wrapper-width: 6.7rem;
+            span {
+                --Ribbon-left-position-default: 0.3rem;
+            }
+            & .o_medium {
+                font-size: $font-size-sm !important;
+            }
+        }
+    }
+}
+
+.o_holidays_view_kanban .o_kanban_renderer{
+
+    .ribbon {
+        --Ribbon-wrapper-width: 6.77rem;
+        height: 5rem;
+        span {
+            --Ribbon-left-position-default: 0.3rem;
+        }
+        & .o_medium {
+            font-size: $font-size-sm !important;
+        }
+    }
+
+    &.o_kanban_grouped {
+        .o_hr_holidays_kanban {
+            display: none;
+        }
+    }
+
+    &.o_kanban_ungrouped {
+        padding: 0px;
+        @media only screen and (max-width:767px) {
+            .o_hr_holidays_kanban {
+                display: none;
+            }
+        }
+        @media only screen and (min-width:768px){
+            .o_kanban_record:not(.o_kanban_ghost) {
+                width: 100%;
+                max-height: 5.1rem;
+                margin: 0px;
+                justify-content: center;
+            }
+            .o_hr_holidays_kanban_mobile {
+                display: none;
+            }
+            .o_holidays_kanban_card {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                .o_hr_holidays_value {
+                    display: flex;
+                    flex-direction: row;
+                    .o_hr_holidays_name {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2;
+                        align-items: baseline;
+                    }
+                    .o_hr_holidays_card {
+                        flex-direction: column;
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: baseline;
+                    }
+                }
+                .o_hr_holidays_button {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1;
+                }
+            }
+        }
+    }
+}

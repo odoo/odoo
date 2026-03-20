@@ -1,0 +1,299 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import ast
+
+from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.tools import SQL
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
+
+
+class ProjectProject(models.Model):
+    _inherit = 'project.project'
+
+    @api.model
+    def default_get(self, fields):
+        """ Pre-fill timesheet product as "Time" data product when creating new project allowing billable tasks by default. """
+        result = super().default_get(fields)
+        if 'timesheet_product_id' in fields and result.get('allow_billable') and result.get('allow_timesheets') and not result.get('timesheet_product_id'):
+            default_product = self.env.ref('sale_timesheet.time_product', False)
+            if default_product:
+                result['timesheet_product_id'] = default_product.id
+        return result
+
+    def _default_timesheet_product_id(self):
+        return self.env.ref('sale_timesheet.time_product', False)
+
+    pricing_type = fields.Selection([
+        ('task_rate', 'Task rate'),
+        ('fixed_rate', 'Project rate'),
+        ('employee_rate', 'Employee rate')
+    ], string="Pricing", default="task_rate",
+        compute='_compute_pricing_type',
+        search='_search_pricing_type',
+        help='The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
+    sale_line_employee_ids = fields.One2many(
+        'project.sale.line.employee.map',
+        'project_id',
+        'Sale line/Employee map',
+        copy=False,
+        export_string_translation=False,
+        help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+             "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+             "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
+    timesheet_product_id = fields.Many2one(
+        'product.product', string='Timesheet Product',
+        domain="""[
+            ('type', '=', 'service'),
+            ('invoice_policy', '=', 'delivery'),
+            ('service_type', '=', 'timesheet'),
+        ]""",
+        help='Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.',
+        check_company=True,
+        compute="_compute_timesheet_product_id", store=True, readonly=False,
+        default=_default_timesheet_product_id)
+    warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True, export_string_translation=False)
+    partner_id = fields.Many2one(
+        compute='_compute_partner_id', store=True, readonly=False)
+    allocated_hours = fields.Float()
+    billing_type = fields.Selection(
+        compute="_compute_billing_type",
+        selection=[
+            ('not_billable', 'not billable'),
+            ('manually', 'billed manually'),
+        ],
+        default='not_billable',
+        required=True,
+        readonly=False,
+        store=True,
+    )
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'form' and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            for node in arch.xpath("//field[@name='display_cost'][not(@string)]"):
+                node.set('string', 'Daily Cost')
+        return arch, view
+
+    @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
+    def _compute_pricing_type(self):
+        billable_projects = self.filtered('allow_billable')
+        for project in billable_projects:
+            if project.sale_line_employee_ids:
+                project.pricing_type = 'employee_rate'
+            elif project.sale_line_id:
+                project.pricing_type = 'fixed_rate'
+            else:
+                project.pricing_type = 'task_rate'
+        (self - billable_projects).update({'pricing_type': False})
+
+    def _search_pricing_type(self, operator, value):
+        """ Search method for pricing_type field.
+
+            :param operator: the supported operator is either '=' or '!='.
+            :param value: the value than the field should be is among these values into the following tuple: (False, 'task_rate', 'fixed_rate', 'employee_rate').
+
+            :returns: the domain to find the expected projects.
+        """
+        if operator != 'in':
+            return NotImplemented
+        domains = []
+        if 'task_rate' in value:
+            domains.append([('sale_line_employee_ids', '=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)])
+        if 'fixed_rate' in value:
+            domains.append([('sale_line_employee_ids', '=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)])
+        if 'employee_rate' in value:
+            domains.append([('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)])
+        if False in value:
+            domains.append([('allow_billable', '=', False)])
+        return Domain.OR(domains)
+
+    @api.depends('allow_timesheets', 'allow_billable')
+    def _compute_timesheet_product_id(self):
+        default_product = self.env.ref('sale_timesheet.time_product', False)
+        for project in self:
+            if not project.allow_timesheets or not project.allow_billable:
+                project.timesheet_product_id = False
+            elif not project.timesheet_product_id:
+                project.timesheet_product_id = default_product
+
+    @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id')
+    def _compute_warning_employee_rate(self):
+        projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.pricing_type == 'employee_rate')
+        employees = self.env['account.analytic.line']._read_group(
+            [('task_id', 'in', projects.task_ids.ids), ('employee_id', '!=', False)],
+            ['project_id'],
+            ['employee_id:array_agg'],
+        )
+        dict_project_employee = {project.id: employee_ids for project, employee_ids in employees}
+        for project in projects:
+            project.warning_employee_rate = any(
+                x not in project.sale_line_employee_ids.employee_id.ids
+                for x in dict_project_employee.get(project.id, ())
+            )
+
+        (self - projects).warning_employee_rate = False
+
+    @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
+    def _compute_partner_id(self):
+        billable_projects = self.filtered('allow_billable')
+        for project in billable_projects:
+            if project.partner_id:
+                continue
+            if project.allow_billable and project.allow_timesheets and project.pricing_type != 'task_rate':
+                sol = project.sale_line_id or project.sale_line_employee_ids.sale_line_id[:1]
+                project.partner_id = sol.order_partner_id
+        super(ProjectProject, self - billable_projects)._compute_partner_id()
+
+    @api.depends('partner_id')
+    def _compute_sale_line_id(self):
+        super()._compute_sale_line_id()
+        for project in self.filtered(lambda p: not p.sale_line_id and p.partner_id and p.pricing_type == 'employee_rate'):
+            # Give a SOL by default either the last SOL with service product and remaining_hours > 0
+            SaleOrderLine = self.env['sale.order.line']
+            sol = SaleOrderLine.search(Domain.AND([
+                SaleOrderLine._domain_sale_line_service(),
+                [('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id), ('remaining_hours', '>', 0)],
+            ]), limit=1)
+            project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
+
+    @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
+    def _compute_sale_order_count(self):
+        billable_projects = self.filtered('allow_billable')
+        super(ProjectProject, billable_projects)._compute_sale_order_count()
+        non_billable_projects = self - billable_projects
+        non_billable_projects.sale_order_line_count = 0
+        non_billable_projects.sale_order_count = 0
+
+    @api.depends('allow_billable', 'allow_timesheets')
+    def _compute_billing_type(self):
+        self.filtered(lambda project: (not project.allow_billable or not project.allow_timesheets) and project.billing_type == 'manually').billing_type = 'not_billable'
+
+    @api.constrains('sale_line_id')
+    def _check_sale_line_type(self):
+        for project in self.filtered(lambda project: project.sale_line_id):
+            if not project.sale_line_id.is_service:
+                raise ValidationError(_("You cannot link a billable project to a sales order item that is not a service."))
+            if project.sale_line_id.is_expense:
+                raise ValidationError(_("You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."))
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'allow_billable' in vals and not vals.get('allow_billable'):
+            self.task_ids._get_timesheet().write({
+                'so_line': False,
+            })
+        return res
+
+    def _update_timesheets_sale_line_id(self):
+        for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
+            timesheet_ids = project.mapped('timesheet_ids').filtered(lambda t: not t.is_so_line_edited and t._is_updatable_timesheet())
+            if not timesheet_ids:
+                continue
+            for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
+                sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
+                timesheet_ids.filtered(lambda t: t.employee_id == employee_id).sudo().so_line = sale_line_id
+
+    def action_view_timesheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Timesheets of %s', self.name),
+            'domain': [('project_id', '!=', False)],
+            'res_model': 'account.analytic.line',
+            'view_id': False,
+            'view_mode': 'list,form',
+            'help': _("""
+                <p class="o_view_nocontent_smiling_face">
+                    Record timesheets
+                </p><p>
+                    You can register and track your workings hours by project every
+                    day. Every time spent on a project will become a cost and can be re-invoiced to
+                    customers if required.
+                </p>
+            """),
+            'limit': 80,
+            'context': {
+                'default_project_id': self.id,
+                'search_default_project_id': [self.id]
+            }
+        }
+
+    def action_billable_time_button(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order_item")
+        action.update({
+            'context': {
+                'search_default_groupby_billable_type': True,
+                'default_project_id': self.id,
+            },
+            'domain': [('project_id', '=', self.id)],
+        })
+        return action
+
+    def action_project_timesheets(self):
+        action = super().action_project_timesheets()
+        if not self.allow_billable:
+            context = action['context'].replace('active_id', str(self.id))
+            action['context'] = {
+                **ast.literal_eval(context),
+                'hide_so_line': True,
+            }
+        return action
+
+    # ----------------------------
+    #  Project Updates
+    # ----------------------------
+
+    def _get_sale_order_items_query(self, domain_per_model=None):
+        if domain_per_model is None:
+            domain_per_model = {'project.task': [('allow_billable', '=', True)]}
+        else:
+            domain_per_model['project.task'] = Domain.AND([
+                domain_per_model.get('project.task', []),
+                [('allow_billable', '=', True)],
+            ])
+        query = super()._get_sale_order_items_query(domain_per_model)
+
+        Timesheet = self.env['account.analytic.line']
+        timesheet_domain = [('project_id', 'in', self.ids), ('so_line', '!=', False), ('project_id.allow_billable', '=', True)]
+        if Timesheet._name in domain_per_model:
+            timesheet_domain = Domain.AND([
+                domain_per_model.get(Timesheet._name, []),
+                timesheet_domain,
+            ])
+        timesheet_query = Timesheet._search(timesheet_domain)
+        timesheet_sql = timesheet_query.select(
+            f'{Timesheet._table}.project_id AS id',
+            f'{Timesheet._table}.so_line AS sale_line_id',
+        )
+
+        EmployeeMapping = self.env['project.sale.line.employee.map']
+        employee_mapping_domain = [('project_id', 'in', self.ids), ('project_id.allow_billable', '=', True), ('sale_line_id', '!=', False)]
+        if EmployeeMapping._name in domain_per_model:
+            employee_mapping_domain = Domain.AND([
+                domain_per_model[EmployeeMapping._name],
+                employee_mapping_domain,
+            ])
+        employee_mapping_query = EmployeeMapping._search(employee_mapping_domain)
+        employee_mapping_sql = employee_mapping_query.select(
+            f'{EmployeeMapping._table}.project_id AS id',
+            f'{EmployeeMapping._table}.sale_line_id',
+        )
+
+        join, sql, condition = query._joins['project_sale_order_item']
+        sql = SQL('(%s)', SQL(' UNION ').join([
+            sql,
+            timesheet_sql,
+            employee_mapping_sql,
+        ]))
+        query._joins['project_sale_order_item'] = (join, sql, condition)
+        return query
+
+    def _get_template_default_context_whitelist(self):
+        return [
+            *super()._get_template_default_context_whitelist(),
+            "allow_timesheets",
+        ]

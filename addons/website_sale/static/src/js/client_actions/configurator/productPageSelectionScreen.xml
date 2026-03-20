@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website_sale.Configurator.ProductPageSelectionScreen">
+        <div class="o_configurator_screen o_wsale_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
+            <div class="o_configurator_screen_content pb-5">
+                <div class="container-fluid px-3 px-xl-5">
+                    <div class="o_configurator_typing_text text-center pt-3 mb-4">
+                        Choose your favorite <b class="text-info">Product Page</b>
+                    </div>
+                    <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-2 g-2 g-sm-3 g-lg-4">
+                        <t t-foreach="this.productPageStyles" t-as="style" t-key="style_index">
+                            <div class="col">
+                                <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mb-2">
+                                    <h6 class="theme_preview_tip text-center text-muted d-none d-lg-block">
+                                        Click to select
+                                    </h6>
+                                    <div class="ratio" style="--aspect-ratio: 66%;">
+                                        <img
+                                            t-attf-src="{{style.img_src}}"
+                                            class="rounded"
+                                            role="presentation"
+                                            t-att-title="style.title"
+                                        />
+                                    </div>
+                                    <button
+                                        class="o_btn_reset button_area"
+                                        t-on-click="() => this.selectStyle(style.option)"
+                                        t-att-title="style.title"
+                                    />
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

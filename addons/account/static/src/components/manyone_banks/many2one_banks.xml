@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account.Many2OneBank" t-inherit="web.Many2One">
+        <xpath expr="//t[@t-if='props.readonly']" position="before">
+            <t t-if="this.props.value.id">
+                <i t-if="this.props.value.allow_out_payment" class="me-1 fa fa-shield text-success align-self-center" title="Trusted"/>
+                <i t-else="" class="me-1 fa fa-exclamation-circle text-danger align-self-center" title="Untrusted"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

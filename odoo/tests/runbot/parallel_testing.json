@@ -1,0 +1,72 @@
+{
+    "name": "Parallel testing",
+    "vars": {
+        "module_filter": "*,-hw_*,-*l10n_*,-theme_*,-account_bacs,-account_reports_cash_basis,-auth_ldap,-base_gengo,-document_ftp,-iot_drivers,-note_pad,-odoo_referral,-odoo_referral_portal,-pad,-pad_project,-pos_blackbox_be,-pos_cache,-pos_six,-social_demo,-website_gengo,-website_instantclick,test_l10n_be_hr_payroll_account,test_l10n_us_hr_payroll_account"
+    },
+    "steps": [
+        {
+            "name": "Create at install",
+            "job_type": "create_build",
+            "children": [
+                {
+                    "name": "Test at install",
+                    "steps":[{
+                        "name": "Start at install",
+                        "job_type": "odoo",
+                        "install_modules": "{{module_filter}},-test_lint",
+                        "test_tags": "-post_install,-/test_lint"
+                        }]
+                },
+                {
+                    "name": "Test pylint",
+                    "steps":[{
+                        "name": "Start test lint",
+                        "job_type": "odoo",
+                        "install_modules": "test_lint",
+                        "test_tags": "-post_install,/test_lint"
+                    }]
+                }
+            ]
+        },
+        {
+            "name": "Install all",
+            "db_name": "all",
+            "job_type": "odoo",
+            "install_modules": "{{module_filter}}"
+        },
+        {
+            "name": "Create post install",
+            "job_type": "create_build",
+            "for_each_vars": [
+                {"test_module_filter": "-> !account_auto_transfer"},
+                {"test_module_filter": "account_auto_transfer -> !auth_totp"},
+                {"test_module_filter": "auth_totp -> !mail"},
+                {"test_module_filter": "mail -> !mrp"},
+                {"test_module_filter": "mrp -> !pos"},
+                {"test_module_filter": "pos -> !pos_restaurant"},
+                {"test_module_filter": "pos_restaurant -> !sale"},
+                {"test_module_filter": "sale -> !sale_timesheet"},
+                {"test_module_filter": "sale_timesheet -> !stock_barcode_mrp_subcontracting"},
+                {"test_module_filter": "stock_barcode_mrp_subcontracting -> !test_main_flows"},
+                {"test_module_filter": "test_main_flows -> !web"},
+                {"test_module_filter": "web -> web"},
+                {"test_module_filter": "!web -> !website"},
+                {"test_module_filter": "website -> website"},
+                {"test_module_filter": "!website -> "}
+            ],
+            "children": [{
+                "name": "Test Post Install",
+                "description": "Post install tests for **{{test_module_filter}}**",
+                "steps": [
+                    {"name": "restore", "job_type": "restore", "db_name": "all"},
+                    {
+                        "name": "Start post install tests",
+                        "job_type": "odoo",
+                        "test_tags": "-at_install,{{test_module_filter|filter_all_modules|make_module_test_tags}}",
+                        "db_name": "all"
+                    }
+                ]
+            }]
+        }
+    ]
+}

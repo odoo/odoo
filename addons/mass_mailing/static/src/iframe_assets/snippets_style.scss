@@ -1,0 +1,26 @@
+.o_layout .o_mail_wrapper {
+    hr {
+        // override necessary because bootstrap opacity is 0.25 by default
+        // depending on the modules installed.
+        opacity: 1;
+    }
+    .s_badge {
+        --badge-color: var(--color);
+
+        background: var(--badge-bg, var(--background-color)) !important;
+        color: var(--badge-color, var(--color)) !important;
+        border: $border-width solid var(--badge-border-color) !important;
+
+        @each $-color, $-value in $theme-colors {
+            &.text-bg-#{$-color} {
+                --badge-bg: #{tint-color($-value, 90%)};
+                --badge-color: #{increase-contrast($-value, tint-color($-value, 90%))};
+                --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
+                --badge-border-color: #{$-value};
+            }
+        }
+        * {
+            color: unset !important;
+        }
+    }
+}

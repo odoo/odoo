@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-if="auth_url" t-att-action="auth_url" method="post"/>
+        <form t-else="" t-att-action="api_url" method="get"/>
+    </template>
+
+</odoo>

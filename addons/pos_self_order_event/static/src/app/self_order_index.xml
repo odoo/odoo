@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-t-name="pos_self_order_event.selfOrderIndex" t-inherit="pos_self_order.selfOrderIndex" t-inherit-mode="extension">
+        <xpath expr="//Router" position="inside">
+            <t t-set-slot="event_page" route="`/pos-self/${selfOrder.config.id}/event/{int:id}`" t-slot-scope="url">
+                <EventPage eventTemplate="selfOrder.models['event.event'].get(url.id)"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,121 @@
+.o_spreadsheet_dashboard_search_panel {
+    width: fit-content;
+    max-width: 200px;
+    align-items: center;
+
+    ul {
+        padding-inline-start: 0px;
+    }
+
+    li {
+        padding: 4px 8px 4px 12px;
+        list-style-type: none;
+        white-space: nowrap;
+
+        &:hover:not(.active) {
+            background-color: $o-gray-100;
+        }
+
+        .o_dashboard_name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 8px;
+        }
+
+        .o_edit_dashboard {
+            padding: 0;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s ease-in-out;
+        }
+    }
+
+    .o_search_panel_category_value:hover .o_edit_dashboard,
+    .o_search_panel_category_value:focus-within .o_edit_dashboard {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.o_spreadsheet_dashboard_action {
+    background-color: white;
+
+    .o_renderer {
+        height: 100%;
+
+        .o-spreadsheet {
+            height: 100%;
+
+            .o-grid {
+                background-color: white;
+            }
+
+            canvas {
+                border-top: 0px;
+            }
+        }
+    }
+
+    .dashboard-loading-status {
+        margin: auto;
+    }
+
+    .o_cp_top_left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .o_cp_top_right {
+        display: flex;
+        align-items: flex-start;
+        flex: 4;
+        row-gap: 8px;
+        min-width: 0;
+    }
+
+    /* In mobile */
+    @media (max-width: 768px){
+        .o_control_panel {
+            /* We don't want the control panel to disappear when scrolling */
+            top: 0px !important
+        }
+        .o_control_panel_main {
+            /* We don't want a gap before the DashboardMobileSearchPanel */
+            column-gap: 0px !important;
+        }
+    }
+
+    .o_control_panel_actions {
+        gap: map-get($spacers, 2);
+        overflow: auto;
+        flex-wrap: wrap;
+        justify-content: start !important;
+        align-items: start !important;
+
+        .o-filter-value {
+            min-height: 25px;
+            min-width: 100px;
+            flex-basis: 100px;
+            flex-grow: 1;
+
+            .o_multi_record_selector {
+                width: 100%;
+
+                .o_input {
+                    flex: 1 0 1rem;
+                }
+            }
+        }
+    }
+
+    .o_dashboard_star {
+        margin: auto 0;
+        cursor: pointer;
+        &.fa-star-o {
+            @include o-hover-text-color($o-main-color-muted, $o-main-favorite-color);
+        }
+        &.fa-star {
+            color: $o-main-favorite-color;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImageToolbarDropdown">
+        <Dropdown menuClass="`${props.name}_selector`" menuRef="menuRef">
+            <button t-att-title="props.title" class="btn btn-light">
+                <t t-if="props.icon" t-call="{{props.icon}}"/>
+                <t t-elif="state &amp;&amp; state.displayName" t-esc="state.displayName"/>
+                <t t-else="" t-esc="props.title"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="items" t-as="item" t-key="item_index">
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
+                        <t t-esc="item.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="html_editor.ImagePaddingIcon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="2"
+        >
+            <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+            <path d="M8 16v.01"></path>
+            <path d="M8 12v.01"></path>
+            <path d="M8 8v.01"></path>
+            <path d="M16 16v.01"></path>
+            <path d="M16 12v.01"></path>
+            <path d="M16 8v.01"></path>
+            <path d="M12 8v.01"></path>
+            <path d="M12 16v.01"></path>
+        </svg>
+    </t>
+</templates>

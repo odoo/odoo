@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.MediaListItemOption">
+    <BuilderContext applyTo="':scope > .row'">
+        <BaseWebsiteBackgroundOption
+            withColors="true"
+            withImages="false"
+            withColorCombinations="true"
+        />
+    </BuilderContext>
+
+    <BuilderContext applyTo="':scope > .row'">
+        <BorderConfigurator label.translate="Border"/>
+        <ShadowOption/>
+    </BuilderContext>
+
+    <BuilderRow label.translate="Layout">
+        <BuilderButtonGroup applyTo="':scope > .row'">
+            <BuilderButton title.translate="Left" id="'media_left_opt'" classAction="''" iconImg="'/website/static/src/img/snippets_options/image_left.svg'"/>
+            <BuilderButton title.translate="Right" classAction="'flex-row-reverse'" iconImg="'/website/static/src/img/snippets_options/image_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Image Size">
+        <BuilderButtonGroup t-if="this.isActiveItem('media_left_opt')">
+            <BuilderButton action="'setMediaLayout'" actionValue="3" iconImg="'/website/static/src/img/snippets_options/media_layout_1_4.svg'" title.translate="1/4 - 3/4"/>
+            <BuilderButton action="'setMediaLayout'" actionValue="4" iconImg="'/website/static/src/img/snippets_options/media_layout_1_3.svg'" title.translate="1/3 - 2/3"/>
+            <BuilderButton action="'setMediaLayout'" actionValue="6" iconImg="'/website/static/src/img/snippets_options/media_layout_1_2.svg'" title.translate="1/2 - 1/2"/>
+        </BuilderButtonGroup>
+        <BuilderButtonGroup t-if="!this.isActiveItem('media_left_opt')">
+            <BuilderButton action="'setMediaLayout'" actionValue="3" iconImg="'/website/static/src/img/snippets_options/media_layout_1_4_right.svg'" title.translate="1/4 - 3/4"/>
+            <BuilderButton action="'setMediaLayout'" actionValue="4" iconImg="'/website/static/src/img/snippets_options/media_layout_1_3_right.svg'" title.translate="1/3 - 2/3"/>
+            <BuilderButton action="'setMediaLayout'" actionValue="6" iconImg="'/website/static/src/img/snippets_options/media_layout_1_2_right.svg'" title.translate="1/2 - 1/2"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Text Position" applyTo="':scope > .row'">
+        <!-- Don't use the standard Vert. Alignement option to not suggest
+            Equal Height, which is useless for this snippet. -->
+        <BuilderButtonGroup t-if="this.isActiveItem('media_left_opt')">
+            <BuilderButton title.translate="Align Top" classAction="'align-items-start'" iconImg="'/website/static/src/img/snippets_options/align_top_right.svg'"/>
+            <BuilderButton title.translate="Align Middle" classAction="'align-items-center'" iconImg="'/website/static/src/img/snippets_options/align_middle_right.svg'"/>
+            <BuilderButton title.translate="Align Bottom" classAction="'align-items-end'" iconImg="'/website/static/src/img/snippets_options/align_bottom_right.svg'"/>
+        </BuilderButtonGroup>
+        <BuilderButtonGroup t-if="!this.isActiveItem('media_left_opt')">
+            <BuilderButton title.translate="Align Top" classAction="'align-items-start'" iconImg="'/html_builder/static/img/snippets_options/align_top.svg'"/>
+            <BuilderButton title.translate="Align Middle" classAction="'align-items-center'" iconImg="'/html_builder/static/img/snippets_options/align_middle.svg'"/>
+            <BuilderButton title.translate="Align Bottom" classAction="'align-items-end'" iconImg="'/html_builder/static/img/snippets_options/align_bottom.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+
+
+</templates>

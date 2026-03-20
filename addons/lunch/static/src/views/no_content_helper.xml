@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="lunch.NoContentHelper" owl="1">
+        <t t-set="showNoLocationHelper" t-value="!this.env.searchModel.lunchState.locationId"/>
+
+        <div t-if="showNoLocationHelper and !showNoContentHelper" class="o_view_nocontent" style="pointer-events: all">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_smiling_face">
+                    No location found
+                </p>
+                <p>
+                    Please create a location to start ordering.
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>

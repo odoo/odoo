@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.delivery.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='module_install_warning_sms']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='stock_text_confirmation']" position="inside">
+                <div class="row mt16" invisible="stock_confirmation_type != 'sms' or not stock_text_confirmation">
+                    <field name="stock_sms_confirmation_template_id"
+                        class="oe_inline"
+                        required="stock_text_confirmation and stock_confirmation_type == 'sms'"
+                        context="{'default_model': 'stock.picking'}"/>
+                </div>
+                <widget name="iap_buy_more_credits" service_name="sms" invisible="stock_confirmation_type != 'sms' or not stock_text_confirmation"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

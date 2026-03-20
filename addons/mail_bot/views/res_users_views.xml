@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <!-- Update user form !-->
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.mail_bot</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="mail.view_users_form_mail"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="notification_type" position="after">
+                    <field name="odoobot_state" groups="base.group_no_one"
+                        readonly="0"
+                        invisible="share"/>
+                </field>
+            </data>
+        </field>
+    </record>
+</data></odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="html_editor.ExternalImage" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if]" position="after">
+            <t t-elif="record.mediaType === 'unsplashRecord'">
+                <AutoResizeImage src="record.url"
+                    author="record.user.name"
+                    authorLink="record.user.links.html"
+                    name="record.user.name"
+                    title="record.user.name"
+                    altDescription="record.alt_description"
+                    selected="this.selectedRecordIds.includes(record.id)"
+                    onImageClick="() => this.onClickRecord(record)"
+                    minRowHeight="MIN_ROW_HEIGHT"
+                    onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="html_editor.ImagesListTemplate" t-inherit-mode="extension">
+        <xpath expr="//t[@id='o_we_media_library_images']" position="replace">
+            <t id='o_we_media_library_images' t-if="['all', 'unsplash', 'media-library'].includes(state.searchService)">
+                <t t-foreach="combinedRecords" t-as="record" t-key="record.id">
+                    <t t-call="html_editor.ExternalImage"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="html_editor.FileSelector" t-inherit-mode="extension">
+        <xpath expr="//div[@name='load_more_attachments']" position="before">
+            <div t-if="unsplashState?.unsplashError" class="d-flex mt-2 unsplash_error">
+                <UnsplashError
+                    title="errorTitle"
+                    subtitle="errorSubtitle"
+                    showCredentials="['key_not_found', 401].includes(unsplashState.unsplashError)"
+                    submitCredentials="(key, appId)  => this.submitCredentials(key, appId)"
+                    hasCredentialsError="unsplashState.unsplashError === 401"/>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="html_editor.FileSelectorControlPanel" t-inherit-mode="extension">
+        <xpath expr="//option[@value='media-library']" position="after">
+            <option t-if="props.useUnsplash" t-att-selected="props.searchService === 'unsplash'" value="unsplash">Photos (via Unsplash)</option>
+        </xpath>
+    </t>
+
+    <t t-inherit="html_editor.FileSelector" t-inherit-mode="extension">
+        <xpath expr="//FileSelectorControlPanel" position="attributes">
+            <attribute name="useUnsplash">unsplashState?.useUnsplash</attribute>
+        </xpath>
+    </t>
+</templates>

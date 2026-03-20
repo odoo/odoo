@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TimelineListOption">
+    <BuilderRow label.translate="Milestones">
+        <BuilderButton
+            type="'success'"
+            action="'addItem'"
+            actionParam="'.s_timeline_list_row'"
+            actionValue="'beforebegin'"
+            preview="false"
+            applyTo="':scope > :has(.s_timeline_list_row)'">
+            Add Milestone
+        </BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup applyTo="'.s_timeline_list_wrapper'">
+            <BuilderButton icon="'fa-align-left'" title.translate="Align Left" classAction="'justify-content-start'"/>
+            <BuilderButton icon="'fa-align-center'" title.translate="Align Center" classAction="'justify-content-center'"/>
+            <BuilderButton icon="'fa-align-right'" title.translate="Align Right" classAction="'justify-content-end'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>

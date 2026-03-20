@@ -1,0 +1,132 @@
+.o-hb-colorpicker-popover {
+    --popover-bg: #{$o-we-bg-darker};
+    --popover-border-color: #{$o-we-bg-darker};
+}
+
+.o_custom_gradient_button {
+    border: 1px solid $o-we-item-clickable-color;
+
+    &, &:hover, &:focus {
+        color: #000000;
+    }
+
+    &[style*="background-image"] {
+        color: $o-we-item-clickable-color;
+    }
+}
+
+.o-hb-colorpicker {
+    --o-color-picker-active-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+
+    --bg: #{$o-we-item-clickable-bg};
+
+    background-color: $o-we-item-clickable-bg;
+    color: $white;
+
+    &:has(.theme-tab){
+        width: 250px;
+    }
+
+    & > div:first-child {
+        background-color: $o-we-bg-darker;
+        padding-block: 0.5em;
+    }
+
+    & > div:not(:first-child) {
+        .btn:not(.o-hb-edit-color-combination) {
+            @include button-variant(
+                $background: $o-we-item-clickable-bg,
+                $border: transparent,
+                $color: $o-we-item-clickable-color,
+                $hover-background: $o-we-item-clickable-hover-bg,
+                $hover-border: transparent,
+                $hover-color: $o-we-item-clickable-color,
+                $active-background: rgba($o-we-color-accent, .15),
+                $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
+                $active-color: $o-we-fg-lighter,
+                $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+                $disabled-border: transparent,
+                $disabled-color: $o-we-item-clickable-color,
+            );
+
+            &:hover {
+                border: $o-we-border-width solid var(--o-color-picker-active-color);
+            }
+        }
+    }
+
+    .btn[title=Reset] {
+        @include button-variant(
+            $background: $o-we-bg-light,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-bg-lighter,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: $o-we-bg-lighter,
+            $active-border: transparent,
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+    .btn-tab {
+        @include button-variant(
+            $background: $o-we-bg-darker,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-bg-light,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: rgba($o-we-color-accent, .15),
+            $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+
+    .btn:focus-visible {
+        border: $o-we-border-width solid var(--o-color-picker-active-color);
+        z-index: 1;
+    }
+
+    .color-combination-button:focus-visible {
+        box-shadow:
+            0 0 0 1px $o-we-bg-darker,
+            0 0 0 3px var(--o-color-picker-active-color);
+        outline: none;
+    }
+
+    .o-hb-edit-color-combination {
+        color: $o-we-item-clickable-color;
+        border: none;
+
+        &:hover {
+            color: $o-we-fg-lighter;
+        }
+
+        &:not(:focus-visible) {
+            border: 1px solid transparent; // keep size stable on focus
+        }
+    }
+
+    // Gradients
+    .o_custom_gradient_button {
+        color: $o-we-item-clickable-color;
+    }
+
+    .gradient-angle-thumb {
+        background-color: $white;
+    }
+
+    .o_color_picker_inputs, .o_color_gradient_input {
+        color: $o-we-item-clickable-color;
+
+        & input {
+            color: currentColor;
+        }
+    }
+}

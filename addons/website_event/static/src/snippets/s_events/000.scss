@@ -1,0 +1,67 @@
+.s_dynamic {
+    .s_events_event_subtitle {
+        @include font-size($font-size-base);
+    }
+
+    &.s_event_event_picture {
+        .s_events_event .s_events_event_cover {
+            max-height: 26rem;
+
+            .o_record_cover_container {
+                top: 0;
+            }
+        }
+
+        .row {
+            align-items: stretch;
+            .s_events_event_subtitle {
+                margin: 0;
+            }
+        }
+    }
+
+    &.s_event_event_card, &.s_event_event_single_offset {
+        .card {
+            .s_events_event_cover {
+                height: 180px;
+
+                .s_events_event_date {
+                    top: $card-spacer-x;
+                    right: $card-spacer-x;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    width: $font-size-base * 4;
+                    height: $font-size-base * 4;
+                    border-radius: 50%;
+                    text-align: center;
+
+                    .s_events_event_month {
+                        @include font-size($font-size-sm);
+                    }
+
+                    .s_events_event_day {
+                        @include font-size($font-size-lg);
+                    }
+                }
+            }
+        }
+    }
+
+    // Solo templates
+    @include media-breakpoint-up(lg) {
+        &.s_event_event_single_offset .position-lg-absolute {
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    &.s_event_event_single_badge .s_cta_badge {
+        img {
+            height: var(--body-font-size);
+        }
+
+        &:hover {
+            box-shadow: $box-shadow-sm;
+        }
+    }
+}

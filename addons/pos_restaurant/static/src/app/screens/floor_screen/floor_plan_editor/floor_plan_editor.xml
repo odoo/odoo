@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_plan_editor">
+        <div t-ref="container" class="o_fp_canvas w-100 h-100 overflow-auto position-relative" t-attf-style="{{getScrollContainerStyles()}}" t-on-click="onCanvasClick" >
+             <div t-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{getCanvasStyles()}}">
+                 <svg class="o_fp_snap_guides position-absolute w-100 h-100 top-0 start-0" t-ref="snapGuides" />
+                 <Handles floorElement="floorPlanStore.selectedElement" canvasRef="canvasRef" onStartResize="startResize" onStartMove="startDrag" onStartRotate="startRotate"
+                          onEdit="onEdit" actions="handlesActions" actionMenuPosition="state.actionMenuPosition" />
+                 <t t-foreach="floorPlanStore.getFloorDecorElements()" t-as="shape" t-key="shape.uuid">
+                        <t t-call="pos.floor_screen_shape"/>
+                 </t>
+                 <t t-foreach="floorPlanStore.getFloorTables()" t-as="shape" t-key="shape.uuid">
+                     <t t-call="pos.floor_screen_shape"/>
+                 </t>
+              </div>
+
+             <div t-ref="actionMenu" class="o_fp_action_menu">
+                <button class="btn btn-secondary o_edit" title="Properties" t-if="selectedElement?.isEditable()" t-att-class="{'active':this.floorPlanStore.elementEditMode}" t-on-click="editSelected"><i class="fa fa-fw fa-pencil"/></button>
+                <button class="btn btn-secondary o_duplicate" title="Duplicate" t-on-click="duplicateSelected"><i class="fa fa-fw fa-copy"/></button>
+                <button class="btn btn-secondary o_delete" title="Delete" t-on-click="deleteSelected"><i class="fa fa-fw fa-trash "/></button>
+            </div>
+        </div>
+        <div class="o_fp_edit_menu position-absolute top-0 end-0 bottom-0 bg-view" t-att-class="{'visible': this.floorPlanStore.elementEditMode or this.floorPlanStore.floorEditMode}">
+            <t t-if="selectedElement and this.floorPlanStore.elementEditMode ">
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3" aria-label="Close" tabindex="-1" t-on-click="closeElementEdition"/>
+                <t t-if="selectedElement.isTable">
+                    <EditTableProperties table="this.selectedElement" updateElement="updateElement" onSizeUpdated="()=>this.ensureBoardFits()" />
+                </t>
+                <t t-else="">
+                    <EditDecorProperties element="this.selectedElement" updateElement="updateElement" moveLayer="moveLayer" isTextContentEditable="this.floorPlanStore.isContentEditableTextEnabled()" />
+                </t>
+            </t>
+            <t t-elif="this.floorPlanStore.floorEditMode and selectedFloor">
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3" aria-label="Close" tabindex="-1" t-on-click="endEditFloor"/>
+                <EditFloorProperties floor="this.selectedFloor" canvasRef="canvasRef" onSizeUpdated="()=>this.ensureBoardFits()" />
+            </t>
+        </div>
+    </t>
+
+     <t t-name="pos.floor_screen_shape">
+         <div t-attf-class="o_fp_shape {{shape.isTable?'o_fp_table':'o_fp_decor' }} {{shape.shape}} {{shape.hasTransparentArea?'o_fp_transparent_area':''}} {{floorPlanStore.selectedElement == shape ? 'selected' :'' }}" t-att-style="shape.getCssStyle()"
+              t-attf-id="fpe-{{shape.uuid}}" t-on-mousedown.synthetic.stop="(ev)=>this.startDrag(ev, shape.uuid)" t-on-dblclick.synthetic.stop="(ev)=>this.onDblclick(ev, shape.uuid)"  t-on-touchstart.synthetic.stop="(ev)=>this.startDrag(ev, shape.uuid)"  >
+              <t t-if="shape.isTable">
+                <span t-out="shape.tableNumber" class="o_fp_table_number fs-4 fw-bolder" t-att-style="shape.getTableContentStyle()"/>
+              </t>
+               <t t-elif="shape.isText">
+                     <!-- Use a separate contenteditable element to avoid reactive glitches where text renders twice with trailing \n -->
+                   <span t-if="shape.textEditing and this.floorPlanStore.isContentEditableTextEnabled()" _text="1" class="o_fp_text_content" t-esc="shape.initialText" t-att-style="shape.getTextCssStyle()"
+                         contenteditable="true"
+                         t-on-input="(ev) => this.onTextInput(ev, shape)"
+                         t-on-paste="(ev) => this.onTextPaste(ev)"
+                         t-on-mousedown.stop="(ev) => this.onTextMouseDown(ev)"
+                         />
+                   <span t-else="" class="o_fp_text_content" _text="1" t-esc="shape.text" t-att-style="shape.getTextCssStyle()"/>
+                </t>
+                 <t t-elif="shape.allowText and shape.text">
+                     <div class="h-100 w-100 d-flex align-items-center" >
+                         <span  class="o_fp_text_content" t-esc="shape.text" t-att-style="shape.getTextCssStyle()"/>
+                     </div>
+                 </t>
+         </div>
+     </t>
+
+</templates>
+
+

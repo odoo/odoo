@@ -1,0 +1,25 @@
+.o-we-hint {
+    position: relative;
+
+    &:after {
+        content: attr(o-we-hint-text);
+        position: absolute;
+        top: 0;
+        inset-inline-start: var(--placeholder-offset, 0);
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+        overflow: hidden;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+div[class*="col-"][class*="o-we-hint"] {
+    &:after {
+        left: calc(var(--gutter-x, 0)* .5);
+    }
+}

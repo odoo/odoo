@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Items" id="s_product_list">
+    <t t-set="url" t-value="url or '#'"/>
+    <section class="s_product_list pt64 pb64" data-vcss="001">
+        <div class="container">
+            <h2 class="h3-fs">Our finest selection</h2>
+            <div class="row">
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url" aria-label="Link to product">
+                                <img src="/web/image/website.s_product_list_default_image_1" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Elegant</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url" aria-label="Link to product">
+                                <img src="/web/image/website.s_product_list_default_image_2" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Simple</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url" aria-label="Link to product">
+                                <img src="/web/image/website.s_product_list_default_image_3" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Balanced</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url" aria-label="Link to product">
+                                <img src="/web/image/website.s_product_list_default_image_4" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Subtle</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url" aria-label="Link to product">
+                                <img src="/web/image/website.s_product_list_default_image_5" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Sleek</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url" aria-label="Link to product">
+                                <img src="/web/image/website.s_product_list_default_image_6" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Modern</a></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_product_list_000_variables_scss" name="Product list 000 variables SCSS" active="False">
+    <bundle>web._assets_primary_variables</bundle>
+    <path>website/static/src/snippets/s_product_list/000_variables.scss</path>
+</asset>
+
+<asset id="website.s_product_list_000_scss" name="Product list 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_product_list/000.scss</path>
+</asset>
+
+</odoo>

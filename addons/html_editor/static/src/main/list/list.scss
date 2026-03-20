@@ -1,0 +1,53 @@
+[contenteditable="true"] {
+    li p {
+        margin-bottom: 0;
+    }
+
+    // Invalidate `--heading-color` when under colored element in editable
+    :where([style*="color:"]) {
+        --heading-color: none;
+    }
+}
+
+// Checklist
+ul.o_checklist {
+    > li {
+        list-style: none;
+        position: relative;
+
+        &:not(.oe-nested):before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            display: block;
+            height: 14px;
+            width: 14px;
+            top: 1px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+        &.o_checked {
+            &::before {
+                content: "✓";
+                transition: opacity .5s;
+                position: absolute;
+                left: -18px;
+                top: -1px;
+                opacity: 1;
+            }
+
+            &:has(ul, ol)::before {
+                opacity: 0.5;
+            }
+
+            &:not(:has(ul, ol)) {
+                text-decoration: line-through;
+                opacity: 0.5;
+            }
+            &:has(ul, ol) > :not(ul, ol) {
+                text-decoration: line-through;
+                opacity: 0.5;
+            }
+        }
+    }
+}

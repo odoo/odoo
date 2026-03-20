@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageShapeOption">
+    <BuilderRow label.translate="Shape">
+        <div class="btn-group o-hb-button-group">
+            <BuilderSlidingPanel
+                label.translate="Shape"
+                extraClasses="'btn-secondary'"
+                fullHeight="true"
+                darkBackground="true">
+                <t t-out="state.shapeLabel"/>
+                <t t-set-slot="content" t-slot-scope="panel">
+                    <ShapeSelector
+                        onClose="panel.close"
+                        shapeActionId="'setImageShape'"
+                        buttonWrapperClassName="'o-hb-img-shape-btn'"
+                        selectorTitle.translate="Shapes"
+                        shapeGroups="getFilteredGroups()"
+                    />
+                </t>
+            </BuilderSlidingPanel>
+            <BuilderButton
+                title.translate="Remove the shape"
+                action="'setImageShape'"
+                actionValue=""
+                preview="false"
+                icon="'oi-close'"
+                className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
+                t-if="state.hasShape"/>
+        </div>
+    </BuilderRow>
+
+    <t t-if="this.state.hasShape">
+        <BuilderRow label.translate="Colors" level="1">
+            <t t-foreach="this.state.imageShapeColorNames" t-as="colorName" t-key="colorName_index">
+                <BuilderColorPicker
+                    t-if="colorName"
+                    action="'setImgShapeColor'"
+                    actionParam="{index: colorName_index}"
+                    enabledTabs="['solid', 'custom']"
+                />
+            </t>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Transform" level="1" t-if="this.state.showImageShapeTransform" preview="false">
+            <BuilderButton
+                title.translate="Horizontal flip"
+                icon="'oi-arrows-h'"
+                action="'flipImageShape'"
+                actionParam="{axis: 'x'}"/>
+            <BuilderButton
+                title.translate="Vertical flip"
+                icon="'oi-arrows-v'"
+                action="'flipImageShape'"
+                actionParam="{axis: 'y'}"/>
+            <BuilderButton
+                title.translate="Rotate left"
+                icon="'fa-rotate-left'"
+                action="'rotateImageShape'"
+                actionParam="{side: 'left'}"/>
+            <BuilderButton
+                title.translate="Rotate right"
+                icon="'fa-rotate-right'"
+                action="'rotateImageShape'"
+                actionParam="{side: 'right'}"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">
+            <BuilderRange
+                action="'setImageShapeSpeed'"
+                min="-2"
+                max="2"
+                step="0.1"
+                displayRangeValue="true"
+                computedOutput="this.toRatio" />
+        </BuilderRow>
+
+        <BuilderRow label.translate="Stretch" level="1" t-if="this.state.togglableRatio" preview="false" tooltip.translate="Will remove the crop factor">
+            <BuilderCheckbox action="'toggleImageShapeRatio'" />
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

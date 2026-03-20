@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='root']" position="replace">
+            <div class="h-100 d-flex flex-column">
+                <ControlPanel t-if="!ui.isSmall and env.config?.breadcrumbs?.length > 1"/>
+                <t>$0</t>
+            </div>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="attributes">
+            <attribute name="class" add="h-0" remove="h-100" separator=" "/>
+        </xpath>
+    </t>
+</templates>

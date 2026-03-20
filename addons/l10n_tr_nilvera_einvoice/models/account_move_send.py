@@ -1,0 +1,358 @@
+from io import BytesIO
+import logging
+import re
+from collections import defaultdict
+
+from odoo import _, api, models
+from odoo.tools.float_utils import float_compare
+
+_logger = logging.getLogger(__name__)
+
+
+class AccountMoveSend(models.AbstractModel):
+    _inherit = 'account.move.send'
+
+    @api.model
+    def _is_tr_nilvera_applicable(self, move):
+        return move.l10n_tr_nilvera_send_status == 'not_sent' and move.is_invoice(include_receipts=True) and move.country_code == 'TR'
+
+    def _get_all_extra_edis(self) -> dict:
+        # EXTENDS 'account'
+        res = super()._get_all_extra_edis()
+        label = _("by Nilvera (Demo)") if self.env.company.l10n_tr_nilvera_use_test_env else _("by Nilvera")
+        res.update({'tr_nilvera': {'label': label, 'is_applicable': self._is_tr_nilvera_applicable}})
+        return res
+
+    # -------------------------------------------------------------------------
+    # ATTACHMENTS
+    # -------------------------------------------------------------------------
+
+    def _get_invoice_extra_attachments(self, move):
+        # EXTENDS 'account'
+        # Add the Nilvera PDF to the mail attachments.
+        attachments = super()._get_invoice_extra_attachments(move)
+        if move.l10n_tr_nilvera_send_status == 'succeed' and move.l10n_tr_nilvera_pdf_id:
+            attachments += move.l10n_tr_nilvera_pdf_id
+        return attachments
+
+    # -------------------------------------------------------------------------
+    # ALERTS
+    # -------------------------------------------------------------------------
+
+    def _get_alerts(self, moves, moves_data):
+        def _is_valid_nilvera_name(move):
+            _, parts = move._get_sequence_format_param(move.name)
+
+            return (
+                parts['year'] != 0
+                and parts['year_length'] == 4
+                and parts['seq'] != 0
+                and re.match(r'^[A-Za-z0-9]{3}[^A-Za-z0-9]?$', parts['prefix1'])
+            )
+
+        alerts = super()._get_alerts(moves, moves_data)
+
+        # Filter for moves that have 'tr_nilvera' in their EDI data
+        tr_nilvera_moves = moves.filtered(lambda m: 'tr_nilvera' in moves_data[m]['extra_edis'])
+        if not tr_nilvera_moves:
+            return alerts
+
+        if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())):
+            alerts["tr_companies_missing_required_codes"] = {
+                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "action_text": _("View Company(s)"),
+                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
+                "level": "danger",
+            }
+
+        # Alert if company is missing required data (country = TR, and tax ID, city, state, street)
+        if tr_companies_missing_required_fields := tr_nilvera_moves.filtered(
+            lambda m: (
+                not m.company_id.vat
+                or not m.company_id.street
+                or not m.company_id.city
+                or not m.company_id.state_id
+                or m.company_id.country_code != 'TR'
+            )
+        ).company_id:
+            alerts["tr_companies_missing_required_fields"] = {
+                'level': 'danger',
+                "message": _(
+                    "The following company(s) either do not have their country set as Türkiye "
+                    "or are missing at least one of these fields: Tax ID, Street, City, or State"
+                ),
+                "action_text": _("View Company(s)"),
+                "action": tr_companies_missing_required_fields._get_records_action(name=_(
+                    "Check Tax ID, City, Street, State, and Country or Company(s)"
+                )),
+            }
+
+        # Alert if partner is missing required data (tax ID, street, city, state, country)
+        if tr_partners_missing_required_fields := self._get_l10n_tr_tax_partner_address_alert(tr_nilvera_moves):
+            alerts["tr_partners_missing_required_fields"] = tr_partners_missing_required_fields
+
+        # Alert if partner is missing required tax office
+        if tr_partners_missing_tax_office := self._get_l10n_tr_tax_partner_tax_office_alert(tr_nilvera_moves):
+            alerts["tr_partners_missing_tax_office"] = tr_partners_missing_tax_office
+
+        # Alert if TR company is missing required tax office
+        if tr_companies_missing_tax_office := self._get_l10n_tr_tax_company_tax_office_alert(tr_nilvera_moves):
+            alerts["tr_companies_missing_tax_office"] = tr_companies_missing_tax_office
+
+        # Alert if partner does not use UBL TR e-invoice format or has not checked Nilvera status
+        if tr_partners_invalid_edi_or_status := tr_nilvera_moves.filtered(
+            lambda m: (
+                m.partner_id.invoice_edi_format != 'ubl_tr'
+                or m.partner_id.l10n_tr_nilvera_customer_status == 'not_checked'
+            )
+        ).partner_id:
+            alerts["tr_partners_invalid_edi_or_status"] = {
+                'level': 'danger',
+                "message": _(
+                    "The following partner(s) either do not have the e-invoice format UBL TR 1.2 "
+                    "or have not checked their Nilvera Status"
+                ),
+                "action_text": _("View Partner(s)"),
+                "action": tr_partners_invalid_edi_or_status._get_records_action(
+                    name=_("Check e-Invoice Format or Nilvera Status on Partner(s)"
+                )),
+            }
+
+        if invalid_negative_lines := tr_nilvera_moves.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_negative_lines(),
+        ):
+            alerts["critical_invalid_negative_lines"] = {
+                "level": "danger",
+                "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
+            }
+
+        if moves_with_invalid_name := tr_nilvera_moves.filtered(lambda move: not _is_valid_nilvera_name(move)):
+            alerts['tr_moves_with_invalid_name'] = {
+                'level': 'danger',
+                'message': _(
+                    "The invoice name must follow the format when sending to Nilvera: 3 alphanumeric characters, "
+                    "followed by the year, and then a sequential number. Example: INV/2025/000001",
+                ),
+                'action_text': _("View Invoice(s)"),
+                'action': moves_with_invalid_name._get_records_action(name=_("Check name on Invoice(s)")),
+            }
+
+        exemption_702 = self.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
+        # Warning alert if product is missing CTSP Number
+        tr_export_moves = tr_nilvera_moves.filtered(
+            lambda m: m.l10n_tr_is_export_invoice or m.l10n_tr_exemption_code_id == exemption_702,
+        )
+        if non_eligible_tr_products := tr_export_moves.invoice_line_ids.product_id.filtered(
+            lambda p: not p.l10n_tr_ctsp_number and 'TR' in p.fiscal_country_codes,
+        ):
+            alerts['l10n_tr_non_eligible_products'] = {
+                'message': self.env._(
+                    "The following products are missing a CTSP Number:\n%(products)s\n",
+                    products="\n".join(f"- {product.display_name}" for product in non_eligible_tr_products),
+                ),
+                'level': 'danger',
+                'action_text': self.env._("View Product(s)"),
+                'action': non_eligible_tr_products._get_records_action(
+                    name=self.env._("Check Products"),
+                ),
+            }
+
+        if moves_with_missing_line_codes := tr_nilvera_moves.invoice_line_ids.filtered(
+            lambda ml: ml.move_id.l10n_tr_exemption_code_id == exemption_702 and not ml.l10n_tr_customer_line_code,
+        ):
+            alerts['l10n_tr_moves_with_missing_line_codes'] = {
+                'message': _(
+                    "For Registered for Export type invoices with a 702 reason code, the Customer "
+                    "Line Code must be filled in per product in the invoice lines.",
+                ),
+                'level': 'danger',
+                'action_text': _("View Invoice(s)"),
+                'action': moves_with_missing_line_codes.move_id._get_records_action(
+                    name=_("Check Invoice(s)"),
+                ),
+            }
+
+        if (
+            invalid_invoice_references
+            := tr_nilvera_moves._l10n_tr_nilvera_einvoice_check_invalid_invoice_reference()
+        ):
+            alerts["tr_moves_with_invalid_invoice_reference"] = {
+                "level": "danger",
+                "message": _(
+                    "The credit notes must have a valid reference to the original invoice in the reference field"
+                ),
+                "action_text": _("Check reference on Invoice(s)"),
+                "action": invalid_invoice_references._get_records_action(
+                    name=_("Check reference on Credit Note(s)")
+                ),
+            }
+
+        if invalid_type_invoices := tr_nilvera_moves.filtered(
+            lambda r: (r.l10n_tr_gib_invoice_type in {"IADE", "TEVKIFATIADE"})
+            ^ (r.move_type == "out_refund")
+        ):
+            alerts["tr_moves_with_invalid_type"] = {
+                "level": "danger",
+                "message": _(
+                    "Type 'Return' and 'Withholding Return' should only be used for Credit Notes"
+                ),
+                "action_text": _("Check invoice type"),
+                "action": invalid_type_invoices._get_records_action(
+                    name=_("Check Invoice Type")
+                ),
+            }
+
+        if (
+            tr_withholding_credit_note_tax_mismatch
+            := self._l10n_tr_withholding_credit_note_tax_mismatch(tr_nilvera_moves)
+        ):
+            alerts["tr_withholding_credite_note_tax_mismatch"] = (
+                tr_withholding_credit_note_tax_mismatch
+            )
+
+        if tr_credit_note_invoice_not_sent := tr_nilvera_moves.filtered(
+            lambda r: r.move_type == "out_refund"
+            and r.reversed_entry_id
+            and r.reversed_entry_id.l10n_tr_nilvera_send_status
+            not in {"sent", "waiting", "succeed"}
+        ):
+            alerts["tr_credit_note_invoice_not_sent"] = {
+                "level": "danger",
+                "message": _(
+                    "Return invoices can only be sent if the original invoice has already been successfully sent to Nilvera"
+                ),
+                "action_text": _("View Invoice(s)"),
+                "action": tr_credit_note_invoice_not_sent.reversed_entry_id._get_records_action(
+                    name=_("View Invoice(s)")
+                ),
+            }
+        return alerts
+
+    def _l10n_tr_withholding_credit_note_tax_mismatch(self, moves):
+        errors = defaultdict(defaultdict)
+        for invoice in moves.filtered(
+            lambda r: r.country_code == "TR"
+            and r.move_type == "out_refund"
+            and r.l10n_tr_gib_invoice_type == "TEVKIFATIADE"
+        ):
+            for line in invoice.invoice_line_ids:
+                tax_amount = line.price_total - line.price_subtotal
+                expected_percentage = (line.l10n_tr_original_quantity and line.quantity / line.l10n_tr_original_quantity) or 0
+                expected_tax_amount = expected_percentage * line.l10n_tr_original_tax_without_withholding
+                if float_compare(tax_amount, expected_tax_amount, line.currency_id.decimal_places) != 0:
+                    errors[invoice.name][line.product_id.name] = f"{line.currency_id.format(tax_amount)} != {line.currency_id.format(expected_tax_amount)}"
+
+        if not errors:
+            return ""
+
+        error_message = _("For withholding return invoices, the tax amount is expected to be the same percentage as the returned quantity.\n"
+                            "The following mismatch was found:\n")
+        for invoice, lines in errors.items():
+            for line, error in lines.items():
+                error_message += "- [%s] - %s: %s\n" % (invoice, line, error)
+
+        error_message += _("Make sure the price and taxes match the original invoice.")
+        return {
+            'level': 'danger',
+            'message': error_message,
+            'action_text': _("Check Tax Amounts on Credit Note(s)"),
+            'action': moves._get_records_action(name=_("Check Tax Amounts on Credit Note(s)")),
+        }
+
+
+    def _get_l10n_tr_tax_partner_address_alert(self, moves):
+        if tr_partners_missing_required_fields := moves.filtered(
+            lambda m: (
+                not m.l10n_tr_is_export_invoice
+                and (
+                    not m.partner_id.vat
+                    or not m.partner_id.street
+                    or not m.partner_id.city
+                    or not m.partner_id.state_id
+                    or not m.partner_id.country_id
+                )
+            ),
+        ).partner_id:
+            return {
+                "message": _("The following partner(s) are missing at least one of these fields: Tax ID, Street, City, State or Country"),
+                "action_text": _("View Partner(s)"),
+                "action": tr_partners_missing_required_fields._get_records_action(name=_("Check Tax ID, City, Street, State, and Country or Partner(s)")),
+                "level": "danger",
+            }
+        return {}
+
+    def _get_l10n_tr_tax_partner_tax_office_alert(self, moves):
+        if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
+            lambda p: p.l10n_tr_nilvera_customer_status == 'einvoice' and not p.l10n_tr_tax_office_id,
+        ):
+            return {
+                'message': self.env._("The Tax Office is not set on the following TR Partner(s)."),
+                'action_text': self.env._("View Partner(s)"),
+                'action': tr_einvoice_partners_missing_ref._get_records_action(
+                    name=self.env._("Check reference on Partner(s)"),
+                ),
+                'level': 'danger',
+            }
+        return {}
+
+    def _get_l10n_tr_tax_company_tax_office_alert(self, moves):
+        if tr_companies_missing_tax_office := moves.company_id.filtered(
+            lambda c: (not c.l10n_tr_tax_office_id and c.country_code == 'TR'),
+        ):
+            return {
+                'message': self.env._("The Tax Office is not set on the following TR Company(s)."),
+                'action_text': self.env._("View Company(s)"),
+                'action': tr_companies_missing_tax_office._get_records_action(
+                    name=self.env._("TR Company(s)"),
+                ),
+                'level': 'danger',
+            }
+        return {}
+
+    # -------------------------------------------------------------------------
+    # BUSINESS ACTIONS
+    # -------------------------------------------------------------------------
+    def _link_invoice_documents(self, invoices_data):
+        # EXTENDS 'account'
+        super()._link_invoice_documents(invoices_data)
+        # The move needs to be put as sent only if sent by Nilvera
+        for invoice, invoice_data in invoices_data.items():
+            if invoice.company_id.country_code == 'TR':
+                invoice.is_move_sent = invoice.l10n_tr_nilvera_send_status == 'sent'
+
+
+    @api.model
+    def _call_web_service_before_invoice_pdf_render(self, invoices_data):
+        # EXTENDS 'account'
+        super()._call_web_service_before_invoice_pdf_render(invoices_data)
+
+        for invoice, invoice_data in invoices_data.items():
+            if 'tr_nilvera' in invoice_data['extra_edis']:
+                if attachment_values := invoice_data.get('ubl_cii_xml_attachment_values'):
+                    xml_file = BytesIO(attachment_values.get('raw'))
+                    xml_file.name = attachment_values['name']
+                else:
+                    xml_file = BytesIO(invoice.ubl_cii_xml_id.raw or b'')
+                    xml_file.name = invoice.ubl_cii_xml_id.name or ''
+
+                if not invoice.partner_id.l10n_tr_nilvera_customer_alias_id:
+                    # If no alias is saved, the user is either an E-Archive user or we haven't checked before. Check again
+                    # just in case.
+                    invoice.partner_id._check_nilvera_customer()
+                customer_alias = invoice._get_partner_l10n_tr_nilvera_customer_alias_name()
+                if customer_alias:  # E-Invoice
+                    invoice._l10n_tr_nilvera_submit_einvoice(xml_file, customer_alias)
+                else:   # E-Archive
+                    invoice._l10n_tr_nilvera_submit_earchive(xml_file)
+
+    @api.model
+    def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
+        # EXTENDS account_edi_ubl_cii
+        # Nilvera rejects XMLs with the PDF attachment.
+
+        if invoice_data['invoice_edi_format'] == 'ubl_tr':
+            return
+
+        return super()._postprocess_invoice_ubl_xml(invoice, invoice_data)

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_es_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <div name="cashier_name" position="before">
+                <div t-if="order.get('is_l10n_es_simplified_invoice')" class="w-100 text-center mt-2 mb-2">
+                    <div>Simplified invoice</div>
+                    <div class="simplified-invoice-number" t-out="extra_data['invoice_name']" />
+                </div>
+            </div>
+            <div name="partner_info" position="attributes">
+                <attribute name="t-if">not config.get('simplified_partner_id')</attribute>
+            </div>
+        </template>
+    </data>
+</odoo>

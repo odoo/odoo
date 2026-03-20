@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_grade_tree" model="ir.ui.view">
+        <field name="name">res.partner.grade.list</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <list string="Partner Level">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="res_partner_grade_view_search" model="ir.ui.view">
+        <field name="name">res.partner.grade.view.search</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <search string="Search Partner Grade">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_partner_grade_action" model="ir.actions.act_window">
+        <field name="name">Levels</field>
+        <field name="res_model">res.partner.grade</field>
+        <field name="search_view_id" ref="res_partner_grade_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Partner Level
+            </p><p>
+                Partner Levels allow you to rank your Partners based on their performances.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_partner_grade_form" model="ir.ui.view">
+        <field name="name">res.partner.grade.form</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <form string="Partner Level">
+                <sheet string="Level">
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action" name="partnership.action_grade_partners" class="oe_stat_button" icon="fa-users">
+                            <field name="partners_count" widget="statinfo" class="oe_inline me-1" nolabel="1"/>
+                            <field name="partners_label" widget="statinfo" nolabel="1"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Gold Partner" required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="default_pricelist_id" groups="product.group_product_pricelist"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocSearchModal">
+    <div class="modal-bg d-flex flex-nowrap justify-content-center align-items-center">
+        <div class="modal p-2 d-flex flew-nowrap flex-column mb-2" style="height: 40rem; width: 40rem" t-ref="modalRef">
+            <input
+                class="mb-2"
+                type="text"
+                autocorrect="off"
+                placeholder="Find anything..."
+                t-on-input="onInput"
+                t-ref="seachRef"
+            />
+
+            <div class="d-flex flex-nowrap mb-2 align-items-center">
+                <div
+                    t-foreach="state.activeFilters"
+                    t-as="filter"
+                    t-key="filter"
+                    class="d-flex flex-nowrap ms-2 align-items-center cursor-pointer btn o-doc-modal-checkbox"
+                    t-on-click="() => this.onFilterClick(filter)"
+                >
+                    <input class="me-2" type="checkbox" t-att-id="filter" t-att-checked="state.activeFilters[filter]"/>
+                    <label class="text-truncate" t-att-for="filter" t-out="filter" t-on-click.prevent=""></label>
+                </div>
+                <div class="text-muted ms-2 me-2">
+                    <t t-out="this.state.resultCount"/>
+                    results
+                </div>
+            </div>
+
+            <div class="d-flex flex-nowrap flex-column w-100 overflow-auto flex-grow" t-ref="scrollRef" t-on-scroll="(ev) => this.onScroll(ev.target)">
+                <div class="overflow-hidden" t-att-style="`min-height: ${this.state.scrollHeight}px`">
+                    <div t-att-style="`transform: translateY(${this.state.scrollOffsetY}px)`">
+                        <button
+                            t-foreach="state.results"
+                            t-as="result"
+                            t-key="result_index + result.type + '/' + result.label + '/' + result.path"
+                            class="btn mb-2 text-start w-100 d-flex flex-nowrap flex-row o-doc-modal-checkbox justify-content-between"
+                            t-on-click="() => this.onSelect(result)"
+                            t-att-style="`min-height: ${itemHeight}px; max-height: ${itemHeight}px; margin-bottom: ${itemMargin}px`"
+                        >
+                            <div class="h-100 flex-grow-1 me-2">
+                                <h5 t-out="result.label" class="text-truncate mb-0"></h5>
+                                <div class="text-muted text-truncate" t-out="result.path"></div>
+                            </div>
+                            <span class="text-muted h-100 align-self-center" t-out="result.type"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

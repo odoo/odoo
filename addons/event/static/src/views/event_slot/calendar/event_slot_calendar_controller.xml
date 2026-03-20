@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="event.EventSlotCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-buttons">
+                <button class="btn btn-primary o-calendar-button-new" t-on-click="onClickAddButton">New</button>
+            </t>
+        </xpath>
+    </t>
+</templates>

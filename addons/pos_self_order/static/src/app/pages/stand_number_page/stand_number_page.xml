@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.StandNumberPage">
+        <div class="kiosk_stand_page d-flex flex-column vh-100 overflow-hidden o_self_background text-center o_self_fade"
+        t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
+
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto" >
+                <div class="container o_self_container my-auto d-flex flex-column py-4">
+                   <h1 class="mb-4 m-0">Enter your tracker number</h1>
+                    <div>
+                        <div class="d-flex flex-column gap-4 mx-auto" style="max-width: 700px;">
+                            <div class="input-number py-3 px-2 w-100 rounded-4 bg-white text-center overflow-hidden text-nowrap text-truncate shadow-sm">
+                                <span t-attf-class="fw-bold {{ state.standNumber ? 'text-primary' : 'opacity-0' }}" t-esc="state.standNumber || '_ _'" style="font-size: 2.4rem"/>
+                            </div>
+                            <Numpad buttons="[1, 2, 3, 4, 5, 6, 7, 8, 9, { value: '', disabled: true }, '0', { value: 'Backspace', text: '⌫' }]" onClick="numberClick.bind(this)" class="'numpad-so rounded-4'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex py-3 w-100 bg-light border-top ">
+               <div class="o_self_footer container o_self_container d-flex justify-content-between ">
+                 <button class="btn btn-secondary btn-lg" t-on-click="() => this.router.back()">
+                     <i class="oi oi-chevron-left d-md-none" />
+                     <span class="d-none d-md-inline">Back</span>
+                 </button>
+                 <button class="btn btn-primary btn-lg" t-att-disabled="!state.standNumber" t-on-click="confirm" t-esc="actionBtnText"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

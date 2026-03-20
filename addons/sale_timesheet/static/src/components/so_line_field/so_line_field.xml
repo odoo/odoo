@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="sale_timesheet.SoLineField">
+        <Many2One t-props="m2oProps"/>
+        <span class="text-muted" t-out="this.props.record.fields[this.props.name].falsy_value_label" t-if="props.readonly and !props.record.data.so_line"/>
+    </t>
+
+</templates>

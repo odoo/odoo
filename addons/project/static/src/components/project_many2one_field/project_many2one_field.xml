@@ -1,0 +1,13 @@
+<templates>
+
+    <t t-name="project.ProjectMany2OneField">
+        <div class="d-flex align-items-center gap-1">
+            <t t-set="isPrivateTask" t-value="props.readonly and !props.record.data.parent_id and !props.record.data.project_id"/>
+            <Many2One t-if="!isPrivateTask" t-props="m2oProps"/>
+            <span class="text-danger fst-italic text-muted"
+                t-out="this.props.record.fields[this.props.name].falsy_value_label"
+                t-if="isPrivateTask"/>
+        </div>
+    </t>
+
+</templates>

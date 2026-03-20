@@ -1,0 +1,19 @@
+<templates>
+    <t t-name="mail.RecipientsInputTagsListPopover">
+        <div class="d-flex flex-column p-2 o-mail-RecipientsInputTagsListPopover" t-ref="tagsListPopoverRef">
+            <span class="pt-2">
+                What's the email address of <span t-out="props.tagToUpdate.name" class="fw-bold text-primary"/>?
+            </span>
+            <input class="mt-2 w-auto me-3"
+                   t-att-class="{ 'border-danger border rounded': state.error, 'mb-2': !state.error }"
+                   type="text" placeholder="e.g. mail@example.com" t-model="state.value"
+                   t-on-keydown="onKeydown" autocomplete="off"
+            />
+            <small t-if="state.error" class="text-danger o-xsmaller mb-2">Please provide a valid email</small>
+            <div class="d-flex">
+                <button class="btn btn-primary btn-sm me-2" t-on-click="updateTag">Set Email</button>
+                <button class="btn btn-secondary btn-sm" t-on-click="discardTag">Discard</button>
+            </div>
+        </div>
+    </t>
+</templates>

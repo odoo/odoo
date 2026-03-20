@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.FieldVideoPreview">
+        <div class="ratio ratio-16x9 mt-2" t-if="props.record.data[props.name]">
+            <t t-out="props.record.data[props.name]"/>
+        </div>
+    </t>
+
+</templates>

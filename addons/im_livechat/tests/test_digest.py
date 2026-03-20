@@ -1,0 +1,59 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.addons.digest.tests.common import TestDigestCommon
+from odoo.tools import mute_logger
+
+
+class TestLiveChatDigest(TestDigestCommon):
+
+    @classmethod
+    @mute_logger('odoo.models.unlink')
+    def setUpClass(cls):
+        super().setUpClass()
+
+        other_partner = cls.env['res.partner'].create({'name': 'Other Partner'})
+
+        cls.channels = cls.env['discuss.channel'].create([{
+            'name': 'Channel 1',
+            'channel_type': 'livechat',
+        }, {
+            'name': 'Channel 2',
+            'channel_type': 'livechat',
+        }, {
+            'name': 'Channel 3',
+            'channel_type': 'livechat',
+        }])
+        cls.channels[0:2]._add_members(users=cls.env.user)
+        cls.channels[2]._add_members(partners=other_partner)
+
+        cls.env['rating.rating'].search([]).unlink()
+
+        cls.env['rating.rating'].create([{
+            'rated_partner_id': cls.env.user.partner_id.id,
+            'res_id': cls.channels[0].id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
+            'consumed': True,
+            'rating': 5,
+        }, {
+            'rated_partner_id': cls.env.user.partner_id.id,
+            'res_id': cls.channels[0].id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
+            'consumed': True,
+            'rating': 0,
+        }, {
+            'rated_partner_id': cls.env.user.partner_id.id,
+            'res_id': cls.channels[0].id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
+            'consumed': True,
+            'rating': 3,
+        }, {
+            'rated_partner_id': cls.env.user.partner_id.id,
+            'res_id': cls.channels[0].id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
+            'consumed': True,
+            'rating': 3,
+        }])
+
+    def test_kpi_livechat_rating_value(self):
+        # 1/3 of the ratings have 5/5 note (0 are ignored)
+        self.assertEqual(round(self.digest_1.kpi_livechat_rating_value, 2), 33.33)

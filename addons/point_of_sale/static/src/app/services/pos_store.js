@@ -1,0 +1,3065 @@
+import { Mutex } from "@web/core/utils/concurrency";
+import { reactive } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    random5Chars,
+    uuidv4,
+    Counter,
+    orderUsageUTCtoLocalUtil,
+    getTimeUtil,
+} from "@point_of_sale/utils";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
+import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
+import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
+import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
+import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
+import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
+import {
+    makeAwaitable,
+    ask,
+    makeActionAwaitable,
+} from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { PartnerList } from "../screens/partner_list/partner_list";
+import { computeComboItems } from "../models/utils/compute_combo_items";
+import { getOrderChanges } from "../models/utils/order_change";
+import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
+import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
+import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
+import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
+import { user } from "@web/core/user";
+import { normalize } from "@web/core/l10n/utils";
+import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+import { debounce } from "@web/core/utils/timing";
+import DevicesSynchronisation from "../utils/devices_synchronisation";
+import { formatDate, deserializeDateTime } from "@web/core/l10n/dates";
+import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
+import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
+import { DebugWidget } from "../utils/debug/debug_widget";
+import OrderPaymentValidation from "../utils/order_payment_validation";
+import { logPosMessage } from "../utils/pretty_console_log";
+import { initLNA } from "../utils/init_lna";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
+
+const { DateTime } = luxon;
+export const CONSOLE_COLOR = "#F5B427";
+
+export class PosStore extends WithLazyGetterTrap {
+    loadingSkipButtonIsShown = false;
+    mainScreen = { name: null, component: null };
+    feedbackScreenAutoSkipDelay = 1000;
+
+    static serviceDependencies = [
+        "bus_service",
+        "number_buffer",
+        "barcode_reader",
+        "ui",
+        "pos_data",
+        "dialog",
+        "notification",
+        "pos_ticket_printer",
+        "action",
+        "alert",
+        "pos_router",
+        "mail.sound_effects",
+    ];
+    constructor({ traps, env, deps }) {
+        super({ traps });
+        const reactiveSelf = reactive(this);
+        reactiveSelf.ready = reactiveSelf.setup(env, deps).then(() => reactiveSelf);
+        return reactiveSelf;
+    }
+    // use setup instead of constructor because setup can be patched.
+    async setup(
+        env,
+        {
+            number_buffer,
+            barcode_reader,
+            ui,
+            dialog,
+            notification,
+            pos_ticket_printer,
+            bus_service,
+            pos_data,
+            action,
+            pos_router,
+            alert,
+        }
+    ) {
+        this.env = env;
+        this.numberBuffer = number_buffer;
+        this.barcodeReader = barcode_reader;
+        this.ui = ui;
+        this.dialog = dialog;
+        this.ticketPrinter = pos_ticket_printer;
+        this.bus = bus_service;
+        this.data = pos_data;
+        this.action = action;
+        this.alert = alert;
+        this.router = pos_router;
+        this.sound = env.services["mail.sound_effects"];
+        this.notification = notification;
+        this.pushOrderMutex = new Mutex();
+        this.router.popStateCallback = this.handleUrlParams.bind(this);
+        this.searchProductDBState = null;
+
+        // Object mapping the order's name (which contains the uuid) to it's server_id after
+        // validation (order paid then sent to the backend).
+        this.validated_orders_name_server_id_map = {};
+        this.numpadMode = "quantity";
+        this.mobile_pane = "right";
+        this.ticket_screen_mobile_pane = "left";
+
+        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
+        this.screenState = {
+            ticketSCreen: {
+                offsetByDomain: {},
+                totalCount: 0,
+            },
+            partnerList: {
+                offsetBySearch: {},
+            },
+        };
+        // Handle offline mode
+        // All of Set of ids
+        this.pendingOrder = {
+            write: new Set(),
+            delete: new Set(),
+            create: new Set(),
+        };
+
+        this.selectedOrderUuid = null;
+        this.selectedPartner = null;
+        this.selectedCategory = null;
+        this.searchProductWord = "";
+        this.ready = new Promise((resolve) => {
+            this.markReady = resolve;
+        });
+
+        this.orderCounter = new Counter(0);
+        this.lnaState = {
+            type: "pending",
+            message: _t("Checking Local Network Access permission..."),
+        };
+
+        this.syncingOrders = new Set();
+        await this.initServerData();
+
+        this.closeOtherTabs();
+        this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
+        this._searchTriggered = false;
+
+        if (this.env.debug) {
+            registry.category("main_components").add("DebugWidget", {
+                Component: DebugWidget,
+            });
+        }
+
+        window.addEventListener("pos-network-online", () => {
+            // Sync should be done before websocket connection when going online
+            this.syncAllOrdersDebounced();
+        });
+
+        this.handleQRPaymentLines();
+    }
+
+    handleQRPaymentLines() {
+        // Ensure that all Bank QR payments in the 'waiting' status are automatically set to 'retry'
+        // when the POS session is started or restarted.
+        const order = this.getOrder();
+        if (!order) {
+            return;
+        }
+        order.payment_ids?.forEach((payment) => {
+            if (
+                payment.payment_method_id.payment_method_type === "qr_code" &&
+                payment.getPaymentStatus() === "waiting"
+            ) {
+                payment.setPaymentStatus("retry");
+            }
+        });
+    }
+
+    async searchProductsFromDB() {
+        const { searchProductWord } = this;
+        if (!searchProductWord?.length) {
+            return;
+        }
+        this.searchProductDBState = this.searchProductDBState || {};
+        if (searchProductWord !== this.searchProductDBState.query) {
+            this.searchProductDBState = {
+                query: searchProductWord,
+            };
+        }
+        const { query = "", previousQuery = "" } = this.searchProductDBState;
+        const { offset = 0 } = this.searchProductDBState;
+        this.setSelectedCategory(0);
+        const domain = this.searchProductsFromDBDomain(query);
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const categIds = iface_available_categ_ids.map((categ) => categ.id);
+            domain.push(["pos_categ_ids", "in", categIds]);
+        }
+        const loadResult = await this.loadNewProducts(domain, offset, 30);
+        const result = loadResult["product.product"];
+        if (result.length === 0) {
+            this.notification.add(_t('No other products found for "%s".', query), 3000);
+        }
+        if (previousQuery === query) {
+            this.searchProductDBState.offset += result.length;
+        } else {
+            this.searchProductDBState.previousQuery = query;
+            this.searchProductDBState.offset = result.length;
+        }
+    }
+
+    searchProductsFromDBDomain(searchProductWord) {
+        return [
+            "|",
+            "|",
+            "|",
+            ["name", "ilike", searchProductWord],
+            ["product_variant_ids.name", "ilike", searchProductWord],
+            "|",
+            ["default_code", "ilike", searchProductWord],
+            ["product_variant_ids.default_code", "ilike", searchProductWord],
+            "|",
+            ["barcode", "ilike", searchProductWord],
+            ["product_variant_ids.barcode", "ilike", searchProductWord],
+            ["available_in_pos", "=", true],
+            ["sale_ok", "=", true],
+        ];
+    }
+
+    navigate(routeName, routeParams = {}) {
+        const pageParams = registry.category("pos_pages").get(routeName);
+        const component = pageParams.component;
+
+        if (component.storeOnOrder ?? true) {
+            this.getOrder()?.setScreenData({ name: routeName, props: routeParams });
+        }
+
+        this.router.navigate(routeName, routeParams);
+        return true;
+    }
+
+    navigateToFirstPage() {
+        const page = this.firstPage;
+        this.navigate(page.page, page.params);
+    }
+
+    navigateToOrderScreen(order) {
+        const orderPage = order.getScreenData();
+        const page = orderPage?.name || "ProductScreen";
+        const params = orderPage?.props || {
+            orderUuid: order.uuid,
+        };
+        this.ticket_screen_mobile_pane = "left";
+        this.navigate(page, params);
+    }
+
+    get defaultPage() {
+        return {
+            page: "ProductScreen",
+            params: {
+                orderUuid: this.openOrder.uuid,
+            },
+        };
+    }
+
+    get firstPage() {
+        if (odoo.from_backend) {
+            // Remove from_backend params in the URL but keep the rest
+            const url = new URL(window.location.href);
+            url.searchParams.delete("from_backend");
+            window.history.replaceState({}, "", url);
+
+            if (!this.config.module_pos_hr) {
+                this.setCashier(this.user);
+            }
+        } else {
+            this.resetCashier();
+        }
+
+        return !this.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
+    }
+
+    get idleTimeout() {
+        return [
+            {
+                timeout: 300000, // 5 minutes
+                action: () =>
+                    this.router.state.current !== "PaymentScreen" && this.navigate("SaverScreen"),
+            },
+            {
+                timeout: 120000, // 2 minutes
+                action: () =>
+                    this.router.state.current === "LoginScreen" && this.navigate("SaverScreen"),
+            },
+        ];
+    }
+
+    async reloadData(fullReload = false) {
+        const orders = this.models["pos.order"].getAll();
+        this.device.saveUnusedNumber(orders);
+        await this.data.resetIndexedDB();
+        const url = new URL(window.location.href);
+
+        if (fullReload) {
+            url.searchParams.set("limited_loading", "0");
+        }
+
+        window.location.href = url.href;
+    }
+
+    async showLoginScreen() {
+        this.resetCashier();
+        this.navigate("LoginScreen");
+        this.dialog.closeAll();
+    }
+
+    resetCashier() {
+        this.cashier = false;
+        this._resetConnectedCashier();
+    }
+
+    checkPreviousLoggedCashier() {
+        const savedCashier = this._getConnectedCashier();
+        if (savedCashier) {
+            this.setCashier(savedCashier);
+        }
+    }
+
+    setCashier(user) {
+        if (!user) {
+            return;
+        }
+
+        this.cashier = user;
+        this._storeConnectedCashier(user);
+    }
+
+    _getConnectedCashier() {
+        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        if (cashier_id && this.models["res.users"].get(cashier_id)) {
+            return this.models["res.users"].get(cashier_id);
+        }
+        return false;
+    }
+
+    _storeConnectedCashier(user) {
+        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
+    }
+
+    _resetConnectedCashier() {
+        sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
+    }
+
+    async initServerData() {
+        await this.processServerData();
+        await this.handleUrlParams();
+        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        const process = await this.afterProcessServerData();
+
+        if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
+            this.setCashier(this.user);
+        }
+
+        const page =
+            this.router.state.current === "LoginScreen"
+                ? this.firstPage
+                : {
+                      page: this.router.state.current,
+                      params: this.router.state.params,
+                  };
+        this.navigate(page.page, page.params);
+        return process;
+    }
+
+    async closingSessionNotification(data) {
+        if (
+            data.device_identifier === this.device.identifier ||
+            this.session.id !== parseInt(data.session_id)
+        ) {
+            return;
+        }
+
+        try {
+            const paidOrderNotSynced = this.models["pos.order"].filter(
+                (order) => order.state === "paid" && !order.isSynced
+            );
+            this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
+            await this.syncAllOrders({ throw: true });
+
+            this.dialog.add(AlertDialog, {
+                title: _t("Closing Session"),
+                body: _t("The session is being closed by another user. The page will be reloaded."),
+            });
+        } catch {
+            this.dialog.add(AlertDialog, {
+                title: _t("Oh snap !"),
+                body: _t(
+                    "An error occurred while closing the session. But don't worry, unsynced orders will be available in the next session.\nThe page will now, be reloaded."
+                ),
+            });
+        } finally {
+            // All orders saved on the server should be cancelled by the device that closes
+            // the session. If some orders are not cancelled, we need to cancel them here.
+            const orders = this.models["pos.order"].filter((o) => o.isSynced);
+            for (const order of orders) {
+                if (!order.finalized) {
+                    order.state = "cancel";
+                }
+            }
+            this.session.state = "closed";
+        }
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    }
+
+    get session() {
+        return this.data.models["pos.session"].get(odoo.pos_session_id);
+    }
+
+    get company() {
+        return this.config.company_id;
+    }
+
+    async processServerData() {
+        // Used to identify the device when several devices are connected to the same POS
+        this.device = this.data.device;
+
+        // These fields should be unique for the pos_config
+        // and should not change during the session, so we can
+        // safely take the first element.this.models
+        this.config = this.data.models["pos.config"].getFirst();
+        this.user = this.data.models["res.users"].getFirst();
+        this.currency = this.config.currency_id;
+        this.pickingType = this.data.models["stock.picking.type"].getFirst();
+        this.models = this.data.models;
+        this.screenState.partnerList.offsetBySearch = {
+            "": this.models["res.partner"].length,
+        };
+
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
+
+        await this.deviceSync.readDataFromServer();
+
+        // Check cashier
+        this.checkPreviousLoggedCashier();
+
+        // Add Payment Interface to Payment Method
+        for (const pm of this.models["pos.payment.method"].getAll()) {
+            const PaymentInterface = registry
+                .category("electronic_payment_interfaces")
+                .get(pm.use_payment_terminal, null);
+            if (PaymentInterface) {
+                pm.payment_terminal = new PaymentInterface(this, pm);
+            }
+        }
+
+        if (this.ticketPrinter.useLna) {
+            initLNA(this.notification, (type, message) => {
+                this.lnaState = { type, message };
+            });
+        } else {
+            this.lnaState = {
+                type: "info",
+                message: _t("Local Network Access is not configured for this POS."),
+            };
+        }
+
+        this.models["product.pricelist.item"].addEventListener("create", () => {
+            const order = this.getOrder();
+            if (!order) {
+                return;
+            }
+            const currentPricelistId = order.pricelist_id?.id;
+            order.setPricelist(this.models["product.pricelist"].get(currentPricelistId));
+        });
+
+        await this.processProductAttributes();
+    }
+    cashMove() {
+        this.openCashbox(_t("Cash in / out"));
+        return makeAwaitable(this.dialog, CashMovePopup);
+    }
+    async openCashbox(action = undefined) {
+        if (this.config.iface_cashdrawer) {
+            await this.ticketPrinter.openCashbox();
+
+            if (action) {
+                await this.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
+            }
+        }
+    }
+    async closeSession() {
+        const info = await this.getClosePosInfo();
+
+        if (info) {
+            this.dialog.add(ClosePosPopup, info);
+        }
+    }
+    async processProductAttributes() {
+        const productIds = new Set();
+        const productTmplIds = new Set();
+        const productByTmplId = {};
+        const productCombos = [];
+
+        for (const product of this.models["product.product"].getAll()) {
+            if (product.product_template_variant_value_ids.length > 0) {
+                productTmplIds.add(product.raw.product_tmpl_id);
+                productIds.add(product.id);
+
+                if (!productByTmplId[product.raw.product_tmpl_id]) {
+                    productByTmplId[product.raw.product_tmpl_id] = [];
+                }
+
+                productByTmplId[product.raw.product_tmpl_id].push(product);
+            }
+            if (product.product_tmpl_id?.type === "combo") {
+                productCombos.push(product);
+            }
+        }
+
+        this.productCombos = productCombos;
+
+        if (productIds.size > 0) {
+            try {
+                await this.data.searchRead("product.product", [
+                    "&",
+                    ["id", "not in", [...productIds]],
+                    ["product_tmpl_id", "in", [...productTmplIds]],
+                ]);
+            } catch (error) {
+                logPosMessage(
+                    "Store",
+                    "processProductAttributes",
+                    "Error while fetching product variants",
+                    CONSOLE_COLOR,
+                    [error]
+                );
+            }
+        }
+
+        for (const product of this.models["product.product"].filter(
+            (p) => !productIds.has(p.id) && p.product_template_variant_value_ids.length > 0
+        )) {
+            productByTmplId[product.raw.product_tmpl_id].push(product);
+        }
+
+        for (const products of Object.values(productByTmplId)) {
+            const nbrProduct = products.length;
+
+            for (let i = 0; i < nbrProduct - 1; i++) {
+                products[i].available_in_pos = false;
+            }
+        }
+
+        this.productAttributesExclusion = this.computeProductAttributesExclusion();
+    }
+
+    computeProductAttributesExclusion(ptav_ids = false) {
+        const exclusions = this.productAttributesExclusion || new Map();
+
+        const addExclusion = (key, value) => {
+            if (!exclusions.has(key)) {
+                exclusions.set(key, new Set());
+            }
+            exclusions.get(key).add(value);
+        };
+
+        for (const ptav of ptav_ids || this.models["product.template.attribute.value"].getAll()) {
+            const excluded_value_ids = ptav.excluded_value_ids;
+            const ptavId = ptav.id;
+            for (const { id: valueId } of excluded_value_ids) {
+                addExclusion(ptavId, valueId);
+                addExclusion(valueId, ptavId);
+            }
+        }
+        return exclusions;
+    }
+
+    doHaveConflictWith(value, selectedValues) {
+        const exclusions = this.productAttributesExclusion.get(value.id);
+        if (!exclusions) {
+            return false;
+        }
+        const selectedValueIds = new Set(selectedValues.map((v) => v.id));
+        for (const exclusionId of exclusions) {
+            if (selectedValueIds.has(exclusionId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    async onDeleteOrder(order) {
+        if (order.getOrderlines().length > 0) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Existing orderlines"),
+                body: _t(
+                    "%s has a total amount of %s, are you sure you want to delete this order?",
+                    order.pos_reference,
+                    this.env.utils.formatCurrency(order.priceIncl)
+                ),
+            });
+            if (!confirmed) {
+                return false;
+            }
+        }
+        const refundedOrderLines = order.lines
+            .filter((line) => line.refunded_orderline_id?.order_id)
+            .map((line) => ({
+                order: line.refunded_orderline_id.order_id,
+                uuid: line.refunded_orderline_id.uuid,
+            }));
+
+        const orderIsDeleted = await this.deleteOrders([order]);
+        if (!orderIsDeleted) {
+            return false;
+        }
+        order.uiState.displayed = false;
+        // Delete refunded lines linked to the current order
+        for (const refundedLine of refundedOrderLines) {
+            delete refundedLine.order?.uiState?.lineToRefund[refundedLine.uuid];
+        }
+
+        await this.afterOrderDeletion();
+        return true;
+    }
+    async afterOrderDeletion() {
+        if (!this.config.module_pos_restaurant) {
+            this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        }
+    }
+
+    async deleteOrders(orders, serverIds = [], ignoreChange = false) {
+        const ordersToDelete = [];
+        const actionPosOrderCancelCall = async (orderIds) => {
+            await this.data.call("pos.order", "cancel_order_from_pos", [orderIds], {
+                context: {
+                    device_identifier: this.device.identifier,
+                },
+            });
+        };
+        try {
+            for (const order of orders) {
+                if (order && (await this._onBeforeDeleteOrder(order))) {
+                    if (
+                        !ignoreChange &&
+                        order.isSynced &&
+                        Object.keys(order.last_order_preparation_change).length > 0
+                    ) {
+                        const orderPresetDate = DateTime.fromISO(order.preset_time);
+                        const isSame = DateTime.now().hasSame(orderPresetDate, "day");
+                        if (!order.preset_time || isSame) {
+                            await this.sendOrderInPreparation(order, {
+                                cancelled: true,
+                                orderDone: true,
+                            });
+                        }
+                    }
+
+                    if (order.isSynced) {
+                        await actionPosOrderCancelCall([order.id]);
+                    }
+                    ordersToDelete.push(order);
+                } else {
+                    return false;
+                }
+            }
+
+            if (serverIds.length > 0) {
+                await actionPosOrderCancelCall([
+                    ...new Set(serverIds.filter((id) => typeof id === "number")),
+                ]);
+            }
+        } finally {
+            // Remove orders locally at the end to avoid reactivity during the async process
+            for (const order of ordersToDelete) {
+                this.removeOrder(order, false);
+                this.removePendingOrder(order);
+            }
+        }
+
+        return true;
+    }
+    /**
+     * Override to do something before deleting the order.
+     * Make sure to return true to proceed on deleting the order.
+     * @param {*} order
+     * @returns {boolean}
+     */
+    async _onBeforeDeleteOrder(order) {
+        return true;
+    }
+
+    /**
+     * This method is used to load new products from the server.
+     * It also load pricelists, attributes and packagings
+     * @param {Array} domain
+     * @param {number} offset
+     * @param {number} limit
+     * @returns {Promise<Object>}
+     */
+    async loadNewProducts(domain, offset = 0, limit = 0) {
+        const result = await this.data.loadProductFromPos(domain, offset, limit);
+        this.productAttributesExclusion = this.computeProductAttributesExclusion(
+            result["product.template.attribute.value"]
+        );
+        return result;
+    }
+
+    async handleUrlParams() {
+        const orderPathUuid = this.router.state.params.orderUuid;
+        const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
+        if (orderPathUuid && !order) {
+            await this.data.loadServerOrders([["uuid", "=", orderPathUuid]]);
+            const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
+            if (order) {
+                this.setOrder(order);
+            } else {
+                const next = this.defaultPage;
+                this.router.navigate(next.page, next.params);
+            }
+        } else {
+            this.setOrder(order);
+        }
+    }
+
+    async afterProcessServerData() {
+        // Adding the not synced paid orders to the pending orders
+        const paidUnsyncedOrderIds = this.models["pos.order"]
+            .filter((order) => order.isUnsyncedPaid)
+            .map((order) => order.id);
+
+        if (paidUnsyncedOrderIds.length > 0) {
+            this.addPendingOrder(paidUnsyncedOrderIds);
+        }
+
+        const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
+        await this.syncAllOrders();
+
+        if (!this.config.module_pos_restaurant) {
+            if (this.router.state.params.orderUuid) {
+                this.selectedOrderUuid = this.router.state.params.orderUuid;
+            } else {
+                this.selectedOrderUuid = openOrders.length
+                    ? openOrders[openOrders.length - 1].uuid
+                    : null;
+            }
+        }
+
+        this.markReady();
+        await this.deviceSync.readDataFromServer();
+    }
+
+    get productViewMode() {
+        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
+        if (viewMode === "grid") {
+            return "flex-column";
+        } else {
+            return "flex-row-reverse justify-content-between m-1";
+        }
+    }
+    async onProductInfoClick(productTemplate, productProduct = false) {
+        const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
+        this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
+    }
+    async openConfigurator(pTemplate, opts = {}) {
+        const attrById = this.models["product.attribute"].getAllBy("id");
+        const attributeLines = pTemplate.attribute_line_ids.filter(
+            (attr) => attr.attribute_id?.id in attrById
+        );
+        let attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
+        if (opts.code || opts.presetVariant) {
+            let product;
+            if (opts.code) {
+                product = this.models["product.product"].getBy("barcode", opts.code.base_code);
+            } else {
+                product = opts.presetVariant;
+            }
+
+            const attrValueIds = new Set(
+                product?.product_template_attribute_value_ids?.map((v) => v.id) || []
+            );
+
+            attributeLinesValues = attributeLinesValues.map((values) =>
+                values[0].attribute_id.create_variant === "no_variant"
+                    ? values
+                    : values.filter((value) => attrValueIds.has(value.id))
+            );
+        }
+        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+            return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
+                productTemplate: pTemplate,
+                hideAlwaysVariants: opts.hideAlwaysVariants,
+                forceVariantValue: opts.forceVariantValue,
+                line: opts.line,
+            });
+        }
+        return {
+            attribute_value_ids: attributeLinesValues.map((values) => values[0].id),
+            attribute_custom_values: [],
+            price_extra: attributeLinesValues
+                .filter((attr) => attr[0].attribute_id.create_variant !== "always")
+                .reduce((acc, values) => acc + values[0].price_extra, 0),
+            quantity: 1,
+        };
+    }
+    getDefaultSearchDetails() {
+        let field = "RECEIPT_NUMBER";
+        let term = "";
+        if (this.getOrder()?.getPartner()) {
+            field = "PARTNER";
+            term = this.getOrder().getPartner().name;
+        }
+        return {
+            fieldName: field,
+            searchTerm: term,
+        };
+    }
+
+    async setDiscountFromUI(line, val) {
+        for (const comboLine of line.combo_line_ids) {
+            comboLine.setDiscount(val);
+        }
+        line.setDiscount(val);
+    }
+
+    async setTip(tip, type = "fixed", value = false) {
+        const currentOrder = this.getOrder();
+        const tipProduct = this.config.tip_product_id;
+        let line = currentOrder.lines.find((line) => line.product_id.id === tipProduct.id);
+
+        // Delete tip
+        if (line && !tip) {
+            line.delete();
+            currentOrder.setTip(false);
+        }
+
+        // Update tip
+        else if (line) {
+            line.setUnitPrice(tip);
+            currentOrder.setTip(tip, type, value);
+        }
+
+        // Add tip
+        else if (tip) {
+            line = await this.addLineToCurrentOrder(
+                {
+                    product_id: tipProduct,
+                    price_unit: tip,
+                    product_tmpl_id: tipProduct.product_tmpl_id,
+                },
+                {}
+            );
+            currentOrder.setTip(tip, type, value);
+        }
+        return line;
+    }
+
+    getTip() {
+        const currentOrder = this.getOrder();
+        return {
+            amount: currentOrder.tip_amount || 0,
+            type: currentOrder.uiState.tip.type || "fixed",
+            value: currentOrder.uiState.tip.value || 0,
+        };
+    }
+
+    selectOrderLine(order, line) {
+        order.selectOrderline(line);
+        this.numpadMode = "quantity";
+    }
+    // This method should be called every time a product is added to an order.
+    // The configure parameter is available if the orderline already contains all
+    // the information without having to be calculated. For example, importing a SO.
+    async addLineToCurrentOrder(vals, opts = {}, configure = true) {
+        let order = this.getOrder();
+        if (!order) {
+            order = this.addNewOrder();
+        }
+        order.assertEditable();
+        return await this.addLineToOrder(vals, order, opts, configure);
+    }
+
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        let merge = true;
+        order.assertEditable();
+
+        const options = {
+            ...opts,
+        };
+
+        if ("price_unit" in vals) {
+            merge = false;
+        }
+
+        if (typeof vals.product_tmpl_id == "number") {
+            vals.product_tmpl_id = this.data.models["product.template"].get(vals.product_tmpl_id);
+        }
+
+        const productTemplate = vals.product_tmpl_id;
+        const values = {
+            price_type: "price_unit" in vals ? "manual" : "original",
+            price_extra: 0,
+            price_unit: 0,
+            order_id: this.getOrder(),
+            qty: this.getOrder().preset_id?.is_return ? -1 : 1,
+            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
+            product_id: productTemplate.product_variant_ids[0],
+            ...vals,
+        };
+
+        // Handle refund constraints
+        if (order.isSaleDisallowed(values, options)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Oops.."),
+                body: _t("Ensure you validate the refund before taking another order."),
+            });
+            return;
+        }
+
+        let keepGoing = await this.handleConfigurableProduct(
+            values,
+            productTemplate,
+            opts,
+            configure
+        );
+        if (keepGoing === false) {
+            return;
+        }
+
+        keepGoing = await this.handleComboProduct(values, order, configure, opts);
+        if (keepGoing === false) {
+            return;
+        }
+
+        const pack_lot_ids = await this.configureNewOrderLine(
+            productTemplate,
+            vals,
+            values,
+            order,
+            options,
+            configure
+        );
+
+        // Handle price unit
+        this.handlePriceUnit(values, order, vals.price_unit);
+
+        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+        line.setOptions(options);
+        this.selectOrderLine(order, line);
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+        let selectedOrderline = order.getSelectedOrderline();
+        if (options.draftPackLotLines && configure) {
+            selectedOrderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
+        }
+
+        // Merge orderline if needed
+        this.tryMergeOrderline(order, line, merge, selectedOrderline);
+
+        selectedOrderline = order.getSelectedOrderline();
+        if (values.product_id.tracking === "lot") {
+            const productTemplate = values.product_id.product_tmpl_id;
+            const related_lines = [];
+            const price = productTemplate.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id,
+                selectedOrderline,
+                related_lines
+            );
+            related_lines.forEach((line) => line.setUnitPrice(price));
+        }
+
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+
+        if (values.product_id.tracking === "serial") {
+            this.selectedOrder.getSelectedOrderline().setPackLotLines({
+                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
+                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
+                setQuantity: true,
+            });
+        }
+
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
+
+        return order.getSelectedOrderline();
+    }
+
+    async configureNewOrderLine(productTemplate, vals, values, order, opts = {}, configure = true) {
+        // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
+        // It will return an instance of pos.pack.operation.lot
+        // ---
+        // This actions cannot be handled inside pos_order.js or pos_order_line.js
+        const code = opts.code;
+        let pack_lot_ids = {};
+        if (values.product_tmpl_id.isTracked() && (configure || code)) {
+            const packLotLinesToEdit =
+                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
+                    this.getOrder()
+                        .getOrderlines()
+                        .filter((line) => !line.getDiscount())
+                        .find((line) => line.product_id.id === values.product_id.id)
+                        ?.getPackLotLinesToEdit()) ||
+                [];
+
+            // if the lot information exists in the barcode, we don't need to ask it from the user.
+            if (code && code.type === "lot") {
+                // consider the old and new packlot lines
+                const modifiedPackLotLines = Object.fromEntries(
+                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
+                );
+                const newPackLotLines = [{ lot_name: code.code }];
+                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
+            } else {
+                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
+            }
+
+            if (!pack_lot_ids) {
+                return;
+            } else {
+                const packLotLine = pack_lot_ids.newPackLotLines;
+                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
+            }
+        }
+        return pack_lot_ids;
+    }
+
+    /**
+     * Try to merge the orderline with another one in the order.
+     * If no orderline can be merged, select the last orderline.
+     * If merge is false, do not merge the orderline.
+     */
+    tryMergeOrderline(order, line, merge, selectedOrderline) {
+        selectedOrderline = selectedOrderline || order.getSelectedOrderline();
+        let to_merge_orderline;
+        for (const curLine of order.lines) {
+            if (curLine.id !== line.id) {
+                if (curLine.canBeMergedWith(line) && merge !== false) {
+                    to_merge_orderline = curLine;
+                }
+            }
+        }
+
+        if (to_merge_orderline) {
+            to_merge_orderline.merge(line);
+            line.delete();
+            this.selectOrderLine(order, to_merge_orderline);
+        } else if (!selectedOrderline) {
+            this.selectOrderLine(order, order.getLastOrderline());
+        }
+    }
+
+    /**
+     * Handle price unit for the order line.
+     */
+    handlePriceUnit(values, order, price_unit) {
+        if (!values.product_tmpl_id.isCombo() && price_unit === undefined) {
+            values.price_unit = values.product_id.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id
+            );
+        }
+    }
+
+    // In case of clicking a combo product a popup will be shown to the user
+    // It will return the combo prices and the selected products
+    // ---
+    // This actions cannot be handled inside pos_order.js or pos_order_line.js
+    async handleComboProduct(values, order, configure = true, opts = {}) {
+        const compleValue = (comboPrices) => {
+            values.combo_line_ids = comboPrices.map((comboItem) => [
+                "create",
+                {
+                    product_id: comboItem.combo_item_id.product_id,
+                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
+                        "link",
+                        tax,
+                    ]),
+                    combo_item_id: comboItem.combo_item_id,
+                    price_unit: comboItem.price_unit,
+                    price_type: "original",
+                    order_id: order,
+                    qty: comboItem.qty * values.qty,
+                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
+                        "link",
+                        attr,
+                    ]),
+                    custom_attribute_value_ids: Object.entries(
+                        comboItem.attribute_custom_values
+                    ).map(([id, cus]) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                this.data.models["product.template.attribute.value"].get(id),
+                            custom_value: cus,
+                        },
+                    ]),
+                },
+            ]);
+        };
+        if (values.product_tmpl_id.isCombo() && configure) {
+            const payload =
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
+                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
+                          productTemplate: values.product_tmpl_id,
+                          line: opts.line,
+                      });
+
+            if (!payload) {
+                return false;
+            }
+
+            // Product template of combo should not have more than 1 variant.
+            const [childLineConf, comboExtraLines] = payload;
+            const comboPrices = computeComboItems(
+                values.product_tmpl_id.product_variant_ids[0],
+                childLineConf,
+                order.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines,
+                this.currency
+            );
+
+            compleValue(comboPrices);
+        } else if (!configure && opts.comboOpts) {
+            compleValue(opts.comboOpts);
+        }
+
+        return true;
+    }
+
+    // In case of configurable product a popup will be shown to the user
+    // We assign the payload to the current values object.
+    // ---
+    // This actions cannot be handled inside pos_order.js or pos_order_line.js
+    handleConfigurableProduct = async (values, productTemplate, opts = {}, configure = true) => {
+        if (productTemplate.isConfigurable() && configure) {
+            const payload =
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
+                    : await this.openConfigurator(productTemplate, opts);
+
+            if (payload) {
+                // Find candidate based on instantly created variants.
+                const attributeValues = this.models["product.template.attribute.value"]
+                    .readMany(payload.attribute_value_ids)
+                    .filter((value) => value.attribute_id.create_variant !== "no_variant")
+                    .map((value) => value.id);
+
+                let candidate = productTemplate.product_variant_ids.find((variant) => {
+                    const attributeIds = variant.product_template_attribute_value_ids.map(
+                        (value) => value.id
+                    );
+                    return (
+                        attributeValues.every((id) => attributeIds.includes(id)) &&
+                        attributeValues.length
+                    );
+                });
+
+                const isDynamic = productTemplate.attribute_line_ids.some(
+                    (line) => line.attribute_id.create_variant === "dynamic"
+                );
+
+                if (!candidate && isDynamic) {
+                    // Need to create the new product.
+                    const result = await this.data.callRelated(
+                        "product.template",
+                        "create_product_variant_from_pos",
+                        [productTemplate.id, payload.attribute_value_ids, this.config.id]
+                    );
+                    candidate = result["product.product"][0];
+                }
+
+                Object.assign(values, {
+                    attribute_value_ids: payload.attribute_value_ids.map((id) => [
+                        "link",
+                        this.models["product.template.attribute.value"].get(id),
+                    ]),
+                    custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
+                        ([id, cus]) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]
+                    ),
+                    price_extra: values.price_extra + payload.price_extra,
+                    qty: payload.qty || values.qty,
+                    product_id: candidate || productTemplate.product_variant_ids[0],
+                });
+            } else {
+                return false;
+            }
+        } else if (values.product_id?.product_template_variant_value_ids.length > 0) {
+            // Verify price extra of variant products
+            const priceExtra = values.product_id.product_template_variant_value_ids
+                .filter((attr) => attr.attribute_id.create_variant !== "always")
+                .reduce((acc, attr) => acc + attr.price_extra, 0);
+
+            values.price_extra += priceExtra;
+            if (!values.attribute_value_ids) {
+                values.attribute_value_ids = [];
+            }
+            values.attribute_value_ids = values.attribute_value_ids.concat(
+                values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
+            );
+        }
+    };
+
+    setSelectedCategory(categoryId) {
+        if (categoryId === this.selectedCategory?.id) {
+            if (this.selectedCategory.parent_id) {
+                this.selectedCategory = this.selectedCategory.parent_id;
+            } else {
+                this.selectedCategory = this.models["pos.category"].get(0);
+            }
+        } else {
+            this.selectedCategory = this.models["pos.category"].get(categoryId);
+        }
+    }
+
+    /**
+     * Remove the order passed in params from the list of orders
+     * @param order
+     */
+    removeOrder(order, removeFromServer = true) {
+        if (this.config.isShareable || removeFromServer) {
+            if (order.isSynced && !order.finalized) {
+                this.addPendingOrder([order.id], true);
+                this.syncAllOrdersDebounced();
+            }
+        }
+
+        if (!order.isSynced && order.finalized) {
+            this.addPendingOrder([order.id]);
+            return;
+        }
+
+        this.device.saveUnusedNumber([order]);
+        return this.data.localDeleteCascade(order);
+    }
+
+    /**
+     * Return the current cashier (in this case, the user)
+     * @returns {name: string, id: int, role: string}
+     */
+    getCashier() {
+        return this.user;
+    }
+    getCashierUserId() {
+        return this.user?.id;
+    }
+    cashierHasPriceControlRights() {
+        return !this.config.restrict_price_control || this.getCashier()._role == "manager";
+    }
+    get showCashMoveButton() {
+        return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
+    }
+    createNewOrder(data = {}) {
+        const fiscalPosition = this.models["account.fiscal.position"].find(
+            (fp) => fp.id === this.config.default_fiscal_position_id?.id
+        );
+
+        const order = this.models["pos.order"].create({
+            session_id: this.session,
+            company_id: this.company,
+            config_id: this.config,
+            picking_type_id: this.pickingType,
+            user_id: this.user,
+            access_token: uuidv4(),
+            ticket_code: random5Chars(),
+            fiscal_position_id: fiscalPosition,
+            tracking_number: "",
+            sequence_number: 0,
+            pos_reference: "",
+            ...data,
+        });
+
+        this.setNextOrderRefs(order);
+        order.setPricelist(this.config.pricelist_id);
+
+        if (this.config.use_presets && !data["preset_id"]) {
+            this.selectPreset(this.config.default_preset_id, order);
+        }
+
+        return order;
+    }
+    addNewOrder(data = {}) {
+        if (this.getOrder()) {
+            this.getOrder().updateSavedQuantity();
+        }
+        const order = this.createOrderIfNeeded(data);
+        this.selectedOrderUuid = order.uuid;
+        this.searchProductWord = "";
+        this.mobile_pane = "right";
+        return order;
+    }
+    createOrderIfNeeded(data) {
+        return this.createNewOrder(data);
+    }
+    setNextOrderRefs(order) {
+        const deviceIdentifier = this.device.identifier;
+        const number = `${this.device.useNext()}`.padStart(6, "0");
+        const configId = this.config.id;
+        const year2Digits = DateTime.now().year.toString().slice(-2);
+        const posReference = `${year2Digits}${deviceIdentifier}-${configId}-${number}`;
+
+        order.pos_reference = posReference;
+        order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
+    }
+
+    selectNextOrder() {
+        const orders = this.models["pos.order"].filter((order) => !order.finalized);
+        if (orders.length > 0) {
+            this.selectedOrderUuid = orders[0].uuid;
+        } else {
+            return this.addNewOrder();
+        }
+    }
+    get openOrder() {
+        return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
+    }
+    getEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) =>
+                order.isEmpty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
+        );
+        if (emptyOrders.length > 0) {
+            return emptyOrders[0];
+        }
+        return this.addNewOrder();
+    }
+
+    addPendingOrder(orderIds, remove = false) {
+        if (remove) {
+            for (const id of orderIds) {
+                this.pendingOrder["create"].delete(id);
+                this.pendingOrder["write"].delete(id);
+            }
+
+            this.pendingOrder["delete"].add(...orderIds);
+            return true;
+        }
+
+        for (const id of orderIds) {
+            if (typeof id === "number") {
+                this.pendingOrder["write"].add(id);
+            } else {
+                this.pendingOrder["create"].add(id);
+            }
+        }
+
+        return true;
+    }
+
+    getPendingOrder() {
+        const orderToCreate = this.models["pos.order"]
+            .filter(
+                (order) =>
+                    this.pendingOrder.create.has(order.id) && this.shouldCreatePendingOrder(order)
+            )
+            .filter(Boolean);
+        const orderToUpdate = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.write))
+            .filter(Boolean);
+        const orderToDelete = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.delete))
+            .filter(Boolean);
+
+        return {
+            orderToDelete,
+            orderToCreate,
+            orderToUpdate,
+        };
+    }
+
+    shouldCreatePendingOrder(order) {
+        return (
+            order.lines.length > 0 ||
+            order.payment_ids.some((p) => p.payment_method_id.type === "pay_later")
+        );
+    }
+
+    getOrderIdsToDelete() {
+        return [...this.pendingOrder.delete];
+    }
+
+    removePendingOrder(order) {
+        this.pendingOrder["create"].delete(order.id);
+        this.pendingOrder["write"].delete(order.id);
+        this.pendingOrder["delete"].delete(order.id);
+        return true;
+    }
+
+    clearPendingOrder() {
+        this.pendingOrder = {
+            create: new Set(),
+            write: new Set(),
+            delete: new Set(),
+        };
+    }
+
+    getSyncAllOrdersContext(orders, options = {}) {
+        return {
+            config_id: this.config.id,
+            device_identifier: this.device.identifier,
+            ...(options.context || {}),
+        };
+    }
+
+    async preSyncAllOrders(orders) {
+        // Prices are computed on the fly on the pos.order and pos.order.line model
+        // we need to set them before sending the orders to the backend
+        for (const order of orders) {
+            order.setOrderPrices();
+        }
+    }
+
+    postSyncAllOrders(orders) {}
+    async syncAllOrders(options = {}) {
+        if (this.data.network.offline) {
+            if (options.throw) {
+                throw new ConnectionLostError();
+            }
+
+            return new ConnectionLostError();
+        }
+
+        const { orderToCreate, orderToUpdate } = this.getPendingOrder();
+        const orderIdsToDelete = this.getOrderIdsToDelete();
+
+        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
+        orders = orders.filter(
+            (order) => !this.syncingOrders.has(order.uuid) && (order.isDirty() || options.force)
+        );
+
+        // Delete orders first
+        if (orderIdsToDelete.length > 0) {
+            await this.deleteOrders([], orderIdsToDelete);
+        }
+
+        // Allow us to force the sync of the orders In the case of
+        // pos_restaurant is usefull to get unsynced orders
+        // for a specific table
+        if (orders.length === 0) {
+            return;
+        }
+
+        // We are now syncing orders one by one to avoid cancelling all sync
+        // when one order fails, this also avoid timeout issues with a lot of orders
+        let errorOccurred = false;
+        let newSession = false;
+        const syncedOrders = [];
+
+        for (const order of orders) {
+            const context = this.getSyncAllOrdersContext([order], options);
+            await this.preSyncAllOrders([order]);
+            this.syncingOrders.add(order.uuid);
+
+            try {
+                const serialized = order.serializeForORM();
+                const data = await this.data.call("pos.order", "sync_from_ui", [[serialized]], {
+                    context,
+                });
+                const missingRecords = await this.data.missingRecursive(data);
+                const newData = this.models.loadConnectedData(missingRecords);
+
+                logPosMessage(
+                    "Store",
+                    "syncAllOrders",
+                    `Successfully synced orders (${orders.length})`,
+                    CONSOLE_COLOR,
+                    [newData]
+                );
+
+                for (const line of newData["pos.order.line"]) {
+                    const refundedOrderLine = line.refunded_orderline_id;
+
+                    if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
+                        const order = refundedOrderLine.order_id;
+                        if (order) {
+                            delete order.uiState?.lineToRefund[refundedOrderLine.uuid];
+                        }
+                    }
+                }
+
+                await this.postSyncAllOrders(newData["pos.order"]);
+                this.removePendingOrder(order);
+                syncedOrders.push(...newData["pos.order"]);
+                newSession = newSession || data["pos.session"].length > 0;
+            } catch (error) {
+                if (options.throw) {
+                    throw error;
+                }
+
+                if (error instanceof ConnectionLostError) {
+                    logPosMessage(
+                        "Store",
+                        "syncAllOrders",
+                        "Offline mode active, order will be synced later",
+                        CONSOLE_COLOR
+                    );
+                } else {
+                    errorOccurred = true;
+                }
+            } finally {
+                orders.forEach((order) => this.syncingOrders.delete(order.uuid));
+            }
+        }
+
+        if (errorOccurred) {
+            // In that case we assume the order data isn't valid anymore, so we
+            // try to read data from server, to be sure to have the latest state
+            // the order can be deleted from the server side during the sync_from_ui call
+            this.deviceSync.readDataFromServer();
+        }
+
+        if (newSession) {
+            // Replace the original session by the rescue one. And the rescue one will have
+            // a higher id than the original one since it's the last one created.
+            const sessions = this.models["pos.session"].sort((a, b) => a.id - b.id);
+            if (sessions.length > 1) {
+                const sessionToDelete = sessions.slice(0, -1);
+                this.models["pos.session"].deleteMany(sessionToDelete);
+            }
+            this.models["pos.order"]
+                .getAll()
+                .filter((order) => order.state === "draft")
+                .forEach((order) => (order.session_id = this.session));
+        }
+
+        return syncedOrders;
+    }
+
+    pushSingleOrder(order) {
+        return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
+    }
+
+    async pay() {
+        const currentOrder = this.getOrder();
+
+        if (!currentOrder.canPay()) {
+            return;
+        }
+
+        if (
+            currentOrder.lines.some(
+                (line) =>
+                    ["lot", "serial"].includes(line.getProduct().tracking) &&
+                    !line.hasValidProductLot()
+            ) &&
+            (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
+        ) {
+            const confirmed = await ask(this.env.services.dialog, {
+                title: _t("Some Serial/Lot Numbers are missing"),
+                body: _t(
+                    "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
+                ),
+            });
+            if (confirmed) {
+                this.mobile_pane = "right";
+                this.navigate("PaymentScreen", {
+                    orderUuid: this.selectedOrderUuid,
+                });
+            }
+        } else {
+            this.mobile_pane = "right";
+            this.navigate("PaymentScreen", {
+                orderUuid: this.selectedOrderUuid,
+            });
+        }
+    }
+    async getServerOrders() {
+        await this.syncAllOrders();
+        return await this.data.loadServerOrders([
+            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+            ["state", "=", "draft"],
+        ]);
+    }
+    async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
+        const order = this.getOrder();
+        // check back-end method `get_product_info_pos` to see what it returns
+        // We do this so it's easier to override the value returned and use it in the component template later
+        const productInfo = await this.data.call("product.template", "get_product_info_pos", [
+            [productTemplate?.id],
+            productTemplate.getPrice(order.pricelist_id, quantity, priceExtra, false),
+            quantity,
+            this.config.id,
+            productProduct?.id,
+        ]);
+
+        const productTaxDetails = productTemplate.getTaxDetails();
+        const priceWithoutTax = productTaxDetails.total_excluded;
+        const margin = priceWithoutTax - productTemplate.standard_price;
+        const orderPriceWithoutTax = order.priceExcl;
+        const orderCost = order.getTotalCost();
+        const orderMargin = orderPriceWithoutTax - orderCost;
+        const orderTaxTotalCurrency = this.env.utils.formatCurrency(
+            order.prices.taxDetails.order_sign * order.prices.taxDetails.tax_amount_currency
+        );
+        const orderPriceWithTaxCurrency = this.env.utils.formatCurrency(
+            order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
+        );
+        const taxAmount = this.env.utils.formatCurrency(
+            productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
+        );
+        const taxName = productTemplate.taxes_id.map((t) => t.name)?.join(", ");
+
+        const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
+        const marginCurrency = this.env.utils.formatCurrency(margin);
+        const marginPercent = priceWithoutTax
+            ? Math.round((margin / priceWithoutTax) * 10000) / 100
+            : 0;
+        const orderPriceWithoutTaxCurrency = this.env.utils.formatCurrency(orderPriceWithoutTax);
+        const orderCostCurrency = this.env.utils.formatCurrency(orderCost);
+        const orderMarginCurrency = this.env.utils.formatCurrency(orderMargin);
+        const orderMarginPercent = orderPriceWithoutTax
+            ? Math.round((orderMargin / orderPriceWithoutTax) * 10000) / 100
+            : 0;
+        return {
+            costCurrency,
+            marginCurrency,
+            marginPercent,
+            taxAmount,
+            taxName,
+            orderPriceWithoutTaxCurrency,
+            orderCostCurrency,
+            orderMarginCurrency,
+            orderMarginPercent,
+            orderTaxTotalCurrency,
+            orderPriceWithTaxCurrency,
+            productInfo,
+        };
+    }
+    async getClosePosInfo() {
+        return await this.data.call("pos.session", "get_closing_control_data", [[this.session.id]]);
+    }
+    // return the current order
+    getOrder() {
+        if (!this.selectedOrderUuid) {
+            return undefined;
+        }
+
+        return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+    }
+    get selectedOrder() {
+        return this.getOrder();
+    }
+
+    // change the current order
+    setOrder(order) {
+        if (this.getOrder()) {
+            this.getOrder().updateSavedQuantity();
+        }
+        this.selectedOrderUuid = order?.uuid;
+    }
+
+    // return the list of unpaid orders
+    getOpenOrders() {
+        return this.models["pos.order"].filter((o) => !o.finalized);
+    }
+
+    // To be used in the context of closing the POS
+    // Saves the order locally and try to send it to the backend.
+    // If there is an error show a popup
+    async pushOrdersWithClosingPopup(opts = {}) {
+        try {
+            await this.syncAllOrders(opts);
+            return true;
+        } catch (error) {
+            logPosMessage(
+                "Store",
+                "pushOrdersWithClosingPopup",
+                "Some orders could not be submitted to the server",
+                CONSOLE_COLOR,
+                [error]
+            );
+            const reason = this.failed
+                ? _t(
+                      "Some orders could not be submitted to " +
+                          "the server due to configuration errors. " +
+                          "You can exit the Point of Sale, but do " +
+                          "not close the session before the issue " +
+                          "has been resolved."
+                  )
+                : _t(
+                      "Some orders could not be submitted to " +
+                          "the server due to internet connection issues. " +
+                          "You can exit the Point of Sale, but do " +
+                          "not close the session before the issue " +
+                          "has been resolved."
+                  );
+            await ask(this.dialog, {
+                title: _t("Offline Orders"),
+                body: reason,
+            });
+            return false;
+        }
+    }
+
+    /**
+     * @param {str} terminalName
+     */
+    getPendingPaymentLine(terminalName) {
+        for (const order of this.models["pos.order"].getAll()) {
+            const paymentLine = order.payment_ids.find(
+                (paymentLine) =>
+                    paymentLine.payment_method_id.use_payment_terminal === terminalName &&
+                    !paymentLine.isDone() &&
+                    paymentLine.getPaymentStatus() !== "retry"
+            );
+            if (paymentLine) {
+                return paymentLine;
+            }
+        }
+    }
+
+    get linesToRefund() {
+        return this.models["pos.order"].reduce((acc, order) => {
+            acc.push(...Object.values(order.uiState.lineToRefund));
+            return acc;
+        }, []);
+    }
+
+    isProductQtyZero(qty) {
+        const ProductUnit = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        );
+        return ProductUnit.isZero(qty);
+    }
+
+    disallowLineQuantityChange() {
+        return false;
+    }
+
+    restrictLineDiscountChange() {
+        return false;
+    }
+
+    restrictLinePriceChange() {
+        return false;
+    }
+
+    switchPane() {
+        this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
+    }
+    switchPaneTicketScreen() {
+        this.ticket_screen_mobile_pane =
+            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
+    }
+    async logEmployeeMessage(action, message) {
+        await this.data.call(
+            "pos.session",
+            "log_partner_message",
+            [this.session.id, this.user.partner_id.id, action, message],
+            {},
+            true
+        );
+    }
+    get printOptions() {
+        return { webPrintFallback: true };
+    }
+    getOrderChanges(order = this.getOrder()) {
+        return getOrderChanges(order, this.config.preparationCategories);
+    }
+    async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
+        if (!order.isSynced) {
+            return this.sendOrderInPreparation(order, opts);
+        }
+
+        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
+        const rawchange = data.last_order_preparation_change || "{}";
+        const lastChanges = JSON.parse(rawchange);
+        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
+        const lastLocalDate = DateTime.fromSQL(
+            order.last_order_preparation_change?.metadata?.serverDate
+        ).toUTC();
+
+        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Order Outdated"),
+                body: _t(
+                    "The order has been modified on another device. If you have modified existing " +
+                        "order lines, check that your changes have not been overwritten.\n\n" +
+                        "The order will be sent to the server with the last changes made on this device."
+                ),
+            });
+
+            // Update before syncing otherwise it will overwrite the last change
+            order.last_order_preparation_change = lastChanges;
+            await this.syncAllOrders({ orders: [order] });
+            return;
+        }
+
+        return this.sendOrderInPreparation(order, opts);
+    }
+    // Now the printer should work in PoS without restaurant
+    async sendOrderInPreparation(order, opts = {}) {
+        let isPrinted = false;
+
+        if (this.config.printerCategories.size && !opts.byPassPrint) {
+            try {
+                isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
+            } catch (e) {
+                logPosMessage(
+                    "Store",
+                    "sendOrderInPreparation",
+                    "Failed in printing the changes in the order",
+                    CONSOLE_COLOR,
+                    [e]
+                );
+            }
+        }
+        order.updateLastOrderChange();
+        // Ensure that other devices are aware of the changes
+        // Otherwise several devices can print the same changes
+        // We need to check if a preparation display is configured to avoid unnecessary sync
+        if (isPrinted && !this.models["pos.prep.display"]?.length) {
+            await this.syncAllOrders({ orders: [order] });
+        }
+    }
+    async sendOrderInPreparationUpdateLastChange(o, opts) {
+        if (this.data.network.offline) {
+            this.data.network.warningTriggered = false;
+            throw new ConnectionLostError();
+        }
+        await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
+    }
+
+    editPartnerContext(partner) {
+        return {};
+    }
+    /**
+     * @param {import("@point_of_sale/app/models/res_partner").ResPartner?} partner leave undefined to create a new partner
+     */
+    async editPartner(partner) {
+        const record = await makeActionAwaitable(
+            this.action,
+            await this.data.call("res.partner", "action_open_partner_view", [partner?.id]),
+            {
+                props: { resId: partner?.id },
+                additionalContext: this.editPartnerContext(),
+            }
+        );
+        const newPartner = await this.data.read("res.partner", record.config.resIds);
+        return newPartner[0];
+    }
+    /**
+     * @param {import("@point_of_sale/app/models/product_product").ProductProduct?} product leave undefined to create a new product
+     */
+    async editProduct(product) {
+        const orderContainsProduct = product && this.orderContainsProduct(product);
+        this.action.doAction(
+            product
+                ? "point_of_sale.product_template_action_edit_pos"
+                : "point_of_sale.product_template_action_add_pos",
+            {
+                props: {
+                    resId: product?.id,
+                    onSave: async (record) => {
+                        await this.loadNewProducts([["id", "=", record.evalContext.id]]);
+                        this.action.doAction({
+                            type: "ir.actions.act_window_close",
+                        });
+                    },
+                },
+                additionalContext: {
+                    taxes_readonly: orderContainsProduct,
+                    pos_session_id: this.session.id,
+                },
+            }
+        );
+    }
+    orderContainsProduct(product) {
+        const lines = this.getOpenOrders().flatMap((o) => o.lines);
+        return lines.some((l) => l.product_id.product_tmpl_id.id === product.id);
+    }
+    async loadSampleData() {
+        const [isPosManager, isAdmin] = await Promise.all([
+            user.hasGroup("point_of_sale.group_pos_manager"),
+            user.hasGroup("base.group_system"),
+        ]);
+
+        if (!(isPosManager && isAdmin)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Access Denied"),
+                body: _t("It seems like you don't have enough rights to load data."),
+            });
+            return;
+        }
+        await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
+        await this.reloadData(true);
+    }
+    async allowProductCreation() {
+        return await user.checkAccessRight("product.product", "create");
+    }
+    editPayment(order) {
+        this.setOrder(order);
+        this.navigate("PaymentScreen", {
+            orderUuid: order.uuid,
+        });
+    }
+    showOrderDetails(order, props = {}) {
+        this.dialog.add(OrderDetailsDialog, {
+            order: order,
+            editPayment: () => {
+                this.dialog.closeAll();
+                this.editPayment(order);
+            },
+            ...props,
+        });
+    }
+    canEditPayment(order) {
+        return !this.config.iface_print_auto && order.nb_print === 0 && order.state === "paid";
+    }
+    openFinalizedOrders() {
+        const order = this.getOrder();
+        const partner = order.getPartner();
+        const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
+        return this.navigate("TicketScreen", {
+            stateOverride: {
+                filter: "SYNCED",
+                search: searchDetails,
+                destinationOrder: order,
+            },
+        });
+    }
+    async closePos() {
+        this._resetConnectedCashier();
+        // If pos is not properly loaded, we just go back to /web without
+        // doing anything in the order data.
+        if (!this) {
+            this.redirectToBackend();
+        }
+
+        if (this.session.state === "opening_control") {
+            const data = await this.data.call("pos.session", "delete_opening_control_session", [
+                this.session.id,
+            ]);
+
+            if (data.status === "success") {
+                this.redirectToBackend();
+            }
+        }
+
+        // If there are orders in the db left unsynced, we try to sync.
+        const syncSuccess = await this.pushOrdersWithClosingPopup();
+        if (syncSuccess) {
+            this.redirectToBackend();
+        }
+    }
+    async selectPricelist(pricelist) {
+        await this.getOrder().setPricelist(pricelist);
+    }
+    async openPresetTiming(order = this.getOrder()) {
+        const data = await makeAwaitable(this.dialog, PresetSlotsPopup);
+        if (data) {
+            if (order.preset_id.id != data.presetId) {
+                await this.selectPreset(this.models["pos.preset"].get(data.presetId));
+            }
+
+            order.preset_time = data.slot.datetime;
+            if (data.slot.datetime > DateTime.now()) {
+                this.addPendingOrder([order.id]);
+                await this.syncAllOrders({ orders: [order] });
+            }
+        }
+    }
+    async handleSelectNamePreset(order) {
+        if (!order.partner_id) {
+            const partner = await this.selectPartner();
+            if (!partner) {
+                return;
+            }
+        }
+    }
+    async selectPreset(preset = false, order = this.getOrder()) {
+        if (!preset) {
+            const selectionList = this.config.available_preset_ids.map((preset) => ({
+                id: preset.id,
+                label: preset.name,
+                isSelected: order.preset_id && preset.id === order.preset_id.id,
+                item: preset,
+            }));
+
+            if (selectionList.length <= 1) {
+                return;
+            }
+
+            preset =
+                selectionList.length === 2
+                    ? selectionList.find((preset) => !preset.isSelected).item
+                    : await makeAwaitable(this.dialog, SelectionPopup, {
+                          title: _t("Select preset"),
+                          list: selectionList,
+                          size: "md",
+                      });
+        }
+
+        if (preset) {
+            order.setPreset(preset);
+
+            if (preset.needsPartner) {
+                const partner = order.partner_id || (await this.selectPartner(order));
+                if (!partner) {
+                    return;
+                }
+                if (!(partner.street || partner.street2)) {
+                    this.notification.add(_t("Customer address is required"), { type: "warning" });
+                    await this.editPartner(partner);
+                    if (!(partner.street || partner.street2)) {
+                        return;
+                    }
+                }
+            }
+
+            if (preset.identification === "name") {
+                await this.handleSelectNamePreset(order);
+            }
+
+            if (preset.use_timing && !order.preset_time) {
+                await this.openPresetTiming(order);
+                if (!order.preset_time) {
+                    await this.syncPresetSlotAvaibility(preset);
+                    order.preset_time = preset.nextSlot?.datetime || false;
+                }
+            } else if (!preset.use_timing) {
+                order.preset_time = false;
+            }
+        }
+    }
+    orderUsageUTCtoLocal(data) {
+        return orderUsageUTCtoLocalUtil(data);
+    }
+    async syncPresetSlotAvaibility(preset) {
+        try {
+            const result = await this.data.call("pos.preset", "get_available_slots", [preset.id]);
+            const localUsage = this.orderUsageUTCtoLocal(result.usage_utc);
+            preset.computeAvailabilities(localUsage);
+        } catch {
+            // Compute locally if the server is not reachable
+            preset.computeAvailabilities();
+        }
+    }
+    // There for override to do something before adding partner to current order from partner list
+    setPartnerToCurrentOrder(partner) {
+        this.getOrder().setPartner(partner);
+    }
+    async selectPartner(currentOrder = this.getOrder()) {
+        // FIXME, find order to refund when we are in the ticketscreen.
+        if (!currentOrder) {
+            return false;
+        }
+        const currentPartner = currentOrder.getPartner();
+        if (currentPartner && currentOrder.getHasRefundLines()) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Can't change customer"),
+                body: _t(
+                    "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer.",
+                    currentPartner.name
+                ),
+            });
+            return currentPartner;
+        }
+        const payload = await makeAwaitable(this.dialog, PartnerList, {
+            partner: currentPartner,
+        });
+
+        this.setPartnerToCurrentOrder(payload || false);
+
+        return payload;
+    }
+    async editLotsRefund(line) {
+        const product = line.getProduct();
+        const packLotLinesToEdit = line.pack_lot_ids.map((p) => ({
+            id: p.id,
+            text: p.lot_name,
+        }));
+        const alreadyRefundedLots = line.refunded_orderline_id.refund_orderline_ids
+            .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
+            .flatMap((item) => item.pack_lot_ids)
+            .map((p) => p.lot_name);
+        const options = line.refunded_orderline_id.pack_lot_ids
+            .map((p) => ({ id: p.id, name: p.lot_name, product_qty: line.qty }))
+            .filter((lot) => !alreadyRefundedLots.includes(lot.name));
+        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
+            title: _t("Lot/Serial number(s) required for"),
+            name: product.display_name,
+            isSingleItem: product.isAllowOnlyOneLot(),
+            array: packLotLinesToEdit,
+            options: options,
+            customInput: false,
+            uniqueValues: product.tracking === "serial",
+            isLotNameUsed: () => false,
+        });
+        if (payload) {
+            const modifiedPackLotLines = {};
+            const newPackLotLines = [];
+            for (const item of payload) {
+                if (item.id) {
+                    modifiedPackLotLines[item.id] = item.text;
+                } else {
+                    newPackLotLines.push({ lot_name: item.text });
+                }
+            }
+            return { modifiedPackLotLines, newPackLotLines };
+        } else {
+            return null;
+        }
+    }
+
+    showNotificationIfLotExpired(lotName, lotExpDate = null) {
+        const lotExpDateTime = deserializeDateTime(lotExpDate);
+        if (lotExpDateTime.isValid && lotExpDateTime.ts <= DateTime.now().ts) {
+            this.notification.add(_t("Lot/Serial %s is expired", lotName));
+        }
+    }
+    async editLots(product, packLotLinesToEdit) {
+        const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
+        let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
+
+        let existingLots = [];
+        try {
+            existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
+                this.company.id,
+                this.config.id,
+                product.id,
+            ]);
+            if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("No existing serial/lot number"),
+                    body: _t(
+                        "There is no serial/lot number for the selected product, and their creation is not allowed from the Point of Sale app."
+                    ),
+                });
+                return null;
+            }
+        } catch (ex) {
+            logPosMessage("Store", "editLots", "Collecting existing lots failed", CONSOLE_COLOR, [
+                ex,
+            ]);
+            const confirmed = await ask(this.dialog, {
+                title: _t("Server communication problem"),
+                body: _t(
+                    "The existing serial/lot numbers could not be retrieved. \nContinue without checking the validity of serial/lot numbers ?"
+                ),
+                confirmLabel: _t("Yes"),
+                cancelLabel: _t("No"),
+            });
+            if (!confirmed) {
+                return null;
+            }
+            canCreateLots = true;
+        }
+
+        const usedLotsQty = this.models["pos.pack.operation.lot"]
+            .filter(
+                (lot) =>
+                    lot.pos_order_line_id?.product_id?.id === product.id &&
+                    lot.pos_order_line_id?.order_id?.state === "draft"
+            )
+            .reduce((acc, lot) => {
+                if (!acc[lot.lot_name]) {
+                    acc[lot.lot_name] = { total: 0, currentOrderCount: 0 };
+                }
+                acc[lot.lot_name].total += lot.pos_order_line_id?.qty || 0;
+
+                if (lot.pos_order_line_id?.order_id?.id === this.selectedOrder.id) {
+                    acc[lot.lot_name].currentOrderCount += lot.pos_order_line_id?.qty || 0;
+                }
+                return acc;
+            }, {});
+
+        // Remove lot/serial names that are already used in draft orders
+        existingLots = existingLots.filter(
+            (lot) => lot.product_qty > (usedLotsQty[lot.name]?.total || 0)
+        );
+
+        // Check if the input lot/serial name is already used in another order
+        const isLotNameUsed = (itemValue) => {
+            const totalQty = existingLots.find((lt) => lt.name == itemValue)?.product_qty || 0;
+            const usedQty = usedLotsQty[itemValue]
+                ? usedLotsQty[itemValue].total - usedLotsQty[itemValue].currentOrderCount
+                : 0;
+            return usedQty ? usedQty >= totalQty : false;
+        };
+
+        const existingLotsName = existingLots.map((l) => l.name);
+        if (!packLotLinesToEdit.length && existingLotsName.length === 1) {
+            if (existingLots[0].expiration_date) {
+                this.showNotificationIfLotExpired(
+                    existingLots[0].name,
+                    existingLots[0].expiration_date
+                );
+            }
+            // If there's only one existing lot/serial number, automatically assign it to the order line
+            return { newPackLotLines: [{ lot_name: existingLotsName[0] }] };
+        }
+        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
+            title: _t("Lot/Serial number(s) required for"),
+            name: product.display_name,
+            isSingleItem: isAllowOnlyOneLot,
+            array: packLotLinesToEdit,
+            options: existingLots,
+            customInput: canCreateLots,
+            uniqueValues: product.tracking === "serial",
+            isLotNameUsed: isLotNameUsed,
+        });
+        if (payload) {
+            for (const item of payload) {
+                if (!item.expiration_date) {
+                    continue;
+                }
+                this.showNotificationIfLotExpired(item.text, item.expiration_date);
+            }
+            // Segregate the old and new packlot lines
+            const modifiedPackLotLines = Object.fromEntries(
+                payload.filter((item) => item.id).map((item) => [item.id, item.text])
+            );
+            const newPackLotLines = payload
+                .filter((item) => !item.id)
+                .map((item) => ({ lot_name: item.text }));
+
+            return { modifiedPackLotLines, newPackLotLines };
+        } else {
+            return null;
+        }
+    }
+
+    openOpeningControl() {
+        if (this.shouldShowOpeningControl()) {
+            this.dialog.add(
+                OpeningControlPopup,
+                {},
+                {
+                    onClose: () => {
+                        if (
+                            this.session.state !== "opened" &&
+                            this.router.state.current === "ProductScreen"
+                        ) {
+                            this.closePos();
+                        }
+                    },
+                }
+            );
+        }
+    }
+    shouldShowOpeningControl() {
+        return this.session.state == "opening_control";
+    }
+
+    /**
+     * Close other tabs that contain the same pos session.
+     */
+    closeOtherTabs() {
+        localStorage["message"] = "";
+        localStorage["message"] = JSON.stringify({
+            message: "close_tabs",
+            session: this.session.id,
+        });
+
+        window.addEventListener(
+            "storage",
+            (event) => {
+                if (event.key === "message" && event.newValue) {
+                    const msg = JSON.parse(event.newValue);
+                    if (msg.message === "close_tabs" && msg.session == this.session.id) {
+                        logPosMessage(
+                            "Store",
+                            "editLots",
+                            "POS / Session opened in another window. EXITING POS",
+                            CONSOLE_COLOR
+                        );
+                        this.closePos();
+                    }
+                }
+            },
+            false
+        );
+    }
+
+    showBackButton() {
+        return (
+            this.ui.isSmall &&
+            this.numpadMode !== "table" &&
+            (this.router.state.current !== "ProductScreen" || this.mobile_pane === "left")
+        );
+    }
+    async onClickBackButton() {
+        if (this.router.state.current === "TicketScreen") {
+            if (this.ticket_screen_mobile_pane == "left") {
+                const next = this.defaultPage;
+                this.navigate(next.page, next.params);
+            } else {
+                this.ticket_screen_mobile_pane = "left";
+            }
+        } else if (
+            this.mobile_pane == "left" ||
+            ["PaymentScreen", "ActionScreen"].includes(this.router.state.current)
+        ) {
+            if (this.router.state.current === "ProductScreen") {
+                this.getOrder().deselectOrderline();
+            }
+
+            this.mobile_pane = this.router.state.current === "PaymentScreen" ? "left" : "right";
+            this.navigate("ProductScreen", {
+                orderUuid: this.getOrder().uuid,
+            });
+        }
+    }
+
+    showSearchButton() {
+        if (this.router.state.current === "ProductScreen") {
+            return this.ui.isSmall ? this.mobile_pane === "right" : true;
+        }
+        return false;
+    }
+
+    async showQR(payment) {
+        if (this.currency.isZero(payment.amount)) {
+            this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
+            return false;
+        }
+        payment.setPaymentStatus("waiting");
+        let qr;
+        try {
+            qr = await this.data.call("pos.payment.method", "get_qr_code", [
+                [payment.payment_method_id.id],
+                payment.amount,
+                payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
+                "",
+                this.currency.id,
+                payment.pos_order_id.partner_id?.id,
+            ]);
+        } catch (error) {
+            qr = payment.payment_method_id.default_qr;
+            if (!qr) {
+                let message;
+                if (error instanceof ConnectionLostError) {
+                    message = _t(
+                        "Connection to the server has been lost. Please check your internet connection."
+                    );
+                } else {
+                    message = error.data.message;
+                }
+                this.env.services.dialog.add(AlertDialog, {
+                    title: _t("Failure to generate Payment QR Code"),
+                    body: message,
+                });
+                return false;
+            }
+        }
+        payment.qrPaymentData = {
+            amount: this.env.utils.formatCurrency(payment.amount),
+            qrCode: qr,
+            paymentMethod: payment.payment_method_id,
+        };
+        return await ask(
+            this.env.services.dialog,
+            {
+                ...payment.qrPaymentData,
+                line: payment,
+            },
+            {},
+            QRPopup
+        ).then((result) => {
+            payment.qrPaymentData = null;
+            return result;
+        });
+    }
+
+    redirectToBackend() {
+        window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
+    }
+
+    getExcludedProductIds() {
+        return [
+            this.config.tip_product_id?.product_tmpl_id?.id,
+            ...this.config._pos_special_products_ids.map(
+                (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id
+            ),
+        ].filter(Boolean);
+    }
+
+    areAllProductsSpecial(products) {
+        const specialDisplayProductIds = this.config._pos_special_display_products_ids || [];
+        return (
+            specialDisplayProductIds.length >= products.length &&
+            products.every((product) => specialDisplayProductIds.includes(product.id))
+        );
+    }
+
+    get productsToDisplay() {
+        const searchWord = this.searchProductWord.trim();
+        const allProducts = this.models["product.template"].getAll();
+        let list = [];
+        const isSearchByWord = searchWord !== "";
+
+        if (isSearchByWord) {
+            if (!this._searchTriggered) {
+                this.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.getProductsBySearchWord(
+                searchWord,
+                this.selectedCategory?.id ? this.selectedCategory.associatedProducts : allProducts
+            );
+        } else {
+            this._searchTriggered = false;
+            if (this.selectedCategory?.id) {
+                list = this.selectedCategory.associatedProducts;
+            } else {
+                list = allProducts;
+            }
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const filteredList = [];
+        const excludedProductIds = new Set(this.getExcludedProductIds());
+        const availableCateg = new Set(
+            (this.config.iface_available_categ_ids || []).map((c) => c.id)
+        );
+
+        for (const p of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+
+            if (excludedProductIds.has(p.id) || !p.canBeDisplayed) {
+                continue;
+            }
+
+            if (
+                availableCateg.size &&
+                !this.config._pos_special_display_products_ids?.includes(p.id) &&
+                !p.pos_categ_ids.some((c) => availableCateg.has(c.id))
+            ) {
+                continue;
+            }
+
+            filteredList.push(p);
+        }
+
+        if (
+            !isSearchByWord &&
+            !this.selectedCategory?.id &&
+            this.areAllProductsSpecial(filteredList)
+        ) {
+            return [];
+        }
+
+        return isSearchByWord
+            ? filteredList.sort((a, b) => b.is_favorite - a.is_favorite)
+            : filteredList.sort((a, b) => {
+                  if (b.is_favorite !== a.is_favorite) {
+                      return b.is_favorite - a.is_favorite;
+                  } else if (a.pos_sequence !== b.pos_sequence) {
+                      return a.pos_sequence - b.pos_sequence;
+                  }
+                  return a.name.localeCompare(b.name);
+              });
+    }
+
+    get productToDisplayByCateg() {
+        const sortedProducts = this.productsToDisplay;
+        if (!this.config.iface_group_by_categ) {
+            return sortedProducts.length ? [["0", sortedProducts]] : [];
+        } else {
+            const groupedByCategory = {};
+            const selectedCategories = this.selectedCategory
+                ? this.selectedCategory.getAllChildren().map((c) => c.id)
+                : false;
+            for (const product of sortedProducts) {
+                if (product.pos_categ_ids.length === 0) {
+                    // Only display product without category if we don't have a category selected
+                    if (selectedCategories) {
+                        continue;
+                    }
+                    if (!groupedByCategory[0]) {
+                        groupedByCategory[0] = [];
+                    }
+                    groupedByCategory[0].push(product);
+                    continue;
+                }
+                const productCategories = product.pos_categ_ids.map((c) => c.id);
+                for (const categId of productCategories) {
+                    if (selectedCategories && !selectedCategories.includes(categId)) {
+                        continue;
+                    }
+                    if (!groupedByCategory[categId]) {
+                        groupedByCategory[categId] = [];
+                    }
+                    groupedByCategory[categId].push(product);
+                }
+            }
+            const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
+                // None category goes last
+                const aNoneCategory = a === "0";
+                const bNoneCategory = b === "0";
+                if (aNoneCategory && bNoneCategory) {
+                    return 0;
+                }
+                if (aNoneCategory) {
+                    return 1;
+                }
+                if (bNoneCategory) {
+                    return -1;
+                }
+
+                const catA = this.models["pos.category"].get(a);
+                const catB = this.models["pos.category"].get(b);
+
+                const isRootA = !catA.parent_id;
+                const isRootB = !catB.parent_id;
+
+                return isRootA !== isRootB ? (isRootA ? -1 : 1) : catA.sequence - catB.sequence;
+            });
+            return res;
+        }
+    }
+
+    getProductsBySearchWord(searchWord, products) {
+        const query = normalize(searchWord);
+        const matches = [];
+
+        for (const product of products) {
+            const searchStr = product.searchString;
+
+            if (searchStr.includes(query)) {
+                const normName = product.normalizedName;
+                matches.push({
+                    product: product,
+                    index: normName.indexOf(query),
+                    name: normName,
+                });
+            }
+        }
+
+        matches.sort(
+            (a, b) =>
+                (a.index === -1) - (b.index === -1) ||
+                a.index - b.index ||
+                (a.name == b.name ? 0 : a.name > b.name ? 1 : -1)
+        );
+
+        return matches.map((m) => m.product);
+    }
+    getPaymentMethodFmtAmount(pm, order) {
+        const amount = order.getDefaultAmountDueToPayIn(pm);
+        const fmtAmount = this.env.utils.formatCurrency(amount, true);
+
+        if (!this.currency.isPositive(amount) || !this.config.cash_rounding) {
+            return;
+        }
+        if (!this.config.only_round_cash_method || pm.type === "cash") {
+            return fmtAmount;
+        }
+    }
+    getDate(date) {
+        const todayTs = DateTime.now().startOf("day").ts;
+        if (date.toLocal().startOf("day").ts === todayTs) {
+            return _t("Today");
+        } else {
+            return formatDate(date);
+        }
+    }
+    getTime(date) {
+        return getTimeUtil(date);
+    }
+
+    orderDone(order) {
+        order.setScreenData({ name: "" });
+        if (!this.config.module_pos_restaurant) {
+            this.selectedOrderUuid = this.getEmptyOrder().uuid;
+        }
+        this.searchProductWord = "";
+        const nextPage = this.defaultPage;
+        this.navigate(nextPage.page, nextPage.params);
+    }
+
+    async isSessionDeleted() {
+        return (
+            (await this.data.orm.searchCount("pos.session", [["id", "=", this.session.id]])) === 0
+        );
+    }
+
+    async validateOrderFast(paymentMethod) {
+        const validation = new OrderPaymentValidation({
+            pos: this,
+            orderUuid: this.getOrder().uuid,
+            fastPaymentMethod: paymentMethod,
+        });
+        await validation.validateOrder(false);
+    }
+
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+        const srcKey = srcLine.preparationKey;
+        const destKey = destLine.preparationKey;
+        const srcQty = srcPrep[srcKey]?.quantity;
+
+        if (srcQty) {
+            if (srcQty <= qty) {
+                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
+                destPrep[destKey] = newPrep;
+                delete srcPrep[srcKey];
+            } else {
+                srcPrep[srcKey].quantity = srcQty - qty;
+                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+            }
+        }
+    }
+
+    get isSelectedLineCombo() {
+        return Boolean(this.selectedOrder?.getSelectedOrderline()?.isPartOfCombo());
+    }
+
+    /**
+     * This method is called in three different contexts.
+     *
+     * 1. Each time `order_summary` is rendered, this method is called in “limited” mode to
+     *    determine whether it is possible to create combos with the order lines.
+     *
+     * 2. When you click on “apply combos,” a popup opens if there are several possibilities, this
+     *    time in “combinations” mode.
+     *
+     * 3. When choosing a combo in the popup, this method is called in “full” mode to get all
+     *    possible combinations.
+     *
+     * Limited mode: this mode returns when more than one combo possibility is
+     * found.
+     *
+     * Combination mode: this mode returns 1 combination for each possible combo. It limits the computation time
+     * while giving all information needed for the popup.
+     *
+     * Full mode: returns all possibilities; this mode is more complex, hence the limited mode for
+     * rendering.
+     *
+     * @param {string} mode: limited | full | combinaison
+     * @param {ProductTemplate} productTmpl: ProductTmpl
+     */
+    getApplicableProductCombo(mode = "limited", productTmpl = null) {
+        const matchingCombos = [];
+        const productInOrder = this.selectedOrder.lines.reduce((acc, line) => {
+            if (line.isPartOfCombo()) {
+                return acc;
+            }
+            const pid = line.product_id.id;
+
+            if (!acc[pid]) {
+                acc[pid] = {
+                    lines: {},
+                    totalQty: 0,
+                };
+            }
+
+            acc[pid].lines[line.uuid] = line.qty;
+            acc[pid].totalQty += line.qty;
+            return acc;
+        }, {});
+        const combos = this.models["product.combo"].getAll();
+        const comboItems = combos.flatMap((combo) => combo.combo_item_ids);
+        const totalQtyAvailable = comboItems.reduce((acc, item) => {
+            const productId = item.product_id.id;
+            if (productInOrder[productId]) {
+                acc[item.combo_id.id] =
+                    (acc[item.combo_id.id] || 0) + productInOrder[productId].totalQty;
+            }
+            return acc;
+        }, {});
+
+        const productTmplsToCheck =
+            mode === "full" && productTmpl
+                ? [productTmpl]
+                : this.productCombos.sort(
+                      (a, b) => a.product_tmpl_id.list_price - b.product_tmpl_id.list_price
+                  );
+
+        for (const comboProduct of productTmplsToCheck) {
+            const combos = comboProduct.combo_ids;
+            const quantityTaken = {};
+            let comboQty = Infinity;
+            let hasUpsell = false;
+
+            for (const combo of combos) {
+                if (combo.is_upsell) {
+                    hasUpsell = true;
+                    continue;
+                }
+                const comboId = combo.id;
+                const minQty = combo.qty_free;
+                quantityTaken[comboId] = {};
+
+                if ((totalQtyAvailable[comboId] || 0) < minQty) {
+                    // Not enough to satisfy qty_free for this combo group
+                    comboQty = 0;
+                    break;
+                }
+                comboQty = Math.min(totalQtyAvailable[comboId] / minQty, comboQty);
+            }
+
+            if (comboQty === 0 || comboQty == Infinity) {
+                // The combo product is either composed of only upsell combo choices (Infinity)
+                // or cannot be completed with current order lines (0).
+                // We do not propose it as applicable or upsell
+                continue;
+            }
+
+            if (mode === "limited") {
+                // In limited mode, we only want the useful information for the UI
+                // We thus want to know if there is a applicable combo or not,
+                // If yes, we want to know if there could be several combos
+                // and the quantity of the first applicable combo
+                matchingCombos.push({
+                    productTmpl: comboProduct,
+                    quantity: comboQty,
+                    hasUpsell,
+                });
+                if (matchingCombos.length > 1) {
+                    break;
+                }
+                continue;
+            }
+
+            const availableQty = JSON.parse(JSON.stringify(productInOrder));
+            const combinations = [];
+
+            let qtyToCheck = Math.min(comboQty, 20); // For performance reasons, we only do 20 combos at a time
+            if (mode === "combinations") {
+                // In combinations mode, we only want to get the first combinations to display to the user
+                qtyToCheck = Math.min(qtyToCheck, 1);
+            }
+
+            for (let i = 0; i < qtyToCheck; i++) {
+                const quantityTaken = {};
+                for (const combo of combos) {
+                    const comboId = combo.id;
+                    let qtyNeeded = Math.min(
+                        Math.ceil(totalQtyAvailable[comboId] / comboQty),
+                        combo.qty_max
+                    );
+                    quantityTaken[comboId] = {};
+
+                    for (const item of combo.combo_item_ids) {
+                        const productId = item.product_id.id;
+                        if (!availableQty[productId]) {
+                            continue;
+                        }
+                        for (const [lUuid, qty] of Object.entries(availableQty[productId].lines)) {
+                            if (qtyNeeded === 0) {
+                                break;
+                            }
+                            const line = this.selectedOrder.lines.filter(
+                                (l) => l.uuid === lUuid
+                            )[0];
+                            const takeQty = Math.min(qty, qtyNeeded);
+                            quantityTaken[comboId][lUuid] = {
+                                qty: takeQty,
+                                combo_item: item,
+                                line_price:
+                                    this.config.iface_tax_included == "total"
+                                        ? line.priceIncl
+                                        : line.priceExcl,
+                                attribute_value_ids: line.attribute_value_ids.map(
+                                    (value) => value.id
+                                ),
+                                attribute_value_extra_price: line.attribute_value_ids.reduce(
+                                    (sum, value) => sum + value.price_extra,
+                                    0
+                                ),
+                            };
+                            availableQty[productId].lines[lUuid] -= takeQty;
+                            qtyNeeded -= takeQty;
+                        }
+                    }
+                    if (combo.is_upsell) {
+                        quantityTaken[comboId].upsell = true;
+                    }
+                }
+                combinations.push(quantityTaken);
+            }
+            let totalSplitedComboLinePrice = 0;
+
+            const itemLines = combinations
+                .flatMap((items) => Object.values(items))
+                .flatMap((item) => Object.values(item))
+                .filter((val) => val && typeof val === "object");
+
+            const remainingFreeByComboItem = new Map();
+            const childLineConf = [];
+            const comboExtraLines = [];
+            for (const item of itemLines) {
+                const combo = item.combo_item;
+                const comboItemId = combo.combo_id.id;
+                if (!remainingFreeByComboItem.has(comboItemId)) {
+                    remainingFreeByComboItem.set(comboItemId, combo.combo_id.qty_free);
+                }
+                const remainingFree = remainingFreeByComboItem.get(comboItemId);
+                const base = {
+                    combo_item_id: combo,
+                    configuration: {
+                        attribute_value_ids: item.attribute_value_ids,
+                        price_extra: item.attribute_value_extra_price,
+                    },
+                };
+                if (remainingFree > 0) {
+                    const freeQty = Math.min(item.qty, remainingFree);
+                    const extraQty = item.qty - freeQty;
+                    if (freeQty > 0) {
+                        childLineConf.push({
+                            ...base,
+                            qty: freeQty,
+                        });
+                    }
+                    if (extraQty > 0) {
+                        comboExtraLines.push({
+                            ...base,
+                            qty: extraQty,
+                        });
+                    }
+                    remainingFreeByComboItem.set(comboItemId, remainingFree - freeQty);
+                } else {
+                    comboExtraLines.push({
+                        ...base,
+                        qty: item.qty,
+                    });
+                }
+            }
+            const comboPrices = computeComboItems(
+                comboProduct,
+                childLineConf,
+                this.selectedOrder.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines,
+                this.currency
+            );
+            const baseLines = comboPrices.map((comboPrice) =>
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                    {},
+                    {
+                        currency_id: this.currency,
+                        quantity: comboPrice.qty,
+                        price_unit: comboPrice.price_unit,
+                        tax_ids: comboPrice.combo_item_id.product_id.taxes_id,
+                        product_id: comboPrice.combo_item_id.product_id,
+                    }
+                )
+            );
+            accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
+            accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
+            const cashRounding = this.config.cash_rounding ? this.config.rounding_method : null;
+            const taxDetails = accountTaxHelpers.get_tax_totals_summary(
+                baseLines,
+                this.currency,
+                this.company,
+                {
+                    cash_rounding: cashRounding,
+                }
+            );
+            totalSplitedComboLinePrice = this.currency.round(
+                itemLines.reduce((sum, line) => sum + line.line_price, 0)
+            );
+            matchingCombos.push({
+                productTmpl: comboProduct,
+                combinations,
+                combinationsQty: comboQty,
+                totalComboPrice:
+                    this.config.iface_tax_included == "total"
+                        ? taxDetails.total_amount
+                        : taxDetails.base_amount,
+                totalSplitedComboLinePrice,
+            });
+        }
+        return matchingCombos;
+    }
+    async createComboFromLines(productTmpl, combinations) {
+        const concernedLinesQty = {};
+        combinations.forEach((items) => {
+            for (const combo of Object.values(items)) {
+                for (const uuid of Object.keys(combo)) {
+                    const line = this.selectedOrder.lines.find((l) => l.uuid === uuid);
+                    if (!line) {
+                        continue;
+                    }
+                    concernedLinesQty[uuid] = line.qty;
+                }
+            }
+        });
+        let comboLine = null;
+        for (const [index, items] of combinations.entries()) {
+            const props = {
+                productTemplate: productTmpl,
+                values: items,
+            };
+            if (combinations.length > 1) {
+                props.title = productTmpl.display_name + ` ${index + 1}/${combinations.length}`;
+            }
+            const payload = await makeAwaitable(this.dialog, ComboConfiguratorPopup, props);
+            if (!payload) {
+                break;
+            }
+
+            const comboPrices = computeComboItems(
+                productTmpl.product_variant_ids[0],
+                payload[0],
+                this.selectedOrder.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                payload[1],
+                this.currency
+            );
+
+            comboLine = await this.addLineToCurrentOrder(
+                { product_tmpl_id: productTmpl },
+                { comboOpts: comboPrices },
+                false
+            );
+
+            const linkOldNewLines = {};
+            comboLine.combo_line_ids.forEach((cl) => {
+                linkOldNewLines[cl.uuid] = 0;
+            });
+
+            const oldLines = this.selectedOrder.lines.filter((l) =>
+                Object.keys(concernedLinesQty).includes(l.uuid)
+            );
+
+            for (const oldLine of oldLines) {
+                const possibleLinkedComboLines = this.findComboLinesByOldLine(oldLine, comboLine);
+                for (const link of possibleLinkedComboLines) {
+                    if (linkOldNewLines[link.uuid] >= link.qty) {
+                        continue;
+                    }
+                    if (link.qty >= concernedLinesQty[oldLine.uuid]) {
+                        this.handlePreparationHistory(
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            oldLine,
+                            link,
+                            concernedLinesQty[oldLine.uuid]
+                        );
+                        linkOldNewLines[link.uuid] += concernedLinesQty[oldLine.uuid];
+                        concernedLinesQty[oldLine.uuid] = 0;
+                        break;
+                    } else {
+                        this.handlePreparationHistory(
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            oldLine,
+                            link,
+                            link.qty
+                        );
+                        linkOldNewLines[link.uuid] += link.qty;
+                        concernedLinesQty[oldLine.uuid] -= link.qty;
+                    }
+                }
+            }
+
+            // make orderline ignored by preparation printers if at least one child orderline has already been sent to the kitchen
+            if (
+                comboLine.combo_line_ids.some(
+                    (cl) =>
+                        this.selectedOrder.last_order_preparation_change.lines[cl.preparationKey]
+                )
+            ) {
+                this.selectedOrder.last_order_preparation_change[comboLine.preparationKey] = {
+                    ignoreQty: comboLine.qty,
+                };
+            }
+        }
+        for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
+            const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
+            if (newQty > 0) {
+                line.setQuantity(newQty);
+            } else {
+                line.order_id.removeOrderline(line);
+            }
+        }
+        if (comboLine) {
+            this.selectedOrder.selectOrderline(comboLine);
+        }
+        return;
+    }
+    findComboLinesByOldLine(oldLine, comboProduct) {
+        // Link future new lines to old lines for preparation history tracking
+        return comboProduct.combo_line_ids.filter((cl) => {
+            if (cl.product_id.id !== oldLine.product_id.id) {
+                return false;
+            }
+            if (cl.full_product_name !== oldLine.full_product_name) {
+                return false;
+            }
+            return true;
+        });
+    }
+    breakCombo(orderline) {
+        if (!this.isSelectedLineCombo) {
+            return;
+        }
+        const order = this.selectedOrder;
+        for (const line of orderline.combo_line_ids) {
+            line.combo_parent_id = false;
+            line.setUnitPrice(
+                line.product_id.getPrice(order.pricelist_id, line.qty, 0, false, line.product_id)
+            );
+        }
+        const preparationKey = orderline.preparationKey;
+        order.removeOrderline(orderline, false);
+        delete order.last_order_preparation_change.lines[preparationKey];
+    }
+}
+
+export const posService = {
+    dependencies: PosStore.serviceDependencies,
+    async start(env, deps) {
+        return new PosStore({ traps: {}, env, deps }).ready;
+    },
+};
+
+registry.category("services").add("pos", posService);

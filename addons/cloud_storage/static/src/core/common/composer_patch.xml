@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//FileUploader" position="attributes">
+            <attribute name="checkSize">!cloudStorageUsable</attribute>
+        </xpath>
+    </t>
+</templates>

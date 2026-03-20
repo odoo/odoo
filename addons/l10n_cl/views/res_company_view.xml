@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_company_l10n_cl_form" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="name">view.company.l10n.cl.form</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <field name="vat" position="after">
+                    <field name="l10n_cl_activity_description" placeholder="Activity Description"
+                        invisible="country_id != %(base.cl)d"
+                        required="country_id == %(base.cl)d"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

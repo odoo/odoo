@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_editor.FieldSelectorPopover">
+    <div style="width: 15rem;"
+        class="o-dynamic-field-popover d-flex flex-column flex-wrap gap-3 py-2">
+
+        <i class="btn btn-link position-absolute top-0 end-0 fa fa-times text-dark" data-tooltip="Close" role="img" aria-label="Close" title="Close" t-on-click="() => this.props.close()"/>
+
+        <div class="px-2" t-if="!!env.debug">
+            <span class="fw-bolder d-block">Model</span>
+            <span t-out="state.modelName" /> (<span t-out="resModel" />)
+        </div>
+
+        <div class="d-flex flex-column px-2 text-break">
+            <span class="fw-bolder">Field</span>
+            <ModelFieldSelector
+                readonly="false"
+                filter.bind="props.filter"
+                followRelations="props.followRelations"
+                isDebugMode="!!env.debug"
+                path="state.path"
+                resModel="resModel"
+                readProperty="true"
+                showSearchInput="true"
+                update.bind="setPath"
+                showDebugInput="false"
+            />
+        </div>
+        <div t-if="env.debug and state.path" class="d-flex flex-column px-2 text-break">
+            <span class="d-block fw-bolder">Technical name</span>
+            <code t-esc="state.path" />
+        </div>
+        <div class="d-flex flex-column px-2 fw-bolder" t-if="!props.disableLabel">
+            <span class="d-block">
+                Default<sup class="text-info" data-tooltip="Text shown if field is empty" style="cursor: help;">?</sup>
+            </span>
+            <input
+                t-att-value="state.label"
+                name="label_value"
+                t-on-input="onLabelInput"
+                class="o_input"
+                type="text"
+                placeholder="Text shown if field is empty"
+            />
+        </div>
+        <div class="d-flex flex-row px-2 justify-content-end gap-2 mt-auto">
+            <button class="btn btn-primary" t-att-disabled="!state.path" t-on-click="validate">Update</button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </div>
+    </div>
+</t>
+
+</templates>

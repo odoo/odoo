@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.MenuDialog">
+    <WebsiteDialog title="title" primaryTitle.translate="Continue" secondaryTitle.translate="Discard"
+        closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
+        <div class="o_menu_dialog_form mb-3 row">
+            <label class="col-form-label col-md-3">
+                Title
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-on-input="onTitleInput" t-model="state.name"
+                    class="form-control" t-att-class="{ 'is-invalid': state.invalidName }" t-ref="autofocus"/>
+            </div>
+        </div>
+        <div t-if="!props.isMegaMenu" class="mb-3 row">
+            <label class="col-form-label col-md-3">
+                Url or Email
+            </label>
+            <div class="col-md-9">
+                <div class="position-relative" t-att-class="{ 'o_page_not_found': state.pageNotFound }">
+                    <input id="url_input" t-on-input="onUrlInput" t-ref="url-input" type="text"
+                        t-model="state.url" class="form-control" t-att-class="{ 'is-invalid': state.invalidUrl }"/>
+                    <i t-if="state.pageNotFound and !state.invalidUrl"
+                        class="fa fa-info-circle text-warning position-absolute top-50 end-0 translate-middle-y me-2"
+                        data-tooltip="Page not found" data-tooltip-position="top" data-tooltip-delay="0">
+                    </i>
+                </div>
+                <small class="form-text">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+            </div>
+        </div>
+    </WebsiteDialog>
+</t>
+
+<t t-name="website.MenuRow">
+    <li class="mb-1" t-att-data-menu-id="props.menu.fields['id']" t-att-data-is-mega-menu="props.menu.fields['is_mega_menu'] ? 'true' : undefined">
+        <div class="input-group mb-1">
+            <span class="input-group-text bg-view oi oi-draggable align-content-center p-2 border-end-0 text-muted"
+                role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            <span class="form-control d-flex align-items-center bg-view ms-0 border-start-0 border-end-0">
+                <span t-on-dblclick="edit" class="js_menu_label o_text_overflow flex-grow-1">
+                    <t t-esc="props.menu.fields['name']"/>
+                </span>
+                <span t-if="props.menu.fields['is_mega_menu']" class="badge text-bg-primary rounded-pill">Mega Menu</span>
+                <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>
+            </span>
+            <div class="input-group-text bg-view p-0 ms-0 border-start-0">
+                <button type="button" t-if="props.menu.page_not_found and !props.menu.children.length" t-on-click="createPage"
+                    class="btn btn-sm btn-outline-primary me-1">Create Page</button>
+                <button t-on-click="edit" type="button"
+                    class="btn js_edit_menu fa fa-pencil text-muted px-2 rounded-0 h-100"
+                    aria-label="Edit Menu Item" title="Edit Menu Item"/>
+                <button t-on-click="delete" type="button"
+                    class="btn js_delete_menu fa fa-trash-o text-danger px-2 rounded-0 h-100"
+                    aria-label="Delete Menu Item" title="Delete Menu Item"/>
+            </div>
+        </div>
+        <ul t-if="props.menu.children.length">
+            <t t-foreach="props.menu.children" t-as="submenu" t-key="submenu.fields['id']">
+                <MenuRow menu="submenu" edit="props.edit" delete="props.delete" createPage="props.createPage"/>
+            </t>
+        </ul>
+    </li>
+</t>
+
+<t t-name="website.EditMenuDialog">
+    <WebsiteDialog close="props.close" title.translate="Edit Menu" primaryTitle.translate="Save" primaryClick="() => this.onClickSave()">
+        <ul t-ref="menu-editor" class="oe_menu_editor list-unstyled">
+            <t t-foreach="state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
+                <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)" createPage="(id) => this.createPage(id)"/>
+            </t>
+        </ul>
+        <div class="d-flex mt-4 justify-content-between align-items-end">
+            <div class="d-flex flex-column">
+                <a href="#" t-on-click="() => this.addMenu(false)">
+                    <i class="fa fa-plus-circle me-1"/> Add Menu Item
+                </a>
+                <a href="#" t-on-click="() => this.addMenu(true)">
+                    <i class="fa fa-plus-circle me-1"/> Add Mega Menu Item
+                </a>
+            </div>
+            <small class="text-muted">
+                <i class="fa fa-info-circle me-1"/> Drag to the right to get a submenu
+            </small>
+        </div>
+    </WebsiteDialog>
+</t>
+</templates>

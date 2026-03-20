@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="replace">
+                <field name="requisition_type" invisible="1"/>
+                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" readonly="requisition_type == 'blanket_order' or state in ['purchase', 'cancel']" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
+            </field>
+            <field name="partner_ref" position="after">
+                <field name="requisition_id" domain="[('state', '=', 'confirmed'), ('vendor_id', 'in', (partner_id, False)), ('company_id', '=', company_id)]"
+                options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_search_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.list.select.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="requisition_id"/>
+            </field>
+            <filter name="representative" position="after">
+                <filter string="Agreement" name="requisition" domain="[]" context="{'group_by': 'requisition_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

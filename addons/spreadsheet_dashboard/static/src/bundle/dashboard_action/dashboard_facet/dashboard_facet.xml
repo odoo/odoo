@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_dashboard.DashboardFacet">
+        <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover mw-100 o_facet_with_domain" tabindex="0">
+            <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"></div>
+            <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0 btn btn-primary" t-on-click.stop="props.onClick">
+                <small class="px-1" t-esc="props.facet.title"/>
+                <span class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover">
+                    <i class="fa fa-fw fa-cog"></i>
+                </span>
+            </div>
+            <div class="o_facet_values position-relative d-flex flex-wrap align-items-center rounded-end-2 text-wrap overflow-hidden">
+                <span><small class="o_facet_values_sep small mx-1 opacity-50" t-esc="props.facet.operator" t-att-title="props.facet.operator"/></span>
+                <span t-foreach="props.facet.values" t-as="value" t-key="value_index" class="d-flex">
+                    <em t-if="!value_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="props.facet.separator"/>
+                    <small class="o_facet_value text-truncate" t-esc="value" t-att-title="value"/>
+                </span>
+            </div>
+            <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none" title="Remove" t-on-click.stop="props.clearFilter" />
+        </div>
+    </t>
+</templates>

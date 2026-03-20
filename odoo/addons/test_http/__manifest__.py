@@ -1,0 +1,14 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+{
+    'name': 'Test HTTP',
+    'category': 'Hidden/Tests',
+    'description': """A module to test HTTP""",
+    'depends': ['web', 'web_tour', 'mail', 'rpc'],
+    'data': [
+        'data.xml',
+        'ir.model.access.csv',
+        'views.xml'
+    ],
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

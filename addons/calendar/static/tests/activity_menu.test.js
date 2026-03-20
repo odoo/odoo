@@ -1,0 +1,44 @@
+import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
+import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { expect, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
+import { mockService, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
+
+defineCalendarModels();
+preloadBundle("web.fullcalendar_lib");
+
+test("activity menu widget:today meetings", async () => {
+    mockDate(2018, 3, 20, 6, 0, 0);
+    const pyEnv = await startServer();
+    const attendeeId = pyEnv["calendar.attendee"].create({ partner_id: serverState.partnerId });
+    pyEnv["calendar.event"].create([
+        {
+            res_model: "calendar.event",
+            name: "meeting1",
+            start: "2018-04-20 06:30:00",
+            attendee_ids: [attendeeId],
+        },
+        {
+            res_model: "calendar.event",
+            name: "meeting2",
+            start: "2018-04-20 09:30:00",
+            attendee_ids: [attendeeId],
+        },
+    ]);
+    mockService("action", {
+        doAction(action) {
+            if (typeof action === "string") {
+                expect.step(action);
+            }
+        },
+    });
+    await start();
+    await contains(".o_menu_systray i[aria-label='Activities']");
+    await click(".o_menu_systray i[aria-label='Activities']");
+    await contains(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Today's Meetings" });
+    await contains(".o-mail-ActivityGroup .o-calendar-meeting", { count: 2 });
+    await contains(".o-calendar-meeting span.fw-bold", { text: "meeting1" });
+    await contains(".o-calendar-meeting span:not(.fw-bold)", { text: "meeting2" });
+    await click(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Today's Meetings" });
+    await expect.waitForSteps(["calendar.action_calendar_event"]);
+});

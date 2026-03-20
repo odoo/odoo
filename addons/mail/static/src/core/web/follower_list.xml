@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.FollowerList">
+        <DropdownItem t-if="props.thread.selfFollower" class="'d-flex px-1 o-mail-FollowerList-unfollow'" onSelected="() => this.onClickUnfollow()">
+            <span class="o-mail-FollowerList-unfollowBtn text-danger d-flex align-items-center flex-grow-1 px-3 fw-bold">
+                Unfollow
+            </span>
+            <span class="o-mail-Follower-action btn btn-icon rounded-0 p-0 opacity-50 opacity-100-hover me-1" title="Edit subscription" t-on-click.stop="(ev) => this.onClickEdit(ev)">
+                <i class="fa fa-fw fa-pencil"/>
+            </span>
+        </DropdownItem>
+        <DropdownItem t-else="" class="'o-mail-FollowerList-followBtn text-success'" onSelected="() => this.onClickFollow()">
+            Follow
+        </DropdownItem>
+        <div role="separator" class="dropdown-divider opacity-50"/>
+        <t t-if="props.thread.hasWriteAccess">
+            <DropdownItem onSelected="() => this.onClickAddFollowers()" tag="'a'">
+                Add Followers
+            </DropdownItem>
+            <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider opacity-50"/>
+        </t>
+        <div t-if="props.thread.followers.length > 0" class="d-flex flex-column gap-1">
+            <t t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
+                <Follower follower="follower" onFollowerChanged="props.onFollowerChanged" close="props.dropdown.close"/>
+            </t>
+            <span t-if="!props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="props.thread.loadMoreFollowers" t-ref="load-more">Load more</span>
+        </div>
+        <div t-elif="!props.thread.hasWriteAccess" class="dropdown-item disabled">
+            No Followers
+        </div>
+    </t>
+
+</templates>

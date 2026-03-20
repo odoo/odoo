@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_hr_recruitment.JobsPageOption">
+        <BuilderContext action="'websiteConfig'">
+            <BuilderRow label.translate="Countries Filter">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_filter_by_countries']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Offices Filter">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_filter_by_offices']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Industries Filter">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_filter_by_industries']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Departments Filter">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_filter_by_departments']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Employment Types Filter">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_filter_by_employment_type']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Reset Filter">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_reset_filters']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Search Bar">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_search_bar']}" />
+            </BuilderRow>
+            <BuilderRow label.translate="Sidebar">
+                <BuilderCheckbox actionParam="{views: ['website_hr_recruitment.job_right_side_bar']}" />
+            </BuilderRow>
+
+        </BuilderContext>
+    </t>
+
+</templates>

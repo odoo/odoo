@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.CartNotificationContainer">
+        <div
+            class="position-fixed w-100 h-100 top-0 end-0 pe-none"
+            name="o_cart_notification_container"
+        >
+            <div class="d-flex flex-column container align-items-end">
+                <t t-foreach="state.notifications" t-as="notification" t-key="notification_index">
+                    <div
+                        class="position-relative mt-2"
+                        t-attf-style="top: {{state.topOffset}}px;"
+                    >
+                        <WarningNotification
+                            t-if="notification.type === 'warning'"
+                            t-props="notification.data"
+                        />
+                        <ItemAddedNotification
+                            t-else="notification.type === 'item_added'"
+                            t-props="notification.data"
+                        />
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

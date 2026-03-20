@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Gif">
+       <img t-att-src="props.paused and state.snapshot ? state.snapshot : props.src" t-att-loading="props.loading" t-att-data-paused="props.paused" t-att-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-on-click="() => props.onClick?.()" t-on-load="onLoad"/>
+    </t>
+</templates>

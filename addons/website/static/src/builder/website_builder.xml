@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WebsiteBuilder">
+    <Builder t-props="this.builderProps">
+        <t t-set-slot="extraActions">
+            <button type="button" t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
+            <button type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
+        </t>
+    </Builder>
+</t>
+
+</templates>

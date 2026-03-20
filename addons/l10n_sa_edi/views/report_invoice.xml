@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="l10n_sa_edi_report_invoice_document" inherit_id="l10n_sa.l10n_sa_report_invoice_document">
+            <!-- Address format -->
+            <xpath expr="//div[hasclass('invoice_main')]" position="before">
+                <t t-set="address">
+                    <t t-out="address"/>
+                    <t t-if="o.partner_id.l10n_sa_edi_additional_identification_scheme and o.partner_id.l10n_sa_edi_additional_identification_number">
+                        <span t-field="o.partner_id.l10n_sa_edi_additional_identification_scheme"/>:
+                        <span t-field="o.partner_id.l10n_sa_edi_additional_identification_number"/>
+                    </t>
+                </t>
+            </xpath>
+            <!-- End Address format -->
+        </template>
+    </data>
+</odoo>

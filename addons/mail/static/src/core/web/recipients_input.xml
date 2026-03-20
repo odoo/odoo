@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.RecipientsInput">
+        <div class="o-mail-RecipientsInput d-flex flex-wrap flex-grow-1 align-items-center gap-1 mx-1" t-ref="recipientsInputRef">
+            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+                <RecipientTag t-props="tag"/>
+            </t>
+            <div class="flex-grow-1">
+                <AutoComplete placeholder="this.getPlaceholder()" sources="this.getAutoCompleteSources()"/>
+            </div>
+        </div>
+    </t>
+</templates>

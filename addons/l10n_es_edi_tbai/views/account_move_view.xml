@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_l10n_es_edi_tbai" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n_es_edi_tbai</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <field name="l10n_es_tbai_is_required" invisible="1"/>
+                    <field name="l10n_es_tbai_post_document_id" invisible="1"/>
+                    <button
+                        string="Send Bill to TicketBAI"
+                        name="l10n_es_tbai_send_bill"
+                        type="object"
+                        invisible="not l10n_es_tbai_is_required or move_type not in ('in_invoice', 'in_refund') or state != 'posted' or l10n_es_tbai_state != 'to_send'"
+                    />
+                    <button
+                        string="Resend to TicketBAI"
+                        name="l10n_es_tbai_resend_bill"
+                        type="object"
+                        invisible="not l10n_es_tbai_is_required or move_type not in ('in_invoice', 'in_refund') or state != 'posted' or l10n_es_tbai_state != 'sent'"
+                    />
+                    <button
+                        string="TicketBAI Cancel"
+                        name="l10n_es_tbai_cancel"
+                        type="object"
+                        invisible="l10n_es_tbai_state != 'sent'"
+                    />
+                </xpath>
+                <xpath expr="//group[@id='header_right_group']" position='inside'>
+                    <field
+                        name="l10n_es_tbai_refund_reason"
+                        invisible="move_type not in ('in_refund', 'out_refund') or not l10n_es_tbai_is_required"
+                        readonly="state != 'draft'"
+                    />
+                </xpath>
+                <xpath expr="//page[@id='other_tab_entry']" position='after'>
+                    <page
+                        id="ticketbai_tab"
+                        string="TicketBAI"
+                        invisible="not l10n_es_tbai_is_required or not l10n_es_tbai_post_document_id"
+                    >
+                        <group>
+                            <field name="l10n_es_tbai_state"/>
+                            <field name="l10n_es_tbai_chain_index" groups="base.group_no_one"/>
+                            <field name="l10n_es_tbai_post_file_name" invisible="1"/>
+                            <field name="l10n_es_tbai_post_file" widget="binary" filename="l10n_es_tbai_post_file_name"/>
+                            <field name="l10n_es_tbai_cancel_file_name" invisible="1"/>
+                            <field name="l10n_es_tbai_cancel_file" widget="binary" filename="l10n_es_tbai_cancel_file_name"/>
+                            <field name="l10n_es_tbai_reversed_ids" invisible="move_type != 'in_refund'" widget="many2many_tags"/>
+                            <field name="reversed_entry_id" invisible="move_type != 'in_refund'"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

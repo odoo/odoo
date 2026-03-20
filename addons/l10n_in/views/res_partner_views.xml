@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_view_partner_form" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.vat.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="required">l10n_in_is_gst_registered_enabled and l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="before">
+                <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes or not l10n_in_is_gst_registered_enabled" readonly="parent_id"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_pan_entity_id" invisible="country_code != 'IN'" readonly="parent_id"/>
+                <field name="l10n_in_tan" invisible="country_code != 'IN' or not l10n_in_pan_entity_id" readonly="parent_id"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert"
+                        invisible="not display_pan_warning">
+                        PAN number is not same as the 3rd to 12th characters of the GST number.
+                </div>
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_gst_state_warning or country_code != 'IN'">
+                    <field name="l10n_in_gst_state_warning"/>
+                    <a name="action_update_state_as_per_gstin"
+                            string="update it"
+                            class="ms-1"
+                            invisible="country_code != 'IN'"
+                            type="object"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_view_partner_tree" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_pan_entity_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_view_res_partner_filter" model="ir.ui.view">
+        <field name="name">l10n.in.view.res.partner.filter.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="l10n_in_pan_entity_id"/>
+            </field>
+            <filter name="group_country" position="after">
+                <filter name="l10n_in_pan_entity_id" string="PAN" context="{'group_by': 'l10n_in_pan_entity_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="l10n_in_view_partner_base_vat_form" model="ir.ui.view">
+        <field name="name">l10n.in.gstin.status.view.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_vat.view_partner_base_vat_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vies_valid']" position="after">
+                <span invisible="country_code != 'IN' or not l10n_in_gstin_status_feature_enabled or not vat or 'IN' not in fiscal_country_codes">
+                    <span invisible="not l10n_in_gstin_verified_date or not l10n_in_gstin_verified_status"
+                        class="oe_inline text-success">Active</span>
+                    <span invisible="not l10n_in_gstin_verified_date or l10n_in_gstin_verified_status"
+                        class="oe_inline text-danger">Inactive</span>
+                    <span invisible="not l10n_in_gstin_verified_date and not l10n_in_gstin_verified_status" class="text-muted">
+                        (
+                        <field name="l10n_in_gstin_verified_date" widget="remaining_days" class="oe_inline" readonly="1" />
+                        <button name="action_l10n_in_verify_gstin_status" type="object" icon="fa-refresh"
+                            class="oe_link p-0 ps-2" title="Reverify GSTIN status" />
+                        )
+                    </span>
+                    <button string="Check Status" name="action_l10n_in_verify_gstin_status" type="object"
+                        icon="fa-check" class="oe_link p-0" title="Check GSTIN status"
+                        invisible="l10n_in_gstin_verified_date" />
+                </span>
+            </xpath>
+        </field>
+    </record>
+</odoo>

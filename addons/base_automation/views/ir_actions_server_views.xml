@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_server_action_form" model="ir.ui.view">
+            <field name="name">Server Actions</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button
+                        type="object"
+                        name="action_open_automation"
+                        invisible="not base_automation_id"
+                        class="oe_stat_button"
+                        icon="fa-bolt"
+                    >
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Automation</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

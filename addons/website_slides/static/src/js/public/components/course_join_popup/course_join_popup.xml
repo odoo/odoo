@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="slide.course.join.popupContent">
+        <div class="p-3">
+            <t t-if="props.text">
+                <t t-out="props.text" />
+            </t>
+            <div t-elif="props.invitePreview">
+                Please <a t-attf-href="/slides/#{props.channelId}/identify?invite_partner_id=#{props.invitePartnerId}&amp;invite_hash=#{props.inviteHash}">
+                <t t-if="props.isPartnerWithoutUser">create an account</t><t t-else="">login</t>
+                </a> to join this course
+            </div>
+            <t t-elif="props.errorSignupAllowed">
+                Please <a t-attf-href="/web/login?redirect=#{props.courseUrl}">login</a> or <a t-attf-href="/web/signup?redirect=#{props.courseUrl}">create an account</a> to join this course
+            </t>
+            <t t-else="">
+                Please <a t-attf-href="/web/login?redirect=#{props.courseUrl}">login</a> to join this course
+            </t>
+        </div>
+    </t>
+</templates>

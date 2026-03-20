@@ -1,0 +1,264 @@
+// This file regroups the fixes and styling related to table inside reports
+
+table.table {
+    // Fix alignment in PDF (default bs inheritance doesn't seem to apply)
+    td {
+        vertical-align: $table-cell-vertical-align;
+    }
+
+    th {
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .o_line_section {
+        border-top: $border-width solid $o-gray-400;
+    }
+
+    .o_line_section {
+        td, td.o_price_total {
+            background-color: $gray-200;
+        }
+    }
+
+    .o_line_subsection {
+        td, td.o_price_total {
+            background-color: $gray-100;
+        }
+    }
+}
+
+div#total {
+    // Avoid crop in the total table if in middle of 2 pages
+    page-break-inside: avoid;
+}
+
+// Table styling of the reports, apply the styling class .o_table_x
+// to the .article bloc of the report to change the table style.
+
+.o_table_standard {
+    table:not(.o_ignore_layout_styling) {
+        thead {
+            border-bottom: $border-width solid $o-gray-900;
+        }
+
+        th:first-child, td:first-child {
+            padding-left: map-get($spacers, 1);
+        }
+
+        th:last-child, td:last-child {
+            padding-right: map-get($spacers, 1);
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling),
+    .o_total_table:not(.o_ignore_layout_styling) .o_total {
+        border-top: $border-width solid $border-color;
+    }
+}
+
+.o_table_bold {
+    table:not(.o_ignore_layout_styling) {
+
+        td:first-child, th:first-child {
+            padding-left: map-get($spacers, 1);
+        }
+
+        td:last-child, th:last-child {
+            padding-right: map-get($spacers, 1);
+        }
+
+        &:not(.o_total_table) {
+            th:first-child {
+                padding-left: map-get($spacers, 1);
+            }
+
+            th:last-child {
+                padding-right: map-get($spacers, 1);
+            }
+        }
+
+        th {
+            font-weight: bold;
+            border-top: $border-width * 2 solid;
+            border-bottom: $border-width * 2 solid;
+        }
+
+        tr td {
+            border-bottom: $border-width solid;
+        }
+
+        .o_line_section, .o_line_subsection {
+            border-top: $border-width solid;
+        }
+    }
+}
+
+.o_table_striped {
+    table:not(.o_ignore_layout_styling) {
+        tbody tr {
+            &.o_line_section {
+                border: none;
+            }
+
+            &:first-child {
+                border-top: $border-width solid;
+            }
+
+            &:last-child {
+                border-bottom: $border-width solid;
+            }
+
+            &.is-subtotal {
+                border-bottom: $border-width solid;
+            }
+
+            &.o_total strong {
+                color: $body-color;
+            }
+        }
+    }
+}
+
+.o_table_boxed table:not(.o_ignore_layout_styling) {
+    thead {
+        text-transform: uppercase;
+
+        th:not(:last-child) {
+            border-right: $border-width solid $gray-700;
+        }
+    }
+}
+
+.o_table_boxed, .o_table_boxed-rounded {
+    table:not(.o_ignore_layout_styling) {
+        position: relative;
+
+        &::before {
+            // Avoid inner borders overlapping the table borders
+            content: '';
+            // Position absolute will place the pseudo-element
+            // above the table. We need to prevent events on this pseudo-element
+            // to avoid messing up eventual user interaction with the table itself (report editor)
+            @include o-position-absolute(0, 0, 0, 0);
+            pointer-events: none;
+            border: $border-width solid $gray-700;
+        }
+
+        thead th {
+            border-bottom: $border-width solid $border-color;
+        }
+
+        tbody {
+            tr:not(:last-child) td {
+                border-bottom: $border-width solid $gray-400;
+            }
+
+            td:not(:last-child) {
+                border-right: $border-width solid $gray-400;
+            }
+
+            &.o_line_section td,
+            &.o_line_note td,
+            &.is-subtotal td {
+                border-top: $border-width solid $gray-700;
+                border-bottom: $border-width solid $gray-700;
+            }
+
+            tr:not(.o_line_section):not(.o_line_subsection):not(.o_line_combo) td.o_price_total,
+            .o_taxes td {
+                background-color: rgba($gray-200, .5);
+            }
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling) {
+        td {
+            border-right: none !important;
+        }
+
+        &::before {
+            border-top: none;
+        }
+    }
+
+    .mt-5 .o_total_table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-top: $border-width solid $border-color;
+        }
+    }
+}
+
+.o_table_boxed-rounded {
+    table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-radius: $border-radius-lg;
+        }
+
+        &.o_has_total_table::before {
+            border-radius: $border-radius-lg $border-radius-lg 0 $border-radius-lg ;
+        }
+
+        th:first-child {
+            border-radius: $border-radius-lg 0 0 0;
+        }
+
+        th:last-child {
+            border-radius: 0 $border-radius-lg 0 0;
+        }
+
+        th {
+            border-color: $gray-300 !important;
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-radius: 0 0 $border-radius-lg $border-radius-lg;
+        }
+
+        tr:last-child {
+            td:first-child {
+                border-radius: 0 0 0 $border-radius-lg;
+            }
+
+            td:last-child {
+                border-radius: 0 0 $border-radius-lg 0;
+            }
+        }
+    }
+}
+
+.o_table_column {
+    table:not(.o_ignore_layout_styling) {
+
+        td:first-child, th:first-child {
+            padding-left: map-get($spacers, 1);
+        }
+
+        td:last-child, th:last-child {
+            padding-right: map-get($spacers, 1);
+        }
+
+        &:not(.o_total_table) {
+            th:first-child {
+                padding-left: map-get($spacers, 1);
+            }
+
+            th:last-child {
+                padding-right: map-get($spacers, 1);
+            }
+
+            td:not(:last-child) {
+                border-right: $border-width solid $o-gray-400;
+            }
+        }
+
+        border-bottom: $border-width solid $o-gray-400;
+
+        .o_line_section, .o_line_subsection, .o_line_combo {
+            border-bottom: $border-width solid $o-gray-400;
+            border-top: $border-width solid $o-gray-400;
+        }
+    }
+}

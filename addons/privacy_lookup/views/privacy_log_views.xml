@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="privacy_log_view_list" model="ir.ui.view">
+        <field name="name">privacy.log.view.list</field>
+        <field name="model">privacy.log</field>
+        <field name="arch" type="xml">
+            <list string="Privacy Logs">
+                <field name="date" />
+                <field name="anonymized_name"/>
+                <field name="anonymized_email"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="execution_details"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="privacy_log_view_form" model="ir.ui.view">
+        <field name="name">privacy.log.view.form</field>
+        <field name="model">privacy.log</field>
+        <field name="arch" type="xml">
+            <form string="Privacy Log">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="anonymized_name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="anonymized_email"/>
+                            <field name="date"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="records_description"/>
+                            <field name="execution_details"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="additional_note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="privacy_log_action" model="ir.actions.act_window">
+        <field name="name">Privacy Logs</field>
+        <field name="res_model">privacy.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <record id="privacy_log_form_action" model="ir.actions.act_window">
+        <field name="name">Privacy Logs</field>
+        <field name="res_model">privacy.log</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <menuitem
+        id="privacy_menu"
+        name="Privacy"
+        parent="base.menu_custom"
+        sequence="26"/>
+
+    <menuitem
+        name="Privacy Logs"
+        action="privacy_log_action"
+        id="pricacy_log_menu"
+        parent="privacy_menu"
+        sequence="1"/>
+</odoo>

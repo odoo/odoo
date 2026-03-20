@@ -1,0 +1,35 @@
+declare module "models" {
+    import { HrDepartment as HrDepartmentClass } from "@hr/core/common/hr_department_model";
+    import { HrEmployee as HrEmployeeClass } from "@hr/core/common/hr_employee_model";
+    import { HrEmployeePublic as HrEmployeePublicClass } from "@hr/core/common/hr_employee_public_model";
+    import { HrWorkLocation as HrWorkLocationClass } from "@hr/core/common/hr_work_location_model";
+
+    export interface HrDepartment extends HrDepartmentClass {}
+    export interface HrEmployee extends HrEmployeeClass {}
+    export interface HrEmployeePublic extends HrEmployeePublicClass {}
+    export interface HrWorkLocation extends HrWorkLocationClass {}
+
+    export interface ResPartner {
+        employee_id: HrEmployee;
+        employee_ids: HrEmployee[];
+        employeeId: number|undefined;
+    }
+    export interface ResUsers {
+        employee_id: HrEmployee;
+        employee_ids: HrEmployee[];
+    }
+    export interface Store {
+        employees: {[key: number]: {id: number, user_id: number, hasCheckedUser: boolean}};
+        "hr.department": StaticMailRecord<HrDepartment, typeof HrDepartmentClass>;
+        "hr.employee": StaticMailRecord<HrEmployee, typeof HrEmployeeClass>;
+        "hr.employee.public": StaticMailRecord<HrEmployeePublic, typeof HrEmployeePublicClass>;
+        "hr.work.location": StaticMailRecord<HrWorkLocation, typeof HrWorkLocationClass>;
+    }
+
+    export interface Models {
+        "hr.department": HrDepartment;
+        "hr.employee": HrEmployee;
+        "hr.employee.public": HrEmployeePublic;
+        "hr.work.location": HrWorkLocation;
+    }
+}

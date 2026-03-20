@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
+        <xpath expr="//t[@name='threads']/NotificationItem" position="attributes">
+            <attribute name="rating">message?.rating_id</attribute>
+        </xpath>
+    </t>
+</templates>

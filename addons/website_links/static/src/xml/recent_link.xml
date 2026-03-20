@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_links.RecentLink">
+        <a class="o_website_links_card row mb16 mx-1 py-4 border rounded flex-nowrap text-decoration-none text-black" t-attf-href="{{short_url}}+">
+            <div class="col-2 col-lg-1 text-center">
+                <h4 class="mb-0" t-out="count"/>
+                <p class="text-muted mb-0">clicks</p>
+            </div>
+            <div class="col-8 col-lg-9 d-flex flex-column flex-lg-row">
+                <div class="w-lg-50 mb-3 mb-lg-0 pe-lg-4">
+                    <h4 class="o_website_links_title text-truncate" t-out="title"/>
+                    <div t-if="campaign_id or medium_id or source_id" class="d-flex flex-wrap gap-1">
+                        <span class="badge text-bg-secondary fw-normal" t-out="campaign_id[1]"/>
+                        <span class="badge text-bg-secondary fw-normal" t-out="medium_id[1]"/>
+                        <span class="badge text-bg-secondary fw-normal" t-out="source_id[1]"/>
+                    </div>
+                </div>
+                <div class="w-lg-50 row align-items-center ps-3">
+                    <span class="o_website_links_short_url p-0 d-inline-flex flex-nowrap align-items-stretch border border-primary rounded">
+                        <span t-out="short_url" class="flex-grow-1 small text-muted text-truncate px-2 py-1 lh-lg"/>
+                        <button class="btn btn-primary rounded-0 btn_shorten_url_clipboard py-1" t-att-data-url="short_url">
+                            <small>Copy</small>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-2 d-flex align-items-start align-items-lg-center justify-content-center text-break">
+                <a role="button" target="_blank" t-att-href="url" class="btn btn-secondary">
+                    <span class="d-none d-lg-inline-block me-1">Visit Link</span><i class="fa fa-external-link"/>
+                </a>
+            </div>
+        </a>
+    </t>
+</templates>

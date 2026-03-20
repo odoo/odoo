@@ -1,0 +1,79 @@
+.o_location_selector {
+    .o_location_selector_view {
+        // Force tab-pane to be displayed on desktop.
+        @include media-breakpoint-up(md) {
+            opacity: 1;
+        }
+
+        // Remove border-start class for mobile
+        @include media-breakpoint-down(md) {
+            border-left: 0 !important;
+        }
+    }
+
+    .o_location_selector_number {
+        right: .75rem;
+        bottom: .75rem;
+        width: 1.75rem;
+
+        svg {
+            width: 100%;
+        }
+    }
+
+    .o_location_selector_details {
+        transform: translateY(-100%);
+    }
+
+    .collapsed i.o_location_selector_hours_caret {
+        transform: rotate(180deg) !important;
+    }
+
+    .modal-footer,
+    .modal.o_modal_full &.modal-content .modal-footer {
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .o_location_selector_schedule {
+        grid-template-columns: auto 1fr;
+    }
+
+    .o_location_selector_schedule_hours {
+        gap: 0 map-get($spacers, 3);
+    }
+
+    .o_select_menu_toggler {
+        &::before {
+            margin: auto;
+            padding-left: #{map-get($spacers, 2)};
+            border-right: $border-width solid $border-color;
+            height: 70%;
+            content: "";
+            order: 1;
+
+        }
+
+        .o_select_menu_caret {
+            position: relative;
+            top: -1px;
+            right: 0;
+            visibility: visible;
+        }
+    }
+
+    .o_select_menu_toggler_slot {
+        display: flex;
+        align-items: center;
+    }
+
+    .list-group-item {
+        padding-bottom: .75rem;
+    }
+}
+
+.o_location_selector_country_selector {
+    --#{$prefix}dropdown-link-active-color: #{$body-color};
+
+    min-width: calc(#{$modal-lg} * 1/3 - #{map-get($spacers, 3)} * 2);
+}

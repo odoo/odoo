@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.ClosePosPopup" t-inherit="point_of_sale.ClosePosPopup" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('payment-methods-overview')]" position="attributes">
+            <attribute name="t-if">!pos.config.module_pos_hr</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('payment-methods-overview')]" position="after">
+            <t t-if="pos.config.module_pos_hr">
+                <div t-if="pos.config.cash_control and pos.config.module_pos_hr" class="w-100 mb-3">
+                    <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                    <t t-set="counted" t-value="state.payments[props.default_cash_details.id]?.counted || '0'" />
+                    <div class="d-flex align-items-center justify-content-between fs-3">
+                        <span t-esc="props.default_cash_details.name" />
+                        <span t-esc="env.utils.formatCurrency(props.default_cash_details.amount)" />
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                        <span>Opening</span>
+                        <span t-esc="env.utils.formatCurrency(props.default_cash_details.opening)" />
+                    </div>
+                    <t t-set="amountByEmployee" t-value="props.default_cash_details.amount_per_employee" />
+                    <PaymentMethodBreakdown title.translate="Payments" total_amount="props.default_cash_details.payment_amount" transactions="props.default_cash_details.amount_per_employee"/>
+                    <PaymentMethodBreakdown title.translate="Cash in/out" total_amount="getMovesTotalAmount()" transactions="props.default_cash_details.moves_per_employee"/>
+                    <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                        <span>Counted</span>
+                        <span t-esc="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
+                        <span>Difference</span>
+                        <span class="cash-difference" t-esc="env.utils.formatCurrency(diff)" />
+                    </div>
+                </div>
+                <div class="w-100 mb-3" t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
+                    <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
+                    <t t-set="diff" t-value="_showDiff ? getDifference(pm.id) : 0" />
+                    <t t-set="counted" t-value="_showDiff ? env.utils.parseValidFloat(state.payments[pm.id].counted) : 0" />
+                    <div class="d-flex align-items-center justify-content-between fs-3">
+                        <span t-esc="pm.name" />
+                        <span t-esc="env.utils.formatCurrency(pm.amount)" />
+                    </div>
+                    <PaymentMethodBreakdown title.translate="Payments" total_amount="pm.amount" transactions="pm.amount_per_employee"/>
+                    <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
+                        <span>Difference</span>
+                        <span t-esc="env.utils.formatCurrency(diff)" />
+                    </div>
+            </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

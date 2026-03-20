@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="card_card_view_list" model="ir.ui.view">
+        <field name="name">card.card.view.list</field>
+        <field name="model">card.card</field>
+        <field name="arch" type="xml">
+            <list string="Share Card">
+                <field name="create_date"/>
+                <field name="create_uid"/>
+                <field name="display_name"/>
+                <field name="res_model" optional="hidden"/>
+                <field name="campaign_id" optional="hidden"/>
+                <field name="share_status"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="card_card_view_search" model="ir.ui.view">
+        <field name="name">card.card.view.search</field>
+        <field name="model">card.card</field>
+        <field name="arch" type="xml">
+            <search string="Search Card">
+                <group>
+                    <field name="share_status"/>
+                    <filter string="Shared" name="filter_shared" domain="[('share_status', '=', 'shared')]"/>
+                    <filter string="Visited" name="filter_visited" domain="[('share_status', '=', 'visited')]"/>
+                </group>
+                <group>
+                    <field name="campaign_id"/>
+                    <filter string="Campaign" name="by_campaign" context="{'group_by': 'campaign_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="cards_card_action" model="ir.actions.act_window">
+        <field name="name">Card</field>
+        <field name="res_model">card.card</field>
+        <field name="search_view_id" ref="card_card_view_search"></field>
+        <field name="context">{'search_default_by_campaign': True, 'search_default_filter_visited': True}</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Card Campaign to send cards to your partners
+            </p>
+        </field>
+    </record>
+</odoo>

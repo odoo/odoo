@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_expense_employee,hr.expense.employee,model_hr_expense,base.group_user,1,1,1,1
+access_hr_expense_user,hr.expense.user,model_hr_expense,hr_expense.group_hr_expense_team_approver,1,1,1,1
+access_hr_expense_manager,hr.expense.manager,model_hr_expense,hr_expense.group_hr_expense_manager,1,1,1,1
+access_hr_expense_accountant,hr.expense.accountant,model_hr_expense,account.group_account_invoice,1,1,1,0
+access_account_journal_user,account.journal.user,account.model_account_journal,hr_expense.group_hr_expense_team_approver,1,0,0,0
+access_account_move_user,account.move.hr.expense.approver,account.model_account_move,hr_expense.group_hr_expense_team_approver,1,0,0,0
+access_account_move_line_user,account.move.line.hr.expense.approver,account.model_account_move_line,hr_expense.group_hr_expense_team_approver,1,0,0,0
+access_account_analytic_line_user,account.analytic.line.user,account.model_account_analytic_line,hr_expense.group_hr_expense_team_approver,1,1,1,1
+access_mail_activity_type_expense_user,mail.activity.type.expense.user,mail.model_mail_activity_type,hr_expense.group_hr_expense_manager,1,1,1,1
+access_hr_expense_refuse_wizard,access.hr.expense.refuse.wizard,model_hr_expense_refuse_wizard,hr_expense.group_hr_expense_team_approver,1,1,1,0
+access_hr_expense_approve_duplicate,access.hr.expense.approve.duplicate,model_hr_expense_approve_duplicate,hr_expense.group_hr_expense_team_approver,1,1,1,0
+access_hr_expense_split_wizard_manager,access.hr.expense.split.wizard.manager,model_hr_expense_split_wizard,base.group_user,1,1,1,0
+access_hr_expense_split_manager,access.hr.expense.split.manager,model_hr_expense_split,base.group_user,1,1,1,1
+access_hr_expense_post,access.hr.expense.post.wizard,model_hr_expense_post_wizard,account.group_account_invoice,1,1,1,1

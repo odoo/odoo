@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.BreadcrumbOption">
+    <BuilderRow label.translate="Background Color">
+        <BuilderColorPicker
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'breadcrumb-custom',
+                gradientColor: 'breadcrumb-gradient',
+                combinationColor: 'breadcrumb',
+                nullValue: 'NULL',
+            }"
+         />
+    </BuilderRow>
+    <BaseVisibilityOption
+        label.translate="Breadcrumb Position"
+        tooltip.translate="Change the Breadcrumb Position on this page"
+        visibilityAction="'setWebsiteBreadcrumbVisibility'"
+        textColor="'breadcrumb_text_color'"
+        bgColor="'breadcrumb_color'"
+        level="1"
+        overlay="'breadcrumb_overlay'"
+    />
+</t>
+
+</templates>

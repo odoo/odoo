@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="maintenance_stock_equipment_view_form" model="ir.ui.view">
+        <field name="name">equipment.form.stock.maintenance</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <button name="%(maintenance.hr_equipment_request_action_from_equipment)d" position="before">
+                <button type="object"
+                    name="action_open_matched_serial"
+                    icon="fa-bars" class="oe_stat_button"
+                    invisible="not match_serial">
+                    <field string="Serial Number" name="serial_no" widget="statinfo"/>
+                </button>
+            </button>
+            <xpath expr="//group[@name='service_info_group']/group[last()]" position="inside">
+                <field name="location_id" string="Used in location"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

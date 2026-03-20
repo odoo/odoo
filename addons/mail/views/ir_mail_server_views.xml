@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="ir_mail_server_view_form" model="ir.ui.view">
+        <field name="name">ir.mail_server.view.form.inherit.mail</field>
+        <field name="model">ir.mail_server</field>
+        <field name="inherit_id" ref="base.ir_mail_server_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='smtp_user']" position="attributes">
+                <attribute name="invisible" add="owner_user_id" separator="or"/>
+            </xpath>
+            <xpath expr="//label[@for='smtp_user']" position="after">
+                <label for="smtp_user" string="User email"
+                    invisible="smtp_authentication == 'certificate' or not owner_user_id"/>
+            </xpath>
+            <xpath expr="//field[@name='smtp_pass']" position="after">
+                <field name="owner_user_id"
+                    placeholder="Restrict usage to a user"
+                    groups="base.group_no_one"
+                    widget="many2one_avatar_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

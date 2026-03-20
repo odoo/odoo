@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_todo.TodoFormControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_cp_pager')]" position="before">
+            <a
+                t-if="!env.isSmall"
+                role="button"
+                title="Toggle chatter"
+                data-hotkey="d"
+                t-attf-class="btn btn-light btn-chatter todo_toggle_chatter #{state.displayChatter ? 'active' : '' }"
+                t-on-click="toggleChatter"
+            >
+                <i class="fa fa-comments"/>
+            </a>
+        </xpath>
+    </t>
+
+</templates>

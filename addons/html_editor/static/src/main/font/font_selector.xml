@@ -1,0 +1,20 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.FontSelector">
+        <Dropdown menuClass="'o_font_selector_menu'" menuRef="menuRef">
+            <button class="btn btn-light" t-att-title="props.title" name="font" t-att-disabled="props.isDisabled">
+                <span class="px-1" t-esc="state.displayName"/>
+            </button>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true">
+                    <t t-foreach="items" t-as="item" t-key="item_index">
+                        <DropdownItem
+                            attrs="{ name: item.tagName }"
+                            onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                            <t t-esc="item.name"/>
+                        </DropdownItem>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

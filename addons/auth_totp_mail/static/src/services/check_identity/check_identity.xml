@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="auth_totp_mail.CheckIdentityFormTOTPMail">
+        <div class="text-center">
+            <i class="fa fa-3x fa-envelope" aria-hidden="true"/>
+            <h3>Authentication code via email</h3>
+        </div>
+        <div>
+            Enter below the six-digit authentication code just sent to your email
+        </div>
+        <input name="token" inputmode="numeric" pattern="[0-9]+" class="form-control" placeholder="XXXXXX"/>
+        <div class="text-center gap-1 d-grid mb-1 pt-3">
+            <button type="submit" class="btn btn-primary">Verify</button>
+        </div>
+    </t>
+    <t t-name="auth_totp_mail.CheckIdentityLinkStringTOTPMail">Use an authentication code sent by email</t>
+
+</templates>

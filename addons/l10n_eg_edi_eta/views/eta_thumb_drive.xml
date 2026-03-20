@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <record id="view_l10n_eg_edi_thumb_drive_tree" model="ir.ui.view">
+            <field name="name">view_l10n_eg_edi_thumb_drive_tree</field>
+            <field name="model">l10n_eg_edi.thumb.drive</field>
+            <field name="arch" type="xml">
+                <list editable="top">
+                    <field name="user_id" column_invisible="True"/>
+                    <field name="certificate" column_invisible="True"/>
+                    <field name="company_id"/>
+                    <field name="pin" password="True"/>
+                    <field name="access_token" password="True"/>
+                    <button name="action_set_certificate_from_usb" type="object" string="Get certificate" invisible="certificate"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_eta_thumb_drive_tree" model="ir.actions.act_window">
+            <field name="name">Thumb Drive</field>
+            <field name="res_model">l10n_eg_edi.thumb.drive</field>
+            <field name="view_mode">list</field>
+        </record>
+
+        <menuitem id="account_eta_menu" name="ETA" groups="account.group_account_manager" parent="account.menu_finance_configuration" sequence="99">
+            <menuitem id="menu_action_eta_thumb_drive_tree" action="action_eta_thumb_drive_tree" sequence="1"/>
+        </menuitem>
+    </data>
+</odoo>

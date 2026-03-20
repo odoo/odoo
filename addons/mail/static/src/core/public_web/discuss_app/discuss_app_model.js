@@ -1,0 +1,34 @@
+import { fields, Record } from "@mail/model/export";
+
+export class DiscussApp extends Record {
+    static singleton = true;
+
+    INSPECTOR_WIDTH = 300;
+    COMPACT_SIDEBAR_WIDTH = 60;
+    /** @type {'notification'|'channel'|'chat'|'livechat'|'inbox'} */
+    activeTab = "notification";
+    searchTerm = "";
+    isActive = false;
+    isMemberPanelOpenByDefault = fields.Attr(true, { localStorage: true });
+    isSidebarCompact = fields.Attr(false, { localStorage: true });
+    lastActiveId = fields.Attr(undefined, { localStorage: true });
+    thread = fields.One("mail.thread", {
+        inverse: "discussAppAsThread",
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            this._threadOnUpdate();
+        },
+    });
+    hasRestoredThread = false;
+
+    /** @param {import("@mail/core/common/action").Action} [nextActiveAction] */
+    shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
+        return true;
+    }
+
+    _threadOnUpdate() {
+        this.lastActiveId = this.store["mail.thread"].localIdToActiveId(this.thread?.localId);
+    }
+}
+
+DiscussApp.register();

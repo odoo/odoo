@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AvatarsOption">
+    <BuilderRow label.translate="Size">
+        <BuilderRange styleAction="'--avatars-size'" min="2" max="6" step="0.1" unit="'rem'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Order">
+        <BuilderSelect action="'avatarsChangeOrder'">
+            <BuilderSelectItem actionParam="''">Last on top</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'o_first_on_top'">First on top</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup>
+            <BuilderButton className="'fa fa-fw fa-align-left'" title.translate="Left" classAction="''"/>
+            <BuilderButton className="'fa fa-fw fa-align-center'" title.translate="Center" classAction="'o_avatars_center'"/>
+            <BuilderButton className="'fa fa-fw fa-align-right'" title.translate="Right" classAction="'o_avatars_end'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Extra Content">
+        <BuilderButton className="'flex-basis-50'" title.translate="Show extra avatars count"
+                       classAction="'d-none'" inverseAction="true" applyTo="'.s_avatars_more'">
+            More
+        </BuilderButton>
+        <BuilderButton id="'avatars_label_opt'" className="'flex-basis-50'" title.translate="Show text"
+                       classAction="'d-none'" inverseAction="true" applyTo="'.s_avatars_label'">
+            Label
+        </BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Direction" t-if="isActiveItem('avatars_label_opt')" level="1">
+        <BuilderButtonGroup>
+            <BuilderButton className="'fa fa-fw fa-long-arrow-right'" title.translate="Row" classAction="'flex-row'"/>
+            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" title.translate="Column" classAction="'flex-column'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderContext applyTo="'.s_avatars_avatar'">
+        <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
+        <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all avatars">
+            <BuilderRange action="'setClassRange'"
+                          actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5', 'rounded-circle']"
+                          max="6"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="website.AvatarsHeaderMiddleButtons">
+    <button class="btn btn-success-color-hover ms-0 py-0 px-1 me-1" aria-label="Add Avatar" t-on-click="addAvatar">
+        <span class="oi oi-fw oi-plus"/>
+        <span class="oi oi-user"/>
+    </button>
+    <button class="btn btn-danger-color-hover py-0 px-1 me-3" t-att-disabled="state.disableRemoveButton"
+            aria-label="Remove Avatar" t-on-click="removeAvatar">
+        <span class="oi oi-fw oi-minus"/>
+        <span class="oi oi-user"/>
+    </button>
+</t>
+
+</templates>

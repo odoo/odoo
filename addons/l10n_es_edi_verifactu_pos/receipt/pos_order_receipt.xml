@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_es_edi_verifactu_pos.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="after">
+                <div t-if="conditions.get('l10n_es_edi_verifactu_pos')"  class="text-center">
+                    <t t-if="order['sequence_number'] != 0">Simplified </t>Invoice: <t t-out="extra_data['invoice_name']"/>
+                </div>
+                <div t-if="image.get('l10n_es_edi_verifactu_qr_code')" class="w-100 text-center mt-2 mb-2">
+                    <div class="text-bold mb-2">QR tributario:</div>
+                    <img t-att-src="image['l10n_es_edi_verifactu_qr_code']" alt="QR Code" class="mw-50" />
+                    <div class="text-bold mt-2">VERI*FACTU</div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

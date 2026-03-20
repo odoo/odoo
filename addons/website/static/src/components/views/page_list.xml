@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PageListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+    <xpath expr="//Field//ancestor::td/*[1]" position="before">
+        <t t-if="column.name === 'name' and record.data.is_homepage and record.mode !== 'edit'">
+            <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
+        </t>
+    </xpath>
+</t>
+
+</templates>

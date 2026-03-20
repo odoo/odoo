@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ProductCard" t-inherit-mode="extension">
+        <article position="attributes">
+            <attribute
+                name="t-attf-class"
+                remove="cursor-pointer"
+                add="{{
+                    props.product.isQuantityAllowed(props.quantity)
+                    ? 'cursor-pointer' : 'unselectable-card border'
+                }}"
+                separator=" "
+            />
+            <attribute
+                name="t-att-tabindex"
+                add="props.product.isQuantityAllowed(props.quantity) ? '0' : '-1'"
+            />
+        </article>
+        <h6 name="product_card_title" position="after">
+            <span
+                t-if="!props.product.isQuantityAllowed(props.quantity)"
+                class="badge text-bg-danger"
+            >
+                <i class="fa fa-circle me-2"/>
+                <span>Out of Stock</span>
+            </span>
+            <span
+                t-elif="props.isSelected &amp;&amp; !props.product.isQuantityAllowed(props.quantity + 1)"
+                class="text-warning"
+            >
+                <i
+                    class="fa fa-warning"
+                    data-toggle="tooltip"
+                    data-trigger="click hover focus"
+                    t-att-title="allQuantitySelectedTooltip"
+                />
+            </span>
+        </h6>
+        <img name="product_card_image" position="attributes">
+            <attribute
+                name="t-att-class"
+                add="{'opacity-50': !props.product.isQuantityAllowed(props.quantity)}"
+                separator=" "
+            />
+        </img>
+        <h6 name="product_card_title" position="attributes">
+            <attribute
+                name="t-att-class"
+                add="{'opacity-50': !props.product.isQuantityAllowed(props.quantity)}"
+                separator=" "
+            />
+        </h6>
+        <xpath expr="//div[hasclass('text-muted')]" position="attributes">
+            <attribute
+                name="t-att-class"
+                add="{'d-none': !props.product.isQuantityAllowed(props.quantity)}"
+                separator=" "
+            />
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_self_order.pos_order_change_receipt" inherit_id="point_of_sale.pos_order_change_receipt">
+            <div name="receipt-header" position="inside">
+                <div t-if="extra_data.get('name')" class="pos-receipt-order-data">
+                    <t t-out="extra_data['name']"/>
+                </div>
+                <div t-if="order.get('table_stand_number')" class="text-center">
+                    Table Tracker:
+                    <span t-out="order['table_stand_number']" />
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

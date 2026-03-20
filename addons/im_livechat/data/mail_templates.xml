@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="livechat_email_template">
+<!-- sudo: visitor can access header background color -->
+<t t-set="header_background_color" t-value="channel.livechat_channel_id.sudo().header_background_color or '#875A7B'" />
+<!-- sudo: visitor can access title color -->
+<t t-set="title_color" t-value="channel.livechat_channel_id.sudo().title_color or '#FFFFFF'" />
+<div style="font-size: 13px; max-width: 600px; margin: 10px; padding: 24px 32px 0px 32px; background-color: #ffffff; border-radius: 0 0 8px 8px; border: thin solid #dee2e6;">
+<div style="font-size: 13px; padding: 5px 0; white-space:nowrap;">
+    Here's a copy of your conversation with
+    <span t-attf-style="color: {{header_background_color}};" t-out="correspondent_names"/> on
+    <span t-out="channel.create_date.astimezone(tz).strftime('%m/%d/%y')"/> at
+    <span t-out="channel.create_date.astimezone(tz).strftime('%I:%M %p')"/>.
+</div>
+<table cellspacing="0" cellpadding="0" class="table-borderless" style="width:100%; margin: 16px 0;">
+    <t t-foreach="channel.message_ids.sorted(lambda m: (m.date, m.id))" t-as="message">
+        <t t-if="message.message_type != 'notification'">
+            <t t-set="author_name"><t t-if="message.author_id" t-out="message.author_id.sudo().user_livechat_username or message.author_id.sudo().name"/><t t-else="">You</t></t>
+            <tr>
+                <td style="padding: 4px 0;">
+                    <table cellspacing="0" cellpadding="0" class="table-borderless" style="width: 100%;">
+                        <tr>
+                            <td style="width: 50px; vertical-align: top; padding-right: 12px;">
+                                <t t-if="message.author_avatar">
+                                    <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" t-attf-src="data:image/png;base64,{{message.author_avatar}}" t-attf-alt="{{author_name}}"/>
+                                </t>
+                                <t t-else="">
+                                    <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" src="/mail/static/src/img/smiley/avatar.jpg" t-attf-alt="{{author_name}}"/>
+                                </t>
+                            </td>
+                            <td style="vertical-align: top;">
+                                <div style="margin-bottom:4px;">
+                                    <strong t-attf-style="color:{{header_background_color}}; font-size: 13px; margin-right: 2px;" t-out="author_name"/>
+                                    <span style="font-size:10px; color:#666666;" t-out="message.date.astimezone(tz).strftime('%I:%M %p')"/>
+                                </div>
+                                <div style="display: flex;">
+                                    <div style="background-color: #E2F3F6; padding: 16px 12px 0; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
+                                        <span style="font-size: 13px; word-break: break-word;" t-out="message.body"/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </t>
+    </t>
+</table>
+</div>
+        </template>
+    </data>
+</odoo>

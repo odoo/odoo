@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Embed Code" id="s_embed_code">
+    <t t-set="embed_code">
+        <!-- Keep the next line as a one-liner, this is to nicely show the
+        code in the ace editor when the user is replacing it. The `&#10;`
+        acts as line returns. -->
+        <div class="alert alert-info mb-0">&#10;    Click on <b>"Edit"</b> in the right panel to replace this with your own HTML code&#10;</div>
+    </t>
+    <section class="s_embed_code text-center pt16 pb16">
+        <template class="s_embed_code_saved">
+            <t t-out="embed_code"/>
+        </template>
+        <div class="s_embed_code_embedded container o_not_editable">
+            <t t-out="embed_code"/>
+        </div>
+    </section>
+</template>
+
+<!-- Snippet assets -->
+<asset id="website.s_embed_code_000_scss" name="Embed Code 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_embed_code/000.scss</path>
+</asset>
+
+</odoo>

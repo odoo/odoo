@@ -1,0 +1,5 @@
+<templates xml:splace="preserve">
+    <t t-name="mail.RecipientTag">
+        <BadgeTag color="this.props.color" cssClass="{'o_tag_error': this.props.email.indexOf('@') lt 0}" onClick.bind="this.onClick" onDelete="this.props.onDelete" ref="this.ref" text="this.props.text" tooltip="this.props.tooltip"/>
+    </t>
+</templates>

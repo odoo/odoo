@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="discuss.BlurPerformanceWarning">
+        <CallDropdown class="'position-absolute top-0 start-0 z-2'" menuClass="'o-discuss-BlurPerformanceWarning'" openByDefault="true">
+            <div class="o-discuss-BlurPerformanceWarning-button btn bg-warning-subtle p-1 rounded-circle" title="Background Blur Performance Warning">
+                <i class="fa fa-exclamation-triangle fa-fw"/>
+            </div>
+            <t t-set-slot="content">
+                <div class="position-relative p-3 shadow rounded bg-warning-subtle text-dark" style="min-width:275px;">
+                    <div class="position-absolute top-0 end-0 m-2 cursor-pointer" t-on-click="onClickClose" title="Dismiss warning">
+                        <i class="oi oi-close"/>
+                    </div>
+                    <div>
+                        <strong>Performance Warning:</strong><br/>
+                        Hardware acceleration is disabled. Blur effect impacts performance significantly.
+                    </div>
+                </div>
+            </t>
+        </CallDropdown>
+    </t>
+</templates>

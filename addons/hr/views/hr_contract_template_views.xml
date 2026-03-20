@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_contract_template_form_view" model="ir.ui.view">
+        <field name="name">hr.contract.template.form</field>
+        <field name="model">hr.version</field>
+        <field name="arch" type="xml">
+            <form string="Contract Template">
+                <sheet>
+                    <div class="oe_title pe-0 w-100 mw-100" name="title">
+                        <h1 class="d-flex flex-row justify-content-between">
+                            <field name="name" class="text-truncate" placeholder="Template Name" required="1"/>
+                        </h1>
+                    </div>
+                    <group name="top_info">
+                        <group name="top_info_left">
+                            <field name="job_id" groups="hr.group_hr_manager"/>
+                            <field name="department_id" groups="hr.group_hr_manager"/>
+                        </group>
+                        <group name="top_info_right">
+                            <field name="hr_responsible_id" widget="many2one_avatar_user" groups="hr.group_hr_user"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Salary Information" name="information" class="o_hr_contract_salary_information" groups="hr.group_hr_manager">
+                            <field name="currency_id" invisible="1"/> <!-- for monetary fields -->
+                            <group name="salary_info">
+                                <group name="contract" string="Contract Overview" groups="hr.group_hr_user">
+                                    <label for="wage"/>
+                                    <div class="o_row" name="wage">
+                                        <field name="wage" class="o_hr_narrow_field"/>
+                                        <div name="wage_period_label">/ month</div>
+                                    </div>
+                                    <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
+                                    <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
+                                            domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
+
+                                    <separator name="schedule" string="Schedule"/>
+                                    <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter groups="hr.group_hr_manager"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_template_list_view" model="ir.ui.view">
+        <field name="name">hr.contract.template.list</field>
+        <field name="model">hr.version</field>
+        <field name="arch" type="xml">
+            <list string="Contract Templates" default_order='name'>
+                <field name="name"/>
+                <field name="job_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="wage" widget="monetary" optional="show"/>
+                <field name="contract_type_id" optional="show"/>
+                <field name="structure_type_id" optional="show"/>
+                <field name="resource_calendar_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+                <field name="create_uid" optional="hidden"/>
+                <field name="create_date" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_hr_contract_templates" model="ir.actions.act_window">
+        <field name="name">Contract Templates</field>
+        <field name="res_model">hr.version</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('employee_id', '=', False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'sequence': 1, 'view_id': ref('hr_contract_template_list_view')}),
+            (0, 0, {'view_mode': 'form', 'sequence': 2, 'view_id': ref('hr_contract_template_form_view')})]"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+              No Template found</p><p>
+                Let's create one
+          </p>
+        </field>
+    </record>
+</odoo>

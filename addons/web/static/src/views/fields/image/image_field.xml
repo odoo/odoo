@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ImageField">
+        <div class="d-inline-block position-relative opacity-trigger-hover">
+            <div t-if="!props.readonly and fieldType !== 'many2one'" class="o_image_uploader_container" t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+                <FileUploader
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    t-key="props.record.resId"
+                    onUploaded.bind="onFileUploaded"
+                >
+                    <t t-set-slot="toggler">
+                        <button
+                            class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                            data-tooltip="Edit"
+                            aria-label="Edit">
+                            <i class="fa fa-pencil fa-fw"/>
+                        </button>
+                    </t>
+                    <button
+                        t-if="props.record.data[props.name] and state.isValid"
+                        class="o_clear_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                        data-tooltip="Clear"
+                        aria-label="Clear"
+                        t-on-click="onFileRemove">
+                        <i class="fa fa-trash-o fa-fw"/>
+                    </button>
+                </FileUploader>
+            </div>
+            <img
+                loading="lazy"
+                t-att-class="imgClass"
+                t-att-alt="imgAlt"
+                t-att-src="this.getUrl(props.previewImage or props.name)"
+                t-att-name="props.name"
+                t-att-height="props.height"
+                t-att-width="props.width"
+                t-att-style="sizeStyle"
+                t-on-error.stop="onLoadFailed"
+                t-att-data-tooltip-template="hasTooltip and tooltipAttributes.template"
+                t-att-data-tooltip-info="hasTooltip and tooltipAttributes.info"
+                t-att-data-tooltip-delay="hasTooltip and props.zoomDelay"
+            />
+        </div>
+    </t>
+
+    <t t-name="web.ImageZoomTooltip">
+        <div class="o_image_zoom">
+            <img t-att-src="url" />
+        </div>
+    </t>
+
+</templates>

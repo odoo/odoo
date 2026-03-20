@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_event']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='installed_snippets_hook']" position="after">
+        <t snippet-group="events" t-snippet="website.s_snippet_group" string="Events"
+            t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
+    </xpath>
+    <xpath expr="//t[@id='event_upcoming_snippet_hook']" position="replace">
+        <t t-snippet="website_event.s_events_picture" string="Events" group="events" label="Event"/>
+        <t t-snippet="website_event.s_events_card" string="Events" group="events" label="Event"/>
+        <t t-snippet="website_event.s_events_single_offset" string="Event" group="events" label="Event"/>
+        <t t-snippet="website_event.s_events_single_entry" string="Event" group="events" label="Event"/>
+        <t t-snippet="website_event.s_events_single_card" string="Event" group="events" label="Event"/>
+        <t t-snippet="website_event.s_events_single_badge" string="Event" group="events" label="Event"/>
+        <t t-snippet="website_event.s_events_single_aside" string="Event" group="events" label="Event"/>
+    </xpath>
+</template>
+
+<asset id="website_event.s_searchbar_000_xml" name="Searchbar 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_event/static/src/snippets/s_searchbar/000.xml</path>
+</asset>
+
+<!--
+grep: /website_event/static/src/img/speaker.png
+Note: this URL was used like that (and saved in databases' HTML fields) in the
+old `s_speaker_bio` snippet. That snippet disappeared by mistake from version
+15.1 to 19.0 without action, it was thus removed for 19.1. The speaker image was
+kept for compatibility, but it might be removed in a future refactoring though.
+-->
+
+</odoo>

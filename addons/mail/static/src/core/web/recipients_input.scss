@@ -1,0 +1,18 @@
+.o-mail-RecipientsInput {
+    border-bottom: 1px solid transparent;
+    &:focus-within:hover {
+        border-bottom-color: $input-focus-border-color;
+        &:after {
+            @include o-caret-down($caret-color: $input-focus-border-color);
+        }
+    }
+    &:hover {
+        border-bottom-color: $border-color;
+        &:after {
+            @include o-caret-down($caret-color: $border-color);
+        }
+    }
+    .o_input {
+        border: none;
+    }
+}

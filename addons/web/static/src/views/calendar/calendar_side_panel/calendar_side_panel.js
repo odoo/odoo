@@ -1,0 +1,86 @@
+import { Component, useState } from "@odoo/owl";
+import { DateTimePicker } from "@web/core/datetime/datetime_picker";
+import { _t } from "@web/core/l10n/translation";
+import { useBus } from "@web/core/utils/hooks";
+import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
+import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
+
+export class CalendarSidePanel extends Component {
+    static components = {
+        DatePicker: DateTimePicker,
+        FilterSection: CalendarFilterSection,
+        ScheduleSection: CalendarScheduleSection,
+    };
+    static template = "web.CalendarSidePanel";
+    static props = ["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"];
+
+    setup() {
+        this.state = useState({ isDragging: false });
+        useBus(this.props.model.bus, "CALENDAR_EVENT_DRAG", ({ detail }) => {
+            this.state.isDragging = detail.dragging;
+        });
+    }
+
+    get datePickerProps() {
+        return {
+            type: "date",
+            showWeekNumbers: false,
+            maxPrecision: "days",
+            daysOfWeekFormat: "narrow",
+            onSelect: (date) => {
+                let scale = "week";
+
+                if (this.props.model.date.hasSame(date, "day")) {
+                    const scales = ["month", "week", "day"];
+                    scale = scales[(scales.indexOf(this.props.model.scale) + 1) % scales.length];
+                } else {
+                    // Check if dates are on the same week
+                    // As a.hasSame(b, "week") does not depend on locale and week always starts on Monday,
+                    // we are comparing derivated dates instead to take this into account.
+                    const currentDate =
+                        this.props.model.date.weekday === 7
+                            ? this.props.model.date.plus({ day: 1 })
+                            : this.props.model.date;
+                    const pickedDate = date.weekday === 7 ? date.plus({ day: 1 }) : date;
+
+                    // a.hasSame(b, "week") does not depend on locale and week alway starts on Monday
+                    if (currentDate.hasSame(pickedDate, "week")) {
+                        scale = "day";
+                    }
+                }
+
+                this.props.model.load({ scale, date });
+            },
+            value: this.props.model.date,
+        };
+    }
+    get filterPanelProps() {
+        return {
+            model: this.props.model,
+        };
+    }
+
+    get showDatePicker() {
+        return this.props.model.showDatePicker && !this.env.isSmall;
+    }
+
+    get toScheduleString() {
+        const { eventsToSchedule } = this.props.model.data;
+        if (eventsToSchedule.length) {
+            return _t("%s to schedule", eventsToSchedule.length);
+        }
+        return _t("Nothing to schedule");
+    }
+
+    get filters() {
+        const res = [];
+        for (const f of this.props.model.filterSections) {
+            const filter = { label: f.label, active: false };
+            if (f.filters.some((f) => f.active)) {
+                filter.active = true;
+            }
+            res.push(filter);
+        }
+        return res;
+    }
+}

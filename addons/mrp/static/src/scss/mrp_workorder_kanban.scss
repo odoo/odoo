@@ -1,0 +1,61 @@
+.o_mrp_workorder_kanban {
+    .o_kanban_record {
+        flex-basis: 40%;
+        @include media-breakpoint-down(lg) {
+            flex-basis: 100%
+        }
+    }
+    .o_kanban_group .o_kanban_record_top {
+        flex-direction: column;
+    }
+    .o_kanban_record_top {
+        justify-content: space-between;
+        .o_kanban_workorder_title {
+            display: flex;
+            flex-basis: 40%;
+            flex-direction: row;
+        }
+    }
+    .o_kanban_workorder_production_name {
+        display: flex;
+        flex-basis: 40%;
+        flex-direction: row;
+        color: gray;
+    }
+    .o_kanban_workorder_date {
+        display: flex;
+        flex-basis: 40%;
+        flex-direction: row;
+        color: gray;
+        &.o_wo_red {
+          color: red;
+        }
+        &.o_wo_orange {
+          color: orange;
+        }
+    }
+    .o_kanban_workorder_remaining {
+        border: solid 1px;
+        padding: 3px;
+        border-color: green;
+        &.o_wo_red {
+          border-color: red;
+        }
+    }
+}
+.o_workcenter_kanban {
+    --KanbanRecord-width: 400px;
+    .o_kanban_renderer {
+        --KanbanRecord-width: 480px;
+
+        @include media-only(screen) {
+            --KanbanGroup-width: 480px;
+        }
+        @include media-only(print) {
+            --KanbanGroup-width: 400px;
+        }
+    }
+    .o_dashboard_graph {
+            margin: 0px -8px;
+    }
+}

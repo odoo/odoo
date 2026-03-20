@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.list</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <list string="Working Time" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="dayofweek"/>
+                <field name="duration_hours" sum="Hours per Week" force_save="1" widget="float_time"/>
+                <field name="hour_from" widget="float_time" optional="hidden" decoration-muted="hour_from == hour_to"/>
+                <field name="hour_to" widget="float_time" optional="hidden" decoration-muted="hour_from == hour_to"/>
+                <field name="week_type" readonly="1" force_save="1" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_attendance_form" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.form</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Working Time">
+                <sheet>
+                <group>
+                    <field name="dayofweek"/>
+                    <field name="week_type"/>
+                    <label for="hour_from" string="Hours"/>
+                    <div id="resource_attendance_hours" class="o_row">
+                        <field name="hour_from" widget="float_time" decoration-muted="hour_from == hour_to"/> -
+                        <field name="hour_to" widget="float_time" decoration-muted="hour_from == hour_to"/>
+                    </div>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

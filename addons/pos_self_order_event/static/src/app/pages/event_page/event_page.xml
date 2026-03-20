@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_self_order_event.EventPage">
+        <div class="o_self_event_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
+
+            <!-- Header -->
+            <header class="o_self_event_page_header text-bg-primary" t-att-class="{'o_self_shadow_top': scrollShadow.top}">
+                <div class="container o_self_container py-3 d-flex align-items-center position-relative">
+                    <button type="button" class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="goBack" aria-label="Discard">
+                        <i class="oi oi-close fa-fw"/>
+                        <span t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
+                    </button>
+                    <h2 class="o_self_event_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-esc="event.name"/>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="scrollContainer">
+                <div class="flex-grow-1 pb-4">
+                    <!-- Title & Image -->
+                    <section class="py-3 text-bg-primary">
+                        <div class="container o_self_container d-flex flex-column align-items-center">
+                            <h1 class="mt-kiosk-p-3 mb-3" t-esc="event.name" t-ref="eventName"/>
+                            <div class="o_self_event_image ratio ratio-1x1 rounded-4 w-70 w-m-50">
+                                <img class="rounded-4" t-att-src="selfOrder.eventImageUrl(event)" loading="lazy" alt="Event Image"/>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Body -->
+                    <section class="o_self_event_page_body container o_self_container">
+                        <!-- Stepper -->
+                        <div class="stepper_container w-100 mt-2 mt-md-3 mb-4 mb-kiosk-p-5" aria-label="Steps">
+                            <Stepper steps="steps"
+                                selectedStep="state.selectedStep"
+                                onStepClicked="(s)=>this.onStepClicked(s)"/>
+                        </div>
+                        <!-- Slot Selection -->
+                        <section t-if="state.selectedStep.id === 'slot'" class="d-flex o_self_fade">
+                            <div class="d-flex flex-column w-100">
+                                <h5 class="mb-3">Choose a slot</h5>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6 col-lg-4"
+                                        t-foreach="this.event.event_slot_ids"
+                                        t-as="slot" t-key="slot.id">
+                                        <div class="rounded-3 card shadow-sm h-100"
+                                            t-att-class="{'border-primary': state.selectedSlot === slot.id}"
+                                            t-on-click="() => this.selectSlot(slot)">
+                                            <div class="card-body text-center">
+                                                <h6 class="card-title fw-bolder" t-esc="slot.display_name"/>
+                                                <p class="text-primary fw-bold mb-0">
+                                                    <t t-esc="slotAvailabilityText(slot)"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Ticket Selection Step -->
+                        <section t-if="state.selectedStep.id === 'ticket'" class="d-flex o_self_fade">
+                            <div class="d-flex flex-column w-100">
+                                <div class="o_self_event_products row justify-content-center"
+                                    t-att-class="{'small-item-nb': eventTickets.length &lt; 3}">
+                                    <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3"
+                                        t-att-class="{'col-kiosk-p-4': eventTickets.length &lt; 4}"
+                                        t-foreach="eventTickets"
+                                        t-as="ticket" t-key="ticket.id">
+                                        <div class="event_product_box btn btn-light position-relative d-flex flex-column align-items-center w-100 p-3 rounded-4 shadow-sm overflow-hidden border-2 text-center"
+                                            t-att-class="{
+                                                'border-primary': state.ticketQuantities[ticket.id] &gt; 0,
+                                                'border-transparent': !(state.ticketQuantities[ticket.id] &gt; 0),
+                                                'opacity-50': !seatAvailability(ticket)
+                                            }">
+                                            <div class="o_self_product_image ratio ratio-1x1 w-75 mb-2">
+                                                <img class="object-fit-cover rounded-4"
+                                                     t-att-src="'/pos_self_order_event/static/src/img/event_ticket_placeholder_thumbnail.png'"
+                                                     loading="lazy"
+                                                     alt="Ticket Image"/>
+                                            </div>
+                                            <div class="flex-grow-1 mb-2">
+                                                <span class="fw-bold d-block"><t t-esc="ticket.name"/></span>
+                                                <span t-if="ticket.price"
+                                                    class="badge mt-1 px-2 py-1 rounded-3 text-bg-primary small">
+                                                    <t t-out="selfOrder.formatMonetary(ticket.price)"/>
+                                                </span>
+                                                <div t-if="!seatAvailability(ticket)"
+                                                    class="mt-2 p-1 px-3 fs-lighter bg-secondary rounded">
+                                                    Sold Out
+                                                </div>
+                                            </div>
+                                            <div class="mt-auto w-100 d-flex justify-content-center">
+                                                <div class="btn-group me-3" t-if="seatAvailability(ticket)">
+                                                    <button type="button"
+                                                            class="btn btn-secondary py-1 px-2"
+                                                            t-on-click="() => this.changeQuantity(ticket.id, false)"
+                                                            t-att-disabled="(state.ticketQuantities[ticket.id] || 0) &lt;= 0">
+                                                        <i class="oi oi-minus fa-fw"/>
+                                                    </button>
+                                                    <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder">
+                                                        <t t-esc="state.ticketQuantities[ticket.id] || 0"/>
+                                                    </div>
+                                                    <button type="button"
+                                                            class="btn btn-secondary py-1 px-2"
+                                                            t-on-click="() => this.changeQuantity(ticket.id, true)"
+                                                            >
+                                                        <i class="oi oi-plus fa-fw"/>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Fill Information Step -->
+                        <section t-if="state.selectedStep.id === 'info'" class="mt-4">
+                            <!-- General Questions -->
+                            <div t-if="eventQuestions().global.length" class="card shadow-sm border-0 mb-4">
+                                <div class="card-header bg-primary py-2 px-3 rounded-top">
+                                    <h6 class="mb-0 text-white">General Information</h6>
+                                </div>
+                                <div class="card-body bg-light p-3">
+                                    <div t-foreach="eventQuestions().global" t-as="question" t-key="question.id" class="mb-3">
+                                        <label class="form-label fw-semibold mb-1" t-esc="question.title"/>
+                                        <span t-if="question.is_mandatory_answer" class="text-danger"> *</span>
+                                        <t t-if="isTextInput(question)">
+                                            <t t-set="props" t-value="getInputProps(question)"/>
+                                            <input t-att-type="props.type"
+                                                   class="form-control"
+                                                   t-att-value="state.globalAnswers?.[question.id] || ''"
+                                                   t-att-class="getFieldErrorClass(question)"
+                                                   t-on-blur="() => this.markTouched(this.getFieldKey(question))"
+                                                   t-on-input="(ev) => this.updateGlobalAnswer(question.id, ev.target.value)"
+                                                   t-att-placeholder="props.placeholder"
+                                                   aria-label="question.title"/>
+                                        </t>
+                                        <t t-elif="question.question_type === 'simple_choice'">
+                                            <select class="form-select"
+                                                    t-on-change="(ev) => this.updateGlobalAnswer(question.id, ev.target.value)"
+                                                    aria-label="question.title">
+                                                <option value="">-- Select --</option>
+                                                <t t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
+                                                    <option t-att-value="ans.id" t-esc="ans.name"/>
+                                                </t>
+                                            </select>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Per Ticket Questions -->
+                            <div class="ticket-info-form">
+                                <t t-foreach="ticketForms" t-as="form" t-key="form.ticketId + '_' + form.index">
+                                    <div class="card shadow-sm border-0 mb-4">
+                                        <div class="card-header bg-primary py-2 px-3 rounded-top">
+                                            <h6 class="mb-0 text-white">
+                                                Ticket #<t t-esc="form.index"/> for <t t-esc="form.ticketName"/>
+                                            </h6>
+                                        </div>
+                                        <div class="card-body bg-light p-3">
+                                            <div t-foreach="eventQuestions().ticket" t-as="question" t-key="question.id + '_' + form.index" class="mb-3">
+                                                <label class="form-label fw-semibold mb-1" t-esc="question.title"/>
+                                                <span t-if="question.is_mandatory_answer" class="text-danger"> *</span>
+                                                <t t-if="isTextInput(question)">
+                                                    <t t-set="props" t-value="getInputProps(question)"/>
+                                                    <input t-att-type="props.type"
+                                                           t-att-placeholder="props.placeholder"
+                                                           class="form-control"
+                                                           t-att-class="getFieldErrorClass(question, form)"
+                                                           t-on-blur="() => this.markTouched(this.getFieldKey(question, form))"
+                                                           t-att-value="state.ticketDetails?.[`${form.ticketId}_${form.index}`]?.[question.id]?.value || ''"
+                                                           t-on-input="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, ev.target.value)"
+                                                           aria-label="question.title"/>
+                                                </t>
+                                                <t t-elif="question.question_type === 'simple_choice'">
+                                                    <select class="form-select"
+                                                            t-on-change="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, ev.target.value)"
+                                                            aria-label="question.title">
+                                                        <option value="">-- Select --</option>
+                                                        <t t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
+                                                            <option t-att-value="ans.id" t-esc="ans.name"/>
+                                                        </t>
+                                                    </select>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </section>
+                    </section>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="o_self_footer bg-white border-top py-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container ">
+                    <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
+                        <button t-if="this.isBackVisible()" class="btn btn-lg btn-secondary" t-on-click="back">
+                            <i class="oi oi-chevron-left d-md-none" />
+                            <span class="d-none d-md-inline">Back</span>
+                        </button>
+                        <div t-else=""/>
+                        <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
+                            <div class="ms-auto text-start">
+                                <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Event</h4>
+                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(this.state.totalPrice)" />
+                            </div>
+                            <button
+                                t-if="state.selectedStep.id !== 'info'"
+                                class="btn btn-lg btn-primary text-truncate ps-auto"
+                                t-on-click="next"
+                                t-att-disabled="!this.isNextEnabled()">
+                                    Next
+                            </button>
+                            <button
+                                t-elif="state.selectedStep.id === 'info'"
+                                class="btn btn-lg btn-primary text-truncate ps-auto"
+                                t-on-click="addToCart"
+                                t-att-disabled="!this.isNextEnabled()">
+                                    Add to cart
+                            </button>
+                            <button t-elif="selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
+                                <span>Add to cart</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </t>
+</templates>

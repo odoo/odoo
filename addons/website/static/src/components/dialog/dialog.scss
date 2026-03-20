@@ -1,0 +1,26 @@
+.o_website_dialog {
+    label {
+        font-weight: $font-weight-bold;
+    }
+    ul.oe_menu_editor {
+        &:not(:has(li.o_dragged)) .input-group:hover > * {
+            background-color: $table-hover-bg !important;
+        }
+        li.o_dragged {
+            opacity: 1 !important;
+            box-shadow: 5px 5px 5px -5px rgba(0,0,0,0.2);
+        }
+        .o_nested_sortable_placeholder_realsize {
+            outline: 1px dashed $o-gray-400;
+            @include border-radius($input-border-radius);
+        }
+    }
+    .o_page_not_found {
+        input {
+            padding-right: 23px;
+        }
+        .fa {
+            font-size: 1rem;
+        }
+    }
+}

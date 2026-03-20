@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * cloud_storage_google
+#
+# Translators:
+# Tony Ng, 2025
+# Wil Odoo, 2025
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/cloud_storage_google/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/ir_attachment.py:0
+msgid "%s is not a valid Google Cloud Storage URL."
+msgstr "%s 不是有效的 Google 雲端儲存空間網址。"
+
+#. module: cloud_storage_google
+#: model:ir.model,name:cloud_storage_google.model_ir_attachment
+msgid "Attachment"
+msgstr "附件"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr "新附件的雲端儲存空間提供者"
+
+#. module: cloud_storage_google
+#: model:ir.model,name:cloud_storage_google.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
+msgid "Google Bucket Name"
+msgstr "Google 儲存桶名稱"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields.selection,name:cloud_storage_google.selection__res_config_settings__cloud_storage_provider__google
+msgid "Google Cloud Storage"
+msgstr "Google 雲端儲存空間"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_account_info
+msgid "Google Service Account Info"
+msgstr "Google 服務帳戶資訊"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
+msgid "Google Service Account Key"
+msgstr "Google 服務帳戶密鑰"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"Some Google attachments are in use, please migrate cloud storages before "
+"disable the provider"
+msgstr "部份 Google 附件正在使用中，停用此服務商之前，請遷移雲端儲存位置"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"The account info is not allowed to download blobs from the bucket.\n"
+"%s"
+msgstr ""
+"該帳戶資訊不允許從儲存桶下載 blob 儲存體。\n"
+"%s"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"The account info is not allowed to set the bucket's CORS.\n"
+"%s"
+msgstr ""
+"該帳戶資訊不允許設定儲存桶的 CORS。\n"
+"%s"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"The account info is not allowed to upload blobs to the bucket.\n"
+"%s"
+msgstr ""
+"該帳戶資訊不允許上載 blob 儲存體至儲存桶。\n"
+"%s"

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_cards" name="Menu - Cards" groups="base.group_user">
+    <section class="s_mega_menu_cards pt16 pb16 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <nav class="row">
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_1"
+                    _title.translate="Our team"
+                    _text.translate="Created in 2021, the company is young and dynamic. Discover the composition of the team and their skills."/>
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_2"
+                    _title.translate="Departments"
+                    _text.translate="Do you need specific information? Our specialists will help you with pleasure."/>
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_3"
+                    _title.translate="Products"
+                    _text.translate="We offer tailor-made products according to your needs and your budget."/>
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_4"
+                    _title.translate="Customers"
+                    _text.translate="Find out how we were able helping them and set in place solutions adapted to their needs."/>
+
+                <div class="w-100 d-none d-lg-block"/>
+
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_5"
+                    _title.translate="Events"
+                    _text.translate="From seminars to team building activities, we offer a wide choice of events to organize."/>
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_6"
+                    _title.translate="Blog"
+                    _text.translate="Stay informed of our latest news and discover what will happen in the next weeks."/>
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_7"
+                    _title.translate="Deliveries"
+                    _text.translate="Find all information about our deliveries, express deliveries and all you need to know to return a product."/>
+                <t t-call="website.s_mega_menu_cards_item"
+                    _img_src.f="/web/image/website.s_mega_menu_cards_default_image_8"
+                    _title.translate="Points of sale"
+                    _text.translate="Need to pick up your order at one of our stores? Discover the nearest to you."/>
+            </nav>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_cards_item">
+    <div class="col-12 col-lg-3" data-name="Menu Item">
+        <a href="#" class="nav-link rounded text-wrap text-center p-3">
+            <img t-att-src="_img_src" class="mb-3 rounded shadow img-fluid" alt=""/>
+            <h4 t-out="_title"/>
+            <span class="mb-0 small"><t t-out="_text"/></span>
+        </a>
+    </div>
+</template>
+
+<asset id="website.s_mega_menu_cards_000_scss" name="Menu - Cards 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_mega_menu_cards/000.scss</path>
+</asset>
+
+</odoo>

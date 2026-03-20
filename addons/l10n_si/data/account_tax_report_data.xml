@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <!-- DDV -->
+    <record id="tax_report" model="account.report">
+        <field name="name">VAT Return (DDV-O)</field>
+        <field name="name@sl">Davčno Poročilo</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.si"/>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@sl">Bilanca</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_I" model="account.report.line">
+                <field name="name">I. Supplies of goods and services (values excluding VAT)</field>
+                <field name="name@sl">I. Dobave blaga in storitev (vrednosti brez DDV)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_I_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            c11.balance +
+                            c11a.balance +
+                            c12.balance +
+                            c13.balance +
+                            c14.balance +
+                            c15.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_11" model="account.report.line">
+                        <field name="name">11. Supplies of goods and services</field>
+                        <field name="name@sl">11. Dobave blaga in storitev</field>
+                        <field name="code">c11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_11a" model="account.report.line">
+                        <field name="name">11a. Supplies of goods and services in Slovenia, of which VAT is charged by the recipient</field>
+                        <field name="name@sl">11a. Dobave blaga in storitev v Sloveniji, od katerih obračunava DDV do prejemnik</field>
+                        <field name="code">c11a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_11a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-11a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_12" model="account.report.line">
+                        <field name="name">12. Deliveries of goods and services to other EU Member States</field>
+                        <field name="name@sl">12. Dobave blaga in storitev v druge države članice EU</field>
+                        <field name="code">c12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-12</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_13" model="account.report.line">
+                        <field name="name">13. Sale of goods at a distance</field>
+                        <field name="name@sl">13. Prodaja blaga na daljavo</field>
+                        <field name="code">c13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_14" model="account.report.line">
+                        <field name="name">14. Assembly and installation of goods in another Member State</field>
+                        <field name="name@sl">14. Montaža in montaža blaga v drugi državi članici</field>
+                        <field name="code">c14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_15" model="account.report.line">
+                        <field name="name">15. Exempt supplies without the right to deduct VAT</field>
+                        <field name="name@sl">15. Oproščene dobave brez pravice do odbitka DDV</field>
+                        <field name="code">c15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-15</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_II" model="account.report.line">
+                <field name="name">II. VAT charged</field>
+                <field name="name@sl">II. Obračunan DDV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_II_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            c21.balance +
+                            c22.balance +
+                            c22a.balance +
+                            c23.balance +
+                            c23a.balance +
+                            c24.balance +
+                            c24a.balance +
+                            c24b.balance +
+                            c24c.balance +
+                            c25.balance +
+                            c25a.balance +
+                            c25b.balance +
+                            c26.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_21" model="account.report.line">
+                        <field name="name">21. At a rate of 22%</field>
+                        <field name="name@sl">21. Po stopnji 22 %</field>
+                        <field name="code">c21</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_21_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-21</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_22" model="account.report.line">
+                        <field name="name">22. At a rate of 9,5%</field>
+                        <field name="name@sl">22. Po stopnji 9,5 %</field>
+                        <field name="code">c22</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_22_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-22</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_22a" model="account.report.line">
+                        <field name="name">22a. At a rate of 5%</field>
+                        <field name="name@sl">22a. Po stopnji 5 %</field>
+                        <field name="code">c22a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_22a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-22a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_23" model="account.report.line">
+                        <field name="name">23. 22% of acquisitions of goods from other EU Member States</field>
+                        <field name="name@sl">23. 22 % nabav blaga iz drugih držav članic EU</field>
+                        <field name="code">c23</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_23_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-23</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_23a" model="account.report.line">
+                        <field name="name">23a. Of the services received from other EU Member States at a rate of 22%</field>
+                        <field name="name@sl">23a. Prejetih storitev iz drugih držav članic EU po stopnji 22 %.</field>
+                        <field name="code">c23a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_23a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-23a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_24" model="account.report.line">
+                        <field name="name">24. 9,5% of acquisitions of goods from other EU Member States</field>
+                        <field name="name@sl">24. 9,5 % nabav blaga iz drugih držav članic EU</field>
+                        <field name="code">c24</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-24</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_24a" model="account.report.line">
+                        <field name="name">24a. Of the services received from other EU Member States at the rate of 9,5%</field>
+                        <field name="name@sl">24a. Prejetih storitev iz drugih držav članic EU po stopnji 9,5 %.</field>
+                        <field name="code">c24a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_24a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-24a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_24b" model="account.report.line">
+                        <field name="name">24b. Acquisitions of goods from other EU Member States at the rate of 5%</field>
+                        <field name="name@sl">24b. Pridobitve blaga iz drugih držav članic EU po stopnji 5 %</field>
+                        <field name="code">c24b</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_24b_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-24b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_24c" model="account.report.line">
+                        <field name="name">24c. Of the services received from other EU Member States at the rate of 5%</field>
+                        <field name="name@sl">24c. Prejetih storitev iz drugih držav članic EU po stopnji 5 %.</field>
+                        <field name="code">c24c</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_24c_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24c</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_25" model="account.report.line">
+                        <field name="name">25. On the basis of self-assessment as a recipient of goods and services at a rate of 22%</field>
+                        <field name="name@sl">25. Na podlagi samoocenitve kot prejemnik blaga in storitev po stopnji 22 %.</field>
+                        <field name="code">c25</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_25_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-25</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_25a" model="account.report.line">
+                        <field name="name">25a. On the basis of self-assessment as a recipient of goods and services at a rate of 9,5%</field>
+                        <field name="name@sl">25a. Na podlagi samoocenitve kot prejemnik blaga in storitev po stopnji 9,5 %.</field>
+                        <field name="code">c25a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_25a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-25a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_25b" model="account.report.line">
+                        <field name="name">25b. On the basis of self-assessment as a recipient of goods and services at a rate of 5%</field>
+                        <field name="name@sl">25b. Na podlagi samoobdavčitve kot prejemnik blaga in storitev po stopnji 5 %.</field>
+                        <field name="code">c25b</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_25b_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-25b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_26" model="account.report.line">
+                        <field name="name">26. On the basis of self-assessment of imports</field>
+                        <field name="name@sl">26. Na podlagi samoocenitve uvoza</field>
+                        <field name="code">c26</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_26_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-26</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_III" model="account.report.line">
+                <field name="name">III. Purchases of goods and services (values excluding VAT)</field>
+                <field name="name@sl">III. Nakupi blaga in storitev (vrednosti brez DDV)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_III_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            c31.balance +
+                            c31a.balance +
+                            c32.balance +
+                            c32a.balance +
+                            c33.balance +
+                            c34.balance +
+                            c35.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_31" model="account.report.line">
+                        <field name="name">31. Purchases of goods and services</field>
+                        <field name="name@sl">31. Nakupi blaga in storitev</field>
+                        <field name="code">c31</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_31_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_31a" model="account.report.line">
+                        <field name="name">31a. Purchases of goods and services in Slovenia, of which the recipient charges VAT</field>
+                        <field name="name@sl">31a. Nakupi blaga in storitev v Sloveniji, od katerih prejemnik obračuna DDV</field>
+                        <field name="code">c31a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_31a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_32" model="account.report.line">
+                        <field name="name">32. Acquisitions of goods from other EU Member States</field>
+                        <field name="name@sl">32. Pridobitve blaga iz drugih držav članic EU</field>
+                        <field name="code">c32</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_32_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_32a" model="account.report.line">
+                        <field name="name">32a. Services received from other EU Member States</field>
+                        <field name="name@sl">32a. Storitve, prejete iz drugih držav članic EU</field>
+                        <field name="code">c32a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_32a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_33" model="account.report.line">
+                        <field name="name">33. Exempt purchases of goods and services and exempt acquisitions of goods</field>
+                        <field name="name@sl">33. Oproščeni nakupi blaga in storitev ter oproščene pridobitve blaga</field>
+                        <field name="code">c33</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_33_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_34" model="account.report.line">
+                        <field name="name">34. Purchase value of real estate</field>
+                        <field name="name@sl">34. Nabavna vrednost nepremičnine</field>
+                        <field name="code">c34</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_34_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">34</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_35" model="account.report.line">
+                        <field name="name">35. Cost of other fixed assets</field>
+                        <field name="name@sl">35. Nabavna vrednost drugih osnovnih sredstev</field>
+                        <field name="code">c35</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_35_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">35</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_IV" model="account.report.line">
+                <field name="name">IV. VAT deduction</field>
+                <field name="name@sl">IV. Odbitek DDV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_IV_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">c41.balance + c42.balance + c42a.balance + c43.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_41" model="account.report.line">
+                        <field name="name">41. From purchases of goods and services, acquisition of goods and services received from other EU Member States and from imports at a rate of 22%</field>
+                        <field name="name@sl">41. Od nabave blaga in storitev, pridobitve blaga in storitev, prejetih iz drugih držav članic EU in od uvoza po stopnji 22 %.</field>
+                        <field name="code">c41</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_41_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">41</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_42" model="account.report.line">
+                        <field name="name">42. From purchases of goods and services, acquisition of goods and services received from other EU Member States and from imports at a rate of 9,5%</field>
+                        <field name="name@sl">42. Od nabave blaga in storitev, pridobitve blaga in storitev, prejetih iz drugih držav članic EU ter od uvoza po stopnji 9,5 %.</field>
+                        <field name="code">c42</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_42_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_42a" model="account.report.line">
+                        <field name="name">42a. From purchases of goods and services, acquisition of goods and services received from other EU Member States and from imports at a rate of 5%</field>
+                        <field name="name@sl">42a. Od nabave blaga in storitev, pridobitve blaga in storitev, prejetih iz drugih držav članic EU ter od uvoza po stopnji 5 %.</field>
+                        <field name="code">c42a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_42a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">42a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_43" model="account.report.line">
+                        <field name="name">43. Of the flat-rate compensation at the rate of 8%</field>
+                        <field name="name@sl">43. Od pavšalnega nadomestila po stopnji 8 %.</field>
+                        <field name="code">c43</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_43_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">43</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_51" model="account.report.line">
+                <field name="name">51. VAT liability</field>
+                <field name="name@sl">51. Obveznost za DDV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_51_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            c21.balance +
+                            c22.balance +
+                            c22a.balance +
+                            c23.balance +
+                            c23a.balance +
+                            c24.balance +
+                            c24a.balance +
+                            c24b.balance +
+                            c25.balance +
+                            c25a.balance +
+                            c25b.balance +
+                            c26.balance -
+                            c41.balance -
+                            c42.balance -
+                            c42a.balance -
+                            c43.balance
+                        </field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_52" model="account.report.line">
+                <field name="name">52. VAT surplus</field>
+                <field name="name@sl">52. Presežek DDV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_52_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            c41.balance +
+                            c42.balance +
+                            c42a.balance +
+                            c43.balance -
+                            c21.balance -
+                            c22.balance -
+                            c22a.balance -
+                            c23.balance -
+                            c23a.balance -
+                            c24.balance -
+                            c24a.balance -
+                            c24b.balance -
+                            c25.balance -
+                            c25a.balance -
+                            c25b.balance -
+                            c26.balance
+                        </field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

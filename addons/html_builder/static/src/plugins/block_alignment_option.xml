@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BlockAlignmentOption">
+    <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')" level="1">
+        <BuilderButtonGroup>
+            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+            <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
+            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>

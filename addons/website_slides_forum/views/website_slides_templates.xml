@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <template id='course_main' inherit_id="website_slides.course_main">
+        <!-- Channel main template: add link to forum -->
+        <xpath expr="//li[hasclass('o_wslides_course_header_nav_review')]" position="after">
+            <li class="nav-item" t-if="not invite_preview and (channel.is_member or channel.visibility == 'public') and channel.forum_id">
+                <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
+                    t-att-class="'nav-link'" target="new">Forum</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
+        <xpath expr="//a[hasclass('o_wslides_fs_review')]" position="after">
+            <a t-if="(channel.is_member or channel.visibility == 'public') and slide.channel_id.forum_id" id="fullscreen_forum_button"
+                class="d-flex align-items-center px-3" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}"
+                target="new" title="Forum">
+                <i class="fa fa-comments"/><span class="ms-1 d-none d-md-inline-block">Forum</span>
+            </a>
+        </xpath>
+    </template>
+
+</data></odoo>

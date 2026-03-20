@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="snailmail.SnailmailNotificationPopover" t-inherit="mail.MessageNotificationPopover" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o-mail-MessageNotificationPopover')]" position="replace">
+            <t t-if="props.message.message_type === 'snailmail'">
+                <div class="o-snailmail-SnailmailNotificationPopover m-2" t-attf-class="{{ className }}">
+                    <i class="me-2 fa-fw" t-att-class="props.message.notification_ids[0].statusIcon" role="img"/>
+                    <span t-esc="props.message.notification_ids[0].statusTitle"/>
+                    <span t-if="props.message.notification_ids[0].isFailure">(<t t-out="props.message.notification_ids[0].failureMessage"/>)</span>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+
+</templates>

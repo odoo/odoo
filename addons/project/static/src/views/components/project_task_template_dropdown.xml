@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="project.TemplateDropdown">
+        <button t-if="!state.taskTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
+        <Dropdown t-else="">
+            <button t-attf-class="{{ props.newButtonClasses }} o-dropdown-caret" t-att-data-hotkey="props.hotkey" data-bounce-button="">
+                New
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onCreate">
+                    New Task
+                </DropdownItem>
+                <div role="separator" class="dropdown-divider"/>
+                <div class="dropdown-header">Task Templates</div>
+                <t t-foreach="state.taskTemplates" t-as="template" t-key="template.id">
+                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center pe-0'"
+                        onSelected="() => this.createTaskFromTemplate(template.id)">
+                        <span class="text-truncate" t-out="template.name"/>
+                        <ProjectTemplateButtons resModel="'project.task'" resId="template.id"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

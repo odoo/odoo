@@ -1,0 +1,503 @@
+import datetime
+
+from odoo import fields, Command
+from odoo.tests import tagged, Form
+from odoo.exceptions import ValidationError
+from odoo.addons.l10n_it_edi.tests.common import TestItEdi
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestWithholdingAndPensionFundTaxes(TestItEdi):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        def find_tax_by_ref(ref_name):
+            return cls.env['account.chart.template'].with_company(cls.company).ref(ref_name)
+
+        cls.withholding_sale_tax = find_tax_by_ref('20vwc')
+        cls.withholding_purchase_tax = find_tax_by_ref('20awc')
+        cls.withholding_sale_tax_23_base50 = find_tax_by_ref('23vwo')
+        cls.withholding_sale_tax_23_base20 = find_tax_by_ref('23vwn')
+        cls.pension_fund_sale_tax = find_tax_by_ref('4vcp')
+        cls.enasarco_sale_tax = find_tax_by_ref('enasarcov')
+        cls.withholding_purchase_tax_23_base50 = find_tax_by_ref('23awo')
+        cls.withholding_purchase_tax_23_base20 = find_tax_by_ref('23awn')
+        cls.enasarco_purchase_tax = find_tax_by_ref('enasarcoa')
+        cls.inps_tax = find_tax_by_ref('4vinps')
+        cls.inps_purchase_tax = find_tax_by_ref('4ainps')
+
+        cls.zero_tax = cls.env['account.tax'].with_company(cls.company).create({
+            'name': 'ZeroTax',
+            'sequence': 31,
+            'type_tax_use': 'sale',
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'l10n_it_exempt_reason': 'N2.2',
+            'invoice_legal_notes': 'Fatture emesse o ricevute da contribuenti forfettari o minimi',
+        })
+
+        cls.withholding_sale_line = {
+            'name': 'withholding_line',
+            'quantity': 1,
+            'tax_ids': [(6, 0, [
+                cls.withholding_sale_tax.id,
+                cls.company.account_sale_tax_id.id,
+            ])]
+        }
+
+        cls.pension_fund_sale_line = {
+            'name': 'pension_fund_line',
+            'quantity': 1,
+            'tax_ids': [(6, 0, [
+                cls.withholding_sale_tax.id,
+                cls.pension_fund_sale_tax.id,
+                cls.company.account_sale_tax_id.id,
+            ])]
+        }
+
+        cls.enasarco_sale_line = {
+            'name': 'enasarco_line',
+            'quantity': 1,
+            'tax_ids': [(6, 0, [
+                cls.enasarco_sale_tax.id,
+                cls.withholding_sale_tax_23_base50.id,
+                cls.company.account_sale_tax_id.id,
+            ])]
+        }
+
+        cls.withholding_23_base50_sale_line = {
+            'name': 'withholding_23_base50_line',
+            'quantity': 1,
+            'tax_ids': [Command.set([
+                cls.withholding_sale_tax_23_base50.id,
+                cls.company.account_sale_tax_id.id,
+            ])]
+        }
+
+        cls.withholding_23_base20_sale_line = {
+            'name': 'withholding_23_base20_line',
+            'quantity': 1,
+            'tax_ids': [Command.set([
+                cls.withholding_sale_tax_23_base20.id,
+                cls.company.account_sale_tax_id.id,
+            ])]
+        }
+
+        cls.inps_sale_line = {
+            'name': 'inps_line',
+            'quantity': 1,
+            'tax_ids': [(6, 0, [cls.inps_tax.id, cls.zero_tax.id])]
+        }
+
+        cls.invoice_lines = [
+            ('Ordinary accounting service for the year', 350.0),
+            ('Balance deposit for the past year', 300.0),
+            ('Ordinary accounting service for the trimester', 50.0),
+            ('Electronic invoices management', 50.0),
+        ]
+
+        cls.withholding_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.withholding_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in cls.invoice_lines
+            ],
+        })
+
+        cls.pension_fund_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.pension_fund_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in cls.invoice_lines
+            ]
+        })
+
+        cls.enasarco_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.enasarco_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in cls.invoice_lines
+            ]
+        })
+
+        cls.inps_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.inps_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in cls.invoice_lines
+            ]
+        })
+
+        cls.withholding_sale_tax_23_base50_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                Command.create({
+                    **cls.withholding_23_base50_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in cls.invoice_lines
+            ]
+        })
+
+        cls.withholding_sale_tax_23_base20_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                Command.create({
+                    **cls.withholding_23_base20_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in cls.invoice_lines
+            ]
+        })
+
+        cls.withholding_tax_invoice._post()
+        cls.pension_fund_tax_invoice._post()
+        cls.enasarco_tax_invoice._post()
+        cls.inps_tax_invoice._post()
+        cls.withholding_sale_tax_23_base50_invoice._post()
+        cls.withholding_sale_tax_23_base20_invoice._post()
+
+    def test_withholding_tax_change(self):
+        tax_form = Form(self.env['account.tax'])
+        name = "Test Withholding"
+
+        tax_form.name = name
+        tax_form.amount = -2.00
+        tax_form.l10n_it_withholding_type = 'RT01'
+        tax_form.l10n_it_withholding_reason = False
+        with self.assertRaises(ValidationError):
+            tax_form.save()
+
+        tax_form.l10n_it_withholding_reason = "A"
+        tax = tax_form.save()
+        self.assertRecordValues(tax, [{
+            'name': name,
+            'amount': -2.00,
+            'l10n_it_withholding_type': 'RT01',
+            'l10n_it_withholding_reason': 'A',
+        }])
+
+        tax_form.l10n_it_withholding_type = False
+        tax = tax_form.save()
+        self.assertRecordValues(tax, [{
+            'name': name,
+            'amount': -2.00,
+            'l10n_it_withholding_type': False,
+            'l10n_it_withholding_reason': False,
+        }])
+
+    def test_withholding_tax_constraints(self):
+        with self.assertRaises(ValidationError):
+            self.withholding_sale_tax.amount = 10
+        with self.assertRaises(ValidationError):
+            self.withholding_sale_tax.l10n_it_withholding_type = False
+        with self.assertRaises(ValidationError):
+            self.withholding_sale_tax.l10n_it_withholding_reason = False
+        with self.assertRaises(ValidationError):
+            self.company.account_sale_tax_id.l10n_it_withholding_type = "RT02"
+
+    ####################################################
+    # WITHHOLDING TAX
+    ####################################################
+
+    def test_withholding_taxes_export(self):
+        """
+            Invoice
+            -------------------------------------------------------------
+            Ordinary accounting service for the year               350.00
+            Balance deposit for the past year                      300.00
+            Ordinary accounting service for the trimester           50.00
+            Electronic invoices management                          50.00
+            -------------------------------------------------------------
+            Total untaxed:                                         750.00
+            Withholding:     20% of Untaxed Amount                -150.00
+            VAT:             22% of Untaxed Amount                 165.00
+            Document total:  Untaxed Amount + VAT                  915.00
+            Payment amount:  Document total - Withholding          765.00
+        """
+        self._assert_export_invoice(self.withholding_tax_invoice, 'withholding_tax_invoice.xml')
+
+    def test_withholding_taxes_import(self):
+        invoice = self._assert_import_invoice('IT00470550013_withh.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 765.00,
+            'amount_tax': 15.0,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }])
+
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
+            withholding_taxes = line.tax_ids.filtered(lambda x: x.l10n_it_withholding_type)
+            pension_fund_taxes = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type)
+            vat_taxes = line.tax_ids - withholding_taxes - pension_fund_taxes
+            self.assertEqual([1, 1, 0], [len(x) for x in (vat_taxes, withholding_taxes, pension_fund_taxes)])
+
+    ####################################################
+    # PENSION FUND TAX
+    ####################################################
+
+    def test_pension_fund_taxes_export(self):
+        """
+            Invoice
+            -------------------------------------------------------------
+            Ordinary accounting service for the year               350.00
+            Balance deposit for the past year                      300.00
+            Ordinary accounting service for the trimester           50.00
+            Electronic invoices management                          50.00
+            -------------------------------------------------------------
+            Total untaxed:                                         750.00
+            Pension fund:    4% of Untaxed Amount                   30.00
+            Withholding:     20% of Untaxed Amount                -150.00
+            VAT:             22% of Untaxed Amount + Pension fund  171.60
+            Document total:  Taxed Amount                          951.60
+            Payment amount:  Document total - Withholding          801.60
+        """
+        self._assert_export_invoice(self.pension_fund_tax_invoice, 'pension_fund_tax_invoice.xml')
+
+    def test_pension_fund_taxes_import_assosoftware_tag(self):
+        invoice = self._assert_import_invoice('IT00470550013_pfund.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 795.6,
+            'amount_tax': 45.6,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }])
+        for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
+            self.assertEqual(line.tax_ids, (
+                self.inps_purchase_tax
+                | self.withholding_purchase_tax
+                | self.company.account_purchase_tax_id
+            ))
+
+    def test_pension_fund_taxes_import(self):
+        invoice = self._assert_import_invoice('IT00470550013_pfun2.xml', [{
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price,
+            } for name, price in self.invoice_lines]
+        }])
+        for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
+            self.assertEqual(line.tax_ids, (
+                self.inps_purchase_tax
+                | self.withholding_purchase_tax
+                | self.company.account_purchase_tax_id
+            ))
+
+    ####################################################
+    # ENASARCO TAX
+    ####################################################
+
+    def test_enasarco_tax_export(self):
+        """
+            Invoice
+            -----------------------------------------------------------------
+            Ordinary accounting service for the year                   350.00
+            Balance deposit for the past year                          300.00
+            Ordinary accounting service for the trimester               50.00
+            Electronic invoices management                              50.00
+            -----------------------------------------------------------------
+            Total untaxed:                                             750.00
+            VAT:             22% of Untaxed Amount                     165.00
+            ENASARCO:        8.5% of Untaxed Amount                    -63.75
+            Withholding Tax: 23% on 50% of Untaxed Amount              -86.25
+            Document total:  Taxed Amount                              915.00
+            Payment amount:  Document total - Withholding - Enasarco   765.00
+        """
+        self._assert_export_invoice(self.enasarco_tax_invoice, 'enasarco_tax_invoice.xml')
+
+    def test_enasarco_tax_import(self):
+        invoice = self._assert_import_invoice('IT00470550013_enasa.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 765.0,
+            'amount_tax': 15.0,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }])
+
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
+            enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
+            self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
+            self.assertEqual(-8.5, enasarco_imported_tax.amount)
+            self.assertEqual(self.withholding_purchase_tax_23_base50 | enasarco_imported_tax, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
+
+    def test_enasarco_tax_import_global(self):
+        """Test that if we have a unique ENASARCO line with a price of 0.0,
+        the pension fund contribution will be applied on the total amount of
+        the invoice instead of the line amount because it's considered as global.
+        """
+        applied_xml = """
+            <xpath expr="//DettaglioLinee[NumeroLinea=1]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=2]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=3]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=4]/AltriDatiGestionali" position="replace"/>
+
+            <xpath expr="//DettaglioLinee[NumeroLinea=4]" position="after">
+                <DettaglioLinee>
+                    <NumeroLinea>5</NumeroLinea>
+                    <Descrizione>Contributo ENASARCO</Descrizione>
+                    <PrezzoUnitario>0.00</PrezzoUnitario>
+                    <PrezzoTotale>0.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                    <AltriDatiGestionali>
+                    <TipoDato>CASSA-PREV</TipoDato>
+                    <RiferimentoTesto>TC07 - ENASARCO</RiferimentoTesto>
+                    <RiferimentoNumero>63.75</RiferimentoNumero>
+                    </AltriDatiGestionali>
+                </DettaglioLinee>
+            </xpath>
+        """
+
+        invoice = self._assert_import_invoice('IT00470550013_enasa.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 765.0,
+            'amount_tax': 15.0,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }], applied_xml)
+
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
+            enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
+            self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
+            self.assertEqual(-8.5, enasarco_imported_tax.amount)
+            self.assertEqual(self.withholding_purchase_tax_23_base50 | enasarco_imported_tax, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
+
+    def test_inps_tax_export(self):
+        """
+            Invoice
+            -----------------------------------------------------------------
+            Ordinary accounting service for the year                   350.00
+            Balance deposit for the past year                          300.00
+            Ordinary accounting service for the trimester               50.00
+            Electronic invoices management                              50.00
+            -----------------------------------------------------------------
+            Total untaxed:                                             750.00
+            VAT:             0% of Untaxed Amount                        0.00
+            INPS:            4% of Untaxed Amount                       30.00
+            Document total:  Taxed Amount                              780.00
+            Payment amount:  Document total                            780.00
+        """
+        self._assert_export_invoice(self.inps_tax_invoice, 'inps_tax_invoice.xml')
+
+    ####################################################
+    # RA 23% WITHHOLDING TAX
+    ####################################################
+
+    def test_withholding_tax_23_base50_export(self):
+        """
+            Invoice
+            -------------------------------------------------------------
+            Ordinary accounting service for the year               350.00
+            Balance deposit for the past year                      300.00
+            Ordinary accounting service for the trimester           50.00
+            Electronic invoices management                          50.00
+            -------------------------------------------------------------
+            Total untaxed:                                         750.00
+            Withholding Tax: 23% on 50% of Untaxed Amount          -86.25
+            VAT:             22% of Untaxed Amount                 165.00
+            Document total:  Untaxed Amount + VAT                  915.00
+            Payment amount:  Document total - Withholding          828.75
+        """
+        self._assert_export_invoice(self.withholding_sale_tax_23_base50_invoice, 'withholding_23_ret50.xml')
+
+    def test_withholding_tax_23_base50_import(self):
+        invoice = self._assert_import_invoice('IT00470550013_ret50.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 828.75,
+            'amount_tax': 78.75,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }])
+
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
+            withholding_tax = line.tax_ids.filtered(lambda x: x.l10n_it_withholding_type)
+            self.assertEqual(self.withholding_purchase_tax_23_base50, withholding_tax)
+            self.assertEqual(-11.5, withholding_tax.amount)
+
+    def test_withholding_tax_23_base20_export(self):
+        """
+            Invoice
+            -------------------------------------------------------------
+            Ordinary accounting service for the year               350.00
+            Balance deposit for the past year                      300.00
+            Ordinary accounting service for the trimester           50.00
+            Electronic invoices management                          50.00
+            -------------------------------------------------------------
+            Total untaxed:                                         750.00
+            Withholding Tax: 23% on 20% of Untaxed Amount          -34.50
+            VAT:             22% of Untaxed Amount                 165.00
+            Document total:  Untaxed Amount + VAT                  915.00
+            Payment amount:  Document total - Withholding          880.50
+        """
+        self._assert_export_invoice(self.withholding_sale_tax_23_base20_invoice, 'withholding_23_ret20.xml')
+
+    def test_withholding_tax_23_base20_import(self):
+        invoice = self._assert_import_invoice('IT00470550013_ret20.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 880.50,
+            'amount_tax': 130.50,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }])
+
+        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in self.invoice_lines]):
+            withholding_tax = line.tax_ids.filtered(lambda x: x.l10n_it_withholding_type)
+            self.assertEqual(self.withholding_purchase_tax_23_base20, withholding_tax)
+            self.assertEqual(-4.6, withholding_tax.amount)

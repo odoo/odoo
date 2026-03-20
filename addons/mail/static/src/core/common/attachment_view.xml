@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentView">
+        <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
+            <div class="o_attachment_control popout d-print-none cursor-pointer"
+                 t-on-click="onClickPopout"
+                 data-tooltip="Open preview in a separate window."
+                 data-tooltip-delay="400">
+                <i class="fa fa-window-restore" aria-hidden="Pop out"/>
+            </div>
+            <t t-if="state.thread.message_main_attachment_id">
+                <h3 t-if="!state.thread.message_main_attachment_id.isPdf" class="mt0 mb8 ps-2 text-muted text-center"><t t-esc="displayName"/></h3>
+                <div t-if="state.thread.message_main_attachment_id.isImage" class="o-mail-Attachment-imgContainer">
+                    <img id="attachment_img" class="img img-fluid d-block" t-att-src="state.thread.message_main_attachment_id.defaultSource"/>
+                </div>
+                <iframe t-if="state.thread.message_main_attachment_id.isPdf" class="d-print-none mb48" t-att-src="state.thread.message_main_attachment_id.defaultSource" t-ref="iframeViewerPdf"/>
+                <t t-if="state.thread.attachmentsInWebClientView.length > 1 or (state.thread.attachmentsInWebClientView.length > 0 and !(state.thread.message_main_attachment_id.isPdf or state.thread.message_main_attachment_id.isImage))">
+                    <a class="arrow o_move_previous text-center" href="#" t-on-click.prevent="onClickPrevious">
+                        <span class="oi oi-chevron-left"/>
+                    </a>
+                    <a class="arrow o_move_next text-center" href="#" t-on-click.prevent="onClickNext">
+                        <span class="oi oi-chevron-right"/>
+                    </a>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.PopoutAttachmentView">
+        <div class="o-mail-PopoutAttachmentView">
+            <t t-call="mail.AttachmentView"/>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.GalleryElementOption">
+    <BuilderRow label.translate="Re-order" disabled="!state.hasMultiItems">
+        <BuilderButtonGroup preview="false" action="'setGalleryElementPosition'">
+            <BuilderButton icon="'fa-angle-double-left'" title.translate="Move to first"  actionValue="'first'" className="!state.hasMultiItems || state.isFirstItem ? 'disabled': ''"/>
+            <BuilderButton icon="'fa-angle-left'" title.translate="Move to previous" actionValue="'prev'" className="!state.hasMultiItems ? 'disabled': ''"/>
+            <BuilderButton icon="'fa-angle-right'" title.translate="Move to next" actionValue="'next'" className="!state.hasMultiItems ? 'disabled': ''"/>
+            <BuilderButton icon="'fa-angle-double-right'" title.translate="Move to last" actionValue="'last'" className="!state.hasMultiItems || state.isLastItem ? 'disabled': ''"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,11 @@
+.o_crm_team_form_view {
+    /*
+    * Used to conditionnaly add a css class on a record field.
+    * Add text-warning on the element with class o_crm_lead_month_assignment
+    * only if the element with o_crm_lead_all_assigned_month_exceeded is visible
+    * in the template.
+    */
+    div.o_crm_lead_all_assigned_month_exceeded + .o_crm_lead_month_assignment {
+        color: $warning;
+    }
+}

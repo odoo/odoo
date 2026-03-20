@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.pos_order_change_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <body>
+                    <div class="pos-receipt m-0 p-0 mt-3">
+                        <div name="receipt-header" class="text-center">
+                            <div name="preset-info" class="preset-name" t-if="preset">
+                                <span t-esc="preset['name']"/>
+                                <span t-if="extra_data.get('preset_time')"> (<t t-esc="extra_data['preset_time']"/>)</span>
+                            </div>
+                            <div name="employee-info">
+                                <span><t t-esc="config['name']"/> : <t t-esc="extra_data['time']"/></span><br/>
+                                <span t-if="extra_data.get('employee_name')">By: <t t-esc="extra_data['employee_name']"/></span>
+                            </div>
+                            <span class="my-4 text-large">
+                                <span class="text-bold">
+                                    Order <t t-esc="order['pos_reference']"/>
+                                </span>
+                                <span t-if="order.get('tracking_number')" class="text-bold my-3">
+                                    # <t t-esc="order['tracking_number']"/>
+                                </span>
+                            </span>
+                        </div>
+                        <hr style="border: none; border-top: 4px dashed black;"/>
+                        <div name="body" class="pos-receipt-body pb-5">
+                            <t t-set="hasDataChanges" t-value="changes.get('data') or changes.get('title') or changes.get('groupedData')" />
+                            <div t-if="changes.get('title')" class="text-center text-bold text-insane w-100">
+                                <t t-esc="changes['title']" />
+                                <t t-if="extra_data['reprint']">
+                                    (DUPLICATE !)
+                                </t>
+                            </div>
+
+                            <t t-if="changes.get('groupedData') and len(changes['groupedData'])">
+                                <div t-foreach="changes['groupedData']" t-as="group">
+                                    <div style="border-bottom: 2px dashed black;" class="mb-2 pb-1 text-bold mt-1 text-huge" t-esc="group['name']" />
+                                    <div t-foreach="group['data']" t-as="line">
+                                        <t t-call="point_of_sale.pos_order_change_receipt_line" />
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div t-foreach="changes['data']" t-as="line">
+                                    <t t-call="point_of_sale.pos_order_change_receipt_line" />
+                                </div>
+                            </t>
+
+                            <div t-if="extra_data.get('internal_note')" class="new-changes w-100" t-att-class="{'mb-3': order['general_customer_note']}">
+                                <div class="pos-receipt-title text-center text-huge w-100">
+                                    <strong>INTERNAL NOTE</strong>
+                                </div>
+                                <div class="text-center text-large" t-esc="extra_data['internal_note']" />
+                            </div>
+
+                            <div t-if="extra_data['general_customer_note']" class="new-changes w-100">
+                                <div class="pos-receipt-title text-center text-huge w-100">
+                                    <strong>CUSTOMER NOTE</strong>
+                                </div>
+                                <div class="text-center text-large" t-esc="extra_data['general_customer_note']" />
+                            </div>
+                        </div>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <template id="point_of_sale.pos_order_change_receipt_line">
+            <div t-att-class="{'ps-5': line['combo_parent_uuid']}" class="orderline text-huge">
+                <div>
+                    <span t-esc="line['quantity']"/> <span class="product-name" t-esc="line['basic_name']"/>
+                </div>
+                <div t-if="line.get('attribute_value_names') and len(line['attribute_value_names'])" class="ps-5">
+                    <t t-foreach="line['attribute_value_names']" t-as="name">
+                        <div class="text-normal">- <t t-esc="name" /></div>
+                    </t>
+                </div>
+                <div t-if="line.get('note')" class="text-italic">
+                    <t t-esc="line['note']"/>
+                </div>
+                <div t-if="line.get('customer_note')" class="text-italic">
+                    <t t-esc="line['customer_note']"/>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="product.product_product_6" model="product.product">
+        <field name="route_ids" eval="[(4, ref('route_drop_shipping'))]"/>
+    </record>
+
+    <record id="sale_order_purchase" model="sale.order">
+        <field name="partner_id" ref="base.res_partner_3"/>
+    </record>
+
+    <record id="sale_order_line_purchase" model="sale.order.line">
+        <field name="order_id" ref="sale_order_purchase"/>
+        <field name="product_id" ref="product.product_product_6"/>
+    </record>
+
+    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_purchase')]]"/>
+
+</odoo>

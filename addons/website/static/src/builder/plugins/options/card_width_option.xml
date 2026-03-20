@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CardWidthOption">
+    <BuilderRow label.translate="Card Width">
+        <BuilderRange
+            id="'card_width'"
+            action="'setCardWidth'"
+            actionParam="'max-width'"
+            min="8"
+            max="100"
+            displayRangeValue="true"
+            unit="'%'"/>
+    </BuilderRow>
+    <BuilderRow t-if="getItemValue('card_width') !== '100%'" label.translate="Alignment" level="1">
+        <BuilderButtonGroup action="'setCardAlignment'">
+            <BuilderButton icon="'fa-align-left'" title.translate="Left" actionParam="'me-auto'"/>
+            <BuilderButton icon="'fa-align-center'" title.translate="Center" actionParam="'mx-auto'"/>
+            <BuilderButton icon="'fa-align-right'" title.translate="Right" actionParam="'ms-auto'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>

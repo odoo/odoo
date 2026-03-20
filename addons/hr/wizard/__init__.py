@@ -1,0 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from . import mail_activity_schedule
+from . import hr_bank_account_allocation_wizard_line
+from . import hr_bank_account_wizard

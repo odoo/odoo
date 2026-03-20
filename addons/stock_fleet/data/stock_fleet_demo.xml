@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="vehicle_tag_transport" model="fleet.vehicle.tag" >
+        <field name="name">Transport</field>
+        <field name="color" eval="5"/>
+      </record>
+    <!-- vehicle category -->
+    <record id="model_category_truck" model="fleet.vehicle.model.category">
+        <field name="name">Transport Truck</field>
+        <field name="sequence">1</field>
+        <field name="weight_capacity">44000</field>
+        <field name="volume_capacity">32</field>
+    </record>
+    <record id="model_category_van" model="fleet.vehicle.model.category">
+        <field name="name">Pickup Van</field>
+        <field name="sequence">10</field>
+        <field name="weight_capacity">7000</field>
+        <field name="volume_capacity">15</field>
+    </record>
+
+    <!-- vehicle models -->
+    <record id="model_volvo_fm" model="fleet.vehicle.model">
+          <field name="name">FM</field>
+          <field name="brand_id" ref="fleet.brand_volvo"/>
+          <field name="vehicle_type">car</field>
+          <field name="category_id" ref="model_category_truck"/>
+    </record>
+    <record id="model_ford_transit" model="fleet.vehicle.model">
+          <field name="name">Transit</field>
+          <field name="brand_id" ref="fleet.brand_ford"/>
+          <field name="vehicle_type">car</field>
+          <field name="category_id" ref="model_category_van"/>
+    </record>
+
+    <!-- fleet vehicles -->
+    <record id="vehicle_truck_volvo" model="fleet.vehicle">
+        <field name="license_plate">ODO-1347</field>
+        <field name="vin_sn">1V6AD0ERXBC414305</field>
+        <field name="model_id" ref="model_volvo_fm"/>
+        <field name="category_id" ref="model_category_truck"/>
+        <field name="color">Black</field>
+        <field name="location">Millersburg Ohio (US) 44654</field>
+        <field name="doors">2</field>
+        <field name="driver_id" ref="base.user_admin" />
+        <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
+        <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+        <field name="odometer">18000</field>
+        <field name="odometer_unit">kilometers</field>
+        <field name="car_value">20000</field>
+        <field name="model_year">2020</field>
+        <field name="fuel_type">diesel</field>
+        <field name="manager_id" ref="base.user_admin"/>
+        <field eval="[(6,0,[ref('vehicle_tag_transport')])]" name="tag_ids"/>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="test_website.test_template" name="test template 2">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_website.test_bundle" t-js="False"/>
+        <meta/>
+        <t t-call-assets="test_website.test_bundle" t-css="False"/>
+    </head>
+    <body>
+        <img src="http://test.external.link/img.png"/>
+        <img src="/test_website/static/img.png"/>
+        <a href="http://test.external.link/link">x</a>
+        <a href="/web/content/local_link">x</a>
+        <span t-attf-style="background-image: url('/web/image/2')" t-att-empty="False">xxx</span>
+        <div widget="html" t-field="user.signature"/>
+        <div widget="image" t-field="user.avatar_1920" t-options="{'widget': 'image'}"/>
+    </body>
+</html>
+    </template>
+
+    <template id="test_website.test_template_tatt_qweb" name="t-att template">
+        <a t-att-href='"/"'>1</a>
+        <a t-att-href='False'>2</a>
+        <a t-att-href='None'>3</a>
+        <a t-att-href=''>4</a>
+        <a t-att-href='""'>5</a>
+    </template>
+
+</odoo>

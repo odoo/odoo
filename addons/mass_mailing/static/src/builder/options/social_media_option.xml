@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.SocialMediaOptions">
+    <BuilderRow label.translate="Title Position">
+        <BuilderSelect action="'updateTitlePosition'">
+            <BuilderSelectItem actionParam="{ position: 'top' }">Top</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ position: 'side' }">Side</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{}">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect applyTo="'.fa'">
+            <BuilderSelectItem classAction="'rounded shadow-sm'">Square</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-empty-circle shadow-sm'">Circle</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-circle shadow-sm'">Disk</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-stack'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Size">
+        <BuilderSelect applyTo="'.fa'">
+            <BuilderSelectItem classAction="'small_social_icon'">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Medium</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-2x'">Big</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Default Colors">
+        <BuilderCheckbox classAction="'no_icon_color'" id="'no_icon_color_opt'" inverseAction="true"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Custom Color" t-if="!isActiveItem('no_icon_color_opt')">
+        <BuilderColorPicker styleAction="'color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.fa'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Background Color">
+        <BuilderColorPicker styleAction="'background-color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.fa'"/>
+    </BuilderRow>
+</t>
+
+</templates>

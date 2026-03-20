@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_editor.edit_floor_properties">
+        <div class="fs-4 fw-bold mb-2 mt-3">Name</div>
+        <input class="form-control form-control-lg" t-att-value="floor.name"
+               t-on-input="updateFloorName"/>
+        <div class="fs-4 fw-bold mb-2 mt-3">Background</div>
+        <div class="d-flex flex-wrap gap-2 pt-1">
+            <t t-foreach="getBackgroundColors()" t-as="color" t-key="color.key">
+                <button class="rounded-circle o_fp_color_item"
+                        t-att-class="{'selected': floor.bgColor  === color.key}"
+                        t-attf-style="background-color: {{this.getColorValue(color)}}"
+                        t-on-click='()=>this.selectBackgroundColor(color.key)'/>
+            </t>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-2" t-if="!floor.bgImage">
+            <t t-foreach="getBackgroundPatterns()" t-as="pattern" t-key="pattern.id">
+                <button class="rounded-circle o_fp_color_item"
+                        t-att-class="{'selected': floor.bgColor  === pattern.id}"
+                        t-attf-style="{{pattern.previewCss}}"
+                        t-on-click='()=>this.selectBackgroundColor(pattern.id)'/>
+            </t>
+
+        </div>
+        <t t-if="floor.hasBgOpacity()">
+            <div class="d-flex justify-content-between mt-3 mb-2 fs-5">
+                <span>Transparency</span>
+                <span t-out="getBgColorTransparency()"/>
+            </div>
+            <input min="0" max="90" class="w-100" type="range"
+                   t-att-value="getBgColorTransparency()"
+                   t-on-input="(e)=>this.updateBgColorOpacity(e)"
+                   t-on-change="(e)=>this.commitBgColorOpacity(e)"/>
+        </t>
+        <t t-if="!floor.bgImage">
+            <button class="btn btn-outline-secondary fs-4 w-100 text-center mt-4" t-on-click="()=>this.addBackgroundImage()">Set a Background Image</button>
+            <div class="mt-2" t-out="getResolutionMessage()"/>
+        </t>
+        <t t-else="">
+            <button class="btn btn-outline-secondary fs-4 w-100 text-center mt-4" t-on-click="()=>this.removeBackgroundImage()">Remove Background Image</button>
+        </t>
+
+        <t t-if="canBeDelete()">
+            <div class="border-bottom border-color mt-4"/>
+            <button class="btn btn-outline-danger fs-4 w-100 text-center mt-4" t-on-click="()=>this.deleteFloor()">Delete Floor</button>
+        </t>
+
+    </t>
+</templates>

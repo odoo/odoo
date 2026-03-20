@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_edit_project_inherit_form_sale_project_margin" model="ir.ui.view">
+        <field name="name">project.project.view.inherit.sale.project.margin</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_project.view_edit_project_inherit_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_actual_margin']" position="after">
+                <t groups="sales_team.group_sale_salesman_all_leads">
+                    <button class="oe_stat_button" name="action_projected_margin" type="object" groups="project.group_project_manager" context="{'active_id': id}" invisible="is_template or not allow_billable">
+                        <i class="fa fa-fw o_button_icon fa-dollar text-success" invisible="projected_margin &lt; 0" title="On Track"/>
+                        <i class="fa fa-fw o_button_icon fa-dollar text-danger" invisible="projected_margin &gt;= 0" title="Off Track"/>
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Projected Margin</span>
+                            <field name="projected_margin" class="o_stat_value" widget="float" options="{'digits': [1, 0]}"/>
+                        </div>
+                    </button>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

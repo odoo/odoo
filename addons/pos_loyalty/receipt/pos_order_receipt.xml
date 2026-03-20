@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_loyalty.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="before">
+                <table t-if="extra_data.get('loyalties')" class="w-100 mt-2">
+                    <tbody>
+                        <t t-foreach="extra_data['loyalties']" t-as="loyalty">
+                            <tr>
+                                <td class="text-start pb-1" style="width: 40%;">
+                                    <span t-out="loyalty['name']"/>
+                                </td>
+                                <td class="pb-1 text-end" style="width: 60%;">
+                                    <t t-if="loyalty.get('barcode_base64')">
+                                        <img t-att-src="loyalty['barcode_base64']" class="img-fluid" style="transform: translateX(13%);"/>
+                                    </t>
+                                    <div>
+                                        <t t-out="loyalty['type']"/> <t t-out="loyalty['points']"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo>

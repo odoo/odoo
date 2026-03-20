@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AccordionOption">
+    <BuilderRow label.translate="Items">
+        <BuilderButton
+            type="'success'"
+            action="'addItem'"
+            actionParam="'.accordion > .accordion-item:last-of-type'"
+            preview="false">
+            Add New
+        </BuilderButton>
+    </BuilderRow>
+
+    <BuilderContext applyTo="':scope > .accordion'">
+        <BuilderRow label.translate="Style" >
+            <BuilderSelect>
+                <BuilderSelectItem id="'accordion_style_boxed_opt'" title.translate="Boxed" classAction="''">Boxed</BuilderSelectItem>
+                <BuilderSelectItem  title.translate="Highlight Active" classAction="'s_accordion_highlight'">Highlight Active</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Hide Borders" level="1" t-if="this.isActiveItem('accordion_style_boxed_opt')">
+            <BuilderCheckbox classAction="'accordion-flush'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Round Corners" level="1">
+            <BuilderNumberInput applyTo="':scope > .accordion-item'" styleAction="'--accordion-border-radius'" unit="'px'" min="0" composable="true"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Icons">
+            <BuilderSelect action="'customAccordionIcon'">
+                <BuilderSelectItem title.translate="Default" classAction="''" actionValue="''">Default</BuilderSelectItem>
+                <BuilderSelectItem title.translate="Side / bottom" classAction="'o_icons_side_to_bottom'" actionValue="''">Side / bottom</BuilderSelectItem>
+                <BuilderSelectItem title.translate="Plus / minus" classAction="'o_custom_icons o_icons_plus_to_minus'" actionValue="'plusToMinus'">Plus / minus</BuilderSelectItem>
+                <BuilderSelectItem title.translate="Custom" classAction="'o_custom_icons'" actionValue="'custom'" actionParam="{ selectIcons: true }" id="'accordion_icons_custom_opt'">Custom</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Active" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
+            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: true }" preview="false">
+                <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+            </BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Inactive" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
+            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: false }" preview="false">
+                <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+            </BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Transition" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
+            <BuilderSelect>
+                <BuilderSelectItem title.translate="None" classAction="''">None</BuilderSelectItem>
+                <BuilderSelectItem title.translate="Fade" classAction="'o_transition o_transition_fade'">Fade</BuilderSelectItem>
+                <BuilderSelectItem title.translate="Scale" classAction="'o_transition o_transition_scale'">Scale</BuilderSelectItem>
+                <BuilderSelectItem title.translate="Translate" classAction="'o_transition o_transition_translate'">Translate</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Position" level="1" applyTo="':scope > .accordion-item > .accordion-header'">
+            <BuilderButtonGroup>
+                <BuilderButton title.translate="Left" classAction="'justify-content-end flex-row-reverse o_icons_position_reversed'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+                <BuilderButton title.translate="Right" classAction="'justify-content-between'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="website.AccordionItemOption">
+    <BuilderRow label.translate="Colors">
+        <!-- TODO add data-select-color-combination="" data-with-combinations="selectColorCombination" data-prevent-important="true" ?-->
+        <BuilderColorPicker styleAction="'background-color'" />
+    </BuilderRow>
+</t>
+
+</templates>

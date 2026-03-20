@@ -1,0 +1,52 @@
+.orderline {
+    border-top: $border-width solid transparent;
+    border-bottom: $border-width solid transparent;
+    transition: $transition-base;
+
+    &:hover {
+        background-color: $o-gray-200;
+    }
+    
+    @media (hover: none) {
+        &:hover {
+            background-color: $white;
+        }
+    }
+
+    &.selected {
+        background-color: var(--orderline-selected, #{$o-component-active-bg});
+    }
+
+    &.has-change::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        width: 6px;
+        background-color: $o-brand-primary;
+    }
+
+    &.has-change:first-child::before, &.has-change:not(.has-change + .has-change)::before {
+        /* First has-change*/
+        top: 0;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
+
+    &.has-change:not(:has(+ .has-change))::before, &.has-change:has(+ .orderline-combo)::before{
+        /* Last has-change*/
+        bottom: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+}
+
+
+.orderline-combo {
+    &.has-change::before {
+        left: -3px;
+    }
+    &.has-change:not(:has(+ .has-change))::before{
+        border-radius: 3px;
+    }
+}

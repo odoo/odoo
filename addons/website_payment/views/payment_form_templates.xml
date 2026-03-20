@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="website_payment.payment_form" inherit_id="payment.form">
+        <xpath expr="//div[@id='o_payment_form_options']" position="before">
+            <div class="mb-3" t-if="is_donation">
+                <t t-call="website_payment.donation_information"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_payment.website_payment_donation_form">
+        <div class="container-fluid">
+            <form id="o_donation_field_form" class="o_mark_required" data-model_name="res.partner"
+                hide-change-model="true" data-mark="*">
+                <div class="s_website_form_rows row w-100 s_col_no_bgcolor">
+                    <div data-name="Field"
+                        t-attf-class="s_website_form_field s_website_form_model_required mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name"
+                        data-type="char">
+                        <label class="s_website_form_label" for="name">
+                            <span class="s_website_form_label_content">Name</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <input id="partner_name" type="text" name="name" data-fill-with="name"
+                            t-attf-class="form-control s_website_form_input #{error.get('name') and 'is-invalid' or ''}" />
+                        <div class="invalid-feedback">
+                            Please provide a name.
+                        </div>
+                    </div>
+                    <div data-name="Field"
+                        t-attf-class="s_website_form_field s_website_form_model_required mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6"
+                        id="div_email" data-type="char">
+                        <label class="s_website_form_label" for="email">
+                            <span class="s_website_form_label_content">Email</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <input id="partner_email" type="email" name="email" data-fill-with="email"
+                            t-attf-class="form-control s_website_form_input #{error.get('email') and 'is-invalid' or ''}" />
+                        <div class="invalid-feedback">
+                            Please enter a valid email address.
+                        </div>
+                    </div>
+                    <t t-set="country_id" t-value="partner_details.get('country_id')" />
+                    <div data-name="Field"
+                        t-attf-class="s_website_form_field s_website_form_model_required mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country"
+                        data-type="many2one">
+                        <label class="s_website_form_label" for="country_id">
+                            <span class="s_website_form_label_content">Country</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <select id="partner_country_id" name="country_id"
+                            t-attf-class="form-select s_website_form_input #{error.get('country_id') and 'is-invalid' or ''}"
+                            required="1">
+                            <option t-foreach="countries" t-as="c" t-att-value="c.id" t-out="c.name"
+                                t-att-selected="c.id == (country_id or -1)" />
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <template id="website_payment.donation_page_layout" name="Donation page layout">
+        <t t-set="page_title">Donation</t>
+        <t t-set="additional_title"><t t-out="page_title"/></t>
+        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+            <div class="wrap">
+                <div class="oe_structure" id="oe_structure_website_payment_donation_1"/>
+                <div class="container mb-3">
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Payment page -->
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div t-if="not amount" class="alert alert-info">
+                                There is nothing to pay.
+                            </div>
+                            <div t-elif="not currency" class="alert alert-warning">
+                                <strong>Warning</strong> The currency is missing or incorrect.
+                            </div>
+                            <div t-else="">
+                                <t t-if="is_donation">
+                                    <h1 class="o_page_header mt16 mb4 h3-fs">Donation</h1>
+                                </t>
+                                <t t-call="payment.form"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_payment_donation_2"/>
+            </div>
+        </t>
+    </template>
+
+    <!--
+        Display of /donation/pay
+
+        Donation payment page extension.
+        This template exists as a separate inherited template to make the
+        donation form section editable in the website editor.
+
+        The donation form section uses `t-ignore="true"`, which only works
+        correctly when applied from an inherited template. Defining this
+        logic directly in the base layout would prevent the section from
+        being properly editable and manageable in the website builder.
+    -->
+    <template id="website_payment.donation_pay" inherit_id="website_payment.donation_page_layout" name="Donation payment">
+        <xpath expr="//t[@t-if='is_donation']//h1" position="after">
+            <div class="mb-3" t-ignore="true">
+                <section class="s_website_form mb-3 oe_unmovable oe_unremovable o_no_save o_no_content_width_option o_no_scroll_button o_no_background_option" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                    <t t-call="website_payment.website_payment_donation_form"/>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_payment.donation_information" name="Donation Information">
+        <div class="row">
+            <div class="mb-3 col-lg-12 o_donation_payment_form">
+                <div class="col-lg-6 px-0">
+                    <label class="col-form-label fw-bold">Amount (<t t-out="currency.symbol"/>)</label>
+                    <t t-set="donation_layout" t-value="donation_options.get('customAmount')"/>
+                    <t t-set="prefilled_options" t-value="donation_options.get('prefilledOptions')"/>
+                    <t t-if="prefilled_options">
+                        <t t-foreach="donation_amounts" t-as="donation_amount">
+                            <div class="form-check my-2">
+                                <t t-set="is_checked" t-value="float(amount) == float(donation_amount)"/>
+                                <t t-set="has_checked" t-value="has_checked or is_checked"/>
+                                <input name="o_donation_amount"
+                                       class="form-check-input"
+                                       type="radio"
+                                       t-attf-id="amount_#{donation_amount_index}"
+                                       t-att-value="donation_amount"
+                                       t-att-checked="is_checked or None"
+                                />
+                                <label class="form-check-label mt-0" t-attf-for="amount_#{donation_amount_index}">
+                                    <t t-out="float(donation_amount)" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <span t-if="donation_options.get('descriptions')" class="text-muted fst-italic ms-1">
+                                        - <t t-out="donation_descriptions[donation_amount_index]"/>
+                                    </span>
+                                </label>
+                            </div>
+                        </t>
+                        <div t-attf-class="form-check my-2 #{not donation_layout and 'd-none' or ''}">
+                            <input class="form-check-input" type="radio" id="other_amount" name="amount"
+                                t-att-value="amount" t-att-checked="not has_checked or None"/>
+                            <label class="form-check-label mt-0 d-block" for="other_amount"/>
+                            <t t-call="website_payment.donation_input" amount="not has_checked and amount or ''"/>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call="website_payment.donation_input"/>
+                    </t>
+                </div>
+                <div class="col-lg-12 px-0">
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" value="" id="donation_comment_checkbox"/>
+                        <label class="form-check-label" for="donation_comment_checkbox">Write us a comment</label>
+                    </div>
+                    <textarea class="form-control d-none mt-2" id="donation_comment" placeholder="Your comment"/>
+                </div>
+            </div>
+            <input type="hidden" name="donation_recipient_email" t-att-value="donation_options.get('donationEmail')"/>
+            <div class="w-100"/>
+        </div>
+        <h3 class="o_page_header mt16 mb4">Payment Details</h3>
+    </template>
+
+    <template id="website_payment.donation_input" name="Donation input">
+        <input name="o_donation_amount"
+               type="number"
+               class="form-control o_amount_input"
+               t-att-min="donation_options.get('minimumAmount')"
+               t-att-max="donation_options.get('customAmount') == 'slider' and donation_options.get('maximumAmount') or undefined"
+               t-att-value="amount"
+               placeholder="Amount to donate"
+               id="other_amount_value"
+        />
+        <small class="text-danger d-none" id="warning_message_id">Please enter the amount to donate.</small>
+        <small class="text-danger d-none" id="warning_min_message_id">
+            <t t-if="donation_options.get('minimumAmount')">
+                The minimum donation amount is
+                <t t-set="amount" t-value="donation_options.get('minimumAmount')"/>
+                <t t-set="before" t-value="currency.symbol if currency.position == 'before' else ''"/>
+                <t t-set="after" t-value="currency.symbol if currency.position != 'before' else ''"/>
+                <t t-out="'%s%s%s.' % (before, amount, after)"/>
+            </t>
+            <t t-else="">
+                Enter a valid number!
+            </t>
+        </small>
+    </template>
+
+</odoo>

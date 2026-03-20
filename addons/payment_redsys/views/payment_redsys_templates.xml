@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="Ds_MerchantParameters" t-att-value="merchant_parameters"/>
+            <input type="hidden" name="Ds_Signature" t-att-value="signature"/>
+            <input type="hidden" name="Ds_SignatureVersion" t-att-value="signature_version"/>
+        </form>
+    </template>
+
+</odoo>

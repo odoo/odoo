@@ -1,0 +1,308 @@
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
+import { getContent } from "../_helpers/selection";
+import { execCommand } from "../_helpers/userCommands";
+import { simulateArrowKeyPress } from "../_helpers/user_actions";
+import { animationFrame, keyDown, keyUp, press, click, tick } from "@odoo/hoot-dom";
+import { unformat } from "../_helpers/format";
+
+async function insertSeparator(editor) {
+    execCommand(editor, "insertSeparator");
+}
+
+describe("insert separator", () => {
+    test("should insert a separator inside editable with contenteditable set to false", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfter: "<hr><p>[]<br></p>",
+        });
+    });
+
+    test("should insert a separator inside editable with contenteditable set to false before the block", async () => {
+        await testEditor({
+            contentBefore: "<p>[]abc<br></p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p>[]abc<br></p>`,
+            contentAfter: "<hr><p>[]abc<br></p>",
+        });
+    });
+
+    test("should insert a separator before current element if empty", async () => {
+        await testEditor({
+            contentBefore: "<p>content</p><p>[]<br></p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<p>content</p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfter: "<p>content</p><hr><p>[]<br></p>",
+        });
+    });
+
+    test("should insert a separator after current element if it contains text", async () => {
+        await testEditor({
+            contentBefore: "<p>content</p><p>text[]</p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<p>content</p><p>text</p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfter: "<p>content</p><p>text</p><hr><p>[]<br></p>",
+        });
+    });
+
+    test("should insert a separator before current empty paragraph related element but remain inside the div", async () => {
+        await testEditor({
+            contentBefore: "<div><p>[]<br></p></div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div><hr><p>[]<br></p></div>",
+        });
+    });
+
+    test("should insert a separator after current paragraph related element containing text but remain inside the div", async () => {
+        await testEditor({
+            contentBefore: "<div><p>content[]</p></div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div><p>content</p><hr><p>[]<br></p></div>",
+        });
+    });
+
+    describe("list", () => {
+        test("insert separator after list when cursor is inside list item", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc[]</li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter: "<ul><li>abc</li></ul><hr><p>[]<br></p>",
+            });
+        });
+        test("insert separator after list when cursor is inside an empty list item", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>[]<br></li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter: "<ul><li><br></li></ul><hr><p>[]<br></p>",
+            });
+        });
+        test("insert separator after list when cursor is inside an empty list item (2)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc</li><li>[]<br></li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter: "<ul><li>abc</li><li><br></li></ul><hr><p>[]<br></p>",
+            });
+        });
+        test("split list and insert separator after list when cursor is in middle list item", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc</li><li>[]<br></li><li>def</li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter:
+                    "<ul><li>abc</li><li><br></li></ul><hr><p>[]<br></p><ul><li>def</li></ul>",
+            });
+        });
+        test("split list and insert separator after list when cursor is in middle list item (2)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc</li><li>def[]</li><li>ghi</li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter:
+                    "<ul><li>abc</li><li>def</li></ul><hr><p>[]<br></p><ul><li>ghi</li></ul>",
+            });
+        });
+        test("split list and insert separator after list when cursor is in nested list item", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>B[]</li>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>D</li>
+                    </ul>
+                `),
+                stepFunction: insertSeparator,
+                contentAfter: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>B</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr>
+                    <p>[]<br></p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>D</li>
+                    </ul>
+                `),
+            });
+        });
+        test("split list and insert separator after list when cursor is in nested list item (2)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li>
+                                    <p>B[]</p>
+                                    <ul>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                                <li>D</li>
+                            </ul>
+                        </li>
+                        <li>E</li>
+                    </ul>
+                `),
+                stepFunction: insertSeparator,
+                contentAfter: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li>
+                                    <p>B</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr>
+                    <p>[]<br></p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                                <li>D</li>
+                            </ul>
+                        </li>
+                        <li>E</li>
+                    </ul>
+                `),
+            });
+        });
+        test("should insert a separator inside a table that is wrapped in li", async () => {
+            await testEditor({
+                contentBefore:
+                    "<ul><li>ab</li><li><br><table><tbody><tr><td><p>cd[]</p></td></tr></tbody></table></li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter:
+                    "<ul><li>ab</li><li><br><table><tbody><tr><td><p>cd</p><hr><p>[]<br></p></td></tr></tbody></table></li></ul>",
+            });
+        });
+    });
+
+    test("should insert a separator before a empty p element inside a table cell", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td><p>[]<br></p></td></tr></tbody></table>",
+            stepFunction: insertSeparator,
+            contentAfter: "<table><tbody><tr><td><hr><p>[]<br></p></td></tr></tbody></table>",
+        });
+    });
+
+    test("should insert a separator after a p element containing text inside a table cell", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td><p>content[]</p></td></tr></tbody></table>",
+            stepFunction: insertSeparator,
+            contentAfter:
+                "<table><tbody><tr><td><p>content</p><hr><p>[]<br></p></td></tr></tbody></table>",
+        });
+    });
+
+    test("should insert a seperator before a empty block node", async () => {
+        await testEditor({
+            contentBefore: "<div>[]<br></div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<hr><div>[]<br></div>",
+        });
+    });
+
+    test("should insert a seperator after a block node containing text", async () => {
+        await testEditor({
+            contentBefore: "<div>content[]</div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div>content</div><hr><p>[]<br></p>",
+        });
+    });
+
+    test("should split text node when inserting a separator in the middle", async () => {
+        await testEditor({
+            contentBefore: "<div>abc[]def</div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div>abc</div><hr><div>[]def</div>",
+        });
+    });
+
+    test("should set the contenteditable attribute to false on the separator when inserted as a child after normalization", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
+        const div = editor.document.createElement("div");
+        const separator = editor.document.createElement("hr");
+        div.append(separator);
+        el.append(div);
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div><p data-selection-placeholder=""><br></p>`
+        );
+    });
+
+    test("should split text node and apply custom selection on separator when selected", async () => {
+        const { el, editor } = await setupEditor("<p>abc</p><p>x[]yz</p>");
+        await insertSeparator(editor);
+        expect(getContent(el)).toBe(`<p>abc</p><p>x</p><hr contenteditable="false"><p>[]yz</p>`);
+
+        await keyDown("Shift");
+        await press("ArrowUp");
+        await keyUp("Shift");
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            `<p>abc</p><p>x]</p><hr contenteditable="false" class="o_selected_hr"><p>[yz</p>`
+        );
+    });
+
+    test("should remove custom selection on separator when not selected", async () => {
+        const { el, editor } = await setupEditor(
+            '<p>[abc</p><hr contenteditable="false"><p>xyz]</p>'
+        );
+        expect(getContent(el)).toBe(
+            `<p>[abc</p><hr contenteditable="false" class="o_selected_hr"><p>xyz]</p>`
+        );
+
+        simulateArrowKeyPress(editor, ["Shift", "ArrowUp"]);
+        await animationFrame();
+
+        expect(getContent(el)).toBe(`<p>[abc]</p><hr contenteditable="false"><p>xyz</p>`);
+    });
+
+    test("should remove custom selection on separator when click outside of editor", async () => {
+        const { el } = await setupEditor('<p>[abc</p><hr contenteditable="false"><p>xyz]</p>');
+        expect(getContent(el)).toBe(
+            `<p>[abc</p><hr contenteditable="false" class="o_selected_hr"><p>xyz]</p>`
+        );
+
+        const selection = document.getSelection();
+        await click(document.body);
+        selection.setPosition(document.body);
+        await tick();
+
+        expect(getContent(el)).toBe(`<p>abc</p><hr contenteditable="false"><p>xyz</p>`);
+    });
+});

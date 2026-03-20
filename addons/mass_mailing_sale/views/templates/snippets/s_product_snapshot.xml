@@ -1,0 +1,101 @@
+<odoo>
+    <template id="s_product_columns">
+        <section class="s_mail_block_event o_mail_snippet_general">
+            <div class="container">
+                <div class="row align-items-stretch">
+                    <t t-foreach="[1,2,3]" t-as="key">
+                        <div class="col-md-4 col-12 s_record_snapshot pt16 pb16"
+                            data-model="product.template" data-fragment-key="columns"
+                            style="padding-left: 16px !important; padding-right: 16px !important;">
+                            <div class="card rounded h-100">
+                                <div class="o_not_editable">
+                                    <img class="img img-fluid o_editable_media rounded mx-auto" alt="Example Image" style="object-fit: cover; width: 100%;
+                                        --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                                        t-attf-src="/website_sale/static/src/img/product_previews/product_{{key}}.jpg"
+                                        t-attf-data-original-src="/website_sale/static/src/img/product_previews/product_{{key}}.jpg"/>
+                                </div>
+                                <div class="card-body" aria-label="Product information">
+                                    <h3 class="card-title text-break">Select the products you want to display!</h3>
+                                    <p><font style="color: rgb(108, 117, 125)">Click on this block, then select products using the panel on the right.</font></p>
+                                    <h3 aria-label="Price information">
+                                        <strong>$20</strong>
+                                        <span class="h4-fs">
+                                            <s>
+                                                <font style="color: rgb(108, 117, 125)">$25</font>
+                                            </s>
+                                        </span>
+                                    </h3>
+                                    <p>
+                                        <a class="btn btn-primary" href="#" target="_blank" role="button"><i class="fa fa-cart"/> Buy Now</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_product_card">
+        <section class="s_text_image o_mail_snippet_general pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" data-model="product.template" data-fragment-key="card">
+                <div>
+                    <div class="o_not_editable">
+                        <img class="img img-fluid o_editable_media rounded mx-auto" style="width: 65%;
+                            --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                            src="/website_sale/static/src/img/product_previews/product_1.jpg" alt="Example Image"
+                            data-original-src="/website_sale/static/src/img/product_previews/product_1.jpg"/>
+                    </div>
+                    <div class="text-center pt8">
+                        <h3 class="text-break">Select the products you want to display!</h3>
+                        <p><font style="color: rgb(108, 117, 125)">Click on this block, then select products using the panel on the right.</font></p>
+                        <h3 aria-label="Price information">
+                            <strong>$20</strong>
+                            <span class="h4-fs">
+                                <s>
+                                    <font style="color: rgb(108, 117, 125)">$25</font>
+                                </s>
+                            </span>
+                        </h3>
+                        <p>
+                            <a class="btn btn-primary" href="#" target="_blank" role="button"><i class="fa fa-cart"/> Buy Now</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_product_aside">
+        <section class="s_text_image o_mail_snippet_general o_colored_level pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" contenteditable="true" data-model="product.template" data-fragment-key="aside">
+                <div class="row align-items-center">
+                    <div class="col-md-6 col-12">
+                        <div class="o_not_editable">
+                            <img class="img img-fluid o_editable_media rounded mx-auto" data-name="Example Image" style="object-fit: cover; width: 100%;
+                                --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                                src="/website_sale/static/src/img/product_previews/product_2.jpg"
+                                data-original-src="/website_sale/static/src/img/product_previews/product_2.jpg"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <h3 class="text-break">Select the products you want to display!</h3>
+                        <p><font style="color: rgb(108, 117, 125)">Click on this block, then select products using the panel on the right.</font></p>
+                        <h3 aria-label="Price information">
+                            <strong>$20</strong>
+                            <span class="h4-fs">
+                                <s>
+                                    <font style="color: rgb(108, 117, 125)">$25</font>
+                                </s>
+                            </span>
+                        </h3>
+                        <p>
+                            <a class="btn btn-primary" href="#" target="_blank" role="button"><i class="fa fa-cart"/> Buy Now</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

@@ -1,0 +1,302 @@
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+
+export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
+    let trigger = `.o_fp_canvas .o_fp_table${withClass}`;
+    if (withoutClass) {
+        trigger += `:not(${withoutClass})`;
+    }
+    if (name) {
+        trigger += `:has(.label:contains("${name}"))`;
+    }
+    return {
+        content: `Check table with attributes: ${JSON.stringify(arguments[0])}`,
+        trigger,
+        run: typeof run === "string" ? run : (helpers) => run(helpers, trigger),
+    };
+}
+export const clickTable = (name) => table({ name, run: "click" });
+export const hasTable = (name) => table({ name });
+export const selectedTableIs = (name) => table({ name, withClass: ".selected" });
+export const ctrlClickTable = (name) =>
+    table({
+        name,
+        run: (helpers, trigger) => {
+            helpers
+                .queryOne(trigger)
+                .dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
+        },
+    });
+export const addTable = ({ shape = "Square", name, close = true }) => {
+    const steps = [
+        {
+            content: `add table`,
+            trigger: `.o_fp_edit_toolbar button:contains('Add Table')`,
+            run: "click",
+        },
+        {
+            trigger: `.o_fp_table_format_popover button:contains('${shape}')`,
+            run: "click",
+        },
+    ];
+
+    if (name) {
+        steps.push(
+            {
+                content: `rename table to ${name}`,
+                trigger: `.o_fp_action_menu button.o_edit`,
+                run: "click",
+            },
+            {
+                content: `enter table name ${name}`,
+                trigger: `.o_fp_edit_menu div:contains('Table Number') + input[type='number']`,
+                run: `edit ${name}`,
+            }
+        );
+    }
+    if (close) {
+        steps.push({
+            content: `close edit menu`,
+            trigger: `.o_fp_edit_menu button.btn-close`,
+            run: "click",
+        });
+    }
+    return steps;
+};
+export function clickFloor(name) {
+    return [
+        {
+            content: `click '${name}' floor`,
+            trigger: `.floor-selector .button-floor:contains("${name}")`,
+            run: "click",
+        },
+    ];
+}
+export function hasFloor(name) {
+    return [
+        {
+            content: `has '${name}' floor`,
+            trigger: `.floor-selector .button-floor:contains("${name}")`,
+        },
+    ];
+}
+export function hasNotFloor(name) {
+    return [
+        {
+            content: `has not '${name}' floor`,
+            trigger: negate(`.floor-selector .button-floor:contains("${name}")`),
+        },
+    ];
+}
+export function selectFloorEditMode(name) {
+    return [
+        {
+            content: `select '${name}' floor in edit mode`,
+            trigger: `.o_fp_edit_toolbar .toolbar-floor-selector`,
+            run: "click",
+        },
+        {
+            content: `click '${name}' floor`,
+            trigger: `.toolbar-floor-selector-item:contains("${name}")`,
+            run: "click",
+        },
+    ];
+}
+export function openFloorProperties(name) {
+    const steps = [];
+
+    if (name) {
+        steps.push(...selectFloorEditMode(name));
+    }
+
+    steps.push({
+        content: "open floor properties",
+        trigger: `.o_fp_edit_toolbar button[title='Edit Floor']`,
+        run: "click",
+    });
+    return steps;
+}
+export function deleteFloor(name) {
+    return [
+        ...openFloorProperties(name),
+        {
+            content: "delete floor",
+            trigger: `.o_fp_edit_menu button:contains('Delete Floor')`,
+            run: "click",
+        },
+        Dialog.confirm("Delete"),
+    ];
+}
+export function clickEditButton(button) {
+    return [
+        {
+            content: "add table",
+            trigger: `.edit-buttons i[aria-label="${button}"]`,
+            run: "click",
+        },
+    ];
+}
+export function clickSaveEditButton() {
+    return [
+        {
+            content: "Save changes",
+            trigger: '.o_fp_edit_navbar button:contains("Save")',
+            run: "click",
+        },
+    ];
+}
+export function clickTableSelectorButton() {
+    return [
+        {
+            content: "click on table selector button",
+            trigger: ".floor-screen .right-buttons button i.fa-hashtag",
+            run: "click",
+        },
+    ];
+}
+export function goTo(name) {
+    return [
+        ...clickTableSelectorButton(),
+        ...Numpad.enterValue(name),
+        {
+            trigger: ".floor-screen .jump-button",
+            run: "click",
+        },
+    ];
+}
+export function selectedFloorIs(name) {
+    return [
+        {
+            content: `selected floor is '${name}'`,
+            trigger: `.button-floor.active:contains("${name}")`,
+        },
+    ];
+}
+export function orderCountSyncedInTableIs(table, count) {
+    if (count === 0 || count === "0") {
+        return [
+            {
+                trigger: `.floor-map .table:has(.label:contains("${table}")):not(:has(.order-count))`,
+            },
+        ];
+    }
+    return [
+        {
+            trigger: `.floor-map .table:has(.label:contains("${table}")):has(.order-count:contains("${count}"))`,
+        },
+    ];
+}
+export function isShown() {
+    return [
+        {
+            trigger: ".floor-map",
+        },
+    ];
+}
+
+const LINK_DND_DELAY = 500;
+
+export function linkTables(child, parent) {
+    async function drag_multiple_and_then_drop(helpers, ...drags) {
+        const dragEffectDelay = async () => {
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await new Promise((resolve) => setTimeout(resolve, helpers.delay));
+        };
+        const element = helpers.anchor;
+        const { drag } = odoo.loader.modules.get("@odoo/hoot-dom");
+        const { drop, moveTo } = await drag(element);
+        await dragEffectDelay();
+        await helpers.hover(element, {
+            position: {
+                top: 20,
+                left: 20,
+            },
+            relative: true,
+        });
+        await dragEffectDelay();
+        for (const [selector, options] of drags) {
+            const target = await helpers.waitFor(selector, {
+                visible: true,
+                timeout: 500,
+            });
+            await moveTo(target, options);
+            await dragEffectDelay();
+        }
+        await drop();
+        await dragEffectDelay();
+    }
+    return {
+        content: `Drag table ${child} onto table ${parent} in order to link them`,
+        trigger: table({ name: child }).trigger,
+        async run(helpers) {
+            const oldDelay = helpers.delay;
+            helpers.delay = LINK_DND_DELAY;
+            await drag_multiple_and_then_drop(
+                helpers,
+                [
+                    table({ name: parent }).trigger,
+                    {
+                        position: "top",
+                        relative: true,
+                    },
+                ],
+                [
+                    table({ name: parent }).trigger,
+                    {
+                        position: "center",
+                        relative: true,
+                    },
+                ]
+            );
+            helpers.delay = oldDelay;
+        },
+    };
+}
+export function unlinkTables(child, parent) {
+    return {
+        content: `Drag table ${child} away from table ${parent} to unlink them`,
+        trigger: table({ name: child }).trigger,
+        async run(helpers) {
+            const oldDelay = helpers.delay;
+            helpers.delay = LINK_DND_DELAY;
+            await helpers.drag_and_drop(`div.floor-map`, {
+                position: {
+                    bottom: 0,
+                },
+                relative: true,
+            });
+            helpers.delay = oldDelay;
+        },
+    };
+}
+export function isChildTable(child) {
+    return {
+        content: `Verify that table ${child} is a child table`,
+        trigger: table({ name: child }).trigger + ` .opacity-50`,
+    };
+}
+export function clickNewOrder() {
+    return { trigger: ".new-order", run: "click" };
+}
+
+export function addFloor(floorName) {
+    return [
+        {
+            trigger: ".o_fp_edit_toolbar .toolbar-floor-selector",
+            run: "click",
+        },
+        {
+            trigger: ".toolbar-floor-selector-item:contains('Add Floor')",
+            run: "click",
+        },
+        {
+            trigger: ".modal-body textarea",
+            run: `edit ${floorName}`,
+        },
+        {
+            trigger: ".modal-footer button.btn-primary",
+            run: "click",
+        },
+    ];
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.HeaderElementsOption">
+    <div class="options-container-header d-flex align-items-center mt-3">
+        <span class="options-container-label ps-2 py-2">Show/Hide Elements</span>
+    </div>
+
+    <BuilderRow label.translate="Visuals" action="'websiteConfig'">
+        <BuilderButton
+            title.translate="Company Logo"
+            className="'flex-grow-1'"
+            actionParam="websiteLogoParams"
+            iconImg="'/website/static/src/img/snippets_options/header_extra_element_logo.svg'"
+        />
+        <BuilderButton
+            title.translate="Text Elements (e.g. phone number)"
+            className="'flex-grow-1'"
+            actionParam="{
+                views: ['website.header_text_element'],
+                resetViewArch: true,
+            }"
+            iconImg="'/website/static/src/img/snippets_options/header_extra_element_text.svg'"
+        />
+        <BuilderButton
+            title.translate="Social Links"
+            className="'flex-grow-1'"
+            actionParam="{
+                views: ['website.header_social_links'],
+                resetViewArch: true,
+            }"
+            iconImg="'/website/static/src/img/snippets_options/header_extra_element_social.svg'"
+        />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Actions" action="'websiteConfig'">
+        <BuilderButton
+            title.translate="Search Bar"
+            className="'fa fa-search flex-grow-1'"
+            actionParam="{
+                views: ['website.header_search_box'],
+                resetViewArch: true,
+            }"
+        />
+        <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
+        <BuilderButton t-if="language_ids.length > 1"
+            title.translate="Language Selector"
+            className="'fa fa-flag flex-grow-1'"
+            actionParam="{
+                views: ['website.header_language_selector'],
+                resetViewArch: true,
+            }"
+        />
+        <BuilderButton
+            title.translate="Sign In"
+            className="'fa fa-sign-in flex-grow-1'"
+            actionParam="{
+                views: ['portal.user_sign_in'],
+                resetViewArch: true,
+            }"
+        />
+        <BuilderButton
+            title.translate="Header Button"
+            className="'flex-grow-1'"
+            actionParam="{
+                views: ['website.header_call_to_action'],
+                resetViewArch: true,
+            }"
+            iconImg="'/website/static/src/img/snippets_options/header_extra_element_cta.svg'"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

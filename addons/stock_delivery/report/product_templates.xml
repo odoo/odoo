@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="normal_zpl_label" inherit_id="stock.normal_zpl_label">
+        <xpath expr="//t[@t-if='price_included']" position="after">
+            <t t-if="product.hs_code">
+^FO35, 220 ^A0N,15^FDHS:<t t-out="product.hs_code"/>^FS
+            </t>
+        </xpath>
+    </template>
+    <template id="alternative_zpl_label" inherit_id="stock.alternative_zpl_label">
+        <xpath expr="//t[@t-if='price_included']" position="after">
+            <t t-if="product.hs_code">
+^FO35, 180 ^A0N,15^FDHS:<t t-out="product.hs_code"/>^FS
+            </t>
+        </xpath>
+    </template>
+</odoo>

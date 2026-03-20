@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrdersHistoryPage">
+        <div class="d-flex flex-column h-100 o_self_background overflow-hidden">
+             <div class="d-flex flex-column overflow-y-auto h-100">
+               <div class="container my-auto o_self_container py-3" style="max-width: 660px">
+                <h1 t-if="orders.length > 0" class="mb-3">My Orders</h1>
+                <t t-foreach="orders" t-as="order" t-key="order.access_token">
+                    <div class="o_so_order mx-auto d-flex flex-column mb-2 mb-md-3 bg-white rounded-4 shadow-sm p-3">
+                        <div class="o_so_order_header pb-2" t-on-click="() => this.editOrder(order)">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex flex-column">
+                                    <h4 class="mb-1" t-esc="order.pos_reference"/>
+                                    <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="order.date_order.toFormat('dd/MM/yyyy')" /></span>
+                                </div>
+                                <div class="d-flex justify-content-around gap-1 align-items-center">
+                                    <div t-if="selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" t-on-click="() => this.selfOrder.downloadReceipt(order)">
+                                        <i  class="fa fa-download" aria-hidden="true" />
+                                    </div>
+                                    <span class="badge py-2 rounded-pill text-capitalize"
+                                        t-att-class="{
+                                            'text-bg-success': order.state === 'paid',
+                                            'text-bg-primary': order.state !== 'paid'
+                                        }"
+                                        t-esc="getOrderState(order.state)"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_so_order_body pt-3 border-top">
+                            <div
+                                t-foreach="order.lines"
+                                t-as="line"
+                                t-key="line.uuid"
+                                class="o_self_order_item_card position-relative d-flex align-items-start w-100 mb-2"
+                                >
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} ">
+                                        <t t-set="lineName" t-value="getNameAndDescription(line)" />
+                                        <div class="fw-bold mb-0 o_self_product_name" t-esc="lineName.productName" />
+                                        <div t-if="line.qty">
+                                            <span class="small" t-esc="`${line.qty}x `" />
+                                            <span class="flex-grow-1 me-3 small text-muted" t-esc="selfOrder.formatMonetary(getPrice(line) / line.qty)"/>
+                                        </div>
+                                        <span
+                                            t-if="lineName.attributes"
+                                            class="m-0 text-muted small break-line"
+                                            t-esc="lineName.attributes"
+                                            />
+                                        <t t-set="comboParent" t-value="line.combo_parent_id" />
+                                        <div t-if="comboParent" class="info ms-2 combo-parent-name">
+                                            <i class="fa fa-th-large me-2" role="img" aria-label="Combo" title="Combo"/>
+                                            <t t-esc="line.combo_parent_id.product_id.name" />
+                                        </div>
+                                        <div t-if="line.customer_note" class="d-inline-block m-0 text-muted small break-line">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true" />
+                                            <span t-esc="line.customer_note" class="customer_note ms-1" />
+                                        </div>
+                                    </div>
+                                    <span t-attf-class="card-text line_price o-so-tabular-nums"
+                                        t-esc="selfOrder.formatMonetary(getPrice(line))"/>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2">
+                                <div class="ms-auto border-top">
+                                    <table class="table table-sm table-borderless mb-0 py-3">
+                                        <tbody>
+                                            <tr class="text-end">
+                                                <th class="pt-2 pb-0 pe-0">Total:</th>
+                                                <th class="pt-2 pb-0 pe-0 o-so-tabular-nums" t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_total)"/>
+                                                 <span t-else="" class="spinner-border"/>
+                                            </tr>
+                                             <tr class="text-end text-muted">
+                                                <th class="py-0 pe-0 fw-normal">Tax:</th>
+                                                <th class="py-0 pe-0 fw-normal o-so-tabular-nums" t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_tax)"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <div t-if="orders.length === 0" class="d-flex justify-content-center mt-3">
+                    <div>No order found</div>
+                </div>
+               </div>
+             </div>
+
+            <div class="o_self_footer bg-white border-top py-3">
+                <div class="container o_self_container ">
+                  <button  class="btn btn-lg btn-secondary" t-on-click="back">
+                      <i class="oi oi-chevron-left d-md-none" />
+                      <span class="d-none d-md-inline">Back</span>
+                  </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

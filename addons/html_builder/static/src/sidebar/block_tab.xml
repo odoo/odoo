@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BlockTab">
+    <t t-set="disabledGroupTooltip">No block of this category can be dropped on this page.</t>
+    <t t-set="disabledBlockTooltip">This block cannot be dropped anywhere on this page.</t>
+    <div class="o_block_tab"
+         t-att-class="{'o_we_ongoing_insertion': this.state.ongoingInsertion}"
+         t-ref="block-tab"
+         role="tabpanel"
+         aria-labelledby="blocks-tab">
+        <div t-if="this.snippetModel.snippetGroups.length" class="o_snippets_container" id="snippet_groups">
+            <div class="o_snippets_container_body o_snippets_container_body_row_cols_2">
+                <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
+                    <Snippet snippet="snippet"
+                             snippetModel="this.snippetModel"
+                             onClickHandler="() => this.onSnippetGroupClick(snippet)"
+                             disabledTooltip="disabledGroupTooltip"/>
+                </t>
+            </div>
+        </div>
+
+        <t t-if="this.snippetModel.hasCustomInnerContents">
+            <div class="o_snippets_container" id="snippet_custom_content">
+                <div class="o_snippets_container_header"><span>Custom Inner Content</span></div>
+                <div class="o_snippets_container_body">
+                    <t t-foreach="this.snippetModel.snippetCustomInnerContents" t-as="snippet" t-key="snippet.id">
+                        <CustomInnerSnippet snippet="snippet"
+                                            snippetModel="this.snippetModel"
+                                            onClickHandler.bind="showSnippetTooltip"
+                                            disabledTooltip="disabledBlockTooltip"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+
+        <div t-if="this.snippetModel.snippetInnerContents.length"
+            class="o_snippets_container" id="snippet_content">
+            <div class="o_snippets_container_header"><span>Inner Content</span></div>
+            <div class="o_snippets_container_body">
+                <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
+                    <Snippet snippet="snippet"
+                             snippetModel="this.snippetModel"
+                             onClickHandler.bind="showSnippetTooltip"
+                             disabledTooltip="disabledBlockTooltip"/>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

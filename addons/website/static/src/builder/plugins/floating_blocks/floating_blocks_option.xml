@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.FloatingBlocksOption">
+    <BuilderRow label.translate="Cards">
+        <BuilderButton
+            type="'success'"
+            title.translate="Add a new Card"
+            action="'addFloatingBlockCard'"
+            preview="false">
+            Add Card
+        </BuilderButton>
+    </BuilderRow>
+    <hr/>
+    <BuilderRow label.translate="Cards Design">
+            Global options for all inner cards.
+    </BuilderRow>
+    <!-- Apply global cards options to ".s_floating_blocks_wrapper".
+    Each Card will inherit these values in CSS -->
+    <BuilderRow label.translate="Roundness" level="1"
+        tooltip.translate="Applies to all cards">
+        <BuilderRange
+            applyTo="'.s_floating_blocks_wrapper'"
+            action="'floatingBlocksRoundness'"
+            max="5"
+            displayRangeValue="false"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Shadows" level="1"
+        tooltip.translate="Applies to all cards">
+        <BuilderCheckbox
+            applyTo="'.s_floating_blocks_wrapper'"
+            classAction="'s_floating_blocks_wrapper_shadow'"
+            preview="false"/>
+        </BuilderRow>
+</t>
+
+<t t-name="website.FloatingBlocksBlockOption">
+    <AddElementOption applyTo="'.o_grid_mode'"/>
+    <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
+</t>
+
+<t t-name="website.FloatingBlocksBlockMobileOption">
+    <BuilderRow label.translate="Vert. Alignment" tooltip.translate="Vertical Alignment" t-if="state.isMobileView">
+        <BuilderButtonGroup>
+            <BuilderButton title.translate="Align Top" classAction="'align-self-start'"
+                    iconImg="'/html_builder/static/img/snippets_options/align_solo_top.svg'"/>
+            <BuilderButton title.translate="Align Middle" classAction="'align-self-center'"
+                    iconImg="'/html_builder/static/img/snippets_options/align_solo_middle.svg'"/>
+            <BuilderButton title.translate="Align Bottom" classAction="'align-self-end'"
+                    iconImg="'/html_builder/static/img/snippets_options/align_solo_bottom.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-name="website.s_floating_blocks.new_card">
+    <section data-name="Card" class="s_floating_blocks_block s_col_no_resize position-sticky d-flex py-5 o_cc o_cc1">
+        <div class="container-fluid align-self-end">
+            <div class="s_floating_blocks_block_grid row mx-0 o_grid_mode" data-row-count="8">
+                <div class="o_grid_item g-height-4 g-col-lg-8 col-lg-8 order-lg-0" style="z-index: 1; grid-area: 1 / 1 / 5 / 9;">
+                    <p class="lead">A great subtitle</p>
+                    <h2 class="display-4-fs">Card Title</h2>
+                </div>
+
+                <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="z-index: 2; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; grid-area: 7 / 1 / 9 / 5;">
+                    <a href="#" title="" role="button" class="btn btn-lg btn-secondary">Button</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</t>
+
+</templates>

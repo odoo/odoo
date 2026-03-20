@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_replenish_form_inherit_stock" model="ir.ui.view">
+        <field name="name">product.replenish.form.inherit.stock</field>
+        <field name="model">product.replenish</field>
+        <field name="inherit_id" ref="stock.view_product_replenish"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='route_id']" position="after">
+                <field name="partner_id"
+                    required="show_vendor"
+                    invisible="not show_vendor"
+                    context="{'product_id': product_id, 'highlight_supplier': 1}"
+                    options="{'no_open': 1, 'no_create': 0, 'no_quick_create':1}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.InstallModuleDialog">
+    <WebsiteDialog close="props.close"
+        title="props.title"
+        primaryTitle="installButtonTitle"
+        primaryClick="() => this.onClickInstall()">
+        <t t-esc="props.installationText"/>
+    </WebsiteDialog>
+</t>
+
+</templates>

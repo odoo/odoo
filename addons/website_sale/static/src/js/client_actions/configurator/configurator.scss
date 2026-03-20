@@ -1,0 +1,21 @@
+.o_configurator_container .o_wsale_configurator_screen.o_configurator_screen {
+    .theme_preview {
+        --ConfiguratorPreview-height: auto;
+
+        img {
+            border: $border-width solid $border-color;
+        }
+
+        &:hover, :focus {
+            img {
+                border-color: inherit;
+            }
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        .theme_preview {
+            --ConfiguratorPreview-height: auto;
+        }
+    }
+}

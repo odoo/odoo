@@ -1,0 +1,14 @@
+.o_account_dashboard_kanban_view {
+    .o_drop_area {
+        background-color: $o-view-background-color;
+        border: 1px dashed $border-color;
+        &.drag_to_card {
+            border-color: $o-brand-primary;
+            background-color: mix($o-brand-primary, $o-view-background-color, 15%);
+        }
+    }
+}
+  
+span:where(:has(.file_upload_kanban_action_a)) {
+    @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.EmojisCharField" t-inherit="web.CharField" t-inherit-mode="primary">
+        <xpath expr="//span[1]" position="attributes">
+            <attribute name="t-ref">targetReadonlyElement</attribute>
+        </xpath>
+        <xpath expr="//*[hasclass('o_field_input_buttons')]/button" position="before">
+            <t t-call="mail.EmojisFieldButton">
+                <t t-set="positionCenter" t-value="true"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

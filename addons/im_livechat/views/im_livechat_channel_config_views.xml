@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="im_livechat_channel_config_view_kanban" model="ir.ui.view">
+            <field name="name">im_livechat.channel.kanban</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="action"/>
+                </xpath>
+                <xpath expr="//t[@t-name='menu']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_config_action" model="ir.actions.act_window">
+            <field name="name">Live Chat Channels</field>
+            <field name="res_model">im_livechat.channel</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" ref="im_livechat_channel_config_view_kanban"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Define a new website live chat channel
+              </p><p>
+                You can create channels for each website on which you want
+                to integrate the website live chat widget, allowing your website
+                visitors to talk in real time with your operators.
+              </p>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_config_action_list" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="im_livechat_channel_view_list"/>
+            <field name="act_window_id" ref="im_livechat_channel_config_action"/>
+        </record>
+
+        <record id="im_livechat_channel_config_action_kanban" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="im_livechat_channel_config_view_kanban"/>
+            <field name="act_window_id" ref="im_livechat_channel_config_action"/>
+        </record>
+
+        <menuitem
+            id="livechat_channels_config"
+            name="Live Chat Channels"
+            parent="livechat_config"
+            action="im_livechat_channel_config_action"
+            groups="im_livechat_group_manager"
+            sequence="10"
+        />
+    </data>
+</odoo>

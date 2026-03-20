@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_event_exhibitor.EventPageFilterOption">
+    <BuilderRow label.translate="Top Bar Filter" action="'websiteConfig'">
+        <BuilderButton actionParam="{views: ['website_event_exhibitor.exhibitors_topbar_sponsorship']}">Sponsorship</BuilderButton>
+        <BuilderButton actionParam="{views: ['website_event_exhibitor.exhibitors_topbar_country']}">Countries</BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="website_event_exhibitor.EventPageOption">
+    <BuilderRow label.translate="Sponsors">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_event_exhibitor.event_sponsor']}"/>
+    </BuilderRow>
+</t>
+
+
+</templates>
+

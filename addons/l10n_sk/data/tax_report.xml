@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  To ensure the best readability for users, the lines are split into two columns: base and VAT. 
+  For example, in the UI, code 01 is displayed with its description and its value in the "base"
+column. 
+  The corresponding VAT, code 02, its value is shown in the "VAT" column.
+
+  As a result in the code: when summing up tax due in code 17, for the value of code 02, I refer to
+line 1 (sk_01) and its VAT label, 
+  because line 1 consists of a base (01) and a VAT (02), and so on for the other lines. 
+-->
+<odoo>
+    <record id="l10n_sk_vat_report" model="account.report">
+        <field name="name">Slovakia VAT Return (DPHv25)</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="country_id" ref="base.sk" />
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_sk_base_report_column" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@sk">Základ dane</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_sk_vat_report_column" model="account.report.column">
+                <field name="name">VAT</field>
+                <field name="name@sk">Daň</field>
+                <field name="expression_label">vat</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="sk_ops_out" model="account.report.line">
+                <field name="name">I. Outgoing Operations (Sales)</field>
+                <field name="name@sk">I. Odchádzajúce operácie (Predaj)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_ops_out_dom_sale" model="account.report.line">
+                        <field name="name">1. Domestic Sales</field>
+                        <field name="name@sk">1. Domáci predaj</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_ops_out_dom_sale_01_02" model="account.report.line">
+                                <field name="name">01 - Supply of goods and services, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">01 - Dodanie tovarov a služieb, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_01</field>
+                                <field name="expression_ids">
+                                    <record id="sk_ops_out_dom_sale_01_02_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-01</field>
+                                    </record>
+                                    <record id="sk_ops_out_dom_sale_01_02_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-02</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_ops_out_dom_sale_01a_02a" model="account.report.line">
+                                <field name="name">01a - Supply of goods and services, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">01a - Dodanie tovarov a služieb, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_01a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_ops_out_dom_sale_01a_02a_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-01a</field>
+                                    </record>
+                                    <record id="sk_ops_out_dom_sale_01a_02a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-02a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_ops_out_dom_sale_03_04" model="account.report.line">
+                                <field name="name">03 - Supply of goods and services, basic VAT</field>
+                                <field name="name@sk">03 - Dodanie tovarov a služieb, základná DPH</field>
+                                <field name="code">sk_03</field>
+                                <field name="expression_ids">
+                                    <record id="sk_ops_out_dom_sale_03_04_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-03</field>
+                                    </record>
+                                    <record id="sk_ops_out_dom_sale_03_04_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-04</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_ops_in" model="account.report.line">
+                <field name="name">II. Incoming Operations (Domestic Acquisitions)</field>
+                <field name="name@sk">II. Prichádzajúce operácie (domáce akvizície)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_ops_in_purchase" model="account.report.line">
+                        <field name="name">1. Purchases in Slovakia (VAT due by recipient)</field>
+                        <field name="name@sk">1. Nákupy na Slovensku (DPH dlžná od príjemcu)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_ops_in_purchase_05_06" model="account.report.line">
+                                <field name="name">05 - Acquisition of goods within the country, reduced VAT (§27 para. 2)</field>
+                                <field name="name@sk">05 - Nadobudnutie tovaru v tuzemsku, znížená DPH (§27 ods. 2)</field>
+                                <field name="code">sk_05</field>
+                                <field name="expression_ids">
+                                    <record id="sk_ops_in_purchase_05_06_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">05</field>
+                                    </record>
+                                    <record id="sk_ops_in_purchase_05_06_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-06</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_ops_in_purchase_05a_06a" model="account.report.line">
+                                <field name="name">05a - Acquisition of goods within the country, reduced VAT (§27 para. 3)</field>
+                                <field name="name@sk">05a - Nadobudnutie tovaru v tuzemsku, znížená DPH (§27 ods. 3)</field>
+                                <field name="code">sk_05a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_ops_in_purchase_05a_06a_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">05a</field>
+                                    </record>
+                                    <record id="sk_ops_in_purchase_05a_06a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-06a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_ops_in_purchase_07_08" model="account.report.line">
+                                <field name="name">07 - Acquisition of goods within the country, basic VAT</field>
+                                <field name="name@sk">07 - Nadobudnutie tovaru v tuzemsku, základná DPH</field>
+                                <field name="code">sk_07</field>
+                                <field name="expression_ids">
+                                    <record id="sk_ops_in_purchase_07_08_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">07</field>
+                                    </record>
+                                    <record id="sk_ops_in_purchase_07_08_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-08</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_rev_charge" model="account.report.line">
+                <field name="name">III. Reverse Charge Operations</field>
+                <field name="name@sk">III. Operácie prenesenia daňovej povinnosti</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_rev_charge_supplier" model="account.report.line">
+                        <field name="name">1. Reverse charge from supplier (non-EU or under §69)</field>
+                        <field name="name@sk">1. Prenesenie daňovej povinnosti od dodávateľa (mimo EÚ alebo podľa §69)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_rev_charge_supplier_09_10" model="account.report.line">
+                                <field name="name">09 - Goods or services with VAT paid by recipient, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">09 - Tovar alebo služby s DPH zaplatenou príjemcom, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_09</field>
+                                <field name="expression_ids">
+                                    <record id="sk_rev_charge_supplier_09_10_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">09</field>
+                                    </record>
+                                    <record id="sk_rev_charge_supplier_09_10_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-10</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_rev_charge_supplier_09a_10a" model="account.report.line">
+                                <field name="name">09a - Goods or services with VAT paid by recipient, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">09a - Tovar alebo služby s DPH zaplatenou príjemcom, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_09a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_rev_charge_supplier_09a_10a_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">09a</field>
+                                    </record>
+                                    <record id="sk_rev_charge_supplier_09a_10a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-10a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_rev_charge_supplier_09b_10b" model="account.report.line">
+                                <field name="name">09b - Goods or services with VAT paid by recipient, basic VAT</field>
+                                <field name="name@sk">09b - Tovar alebo služby s DPH zaplatenou príjemcom, základná DPH</field>
+                                <field name="code">sk_09b</field>
+                                <field name="expression_ids">
+                                    <record id="sk_rev_charge_supplier_09b_10b_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">09b</field>
+                                    </record>
+                                    <record id="sk_rev_charge_supplier_09b_10b_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-10b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_imp" model="account.report.line">
+                <field name="name">IV. Import of Goods</field>
+                <field name="name@sk">IV. Dovoz tovaru</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_imp_standard" model="account.report.line">
+                        <field name="name">1. Goods where second customer pays VAT</field>
+                        <field name="name@sk">1. Tovar pri ktorom DPH platí druhý zákazník</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_imp_standard_11_12" model="account.report.line">
+                                <field name="name">11 - Goods with VAT paid by the second customer, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">11 - Tovar s DPH zaplatenou druhým odberateľom, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_11</field>
+                                <field name="expression_ids">
+                                    <record id="sk_imp_standard_11_12_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11</field>
+                                    </record>
+                                    <record id="sk_imp_standard_11_12_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_imp_standard_11a_12a" model="account.report.line">
+                                <field name="name">11a - Goods with VAT paid by the second customer, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">11a - Tovar s DPH zaplatenou druhým odberateľom, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_11a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_imp_standard_11a_12a_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11a</field>
+                                    </record>
+                                    <record id="sk_imp_standard_11a_12a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_imp_standard_11b_12b" model="account.report.line">
+                                <field name="name">11b - Goods with VAT paid by the second customer, basic VAT</field>
+                                <field name="name@sk">11b - Tovar s DPH zaplatenou druhým zákazníkom, základná DPH</field>
+                                <field name="code">sk_11b</field>
+                                <field name="expression_ids">
+                                    <record id="sk_imp_standard_11b_12b_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11b</field>
+                                    </record>
+                                    <record id="sk_imp_standard_11b_12b_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_imp_postponed" model="account.report.line">
+                        <field name="name">2. Postponed Accounting (§84a) - VAT self-declared</field>
+                        <field name="name@sk">2. Odložené účtovníctvo (§84a) - DPH priznané osobne</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_imp_postponed_11c_12c" model="account.report.line">
+                                <field name="name">11c - Import of goods to the country, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">11c - Dovoz tovaru do tuzemska, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_11c</field>
+                                <field name="expression_ids">
+                                    <record id="sk_imp_postponed_11c_12c_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11c</field>
+                                    </record>
+                                    <record id="sk_imp_postponed_11c_12c_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12c</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_imp_postponed_11d_12d" model="account.report.line">
+                                <field name="name">11d - Import of goods to the country, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">11d - Dovoz tovaru do tuzemska, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_11d</field>
+                                <field name="expression_ids">
+                                    <record id="sk_imp_postponed_11d_12d_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11d</field>
+                                    </record>
+                                    <record id="sk_imp_postponed_11d_12d_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12d</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_imp_postponed_11e_12e" model="account.report.line">
+                                <field name="name">11e - Import of goods to the country, basic VAT</field>
+                                <field name="name@sk">11e - Dovoz tovaru do krajiny, základná DPH</field>
+                                <field name="code">sk_11e</field>
+                                <field name="expression_ids">
+                                    <record id="sk_imp_postponed_11e_12e_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11e</field>
+                                    </record>
+                                    <record id="sk_imp_postponed_11e_12e_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-12e</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_vat_exempt" model="account.report.line">
+                <field name="name">V. VAT Exempt Operations</field>
+                <field name="name@sk">V. Operácie oslobodené od DPH</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_vat_exempt_total_13" model="account.report.line">
+                        <field name="name">Total - Supply of goods and services, acquisition of goods (Lines 13, 14, 15)</field>
+                        <field name="name@sk">Celkom - Dodávky tovaru a služieb, nákup tovaru (riadky 13, 14, 15)</field>
+                        <field name="code">sk_total_13</field>
+                        <field name="expression_ids">
+                            <record id="sk_vat_exempt_total_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_13.base + sk_14.base + sk_15.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_vat_exempt_13" model="account.report.line">
+                        <field name="name">13 - Supply of goods and services, acquisition of goods (§ 84a para. 3)</field>
+                        <field name="name@sk">13 - Dodanie tovarov a služieb, nadobudnutie tovaru (§ 84a ods. 3)</field>
+                        <field name="code">sk_13</field>
+                        <field name="expression_ids">
+                            <record id="sk_vat_exempt_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_vat_exempt_14" model="account.report.line">
+                        <field name="name">14 - Supply of goods and services, acquisition of goods (§ 43 para. 1, 4)</field>
+                        <field name="name@sk">14 - Dodanie tovarov a služieb, nadobudnutie tovarov (§ 43 ods. 1, 4)</field>
+                        <field name="code">sk_14</field>
+                        <field name="expression_ids">
+                            <record id="sk_vat_exempt_14_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_vat_exempt_15" model="account.report.line">
+                        <field name="name">15 - Supply of goods and services, acquisition of goods (§ 46,47,48 para. 8)</field>
+                        <field name="name@sk">15 - Dodanie tovarov a služieb, nadobudnutie tovaru (§ 46, 47, 48 ods. 8)</field>
+                        <field name="code">sk_15</field>
+                        <field name="expression_ids">
+                            <record id="sk_vat_exempt_15_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_vat_exempt_16" model="account.report.line">
+                        <field name="name">16 - VAT according to special regulations (§ 48ca para. 2, 48d para. 15, 48e para. 3, 6, 8)</field>
+                        <field name="name@sk">16 - DPH podľa osobitných predpisov (§ 48ca ods. 2, 48d ods. 15, 48e ods. 3, 6, 8)</field>
+                        <field name="code">sk_16</field>
+                        <field name="expression_ids">
+                            <record id="sk_vat_exempt_16_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-16</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_total" model="account.report.line">
+                <field name="name">VI. Total VAT</field>
+                <field name="name@sk">VI. Celková DPH</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_total_17" model="account.report.line">
+                        <field name="name">17 - Total VAT</field>
+                        <field name="name@sk">17 - Daň celkom</field>
+                        <field name="code">sk_17</field>
+                        <field name="aggregation_formula"></field>
+                        <field name="expression_ids">
+                            <record id="sk_total_17_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_01.vat + sk_01a.vat + sk_03.vat + sk_05.vat
+                                    + sk_05a.vat + sk_07.vat + sk_09.vat + sk_09a.vat + sk_09b.vat +
+                                    sk_11.vat + sk_11a.vat + sk_11b.vat + sk_11c.vat + sk_11d.vat +
+                                    sk_11e.vat + sk_16.vat</field>
+                                <field name="subformula">round(2)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_deductible" model="account.report.line">
+                <field name="name">VII. Deductible VAT (Input Tax)</field>
+                <field name="name@sk">VII. Odpočítateľná DPH (daň na vstupe)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_deductible_total" model="account.report.line">
+                        <field name="name">Total - Deductions (general, specific, custom, postponed)</field>
+                        <field name="name@sk">Celkom - Odpočty (všeobecné, konkrétne, colné, odložené)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_deductible_total_18" model="account.report.line">
+                                <field name="name">Total VAT deduction, reduced VAT (§ 27 para. 2) (Lines 18, 20, 22, 23a)</field>
+                                <field name="name@sk">Celkový odpočet DPH, znížená DPH (§ 27 ods. 2) (riadky 18, 20, 22, 23a)</field>
+                                <field name="code">sk_18_total</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_total_18_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">sk_18.vat + sk_20.vat + sk_22.vat + sk_23a.vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_total_18a" model="account.report.line">
+                                <field name="name">Total VAT deduction, reduced VAT reduced VAT (§ 27 para. 3) (Lines 18a, 20a, 22a, 23b)</field>
+                                <field name="name@sk">Celkový odpočet DPH, znížená DPH (§ 27 ods. 3) (riadky 18a, 20a, 22a, 23b)</field>
+                                <field name="code">sk_18a_total</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_total_18a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">sk_18a.vat + sk_20a.vat + sk_22a.vat + sk_23b.vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_total_19" model="account.report.line">
+                                <field name="name">Total VAT deduction, basic VAT (Lines 19, 21, 23, 23c)</field>
+                                <field name="name@sk">Celkový odpočet DPH, základná DPH (riadky 19, 21, 23, 23c)</field>
+                                <field name="code">sk_19_total</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_total_19_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">sk_19.vat + sk_21.vat + sk_23.vat + sk_23c.vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_deductible_general" model="account.report.line">
+                        <field name="name">1. General Deductions (§49 to 52 and §54 to 54d)</field>
+                        <field name="name@sk">1. Všeobecné zrážky (§49 až 52 a §54 až 54d)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_deductible_general_18" model="account.report.line">
+                                <field name="name">18 - Total VAT deduction, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">18 - Celkový odpočet DPH, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_18</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_general_18_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_general_18a" model="account.report.line">
+                                <field name="name">18a - Total VAT deduction, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">18a - Celkový odpočet DPH, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_18a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_general_18a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">18a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_general_19" model="account.report.line">
+                                <field name="name">19 - Total VAT deduction, basic VAT</field>
+                                <field name="name@sk">19 - Celkový odpočet DPH, základná DPH</field>
+                                <field name="code">sk_19</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_general_19_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">19</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_deductible_specific" model="account.report.line">
+                        <field name="name">2. Specific Deductions (§51 para. 1 letter a)</field>
+                        <field name="name@sk">2. Konkrétne zrážky (§51 ods. 1 písm. a)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_deductible_specific_20" model="account.report.line">
+                                <field name="name">20 - Total VAT deduction, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">20 - Celkový odpočet DPH, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_20</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_specific_20_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">20</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_specific_20a" model="account.report.line">
+                                <field name="name">20a - Total VAT deduction, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">20a - Celkový odpočet DPH, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_20a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_specific_20a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">20a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_specific_21" model="account.report.line">
+                                <field name="name">21 - Total VAT deduction, basic VAT</field>
+                                <field name="name@sk">21 - Celkový odpočet DPH, základná DPH</field>
+                                <field name="code">sk_21</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_specific_21_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">21</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_deductible_customs" model="account.report.line">
+                        <field name="name">3. Customs VAT (Paid to customs office) (§51 para. 1 letter d)</field>
+                        <field name="name@sk">3. Colná DPH (zaplatená colnému úradu) (§51 ods. 1 písm. d)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_deductible_customs_22" model="account.report.line">
+                                <field name="name">22 - VAT paid to customs authority on imported, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">22 - DPH zaplatená colnému orgánu z dovezeného tovaru, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_22</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_customs_22_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">22</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_customs_22a" model="account.report.line">
+                                <field name="name">22a - VAT paid to customs authority on imported, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">22a - DPH zaplatená colnému orgánu z dovezeného tovaru, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_22a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_customs_22a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">22a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_customs_23" model="account.report.line">
+                                <field name="name">23 - VAT paid to customs authority on imported, basic VAT</field>
+                                <field name="name@sk">23 - DPH zaplatená colnému orgánu z dovozu, základná DPH</field>
+                                <field name="code">sk_23</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_customs_23_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">23</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_deductible_postponed" model="account.report.line">
+                        <field name="name">4. Postponed VAT accounting (§84a para. 3) (§51 para. 1 letter d)</field>
+                        <field name="name@sk">4. Odložené zúčtovanie DPH (§84a ods. 3) (§51 ods. 1 písm. d)</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="sk_deductible_postponed_23a" model="account.report.line">
+                                <field name="name">23a - VAT applied by payer, reduced VAT (§ 27 para. 2)</field>
+                                <field name="name@sk">23a - DPH uplatnená platiteľom, znížená DPH (§ 27 ods. 2)</field>
+                                <field name="code">sk_23a</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_postponed_23a_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">23a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_postponed_23b" model="account.report.line">
+                                <field name="name">23b - VAT applied by payer, reduced VAT (§ 27 para. 3)</field>
+                                <field name="name@sk">23b - DPH uplatnená platiteľom, znížená DPH (§ 27 ods. 3)</field>
+                                <field name="code">sk_23b</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_postponed_23b_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">23b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_deductible_postponed_23c" model="account.report.line">
+                                <field name="name">23c - VAT applied by payer, basic VAT</field>
+                                <field name="name@sk">23c - DPH uplatnená platiteľom, základná DPH</field>
+                                <field name="code">sk_23c</field>
+                                <field name="expression_ids">
+                                    <record id="sk_deductible_postponed_23c_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">23c</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_adjustments" model="account.report.line">
+                <field name="name">VIII. Adjustments and Corrections</field>
+                <field name="name@sk">VIII. Úpravy a opravy</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_adjustments_24_25" model="account.report.line">
+                        <field name="name">24 - Difference in VAT base and VAT (§25 para. 1-3, §65)</field>
+                        <field name="name@sk">24 - Rozdiel medzi základom DPH a DPH (§25 ods. 1-3, §65)</field>
+                        <field name="code">sk_24</field>
+                        <field name="expression_ids">
+                            <record id="sk_adjustments_24_25_tags_refund" model="account.report.expression">
+                                <field name="label">tags_refund</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24_PR</field>
+                            </record>
+                            <record id="sk_adjustments_24_25_tags_base" model="account.report.expression">
+                                <field name="label">tags_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-24</field>
+                            </record>
+                            <record id="sk_adjustments_24_25_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_24.tags_refund + sk_24.tags_base</field>
+                            </record>
+                            <record id="sk_adjustments_24_25_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-25</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_adjustments_26_27" model="account.report.line">
+                        <field name="name">26 - Difference in VAT base and VAT (§25a)</field>
+                        <field name="name@sk">26 - Rozdiel medzi základom DPH a DPH (§25a)</field>
+                        <field name="code">sk_26</field>
+                        <field name="expression_ids">
+                            <record id="sk_adjustments_26_27_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-26</field>
+                            </record>
+                            <record id="sk_adjustments_26_27_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-27</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_adjustments_28" model="account.report.line">
+                        <field name="name">28 - Correction of deducted VAT (§53 and §53a)</field>
+                        <field name="name@sk">28 - Oprava odpočítanej DPH (§53 a §53a)</field>
+                        <field name="code">sk_28</field>
+                        <field name="expression_ids">
+                            <record id="sk_adjustments_28_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">28</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_adjustments_29" model="account.report.line">
+                        <field name="name">29 - Correction of deducted VAT (§53b)</field>
+                        <field name="name@sk">29 - Oprava odpočítanej DPH (§53b)</field>
+                        <field name="code">sk_29</field>
+                        <field name="expression_ids">
+                            <record id="sk_adjustments_29_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">29</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_additional_ops" model="account.report.line">
+                <field name="name">IX. Additional Operations</field>
+                <field name="name@sk">IX. Doplnkové operácie</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_additional_ops_30" model="account.report.line">
+                        <field name="name">30 - VAT deduction upon taxpayer registration (§55)</field>
+                        <field name="name@sk">30 - Odpočet DPH pri registrácii daňovníka (§55)</field>
+                        <field name="code">sk_30</field>
+                        <field name="expression_ids">
+                            <record id="sk_additional_ops_30_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_additional_ops_31" model="account.report.line">
+                        <field name="name">31 - Refund of VAT to travellers (§60)</field>
+                        <field name="name@sk">31 - Vrátenie DPH cestujúcim (§60)</field>
+                        <field name="code">sk_31</field>
+                        <field name="expression_ids">
+                            <record id="sk_additional_ops_31_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_final" model="account.report.line">
+                <field name="name">X. Final VAT Calculation</field>
+                <field name="name@sk">X. Konečný výpočet DPH</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_final_32" model="account.report.line">
+                        <field name="name">32 - Own VAT liability</field>
+                        <field name="name@sk">32 - Vlastná povinnosť z DPH</field>
+                        <field name="code">sk_32</field>
+                        <field name="aggregation_formula"></field>
+                        <field name="expression_ids">
+                            <record id="sk_final_32_calcul" model="account.report.expression">
+                                <field name="label">calcul</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_17.vat - sk_18_total.vat - sk_18a_total.vat - sk_19_total.vat
+                                    + sk_24.vat + sk_26.vat + sk_28.vat - sk_30.vat - sk_31.vat</field>
+                            </record>
+                            <record id="sk_final_32_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_32.calcul</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_final_33" model="account.report.line">
+                        <field name="name">33 - Excess deduction (§ 79 para. 2)</field>
+                        <field name="name@sk">33 - Nadmerný odpočet (§ 79 ods. 2)</field>
+                        <field name="code">sk_33</field>
+                        <field name="aggregation_formula"></field>
+                        <field name="expression_ids">
+                            <record id="sk_final_33_calcul" model="account.report.expression">
+                                <field name="label">calcul</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_32.calcul</field>
+                                <field name="subformula">if_below(EUR(0))</field>
+                            </record>
+                            <record id="sk_final_33_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-sk_33.calcul</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_final_34" model="account.report.line">
+                        <field name="name">34 - Excess deduction offset against own tax liability (§ 79)</field>
+                        <field name="name@sk">34 - Nadmerný odpočet započítaný oproti vlastnej daňovej povinnosti (§ 79)</field>
+                        <field name="code">sk_34</field>
+                        <field name="expression_ids">
+                            <record id="sk_final_34_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_final_35" model="account.report.line">
+                        <field name="name">35 - Own tax liability to be paid</field>
+                        <field name="name@sk">35 - Vlastná daňová povinnosť na úhradu</field>
+                        <field name="code">sk_35</field>
+                        <field name="aggregation_formula"></field>
+                        <field name="expression_ids">
+                            <record id="sk_final_35_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_32.vat - sk_34.vat</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sk_additional_data" model="account.report.line">
+                <field name="name">XI. Additional Data</field>
+                <field name="name@sk">XI. Doplňujúce údaje</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sk_additional_data_36" model="account.report.line">
+                        <field name="name">36 - Difference from the last known tax liability or excess deduction (+/-)</field>
+                        <field name="name@sk">36 - Rozdiel oproti poslednej známej vlastnej daňovej povinnosti alebo nadmernému odpočtu (+/-)</field>
+                        <field name="code">sk_36</field>
+                        <field name="expression_ids">
+                            <record id="sk_additional_data_36_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sk_additional_data_37" model="account.report.line">
+                        <field name="name">37 - Tax to be paid (+/-)</field>
+                        <field name="name@sk">37 - Daň na úhradu (+/-)</field>
+                        <field name="code">sk_37</field>
+                        <field name="expression_ids">
+                            <record id="sk_additional_data_37_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

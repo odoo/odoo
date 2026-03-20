@@ -1,0 +1,18 @@
+.o_overlay_options {
+    display: flex;
+    align-items: center;
+
+    button {
+        &.fa, &.oi {
+            min-width: min-content;
+        }
+    }
+
+    button.o_move_handle {
+        cursor: move;
+    }
+
+    &:empty {
+        display: none;
+    }
+}

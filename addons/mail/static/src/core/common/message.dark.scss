@@ -1,0 +1,36 @@
+.o-mail-Message.o-card {
+    background-color: mix($gray-100, $gray-200);
+}
+
+.o-mail-Message-actions {
+    --mail-Message-actionIconHoveredColor: white;
+}
+
+.o-mail-Message-author {
+    opacity: 50%;
+}
+
+.o-mail-Message-bubble, .o-mail-Message-bubbleTail {
+    $_bubble_colors_map: (
+        'o-blue': darken($info, 10%),
+        'o-green': darken($success, 2.5%),
+        'o-orange': $warning,
+    );
+
+    @each $_type, $_color in $_bubble_colors_map {
+        &.#{$_type} {
+            $_border-base: mix($_color, $body-color, 75%);
+            $_base_bg: mix($white, $gray-100, 15%);
+            $_base_bg_muted: mix($white, $gray-100, 85%);
+            @if $_type == 'o-orange' {
+                --o-message-bubble-bg: #{mix($_base_bg, $_color, 72.5%)};
+                --o-message-bubble-bg-muted: #{mix($_base_bg_muted, $_color, 82.5%)};
+            } @else {
+                --o-message-bubble-bg: #{mix($_base_bg, $_color, 82.5%)};
+                --o-message-bubble-bg-muted: #{mix($_base_bg_muted, $_color, 82.5%)};
+            }
+            --o-message-bubble-border-color: #{mix($_base_bg, $_border-base, 82.5%)};
+            --o-message-bubble-color-base: #{$_color};
+        }
+    }
+}

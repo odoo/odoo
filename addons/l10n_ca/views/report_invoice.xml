@@ -1,0 +1,13 @@
+<odoo>
+    <template id="l10n_ca_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[hasclass('row')]//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+            <div t-if="o.partner_id.l10n_ca_pst">PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+            <div t-if="o.partner_id.l10n_ca_pst">PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+            <div t-if="o.partner_id.l10n_ca_pst">PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+        </xpath>
+    </template>
+</odoo>

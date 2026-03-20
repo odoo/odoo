@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.hr.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="priority" eval="60" />
+        <field name="arch" type="xml">
+            <button name="action_open_versions" position="before">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
+                        invisible="employee_cars_count == 0">
+                    <field name="employee_cars_count" widget="statinfo" string="Cars History" />
+                </button>
+            </button>
+            <group name="application_group" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <group name="departure_planned_actions_right" position="inside">
+                <label for="departure_do_unassign_company_car" string="Fleet"/>
+                <div class="o_row">
+                    <field name="departure_do_unassign_company_car" nolabel="1"
+                        readonly="departure_apply_date"/>
+                    <span>Unassign Company Car</span>
+                </div>
+            </group>
+        </field>
+    </record>
+
+    <!-- Employee Public -->
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.form.inherit.hr.fleet</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_user"
+                        invisible="employee_cars_count == 0 or not is_user">
+                    <field name="employee_cars_count" widget="statinfo" string="Cars History" />
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

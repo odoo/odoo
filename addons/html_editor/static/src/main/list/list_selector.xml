@@ -1,0 +1,21 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ListSelector">
+        <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false" menuRef="menuRef">
+            <button class="btn btn-light fa fa-list-ul" t-att-title="props.title" name="list_selector"/>
+            <t t-set-slot="content" t-key="props.key.value">
+                <div data-prevent-closing-overlay="true">
+                    <t t-set="activeMode" t-value="getActiveMode()"/>
+                    <t t-foreach="props.getButtons()" t-as="button" t-key="button_index">
+                        <button
+                            t-att-title="button.description"
+                            t-att-name="button.id"
+                            t-attf-class="btn btn-light fa {{button.icon}}"
+                            t-att-class="{ active: activeMode === button.mode }"
+                            t-on-click="button.run"
+                        />
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

@@ -1,0 +1,164 @@
+@mixin sublevel-line($_level-left: 0) {
+    position: absolute;
+    top: var(--o-hb-row-sublevel-top, 0);
+    bottom: 0;
+    left: $_level-left - $o-we-border-width;
+    border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
+    border-width: 0 0 $o-we-border-width $o-we-border-width;
+    pointer-events: none;
+    transform: translate(0, ($o-hb-row-min-height + $o-hb-row-spacing) * -0.5 + $o-we-border-width);
+    content: "";
+}
+
+.hb-row {
+    $_z-index: 4;
+
+    .popover & {
+        --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, #{$o-we-fg-lighter});
+        --o-hb-row-active-bg-color: var(--o-hb-row-active-bg-color-popover, #{mix($o-we-color-accent, $o-we-fg-lighter, 20%)});
+        --o-hb-row-color: var(--o-hb-row-color-popover, #{$o-we-bg-lightest});
+        --o-hb-row-color-active: var(--o-hb-row-color-active-popover, #{$o-we-bg-darkest});
+        --o-hb-row-sublevel-color: var(--o-hb-row-sublevel-color-popover, #{mix($o-we-bg-lighter, $o-we-fg-light)});
+        .hb-row-content:has(button.fa-trash) {
+            align-items: stretch;
+        }
+        .hb-row-label {
+            flex: 0 0 38%;
+            align-self: center;
+        }
+        .hb-row-content {
+            flex: 0 0 62%;
+        }
+    }
+
+    --o-hb-btn-minHeight: #{$o-hb-row-min-height - ($o-hb-row-spacing * 0.5)};
+
+    min-height: $o-hb-row-min-height;
+    padding-top: $o-hb-row-spacing;
+    box-sizing: content-box;
+    align-items: center;
+    color: var(--o-hb-row-color, #{$o-we-fg-dark});
+
+    &[data-disabled] {
+        .hb-row-label {
+            opacity: 0.5;
+        }
+        cursor: not-allowed;
+    }
+
+    .hb-container-subtitle {
+        padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
+    }
+
+    .hb-row-label {
+        min-width: 0;
+        flex: 0 0 44%;
+        z-index: $_z-index;
+        background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
+        padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
+        align-self: baseline;
+    }
+
+    .hb-row-content {
+        --hb-row-content-gap: 2%;
+
+        flex: 0 0 56%;
+        width: 56%;
+        align-items: center;
+        gap: var(--hb-row-content-gap);
+        z-index: $_z-index; // Make sure outlines / shadows are not trimmed.
+    }
+
+    .o_hb_collapse_toggler {
+        position: absolute;
+        padding-left: $o-hb-row-spacing;
+        align-self: baseline;
+        z-index: $_z-index + 1;
+        box-shadow: none;
+        font-size: 1em;
+        color: inherit;
+
+        &.active i {
+            margin-left: -1px;
+        }
+    }
+
+    .icon-sup {
+        position: relative;
+        top: -0.4em;
+        margin-left: 0.2em;
+        font-size: 0.65em;
+    }
+
+    &:has(> div > .o_cc_preview_wrapper) > .o_hb_collapse_toggler {
+        align-self: center;
+    }
+
+    // ==== States
+    &:hover, &.active {
+        .hb-row-content {
+            color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
+        }
+    }
+
+    &:has(.hb-row-content:hover) {
+        color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
+    }
+
+    &:has(.hb-row-label-actionable:hover) .o_hb_collapse_toggler {
+        color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
+    }
+
+    &.active {
+        background-color: var(--o-hb-row-active-bg-color, #{mix($o-we-color-accent, $o-we-bg-dark, 20%)});
+
+        .hb-row-label {
+            background-color: inherit;
+        }
+    }
+
+    // Actionable labels hover states are currently dependant on the
+    // presence of a collapsable icon. Should be improved using states.
+    .o_hb_collapse_toggler:where(:not(.d-none)) + .hb-row-label-actionable:hover {
+        cursor: pointer;
+        color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
+    }
+
+    // ==== Sublevels
+    &.hb-row-sublevel > .hb-row-label::after {
+        @include sublevel-line;
+    }
+
+    // Sublevel specific rules
+    @for $_level from 1 through 3 {
+        $_level-padding: $o-hb-row-padding-left + ($o-hb-row-indent-left * $_level);
+        $_level-width: $o-hb-row-spacing + $o-we-border-width;
+        $_level-left: $_level-padding - $_level-width - $o-we-border-width;
+
+        &.hb-row-sublevel-#{$_level} {
+            .hb-row-label, & > .hb-row-label::after {
+                z-index: $_z-index - $_level;
+            }
+
+            .hb-row-label {
+                padding-left: $_level-padding;
+            }
+
+            & > .hb-row-label::after {
+                width: $_level-width;
+                left: $_level-left - $o-we-border-width;
+            }
+        }
+
+        &[data-label=" "]:not(.hb-row-sublevel):has(+ .hb-row-sublevel-#{$_level})::after {
+            @include sublevel-line($_level-left);
+            z-index: $_z-index - $_level;
+        }
+    }
+
+    & + .hb-collapse-content {
+        overflow: hidden;
+        height: 0; // default collapsed state
+        transition: height 0.35s ease;
+    }
+}

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_peppol_install']" position="replace">
+                <div id="account_peppol" class="col-12 o_setting_box col-lg-6 o_searchable_setting">
+                    <div class="o_setting_right_pane border-0" invisible="account_is_token_out_of_sync">
+                        <!-- Info in case of sender. -->
+                        <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'sender'">
+                            Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                            <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode"/>)
+                            </span>
+                            <br/>
+                            But you are receiving your e-invoices via this Access Point: <field name="peppol_external_provider" class="oe_inline o_form_label" readonly="1"/>.
+                        </div>
+                        <!-- Info in case of receiver/smp_registration. -->
+                        <div invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('receiver', 'smp_registration')">
+                            Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
+                            <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
+                                (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode"/>)
+                            </span>
+                            <div invisible="account_peppol_proxy_state != 'smp_registration'">
+                                Your registration should be activated within a day.
+                            </div>
+                        </div>
+                        <div class="row mt-1"
+                            invisible="peppol_use_parent_company or account_peppol_proxy_state == 'not_registered'">
+                            <label string="Peppol Contact Email"
+                                for="account_peppol_contact_email"
+                                class="col-lg-5 o_light_label"/>
+                            <field name="account_peppol_contact_email"
+                                    required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
+                        </div>
+                        <div class="o_setting_right_pane" id="peppol_participation_role_config" company_dependent="1"
+                            invisible="not peppol_participation_role">
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    <label string="Peppol Participation Role" for="peppol_participation_role"/>
+                                </span>
+                            </div>
+                            <field name="peppol_participation_role" widget="radio"/>
+                        </div>
+                        <!-- Info in case of rejected. -->
+                        <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'rejected'">
+                            You registration has been rejected, the reason has been sent to you via email.
+                            Please contact our support if you need further assistance.
+                        </div>
+                        <!-- Info in case of a branch company using the active peppol connection from their parent. -->
+                        <div invisible="not peppol_use_parent_company">
+                            You are sending from <field name="peppol_parent_company_name" class="oe_inline o_form_label" readonly="1"/>.
+                        </div>
+
+                        <div class="d-flex gap-1 action_buttons mt-2"
+                             invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
+                            <!-- Deprecated button for advanced configuration -->
+                            <button string="Advanced Configuration"
+                                icon="oi-arrow-right"
+                                name="button_open_peppol_config_wizard"
+                                type="object"
+                                class="btn-link"
+                                invisible="True"/>
+                            <button string="Disconnect Peppol"
+                                    name="button_peppol_deregister"
+                                    type="object"
+                                    class="btn-primary me-1"/>
+                        </div>
+                        <div class="d-flex gap-1 action_buttons" colspan="3">
+                            <!-- Not yet registered on Peppol -->
+                            <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'not_registered'">
+                                <div class="text-muted">
+                                    Allow sending and receiving invoices through the Peppol network
+                                </div>
+                                <button name="action_open_peppol_form"
+                                        type="object"
+                                        string="Activate Electronic Invoicing"
+                                        class="oe_highlight mt-2"/>
+                            </div>
+                            <!-- deprecated Registered on Peppol -->
+                            <div invisible="True" class="mt-3">
+                                <button string="Register with Odoo"
+                                        name="button_peppol_register_sender_as_receiver"
+                                        type="object"
+                                        class="btn-primary me-1"
+                                        invisible="account_peppol_proxy_state != 'sender'"/>
+                            </div>
+                            <!--Branch company connected to parent's active peppol connection.-->
+                            <div invisible="not peppol_use_parent_company" class="mt-2">
+                                <button string="Disconnect"
+                                        name="button_peppol_disconnect_branch_from_parent"
+                                        type="object"
+                                        class="btn-secondary me-1"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3" invisible="not account_is_token_out_of_sync">
+                        <div class="content-group">
+                            Your Peppol identification is:
+                            <field name="account_peppol_edi_identification" nolabel="1"/>
+                        </div>
+                        <div class="content-group mt-3 alert alert-danger" role="alert">
+                            <div class="d-flex align-items-start">
+                                <i class="fa fa-exclamation-triangle fa-lg me-3 mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <span><strong>Disconnected from Peppol!</strong></span>
+                                    <p>
+                                        Your database is not linked to Peppol anymore. This might be due to a database duplication or restoration.
+                                        Make sure to reconnect the correct database.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-3 d-flex gap-1">
+                                <button name="button_reconnect_this_database"
+                                    type="object"
+                                    string="Reconnect this database"
+                                    class="btn btn-primary"
+                                    icon="fa-refresh"/>
+                                <button name="button_disconnect_this_database"
+                                    type="object"
+                                    string="Disconnect this database"
+                                    class="btn btn-danger"
+                                    icon="fa-unlink"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <setting
+                    invisible="account_is_token_out_of_sync or peppol_use_parent_company or peppol_participation_role != 'sending_and_receiving'">
+                    <div class="row" name="peppol_journal_config">
+                        <label string="Incoming Accounting Journal"
+                            for="account_peppol_purchase_journal_id"
+                            class="col-lg-5"/>
+                        <field name="account_peppol_purchase_journal_id"
+                            class="col-lg-7"
+                            required="account_peppol_proxy_state in ('smp_registration', 'receiver')
+                                        and peppol_participation_role != 'sending_only'"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

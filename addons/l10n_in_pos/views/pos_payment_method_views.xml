@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_l10n_in_pos" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.l10n.in.pos</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qr_code_method']" position="after">
+                <field name="upi_identifier" required="qr_code_method == 'upi'" invisible="payment_method_type != 'qr_code' or qr_code_method != 'upi'" placeholder="e.g. success@odoo"/>
+                <field name="qr_payment_icon_ids" string="QR Payment Icons" invisible="payment_method_type != 'qr_code' or qr_code_method != 'upi'" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

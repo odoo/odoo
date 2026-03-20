@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_event.ConfirmationPage" t-inherit="pos_self_order.ConfirmationPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_confirmation_block')]" position="inside">
+            <t t-if="confirmedOrder.state == 'paid' and hasEventTicket(confirmedOrder)">
+                <h3 class="text-center m-5">
+                    You will soon receive an email with your ticket details.
+                </h3>
+            </t>
+        </xpath>
+    </t>
+</templates>

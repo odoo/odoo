@@ -1,0 +1,330 @@
+import { ACTION_TAGS } from "@mail/core/common/action";
+import { registerThreadAction } from "@mail/core/common/thread_actions";
+import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
+import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
+import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
+import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
+import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
+import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
+
+import { useChildSubEnv } from "@odoo/owl";
+
+import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
+
+registerThreadAction("pinned-messages", {
+    actionPanelComponent: PinnedMessagesPanel,
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
+    actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
+    condition: ({ channel, owner }) =>
+        channel &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
+    icon: "fa fa-fw fa-thumb-tack",
+    name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
+    sequence: 20,
+    sequenceGroup: 10,
+    setup() {
+        useChildSubEnv({
+            pinMenu: {
+                open: () => this.actionPanelOpen(),
+                close: () => {
+                    if (this.isActive) {
+                        this.actionPanelClose();
+                    }
+                },
+            },
+        });
+    },
+});
+registerThreadAction("add-to-favorites", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    condition: ({ channel, store, owner }) =>
+        store.self_user?.share === false &&
+        channel &&
+        channel.self_member_id &&
+        !channel.self_member_id.is_favorite &&
+        !owner.isDiscussContent,
+    icon: "fa fa-fw fa-star",
+    name: _t("Add to Favorites"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     * @param {import("models").Store} param0.store
+     */
+    onSelected: async ({ channel, store }) => {
+        store.fetchStoreData(
+            "/discuss/channel/favorite",
+            { channel_id: channel.id, is_favorite: true },
+            { readonly: false, silent: false }
+        );
+    },
+    sequence: 40,
+    sequenceGroup: 20,
+});
+registerThreadAction("remove-from-favorites", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    condition: ({ channel, owner }) =>
+        channel?.self_member_id?.is_favorite && !owner.isDiscussContent,
+    icon: "fa fa-fw fa-star-o",
+    name: _t("Remove from Favorites"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     * @param {import("models").Store} param0.store
+     */
+    onSelected: async ({ channel, store }) => {
+        store.fetchStoreData(
+            "/discuss/channel/favorite",
+            { channel_id: channel.id, is_favorite: false },
+            { readonly: false, silent: false }
+        );
+    },
+    sequence: 40,
+    sequenceGroup: 20,
+});
+registerThreadAction("notification-settings", {
+    actionPanelClose: ({ action }) => action.popover?.close(),
+    actionPanelComponent: NotificationSettings,
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
+    actionPanelOpen({ channel, owner, store }) {
+        if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
+            store.env.services.dialog?.add(ChannelActionDialog, {
+                title: channel.displayName,
+                contentComponent: NotificationSettings,
+                contentProps: { channel },
+            });
+        } else {
+            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
+                hasSizeConstraints: true,
+                channel,
+            });
+        }
+    },
+    actionPanelOuterClass: "bg-100 border border-secondary",
+    condition: ({ channel, owner, store }) =>
+        channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+    setup({ owner }) {
+        if (!owner.props.chatWindow) {
+            this.popover = usePopover(NotificationSettings, {
+                onClose: () => this.actionPanelClose(),
+                position: "bottom-end",
+                fixedPosition: true,
+                popoverClass: this.actionPanelOuterClass,
+            });
+        }
+    },
+    icon: ({ channel }) =>
+        channel.self_member_id?.mute_until_dt
+            ? "fa fa-fw text-danger fa-bell-slash"
+            : "fa fa-fw fa-bell",
+    name: _t("Notification Settings"),
+    sequence: 10,
+    sequenceGroup: 30,
+});
+registerThreadAction("attachments", {
+    actionPanelComponent: AttachmentPanel,
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
+    condition: ({ owner, channel }) =>
+        channel?.hasAttachmentPanel &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
+    icon: "fa fa-fw fa-paperclip",
+    name: _t("Attachments"),
+    sequence: 10,
+    sequenceGroup: 10,
+});
+registerThreadAction("invite-people", {
+    actionPanelClose: ({ action }) => action.popover?.close(),
+    actionPanelComponent: ChannelInvitation,
+    actionPanelComponentProps: ({ action, channel }) => ({
+        close: () => action.actionPanelClose(),
+        channel,
+    }),
+    actionPanelOpen({ owner, store, channel }) {
+        if (owner.isDiscussSidebarChannelActions) {
+            store.env.services.dialog?.add(ChannelActionDialog, {
+                title: channel.displayName,
+                contentComponent: ChannelInvitation,
+                contentProps: {
+                    autofocus: true,
+                    channel,
+                    close: () => store.env.services.dialog.closeAll(),
+                },
+            });
+        } else if (!owner.env.inMeetingView) {
+            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
+                hasSizeConstraints: true,
+                channel,
+            });
+        }
+    },
+    actionPanelOuterClass: ({ owner }) =>
+        `o-discuss-ChannelInvitation ${
+            owner.props.chatWindow ? "bg-inherit" : ""
+        } bg-100 border border-secondary`,
+    condition: ({ channel, owner }) =>
+        channel &&
+        !owner.env.pipWindow &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !(owner.isDiscussContent && channel?.hasMemberList),
+    icon: "oi oi-fw oi-user-plus",
+    name: _t("Invite People"),
+    sequence: 20,
+    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
+    setup({ owner }) {
+        if (!owner.props.chatWindow && !owner.env.inMeetingView) {
+            this.popover = usePopover(ChannelInvitation, {
+                onClose: () => this.actionPanelClose(),
+                popoverClass: this.actionPanelOuterClass,
+            });
+        }
+    },
+});
+registerThreadAction("copy-invite-link", {
+    condition: ({ channel, owner }) => owner.env.pipWindow && channel?.invitationLink,
+    icon: "oi oi-fw oi-user-plus",
+    name: _t("Copy Invite Link"),
+    onSelected: ({ channel, owner }) =>
+        channel.copyInvitationLink({
+            clipboard: owner.env.pipWindow.navigator.clipboard,
+        }),
+    sequence: 20,
+    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
+});
+registerThreadAction("member-list", {
+    actionPanelClose: ({ action, owner, store, nextActiveAction }) => {
+        if (
+            action.condition &&
+            owner.env.inDiscussApp &&
+            store.discuss?.shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction)
+        ) {
+            store.discuss.isMemberPanelOpenByDefault = false;
+        }
+    },
+    actionPanelComponent: ChannelMemberList,
+    actionPanelComponentProps: ({ actions, channel }) => ({
+        /** @deprecated */
+        openChannelInvitePanel({ keepPrevious } = {}) {
+            actions.actions
+                .find(({ id }) => id === "invite-people")
+                ?.actionPanelOpen({ keepPrevious });
+        },
+        channel,
+    }),
+    actionPanelOpen: ({ owner, store }) => {
+        if (owner.env.inDiscussApp) {
+            store.discuss.isMemberPanelOpenByDefault = true;
+        }
+    },
+    actionPanelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
+    condition: ({ owner, channel }) =>
+        channel?.hasMemberList &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
+    icon: "oi oi-fw oi-users",
+    name: _t("Members"),
+    sequence: 30,
+    sequenceGroup: 10,
+});
+registerThreadAction("mark-read", {
+    condition: ({ channel, owner }) =>
+        channel?.self_member_id &&
+        channel.self_member_id.message_unread_counter > 0 &&
+        !channel.self_member_id.mute_until_dt &&
+        owner.isDiscussSidebarChannelActions,
+    onSelected: ({ channel }) => channel.markAsRead(),
+    icon: "fa fa-fw fa-check",
+    name: _t("Mark Read"),
+    sequence: 10,
+    sequenceGroup: 20,
+});
+registerThreadAction("hide", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    condition: ({ channel, store, owner }) =>
+        store.self_user?.share === false &&
+        (channel?.canHide || channel?.sub_channel_ids.some((subChannel) => subChannel.canHide)) &&
+        !channel?.isSelfInCall &&
+        !owner.isDiscussContent,
+    icon: "fa fa-fw fa-eye-slash",
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    name: ({ channel }) =>
+        channel.isHideUntilNewMessageSupported ? _t("Hide Until New Message") : _t("Hide"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    onSelected: ({ channel }) => channel.unpinChannel(),
+    sequence: 10,
+    sequenceGroup: 35,
+});
+registerThreadAction("leave", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     * @param {import("models").Store} param0.store
+     */
+    condition: ({ channel, owner, store }) =>
+        store.self_user &&
+        channel?.self_member_id &&
+        channel.allowedToLeaveChannelTypes.includes(channel.channel_type) &&
+        channel.group_ids.length === 0 &&
+        !owner.isDiscussContent,
+    icon: "fa fa-fw fa-sign-out",
+    name: _t("Leave Channel"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    onSelected: ({ channel }) => channel.leaveChannel(),
+    sequence: 20,
+    sequenceGroup: 40,
+    tags: ACTION_TAGS.DANGER,
+});
+
+registerThreadAction("delete-thread", {
+    actionPanelClose: ({ action }) => action.popover?.close(),
+    actionPanelComponent: DeleteThreadDialog,
+    actionPanelComponentProps({ action, channel }) {
+        return { channel, close: () => action.actionPanelClose() };
+    },
+    actionPanelOuterClass: "bg-100",
+    condition({ channel, owner, store }) {
+        return (
+            channel?.parent_channel_id &&
+            store.self_user?.eq(channel.create_uid) &&
+            !owner.isDiscussContent
+        );
+    },
+    icon: "fa fa-fw fa-trash",
+    iconLarge: "fa fa-fw fa-lg fa-trash",
+    name: _t("Delete Thread"),
+    actionPanelOpen: ({ channel, owner, store }) => {
+        if (owner.isDiscussSidebarChannelActions) {
+            store.env.services.dialog?.add(ChannelActionDialog, {
+                title: channel.name,
+                contentComponent: DeleteThreadDialog,
+                contentProps: {
+                    close: () => store.env.services.dialog.closeAll(),
+                    channel,
+                },
+            });
+        }
+    },
+    sequence: ({ owner }) => (owner.props.chatWindow ? 50 : 40),
+    sequenceGroup: 40,
+    tags: [ACTION_TAGS.DANGER],
+});

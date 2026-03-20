@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
+        <xpath expr="//tr[@name='draft_picking_out']" position="after">
+            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                <td/>
+                <td>
+                <t t-set="draft_so_out_count" t-value="currentProduct.draft_sale_orders.length"/>
+                <a t-if="draft_so_out_count == 1" href="#"
+                    t-on-click.prevent="() => this.props.openView('sale.order', 'form', currentProduct.draft_sale_orders[0].id)">
+                    1 Quotation</a>
+                <a t-else="" href="#"
+                    t-on-click.prevent="() => this.props.openView('sale.order', 'list', false, [['id', 'in', currentProduct.draft_sale_orders.map((so) => so.id)]])">
+                    <t t-out="draft_so_out_count"/> Quotations</a>
+                </td>
+                <td class="text-end">
+                    <span class="text-danger">
+                        <t t-out="_formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                    </span>
+                </td>
+                <td colspan="3"/>
+            </tr>
+        </xpath>
+        <xpath expr="//td[@name='usedby_cell']" position="inside">
+            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' - ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
+            <t t-if="line.reservation and (line.document_out._name != line.reservation._name or line.document_out.id != line.reservation.id)">
+                <span t-out="' - '"/>
+                <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold"
+                    t-on-click.prevent="() => this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
+            </t>
+            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
+        </xpath>
+    </t>
+</templates>

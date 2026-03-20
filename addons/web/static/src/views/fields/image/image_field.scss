@@ -1,0 +1,44 @@
+.o_field_image {
+
+    > div {
+        height: 100%;
+        width: 100%;
+
+        > img {
+            // Since we don’t provide a separate avatar version for dark mode,
+            // we need to keep the same background color for transparent images
+            // in both modes. Otherwise, the rendering could look odd or become
+            // unreadable. Therefore, we use white as the default color.
+            background-color: #fff;
+            background-clip: padding-box;
+        }
+    }
+
+    button {
+        transition: opacity ease 400ms;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 26px;
+        height: 26px;
+    }
+
+    .o_mobile_controls {
+        button {
+            width: 30px;
+            height: 30px;
+            padding: 6px !important;
+        }
+    }
+
+    &.o_field_invalid img {
+        border: 1px solid map-get($theme-colors, 'danger');
+    }
+}
+
+.o_image_zoom {
+    img {
+        max-width: 100%;
+        max-height: 50vh;
+    }
+}

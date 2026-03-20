@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.View">
+      <WithSearch t-props="withSearchProps" t-slot-scope="search">
+        <t t-component="Controller"
+          t-on-click="handleActionLinks"
+          t-props="componentProps"
+          context="search.context"
+          domain="search.domain"
+          groupBy="search.groupBy"
+          orderBy="search.orderBy"
+          display="search.display"/>
+      </WithSearch>
+  </t>
+
+</templates>

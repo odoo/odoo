@@ -1,0 +1,28 @@
+<odoo>
+    <template id="portal_my_details" inherit_id="portal.portal_my_details">
+        <select name="invoice_sending_method" position="after">
+            <div t-if="peppol_eas_list" class="col-xl-6 portal_peppol_toggle">
+                <label class="col-form-label label-optional" for="peppol_eas">
+                    Peppol e-Address (EAS)
+                </label>
+                <select name="peppol_eas">
+                    <option
+                        t-foreach="peppol_eas_list"
+                        t-as="eas"
+                        t-att-value="eas"
+                        t-att-selected="(peppol_eas or partner_sudo.peppol_eas) == eas"
+                        t-out="eas_value"
+                    />
+                </select>
+                <label class="col-form-label label-optional" for="peppol_endpoint">
+                    Peppol Endpoint
+                </label>
+                <input
+                    type="text"
+                    name="peppol_endpoint"
+                    t-att-value="peppol_endpoint or partner_sudo.peppol_endpoint"
+                />
+            </div>
+        </select>
+    </template>
+</odoo>

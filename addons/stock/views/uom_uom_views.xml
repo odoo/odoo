@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_uom_tree_view_inherit" model="ir.ui.view">
+        <field name="name">uom.uom.list.inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="package_type_id" groups="stock.group_tracking_lot"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_uom_form_view_inherit" model="ir.ui.view">
+        <field name="name">uom.uom.form.inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <div name="relative_factor" position="after">
+                <field name="package_type_id"
+                    groups="stock.group_tracking_lot"
+                    readonly="(context.get('product_id') or context.get('product_ids')) and id"
+                />
+                <field 
+                    name="product_uom_ids"
+                    invisible="not (context.get('product_id') and id)"
+                    widget="many2many_barcode_tags"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                    readonly="not context.get('product_id')"
+                    force_save="1"
+                    context="{'default_uom_id': id, 'default_product_id': context.get('product_id')}"/>
+                <field name="route_ids" groups="stock.group_adv_location" widget="many2many_tags" invisible="not route_ids"/>
+            </div>
+        </field>
+    </record>
+</odoo>

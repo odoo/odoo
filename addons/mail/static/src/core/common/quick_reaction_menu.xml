@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.QuickReactionMenu">
+        <t t-if="ui.isSmall" t-call="mail.QuickReactionMenu.toggler"/>
+        <Dropdown t-else="" state="dropdown" manual="true" menuClass="`o-mail-QuickReactionMenu-popover shadow-none`" position="'top-middle'" navigationOptions="navigationOptions" bottomSheet="false">
+            <t t-call="mail.QuickReactionMenu.toggler"/>
+            <t t-set-slot="content">
+                <div class="o-mail-QuickReactionMenu d-flex align-items-center o-px-0_5 bg-100 border border-secondary o-rounded-bubble shadow-sm gap-1" t-ref="toggle">
+                    <button t-foreach="mostFrequentEmojis" t-as="emoji" t-key="emoji" class="o-mail-QuickReactionMenu-emoji o-mail-QuickReactionMenu-popEffect o-navigable d-flex justify-content-center align-items-center o-rounded-bubble btn lh-1 p-1" t-att-class="{ 'bg-secondary': reactedBySelf(emoji) }" t-att-title="getEmojiShortcode(emoji)" t-on-click="() => this.toggleReaction(emoji)">
+                        <span class="fs-2" t-esc="emoji"/>
+                    </button>
+                    <button class="o-mail-QuickReactionMenu-emojiPicker o-mail-QuickReactionMenu-popEffect o-mail-QuickReactionMenu-popEffect--smaller o-navigable text-muted d-flex justify-content-center align-items-center btn btn-secondary o-rounded-bubble border border-dark-subtle" title="Toggle Emoji Picker" t-on-click="() => this.togglePicker()">
+                        <i class="oi oi-close"/>
+                    </button>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="mail.QuickReactionMenu.toggler">
+        <button class="btn border-0 o-p-0_5 o-inline o-mail-QuickReactionMenu-toggler" t-att-class="attClass" t-att-title="props.action.name" t-att-aria-label="props.action.name" t-on-click="onClick">
+            <i t-att-class="props.action.icon"/>
+        </button>
+    </t>
+</templates>

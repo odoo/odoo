@@ -1,0 +1,37 @@
+// Snippets Modal Preview
+// ======================
+// Performs an animation on :hover showcasing the user how the snippet behaves
+// in use. Measurements and values are arbitrary, the goal is just to provide
+// a preview.
+.o_snippet_preview_wrap {
+    [data-snippet="s_floating_blocks"] {
+        height: 750px;
+
+        // Needed to avoid that inner blocks overflows while translating
+        overflow: hidden;
+
+        .s_floating_blocks_block {
+            opacity: 1;
+
+            &:nth-child(1) {
+                transition: all .3s;
+                margin: 3% 0 -20%;
+                transform-origin: center top;
+                transform: scale(0.98);
+            }
+
+            .s_parallax_bg {
+                // Disable the parallax effect entirely. By default the effect
+                // is very subtle and showcasing it in the preview is not
+                // representative of the actual result.
+                background-position: top !important;
+                transform: none !important;
+                inset: 0 !important;
+            }
+        }
+    }
+    &:is(:hover, :focus-visible) [data-snippet="s_floating_blocks"] .s_floating_blocks_block:nth-child(1) {
+        margin: 3% 0 -30%;
+        transform: scale(.95);
+    }
+}

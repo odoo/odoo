@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.floor_plan">
+        <div t-ref="container" class="o_fp_canvas floor-map w-100 h-100 overflow-auto position-relative" t-attf-style="{{getContainerStyle()}}">
+            <t t-if="floorPlanStore.isEmpty()">
+                <div  class="empty-floor d-flex align-items-center justify-content-center h-100" >
+                    <div class="text-center">
+                        <div class="fs-3 text-muted mb-3">No tables are available yet.</div>
+                        <div class="btn btn-secondary btn-lg" t-on-click="()=>floorPlanStore.startEditMode()"><i class="fa fa-fw fa-pencil-square-o me-1"/>Edit your floor plan</div>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="isKanban">
+                <t t-set="kanbanMode" t-value="true"/>
+                <div class="floor-kanban d-grid gap-1 p-2">
+                    <t t-foreach="getTablesSortedByNumber()" t-as="element" t-key="element.uuid">
+                         <t t-call="pos_restaurant.floor_screen_element"/>
+                     </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div t-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{getCanvasStyles()}}">
+                      <t t-foreach="getFloorDecorElements()" t-as="element" t-key="element.uuid">
+                         <t t-call="pos_restaurant.floor_screen_element"/>
+                     </t>
+                     <t t-foreach="floorPlanStore.getFloorTables()" t-as="element" t-key="element.uuid">
+                         <t t-call="pos_restaurant.floor_screen_element"/>
+                     </t>
+                </div>
+            </t>
+        </div>
+    </t>
+    <t t-name="pos_restaurant.floor_screen_element">
+        <t t-if="element.isTable">
+            <t t-set="table" t-value="element.record"/>
+             <div t-attf-class="o_fp_table table floor-table {{ kanbanMode ? 'd-flex align-items-center justify-content-center' : 'o_fp_shape ' + element.shape}} "
+                  t-on-click="(ev) => this.onClickTable(table, ev)"
+                  t-att-style="kanbanMode ? element.getCssColorStyle() : element.getTableViewCssStyle()"
+                  t-attf-id="fpe-{{element.uuid}}" t-attf-data-table_id="{{element.id}}" >
+                 <t t-set="tableContentStyle" t-value="kanbanMode ? '' : element.getTableContentStyle()"/>
+                 <div t-out="element.table_number" class="o_fp_table_number label fs-4 fw-bolder" t-att-class="{'opacity-50': element.parent_id}" t-att-style="tableContentStyle"/>
+                 <t t-set="tableContentStyle" t-value="kanbanMode ? '' : element.getTableContentStyle()"/>
+                 <t t-set="data" t-value="getChangeCount(element.id)"/>
+                 <div t-if="data.changes > 0" t-esc="this.env.utils.formatProductQty(data.changes, false)" t-att-style="tableContentStyle" class="order-count text-bg-danger d-flex align-items-center justify-content-center position-absolute top-0 end-0 rounded-3 smaller fw-bolder z-2 badge"/>
+             </div>
+        </t>
+        <t t-else="">
+            <div t-attf-class="o_fp_shape o_fp_decor {{element.shape}}" t-att-style="element.getCssStyle()">
+                <t t-if="element.isText">
+                    <span class="o_fp_text_content" t-esc="element.text" t-att-style="element.getTextCssStyle()"/>
+                </t>
+                <t t-elif="element.allowText and element.text">
+                    <div class="h-100 w-100 d-flex align-items-center" >
+                        <span class="o_fp_text_content" t-esc="element.text" t-att-style="element.getTextCssStyle()"/>
+                    </div>
+                </t>
+         </div>
+        </t>
+    </t>
+</templates>

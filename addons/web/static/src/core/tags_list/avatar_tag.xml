@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.AvatarTag">
+        <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_avatar opacity-trigger-hover" tabindex="-1" t-att-class="this.props.cssClass" t-att-data-tooltip="this.props.tooltip or this.props.text" t-att-aria-label="this.props.tooltip or this.props.text" t-ref="ref">
+            <t t-if="this.props.onDelete">
+                <span class="o_avatar_backdrop position-absolute top-0 end-0 bottom-0 start-0 ms-n2 mt-n1 mb-n1 bg-view rounded border shadow opacity-0 opacity-100-hover"/>
+            </t>
+            <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
+            <t t-slot="default">
+                <t t-if="this.props.text">
+                    <div class="o_tag_badge_text position-relative ms-1" t-out="this.props.text"/>
+                </t>
+            </t>
+            <t t-if="this.props.onDelete">
+                <a class="o_delete d-flex align-items-center opacity-100-hover btn btn-link position-relative py-0 px-1 text-danger opacity-0" href="#" tabindex="-1" aria-label="Delete" data-tooltip="Delete" t-on-click.stop.prevent="() => this.props.onDelete()">
+                    <i class="oi oi-close align-text-center"/>
+                </a>
+            </t>
+        </span>
+    </t>
+
+</templates>

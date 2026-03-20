@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.company_info_receipt">
+            <table class="w-100 text-small mt-2">
+                <tbody name="company_info">
+                    <tr>
+                        <td class="text-start" t-out="company['name']" />
+                        <td class="text-end">
+                            Tel. <t t-out="config['phone']" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-start" t-out="config['receipt_address']" />
+                    </tr>
+                    <tr>
+                        <td class="text-start" t-out="config['email']">
+                        </td>
+                        <td class="text-end" t-out="config['website']" />
+                    </tr>
+                    <tr>
+                        <td class="text-start" t-out="company['name']" />
+                        <td class="text-end">
+                            Tel. <t t-out="company['phone']" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-start" t-if="company.get('vat') and extra_data.get('vat_label')" name="company_info_vat">
+                            <t t-out="extra_data['vat_label']" />: <t t-out="company['vat']" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+
+        <template id="point_of_sale.pos_order_receipt_style">
+            <style>
+                /** We don't import full bootstrap classes to improve rendering time */
+                #pos-receipt * { box-sizing: border-box; background: #ffffff; }
+                #pos-receipt { line-height: 1.5 !important; width: 576px !important; color: #000000 !important; font-size: 22px !important; box-sizing: border-box; font-family: Arial, sans-serif !important; }
+                #pos-receipt .top { vertical-align: top !important; }
+                #pos-receipt .overflow-hidden { overflow: hidden !important; }
+
+                /** Width classes **/
+                #pos-receipt .w-100 { width: 100% !important }
+                #pos-receipt .w-80 { width: 80% !important }
+                #pos-receipt .w-75 { width: 75% !important }
+                #pos-receipt .w-70 { width: 70% !important }
+                #pos-receipt .w-60 { width: 60% !important }
+                #pos-receipt .w-50 { width: 50% !important }
+                #pos-receipt .w-33 { width: 33% !important }
+                #pos-receipt .w-30 { width: 30% !important }
+                #pos-receipt .w-25 { width: 25% !important }
+                #pos-receipt .w-10 { width: 10% !important }
+                #pos-receipt .w-5 { width: 5% !important }
+                #pos-receipt .mw-50 { max-width: 50% !important }
+                #pos-receipt .mw-100 { max-width: 100% !important }
+
+                /** Margin classes **/
+                #pos-receipt .mb-1 { margin-bottom: 4px !important; }
+                #pos-receipt .mb-2 { margin-bottom: 8px !important; }
+                #pos-receipt .mb-3 { margin-bottom: 16px !important; }
+                #pos-receipt .mb-4 { margin-bottom: 24px !important; }
+                #pos-receipt .mb-5 { margin-bottom: 32px !important; }
+                #pos-receipt .mt-1 { margin-top: 4px !important; }
+                #pos-receipt .mt-2 { margin-top: 8px !important; }
+                #pos-receipt .mt-3 { margin-top: 16px !important; }
+                #pos-receipt .mt-4 { margin-top: 24px !important; }
+                #pos-receipt .mt-5 { margin-top: 32px !important; }
+                #pos-receipt .me-1 { margin-left: 4px !important; }
+                #pos-receipt .me-2 { margin-left: 8px !important; }
+                #pos-receipt .me-3 { margin-left: 16px !important; }
+                #pos-receipt .me-4 { margin-left: 24px !important; }
+                #pos-receipt .me-5 { margin-left: 32px !important; }
+                #pos-receipt .ms-1 { margin-right: 4px !important; }
+                #pos-receipt .ms-2 { margin-right: 8px !important; }
+                #pos-receipt .ms-3 { margin-right: 16px !important; }
+                #pos-receipt .ms-4 { margin-right: 24px !important; }
+                #pos-receipt .ms-5 { margin-right: 32px !important; }
+                #pos-receipt .mx-1 { margin-left: 4px !important; margin-right: 4px !important; }
+                #pos-receipt .mx-2 { margin-left: 8px !important; margin-right: 8px !important; }
+                #pos-receipt .mx-3 { margin-left: 16px !important; margin-right: 16px !important; }
+                #pos-receipt .mx-4 { margin-left: 24px !important; margin-right: 24px !important; }
+                #pos-receipt .mx-5 { margin-left: 32px !important; margin-right: 32px !important; }
+                #pos-receipt .my-1 { margin-top: 4px !important; margin-bottom: 4px !important; }
+                #pos-receipt .my-2 { margin-top: 8px !important; margin-bottom: 8px !important; }
+                #pos-receipt .my-3 { margin-top: 16px !important; margin-bottom: 16px !important; }
+                #pos-receipt .my-4 { margin-top: 24px !important; margin-bottom: 24px !important; }
+                #pos-receipt .my-5 { margin-top: 32px !important; margin-bottom: 32px !important; }
+
+                /** Padding classes **/
+                #pos-receipt .pb-1 { padding-bottom: 4px !important; }
+                #pos-receipt .pb-2 { padding-bottom: 8px !important; }
+                #pos-receipt .pb-3 { padding-bottom: 16px !important; }
+                #pos-receipt .pb-4 { padding-bottom: 24px !important; }
+                #pos-receipt .pb-5 { padding-bottom: 32px !important; }
+                #pos-receipt .pt-1 { padding-top: 4px !important; }
+                #pos-receipt .pt-2 { padding-top: 8px !important; }
+                #pos-receipt .pt-3 { padding-top: 16px !important; }
+                #pos-receipt .pt-4 { padding-top: 24px !important; }
+                #pos-receipt .pt-5 { padding-top: 32px !important; }
+                #pos-receipt .pe-1 { padding-right: 4px !important; }
+                #pos-receipt .pe-2 { padding-right: 8px !important; }
+                #pos-receipt .pe-3 { padding-right: 16px !important; }
+                #pos-receipt .pe-4 { padding-right: 24px !important; }
+                #pos-receipt .pe-5 { padding-right: 32px !important; }
+                #pos-receipt .ps-1 { padding-left: 4px !important; }
+                #pos-receipt .ps-2 { padding-left: 8px !important; }
+                #pos-receipt .ps-3 { padding-left: 16px !important; }
+                #pos-receipt .ps-4 { padding-left: 24px !important; }
+                #pos-receipt .ps-5 { padding-left: 32px !important; }
+                #pos-receipt .px-1 { padding-left: 4px !important; padding-right: 4px !important; }
+                #pos-receipt .px-2 { padding-left: 8px !important; padding-right: 8px !important; }
+                #pos-receipt .px-3 { padding-left: 16px !important; padding-right: 16px !important; }
+                #pos-receipt .px-4 { padding-left: 24px !important; padding-right: 24px !important; }
+                #pos-receipt .px-5 { padding-left: 32px !important; padding-right: 32px !important; }
+                #pos-receipt .py-1 { padding-top: 4px !important; padding-bottom: 4px !important; }
+                #pos-receipt .py-2 { padding-top: 8px !important; padding-bottom: 8px !important; }
+                #pos-receipt .py-3 { padding-top: 16px !important; padding-bottom: 16px !important; }
+                #pos-receipt .py-4 { padding-top: 24px !important; padding-bottom: 24px !important; }
+                #pos-receipt .py-5 { padding-top: 32px !important; padding-bottom: 32px !important; }
+
+                /** Text classes **/
+                #pos-receipt .text-break{ word-wrap: break-word !important; word-break: break-word !important; }
+                #pos-receipt .font-monospace  { font-variant-numeric: tabular-nums !important; }
+                #pos-receipt .text-center { text-align: center !important; }
+                #pos-receipt .text-start { text-align: left !important; }
+                #pos-receipt .text-end { text-align: right !important; }
+                #pos-receipt .text-small { font-size: 18px !important; line-height: 26px !important; }
+                #pos-receipt .text-normal { font-size: 22px !important; line-height: 32px !important; }
+                #pos-receipt .text-large { font-size: 26px !important; line-height: 38px !important; }
+                #pos-receipt .text-huge { font-size: 34px !important; line-height: 50px !important; }
+                #pos-receipt .text-insane { font-size: 50px !important; line-height: 74px !important; }
+                #pos-receipt .text-bold { font-weight: bold !important; }
+                #pos-receipt .text-italic { font-style: italic !important; }
+                #pos-receipt .text-break { word-break: break-word !important; word-wrap: break-word !important; }
+            </style>
+        </template>
+    </data>
+</odoo>

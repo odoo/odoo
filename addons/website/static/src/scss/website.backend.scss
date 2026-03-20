@@ -1,0 +1,159 @@
+.o_dashboards {
+    background-color: $o-view-background-color;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+
+    .o_content {
+        overflow: scroll;
+    }
+    .o_website_dashboard {
+        background-color: $o-view-background-color;
+    }
+    &.has_plausible {
+        background-color: #f9fafb; // Copied from iframe.
+        .o_website_dashboard {
+            background-color: #f9fafb; // Copied from iframe.
+            iframe {
+                // TODO: Find another way to set the height, not robust enough,
+                // especially if plausible change those values later.
+                height: 2950px; // Copied from iframe.
+                top: 2px; // Do not cover eCommerce dashboard border.
+
+                @include media-breakpoint-only(md) {
+                    height: 2855px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(lg) {
+                    height: 2040px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xl) {
+                    height: 1875px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xxl) {
+                    height: 1875px; // Copied from iframe.
+                }
+            }
+        }
+    }
+    .o_dashboard_common {
+        .o_box {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: flex-start;
+
+            > .o_inner_box {
+                @include media-breakpoint-down(md) {
+                    flex: 1 1 200px;
+                    display: block !important;
+                }
+                @include media-breakpoint-up(md) {
+                    flex: 0 0 16.6%;
+                }
+            }
+        }
+    }
+    .o_dashboard_visits {
+
+        .o_demo_background {
+
+            margin-top: 16px;
+            height: 300px;
+            background-size: 100% !important;
+            background: var(--Dashboard__demoBackground, url("/website/static/src/img/website_dashboard_visit_demo.png")) no-repeat;
+            position: relative;
+
+            .o_buttons {
+                position: relative;
+            }
+
+            .o_layer {
+                background-color: rgba($o-view-background-color,.3);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+.oe_stat_button.o_stat_button_info {
+    pointer-events: none;
+}
+
+.o_field_website_redirect_button {
+    display: contents;
+}
+
+@mixin o-mobile-phone {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 92%;
+    width: auto;
+    // Width and height of phone.svg. Needed for the builder to recompute values
+    // when switching to mobile preview, otherwise the width is 0 for a moment.
+    aspect-ratio: 368 / 763;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+                16px 12px 32px rgba(0, 0, 0, 0.15),
+                64px 0 64px rgba(0, 0, 0, 0.15);
+    border-radius: 3.5vh;
+    background-color: white;
+
+    iframe {
+        height: 87%;
+        top: 8%;
+    }
+
+    // Loop through max-heights from 800px to 600px in steps of 25px,
+    // calculating scale and height for each value.
+    @for $max-height from 800 through 600 {
+        @if $max-height % 25 == 0 {
+            $scale: 0.0016 * $max-height - 0.37;
+            $adjusted-radius: 3.5vh / $scale;
+            @media (max-height: #{$max-height}px) {
+                height: (90 / $scale) * 1%;
+                transform: translate(-50%, -50%) scale($scale);
+                border-radius: $adjusted-radius;
+                // Add min-height for 600px only.
+                @if $max-height == 600 {
+                    min-height: 740px;
+                }
+            }
+        }
+    }
+}
+
+.o_view_form_theme_preview_controller {
+    div.o_form_nosheet {
+        padding: 0px;
+        height:100%;
+        width:100%;
+    }
+
+    .o_field_iframe {
+        width: 100%;
+        height: 100%;
+
+        div.is_mobile {
+            @include media-breakpoint-up(md) {
+                @include o-mobile-phone;
+
+                iframe {
+                    position: absolute;
+                }
+            }
+        }
+    }
+}
+
+// TODO adapt theme previews then remove this
+// ... or remove the feature entirely ? See task-3454790.
+.o_preview_frame::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 0;
+    background-color: white;
+}

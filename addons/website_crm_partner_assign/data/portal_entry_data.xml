@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_leads" model="portal.entry">
+        <field name="name">Leads</field>
+        <field name="description">Follow and convert your leads</field>
+        <field name="url">/my/leads</field>
+        <field name="image" type="base64" file="website_crm_partner_assign/static/src/img/leads.svg"/>
+        <field name="placeholder_count">lead_count</field>
+        <field name="category">vendor_category</field>
+        <field name="sequence" eval="160"/>
+    </record>
+
+    <record id="portal_entry_opportunities" model="portal.entry">
+        <field name="name">Opportunities</field>
+        <field name="description">Follow and convert your opportunities</field>
+        <field name="url">/my/opportunities</field>
+        <field name="image" type="base64" file="website_crm_partner_assign/static/src/img/quotation.svg"/>
+        <field name="placeholder_count">opp_count</field>
+        <field name="category">vendor_category</field>
+        <field name="sequence" eval="170"/>
+    </record>
+</odoo>

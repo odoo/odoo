@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="crm_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">crm.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="sale_project.sale_project_view_form_simplified_template"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='template_id']" position="before">
+                <field name="customer_action" widget="radio" invisible="not is_customer_action_visible" required="True"/>
+            </xpath>
+            <xpath expr="//field[@name='customer_action']" position="after">
+                <field
+                    name="partner_id"
+                    string="Customer"
+                    invisible="customer_action != 'exist'"
+                    required="customer_action == 'exist'"
+                    widget="res_partner_many2one"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='template_id']" position="attributes">
+                <attribute name="domain">[('is_template', '=', True), ('allow_billable', '=', True)]</attribute>
+                <attribute name="context">{'default_is_template': True, 'default_allow_billable': True}</attribute>
+            </xpath>
+            <xpath expr="//form/footer/button[@name='action_create_project_from_so']" position="attributes">
+                <attribute name="name">action_create_project_from_lead</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

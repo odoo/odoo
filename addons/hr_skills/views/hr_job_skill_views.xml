@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_skill_view_form" model="ir.ui.view">
+        <field name="name">hr.job.skill.view.form</field>
+        <field name="model">hr.job.skill</field>
+        <field name="arch" type="xml">
+            <form string="Skills" class="o_hr_skills_dialog_form">
+                <sheet>
+                    <group>
+                        <field name="job_id" invisible="1"/>
+                        <field name="skill_type_id" widget="selection_badge" string="Category"/>
+                        <field name="skill_id" widget="selection_badge"
+                            context="{'default_skill_type_id': skill_type_id}"
+                            domain="[('skill_type_id', '=', skill_type_id)]"
+                            invisible="not skill_type_id"
+                        />
+                        <field name="skill_level_id"
+                            readonly="not skill_id" widget="selection_badge"
+                            invisible="levels_count &lt;= 1"
+                            options="{'no_open': True, 'no_create': True}"
+                            context="{'default_skill_type_id': skill_type_id}"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

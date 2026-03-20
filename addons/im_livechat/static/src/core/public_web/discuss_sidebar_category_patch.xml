@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarCategory.main" t-inherit-mode="extension">
+        <xpath expr="//*[@name='titleText']" position="before">
+            <i t-if="!store.discuss.isSidebarCompact and category.livechat_channel_id?.are_you_inside" class="fa fa-circle text-success o-xxsmaller me-1" title="You have joined this live chat channel"/>
+        </xpath>
+        <xpath expr="//*[@name='header']" position="inside">
+            <i t-if="store.discuss.isSidebarCompact and category.livechat_channel_id?.are_you_inside" class="fa fa-circle text-success o-xxxs position-absolute o-mail-DiscussSidebarCategory-livechatJoinedIndicatorCompact"/>
+        </xpath>
+    </t>
+    <t t-inherit="mail.DiscussSidebarCategory" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='floatingCategoryName']" position="after">
+            <span t-if="category.livechat_channel_id?.are_you_inside" class="d-flex align-items-center">
+                <i class="fa fa-circle text-success o-xxxs me-1"/>
+                <span class="text-muted smaller fst-italic text-success pe-1">joined</span>
+            </span>
+        </xpath>
+    </t>
+</templates>

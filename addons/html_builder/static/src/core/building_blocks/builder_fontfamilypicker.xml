@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderFontFamilyPicker">
+    <BuilderSelect className="'o-hidden-font-family-picker'">
+        <t t-foreach="fonts" t-as="font" t-key="font_index">
+            <BuilderSelectItem t-props="forwardProps(font)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span t-attf-style="font-family: {{font.styleFontFamily}};" class="text-truncate d-flex align-items-center">
+                        <i t-if="font.type === 'cloud'" role="button" class="me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
+                        <t t-out="font.string"/>
+                    </span>
+                    <div class="text-end o_select_item_only ms-2">
+                        <t t-if="font.indexForType >= 0">
+                            <t t-set="delete_font_title">Delete this font</t>
+                            <i role="button"
+                               t-on-click.prevent.stop="() => this.onDeleteFontClick(font)"
+                               class="fa fa-trash-o o_we_delete_font_btn"
+                               t-att-aria-label="delete_font_title"
+                               t-att-title="delete_font_title"/>
+                        </t>
+                    </div>
+                </div>
+            </BuilderSelectItem>
+        </t>
+        <div class="d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable o_we_add_font_btn"
+            role="menuitem"
+            tabindex="0"
+            t-on-click.stop="() => this.onAddFontClick()"
+        >
+            Add a Custom Font
+        </div>
+    </BuilderSelect>
+</t>
+
+</templates>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_mass_mailing.RecaptchaSubscribeOption">
+
+    <BuilderRow label.translate="Show reCaptcha Policy" t-if="this.hasRecaptcha()">
+        <BuilderCheckbox dataAttributeAction="'toggleRecaptchaLegal'" dataAttributeActionValue="'true'" action="'toggleRecaptchaLegal'"/>
+    </BuilderRow>
+
+</t>
+</templates>

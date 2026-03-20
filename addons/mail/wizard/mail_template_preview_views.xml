@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_preview_view_form" model="ir.ui.view">
+            <field name="name">mail.template.preview.view.form</field>
+            <field name="model">mail.template.preview</field>
+            <field name="arch" type="xml">
+                <form string="Email Preview" class="o_mail_template_preview_form_view h-100" disable_autofocus="1">
+                    <sheet class="d-flex flex-column">
+                        <div class="alert alert-danger" role="alert" invisible="not error_msg">
+                            <field name="error_msg" widget="text"/>
+                        </div>
+                        <field name="model_id" invisible="1"/>
+                        <field name="mail_template_id" invisible="1"/>
+
+                        <group class="align-items-stretch mx-0">
+                            <group class="px-0">
+                                <field name="email_from" invisible="not email_from"/>
+                                <label for="subject" string="Subject"/>
+                                <field name="subject" class="fw-bold" invisible="not subject" nolabel="1"/>
+                                <span class="fst-italic" invisible="subject">Unspecified</span>
+                                <label for="recipient_names" string="To"/>
+                                <field name="recipient_names" invisible="not recipient_names" nolabel="1"/>
+                                <span class="fst-italic" invisible="recipient_names">Unspecified</span>
+                                <field name="reply_to" invisible="not reply_to"/>
+                                <field name="scheduled_date" invisible="not scheduled_date"/>
+                            </group>
+                            <div class="d-flex justify-content-end flex-column px-0">
+                                <div class="d-flex gap-1 justify-content-end align-items-stretch">
+                                    <field name="lang"
+                                        class="p-1 d-flex w-25 align-items-center"
+                                        invisible="not has_several_languages_installed" nolabel="1"/>
+                                    <field name="resource_ref" nolabel="1"
+                                        options="{'hide_model': True, 'no_create': True, 'no_open': True, 'model_field': 'model_id'}"
+                                        readonly="False"
+                                        invisible="no_record" widget="mail_preview_record_field"/>
+                                </div>
+                            </div>
+                        </group>
+                        <div class="border p-1 d-flex flex-column flex-grow-1">
+                            <field name="body_html" class="position-relative flex-grow-1" options="{'safe': True, 'sandboxedPreview': True}"/>
+                            <field name="attachment_ids" invisible="not has_attachments" nolabel="1" widget="mail_composer_attachment_list"/>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <button string="Close" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_template_preview_action" model="ir.actions.act_window">
+            <field name="name">Template Preview</field>
+            <field name="res_model">mail.template.preview</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mail_template_preview_view_form"/>
+            <field name="target">new</field>
+            <field name="context">{'default_mail_template_id':active_id, 'dialog_size': 'extra-large'}</field>
+        </record>
+
+    </data>
+</odoo>

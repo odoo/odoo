@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_partnership.PartnershipPageOption">
+        <BuilderRow label.translate="Companies only">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.companies_only_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Partner page">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.linked_partner_page_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Image Format">
+            <BuilderSelect dataAttributeAction="'image_format'">
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partnership.image_one_one_partner_page']}">1:1</BuilderSelectItem>
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partnership.image_six_five_partner_page']}">6:5</BuilderSelectItem>
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partnership.image_four_five_partner_page']}">4:5</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Contact Details">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.o_wcrm_partner_address', 'website_partnership.contact_details']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Search">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.search_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Categories" id="'categories_option'">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.categories_setting']}" />
+        </BuilderRow>
+    </t>
+</templates>

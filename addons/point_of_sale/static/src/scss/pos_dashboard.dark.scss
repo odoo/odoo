@@ -1,0 +1,14 @@
+.pos-scenario-card {
+  .img-container {
+    background-color: darken($card-bg, 2%);
+  }
+
+  &:hover {
+    background-color: lighten($card-bg, 4%);
+    border-color: $card-border-color;
+
+    .img-container {
+      background-color: lighten($card-bg, 4%);
+    }
+  }
+}

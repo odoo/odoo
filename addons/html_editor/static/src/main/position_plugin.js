@@ -1,0 +1,70 @@
+import { ancestors } from "@html_editor/utils/dom_traversal";
+import { Plugin } from "../plugin";
+import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
+
+/**
+ * @typedef {(() => void)[]} on_layout_geometry_change_handlers
+ */
+/**
+ * This plugin broadcasts layout/geometry changes to other plugins when
+ * scrolling, resizing, or history changes occur.
+ */
+export class PositionPlugin extends Plugin {
+    static id = "position";
+    /** @type {import("plugins").EditorResources} */
+    resources = {
+        // todo: it is strange that the position plugin is aware of on_external_history_step_added_handlers and on_history_reset_from_steps_handlers.
+        on_external_history_step_added_handlers: this.layoutGeometryChange.bind(this),
+        on_history_reset_from_steps_handlers: this.layoutGeometryChange.bind(this),
+        on_step_added_handlers: this.layoutGeometryChange.bind(this),
+        on_will_filter_mutation_record_handlers:
+            this.handlePotentialLayoutGeometryChange.bind(this),
+    };
+
+    setup() {
+        this.layoutGeometryChange = throttleForAnimation(this.layoutGeometryChange.bind(this));
+        this.debouncedLayoutGeometryChange = debounce(
+            this.layoutGeometryChange.bind(this),
+            "animationFrame"
+        );
+        this.resizeObserver = new ResizeObserver(this.layoutGeometryChange);
+        this.resizeObserver.observe(this.document.body);
+        this.resizeObserver.observe(this.editable);
+        this.addDomListener(window, "resize", this.layoutGeometryChange);
+        if (this.window !== window) {
+            this.addDomListener(this.window, "resize", this.layoutGeometryChange);
+        }
+        const scrollableElements = [
+            this.editable,
+            ...ancestors(this.editable).filter(
+                (node) => couldBeScrollableX(node) || couldBeScrollableY(node)
+            ),
+        ];
+        for (const scrollableElement of scrollableElements) {
+            this.addDomListener(scrollableElement, "scroll", () => {
+                this.layoutGeometryChange();
+            });
+            this.resizeObserver.observe(scrollableElement);
+        }
+    }
+
+    handlePotentialLayoutGeometryChange(records) {
+        for (const record of records) {
+            if (
+                record.type === "classList" ||
+                (record.type === "attributes" && record.attributeName === "style")
+            ) {
+                this.debouncedLayoutGeometryChange();
+                return;
+            }
+        }
+    }
+    destroy() {
+        this.resizeObserver.disconnect();
+        super.destroy();
+    }
+    layoutGeometryChange() {
+        this.trigger("on_layout_geometry_change_handlers");
+    }
+}

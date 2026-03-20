@@ -1,0 +1,22 @@
+<templates>
+    <t t-name="s_product_snapshot_columns_fragment"
+        t-inherit="mass_mailing_sale.s_product_snapshot_columns_fragment" t-inherit-mode="extension">
+        <xpath expr="//a[@target='_blank']" position="attributes">
+            <attribute name="t-attf-href">{{record.website_absolute_url or "#"}}</attribute>
+        </xpath>
+    </t>
+    
+    <t t-name="s_product_snapshot_card_fragment"
+        t-inherit="mass_mailing_sale.s_product_snapshot_card_fragment" t-inherit-mode="extension">
+        <xpath expr="//a[@target='_blank']" position="attributes">
+            <attribute name="t-attf-href">{{record.website_absolute_url or "#"}}</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="s_product_snapshot_aside_fragment"
+        t-inherit="mass_mailing_sale.s_product_snapshot_aside_fragment" t-inherit-mode="extension">
+        <xpath expr="//a[@target='_blank']" position="attributes">
+            <attribute name="t-attf-href">{{record.website_absolute_url or "#"}}</attribute>
+        </xpath>
+    </t>
+</templates>
