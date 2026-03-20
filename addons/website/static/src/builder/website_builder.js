@@ -16,6 +16,9 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
+import { RepeatTranslationStatePlugin } from "./plugins/translation/repeat_translation_state_plugin";
+import { BadgeTranslationPlugin } from "./plugins/options/badge_option_plugin";
+import { ButtonTranslationPlugin } from "./plugins/options/button_option_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
 import { TranslateLinkInlinePlugin } from "./plugins/translate_link_inline_plugin";
@@ -58,6 +61,9 @@ const TRANSLATION_PLUGINS = [
     WebsiteVisibilityPlugin,
     AnimateOptionPlugin,
     HighlightPlugin,
+    RepeatTranslationStatePlugin,
+    BadgeTranslationPlugin,
+    ButtonTranslationPlugin,
     OperationPlugin,
     EditInteractionPlugin,
     TranslateTableOfContentOptionPlugin,
