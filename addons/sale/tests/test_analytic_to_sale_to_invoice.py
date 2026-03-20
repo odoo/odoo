@@ -435,13 +435,6 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
             "Delivered qty of upsale line should be decreased for at sale price analytic line.",
         )
 
-    def test_negative_quantity_on_analytic_line(self):
-        """Negative analytic quantities should not be allowed."""
-        with self.assertRaises(
-            UserError, msg="It shouldn't be possible to set negative quantity on analytic line."
-        ):
-            self.at_cost_aal.with_context(from_services_and_material=True).unit_amount = -1
-
     def test_manual_amount_update_updates_so_line_price_unit(self):
         """Updating the analytic line amount for at cost lines recomputes the SO line unit price."""
         self.at_cost_aal.unit_amount = 2

@@ -61,6 +61,7 @@ class AccountAnalyticLine(models.Model):
             order_changed_aals = self.env["account.analytic.line"]
             product_changed_aals = self.env["account.analytic.line"]
             amount_changed_aals = self.env["account.analytic.line"]
+            unit_amount_to_negative_aals = self.env["account.analytic.line"]
 
             if vals.get("order_id"):
                 order_changed_aals = self.filtered(lambda aal: aal.order_id.id != vals["order_id"])
@@ -73,13 +74,20 @@ class AccountAnalyticLine(models.Model):
             if vals.get("amount"):
                 amount_changed_aals = self.filtered(lambda aal: aal.amount != vals["amount"])
 
-            product_or_order_changed_aals = order_changed_aals | product_changed_aals
+            if vals.get("unit_amount", False) < 0:
+                unit_amount_to_negative_aals = self.filtered(
+                    lambda aal: aal.unit_amount >= 0 and aal.so_line
+                )
+
+            aals_to_resync = (
+                order_changed_aals | product_changed_aals | unit_amount_to_negative_aals
+            )
 
             res = super().write(vals)
 
             order_changed_aals._sync_so_accounts_and_partners()
-            product_or_order_changed_aals._unsync_so_lines()
-            product_or_order_changed_aals._sync_so_lines()
+            aals_to_resync._unsync_so_lines()
+            aals_to_resync._sync_so_lines()
             amount_changed_aals._sync_so_lines_price_unit()
         else:
             res = super().write(vals)
@@ -91,9 +99,6 @@ class AccountAnalyticLine(models.Model):
         ):
             if any(field_name in vals for field_name in self._restricted_fields_when_invoiced()):
                 raise UserError(self._get_invoiced_line_write_error())
-
-        if "unit_amount" in vals and vals["unit_amount"] < 0 and self.so_line:
-            raise UserError(self.env._("You cannot set a negative quantity on services."))
 
         super()._check_can_write(vals)
 
@@ -144,7 +149,7 @@ class AccountAnalyticLine(models.Model):
                 continue
 
             so_line = self.env["sale.order.line"]
-            if line.product_id.reinvoice_policy == "sales_price":
+            if line.product_id.reinvoice_policy == "sales_price" and line.unit_amount >= 0:
                 so_line = line._get_existing_so_line()
             line.so_line = so_line or line._create_so_line()
 
