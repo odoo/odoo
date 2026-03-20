@@ -141,7 +141,18 @@ class ResPartner(models.Model):
                 'error': True,
                 'error_message': error
             })
-        return result
+        return self._validate_partner_autocomplete_response(result)
+
+    @api.model
+    def _validate_partner_autocomplete_response(self, autocomplete_response):
+        if (
+            self.env['ir.module.module']._get('base_vat').state == 'installed'
+            and (vat_number := autocomplete_response.get('vat'))
+            and (enriched_company := self.env.context.get('enriched_company_data'))
+            ):
+            country = self.env['res.country'].browse(enriched_company['country_id']['id']).exists()
+            autocomplete_response['vat'] = self._run_vat_checks(country, vat_number, validation='setnull')[0]
+        return autocomplete_response
 
     @api.model
     def enrich_by_duns(self, duns, timeout=15):
