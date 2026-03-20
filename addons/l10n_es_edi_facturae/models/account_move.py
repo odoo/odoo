@@ -487,20 +487,23 @@ class AccountMove(models.Model):
             invoice_values['Items'].append(invoice_line_values)
 
         def grouping_function_per_base_line_tax(base_line, tax_data):
+            if not tax_data:
+                return
             return {
-                'record': base_line['record'],
-                'tax': tax_data['tax'] if tax_data else None,
+                'tax_es_type': tax_data['tax'].l10n_es_edi_facturae_tax_type,
+                'tax_rate': tax_data['tax'].amount,
+                'tax_amount_type': tax_data['tax'].amount_type,
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_base_line_tax)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         for grouping_key, values in values_per_grouping_key.items():
-            tax = grouping_key['tax']
-            if not tax:
+            tax_record = values['base_line_x_taxes_data'][0][1][0]['tax']
+            if not tax_record:
                 continue
 
-            is_withholding = tax.amount < 0.0
-            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax})
+            is_withholding = values['grouping_key']['tax_rate'] < 0.0
+            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax_record}, round=True)
             if is_withholding:
                 invoice_values['TaxesWithheld'].append(tax_data)
                 invoice_values['TotalTaxesWithheld'] -= values['tax_amount_currency']
