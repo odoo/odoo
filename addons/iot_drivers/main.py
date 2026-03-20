@@ -85,6 +85,7 @@ class Manager(Thread):
             'ip': self.domain,
             'token': helpers.get_token(),
             'version': self.version,
+            "l10n_eg_proxy_token": helpers.get_conf("proxy_access_token", "default"),
         }
         devices_list = {}
         for device in self.previous_iot_devices.values():
