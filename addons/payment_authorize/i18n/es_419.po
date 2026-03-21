@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"POT-Creation-Date: 2026-03-20 18:37+0000\n"
 "PO-Revision-Date: 2026-03-14 13:00+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -107,8 +107,8 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"No fue posible obtener los detalles de la transacción. (Código de error: "
-"%(error_code)s; detalles del error: %(error_message)s)"
+"No fue posible obtener los detalles de la transacción. (Código de error: %"
+"(error_code)s; detalles del error: %(error_message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
@@ -242,8 +242,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"La transacción no está en un estado en el que se pueda reembolsar. (Estado: "
-"%(status)s, detalles: %(message)s)"
+"La transacción no está en un estado en el que se pueda reembolsar. (Estado: %"
+"(status)s, detalles: %(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -259,6 +259,12 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
 msgstr "Esta acción no se puede realizar si el proveedor está deshabilitado."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Transaction not found."
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form

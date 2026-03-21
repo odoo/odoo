@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 15:26+0000\n"
-"PO-Revision-Date: 2026-03-07 14:35+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"PO-Revision-Date: 2026-03-19 07:14+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/base/"
 "ja/>\n"
 "Language: ja\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -147,6 +147,65 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 msgstr ""
+"\n"
+"\n"
+"チャット、メールゲートウェイ、プライベートチャネル。\n"
+"=======================================\n"
+"\n"
+"Odoo内で同僚・顧客・ゲストとコミュニケーションをとることができます。\n"
+"\n"
+"ディスカス/チャット\n"
+"------------\n"
+"1対1またはグループでのコミュニケーション（テキストチャット/音声通話/ビデオ通"
+"話）を可能にする使いやすい「ディスカス」機能。\n"
+"ゲストを招待し、ドキュメントを共有することもでき、すべてリアルタイムで行えま"
+"す。\n"
+"\n"
+"メールゲートウェイ\n"
+"------------\n"
+"情報やドキュメントの送信が簡素化されました。Odooから直接メールを送信でき、\n"
+"その機能も非常に充実しています。例えば、\n"
+"請求書用の美しいメールテンプレートを作成し、すべての顧客に\n"
+"同じものを使用できます。毎回同じ作業を行う必要はありません。\n"
+"\n"
+"チャター\n"
+"-------\n"
+"ドキュメント上で文脈に沿った会話をすべて行えます。例えば、\n"
+"応募者に関するドキュメント上で、直接更新情報を投稿して応募者にメールを送信し"
+"たり、\n"
+"次回の面接の電話をスケジュールしたり、契約書を添付したり、\n"
+"サブタイプを活用して、フォロワー一覧に追加して、重要なイベントを\n"
+"通知したりできます。\n"
+"\n"
+"\n"
+"POP/IMAPサーバから受信メールを取得します。\n"
+"============================================\n"
+"POP/IMAPアカウントのパラメータを入力するだけで、\n"
+"これらのアカウントに届くすべての受信メールが自動的にOdooシステムに"
+"ダウンロードされます。\n"
+"SSL/TLS暗号化接続を必要とするサーバを含め、\n"
+"すべてのPOP3/IMAP対応サーバがサポートされています。\n"
+"これにより、以下のようなメール対応のOdooドキュメントに対して、\n"
+"メールベースのワークフローを簡単に作成できます：\n"
+"\n"
+"* CRMリード/案件\n"
+"* CRMクレーム\n"
+"* プロジェクト課題\n"
+"* プロジェクトタスク\n"
+"* 人事採用(応募者)\n"
+"\n"
+"関連するアプリケーションをインストールするだけで、これらのドキュメント\n"
+"タイプ(リード、プロジェクト課題など)を受信メールアカウントに割り当てることが"
+"できます。新しいメールが届くと、\n"
+"選択したタイプの新しいドキュメントが自動的に作成されるため、メールボックスと"
+"Odooの連携を\n"
+"簡単に構築できます。 さらに便利な点は、これらのドキュメントがメールによって同"
+"期される\n"
+"「ミニ会話」として直接機能することです。Odoo内から返信すると、\n"
+"返信メールが自動的に収集され、同じ *会話* ドキュメントに添付されます。\n"
+"より具体的なニーズに対応するため、受信メールごとにトリガされる\n"
+"カスタム定義のアクション(技術的には「サーバアクション」)を割り当てることも可"
+"能です。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -20941,7 +21000,7 @@ msgstr "銀行口座"
 #. module: base
 #: model:ir.model,name:base.model_clearing_label
 msgid "Bank Account Clearing Number Label"
-msgstr ""
+msgstr "銀行口座クリアリング番号ラベル"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -22834,17 +22893,17 @@ msgstr "クリーニングサービス"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "クリアリングラベル"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
 msgid "Clearing Number"
-msgstr "消込番号"
+msgstr "クリアリング番号"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__clear
 msgid "Clearing it"
-msgstr "削除する"
+msgstr "空にする"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
@@ -28792,7 +28851,7 @@ msgstr "関数"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_furniture_store
 msgid "Furniture Store"
-msgstr "家具専門店"
+msgstr "家具店"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace

@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 15:26+0000\n"
-"PO-Revision-Date: 2026-03-14 12:54+0000\n"
+"PO-Revision-Date: 2026-03-18 08:58+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/base/"
 "it/>\n"
@@ -148,6 +148,69 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 msgstr ""
+"\n"
+"\n"
+"Chat, gateway e-mail e canale privato.\n"
+"=======================================\n"
+"\n"
+"Comunica con i tuoi colleghi/clienti/ospiti attraverso Odoo.\n"
+"\n"
+"Discuti/chatta\n"
+"------------\n"
+"Funzionalità a portata dell'utente che permettono di comunicare faccia a "
+"faccia o in gruppo\n"
+"(chat/chiamate vocali/videochiamate), invita gli ospiti e condividi "
+"documenti con loro, tutto in tempo reale.\n"
+"\n"
+"Gateway e-mail\n"
+"------------\n"
+"L'invio di informazioni e documenti ora è semplificato. Puoi inviare e-mail\n"
+"dal software stesso, con grandi possibilità. Ad esempio,\n"
+"crea un bellissimo modello di e-mail per le fatture e utilizza lo stesso\n"
+"per tutti i clienti in modo da non doverne creare uno ogni giorno.\n"
+"\n"
+"Chatter\n"
+"-------\n"
+"Tutte le conversazioni contestuali avverrano sul documento stesso. Ad "
+"esempio, puoi postare\n"
+"un aggiornamento direttamente sul profilo del candidato, per inviare un'e-"
+"mail,\n"
+"programmare il prossimo colloquio telefonico, allegare il contratto, "
+"aggiungere il responsabile delle risorse umane\n"
+"alla lista dei seguaci per notificarli (con l'aiuto dei sottotipi),...\n"
+"\n"
+"\n"
+"Recupera le e-mail in arrivo sui server POP/IMAP.\n"
+"============================================\n"
+"Inserisci i parametri dell'account POP/IMAP e qualsiasi e-mail in arrivo su\n"
+"questi account verrà scaricata automaticamente nel sistema di Odoo. Tutti i\n"
+"server POP3/IMAP-compatibili sono supportati, inclusi quelli che richiedono\n"
+"una connessione SSL/TLS crittografata.\n"
+"Questo può essere utilizzato per creare facilmente flussi di lavoro basati "
+"sull'e-mail per molti documenti Odoo abilitati all'invio di e-mail, come ad "
+"esempio:\n"
+"----------------------------------------------------------------------------------------------------------"
+"\n"
+" * CRM Contatti/Opportunità\n"
+"    * CRM Reclami\n"
+"    * Problemi relativi ad un progetto\n"
+"    * Attività di un progetto\n"
+"    * Selezione delle risorse umane (Candidati)\n"
+"Installa le applicazioni necessarie così da poter assegnare qualsiasi tipo "
+"di\n"
+"documento (contatti, problemi progetto) agli account delle e-mail in "
+"entrata. Le nuove e-mail\n"
+"genereranno automaticamente nuovi documenti del tipo scelto quindi è facile "
+"creare un'integrazione\n"
+"tra le caselle di posta e Odoo. Meglio ancora: i documenti fungono "
+"direttamente da mini\n"
+"conversazioni sincronizzate via e-mail. È possibile rispondere all'interno "
+"di Odoo: le\n"
+"risposte verranno raccolte automaticamente e allegate\n"
+"allo stesso documento *conversazione*.\n"
+"Per bisogni più specifici, è possibile assegnare azioni specifiche \n"
+"(tecnicamente: azioni dei server) da attivare per ogni e-mail in arrivo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -2642,6 +2705,12 @@ msgid ""
 "The snippet is linked to specified events and will load a snapshot of their "
 "data to be sent by email.\n"
 msgstr ""
+"\n"
+"Aggiungi snippet precompilati relativi a eventi per il generatore html di "
+"mass_mailing, con collegamenti alla pagina dell'evento corrispondente sul "
+"sito web.\n"
+"Lo snippet è collegato a eventi specificati e caricherà un'istantanea dei "
+"loro dati da inviare via e-mail.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock
@@ -6161,6 +6230,8 @@ msgid ""
 "\n"
 "Export payments file for HSBCnet file upload in Hong Kong.\n"
 msgstr ""
+"\n"
+"Esporta il file dei pagamenti per il caricamento su HSBCnet a Hong Kong.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -7425,6 +7496,20 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"\n"
+"Importa i tuoi ordini Lazada in Odoo e sincronizza le consegne\n"
+"===============================\n"
+"\n"
+"Caratteristiche principali\n"
+"------------\n"
+"* Importa gli ordini da più negozi\n"
+"* Gli ordini vengono abbinati ai prodotti Odoo in base al loro riferimento "
+"interno (SKU in Lazada)\n"
+"* Supporto sia per Fulfillment by Lazada (FBL) che per Fulfillment by "
+"Merchant (FBM):\n"
+"* FBL: importazione degli ordini completati\n"
+"* FBM: le informazioni sulla consegna vengono recuperate da Lazada, traccia "
+"e sincronizza il livello delle scorte con Lazada.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -14334,6 +14419,12 @@ msgid ""
 "This module ensures that the Point of Sale remains independent of Partner "
 "Autocomplete.\n"
 msgstr ""
+"\n"
+"Questo modulo collega Autocompletamento partner al Punto vendita, "
+"consentendo il completamento automatico dei dati dei partner dal frontend "
+"del Punto vendita.\n"
+"Questo modulo garantisce che il Punto vendita rimanga indipendente da "
+"Autocompletamento partner.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -16097,6 +16188,12 @@ msgid ""
 "allow_out_payment\" class=\"text-success\">Trusted</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"d-flex gap-2 w-100\">\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">Non sicuro</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">Sicuro</span>\n"
+"                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -17001,12 +17098,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_sale_stock
 msgid "AI Sale Stock"
-msgstr ""
+msgstr "AI, Vendite e Magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_stock
 msgid "AI Stock"
-msgstr ""
+msgstr "AI Magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_account
@@ -18782,11 +18879,15 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_planning_field_service_repair
 msgid "Allow user without repair right to access field serivce stock.picking"
 msgstr ""
+"Permette all'utente senza diritti di riparazione di accedere a stock.picking "
+"dell'assistenza sul campo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning_field_service_repair
 msgid "Allow user without repair right to access field service stock.picking"
 msgstr ""
+"Consenti agli utenti senza diritti di riparazione di accedere a "
+"stock.picking dell'assistenza sul campo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -20965,7 +21066,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_sale_stock
 msgid "Augment Sale Stock with AI Agents."
-msgstr ""
+msgstr "Aumenta le vendite delle scorte con gli agenti AI."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_sale
@@ -20976,7 +21077,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_stock
 msgid "Augment Stock with AI Agents."
-msgstr ""
+msgstr "Potenzia il magazzino con gli agenti AI."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -24811,7 +24912,7 @@ msgstr "Crea voci lavorative dalle presenze del dipendente"
 #: model:ir.module.module,description:base.module_worksheet
 #: model:ir.module.module,summary:base.module_worksheet
 msgid "Create worksheet with property field"
-msgstr ""
+msgstr "Crea foglio di lavoro con campo proprietà"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -28368,7 +28469,7 @@ msgstr "Esportazione di pagamenti come file EFT"
 #: model:ir.module.module,summary:base.module_l10n_hk_hsbcnet
 #: model:ir.module.module,summary:base.module_l10n_hk_payment_hsbcnet
 msgid "Export payments as HSBCnet files"
-msgstr ""
+msgstr "Esportazione di pagamenti come file HSBCnet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -30338,7 +30439,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_payment_hsbcnet
 msgid "HSBCnet Payments"
-msgstr ""
+msgstr "Pagamenti HSBCnet"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__hst
@@ -32417,7 +32518,7 @@ msgstr "Magazzino"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_reports_stock
 msgid "Inventory Accounting report for the Philippines"
-msgstr ""
+msgstr "Rendiconti contabili relativi al magazzino per le Filippine"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -33791,6 +33892,8 @@ msgstr "Collegamento tra foglio ore e tempo libero"
 #: model:ir.module.module,summary:base.module_pos_partner_autocomplete
 msgid "Link module between Partner Autocomplete and Point of Sale"
 msgstr ""
+"Modulo di collegamento tra il completamento automatico dei partner e il "
+"Punto vendita"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_event
@@ -34966,7 +35069,7 @@ msgstr "Invio email di massa agli oratori"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing_event
 msgid "Mass mailing on website events"
-msgstr ""
+msgstr "Invio mass mail eventi sito web"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_crm_sms
@@ -40964,7 +41067,7 @@ msgstr "Filippine-Contabilità"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ph_reports_stock
 msgid "Philippines - Accounting Inventory Report"
-msgstr ""
+msgstr "Filippine - Rendiconto contabile Magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ph_reports
@@ -42233,7 +42336,7 @@ msgstr "Pubblica le referenze dei clienti"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partnership
 msgid "Publish your partners on your website"
-msgstr ""
+msgstr "Pubblica i tuoi partner sul tuo sito web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -42291,7 +42394,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_alternative_stock
 msgid "Purchase Alternative Stock"
-msgstr ""
+msgstr "Alternative magazzino per acquisti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_intrastat
@@ -50506,6 +50609,8 @@ msgid ""
 "Validate stock moves for product added on sales orders through an "
 "intervention planned"
 msgstr ""
+"Convalida i movimenti di magazzino per i prodotti aggiunti agli ordini di "
+"vendita tramite un intervento pianificato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__value
@@ -51070,7 +51175,7 @@ msgstr "Partner sito web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partnership
 msgid "Website Partnership"
-msgstr ""
+msgstr "Sito web - Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
