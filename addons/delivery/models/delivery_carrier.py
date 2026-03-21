@@ -7,7 +7,7 @@ import psycopg2
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import expr_eval
 
 
 class DeliveryCarrier(models.Model):
@@ -604,7 +604,7 @@ class DeliveryCarrier(models.Model):
         criteria_found = False
         price_dict = self._get_price_dict(total, weight, volume, quantity, wv=wv)
         for line in self.price_rule_ids:
-            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
+            test = expr_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
                 price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
                 criteria_found = True

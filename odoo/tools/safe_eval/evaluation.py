@@ -28,7 +28,7 @@ import typing
 import zoneinfo
 from collections import defaultdict, OrderedDict
 from enum import auto, IntEnum
-from json.encoder import c_make_encoder
+from json.encoder import c_make_encoder  # noqa: OLS02001
 from opcode import opmap, opname
 from types import (
     BuiltinMethodType,
@@ -49,16 +49,47 @@ import werkzeug
 from psycopg2 import OperationalError
 
 import odoo.exceptions
-from .config import config
-from .func import lazy
-from .misc import OrderedSet
+from ..config import config
+from ..func import lazy
+from ..misc import OrderedSet
+
+_logger_runtime = logging.getLogger(f'{__name__}.runtime')
 
 unsafe_eval = eval
 
-__all__ = ['const_eval', 'safe_eval']
-
-_logger = logging.getLogger(__name__)
-_logger_runtime = logging.getLogger(f'{__name__}.runtime')
+__all__ = [
+    '_BLACKLIST',
+    '_BUBBLEUP_EXCEPTIONS',
+    '_BUILTINS',
+    '_CONST_OPCODES',
+    '_EXPR_OPCODES',
+    '_SAFE_OPCODES',
+    '_UNSAFE_ATTRIBUTES',
+    'UnsafeClassError',
+    'UnsafeFunctionError',
+    'UnsafeInstanceError',
+    'UnsafeModuleError',
+    'UnsafeObjectError',
+    'UnsafePolicy',
+    '_import',
+    'assert_valid_codeobj',
+    'check_values',
+    'const_eval',
+    'datetime',
+    'dateutil',
+    'json',
+    'safe_call',
+    'safe_checker',
+    'safe_eval',
+    'safe_transform',
+    'safe_whitelist',
+    'test_python_expr',
+    'time',
+    'to_opcodes',
+    'unsafe_eval',
+    'unsafe_policy',
+    'wrap_module'
+]
 
 
 class UnsafePolicy(IntEnum):
@@ -400,27 +431,6 @@ def const_eval(expr):
     assert_valid_codeobj(_CONST_OPCODES, c, expr)
     return unsafe_eval(c)
 
-def expr_eval(expr):
-    """expr_eval(expression) -> value
-
-    Restricted Python expression evaluation
-
-    Evaluates a string that contains an expression that only
-    uses Python constants. This can be used to e.g. evaluate
-    a numerical expression from an untrusted source.
-
-    >>> expr_eval("1+2")
-    3
-    >>> expr_eval("[1,2]*2")
-    [1, 2, 1, 2]
-    >>> expr_eval("__import__('sys').modules")
-    Traceback (most recent call last):
-    ...
-    ValueError: opcode LOAD_NAME not allowed
-    """
-    c = compile_codeobj(expr)
-    assert_valid_codeobj(_EXPR_OPCODES, c, expr)
-    return unsafe_eval(c)
 
 _BUILTINS = {
     '__import__': _import,
@@ -930,7 +940,7 @@ class _SafeWhitelist:
         if module := getattr(cls_obj, '__module__', None):
             if (
                 module in sys.modules or
-                module == 'odoo.tools.safe_eval.<evaluated_code>'
+                module == 'odoo.tools.safe_eval.evaluation.<evaluated_code>'
             ):
                 return f'{module}.{qualname}'.strip('.')
 
@@ -1104,7 +1114,7 @@ def add_monitoring(code):
 @functools.cache
 def _initialize_safe_whitelist():
     # Custom functions
-    safe_whitelist.add_function('odoo.tools.safe_eval.<evaluated_code>.*')
+    safe_whitelist.add_function('odoo.tools.safe_eval.evaluation.<evaluated_code>.*')
     # Wrapped modules
     safe_whitelist.add_class('datetime.date')
     safe_whitelist.add_class('datetime.datetime')

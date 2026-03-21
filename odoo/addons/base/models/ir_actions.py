@@ -19,7 +19,7 @@ from odoo.http import request
 from odoo.tools import BinaryBytes, _, frozendict, get_lang
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
-from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.safe_eval import expr_eval, safe_eval, test_python_expr
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -1427,7 +1427,7 @@ class IrActionsClient(models.Model):
     @api.depends('params_store')
     def _compute_params(self):
         for record in self:
-            record.params = record.params_store and safe_eval(record.params_store, {'uid': self.env.uid})
+            record.params = record.params_store and expr_eval(record.params_store, {'uid': self.env.uid})
 
     def _inverse_params(self):
         for record in self:

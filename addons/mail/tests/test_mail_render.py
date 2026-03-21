@@ -500,7 +500,7 @@ class TestRegexRendering(common.MailCommon):
             ('''{{object.contact_name ||| Default}}''', 'Default'),
         )
         for template, expected in static_templates:
-            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+            with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
                 self.assertEqual(render(template), expected)
                 self.assertFalse(unsafe_eval.called)
                 self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))
@@ -511,7 +511,7 @@ class TestRegexRendering(common.MailCommon):
             ('''{{object.env.context.get('test')}}''', ''),
         )
         for template, expected in non_static_templates:
-            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+            with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
                 self.assertEqual(render(template), expected)
                 self.assertTrue(unsafe_eval.called)
                 self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))

@@ -290,13 +290,13 @@ class TestMailTemplate(MailCommon):
             self.assertTrue(unsafe_eval.called)
 
         employee_template.email_to = 'Test {{ object.name }}'
-        with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+        with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
             employee_template._render_field('email_to', record.ids)
             self.assertFalse(unsafe_eval.called)
 
         # double check that we can detect the eval call
         mail_template.email_to = 'Test {{ 1+1 }}'
-        with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+        with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
             mail_template._render_field('email_to', record.ids)
             self.assertTrue(unsafe_eval.called)
 

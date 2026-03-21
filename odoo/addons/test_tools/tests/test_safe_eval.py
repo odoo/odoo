@@ -1,24 +1,21 @@
 import ast
 import inspect
-
 from textwrap import dedent
 from unittest.mock import patch
 
-from odoo import Command
-from odoo.tests.common import tagged, BaseCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.misc import OrderedSet
 from odoo.tools.safe_eval import (
     _BUILTINS,
-    const_eval,
-    expr_eval,
-    safe_checker,
-    safe_eval,
     UnsafeClassError,
     UnsafeFunctionError,
     UnsafeInstanceError,
     UnsafeModuleError,
     UnsafePolicy,
+    const_eval,
+    safe_checker,
+    safe_eval
 )
 
 
@@ -31,19 +28,6 @@ class TestSafeEval(BaseCase):
         self.assertEqual(actual, expected)
         # Test RETURN_CONST
         self.assertEqual(const_eval('10'), 10)
-
-    def test_expr(self):
-        # NB: True and False are names in Python 2 not consts
-        expected = 3 * 4
-        actual = expr_eval('3 * 4')
-        self.assertEqual(actual, expected)
-
-    def test_expr_eval_opcodes(self):
-        for expr, expected in [
-            ('3', 3),  # RETURN_CONST
-            ('[1,2,3,4][1:3]', [2, 3]),  # BINARY_SLICE
-        ]:
-            self.assertEqual(expr_eval(expr), expected)
 
     def test_safe_eval_opcodes(self):
         for expr, context, expected in [
@@ -122,12 +106,12 @@ class TestSafeEval(BaseCase):
     def test_03_literal_eval_arithmetic(self):
         """ Try arithmetic expression in literal_eval to verify it does not work """
         with self.assertRaises(ValueError):
-           ast.literal_eval('(1, {"a": 2*9}, (True, False, None))')
+            ast.literal_eval('(1, {"a": 2*9}, (True, False, None))')
 
     def test_04_literal_eval_forbidden(self):
         """ Try forbidden expressions in literal_eval to verify they are not allowed """
         with self.assertRaises(ValueError):
-           ast.literal_eval('{"a": True.__class__}')
+            ast.literal_eval('{"a": True.__class__}')
 
     @mute_logger('odoo.tools.safe_eval')
     def test_05_safe_eval_forbidden(self):
@@ -212,7 +196,7 @@ class TestSafeEvalRuntime(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.startClassPatcher(patch(
-            'odoo.tools.safe_eval.unsafe_policy',
+            'odoo.tools.safe_eval.evaluation.unsafe_policy',
             lambda: UnsafePolicy.RAISE
         ))
 
@@ -255,7 +239,7 @@ class TestSafeEvalRuntime(TransactionCase):
             'wrapper_A', 'wrapper_B',  # Evaluation order
         ])
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_callee(self):
         expr = """
             UnsafeClass()
@@ -263,7 +247,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_args(self):
         expr = """
             callee = lambda *args, **kwargs: ...
@@ -272,7 +256,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_kwargs(self):
         expr = """
             callee = lambda *args, **kwargs: ...
@@ -281,7 +265,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_structure(self):
         expr = """
             callee = lambda *args, **kwargs: ...
@@ -299,7 +283,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_builtin_callee(self):
         expr = """
             map(UnsafeClass, ['foo'])
@@ -319,7 +303,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_callee_qweb(self):
         arch = '''
             <t t-name="template">
@@ -348,7 +332,7 @@ class TestSafeEvalRuntime(TransactionCase):
         # because after transformer, the code becomes:
         # `_save_eval_call = lambda callee, *args, **kwargs: _save_eval_call(callee, *args, **kwargs)`
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_prevent_bare_except(self):
         expr = """
             try:
@@ -359,7 +343,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.runtime')
+    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_generator(self):
         # Not listen `YIELD` event for external generator
         expr = """
