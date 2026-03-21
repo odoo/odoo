@@ -6,10 +6,8 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_info_group']/field[@name='delivery_date']" position="after">
-                <div >
-                    <field name="l10n_ke_wh_certificate_number"/>
-                    <field name="l10n_ke_wh_certificate_date"/>
-                </div>
+                <field name="l10n_ke_wh_certificate_number"/>
+                <field name="l10n_ke_wh_certificate_date"/>
             </xpath>
         </field>
     </record>
