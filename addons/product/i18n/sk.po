@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-14 09:33+0000\n"
+"PO-Revision-Date: 2026-03-21 09:31+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/product/"
 "sk/>\n"
@@ -23,9 +23,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: product
 #. odoo-python
@@ -35,6 +35,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Poznámka: produkty, ku ktorým nemáte prístup, sa nebudú zobrazovať vyššie."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -51,12 +54,12 @@ msgstr "# Produkty"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$14.00"
-msgstr ""
+msgstr "$14,00"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "$15,00"
 
 #. module: product
 #. odoo-python
@@ -67,6 +70,9 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
+"%(base)s s %(discount)s %% %(discount_type)s a %(surcharge)s prirážkou\n"
+"Napríklad: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -75,24 +81,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
+"%(item_name)s: koncový dátum (%(end_date)s) by mal byť po počiatočnom dátume "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s na %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% zľava z %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% zľava z predajnej ceny"
 
 #. module: product
 #. odoo-python
@@ -109,7 +117,7 @@ msgstr "%s (kópia)"
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'Produktové etikety - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
@@ -120,19 +128,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(napr.: popis produktu, elektronická kniha, právne upozornenie...)."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s prirážka"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s zľava"
 
 #. module: product
 #. odoo-python
@@ -140,6 +148,7 @@ msgstr ""
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- Čiarový kód „%(barcode)s“ je už priradený k produktu(-om): %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -151,6 +160,13 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Okamžite: Všetky možné varianty sa vytvoria hneď po pridaní atribútu a "
+"jeho hodnôt k produktu.\n"
+"        - Dynamicky: Každá varianta sa vytvorí až po pridaní príslušných "
+"atribútov a hodnôt na predajnej objednávke.\n"
+"        - Nikdy: Pre atribút sa nikdy nevytvoria žiadne varianty.\n"
+"        Poznámka: túto voľbu nie je možné zmeniť, ak sa atribút už na "
+"produkte používa."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -170,12 +186,12 @@ msgstr "10"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 jednotiek"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -210,7 +226,7 @@ msgstr "4 x 7 s cenou"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>Tip: chcete zaokrúhliť na 9,99?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -218,6 +234,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Ikona "
+"šípky\" title=\"Šípka\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -260,7 +278,7 @@ msgstr "<span class=\"o_stat_text\"> Produkty</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Produkty</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -278,6 +296,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
+"<span>Všetky všeobecné nastavenia týkajúce sa tohto produktu sa spravujú na</"
+"span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -305,31 +325,36 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Čiarový kód môže byť priradený iba k jednému baleniu."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
 msgstr ""
+"Voliteľné položky kombinovaného produktu nemôžu obsahovať duplicitné "
+"produkty."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
 msgstr ""
+"Voliteľné položky kombinovaného produktu nemôžu obsahovať iné kombinované "
+"produkty."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
 msgstr ""
+"Voliteľná položka kombinovaného produktu musí obsahovať aspoň 1 produkt."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "Kombinovaný produkt musí obsahovať najmenej jednu voľbu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -347,7 +372,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Balenie už používa čiarový kód"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -358,6 +383,11 @@ msgid ""
 "            This is the perfect tool to handle several pricings, seasonal "
 "discounts, etc."
 msgstr ""
+"Cena je súbor predajných cien alebo pravidiel na výpočet ceny riadkov "
+"predajnej objednávky na základe produktov, kategórií produktov, dátumov a "
+"objednaných množstiev.\n"
+"            Je to ideálny nástroj na spracovanie viacerých cien, sezónnych "
+"zliav atď."
 
 #. module: product
 #. odoo-python
@@ -366,18 +396,20 @@ msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
 msgstr ""
+"Položka cenníka s „Iným cenníkom“ ako základom musí mať zadaný "
+"base_pricelist_id."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Produkt už používa čiarový kód"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "Predajný kombinovaný produkt môže obsahovať iba predajné produkty."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -387,12 +419,12 @@ msgstr "Prístupový token"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget"
-msgstr ""
+msgstr "Acme Widget"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget - Blue"
-msgstr ""
+msgstr "Acme Widget - Modrý"
 
 #. module: product
 #: model:product.template,name:product.product_template_acoustic_bloc_screens
@@ -425,7 +457,7 @@ msgstr "Aktívne"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Aktívne produkty"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -465,19 +497,19 @@ msgstr "Pridať"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "Pridať produkty"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Pridať produkty do prehľadu cenníka"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add a quantity"
-msgstr ""
+msgstr "Pridať množstvo"
 
 #. module: product
 #. odoo-javascript
@@ -486,22 +518,25 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Pridajte produkty pomocou tlačidla „Pridať produkty“ v pravom hornom rohu, "
+"aby\n"
+"                                boli zahrnuté do prehľadu."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Pridať ku všetkým produktom"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Pridať k existujúcim produktom"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Pridať k produktom"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -517,12 +552,12 @@ msgstr "Všetky kategórie"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Všetky štítky produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Všetky varianty produktov s týmto štítkom"
 
 #. module: product
 #. odoo-python
@@ -535,7 +570,7 @@ msgstr "Všetky produkty"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All categories"
-msgstr ""
+msgstr "Všetky kategórie"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
@@ -551,19 +586,19 @@ msgstr "Všetky súbory nahrané"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "Všetky produkty"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "Všetky varianty"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "Umožnite zákazníkom nastaviť si vlastnú hodnotu"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -583,7 +618,7 @@ msgstr "Použiť na"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply To"
-msgstr ""
+msgstr "Použiť na"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -615,6 +650,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Súčasne je možné zobraziť maximálne %s množstiev. Odstráňte vybrané "
+"množstvo, aby ste mohli pridať ďalšie."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -650,7 +687,7 @@ msgstr "Atribút"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "Riadok atribútu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -686,19 +723,19 @@ msgstr "Atribúty"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "Atribúty a varianty"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Order"
-msgstr ""
+msgstr "Späť na objednávku"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Späť na cenovú ponuku"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -722,6 +759,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Už pridelené čiarové kódy:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -731,6 +771,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Základná cena pre výpočet.\n"
+"Predajná cena: Základná cena bude predajná cena.\n"
+"Nákladová cena: Základná cena bude nákladová cena.\n"
+"Iný cenník: Výpočet základnej ceny na základe iného cenníka."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -740,12 +784,12 @@ msgstr "Na základe"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Based price"
-msgstr ""
+msgstr "Základná cena"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "Základné cenníky"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -756,7 +800,7 @@ msgstr "Čierna"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Zbohom, záznam!"
 
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
@@ -767,12 +811,12 @@ msgstr "Skrinka s dverami"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Je možné zväčšiť obrázok 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "Je možné zväčšiť 1024 obrázok variantu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
@@ -847,7 +891,7 @@ msgstr "Stĺpce"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Kombinované indexy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__combo_id
@@ -859,7 +903,7 @@ msgstr "Kombinácia"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "Voľba kombinácie"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -877,13 +921,13 @@ msgstr "Položka kombinácie"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "Cena kombinácie"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr ""
+msgstr "Kombinované produkty nemôžu mať atribúty."
 
 #. module: product
 #. odoo-python
@@ -892,6 +936,7 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"Kombinácie umožňujú vybrať jeden produkt z výberu možností v danej kategórii."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -929,7 +974,7 @@ msgstr "Vypočítať cenu"
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Konferenčná stolička"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
@@ -990,7 +1035,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Rohový stôl, sedenie vľavo"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
@@ -1042,13 +1087,13 @@ msgstr "Vytvoriť nový variant produktu"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "Vytvoriť produkt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Vytvoriť pri objednávke"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1163,12 +1208,12 @@ msgstr "Predvolený"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "Predvolená doplatok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "Predvolený doplatok zmenený"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1191,17 +1236,17 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Definujte nový štítok"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "Definujte svoju jednotku objemu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Definujte svoju jednotku hmotnosti"
 
 #. module: product
 #. odoo-javascript
@@ -1272,12 +1317,12 @@ msgstr "Zľava (%)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "Zľavnená cena"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
 msgid "Display Applied On"
-msgstr ""
+msgstr "Zobraziť Aplikované na"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -1327,12 +1372,12 @@ msgstr "Dokumenty"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Počet dokumentov"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "Dokumenty pre tuto variantu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1343,7 +1388,7 @@ msgstr "Stiahnuť"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Download examples"
-msgstr ""
+msgstr "Stiahnuť príklady"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1378,12 +1423,12 @@ msgstr "Dynamicky"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
+msgstr "Každá hodnota by mala byť definovaná len raz na atribút na produkt."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "Ekologická drevená stolička"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1408,17 +1453,20 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Koniec platnosti položky cenníka\n"
+"Zobrazená hodnota závisí od časového pásma nastaveného vo vašich "
+"preferenciách."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr ""
+msgstr "Ergonomický"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "Chyba pri exportovaní súboru. Skúste to znovu."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1434,12 +1482,12 @@ msgstr "Jednodznačné meno pravidla pre tento riadok cenníka"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "Dodatočný obsah"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Extra Fee"
-msgstr ""
+msgstr "Doplatok"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1455,7 +1503,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
-msgstr ""
+msgstr "Prirážka"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1463,11 +1511,13 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200 "
 "price extra, 1000 + 200 = 1200."
 msgstr ""
+"Prirážka k predajnej cene za variantu s touto hodnotou atribútu. Napr. "
+"prirážka 200, 1000 + 200 = 1200."
 
 #. module: product
 #: model:product.attribute,name:product.fabric_attribute
 msgid "Fabric"
-msgstr ""
+msgstr "Textília"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_favorite
@@ -1565,12 +1615,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Free text"
-msgstr ""
+msgstr "Ľubovoľný text"
 
 #. module: product
 #: model:product.template,name:product.product_product_furniture_product_template
 msgid "Furniture Assembly"
-msgstr ""
+msgstr "Nábytková zostava"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1602,7 +1652,7 @@ msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu produktov."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr ""
+msgstr "Cenník pre zlatých členov"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
@@ -1618,6 +1668,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Tovar sú hmotné materiály a výrobky, ktoré poskytujete.\n"
+"Služba je nehmotný produkt, ktorý poskytujete."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1730,7 +1782,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "Ak nie je zaškrtnuté, umožní vám skryť atribút bez jeho odstránenia."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1880,7 +1932,7 @@ msgstr "Je produktová varianta"
 #: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
 #: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
 msgid "Is a configurable product"
-msgstr ""
+msgstr "Je konfigurovateľný produkt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
@@ -1976,7 +2028,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_leather
 msgid "Leather"
-msgstr ""
+msgstr "Koža"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1992,12 +2044,12 @@ msgstr "Riadky"
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "Miestna dodávka"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
-msgstr ""
+msgstr "Miestna ručná výroba"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2011,6 +2063,8 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"Hľadáte bambusovú farbu na mieru, ktorá by ladila s existujúcim nábytkom? "
+"Kontaktujte nás pre cenovú ponuku."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -2018,6 +2072,8 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or "
 "some attribute values of optional and accessory products."
 msgstr ""
+"Nastavte túto hodnotu atribútu ako kompatibilnú s inými hodnotami produktu "
+"alebo niektorými hodnotami atribútov voliteľných a doplnkových produktov."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -2038,7 +2094,7 @@ msgstr "Marže"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "Prirážka"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2079,7 +2135,7 @@ msgstr "Napodobniť typ"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min Qty"
-msgstr ""
+msgstr "Min. množstvo"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2109,13 +2165,15 @@ msgstr "Stojan k monitoru"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "Viacnásobné zaškrtávacie políčko"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
+"Typ zobrazenia s viacerými začiarkavacími políčkami nie je kompatibilný s "
+"vytváraním variantov"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
@@ -2182,36 +2240,38 @@ msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
 msgstr ""
+"Žiaden produkt na tlač, ak je produkt archivovaný, pred tlačou etikety ho "
+"prosím odarchivujte."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No products could be found."
-msgstr ""
+msgstr "Nenašli sa žiadne produkty."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "V prehľadu neboli nájdené žiadne produkty"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "Nenašiel sa cenník dodávateľa"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "No, keep it"
-msgstr ""
+msgstr "Nie, nechať tak"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "Note:"
-msgstr ""
+msgstr "Poznámka:"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
@@ -2221,7 +2281,7 @@ msgstr "Nič"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "Počet súvisiacich produktov"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_needaction_counter
@@ -2274,7 +2334,7 @@ msgstr "Kancelárske kreslo čierne"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "Kancelárska kombinácia"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2293,6 +2353,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
 msgstr ""
+"V produkte %(product)s nemôžete priradiť hodnotu %(value)s k atribútu %"
+"(attribute)s, pretože sa nezhodujú."
 
 #. module: product
 #. odoo-python
@@ -2301,12 +2363,16 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"V produkte %(product)s nemôžete transformovať atribút %(attribute_src)s na "
+"atribút %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
+"Ups! '%(fileName)s' sa nepodarilo nahrať, pretože jeho formát nie je "
+"povolený."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2316,7 +2382,7 @@ msgstr "Pôvodná (neoptimalizovaná, nezmenšená) príloha"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__lst_price
 msgid "Original Price"
-msgstr ""
+msgstr "Pôvodná cena"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2328,12 +2394,12 @@ msgstr "Iný cenník"
 #. module: product
 #: model:product.template,name:product.product_template_dining_table
 msgid "Outdoor dining table"
-msgstr ""
+msgstr "Vonkajší jedálenský stôl"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "Typ balíka A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2366,7 +2432,7 @@ msgstr "Percentuálna cena"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "Guľôčky"
 
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_plastic
@@ -2377,7 +2443,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Zadajte kladné celé číslo."
 
 #. module: product
 #. odoo-python
@@ -2388,12 +2454,16 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"Zadajte platnú adresu URL.\n"
+"Príklad: https://www.odoo.com\n"
+"\n"
+"Neplatná adresa URL: %s"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "Najprv vyberte niektoré produkty."
 
 #. module: product
 #. odoo-python
@@ -2426,6 +2496,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
+"Stlačte tlačidlo a sledujte, ako sa váš stôl behom niekoľkých sekúnd bez "
+"námahy posunie z výšky na sedenie do výšky na státie."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -2459,7 +2531,7 @@ msgstr "Cenové pravidlá"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Type"
-msgstr ""
+msgstr "Typ ceny"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
@@ -2507,13 +2579,13 @@ msgstr "Názov cenníka"
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Pricelist Report"
-msgstr ""
+msgstr "Prehľad cenníka"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "Náhľad cenníka"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2526,7 +2598,7 @@ msgstr "Pravidlo cenníka"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "Pravidlá cenníka"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -2643,18 +2715,18 @@ msgstr "Kategória produktu"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Kombinovaný produkt"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "Položka kombinovaného produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__product_count
 msgid "Product Count"
-msgstr ""
+msgstr "Počet produktov"
 
 #. module: product
 #: model:res.groups,name:product.group_product_manager
@@ -2664,7 +2736,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produktový dokument"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
@@ -2674,47 +2746,47 @@ msgstr "Etiketa produktu (PDF)"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
-msgstr ""
+msgstr "Etiketa produktu 2x7 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
-msgstr ""
+msgstr "Etiketa produktu 4x12 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "Etiketa produktu 4x12 bez ceny (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
 msgid "Product Label 4x7 (PDF)"
-msgstr ""
+msgstr "Etiketa produktu 4x7 (PDF)"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "Zostava produktových etiket"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr ""
+msgstr "Zostava produktová etiketa 2x7"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr ""
+msgstr "Zostava produktová etiketa 4x12"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr ""
+msgstr "Zostava produktová etiketa 4x12 bez ceny"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr ""
+msgstr "Zostava produktová etiketa 4x7"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -2752,19 +2824,19 @@ msgstr "Produktové balenia"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
 msgid "Product Properties"
-msgstr ""
+msgstr "Vlastnosti produktu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "Štítok produktu"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr ""
+msgstr "Štítky produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -2802,13 +2874,13 @@ msgstr "Šablóny produktu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Šablóna produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "Nápoveda produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -2855,7 +2927,7 @@ msgstr "Varianty produktu"
 #. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
+msgstr "Model produktu nie je definovaný, kontaktujte svojho správcu."
 
 #. module: product
 #. odoo-python
@@ -2884,7 +2956,7 @@ msgstr "Cenník produktov"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "Hľadanie cenových pravidiel produktov"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2895,12 +2967,12 @@ msgstr "Hľadanie cien produktov"
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "Produkty: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Propagačné akcie, kupóny, darčekové karty a vernostný program"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_properties
@@ -2937,12 +3009,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Quantities"
-msgstr ""
+msgstr "Množstvá"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Množstvá (cena)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2954,13 +3026,13 @@ msgstr "Množstvo"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "Množstvo (%s MJ)"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Množstvo (%s) už je v prehľade zadané."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2989,16 +3061,18 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the "
 "quantity and the period."
 msgstr ""
+"Zaevidujte ceny požadované vašimi dodávateľmi pre každý produkt, množstvo a "
+"obdobie."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 msgid "Related Products"
-msgstr ""
+msgstr "Súvisiace produkty"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
-msgstr ""
+msgstr "Súvisiace varianty"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
@@ -3015,7 +3089,7 @@ msgstr "Odstrániť"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Remove quantity"
-msgstr ""
+msgstr "Odstrániť množstvo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
@@ -3052,7 +3126,7 @@ msgstr "Reštauračné náklady"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
-msgstr ""
+msgstr "Zaokrúhliť na"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
@@ -3062,7 +3136,7 @@ msgstr "Rady"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "Tip k pravidlu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3092,7 +3166,7 @@ msgstr "Predajná cena"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Predajná cena"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -3132,12 +3206,15 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"Nastaví cenu tak, aby bola násobkom tejto hodnoty.\n"
+"Zaokrúhľovanie sa uplatňuje po zľave a pred príplatkom.\n"
+"Aby ceny končili na 9,99, zaokrúhlite na 10,00 a nastavte príplatok na -0,01"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Show Name"
-msgstr ""
+msgstr "Zobraziť názov"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3153,7 +3230,7 @@ msgstr "Veľkosť"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "Konkrétna vlastnosť - Produktový cenník"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3189,6 +3266,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Určite pevnú sumu, ktorú chcete pridať alebo odpočítať (ak je záporná) od "
+"sumy vypočítanej vrátanie zľavy."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3217,6 +3296,9 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Počiatočný dátum a čas pre overenie položky cenníka\n"
+"Zobrazená hodnota závisí od časového pásma nastaveného vo vašich "
+"preferenciách."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_state
@@ -3269,24 +3351,24 @@ msgstr "Tagy"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Štítky sa používajú na vyhľadávanie produktov podľa danej témy."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
 msgid "Template Values"
-msgstr ""
+msgstr "Hodnota šablóny"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The Internal Reference '%s' already exists."
-msgstr ""
+msgstr "Interná referencia „%s“ už existuje."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "The Reference '%s' already exists."
-msgstr ""
+msgstr "Referencia „%s“ už existuje."
 
 #. module: product
 #. odoo-python
@@ -3295,6 +3377,7 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
+"Atribút %(attribute)s produktu %(product)s musí mať aspoň jednu hodnotu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3302,6 +3385,8 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
+"Atribút nie je možné zmeniť, ak sa jeho hodnota použila aspoň na jednom "
+"produkte."
 
 #. module: product
 #. odoo-python
@@ -3320,6 +3405,9 @@ msgid ""
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
 msgstr ""
+"Organizér na stôl je ideálny na ukladanie všetkých druhov drobností a keďže "
+"5 boxov je nepripevnených, môžete ich presúvať a umiestňovať tak, ako to "
+"najlepšie vyhovuje vám a vašim veciam."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -3338,7 +3426,7 @@ msgstr "Prvá v sekvencii je predvolená."
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
-msgstr ""
+msgstr "Minimálna výška je 65 cm a pre prácu v stoji je maximálna výška 125 cm."
 
 #. module: product
 #. odoo-python
@@ -3354,6 +3442,10 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses "
 "in a combo, it will always be the same price."
 msgstr ""
+"Minimálna cena medzi produktmi v tejto kombinácii. Táto hodnota sa použije "
+"na pomerné rozdelenie ceny tejto kombinácie vo vzťahu k ostatným kombináciám "
+"v kombinovanom produkte. Táto heuristika zabezpečuje, že bez ohľadu na to, "
+"ktorý produkt si používateľ v kombinácii vyberie, cena bude vždy rovnaká."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3371,6 +3463,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"Počet variantov, ktoré sa majú vygenerovať, presahuje povolený limit. Nemali "
+"by ste generovať varianty pre každú kombináciu, alebo ich generujte ak je "
+"treba v predajnej objednávke. Pre zmenu otvorte zobrazenie formulára "
+"atribútov a zmeňte režim *Vytvoriť varianty*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3395,7 +3491,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "Metóda zaokrúhľovania musí byť striktne kladná."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
@@ -3414,6 +3510,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"Hodnota %(value)s atribútu %(attribute)s na produkte %(product)s nie je "
+"definovaná."
 
 #. module: product
 #. odoo-python
@@ -3441,6 +3539,9 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"Táto konfigurácia atribútov, hodnôt a vylúčení by neviedla k žiadnej možnej "
+"variante. Ak je to váš zámer, produkt prosím archivujte alebo priamo "
+"odstráňte."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -3473,6 +3574,8 @@ msgstr ""
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
 msgstr ""
+"Tento produkt je súčasťou kombinácie, takže jeho typ nemožno zmeniť na „"
+"kombinácia“."
 
 #. module: product
 #. odoo-python
@@ -3534,13 +3637,13 @@ msgstr "Typ výnimočnej aktivity v zázname."
 #: code:addons/product/controllers/pricelist_report.py:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "MJ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
-msgstr ""
+msgstr "Nemožno nájsť šablónu etikiet pre formát %s"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -3594,23 +3697,23 @@ msgstr "Kategórie merných jednotiek"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "Aktualizovať doplatky"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "Aktualizovať hodnotu atribútu produktu"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "Aktualizovať doplatky produktov"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "Aktualizujte doplatky existujúcich produktov"
 
 #. module: product
 #. odoo-javascript
@@ -3622,12 +3725,12 @@ msgstr "Nahrať"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Nahrajte súbory k vášmu produktu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "Doplnkový a krížový predaj"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__url
@@ -3640,6 +3743,8 @@ msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
 msgstr ""
+"Aby sa zákazníkom zobrazila zľava, použite pravidlá zľav a aktivujte "
+"nastavenia zľav."
 
 #. module: product
 #. odoo-python
@@ -3648,6 +3753,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Túto funkciu použite na ukladanie akýchkoľvek súborov, ktoré chcete zdieľať "
+"so svojimi zákazníkmi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3674,7 +3781,7 @@ msgstr "Platnosť"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Validity Period"
-msgstr ""
+msgstr "Doba platnosti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -3685,7 +3792,7 @@ msgstr "Hodnota"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
+msgstr "Počet hodnôt"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -3724,7 +3831,7 @@ msgstr "Počet variantov"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "Vytváranie variantov"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3734,22 +3841,22 @@ msgstr "Obrázok varianty"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "Obrázok varianty 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "Obrázok varianty 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "Obrázok varianty 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "Obrázok varianty 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3770,7 +3877,7 @@ msgstr "Predajca variantu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Variant Tags"
-msgstr ""
+msgstr "Štítky varianty"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
@@ -3889,6 +3996,7 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior "
 "quality."
 msgstr ""
+"Venujeme osobitnú pozornosť detailom, preto sú naše stoly najvyššej kvality."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3916,7 +4024,7 @@ msgstr "Biela"
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_color_wood
 msgid "Wood"
-msgstr ""
+msgstr "Drevo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
@@ -3930,12 +4038,14 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"Chystáte sa pridať hodnotu „%(attribute_value)s“ k %(product_count)s "
+"produktom."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "Chystáte sa aktualizovať doplatok %s produktov."
 
 #. module: product
 #. odoo-python
@@ -3943,7 +4053,7 @@ msgstr ""
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr ""
+msgstr "Deaktivujete funkciu cenníka. Všetky aktívne cenníky budú archivované."
 
 #. module: product
 #. odoo-python
@@ -3960,12 +4070,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "Nastavením zápornej zľavy môžete aplikovať prirážku."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "Prirážku môžete uplatniť na náklady"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -3990,13 +4100,13 @@ msgstr ""
 msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
-msgstr ""
+msgstr "Môžete nahrať obrázok, ktorý sa použije ako farba hodnoty atribútu."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "Tento produkt nemôžete upravovať v katalógu."
 
 #. module: product
 #. odoo-python
@@ -4004,6 +4114,8 @@ msgstr ""
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"Tento atribút nie je možné archivovať, pretože s ním sú stále prepojené "
+"produkty"
 
 #. module: product
 #. odoo-python
@@ -4020,6 +4132,9 @@ msgid ""
 "because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Režim vytvárania variantov atribútu %(attribute)s nie je možné zmeniť, "
+"pretože sa používa v nasledujúcich produktoch:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -4028,6 +4143,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on "
 "the following products: %(products)s"
 msgstr ""
+"Atribút hodnoty %(value)s nie je možné zmeniť, pretože sa používa v "
+"nasledujúcich produktoch: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -4036,6 +4153,7 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
+"Nemôžete zmeniť produkt hodnoty %(value)s nastavenej na produkte %(product)s."
 
 #. module: product
 #. odoo-python
@@ -4044,6 +4162,7 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
+"Hodnotu %(value)s nastavenú pre produkt %(product)s nie je možné zmeniť."
 
 #. module: product
 #. odoo-python
@@ -4070,6 +4189,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"Nie je možné odstrániť cenníky:\n"
+"(%(pricelists)s)\n"
+"Sú použité v iných cenníkoch:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4085,6 +4208,9 @@ msgid ""
 "following products:\n"
 "%(products)s"
 msgstr ""
+"Atribút %(attribute)s nie je možné odstrániť, pretože sa používa v "
+"nasledujúcich produktoch:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -4094,6 +4220,9 @@ msgid ""
 "products:\n"
 "%(products)s\n"
 msgstr ""
+"Hodnotu %(value)s nie je možné odstrániť, pretože sa používa v nasledujúcich "
+"produktoch:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4109,6 +4238,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
+"Atribút %(attribute)s nie je možné presunúť z produktu %(product_src)s do "
+"produktu %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -4117,6 +4248,8 @@ msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
 msgstr ""
+"Súvisiace varianty nemožno aktualizovať z ich hodnôt. Aktualizujte súvisiace "
+"hodnoty z variantov."
 
 #. module: product
 #. odoo-javascript
@@ -4126,6 +4259,9 @@ msgid ""
 "                            whether it's a storable product, a consumable or "
 "a service."
 msgstr ""
+"Produkty musíte definovať pre všetko čo predávate alebo kupujete,\n"
+"                            či už ide o skladovaný produkt, spotrebný tovar "
+"alebo službu."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -4134,6 +4270,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Produkty musíte definovať pre všetko čo predávate alebo kupujete,\n"
+"                či už ide o skladovaný produkt, spotrebný tovar alebo službu."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -4145,6 +4283,13 @@ msgid ""
 "                price, notes in the quotation, accounting data, procurement "
 "methods, etc."
 msgstr ""
+"Produkt musíte definovať pre všetko, čo predávate alebo nakupujete,\n"
+"                či už ide o skladovateľný produkt, spotrebný tovar alebo "
+"službu.\n"
+"                Formulár produktu obsahuje informácie, ktoré zjednodušujú "
+"proces predaja:\n"
+"                cenu, poznámky v ponuke, účtovné údaje, metódy obstarávania "
+"atď."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -4166,19 +4311,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "Musíte ponechať aspoň jedno množstvo."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "Musíte nastaviť kladné množstvo."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
-msgstr ""
+msgstr "csv"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4195,18 +4340,18 @@ msgstr "zľava"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "napr. 1234567890"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "napr. Výber hamburgerov"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "napr. Syrový burger"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -4221,7 +4366,7 @@ msgstr "napr. predplatné Odoo Enterprise verzie"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "napr. Predjedlo – hlavné jedlo – dezert"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -4232,7 +4377,7 @@ msgstr "napr. USD maloobchodníci"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr ""
+msgstr "prirážka"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -4249,7 +4394,7 @@ msgstr "pdf"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "za"
 
 #. module: product
 #. odoo-python
@@ -4262,19 +4407,19 @@ msgstr "produkt"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "náklady produktu"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "zaokrúhliť na 10,00 a nastaviť prirážku na -0,01"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
-msgstr ""
+msgstr "predajná cena"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -4284,7 +4429,7 @@ msgstr "nadradená spoločnosť"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr ""
+msgstr "šablónu produktu."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4295,4 +4440,4 @@ msgstr "na"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
-msgstr ""
+msgstr "xlsx"

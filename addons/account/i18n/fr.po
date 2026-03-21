@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-03-07 18:00+0000\n"
+"POT-Creation-Date: 2026-03-20 18:36+0000\n"
+"PO-Revision-Date: 2026-03-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/account/"
 "fr/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2568,7 +2568,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité exception décoration"
+msgstr "Indicateur d’exception d’activité"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_state
@@ -7492,6 +7492,11 @@ msgid "Expired"
 msgstr "Expiré"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+msgid "Export ZIP"
+msgstr "Exporter en ZIP"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "Libellé d'expression"
@@ -11409,6 +11414,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
 msgid "Notes"
 msgstr "Notes"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Nothing to export."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -19198,6 +19209,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Vous ne pouvez pas publier une écriture avec un compte analytique archivé : "
+"%s"
 
 #. module: account
 #. odoo-python
@@ -19633,6 +19646,12 @@ msgstr "fermer"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "dates pour"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "documents"
+msgstr "documents"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

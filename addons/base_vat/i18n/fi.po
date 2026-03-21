@@ -10,13 +10,14 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-12 18:39+0000\n"
-"PO-Revision-Date: 2026-03-03 17:41+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-03-21 09:17+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/base_vat/"
 "fi/>\n"
 "Language: fi\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base_vat
 #. odoo-python
@@ -147,7 +148,7 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr "Verokanta"
+msgstr "Verokantasääntö"
 
 #. module: base_vat
 #. odoo-python
@@ -167,8 +168,8 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
-"Jos valittu, sovellettava oletusarvoinen verokanta riippuu eurooppalaisen "
-"VIES-palvelun suorittaman tarkastuksen tuloksesta."
+"Jos tämä ruutu on valittu, oletuksena sovellettava verokantasääntö riippuu "
+"eurooppalaisen VIES-palvelun suorittaman tarkastuksen tuloksesta."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -228,8 +229,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
-"Tämän ulkomaisen ALV-numeron kohdalla havaittu maa ei vastaa mitään maata, "
-"joka muodostaa tämän verokannan maaryhmän."
+"Tälle ulkomaiselle ALV-numerolle havaittu maa ei vastaa yhtäkään tämän "
+"verokantasäännön maaryhmän maata."
 
 #. module: base_vat
 #. odoo-python
@@ -238,8 +239,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a "
 "country to the fiscal position or set a country group"
 msgstr ""
-"Ulkomaisen alv-numeron maata ei voitu havaita. Määritä maa verokannalle tai "
-"aseta maaryhmä"
+"Ulkomaisen ALV-numeron maata ei havaittu. Määritä maaryhmä tai "
+"verokantasäännön maa"
 
 #. module: base_vat
 #. odoo-python
@@ -292,7 +293,7 @@ msgstr "joko 11 numeroa CPF:n osalta tai 14 numeroa CNPJ:n osalta"
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid "fiscal position [%s]"
-msgstr "verokanta [%s]"
+msgstr "verokantasääntö [%s]"
 
 #. module: base_vat
 #. odoo-python

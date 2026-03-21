@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_management
+# * sale_management
 #
 # Translators:
 # Wil Odoo, 2024
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"PO-Revision-Date: 2026-03-21 09:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
+"sale_management/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -33,7 +36,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">z</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -157,7 +160,7 @@ msgstr "Vytvorené"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "Predvolená šablóna objednávky"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
@@ -218,6 +221,7 @@ msgstr ""
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"Zakázaný produkt, množstvo a merná jednotka v neúčtovateľnom riadku ponuky"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -250,6 +254,9 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Ak je táto možnosť nastavená, objednávka s touto šablónou bude fakturovať do "
+"tohto denníka; v opačnom prípade sa použije denník predaja s najnižším "
+"poradovým číslom."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -263,7 +270,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Fakturačný denník"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -345,13 +352,13 @@ msgstr "Možnosti"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Percento preddavku"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Percento zálohy musí byť platné percento."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -425,7 +432,7 @@ msgstr "Šablóny cenovej ponuky"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr ""
+msgstr "Platnosť ponuky"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -503,6 +510,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Predávate ten istý produkt v rôznych veľkostiach alebo farbách? Vyskúšajte "
+"produktovú mriežku a vyplňte svoje objednávky viacerými kusmi každej "
+"varianty. Táto funkcia je k dispozícii aj v aplikácii Nákup."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -518,6 +528,10 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Máte problémy so zložitým produktovým katalógom? Vyskúšajte konfigurátor "
+"produktov, ktorý pomôže predajcom zostaviť produkt s rôznymi možnosťami: "
+"farby, veľkosť, kapacita atď. Uľahčite zadávanie objednávok a zabráňte "
+"chybám."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -542,7 +556,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr " Percento sumy, ktorú je potrebné zaplatiť na potvrdenie ponúk."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -566,13 +580,13 @@ msgstr ""
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Tip: Odoo podporuje konfigurovateľné produkty"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Tip: Predávajte alebo nakupujte produkty vo veľkom pomocou matíc"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -652,6 +666,11 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaša šablóna patrí spoločnosti %(template_company)s, ale obsahuje produkty "
+"spoločnosti %(product_company)s, ktoré nie sú pre spoločnosť %"
+"(template_company)s dostupné.\n"
+"Zmeňte prosím spoločnosť vo vašej šablóne alebo odstráňte produkty iných "
+"spoločností."
 
 #. module: sale_management
 #. odoo-python
@@ -663,6 +682,11 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaša šablóna patrí spoločnosti %(template_company)s, obsahuje však produkty "
+"iných spoločností (%(product_company)s), ku ktorým spoločnosť %"
+"(template_company)s nemá prístup.\n"
+"Zmeňte prosím spoločnosť vo vašej šablóne alebo odstráňte produkty iných "
+"spoločností."
 
 #. module: sale_management
 #. odoo-python
@@ -672,6 +696,9 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Ak je vaša šablóna zdieľaná medzi viacerými spoločnosťami, nesmie obsahovať "
+"produkty konkrétnych spoločností. Obmedzte prosím prístup k šablóne alebo "
+"tieto produkty odstráňte."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -681,7 +708,7 @@ msgstr "dni"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "napr. Štandardný konzultačný balík"
 
 #~ msgid "Your template cannot contain products from multiple companies."
 #~ msgstr "Vaša šablóna nemôže obsahovať produkty od viacerých spoločností."

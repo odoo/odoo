@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 10:05+0000\n"
+"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"PO-Revision-Date: 2026-03-21 09:18+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/hr/nl/>\n"
 "Language: nl\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -83,7 +83,7 @@ msgstr "12 dagen per jaar, waarvan <br>6 naar keuze."
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "2 open days"
-msgstr "2 open dagen"
+msgstr "2 dagen"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -300,9 +300,7 @@ msgstr "Actie gevraagd"
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
-msgstr ""
-"Activeer Werken op afstand om medewerkers te laten aangeven waarvandaan ze "
-"werken."
+msgstr "Activeer Telewerk om medewerkers te laten aangeven waar ze werken."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -1411,6 +1409,11 @@ msgid "Employee's Country"
 msgstr "Werknemer zijn land"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+msgid "Employee's Country Code"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1729,7 +1732,7 @@ msgstr "Eenheid afstand thuis-werk"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_resource_resource__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "HR-pictogramweergave"
+msgstr "HR-icoonweergave"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
@@ -1752,7 +1755,7 @@ msgstr "Personeelszaken"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Personeelsbeheer manager"
+msgstr "HR-manager"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
@@ -2132,7 +2135,7 @@ msgstr "Burgerlijke staat"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "Marketing en communicatie manager"
+msgstr "Marketing- en communicatiemanager"
 
 #. module: hr
 #. odoo-python
@@ -2901,7 +2904,7 @@ msgstr "Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
 msgid "Remote Work"
-msgstr "Op afstand werken"
+msgstr "Telewerk"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -3058,7 +3061,7 @@ msgstr "Gebruiker delen"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__show_hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_resource_resource__show_hr_icon_display
 msgid "Show Hr Icon Display"
-msgstr "Toon hr-pictogramweergave"
+msgstr "Toon hr-icoonweergave"
 
 #. module: hr
 #. odoo-javascript
@@ -3261,6 +3264,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."

@@ -7,15 +7,15 @@
 # Manon Rondou, 2025
 #
 # Rémi CAZENAVE <remi@le-filament.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2025-11-21 02:27+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"PO-Revision-Date: 2026-03-21 09:18+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/hr/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -323,7 +323,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité exception décoration"
+msgstr "Indicateur d’exception d’activité"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan
@@ -1413,6 +1413,11 @@ msgstr "Numéro de compte bancaire de l'employé"
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
 msgstr "Pays de l'employé"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+msgid "Employee's Country Code"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -3273,6 +3278,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_attendance
+# * hr_attendance
 #
 # Translators:
 # Mads Søndergaard, 2024
@@ -10,20 +10,22 @@
 # lhmflexerp <lhm@flexerp.dk>, 2025
 # Kira Petersen, 2025
 # Wil Odoo, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"PO-Revision-Date: 2026-03-21 18:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
+"hr_attendance/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -270,7 +272,7 @@ msgstr "Tilstedeværelse"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "Tilstedeværelsesfejl"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -639,7 +641,7 @@ msgstr "Tilslut en RDIF-læser, og scan et token."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "Forbindelsen afbrudt. Ind- og udtjekning kunne ikke registreres."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_country_name
@@ -746,6 +748,9 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"Brugeren har ikke adgang til at redigere tilstedeværelser, der ikke vedrører "
+"vedkommende selv, eller hvis brugeren ikke er ansvarlig for medarbejderens "
+"tilstedeværelse."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -990,6 +995,14 @@ msgstr "Inputtilstand (ud)"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Install"
 msgstr "Installer"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/controllers/main.py:0
+msgid ""
+"Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
+"'ilike' operators."
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1380,6 +1393,11 @@ msgstr "Afvist"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "Rapportering"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Oplysninger om ressourcens ferie"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error
