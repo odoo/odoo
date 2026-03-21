@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -2037,6 +2037,11 @@ msgstr "Darbinieka bankas konts"
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
 msgstr "Darbinieka valsts"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+msgid "Employee's Country Code"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -4365,6 +4370,7 @@ msgstr "Nozīmītes ID jābūt unikālam, šāds jau ir piešķirts citam darbin
 #: model:ir.model.fields,help:hr.field_hr_employee__country_code
 #: model:ir.model.fields,help:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,help:hr.field_hr_version__country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -4423,6 +4429,12 @@ msgstr ""
 msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
 msgstr ""
 
 #. module: hr

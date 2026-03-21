@@ -7,13 +7,14 @@
 # Thi Huong Nguyen, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 22:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-21 13:12+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-4/hr/"
 "vi/>\n"
 "Language: vi\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -204,7 +205,7 @@ msgstr "<small>AI</small>"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Dashboard</small>"
-msgstr "<small>Bảng điều khiển</small>"
+msgstr "<small>Báo cáo tổng quan</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -2205,6 +2206,11 @@ msgstr "Số tài khoản ngân hàng của nhân viên"
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
 msgstr "Quốc gia của nhân viên"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+msgid "Employee's Country Code"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -4570,6 +4576,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__country_code
 #: model:ir.model.fields,help:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,help:hr.field_hr_version__country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -4639,6 +4646,12 @@ msgid ""
 msgstr ""
 "Trường “%s” mà bạn đang muốn xem không khả dụng cho hồ sơ nhân viên công "
 "khai."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
 
 #. module: hr
 #. odoo-python

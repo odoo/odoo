@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-03-12 09:11+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-21 13:09+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_attendance/da/>\n"
@@ -704,6 +704,7 @@ msgstr "Vis ekstra timer."
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -926,6 +927,7 @@ msgstr "HR-tilstedeværelsessøgning"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__id
+#: model:ir.model.fields,field_description:hr_attendance.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
@@ -982,6 +984,14 @@ msgstr "Inputtilstand (ud)"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Install"
 msgstr "Installér"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/controllers/main.py:0
+msgid ""
+"Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
+"'ilike' operators."
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1392,6 +1402,11 @@ msgid "Reporting"
 msgstr "Rapportering"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Fejl ved SMS-levering"
@@ -1603,7 +1618,8 @@ msgstr "Ukendt"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr "Anvend pinkoder (defineret på medarbejderens profil) til at tjekke ind."
+msgstr ""
+"Anvend pinkoder (defineret på medarbejderens profil) til at tjekke ind."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form

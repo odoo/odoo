@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 13:34+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-21 13:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/ja/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -941,8 +941,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> 予約"
-"済</span>"
+"                                    <span class=\"d-none d-md-inline\"> 逆仕"
+"訳済</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -4925,7 +4925,7 @@ msgstr "都市町村"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__clearing_number
 msgid "Clearing Number"
-msgstr "消込番号"
+msgstr "クリアリング番号"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -10187,7 +10187,7 @@ msgstr "残高に関わらず、会計で消込が許可されている仕訳明
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Journal should be the same type as the reversed entry."
-msgstr "仕訳は、反対仕訳と同じ種類を使用する必要があります。"
+msgstr "仕訳帳は、逆仕訳対象の仕訳と同じ種類である必要があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -13897,7 +13897,7 @@ msgstr "逆仕訳"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Reverse Moves"
-msgstr "逆仕訳"
+msgstr "逆仕訳を作成"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -13918,7 +13918,7 @@ msgstr "逆仕訳済"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr "取消日"
+msgstr "逆仕訳日"
 
 #. module: account
 #. odoo-python
@@ -17291,7 +17291,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "To reverse a journal entry, it has to be posted first."
-msgstr "仕訳を取り消すには、まず仕訳が記帳されている必要があります。"
+msgstr "仕訳を逆仕訳するには、先に記帳されている必要があります。"
 
 #. module: account
 #. odoo-javascript
@@ -17922,7 +17922,7 @@ msgstr "税クロージングで使用"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use negative numbers to reverse original entries"
-msgstr "元の仕訳を取り消すには、マイナスの金額を使用してください。"
+msgstr "元の仕訳を逆仕訳するには、負の数を使用します"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
@@ -18799,6 +18799,14 @@ msgstr "税レポートに影響を与えるため、税目を削除すること
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr "ロックされた仕訳帳の仕訳明細は削除できません。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
 
 #. module: account
 #. odoo-python
