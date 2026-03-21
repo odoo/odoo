@@ -512,7 +512,7 @@ class HolidaysAllocation(models.Model):
                         # allocation.expiring_carryover_days - allocation.leaves_taken or 0 if all the expiring days were used
                         # to take time off.
                         # This ensures that only the days that weren't used to take time off will expire.
-                        expiring_days = max(0, allocation.expiring_carryover_days - allocation.leaves_taken)
+                        expiring_days = max(0, allocation.expiring_carryover_days - leaves_taken)
                         allocation.number_of_days = max(0, allocation.number_of_days - expiring_days)
                         allocation.expiring_carryover_days = 0
 
