@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
-"PO-Revision-Date: 2026-01-15 21:48+0000\n"
+"POT-Creation-Date: 2026-03-20 18:36+0000\n"
+"PO-Revision-Date: 2026-03-18 16:37+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/lunch/"
 "ar/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -206,6 +206,85 @@ msgid ""
 "<p>Do not hesitate to contact us if you have any questions.</p>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"<p>\n"
+"عزيزتنا<t t-out=\"order.get('supplier_name', '')\">لوري بوارت</t>,\n"
+"</p><p>\n"
+"هذه هي طلبات اليوم لـ <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
+"</p>\n"
+"\n"
+"<t t-if=\"sites\">\n"
+"    <br/>\n"
+"    <p>الموقع</p>\n"
+"    <p t-foreach=\"site\" t-as=\"site\">\n"
+"        <t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or "
+"''\"/>\n"
+"    </p>\n"
+"    <br/>\n"
+"</t>\n"
+"\n"
+"<table>\n"
+"    <thead>\n"
+"        <tr style=\"background-color:rgb(233,232,233);\">\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>المنتج</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>التعليقات</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>الأفراد</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;"
+"\"><strong>الموقع</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" "
+"align=\"center\"><strong>الكمية</strong></th>\n"
+"            <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" "
+"align=\"center\"><strong>السعر</strong></th>\n"
+"        </tr>\n"
+"    </thead>\n"
+"    <tbody>\n"
+"        <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-"
+"out=\"line['product'] or ''\">سوشي بالسالمون</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"            <t t-if=\"line['toppings']\">\n"
+"                <t t-out=\"line['toppings'] or ''\">صلصة الصويا</t>\n"
+"            </t>\n"
+"            <t t-if=\"line['note']\">\n"
+"                <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] "
+"or ''\">مع الواسابي.</div>\n"
+"            </t>\n"
+"            </td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-"
+"out=\"line['username'] or ''\">lap</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-"
+"out=\"line['site'] or ''\">المكتب 1</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" "
+"align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"            <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" "
+"align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ "
+"1.00</td>\n"
+"        </tr>\n"
+"        <tr>\n"
+"            <td/>\n"
+"            <td/>\n"
+"            <td/>\n"
+"            <td/>\n"
+"            <td style=\"width: 100%; font-size: 13px; border-top: 1px solid "
+"black;\"><strong>الإجمالي</strong></td>\n"
+"            <td style=\"width: 100%; font-size: 13px; border-top: 1px solid "
+"black;\" align=\"right\"><strong t-out=\"order.get('amount_total') and "
+"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></"
+"td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+"</table>\n"
+"\n"
+"<p>لا تترددوا في التواصل معنا إذا كانت لديكم أي أسئلة أو استفسارات.</p>\n"
+"        </t>"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
@@ -534,7 +613,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Close"
-msgstr ""
+msgstr "إغلاق"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
@@ -1185,32 +1264,32 @@ msgid "Lunch: Supplier Order"
 msgstr "الغداء: طلب المورد"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_238
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "الغداء: إشعار تنبيه الدردشة (التنبيه للمكتب 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى Coin Gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً لمزود الغداء"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_241
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_242
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_241
 msgid "Lunch: send automatic email to The Corner"
 msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى The Corner"
 
