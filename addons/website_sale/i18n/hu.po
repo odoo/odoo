@@ -22,13 +22,14 @@
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Tommy Gombar <tommy.gombar@kilafornia.net>, 2026.
+# Sarbó Gergely <sarbo.gergely@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-16 05:03+0000\n"
-"Last-Translator: Tommy Gombar <tommy.gombar@kilafornia.net>\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-15 14:05+0000\n"
+"Last-Translator: Sarbó Gergely <sarbo.gergely@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/hu/>\n"
 "Language: hu\n"
@@ -36,7 +37,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -81,7 +82,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax included)"
-msgstr ""
+msgstr "(adóval)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.empty_cart_svg
@@ -177,7 +178,7 @@ msgstr "<b>Közlemény:</b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "<b>Price Range</b>"
-msgstr ""
+msgstr "<b>Ár</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -197,6 +198,9 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\">Add "
 "to cart</span>"
 msgstr ""
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                    <span class=\"d-none d-md-"
+"inline\">Kosárba</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -224,6 +228,9 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
+"                    <span class=\"o_label small ms-1\">Kosárba</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -268,6 +275,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
 "class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+"class=\"o_label small ms-1\">Kosárba</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -275,6 +284,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                    Kosárba"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -1025,7 +1036,7 @@ msgstr "Vissza a kosárhoz"
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
 msgid "Back to extra info"
-msgstr ""
+msgstr "Vissza az Extra információ szakaszra"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1426,7 +1437,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
-msgstr ""
+msgstr "Átvételi hely kiválasztása"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1525,7 +1536,7 @@ msgstr "Bezárás"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
-msgstr "Lezárt"
+msgstr "Zárva"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1977,7 +1988,7 @@ msgstr "Szállítás módja"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "Delivery address"
-msgstr ""
+msgstr "Szállítási cím"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
@@ -2083,7 +2094,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Discount code..."
-msgstr ""
+msgstr "Kuponkód..."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2179,7 +2190,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Displayed in bottom of product pages"
-msgstr ""
+msgstr "A terméklap alján kerülnek bemutatásra"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__cover_image
@@ -2259,7 +2270,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_extra_field
 msgid "E-Commerce Extra Info Shown on product page"
-msgstr ""
+msgstr "Webshop extra információk a terméklapon megjelenítve"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
@@ -2290,12 +2301,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Ecommerce Description"
-msgstr ""
+msgstr "Webáruház leírás"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Ecommerce Shop"
-msgstr ""
+msgstr "Webáruház"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
@@ -2400,7 +2411,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra info"
-msgstr ""
+msgstr "Extra információk"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2563,7 +2574,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/checkout.js:0
 msgid "Free"
-msgstr "Szabad"
+msgstr "Ingyenes"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -2722,7 +2733,7 @@ msgstr "Elrejt"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
 msgid "Hide 'Add To Cart' when price = 0"
-msgstr ""
+msgstr "Rejtse el a 'Kosárba' gombot, ha az ár 0."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2828,6 +2839,7 @@ msgstr "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépe
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
 msgstr ""
+"Ha a termék ára 0, cserélje le a 'Kosárba' gombot a 'Kapcsolat' feliratra."
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -3461,12 +3473,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
-msgstr ""
+msgstr "Nem található termék"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in this category."
-msgstr ""
+msgstr "Nem található termék ebben a kategóriában."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -3877,7 +3889,7 @@ msgstr "Telefonszám"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Pickup Location"
-msgstr ""
+msgstr "Átvételi pont"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3927,7 +3939,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_history
 msgid "Press 'Enter' to add to cart"
-msgstr ""
+msgstr "Nyomja meg az 'Enter'-t a kosárba tételhez"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
@@ -4907,7 +4919,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Checkout - Extra Information"
-msgstr ""
+msgstr "Rendelés véglegesítése - extra információk"
 
 #. module: website_sale
 #. odoo-python
@@ -5111,7 +5123,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sort By"
-msgstr ""
+msgstr "Rendezés"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5213,7 +5225,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr ""
+msgstr "Javasolt kiegészítők a kosárbnan"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5253,7 +5265,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
-msgstr ""
+msgstr "Adóval vagy adó nélkül a weboldal beállításától függően."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -5735,6 +5747,14 @@ msgid "Video URL"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/website_sale.js:0
+msgid "View Less"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/website_sale.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
 msgstr ""
@@ -5984,7 +6004,7 @@ msgstr "Weboldalak"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "What should be done on \"Add to Cart\"?"
-msgstr ""
+msgstr "Mi történjen a „Kosárba” gomb megnyomásakor?"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
@@ -6224,7 +6244,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Media"
-msgstr ""
+msgstr "Webáruház fotók"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total

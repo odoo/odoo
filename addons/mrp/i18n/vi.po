@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-01-17 09:51+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-20 15:13+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/mrp/"
 "vi/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -221,7 +221,7 @@ msgstr "+ %d ngày"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s ngày"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
@@ -488,7 +488,7 @@ msgstr "<span class=\"o_stat_text\">Loại bỏ</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Số sê-ri</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1723,7 +1723,7 @@ msgid ""
 "buying or manufacturing the components and/or subassemblies."
 msgstr ""
 "Tính số ngày cần thiết để cung cấp lại tất cả thành phần từ BoM, bằng cách "
-"mua hoặc sản xuất các thành phần và/hoặc cụm lắp ráp."
+"mua hoặc sản xuất các thành phần và/hoặc bán thành phẩm."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -2038,7 +2038,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Creates a new serial number"
-msgstr ""
+msgstr "Tạo số sê-ri mới"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
@@ -2525,7 +2525,7 @@ msgstr "(Các) ngoại lệ:"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Exp %s"
-msgstr "Ngày hết hạn %s"
+msgstr "Ngày dự kiến %s"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
@@ -3652,6 +3652,7 @@ msgstr "Lệnh sản xuất"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -4847,7 +4848,6 @@ msgstr "Sản xuất được bắt đầu muộn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 msgid "Productions"
 msgstr "Hoạt động sản xuất"
@@ -7201,16 +7201,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
-msgstr ""
-"Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'sử dụng' chúng: %"
-"(missing_products)s"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than the initial demand"
 msgstr ""
@@ -7340,6 +7330,13 @@ msgstr "thời lượng thực tế"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "tách"
+
+#~ msgid ""
+#~ "You need to supply Lot/Serial Number for products and 'consume' them: %"
+#~ "(missing_products)s"
+#~ msgstr ""
+#~ "Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'sử dụng' chúng: %"
+#~ "(missing_products)s"
 
 #~ msgid "# Read Work Orders"
 #~ msgstr "# Công đoạn đã đọc"

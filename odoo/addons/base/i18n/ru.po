@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-03-06 17:48+0000\n"
+"PO-Revision-Date: 2026-03-14 09:40+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/base/ru/>"
 "\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -7392,8 +7392,8 @@ msgid ""
 "Finland.\n"
 msgstr ""
 "\n"
-"Generates Intrastat CSV report for declaration based on invoices for Finland."
-"\n"
+"Generates Intrastat CSV report for declaration based on invoices for "
+"Finland.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_intrastat
@@ -11588,6 +11588,10 @@ msgid ""
 "that are computed\n"
 "using an AI model and a system prompt.\n"
 msgstr ""
+"\n"
+"Целью данного модуля является реализация вычисляемых полей ИИ, т. е. полей, "
+"значения которых рассчитываются\n"
+"с использованием модели ИИ и системного промпта.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_media
@@ -13411,6 +13415,11 @@ msgid ""
 "The user has to create an account on twilio.com and top\n"
 "up their account to start sending SMS messages.\n"
 msgstr ""
+"\n"
+"Этот модуль позволяет использовать Twilio в качестве провайдера для отправки "
+"СМС.\n"
+"Пользователю необходимо создать учетную запись на twilio.com и пополнить \n"
+"баланс, чтобы начать рассылку.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_barcodelookup
@@ -13468,6 +13477,11 @@ msgid ""
 "\n"
 "You can easily assign grade to members/partners, with a specific pricelist.\n"
 msgstr ""
+"Этот модуль позволяет управлять всеми операциями по членству и партнерству.\n"
+"==========================================================================================\n"
+"\n"
+"Вы можете легко присваивать уровни членам/партнерам с использованием "
+"специальных прайс-листов.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription
@@ -14600,6 +14614,10 @@ msgid ""
 "It checks if the pgvector extension is available in the server and\n"
 "only then the AI module is auto-installed.\n"
 msgstr ""
+"\n"
+"Этот модуль необходим для условной автоматической установки модуля ИИ.\n"
+"Он проверяет наличие расширения pgvector на сервере, и\n"
+"только в этом случае модуль ИИ устанавливается автоматически.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -17574,6 +17592,11 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"Acme Corporation внедряет ERP для глобальных компаний и поддерживает малый и "
+"средний бизнес\n"
+"                при помощи программного обеспечения с открытым исходным "
+"кодом. Наши\n"
+"                консультанты являются экспертами в следующих областях:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
@@ -20064,6 +20087,11 @@ msgid ""
 "Thanks to the following constraint: %(field_display)s\n"
 "How about archiving the record instead?"
 msgstr ""
+"Другая модель использует запись, которую вы пытаетесь удалить.\n"
+"\n"
+"Проблема в: %(model_display)s\n"
+"Из-за следующего ограничения: %(field_display)s\n"
+"Может быть, стоит вместо этого архивировать запись?"
 
 #. module: base
 #. odoo-python
@@ -30384,6 +30412,10 @@ msgid ""
 "remove the following fields from the webhook payload:\n"
 "%(restricted_fields)s"
 msgstr ""
+"Поля с ограничением по группам нельзя включать в данные вебхука, чтобы "
+"избежать случайной утечки конфиденциальной информации. Удалите следующие "
+"поля из данных вебхука в указанных действиях:\n"
+"%(restricted_fields)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -31854,6 +31886,9 @@ msgid ""
 "In a Kanban view where columns are records of this model, the value of this "
 "(boolean) field determines which column should be folded by default."
 msgstr ""
+"В представлении Канбан, где колонки соответствуют записям этой модели, "
+"значение этого (логического) поля определяет, какая колонка должна быть "
+"свернута по умолчанию."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
@@ -43510,7 +43545,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Role / Public"
-msgstr "Role / Public"
+msgstr "Роль / Для всех"
 
 #. module: base
 #: model:res.groups,name:base.group_user
@@ -44778,6 +44813,9 @@ msgid ""
 "the UPS connector is compatiblewith the newest version of the UPS REST APIs "
 "available at https://developer.ups.com/"
 msgstr ""
+"Отправляйте свои посылки через UPS и отслеживайте их онлайн. Эта новая "
+"версия коннектора UPS совместима с последней версией UPS REST API "
+"(developer.ups.com)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps_rest
@@ -44786,6 +44824,9 @@ msgid ""
 "USPS connector iscompatible with the new USPS REST API available at https://"
 "developers.usps.com/."
 msgstr ""
+"Отправляйте свои посылки через USPS и отслеживайте их онлайн.  Эта версия "
+"коннектора USPS совместима с новым USPS REST API (https://www.google.com/"
+"search?q=developers.usps.com)."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -48068,6 +48109,8 @@ msgid ""
 "There can be several users related to the same partner. When a single user "
 "is needed, this field attempts to find the most appropriate one."
 msgstr ""
+"С одним партнером могут быть связаны несколько пользователей. Если требуется "
+"один пользователь, это поле пытается найти наиболее подходящего."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
@@ -48216,6 +48259,9 @@ msgid ""
 "supported.         Please install the new \"DHL Express Shipping\" module "
 "and uninstall this one as soon as possible."
 msgstr ""
+"Это устаревшая интеграция с DHL Express, которая больше не "
+"поддерживается.         Пожалуйста, установите новый модуль «DHL Express "
+"Shipping» и удалите этот как можно скорее."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex

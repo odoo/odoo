@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
 "PO-Revision-Date: 2025-11-21 14:45+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/mrp/tr/"
@@ -3672,6 +3672,7 @@ msgstr "Üretim Emri"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -4870,7 +4871,6 @@ msgstr "Üretim geç başladı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 msgid "Productions"
 msgstr "Üretimler"
@@ -7237,16 +7237,6 @@ msgstr ""
 "oluşturmanız gerekir"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
-msgstr ""
-"Ürünler için Lot/Seri Numarası sağlamanız ve bunları 'tüketmeniz' gerekir: %"
-"(missing_products)s"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than the initial demand"
 msgstr "İlk talepten daha az üretim yaptınız"
@@ -7375,6 +7365,13 @@ msgstr "gerçek süre"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "bölünmüş"
+
+#~ msgid ""
+#~ "You need to supply Lot/Serial Number for products and 'consume' them: %"
+#~ "(missing_products)s"
+#~ msgstr ""
+#~ "Ürünler için Lot/Seri Numarası sağlamanız ve bunları 'tüketmeniz' "
+#~ "gerekir: %(missing_products)s"
 
 #~ msgid "# Read Work Orders"
 #~ msgstr "# İş Emirlerini Oku"

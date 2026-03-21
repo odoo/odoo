@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-17 22:06+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -222,6 +222,16 @@ msgstr "%(name)s%(ref)s zu %(currency_amount)s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
+"delivered at %(unit_price)s"
+msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s abgerechnet, %(qty_delivered)s "
+"geliefert zum Preis von %(unit_price)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
@@ -330,18 +340,6 @@ msgstr "„%(filename)s“ (extrahiert aus „%(root_filename)s“, type=%(type)
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "„%(filename)s“ (type=%(type)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
-msgstr "(*) Gelieferte, aber nicht abgerechnete Waren (fortlaufende Bewertung)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
-msgstr "(*) Abgerechnte, aber nicht gelieferte Waren (fortlaufende Bewertung)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -9920,6 +9918,18 @@ msgid "Goods"
 msgstr "Güter"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Delivered not Invoiced (perpetual valuation)"
+msgstr "Gelieferte, aber abgerechnete Waren (fortlaufende Bewertung)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Invoiced not Delivered (perpetual valuation)"
+msgstr "Abgerechnete, aber gelieferte Waren (fortlaufende Bewertung)"
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
 msgid "Ground Transportation"
 msgstr "Bodentransport"
@@ -10962,7 +10972,7 @@ msgstr "Interne Referenz"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_id
 msgid "Internal Transfer"
-msgstr "Interne Überweisungen"
+msgstr "Interne Überweisung"
 
 #. module: account
 #. odoo-python
@@ -12869,7 +12879,7 @@ msgstr "Sonstige Vorgänge"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Miscellaneous"
-msgstr "Sonstiges"
+msgstr "Sonstige"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense
@@ -12888,7 +12898,7 @@ msgstr "Sonstige Sachanlagen"
 #: model:account.journal,name:account.1_general
 #: model:account.journal,name:account.2_general
 msgid "Miscellaneous Operations"
-msgstr "Sonstiges"
+msgstr "Sonstige Geschäftsvorfälle"
 
 #. module: account
 #. odoo-python
@@ -13987,12 +13997,12 @@ msgstr "Ursprüngliches Sperrdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
-msgstr "Originator Gruppe von Steuern"
+msgstr "Usprüngliche Gruppe von Steuern"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
-msgstr "Originator der Zahlung"
+msgstr "Ursprüngliche Zahlung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
@@ -18529,11 +18539,11 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
-"Das mit dieser Rechnung verknüpfte Unternehmensbankkonto (%(account_number)"
-"s) ist nicht vertrauenswürdig. Gehen Sie zu den Bankeinstellungen, "
-"überprüfen Sie, ob es sich um Ihr Konto handelt, oder korrigieren Sie die "
-"Nummer und klicken Sie auf „Geld senden“, um es als vertrauenswürdig zu "
-"markieren."
+"Das mit dieser Rechnung verknüpfte Unternehmensbankkonto (%"
+"(account_number)s) ist nicht vertrauenswürdig. Gehen Sie zu den "
+"Bankeinstellungen, überprüfen Sie, ob es sich um Ihr Konto handelt, oder "
+"korrigieren Sie die Nummer und klicken Sie auf „Geld senden“, um es als "
+"vertrauenswürdig zu markieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -19434,6 +19444,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
 "There's nothing left to pay for the selected journal items, so no payment "
@@ -20155,6 +20173,11 @@ msgstr "Übertragung von %s"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer to %s"
 msgstr "Übertragung nach %s"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+msgid "Translated Product Name"
+msgstr "Übersetzter Produktname"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -21769,6 +21792,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+"Sie können keinen Posten mit einer archivierten Kostenstelle buchen: %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -22722,6 +22752,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+#~ msgstr ""
+#~ "(*) Gelieferte, aber nicht abgerechnete Waren (fortlaufende Bewertung)"
+
+#~ msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+#~ msgstr ""
+#~ "(*) Abgerechnte, aber nicht gelieferte Waren (fortlaufende Bewertung)"
 
 #~ msgid ""
 #~ "The company bank account linked to this invoice is not trusted, please "

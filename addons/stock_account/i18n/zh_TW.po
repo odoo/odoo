@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 18:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -62,6 +62,14 @@ msgstr "<span>數量</span>"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
 msgstr "<span>序號/批次</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -1088,18 +1096,6 @@ msgstr ""
 "        計算銷售訂單利潤率時也會使用。"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"產品價值（在 AVCO 中自動計算）。\n"
-"        用於在採購成本未知情況下對產品進行估值（例如庫存調整）。\n"
-"        用於計算銷售訂單的利潤率。"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
 msgstr ""
@@ -1149,6 +1145,15 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1164,6 +1169,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "單位"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "產品價值（在 AVCO 中自動計算）。\n"
+#~ "        用於在採購成本未知情況下對產品進行估值（例如庫存調整）。\n"
+#~ "        用於計算銷售訂單的利潤率。"
 
 #~ msgid ""
 #~ "Manual: The accounting entries to value the inventory are not posted "

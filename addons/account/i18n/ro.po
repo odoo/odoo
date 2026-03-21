@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
 "PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: Comaniciu Ioana <ioana@dakai.ro>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/account/"
@@ -209,6 +209,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
+"delivered at %(unit_price)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
@@ -317,18 +325,6 @@ msgstr "'%(filename)s' (extras din '%(root_filename)s', tip=%(type)s)"
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (tip=%(type)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
-msgstr "(*) Mărfuri Livrate și Nefacturate (evaluare perpetuă)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
-msgstr "(*) Mărfuri Facturate și Nelivrate (evaluare perpetuă)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -9613,6 +9609,18 @@ msgstr "Debitor bun"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Goods"
 msgstr "Bunuri"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Delivered not Invoiced (perpetual valuation)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Invoiced not Delivered (perpetual valuation)"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -19041,6 +19049,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
 "There's nothing left to pay for the selected journal items, so no payment "
@@ -19759,6 +19775,11 @@ msgstr "Transfer de la %s"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer to %s"
 msgstr "Transfer la %s"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+msgid "Translated Product Name"
+msgstr ""
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -21320,6 +21341,12 @@ msgstr "Nu puteți posta o intrare într-un jurnal arhivat (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -22250,6 +22277,12 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factură de auto-facturare (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+#~ msgstr "(*) Mărfuri Livrate și Nefacturate (evaluare perpetuă)"
+
+#~ msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+#~ msgstr "(*) Mărfuri Facturate și Nelivrate (evaluare perpetuă)"
 
 #~ msgid ""
 #~ "Value for the amount of the writeoff line\n"

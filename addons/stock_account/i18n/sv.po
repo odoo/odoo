@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
+"PO-Revision-Date: 2026-03-20 17:35+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/sv/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -70,6 +70,14 @@ msgstr "<span>Antal</span>"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
 msgstr "<span>SN/LN</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -600,7 +608,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
-msgstr "Verifikation"
+msgstr "Bokföringspost"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
@@ -725,7 +733,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Plocktyp"
+msgstr "Plockningstyp"
 
 #. module: stock_account
 #. odoo-python
@@ -960,8 +968,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-landskoden med två tecken.\n"
-"Du kan använda det här fältet för snabb sökning."
+"ISO-kod med två tecken.\n"
+"Fältet används för snabbsökning."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_value__current_value
@@ -1110,19 +1118,6 @@ msgstr ""
 "        Används för att beräkna marginaler på försäljningsorder."
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"Produktens värde (beräknas automatiskt i AVCO).\n"
-"        Används för att värdera produkten när inköpskostnaden inte är känd "
-"(t.ex. lagerjustering).\n"
-"        Används för att beräkna marginaler på försäljningsorder."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
 msgstr ""
@@ -1176,6 +1171,15 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1185,12 +1189,23 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
-msgstr ""
+msgstr "stock_move_id"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "enheter"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "Produktens värde (beräknas automatiskt i AVCO).\n"
+#~ "        Används för att värdera produkten när inköpskostnaden inte är "
+#~ "känd (t.ex. lagerjustering).\n"
+#~ "        Används för att beräkna marginaler på försäljningsorder."
 
 #~ msgid ""
 #~ "Manual: The accounting entries to value the inventory are not posted "

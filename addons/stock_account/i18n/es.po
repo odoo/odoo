@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
+"PO-Revision-Date: 2026-03-18 11:18+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/es/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -65,6 +65,16 @@ msgstr "<span>Cantidad</span>"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
 msgstr "<span>NS/NL</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
+"Se necesita un número de serie o de lote para el producto «%s », ya que "
+"tiene habilitada la valoración por lotes."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -1132,19 +1142,6 @@ msgstr ""
 "        Se utiliza para calcular los márgenes de los pedidos de venta."
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"El valor del producto (calculado automáticamente con AVCO).\n"
-"        Se utiliza para valorar el producto cuando se desconoce el coste de "
-"compra (por ejemplo, en un ajuste de inventario).\n"
-"        Se utiliza para calcular los márgenes de los pedidos de venta."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
 msgstr "Cuenta de variación"
@@ -1204,6 +1201,18 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+"No puedes habilitar una valoración por lote porque los siguientes productos "
+"tienen cantidades disponibles sin número de lote/serie:\n"
+"%s"
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1221,6 +1230,17 @@ msgstr "movimiento_stock_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "unidades"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "El valor del producto (calculado automáticamente con AVCO).\n"
+#~ "        Se utiliza para valorar el producto cuando se desconoce el coste "
+#~ "de compra (por ejemplo, en un ajuste de inventario).\n"
+#~ "        Se utiliza para calcular los márgenes de los pedidos de venta."
 
 #~ msgid ""
 #~ "You cannot modify the scheduled date of this operation because it falls "

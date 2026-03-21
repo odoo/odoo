@@ -18,15 +18,16 @@
 # Maksym <ms@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 10:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/rating/pl/"
-">\n"
+"PO-Revision-Date: 2026-03-14 09:35+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/rating/"
+"pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +35,12 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
 msgid "\" or someone from the same company can give it a rating."
-msgstr ""
+msgstr "\" lub ktoś z tej samej firmy może wystawić ocenę."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
@@ -49,17 +50,17 @@ msgstr "# Ocen"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "<i class=\"fa fa-arrow-left me-1\"/> Back to the Homepage"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-left me-1\"/> Powrót do strony głównej"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
-msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
+msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"Data utworzenia\"/>"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
-msgstr "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
+msgstr "<i class=\"fa fa-folder me-2\" aria-label=\"Otwórz folder\"/>"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
@@ -131,7 +132,7 @@ msgstr "Wątek email"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Feel free to share feedback on your experience:"
-msgstr ""
+msgstr "Podziel się swoimi wrażeniami:"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
@@ -221,12 +222,14 @@ msgid ""
 "Incorrect rating: should be %(rating_unhappy)d, %(rating_neutral)d or %"
 "(rating_happy)d (received %(rate)d)"
 msgstr ""
+"Nieprawidłowa ocena: powinno być %(rating_unhappy)d, %(rating_neutral)d lub %"
+"(rating_happy)d (otrzymano %(rate)d)"
 
 #. module: rating
 #. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 msgid "Invalid token or rating."
-msgstr ""
+msgstr "Nieprawidłowy token lub ocena."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_is_follower
@@ -310,7 +313,7 @@ msgstr "Brak oceny"
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
 #: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
 msgid "Not Rated yet"
-msgstr ""
+msgstr "Na razie brak ocen"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction_counter
@@ -335,7 +338,7 @@ msgstr "Liczba wiadomości z błędami przy doręczeniu"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
 msgid "Only the customer of \""
-msgstr ""
+msgstr "Tylko klient „"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
@@ -345,7 +348,7 @@ msgstr "Dokument nadrzędny"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr "Wzór dokumentu nadrzędnego"
+msgstr "Model dokumentu nadrzędnego"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
@@ -376,13 +379,13 @@ msgstr "Procent zadowolonych ocen"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_on
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated On"
-msgstr ""
+msgstr "Oceniono dnia"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated Operator"
-msgstr "Oceniony operator"
+msgstr "Oceniany operator"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
@@ -423,12 +426,12 @@ msgstr "Ocena ostatniej wartości"
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr "Rating Mixin"
+msgstr "Mixin Oceny"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_parent_mixin
 msgid "Rating Parent Mixin"
-msgstr "Rating Parent Mixin"
+msgstr "Mixin nadrzędnej oceny"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
@@ -549,7 +552,7 @@ msgstr "Wyślij opinię"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Submitted on"
-msgstr "Zgłoszono dnia"
+msgstr "Przesłano dnia"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -589,11 +592,13 @@ msgstr "Widoczny tylko wewnętrznie"
 #: code:addons/rating/models/mail_thread.py:0
 msgid "Wrong rating value. A rate should be between 0 and 5 (received %d)."
 msgstr ""
+"Nieprawidłowa wartość oceny. Ocena powinna mieścić się w przedziale od 0 do "
+"5 (otrzymano %d)."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
 msgid "You cannot rate this"
-msgstr ""
+msgstr "Nie można tego ocenić"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban

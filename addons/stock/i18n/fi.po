@@ -43,17 +43,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-25 14:48+0000\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-16 09:20+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/stock/fi/"
-">\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/stock/"
+"fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: stock
 #. odoo-python
@@ -116,6 +116,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) on olemassa paikassa %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -1252,7 +1260,8 @@ msgstr "Lisää uusi varastointikategoria"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr "Lisää sisäinen viesti, joka näytetään keräilylistalla"
+msgstr ""
+"Lisää sisäinen merkintä, joka tulostetaan keräilytoimintojen lomakkeelle"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -1300,7 +1309,7 @@ msgstr "Lisää laadunvarmistus siirtotoimenpiteisiisi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Additional Info"
-msgstr "Lisätietoa"
+msgstr "Lisätiedot"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -4834,7 +4843,7 @@ msgstr "Tuotekoodi"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "Tee sisäinen tilisiirto"
+msgstr "Sisäinen siirto"
 
 #. module: stock
 #. odoo-python
@@ -4847,12 +4856,12 @@ msgstr "Sisäiset siirrot"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr "Sisäinen siirtymäpaikka"
+msgstr "Sisäisen siirron sijainti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
 msgid "Internal Type"
-msgstr "Sisäisten siirtojen tyyppi"
+msgstr "Sisäinen tyyppi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_warning_text
@@ -6320,12 +6329,12 @@ msgstr "Ei-torkutetut"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Note"
-msgstr "Muistiinpano"
+msgstr "Merkintä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
-msgstr "Muistiinpanot"
+msgstr "Merkinnät"
 
 #. module: stock
 #. odoo-python
@@ -10276,8 +10285,8 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"Tämä huomautus lisätään sisäisiin siirtotilauksiin (esim. mihin tuote "
-"noudetaan varastosta)."
+"Tämä merkintä lisätään sisäisiin siirtotilauksiin (esim. mistä tuote "
+"noudetaan varastossa)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -10285,8 +10294,8 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the "
 "warehouse)."
 msgstr ""
-"Tämä huomautus lisätään vastaanottotilauksiin (esim. missä tuote "
-"varastoidaan varastossa)."
+"Tämä merkintä lisätään vastaanottotilauksiin (esim. mihin tuote laitetaan "
+"varastossa)."
 
 #. module: stock
 #. odoo-python

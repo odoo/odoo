@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 21:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/mrp/el/>\n"
@@ -3642,6 +3642,7 @@ msgstr "Εντολή Παραγωγής"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -4850,7 +4851,6 @@ msgstr "Η Παραγωγή ξεκίνησε καθυστερημένα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 msgid "Productions"
 msgstr ""
@@ -7242,16 +7242,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
-msgstr ""
-"Πρέπει να παρέχετε Αριθμό Παρτίδας/Σειριακό Αριθμό για τα προϊόντα και να "
-"τους 'αναλώσετε': %(missing_products)s"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than the initial demand"
 msgstr ""
@@ -7381,6 +7371,13 @@ msgstr "πραγματική διάρκεια"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "διαχωρισμός"
+
+#~ msgid ""
+#~ "You need to supply Lot/Serial Number for products and 'consume' them: %"
+#~ "(missing_products)s"
+#~ msgstr ""
+#~ "Πρέπει να παρέχετε Αριθμό Παρτίδας/Σειριακό Αριθμό για τα προϊόντα και να "
+#~ "τους 'αναλώσετε': %(missing_products)s"
 
 #~ msgid "Access Token"
 #~ msgstr "Διακριτικό Πρόσβασης"

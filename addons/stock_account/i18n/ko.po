@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
 "PO-Revision-Date: 2026-01-27 06:39+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -63,6 +63,14 @@ msgstr "<span>수량</span>"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
 msgstr "<span>SN/LN</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -1099,19 +1107,6 @@ msgstr ""
 "        또한 판매 주문의 마진 계산에도 사용됩니다."
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"품목 가치입니다 (AVCO에서 자동 계산). \n"
-"          매입가를 모를 경우 품목 가치 평가를 하기 위해 사용합니다 (예: 재고 "
-"조정 시). \n"
-"           판매주문서에서 마진을 계산할 때 사용합니다."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
 msgstr "변동 계정"
@@ -1164,6 +1159,15 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1179,6 +1183,17 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "기준"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "품목 가치입니다 (AVCO에서 자동 계산). \n"
+#~ "          매입가를 모를 경우 품목 가치 평가를 하기 위해 사용합니다 (예: 재"
+#~ "고 조정 시). \n"
+#~ "           판매주문서에서 마진을 계산할 때 사용합니다."
 
 #~ msgid "AVCO Justification"
 #~ msgstr "AVCO 사유"

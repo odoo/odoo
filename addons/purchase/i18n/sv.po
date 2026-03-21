@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-20 17:35+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/purchase/"
 "sv/>\n"
@@ -40,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -354,7 +354,7 @@ msgstr "<span> dag(ar) innan</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Bra jobbat!</b> Du gick igenom alla steg i den här turen.</span>"
+"<span><b>Grattis!</b> Du har nu gått igenom hela introduktionen.</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -579,7 +579,7 @@ msgstr "Aktivitet undantaget dekoration"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstillstånd"
+msgstr "Aktivitetsstatus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
@@ -1402,7 +1402,7 @@ msgstr "Fullt fakturerat"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr "Framtida aktiviteter"
+msgstr "Kommande aktiviteter"
 
 #. module: purchase
 #. odoo-python
@@ -1612,7 +1612,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
-msgstr "Verifikation"
+msgstr "Bokföringspost"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
@@ -1642,7 +1642,7 @@ msgstr "Försenad(e)"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "Sena aktiviteter"
+msgstr "Försenade aktiviteter"
 
 #. module: purchase
 #. odoo-javascript
@@ -1814,7 +1814,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Activities"
-msgstr "Mina aktivieteter"
+msgstr "Mina aktiviteter"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -2726,7 +2726,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapportera åtgärd"
+msgstr "Rapporteringsåtgärd"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
@@ -3122,8 +3122,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-landskoden med två tecken\n"
-"Du kan använda det här fältet för snabb sökning."
+"ISO-kod med två tecken.\n"
+"Fältet används för snabbsökning."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
@@ -3292,6 +3292,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
 msgstr "Totalt inköpt belopp"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
+msgid "Translated Product Name"
+msgstr ""
 
 #. module: purchase
 #. odoo-javascript
@@ -3686,13 +3691,13 @@ msgstr "partner_id"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_id"
-msgstr ""
+msgstr "res_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_model_id"
-msgstr ""
+msgstr "res_model_id"
 
 #. module: purchase
 #. odoo-python

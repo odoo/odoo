@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 21:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -63,6 +63,14 @@ msgstr "<span>จำนวน</span>"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
 msgstr "<span>SN/LN</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -1093,18 +1101,6 @@ msgstr ""
 "        ใช้ในการคำนวณมาร์จิ้นในการสั่งซื้อสินค้า"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"มูลค่าของสินค้า (คำนวณโดยอัตโนมัติใน AVCO)\n"
-"       ใช้เพื่อประเมินมูลค่าสินค้าเมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับปรุงสินค้าคงคลัง)\n"
-"       ใช้เพื่อคำนวณอัตรากำไรจากคำสั่งซื้อขาย"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
 msgstr ""
@@ -1157,6 +1153,15 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1172,6 +1177,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "หน่วย"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "มูลค่าของสินค้า (คำนวณโดยอัตโนมัติใน AVCO)\n"
+#~ "       ใช้เพื่อประเมินมูลค่าสินค้าเมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับปรุงสินค้าคงคลัง)\n"
+#~ "       ใช้เพื่อคำนวณอัตรากำไรจากคำสั่งซื้อขาย"
 
 #~ msgid ""
 #~ "Manual: The accounting entries to value the inventory are not posted "

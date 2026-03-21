@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-03-06 17:49+0000\n"
+"PO-Revision-Date: 2026-03-14 09:44+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi/sv/>\n"
@@ -18,37 +18,37 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing error(s)"
-msgstr "%(count)s Fel i elektronisk fakturering"
+msgstr "%(count)s felmeddelanden"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing info(s)"
-msgstr "%(count)s Elektronisk fakturering info(s)"
+msgstr "%(count)s informationsmeddelanden"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing warning(s)"
-msgstr "%(count)sVarning(ar) för elektronisk fakturering"
+msgstr "%(count)s varningar"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A cancellation of the EDI has been requested."
-msgstr "En annullering av EDI har begärts."
+msgstr "En makulering har begärts av en digital faktura."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "En EDI annullerings begäran har avbrutits."
+msgstr "En makuleringsförfrågan av en digital faktura har avbrutits."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -73,7 +73,7 @@ msgstr "Bilaga"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr "Nivå för blockering"
+msgstr "Blockeringsnivå"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -90,15 +90,15 @@ msgstr ""
 "Blockerar den aktuella funktionen i dokumentet beroende på felets "
 "allvarlighetsgrad:\n"
 "  * Info: dokumentet är inte blockerat och allt fungerar som det ska.\n"
-"  * Varning: det finns ett fel som inte förhindrar att den aktuella "
-"elektroniska faktureringen lyckas.\n"
-"  * Fel: det finns ett fel som blockerar den aktuella elektroniska "
-"faktureringen."
+"  * Varning: ett fel har uppstått men det förhindrar inte att den digitala "
+"faktureringsoperationen genomförs.\n"
+"  * Fel: ett fel har uppstått som blockerar den digitala "
+"faktureringsoperationen."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "Avbryt EDI annulleringen"
+msgstr "Avbryt makulering av EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -113,8 +113,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
-"Kan inte avaktivera (%s) på denna journal eftersom inte alla dokument är "
-"synkroniserade"
+"Det är inte möjligt att avaktivera (%s) för denna verifikationsserie "
+"eftersom inte alla dokument har synkroniserats"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -124,7 +124,7 @@ msgstr "Kod"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr "Edi-kompatibel"
+msgstr "Kompatibel EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -158,7 +158,7 @@ msgstr "Ladda ner"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "EDI Documents"
-msgstr "EDI dokument"
+msgstr "EDI-dokument"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
@@ -168,23 +168,23 @@ msgstr "EDI-format"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "EDI-format som stöder transaktioner i denna journal"
+msgstr "EDI-format som stöder förflyttningar inom denna verifikationsserie"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr "EDI: Utföra webbtjänstoperationer"
+msgstr "EDI: Genomföra webbtjänstoperationer"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr "EDI blockeringsnivå"
+msgstr "EDI-blockeringsnivå"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr "EDI Innehåll"
+msgstr "EDI-innehåll"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -196,13 +196,13 @@ msgstr "EDI-dokument"
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 msgid "Edi Error Count"
-msgstr "EDI fel antal"
+msgstr "Antal EDI-fel"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 msgid "Edi Error Message"
-msgstr "EDI felmeddelande"
+msgstr "EDI-felmeddelande"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -213,30 +213,30 @@ msgstr "EDI-format"
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr "EDI visa lämna avbryt-knapp"
+msgstr "Visa knapp för att sluta avbryta EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr "EDI visa avbrytsknapp"
+msgstr "Visa knappt för att avbryta EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr "EDI visa tvinga avbryt-knapp"
+msgstr "Visa knapp för att tvångsavsluta EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "EDI webbtjänster att hantera"
+msgstr "EDI-webbtjänster att behandla"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr "Elektroniskt dokument för ett account.move"
+msgstr "Digitalt dokument för en account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -244,17 +244,17 @@ msgstr "Elektroniskt dokument för ett account.move"
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__edi_format_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 msgid "Electronic invoicing"
-msgstr "Elektronisk fakturering"
+msgstr "Digital fakturering"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr "Elektronisk fakturering krävs"
+msgstr "Behandling av digitala fakturor krävs"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr "Stat för elektronisk fakturering"
+msgstr "Status för digital fakturering"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
@@ -266,7 +266,7 @@ msgstr "Fel"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr "Tvinga avbryt"
+msgstr "Tvångsavsluta"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -277,7 +277,9 @@ msgstr "Formatnamn"
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr "Hur många EDI är felaktiga för denna flytt?"
+msgstr ""
+"Hur många EDI:er som är en del av förflyttningen har för närvarande "
+"felmeddelanden?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -305,19 +307,19 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Ogiltig fakturakonfiguration:\n"
+"Ogiltiga fakturainställningar:\n"
 "\n"
 "%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
 msgid "Journal"
-msgstr "Journal"
+msgstr "Verifikationsserie"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Verifikat"
+msgstr "Bokföringspost"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
@@ -334,7 +336,7 @@ msgstr "Senast uppdaterad den"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
 msgid "Move"
-msgstr "Flytta"
+msgstr "Förflyttning"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
@@ -345,27 +347,27 @@ msgstr "Namn"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr "Endast en edi document med transaktionsformat"
+msgstr "Endast ett EDI-dokument per förflyttning och per format"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Process now"
-msgstr "Process nu"
+msgstr "Behandla nu"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Gör om sekvensen för verifikationsserier."
+msgstr "Gör om sekvensen för bokföringsposter."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapportaktivitet"
+msgstr "Rapporteringsåtgärd"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "Begär avbruten EDI"
+msgstr "Begär att EDI ska avbrytas"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -375,7 +377,7 @@ msgstr "Försök igen"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
-msgstr "Skicka XML/EDI-fakturor"
+msgstr "Skicka XML-/EDI-fakturor"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
@@ -386,14 +388,15 @@ msgstr "Skickat"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
 msgid "State"
-msgstr "Läge"
+msgstr "Status"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
 msgstr ""
-"Det aggregerade tillståndet för alla EDI:er med webbtjänst för detta drag"
+"Det samlade tillståndet för alla EDI:er med webbtjänster kopplade till denna "
+"förflyttning"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -401,8 +404,8 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
-"Den fil som genereras av edi_format_id när fakturan bokförs (och detta "
-"dokument behandlas)."
+"Den fil som skapas av edi_format_id när fakturan bokförs (och dokumentet "
+"behandlas)."
 
 #. module: account_edi
 #. odoo-python
@@ -410,7 +413,8 @@ msgstr ""
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
 msgstr ""
-"Följande dokument har redan skickats och kan inte sekvenseras på nytt: %s"
+"Följande dokument har redan skickats och deras sekvens kan därmed inte "
+"ändras: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -422,18 +426,19 @@ msgstr "Fakturan kommer snart att skickas till"
 msgid ""
 "The text of the last error that happened during Electronic Invoice operation."
 msgstr ""
-"Texten för det senaste felet som inträffade under elektronisk fakturering."
+"Texten i det senaste felmeddelandet som för ett fel som inträffade under en "
+"digital faktureringsoperation."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
-msgstr "Den här koden existerar redan"
+msgstr "Den här koden används redan"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 msgid "This document is being sent by another process already. "
-msgstr "Detta dokument skickas redan genom en annan process. "
+msgstr "Dokumentet har redan skickats genom en annan process. "
 
 #. module: account_edi
 #. odoo-python
@@ -442,8 +447,8 @@ msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation "
 "request."
 msgstr ""
-"Den här fakturan makulerades medan EDIs %s fortfarande hade en pågående "
-"makuleringsbegäran."
+"Fakturan makulerades medan vissa EDI:er %s fortfarande hade en väntande "
+"makuleringsförfrågan."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
@@ -471,9 +476,8 @@ msgid ""
 "has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"Du kan inte redigera följande verifikat %s eftersom ett elektroniskt "
-"dokument redan har skickats. Använd istället knappen \"Begär EDI-"
-"annullering\"."
+"Följande bokföringspost %s kan inte redigeras eftersom ett digitalt dokument "
+"redan har skickats. Använd istället knappen \"Avbryt EDI\"."
 
 #. module: account_edi
 #. odoo-python
@@ -481,10 +485,10 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
-"Du kan inte ta bort en länk till en bilaga som är ett EDI-dokument som "
-"skickas till regeringen."
+"Det är inte möjligt att koppla bort en länk till en bilaga som består av ett "
+"EDI-dokument som redan skickas till ansvarig myndighet."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "⇒ See errors"
-msgstr "⇒ Se fel"
+msgstr "⇒ Visa fel"
