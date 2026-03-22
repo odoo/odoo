@@ -17,6 +17,12 @@ type RequestOpenEditorMsg struct {
 	Path string
 }
 
+// RequestUpdateConfigMsg asks the root app to update a configuration key.
+type RequestUpdateConfigMsg struct {
+	Key   string
+	Value string
+}
+
 // EditorDoneMsg reports the result of an editor session.
 type EditorDoneMsg struct {
 	Path string

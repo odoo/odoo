@@ -25,6 +25,9 @@ type Model struct {
 	table     table.Model
 	search    textinput.Model
 	searching bool
+	input     textinput.Model
+	editing   bool
+	editKey   string
 }
 
 // New builds the config tab model.
@@ -34,6 +37,11 @@ func New(cfg *envconfig.Config) Model {
 	search.Prompt = "/ "
 	search.CharLimit = 120
 	search.Blur()
+
+	input := textinput.New()
+	input.Prompt = "> "
+	input.CharLimit = 200
+	input.Blur()
 
 	tbl := table.New(
 		table.WithColumns([]table.Column{
@@ -49,6 +57,7 @@ func New(cfg *envconfig.Config) Model {
 		cfg:    cfg,
 		table:  tbl,
 		search: search,
+		input:  input,
 	}
 	model.refreshRows()
 	return model
@@ -61,10 +70,17 @@ func (m Model) Title() string {
 
 // HelpLines returns the config help text.
 func (m Model) HelpLines() []string {
+	if m.editing {
+		return []string{
+			"enter  save value",
+			"esc    cancel edit",
+		}
+	}
 	return []string{
-		"/  search variables",
-		"e  open .env.make in $EDITOR",
-		"p/h/j/i  generate prod/dev-host/dev-project configs or env-init",
+		"/      search variables",
+		"enter  edit selected variable",
+		"e      open .env.make in $EDITOR",
+		"p/h/j/i generate prod/dev-host/dev-project configs or env-init",
 	}
 }
 
@@ -89,12 +105,36 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		m.table.SetWidth(max(30, m.width-8))
 		m.table.SetHeight(max(8, m.height-12))
 	case tea.KeyMsg:
+		if m.editing {
+			switch msg.String() {
+			case "esc":
+				m.editing = false
+				m.input.Blur()
+				return m, nil
+			case "enter":
+				key := m.editKey
+				value := m.input.Value()
+				m.editing = false
+				m.input.Blur()
+				return m, func() tea.Msg {
+					return event.RequestUpdateConfigMsg{Key: key, Value: value}
+				}
+			}
+			var cmd tea.Cmd
+			m.input, cmd = m.input.Update(msg)
+			return m, cmd
+		}
+
 		if m.searching {
 			switch msg.String() {
 			case "esc":
 				m.searching = false
 				m.search.Blur()
 				m.refreshRows()
+				return m, nil
+			case "enter":
+				m.searching = false
+				m.search.Blur()
 				return m, nil
 			}
 			var cmd tea.Cmd
@@ -108,6 +148,15 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			m.searching = true
 			m.search.Focus()
 			return m, textinput.Blink
+		case "enter":
+			row := m.table.SelectedRow()
+			if len(row) > 0 {
+				m.editing = true
+				m.editKey = row[0]
+				m.input.SetValue(m.cfg.Value(m.editKey))
+				m.input.Focus()
+				return m, textinput.Blink
+			}
 		case "e":
 			return m, requestCmd(event.RequestOpenEditorMsg{Path: ".env.make"})
 		case "p":
@@ -119,6 +168,10 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		case "i":
 			return m, requestCmd(makeMsg("env-init", "Create .env.make from the example file.", []string{"DOMAIN", "EMAIL"}))
 		}
+
+		var cmd tea.Cmd
+		m.table, cmd = m.table.Update(msg)
+		return m, cmd
 	}
 
 	return m, nil
@@ -133,7 +186,9 @@ func (m Model) View(width, height int) string {
 	topLines := []string{
 		configTitleStyle.Render("Active Variables"),
 	}
-	if m.searching || m.search.Value() != "" {
+	if m.editing {
+		topLines = append(topLines, "Edit "+m.editKey+": "+m.input.View())
+	} else if m.searching || m.search.Value() != "" {
 		topLines = append(topLines, m.search.View())
 	}
 	if !m.cfg.Exists {
@@ -148,6 +203,7 @@ func (m Model) View(width, height int) string {
 		"j  make dev-project-config",
 		"i  make env-init",
 		"e  open .env.make",
+		"enter  edit selected",
 	}, "\n"))
 	return lipgloss.JoinVertical(lipgloss.Left, top, bottom)
 }

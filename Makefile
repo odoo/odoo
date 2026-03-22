@@ -4,6 +4,10 @@ SHELL := /bin/bash
 .EXPORT_ALL_VARIABLES:
 
 # Context defaults for local Linux/WSL and deploy stack.
+HOSTNAME_SHORT ?= $(shell hostname -s 2>/dev/null || hostname 2>/dev/null || echo unknown)
+HOST_ROLE ?= $(if $(filter srv-01,$(HOSTNAME_SHORT)),srv01,$(if $(filter dex-00,$(HOSTNAME_SHORT)),dex00,$(if $(filter dex-01,$(HOSTNAME_SHORT)),dex01,unknown)))
+ORIGINAL_MAKE_GOALS ?= $(MAKECMDGOALS)
+OPERATIONS_DOC ?= doc/OPERATIONS_WORKFLOWS.md
 ENV_FILE_OPT := $(if $(wildcard .env.make),--env-file .env.make,)
 COMPOSE ?= docker compose $(ENV_FILE_OPT)
 PYTHON_CANDIDATES := $(wildcard .venv/bin/python3 .venv/bin/python venv/bin/python3 venv/bin/python)
@@ -84,6 +88,8 @@ CONFIG_FIND_CMD = find . \
 	LC_ALL=C sort | sed 's|^\./||'
 
 .PHONY: help doctor deps-install clean clean-all \
+	context-status host-role-status guard-dev-host guard-prod-host \
+	ops-status ops-patch ops-release ops-hotfix ops-experiment ops-rollback \
 	odoo-lnav build build-base up up-base up-cpu up-gpu down down-base logs logs-base status status-base \
 	probe certbot certbot-renew \
 	db-init db-check db-list db-manager \
@@ -116,6 +122,16 @@ CONFIG_FIND_CMD = find . \
 	up-lean-tunnel logs-lean-tunnel down-lean-tunnel
 help:
 	@echo "Targets:"
+	@echo "Host policy:"
+	@echo "  make context-status # Show invocation context (host/user/pwd/ssh/tty)"
+	@echo "  make host-role-status # Show detected HOST_ROLE/hostname and command policy"
+	@echo "  make ops-status      # Show host policy plus workflow references"
+	@echo "  make ops-patch       # Print the patch workflow for the current host role"
+	@echo "  make ops-release     # Print the stable release workflow for the current host role"
+	@echo "  make ops-hotfix      # Print the production hotfix workflow for the current host role"
+	@echo "  make ops-experiment  # Print the experimental feature workflow"
+	@echo "  make ops-rollback    # Print the rollback workflow"
+	@echo ""
 	@echo "Modes:"
 	@echo "  make dev            # Run Odoo natively on host over Docker PostgreSQL (DB=<client> pins one DB; empty keeps manager)"
 	@echo "  make dev-safe       # Run Odoo natively on host over local PostgreSQL (DB=<client> pins one DB; empty keeps manager)"
@@ -258,19 +274,120 @@ help:
 	@echo ""
 	@echo "Examples:"
 	@echo "  cp .env.make.example .env.make"
-	@echo "  make config-list"
-	@echo "  make config-view FILE=.env.make"
-	@echo "  make config-edit"
-	@echo "  make config-create FILE=deploy/odoo/custom.local.conf"
-	@echo "  edit .env.make, then make up-tunnel"
-	@echo "  make logs-tunnel"
-	@echo "  edit .env.make, then make prod-config"
-	@echo "  edit .env.make, then make dev-host-config"
-	@echo "  make dev-host-db-setup dev-host-up"
-	@echo "  make dev-host-upgrade DEV_MODULES=gov_compras DEV_UPGRADE_DB=ktest"
-	@echo "  edit .env.make, then make dev-project-up"
-	@echo "  make tui-install && make tui-live"
-	@echo "  make mobile-install mobile-add-android mobile-open-android"
+
+context-status:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+
+host-role-status:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+	@case "$(HOST_ROLE)" in \
+	  dex00) \
+	    echo "Policy: development and validation host."; \
+	    echo "Allowed: make dev, make dev-safe, make dev-host-up, tests, local experiments."; \
+	    echo "Blocked: production/stable publish targets such as make up-tunnel and make refresh-safe."; \
+	    ;; \
+	  dex01) \
+	    echo "Policy: bastion/operations host."; \
+	    echo "Allowed: production deploy orchestration, patch/release/rollback commands, SSH to srv-01."; \
+	    echo "Avoid: day-to-day development targets."; \
+	    ;; \
+	  srv01) \
+	    echo "Policy: stable production runtime."; \
+	    echo "Allowed: stable Docker runtime, refresh, smoke, logs, backup/restore, rollback."; \
+	    echo "Blocked: host-run dev targets such as make dev and make dev-safe."; \
+	    ;; \
+	  *) \
+	    echo "Policy: unknown host."; \
+	    echo "Safety mode: explicit dex-00 and srv-01 restrictions apply, but unknown hosts are not hard-blocked."; \
+	    echo "Set HOST_ROLE=dex00|dex01|srv01 if you want deterministic policy outside the named hosts."; \
+	    ;; \
+	esac; \
+	echo "Workflow reference: $(OPERATIONS_DOC)"
+
+guard-dev-host:
+	@case "$(HOST_ROLE)" in \
+	  srv01) \
+	    echo "ERROR: development host targets are blocked on srv-01."; \
+	    echo "Run dev flows on dex-00. See $(OPERATIONS_DOC)."; \
+	    HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh; \
+	    exit 1; \
+	    ;; \
+	  dex01) \
+	    echo "ERROR: development host targets are blocked on dex-01."; \
+	    echo "Use dex-00 for dev workflows. See $(OPERATIONS_DOC)."; \
+	    HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh; \
+	    exit 1; \
+	    ;; \
+	  *) ;; \
+	esac
+
+guard-prod-host:
+	@case "$(HOST_ROLE)" in \
+	  dex00) \
+	    echo "ERROR: production/stable targets are blocked on dex-00."; \
+	    echo "Use dex-01 for bastion operations or srv-01 for the stable runtime. See $(OPERATIONS_DOC)."; \
+	    HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh; \
+	    exit 1; \
+	    ;; \
+	  *) ;; \
+	esac
+
+ops-status: host-role-status
+	@echo "Suggested commands:"
+	@case "$(HOST_ROLE)" in \
+	  dex00) echo "  make dev-safe"; echo "  make dev"; echo "  make ops-experiment";; \
+	  dex01) echo "  make ops-patch"; echo "  make ops-release"; echo "  make ops-rollback";; \
+	  srv01) echo "  make status"; echo "  make smoke"; echo "  make logs"; echo "  make ops-rollback";; \
+	  *) echo "  make host-role-status"; echo "  make ops-patch";; \
+	esac
+
+ops-patch:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+	@echo "Patch workflow ($(HOST_ROLE))"; \
+	echo "1. Implement and validate on dex-00 with make dev-safe or make dev."; \
+	echo "2. Run targeted tests and smoke checks on the candidate database."; \
+	echo "3. From dex-01, review the exact revision to deploy and prepare rollback point."; \
+	echo "4. On srv-01, take/verify backup, deploy the validated revision, then run make refresh-safe."; \
+	echo "5. Run make smoke and inspect make logs on srv-01 before closing the patch."; \
+	echo "Reference: $(OPERATIONS_DOC)"
+
+ops-release:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+	@echo "Stable release workflow ($(HOST_ROLE))"; \
+	echo "1. Build and validate the release candidate only on dex-00."; \
+	echo "2. Freeze the revision, migration notes, and operator checklist."; \
+	echo "3. Use dex-01 as the bastion to connect to srv-01 and execute the deploy sequence."; \
+	echo "4. On srv-01 run backup, update the stable stack, then make refresh-safe or the approved stack restart."; \
+	echo "5. Confirm smoke, logs, websocket health, and public endpoint before declaring release complete."; \
+	echo "Reference: $(OPERATIONS_DOC)"
+
+ops-hotfix:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+	@echo "Production hotfix workflow ($(HOST_ROLE))"; \
+	echo "1. Reproduce and fix on dex-00 using the smallest viable change."; \
+	echo "2. Validate against the closest safe copy of production data."; \
+	echo "3. From dex-01, prepare backup plus rollback command before touching srv-01."; \
+	echo "4. Apply on srv-01, run make refresh-safe, then make smoke immediately."; \
+	echo "5. If verification fails, execute rollback first and continue diagnosis off-production."; \
+	echo "Reference: $(OPERATIONS_DOC)"
+
+ops-experiment:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+	@echo "Experimental feature workflow ($(HOST_ROLE))"; \
+	echo "1. Experiments live only on dex-00."; \
+	echo "2. Use isolated local PostgreSQL with make dev-safe whenever possible."; \
+	echo "3. Keep experiment branches and databases separate from stable release candidates."; \
+	echo "4. Promote to a patch/release workflow only after validation is complete."; \
+	echo "Reference: $(OPERATIONS_DOC)"
+
+ops-rollback:
+	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
+	@echo "Rollback workflow ($(HOST_ROLE))"; \
+	echo "1. Keep the last known-good revision and latest backup identified before every deploy."; \
+	echo "2. On failure, stop the rollout, restore the known-good app revision, and restore data only if required."; \
+	echo "3. Re-run make smoke, inspect make logs, and confirm public availability on srv-01."; \
+	echo "4. Investigate the failed candidate later on dex-00, never on the live srv-01 runtime."; \
+	echo "Reference: $(OPERATIONS_DOC)"
 
 doctor:
 	@echo "== Host =="
@@ -602,14 +719,17 @@ odoo-status:
 	fi
 
 build:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(COMPOSE) build
 
 build-base:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(COMPOSE_BASE) build odoo
 
 refresh-safe:
+	@$(MAKE) guard-prod-host
 	@./scripts/refresh-safe.sh
 
 safe-refresh:
@@ -654,6 +774,7 @@ ports-clean:
 up: up-cpu
 
 up-base:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
 	@$(COMPOSE_BASE) up -d db odoo nginx ollama
@@ -703,6 +824,7 @@ up-dev:
 	@$(MAKE) up-local
 
 dev:
+	@$(MAKE) guard-dev-host
 	@selected_db="$(strip $(DB))"; \
 	db_name="$${selected_db:-$(DEV_PROJECT_DB)}"; \
 	precreate=0; \
@@ -751,6 +873,7 @@ dev-status:
 	echo "Database endpoint: $(DOCKER_DB_BIND_HOST):$(DOCKER_DB_HOST_PORT)"
 
 dev-safe:
+	@$(MAKE) guard-dev-host
 	@selected_db="$(strip $(DB))"; \
 	db_name="$${selected_db:-$(DEV_HOST_DB)}"; \
 	precreate=0; \
@@ -866,12 +989,14 @@ troubleshoot-project:
 	exit $$rc
 
 up-cpu:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
 	@$(COMPOSE) up -d db odoo nginx ollama
 	@$(MAKE) ollama-pull
 
 up-gpu:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
 	@if ! command -v nvidia-smi >/dev/null 2>&1; then echo "NVIDIA GPU not detected. Use 'make up-cpu'."; exit 1; fi
@@ -945,6 +1070,7 @@ odoo-shell:
 	@$(COMPOSE) exec odoo odoo shell -c /etc/odoo/odoo.conf -d "$(DB)"
 
 odoo-fix-url:
+	@$(MAKE) guard-prod-host
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url','https://$(DOMAIN)',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url.freeze','True',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"
 	@echo "Odoo base URL fixed to https://$(DOMAIN)."
@@ -968,6 +1094,7 @@ dev-host-test-init:
 	@$(MAKE) dev-host-up DEV_HOST_PRECREATE_DATABASES=0
 
 dev-host-up:
+	@$(MAKE) guard-dev-host
 	@selected_db="$(strip $(DB))"; \
 	db_name="$${selected_db:-$(DEV_HOST_DB)}"; \
 	precreate=0; \
@@ -1026,6 +1153,7 @@ dev-project:
 	@$(MAKE) dev-project-up
 
 dev-project-up:
+	@$(MAKE) guard-dev-host
 	@echo "WARNING: dev-project-up shares the Docker DB service. Avoid while the public tunnel stack is serving traffic."
 	@selected_db="$(strip $(DB))"; \
 	db_name="$${selected_db:-$(DEV_PROJECT_DB)}"; \
@@ -1083,6 +1211,7 @@ dev-host-restore-ktest:
 	./scripts/dev-host-restore-ktest.sh
 
 assets-rebuild:
+	@$(MAKE) guard-prod-host
 	@echo "Clearing cached web assets from database ($(DB))..."
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%';"
 	@echo "Restarting Odoo to regenerate bundles..."
@@ -1090,6 +1219,7 @@ assets-rebuild:
 	@echo "Assets reset complete. Do a hard refresh in browser (Ctrl+F5)."
 
 assets-reset:
+	@$(MAKE) guard-prod-host
 	@echo "Hard resetting Odoo assets (DB + Upgrade force)..."
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%' OR name LIKE 'web.assets_%';"
 	@echo "Marking 'web' module for upgrade to force total bundle regeneration..."
@@ -1100,6 +1230,7 @@ assets-reset:
 	@echo "Assets reset complete. Do a hard refresh in browser (Ctrl+F5)."
 
 smoke:
+	@$(MAKE) guard-prod-host
 	@set -e; \
 	echo "== Smoke check ($(DOMAIN)) =="; \
 	$(COMPOSE) ps >/dev/null; \
@@ -1178,6 +1309,7 @@ smoke:
 	echo "Smoke check passed."
 
 troubleshoot:
+	@$(MAKE) guard-prod-host
 	@set +e; \
 	rc=0; \
 	echo "== Troubleshoot ($(DOMAIN)) =="; \
@@ -1364,6 +1496,7 @@ ollama-list:
 	@$(COMPOSE) exec ollama ollama list
 
 up-insecure:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(INSECURE_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
 	@echo "WARNING: insecure mode enabled (no TLS/reverse-proxy protections)."
@@ -1390,6 +1523,7 @@ down-cloudflare:
 	@$(COMPOSE) down --remove-orphans
 
 up-tunnel:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
 	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env.make first."; exit 1)
@@ -1407,6 +1541,7 @@ down-tunnel:
 	@$(COMPOSE_TUNNEL) down --remove-orphans
 
 up-lean-tunnel:
+	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) 80"
 	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env.make first."; exit 1)

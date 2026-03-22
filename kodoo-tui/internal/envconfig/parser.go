@@ -39,8 +39,10 @@ type Config struct {
 	DevHostHTTPPort    int
 	DevHostDB          string
 	DevHostTestDB      string
+	DevHostAdminPassword string
 	DevProjectHTTPPort int
 	DevProjectDB       string
+	DevProjectAdminPassword string
 	PGLocalHost        string
 	PGLocalPort        int
 	PGLocalUser        string
@@ -70,6 +72,8 @@ var defaultValues = map[string]string{
 	"DEV_HOST_TEST_DB":     "ktest",
 	"DEV_PROJECT_HTTP_PORT": "8071",
 	"DEV_PROJECT_DB":       "ktest",
+	"DEV_HOST_ADMIN_PASSWORD": "",
+	"DEV_PROJECT_ADMIN_PASSWORD": "",
 	"PG_LOCAL_HOST":        "127.0.0.1",
 	"PG_LOCAL_PORT":        "5432",
 	"PG_LOCAL_USER":        "kodoo",
@@ -224,6 +228,83 @@ func (c *Config) LocalWebSocketURL() string {
 	return fmt.Sprintf("ws://%s:%d/websocket", c.LocalBindHost, c.LocalHTTPPort)
 }
 
+// Set updates a configuration value in memory.
+func (c *Config) Set(key, value string) {
+	if c.Values == nil {
+		c.Values = make(map[string]Entry)
+	}
+	c.Values[key] = Entry{
+		Key:    key,
+		Value:  value,
+		Source: "env.make", // Mark as manually set/env.make source
+	}
+	c.applyTypedValues()
+}
+
+// Save persists the current configuration values back to the .env.make file.
+// It tries to preserve existing comments and structure by replacing matching lines.
+func (c *Config) Save() error {
+	if c.Path == "" {
+		return fmt.Errorf("no path defined for config")
+	}
+
+	var lines []string
+	foundKeys := make(map[string]bool)
+
+	// Read existing file if it exists
+	if c.Exists {
+		file, err := os.Open(c.Path)
+		if err == nil {
+			scanner := bufio.NewScanner(file)
+			for scanner.Scan() {
+				line := scanner.Text()
+				trimmed := strings.TrimSpace(line)
+
+				if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+					lines = append(lines, line)
+					continue
+				}
+
+				matches := linePattern.FindStringSubmatch(trimmed)
+				if len(matches) == 4 {
+					key := matches[1]
+					if entry, ok := c.Values[key]; ok && entry.Source == "env.make" {
+						// Preserve the operator and spacing as much as possible
+						operator := matches[2]
+						lines = append(lines, fmt.Sprintf("%s %s %s", key, operator, entry.Value))
+						foundKeys[key] = true
+						continue
+					}
+				}
+				lines = append(lines, line)
+			}
+			file.Close()
+		}
+	}
+
+	// Append any new keys that weren't in the file
+	sortedEntries := c.OrderedEntries()
+	hasNew := false
+	for _, entry := range sortedEntries {
+		if entry.Source == "env.make" && !foundKeys[entry.Key] {
+			if !hasNew && len(lines) > 0 && lines[len(lines)-1] != "" {
+				lines = append(lines, "")
+			}
+			lines = append(lines, fmt.Sprintf("%s = %s", entry.Key, entry.Value))
+			foundKeys[entry.Key] = true
+			hasNew = true
+		}
+	}
+
+	// Write back to file
+	err := os.WriteFile(c.Path, []byte(strings.Join(lines, "\n")+"\n"), 0644)
+	if err != nil {
+		return fmt.Errorf("write %s: %w", c.Path, err)
+	}
+	c.Exists = true
+	return nil
+}
+
 func (c *Config) applyTypedValues() {
 	c.Domain = c.Value("DOMAIN")
 	c.Email = c.Value("EMAIL")
@@ -235,8 +316,10 @@ func (c *Config) applyTypedValues() {
 	c.DevHostHTTPPort = atoi(c.Value("DEV_HOST_HTTP_PORT"), 8070)
 	c.DevHostDB = c.Value("DEV_HOST_DB")
 	c.DevHostTestDB = c.Value("DEV_HOST_TEST_DB")
+	c.DevHostAdminPassword = c.Value("DEV_HOST_ADMIN_PASSWORD")
 	c.DevProjectHTTPPort = atoi(c.Value("DEV_PROJECT_HTTP_PORT"), 8071)
 	c.DevProjectDB = c.Value("DEV_PROJECT_DB")
+	c.DevProjectAdminPassword = c.Value("DEV_PROJECT_ADMIN_PASSWORD")
 	c.PGLocalHost = c.Value("PG_LOCAL_HOST")
 	c.PGLocalPort = atoi(c.Value("PG_LOCAL_PORT"), 5432)
 	c.PGLocalUser = c.Value("PG_LOCAL_USER")

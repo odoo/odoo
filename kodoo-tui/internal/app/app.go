@@ -146,6 +146,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.overlay.databases = msg.Databases
 		m.overlay.selectedDB = 0
 		return m, nil
+	case event.RequestUpdateConfigMsg:
+		m.cfg.Set(msg.Key, msg.Value)
+		if err := m.cfg.Save(); err != nil {
+			m.overlay.visible = true
+			m.overlay.done = true
+			m.overlay.title = "Config save"
+			m.overlay.statusText = "save failed"
+			m.overlay.lines = []string{err.Error()}
+			m.syncOverlayViewport()
+			return m, nil
+		}
+		return m.reloadConfig()
 	case event.RequestOpenEditorMsg:
 		return m, openEditor(msg.Path)
 	case event.EditorDoneMsg:
