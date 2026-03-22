@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_sale_order_compact" model="ir.actions.report">
+        <field name="name">Cotizacion/Orden Personalizada</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_reports_custom.report_saleorder_compact_template</field>
+        <field name="report_file">sale_reports_custom.report_saleorder_compact_template</field>
+        <field name="print_report_name">'Cotizacion - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
