@@ -1,7 +1,7 @@
 # kodoo-tui
 
-`kodoo-tui` is the Go/Bubble Tea control plane for the repository.
-It is now the primary interactive entrypoint for day-to-day environment control.
+`kodoo-tui` is the Go/Bubble Tea cockpit for the repository.
+It now centers the operator workflow around runtime state, databases, incidents, and config readiness instead of a generic action catalog.
 
 ## Install
 
@@ -17,50 +17,60 @@ This downloads the Go dependencies for `kodoo-tui/` and builds `kodoo-tui/bin/ko
 make tui
 ```
 
-`make tui-live` is an alias for the same Go TUI.
+`make tui-live` is still an alias for the same Go TUI.
+The backend Makefile remains the operational engine; the redesign changes navigation and UX, not the underlying targets.
 
-When the TUI opens, it now starts on a **launchpad** screen so you can choose the session mode explicitly:
+## Main Screens
 
-- **Stable Docker · Public-Sector Runtime**: the stable stack with the public-sector image
-- **Stable Docker · Plain Runtime**: the same stable stack with the plain Odoo image
-- **Client Dev · Docker DB / Local DB**: ask for the client database first, then boot native Odoo
-- **Database Manager · Docker DB / Local DB**: open the Odoo database manager without pinning a client database
+- `1 Overview`: mode, active DB, local/public URLs, service health, smoke, incidents, suggested next step
+- `2 Runtime`: operational modes such as Stable Docker, Stable Tunnel, Dev Host, Dev Project, Local Diagnostic / Manager, and Stopped
+- `3 Databases`: docker/local database inventory with connectivity, compatibility, and direct actions
+- `4 Logs`: incident-first view plus raw compose logs
+- `5 Config`: setup/validation summary, config values table, edit flow, and config generation actions
 
-The legacy shell menu still exists as an explicit escape hatch:
+## Command Palette
 
-```bash
-make tui-menu
-```
+The old launchpad is no longer the default entry surface.
+Use `p` to open the command palette / quick switcher for:
 
-## Tabs
-
-- `1 Dashboard`: container state, inferred mode, ports, recent compose events
-- `2 Logs`: follow one service or all services with inline search
-- `3 Actions`: run grouped Make targets with confirmation and streamed output
-- `4 Config`: inspect `.env`, open it in `$EDITOR`, and generate Odoo config files
+- jumping directly to a main screen
+- starting key runtime modes
+- running smoke or troubleshoot
 
 ## Global Keys
 
-- `1`–`4`: jump directly to a tab
-- `tab` / `shift+tab`: switch tabs
-- `l`: reopen the launchpad at any time
-- `?`: open contextual help
+- `1`–`5`: jump directly to a main screen
+- `tab` / `shift+tab`: switch screens
+- `p`: command palette
+- `r`: refresh the aggregated snapshot
+- `?`: contextual help
 - `q` or `ctrl+c`: quit
-- `esc`: close the current help/action overlay after completion
+- `esc`: close help, palette, or the current action overlay
 
-## Action Output
+## Overview Shortcuts
 
-Any action launched from the TUI opens a lower output panel with:
+- `s`: contextual start/stop
+- `w`: open Runtime
+- `d`: open Databases
+- `l`: open Logs
+- `t`: run troubleshoot
+- `c`: open Config
 
-- the target name and start time
-- streaming stdout/stderr
-- final completion status
-- database selection when the action runs in a per-client mode
-- typed confirmation for destructive actions such as `down` and restore flows
+## Action Execution
+
+The TUI still executes Make targets through the existing backend.
+When an action is triggered, an overlay shows:
+
+- target name and start time
+- relevant config values
+- database selection when needed
+- typed confirmation for destructive actions
+- streamed stdout/stderr and completion status
 
 ## Config and Environment
 
-The TUI reads `.env` from the repository root and falls back to legacy `.env.make` when needed. It then overlays any process environment variables with the same names.
+The TUI reads `.env` from the repository root and falls back to legacy `.env.make` when needed.
+It overlays process environment variables with the same names.
 
 Useful knobs:
 
@@ -69,4 +79,4 @@ TUI_REFRESH_SECONDS=3
 TUI_LOG_LINES=20
 ```
 
-If `.env` is missing, the dashboard warns and the config tab can create it with `make env-init`.
+If `.env` is missing, the TUI still bootstraps it on startup and the Config screen highlights missing required values and generated Odoo config files.

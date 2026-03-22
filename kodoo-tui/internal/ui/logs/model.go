@@ -11,15 +11,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 
 	"github.com/kodoo/kodoo-tui/internal/docker"
-	"github.com/kodoo/kodoo-tui/internal/envconfig"
-)
-
-var (
-	logBoxStyle      = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
-	selectedLogStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
-	errorLineStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
-	warnLineStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
-	matchStyle       = lipgloss.NewStyle().Bold(true).Underline(true)
+	"github.com/kodoo/kodoo-tui/internal/state"
 )
 
 type servicesLoadedMsg struct {
@@ -32,9 +24,15 @@ type streamLineMsg struct {
 	done bool
 }
 
-// Model renders the logs tab.
+type viewMode int
+
+const (
+	incidentsView viewMode = iota
+	rawLogsView
+)
+
 type Model struct {
-	cfg       *envconfig.Config
+	snapshot  state.Snapshot
 	width     int
 	height    int
 	services  []string
@@ -47,51 +45,58 @@ type Model struct {
 	cancel    context.CancelFunc
 	stream    <-chan string
 	err       string
+	view      viewMode
 }
 
-// New builds the logs tab model.
-func New(cfg *envconfig.Config) Model {
+var (
+	logBoxStyle      = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
+	selectedLogStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
+	errorLineStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
+	warnLineStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
+	mutedStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
+	matchStyle       = lipgloss.NewStyle().Bold(true).Underline(true)
+	okStyle          = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
+)
+
+func New() Model {
 	filter := textinput.New()
 	filter.Placeholder = "filter logs"
 	filter.Prompt = "/ "
 	filter.CharLimit = 120
 	filter.Blur()
 	return Model{
-		cfg:      cfg,
 		services: []string{"todos"},
 		viewport: viewport.New(40, 10),
 		filter:   filter,
 		follow:   true,
+		view:     incidentsView,
 	}
 }
 
-// Title returns the visible tab label.
 func (m Model) Title() string {
 	return "Logs"
 }
 
-// HelpLines returns the logs help text.
 func (m Model) HelpLines() []string {
+	if m.view == incidentsView {
+		return []string{
+			"left/right switch between incidents and raw logs",
+			"enter on incidents is not required; logs are diagnostic first here",
+		}
+	}
 	return []string{
-		"↑/↓  choose service",
-		"/    search in visible logs",
-		"f    toggle follow mode",
-		"c    clear the current log buffer",
+		"left/right switch between incidents and raw logs",
+		"↑/↓ choose service",
+		"/ search in visible logs",
+		"f toggle follow mode",
+		"c clear the current log buffer",
 	}
 }
 
-// SetConfig updates the config pointer.
-func (m Model) SetConfig(cfg *envconfig.Config) Model {
-	m.cfg = cfg
-	return m
-}
-
-// Init loads services and starts the first log stream.
 func (m Model) Init() tea.Cmd {
 	return loadServicesCmd()
 }
 
-// Update handles log messages and user input.
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
@@ -133,6 +138,17 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		}
 
 		switch msg.String() {
+		case "left", "h":
+			m.view = incidentsView
+		case "right", "raw", "i":
+			m.view = rawLogsView
+		}
+
+		if m.view == incidentsView {
+			return m, nil
+		}
+
+		switch msg.String() {
 		case "up":
 			m.moveSelection(-1)
 			return m, m.restartStream()
@@ -155,10 +171,17 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	return m, nil
 }
 
-// View renders the logs tab.
+func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
+	m.snapshot = snapshot
+	return m
+}
+
 func (m Model) View(width, height int) string {
 	if width <= 0 || height <= 0 {
 		return ""
+	}
+	if m.view == incidentsView {
+		return logBoxStyle.Width(width - 2).Height(max(8, height-4)).Render(m.incidentsPane())
 	}
 
 	sidebarWidth := min(24, max(18, width/5))
@@ -167,8 +190,28 @@ func (m Model) View(width, height int) string {
 	return lipgloss.JoinHorizontal(lipgloss.Top, sidebar, main)
 }
 
+func (m Model) incidentsPane() string {
+	lines := []string{
+		selectedLogStyle.Render("Incidents"),
+		mutedStyle.Render("left/right to switch to Raw Logs"),
+	}
+	if len(m.snapshot.Incidents) == 0 {
+		lines = append(lines, "", okStyle.Render("No incidents detected in the latest snapshot."))
+		return strings.Join(lines, "\n")
+	}
+	for _, incident := range m.snapshot.Incidents {
+		lines = append(lines, "", fmt.Sprintf("%s %s", severityDot(incident.Severity), incident.Summary))
+		lines = append(lines, mutedStyle.Render(incident.Cause))
+		lines = append(lines, warnLineStyle.Render("next: "+incident.Suggestion))
+	}
+	return strings.Join(lines, "\n")
+}
+
 func (m Model) servicesView() string {
-	lines := []string{selectedLogStyle.Render("Services")}
+	lines := []string{
+		selectedLogStyle.Render("Raw Logs"),
+		mutedStyle.Render("left/right to switch to Incidents"),
+	}
 	for idx, service := range m.services {
 		style := lipgloss.NewStyle()
 		prefix := "  "
@@ -251,7 +294,7 @@ func (m *Model) restartStream() tea.Cmd {
 
 	return tea.Batch(
 		func() tea.Msg {
-			go docker.StreamLogs(ctx, m.currentService(), m.cfg.TUILogLines, ch)
+			go docker.StreamLogs(ctx, m.currentService(), 20, ch)
 			return nil
 		},
 		waitStreamCmd(ch),
@@ -310,6 +353,17 @@ func highlightLogLine(line, query string) string {
 	match := line[matchAt : matchAt+len(query)]
 	after := line[matchAt+len(query):]
 	return before + matchStyle.Render(match) + after
+}
+
+func severityDot(level state.Severity) string {
+	switch level {
+	case state.SeverityCritical:
+		return errorLineStyle.Render("●")
+	case state.SeverityWarning:
+		return warnLineStyle.Render("●")
+	default:
+		return okStyle.Render("●")
+	}
 }
 
 func min(a, b int) int {

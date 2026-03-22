@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/table"
@@ -10,16 +11,20 @@ import (
 
 	"github.com/kodoo/kodoo-tui/internal/envconfig"
 	"github.com/kodoo/kodoo-tui/internal/event"
+	"github.com/kodoo/kodoo-tui/internal/state"
 )
 
 var (
 	configPanelStyle = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
 	configTitleStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
+	mutedStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
+	warnStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
+	okStyle          = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
 )
 
-// Model renders the config tab.
 type Model struct {
 	cfg       *envconfig.Config
+	snapshot  state.Snapshot
 	width     int
 	height    int
 	table     table.Model
@@ -30,7 +35,6 @@ type Model struct {
 	editKey   string
 }
 
-// New builds the config tab model.
 func New(cfg *envconfig.Config) Model {
 	search := textinput.New()
 	search.Placeholder = "search keys"
@@ -46,8 +50,9 @@ func New(cfg *envconfig.Config) Model {
 	tbl := table.New(
 		table.WithColumns([]table.Column{
 			{Title: "Key", Width: 28},
-			{Title: "Value", Width: 40},
+			{Title: "Value", Width: 30},
 			{Title: "Origin", Width: 12},
+			{Title: "Required", Width: 9},
 		}),
 		table.WithFocused(true),
 		table.WithHeight(12),
@@ -63,47 +68,48 @@ func New(cfg *envconfig.Config) Model {
 	return model
 }
 
-// Title returns the visible tab label.
 func (m Model) Title() string {
 	return "Config"
 }
 
-// HelpLines returns the config help text.
 func (m Model) HelpLines() []string {
 	if m.editing {
 		return []string{
-			"enter  save value",
-			"esc    cancel edit",
+			"enter save value",
+			"esc cancel edit",
 		}
 	}
 	return []string{
-		"/      search variables",
-		"enter  edit selected variable",
-		"e      open .env in $EDITOR",
-		"p/h/j/i generate prod/dev-host/dev-project configs or env-init",
+		"/ search variables",
+		"enter edit selected variable",
+		"e open .env in $EDITOR",
+		"p/h/j generate prod/dev-host/dev-project configs",
+		"i create .env from the example file",
 	}
 }
 
-// SetConfig updates the config pointer and table rows.
 func (m Model) SetConfig(cfg *envconfig.Config) Model {
 	m.cfg = cfg
 	m.refreshRows()
 	return m
 }
 
-// Init does not need background work.
+func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
+	m.snapshot = snapshot
+	return m
+}
+
 func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-// Update handles config tab input.
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
 		m.table.SetWidth(max(30, m.width-8))
-		m.table.SetHeight(max(8, m.height-12))
+		m.table.SetHeight(max(8, m.height-18))
 	case tea.KeyMsg:
 		if m.editing {
 			switch msg.String() {
@@ -181,45 +187,75 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	return m, nil
 }
 
-// View renders the config tab.
 func (m Model) View(width, height int) string {
 	if width <= 0 || height <= 0 {
 		return ""
 	}
 
-	topLines := []string{
-		configTitleStyle.Render("Active Variables"),
+	top := configPanelStyle.Width(width - 2).Height(9).Render(m.summaryView())
+	middle := configPanelStyle.Width(width - 2).Height(max(10, height-19)).Render(m.tableView())
+	bottom := configPanelStyle.Width(width - 2).Height(7).Render(strings.Join([]string{
+		configTitleStyle.Render("Generate / Validate"),
+		"p  make prod-config    h  make dev-host-config    j  make dev-project-config",
+		"i  make env-init       e  open .env               enter  edit selected",
+		"Validation: .env, generated configs, missing required keys, DB reachability incidents",
+	}, "\n"))
+	return lipgloss.JoinVertical(lipgloss.Left, top, middle, bottom)
+}
+
+func (m Model) summaryView() string {
+	lines := []string{
+		configTitleStyle.Render("Setup Wizard / Validation"),
+		fmt.Sprintf("env file: %s", fallback(m.snapshot.Config.EnvPath, m.cfg.Path)),
+		fmt.Sprintf("exists: %t", m.snapshot.Config.EnvExists),
+		fmt.Sprintf("missing required keys: %d", len(m.snapshot.Config.MissingKeys)),
 	}
+	for path, ok := range m.snapshot.Config.GeneratedFiles {
+		status := warnStyle.Render("missing")
+		if ok {
+			status = okStyle.Render("ok")
+		}
+		lines = append(lines, fmt.Sprintf("%s %s", status, path))
+	}
+	if len(m.snapshot.Config.MissingKeys) > 0 {
+		lines = append(lines, warnStyle.Render("fill these first: "+strings.Join(m.snapshot.Config.MissingKeys, ", ")))
+	}
+	return strings.Join(lines, "\n")
+}
+
+func (m Model) tableView() string {
+	topLines := []string{configTitleStyle.Render("Config Values")}
 	if m.editing {
 		topLines = append(topLines, "Edit "+m.editKey+": "+m.input.View())
 	} else if m.searching || m.search.Value() != "" {
 		topLines = append(topLines, m.search.View())
 	}
 	if !m.cfg.Exists {
-		topLines = append(topLines, lipgloss.NewStyle().Foreground(lipgloss.Color("214")).Render(".env not found. Press i to create it."))
+		topLines = append(topLines, warnStyle.Render(".env not found. Press i to create it."))
 	}
-
-	top := configPanelStyle.Width(width - 2).Height(max(10, height-12)).Render(strings.Join(topLines, "\n") + "\n\n" + m.table.View())
-	bottom := configPanelStyle.Width(width - 2).Height(7).Render(strings.Join([]string{
-		configTitleStyle.Render("Config Actions"),
-		"p  make prod-config",
-		"h  make dev-host-config",
-		"j  make dev-project-config",
-		"i  make env-init",
-		"e  open .env",
-		"enter  edit selected",
-	}, "\n"))
-	return lipgloss.JoinVertical(lipgloss.Left, top, bottom)
+	return strings.Join(topLines, "\n") + "\n\n" + m.table.View()
 }
 
 func (m *Model) refreshRows() {
 	query := strings.ToLower(strings.TrimSpace(m.search.Value()))
+	required := map[string]bool{
+		"DOMAIN":                  true,
+		"EMAIL":                   true,
+		"PROD_DB_PASSWORD":        true,
+		"PROD_ADMIN_PASSWORD":     true,
+		"PG_LOCAL_PASSWORD":       true,
+		"DEV_HOST_ADMIN_PASSWORD": true,
+	}
 	rows := make([]table.Row, 0, len(m.cfg.Values))
 	for _, entry := range m.cfg.OrderedEntries() {
 		if query != "" && !strings.Contains(strings.ToLower(entry.Key), query) && !strings.Contains(strings.ToLower(entry.Value), query) {
 			continue
 		}
-		rows = append(rows, table.Row{entry.Key, m.cfg.MaskedValue(entry.Key), entry.Source})
+		requiredFlag := ""
+		if required[entry.Key] {
+			requiredFlag = "yes"
+		}
+		rows = append(rows, table.Row{entry.Key, m.cfg.MaskedValue(entry.Key), entry.Source, requiredFlag})
 	}
 	m.table.SetRows(rows)
 }
@@ -234,6 +270,13 @@ func makeMsg(target, description string, relevant []string) tea.Msg {
 
 func requestCmd(msg tea.Msg) tea.Cmd {
 	return func() tea.Msg { return msg }
+}
+
+func fallback(value, or string) string {
+	if strings.TrimSpace(value) == "" {
+		return or
+	}
+	return value
 }
 
 func max(a, b int) int {

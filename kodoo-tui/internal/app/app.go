@@ -17,10 +17,12 @@ import (
 	"github.com/kodoo/kodoo-tui/internal/envconfig"
 	"github.com/kodoo/kodoo-tui/internal/event"
 	"github.com/kodoo/kodoo-tui/internal/runner"
-	"github.com/kodoo/kodoo-tui/internal/ui/actions"
+	"github.com/kodoo/kodoo-tui/internal/state"
 	"github.com/kodoo/kodoo-tui/internal/ui/config"
-	"github.com/kodoo/kodoo-tui/internal/ui/dashboard"
+	"github.com/kodoo/kodoo-tui/internal/ui/databases"
 	"github.com/kodoo/kodoo-tui/internal/ui/logs"
+	"github.com/kodoo/kodoo-tui/internal/ui/overview"
+	"github.com/kodoo/kodoo-tui/internal/ui/runtime"
 )
 
 var (
@@ -29,7 +31,6 @@ var (
 	statusStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("252")).Background(lipgloss.Color("238")).Padding(0, 1)
 	overlayStyle     = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
 	titleStyle       = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
-	successStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
 	failureStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
 	warningStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
 	mutedStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
@@ -55,65 +56,75 @@ type overlayState struct {
 	selectedDB  int
 }
 
-type launchOption struct {
+type paletteMode int
+
+const (
+	paletteSwitch paletteMode = iota
+	paletteAction
+)
+
+type paletteOption struct {
 	Title       string
 	Description string
+	Mode        paletteMode
+	Tab         int
 	Request     event.RequestMakeTargetMsg
 }
 
-// Model is the root Bubble Tea application.
+type tickMsg time.Time
+
 type Model struct {
-	repoDir          string
-	cfg              *envconfig.Config
-	activeTab        int
-	width            int
-	height           int
-	dashboard        dashboard.Model
-	logs             logs.Model
-	actions          actions.Model
-	config           config.Model
-	helpVisible      bool
-	launchpadVisible bool
-	launchOptions    []launchOption
-	launchSelected   int
-	overlay          overlayState
-	activeDB         string
+	repoDir        string
+	cfg            *envconfig.Config
+	activeTab      int
+	width          int
+	height         int
+	snapshot       state.Snapshot
+	overview       overview.Model
+	runtime        runtime.Model
+	databases      databases.Model
+	logs           logs.Model
+	config         config.Model
+	helpVisible    bool
+	paletteVisible bool
+	palette        []paletteOption
+	paletteIndex   int
+	overlay        overlayState
+	activeDB       string
+	lastError      string
 }
 
-// New creates the root kodoo-tui application.
 func New(cfg *envconfig.Config, repoDir string) Model {
 	input := textinput.New()
 	input.Prompt = "type 'sim' > "
 	input.CharLimit = 16
 	input.Blur()
 
-	return Model{
-		repoDir:          repoDir,
-		cfg:              cfg,
-		dashboard:        dashboard.New(cfg),
-		logs:             logs.New(cfg),
-		actions:          actions.New(cfg),
-		config:           config.New(cfg),
-		launchpadVisible: true,
-		launchOptions:    defaultLaunchOptions(),
+	model := Model{
+		repoDir:   repoDir,
+		cfg:       cfg,
+		overview:  overview.New(),
+		runtime:   runtime.New(),
+		databases: databases.New(),
+		logs:      logs.New(),
+		config:    config.New(cfg),
 		overlay: overlayState{
 			viewport: viewport.New(60, 10),
 			input:    input,
 		},
 	}
+	model.palette = model.buildPalette()
+	return model
 }
 
-// Init starts all tabs.
 func (m Model) Init() tea.Cmd {
 	return tea.Batch(
-		m.dashboard.Init(),
+		state.RefreshCmd(m.cfg, m.repoDir, m.activeDB),
+		tickCmd(m.cfg.RefreshInterval()),
 		m.logs.Init(),
-		m.actions.Init(),
-		m.config.Init(),
 	)
 }
 
-// Update handles the full application state.
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
@@ -121,6 +132,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 		m.syncOverlayViewport()
 		return m.updateAll(msg)
+	case tickMsg:
+		return m, tea.Batch(state.RefreshCmd(m.cfg, m.repoDir, m.activeDB), tickCmd(m.cfg.RefreshInterval()))
+	case state.MsgSnapshotLoaded:
+		if msg.Err != nil {
+			m.lastError = msg.Err.Error()
+			return m, nil
+		}
+		m.lastError = ""
+		m.snapshot = msg.Snapshot
+		m.overview = m.overview.SetSnapshot(msg.Snapshot)
+		m.runtime = m.runtime.SetSnapshot(msg.Snapshot)
+		m.databases = m.databases.SetSnapshot(msg.Snapshot)
+		m.logs = m.logs.SetSnapshot(msg.Snapshot)
+		m.config = m.config.SetSnapshot(msg.Snapshot)
+		m.palette = m.buildPalette()
+		return m, nil
 	case event.RequestMakeTargetMsg:
 		return m.prepareActionRequest(msg)
 	case database.MsgListLoaded:
@@ -190,15 +217,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.overlay.running = false
 			m.overlay.done = true
 			if msg.Err != nil {
-				m.overlay.statusText = fmt.Sprintf("✗ failed with code %d", msg.ExitCode)
+				m.overlay.statusText = fmt.Sprintf("failed with code %d", msg.ExitCode)
 			} else {
-				m.overlay.statusText = "✓ completed"
+				m.overlay.statusText = "completed"
 			}
 			m.syncOverlayViewport()
-			if msg.Err == nil {
-				return m.reloadConfig()
-			}
-			return m, nil
+			return m, tea.Batch(state.RefreshCmd(m.cfg, m.repoDir, m.activeDB))
 		}
 	case tea.KeyMsg:
 		if handled, next, cmd := m.handleGlobalKey(msg); handled {
@@ -210,7 +234,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m.updateAll(msg)
 }
 
-// View renders the complete TUI.
 func (m Model) View() string {
 	width := m.width
 	height := m.height
@@ -225,7 +248,7 @@ func (m Model) View() string {
 	bodyHeight := height - 3
 	mainHeight := bodyHeight
 	overlayHeight := 0
-	if m.overlay.visible || m.helpVisible || m.launchpadVisible {
+	if m.overlay.visible || m.helpVisible || m.paletteVisible {
 		mainHeight = bodyHeight / 2
 		overlayHeight = bodyHeight - mainHeight
 	}
@@ -237,8 +260,8 @@ func (m Model) View() string {
 		parts = append(parts, m.helpView(width, max(8, overlayHeight)))
 	} else if m.overlay.visible {
 		parts = append(parts, m.overlayView(width, max(8, overlayHeight)))
-	} else if m.launchpadVisible {
-		parts = append(parts, m.launchpadView(width, max(8, overlayHeight)))
+	} else if m.paletteVisible {
+		parts = append(parts, m.paletteView(width, max(8, overlayHeight)))
 	}
 
 	parts = append(parts, m.statusBar(width))
@@ -264,22 +287,27 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 		return true, next, cmd
 	}
 
-	if m.launchpadVisible {
+	if m.paletteVisible {
 		switch msg.String() {
 		case "up":
-			if m.launchSelected > 0 {
-				m.launchSelected--
+			if m.paletteIndex > 0 {
+				m.paletteIndex--
 			}
 		case "down":
-			if m.launchSelected < len(m.launchOptions)-1 {
-				m.launchSelected++
+			if m.paletteIndex < len(m.palette)-1 {
+				m.paletteIndex++
 			}
 		case "enter":
-			m.launchpadVisible = false
-			next, cmd := m.prepareActionRequest(m.launchOptions[m.launchSelected].Request)
+			selected := m.palette[m.paletteIndex]
+			m.paletteVisible = false
+			if selected.Mode == paletteSwitch {
+				m.activeTab = selected.Tab
+				return true, m, nil
+			}
+			next, cmd := m.prepareActionRequest(selected.Request)
 			return true, next, cmd
-		case "esc", "l":
-			m.launchpadVisible = false
+		case "esc", "p":
+			m.paletteVisible = false
 		}
 		return true, m, nil
 	}
@@ -297,18 +325,54 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 	case "4":
 		m.activeTab = 3
 		return true, m, nil
+	case "5":
+		m.activeTab = 4
+		return true, m, nil
 	case "tab":
-		m.activeTab = (m.activeTab + 1) % 4
+		m.activeTab = (m.activeTab + 1) % 5
 		return true, m, nil
 	case "shift+tab":
-		m.activeTab = (m.activeTab + 3) % 4
+		m.activeTab = (m.activeTab + 4) % 5
 		return true, m, nil
 	case "?":
 		m.helpVisible = true
 		return true, m, nil
-	case "l":
-		m.launchpadVisible = true
+	case "p":
+		m.paletteVisible = true
+		m.palette = m.buildPalette()
+		m.paletteIndex = 0
 		return true, m, nil
+	case "r":
+		return true, m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
+	}
+
+	if m.activeTab == 0 {
+		switch msg.String() {
+		case "w":
+			m.activeTab = 1
+			return true, m, nil
+		case "d":
+			m.activeTab = 2
+			return true, m, nil
+		case "l":
+			m.activeTab = 3
+			return true, m, nil
+		case "c":
+			m.activeTab = 4
+			return true, m, nil
+		case "t":
+			next, cmd := m.prepareActionRequest(event.RequestMakeTargetMsg{
+				Target:      "troubleshoot",
+				Description: "Run the detailed diagnostics target.",
+				RelevantKeys: []string{
+					"DOMAIN",
+				},
+			})
+			return true, next, cmd
+		case "s":
+			next, cmd := m.prepareActionRequest(m.contextualStartStop())
+			return true, next, cmd
+		}
 	}
 
 	return false, m, nil
@@ -439,18 +503,25 @@ func (m Model) reloadConfig() (Model, tea.Cmd) {
 	}
 
 	m.cfg = cfg
-	m.dashboard = m.dashboard.SetConfig(cfg)
-	m.logs = m.logs.SetConfig(cfg)
-	m.actions = m.actions.SetConfig(cfg)
+	m.logs = logs.New().SetSnapshot(m.snapshot)
 	m.config = m.config.SetConfig(cfg)
-	return m, nil
+	m.palette = m.buildPalette()
+	return m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
 }
 
 func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 	var cmd tea.Cmd
 
-	m.dashboard, cmd = m.dashboard.Update(msg)
+	m.overview, cmd = m.overview.Update(msg)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
+	m.runtime, cmd = m.runtime.Update(msg)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
+	m.databases, cmd = m.databases.Update(msg)
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
@@ -458,31 +529,30 @@ func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
-	m.actions, cmd = m.actions.Update(msg)
-	if cmd != nil {
-		cmds = append(cmds, cmd)
-	}
 	m.config, cmd = m.config.Update(msg)
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
-
 	return m, tea.Batch(cmds...)
 }
 
 func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.activeTab {
 	case 0:
-		next, cmd := m.dashboard.Update(msg)
-		m.dashboard = next
+		next, cmd := m.overview.Update(msg)
+		m.overview = next
 		return m, cmd
 	case 1:
-		next, cmd := m.logs.Update(msg)
-		m.logs = next
+		next, cmd := m.runtime.Update(msg)
+		m.runtime = next
 		return m, cmd
 	case 2:
-		next, cmd := m.actions.Update(msg)
-		m.actions = next
+		next, cmd := m.databases.Update(msg)
+		m.databases = next
+		return m, cmd
+	case 3:
+		next, cmd := m.logs.Update(msg)
+		m.logs = next
 		return m, cmd
 	default:
 		next, cmd := m.config.Update(msg)
@@ -493,10 +563,11 @@ func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) tabsView() string {
 	tabs := []string{
-		m.renderTab(0, "1 Dashboard"),
-		m.renderTab(1, "2 Logs"),
-		m.renderTab(2, "3 Actions"),
-		m.renderTab(3, "4 Config"),
+		m.renderTab(0, "1 Overview"),
+		m.renderTab(1, "2 Runtime"),
+		m.renderTab(2, "3 Databases"),
+		m.renderTab(3, "4 Logs"),
+		m.renderTab(4, "5 Config"),
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
 }
@@ -511,11 +582,13 @@ func (m Model) renderTab(index int, label string) string {
 func (m Model) activeTabView(width, height int) string {
 	switch m.activeTab {
 	case 0:
-		return m.dashboard.View(width, height)
+		return m.overview.View(width, height)
 	case 1:
-		return m.logs.View(width, height)
+		return m.runtime.View(width, height)
 	case 2:
-		return m.actions.View(width, height)
+		return m.databases.View(width, height)
+	case 3:
+		return m.logs.View(width, height)
 	default:
 		return m.config.View(width, height)
 	}
@@ -524,14 +597,12 @@ func (m Model) activeTabView(width, height int) string {
 func (m Model) helpView(width, height int) string {
 	lines := []string{titleStyle.Render("Help")}
 	lines = append(lines, m.currentHelpLines()...)
-	lines = append(lines, "", "Global keys: 1-4 tabs · tab/shift+tab cycle · l launchpad · q quit · esc close overlay")
+	lines = append(lines, "", "Global keys: 1-5 tabs · tab/shift+tab cycle · p palette · r refresh · q quit · esc close overlay")
 	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
 func (m Model) overlayView(width, height int) string {
-	lines := []string{
-		titleStyle.Render(m.overlay.title),
-	}
+	lines := []string{titleStyle.Render(m.overlay.title)}
 
 	if !m.overlay.running && !m.overlay.done && m.overlay.request != nil {
 		if m.overlay.selectingDB {
@@ -574,42 +645,56 @@ func (m Model) overlayView(width, height int) string {
 	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
-func (m Model) statusBar(width int) string {
-	mode := m.dashboard.Mode()
-	db := m.dbSummary(mode)
-	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  tab cycle · l launchpad · q quit · ? help",
-		m.cfg.Domain,
-		mode,
-		db,
-	)
-	return statusStyle.Width(width).Render(bar)
+func (m Model) paletteView(width, height int) string {
+	lines := []string{
+		titleStyle.Render("Command Palette"),
+		"Quick switcher for screens, runtime actions and diagnostics.",
+	}
+	for idx, item := range m.palette {
+		style := lipgloss.NewStyle()
+		prefix := "  "
+		if idx == m.paletteIndex {
+			style = titleStyle
+			prefix = "> "
+		}
+		lines = append(lines, "", style.Render(prefix+item.Title))
+		lines = append(lines, mutedStyle.Render(item.Description))
+	}
+	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
-func (m Model) dbSummary(mode string) string {
-	switch mode {
-	case "client dev · docker db":
-		if m.activeDB != "" {
-			return fmt.Sprintf("%s (docker pg :%d)", m.activeDB, m.cfg.DockerDBHostPort)
-		}
-		return fmt.Sprintf("database manager (docker pg :%d)", m.cfg.DockerDBHostPort)
-	case "client dev · local db":
-		if m.activeDB != "" {
-			return fmt.Sprintf("%s (local pg :%d)", m.activeDB, m.cfg.PGLocalPort)
-		}
-		return fmt.Sprintf("database manager (local pg :%d)", m.cfg.PGLocalPort)
-	default:
-		return fmt.Sprintf("%s (docker pg :5432)", m.cfg.ProdDBName)
+func (m Model) statusBar(width int) string {
+	mode := m.snapshot.Runtime.Mode
+	if mode == "" {
+		mode = "loading"
 	}
+	db := m.activeDB
+	if db == "" {
+		db = "not pinned"
+	}
+	incident := m.snapshot.Runtime.LastIncident
+	if incident == "" {
+		incident = "no incidents"
+	}
+	if m.lastError != "" {
+		incident = m.lastError
+	}
+	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  p palette · r refresh · q quit · ? help",
+		m.cfg.Domain, mode, db, incident,
+	)
+	return statusStyle.Width(width).Render(bar)
 }
 
 func (m Model) currentHelpLines() []string {
 	switch m.activeTab {
 	case 0:
-		return m.dashboard.HelpLines()
+		return m.overview.HelpLines()
 	case 1:
-		return m.logs.HelpLines()
+		return m.runtime.HelpLines()
 	case 2:
-		return m.actions.HelpLines()
+		return m.databases.HelpLines()
+	case 3:
+		return m.logs.HelpLines()
 	default:
 		return m.config.HelpLines()
 	}
@@ -620,6 +705,20 @@ func (m *Model) syncOverlayViewport() {
 	m.overlay.viewport.Height = max(6, (m.height/2)-8)
 	m.overlay.viewport.SetContent(strings.Join(m.overlay.lines, "\n"))
 	m.overlay.viewport.GotoBottom()
+}
+
+func (m Model) databaseSelectionView() []string {
+	lines := make([]string, 0, len(m.overlay.databases))
+	for idx, item := range m.overlay.databases {
+		style := lipgloss.NewStyle()
+		prefix := "  "
+		if idx == m.overlay.selectedDB {
+			style = titleStyle
+			prefix = "> "
+		}
+		lines = append(lines, style.Render(fmt.Sprintf("%s%s (%s · %s)", prefix, item.Name, item.Owner, item.Size)))
+	}
+	return lines
 }
 
 func (m Model) newOverlay() overlayState {
@@ -633,50 +732,17 @@ func (m Model) newOverlay() overlayState {
 	}
 }
 
-func (m Model) databaseSelectionView() []string {
-	lines := []string{}
-	for idx, record := range m.overlay.databases {
-		prefix := "  "
-		style := lipgloss.NewStyle()
-		if idx == m.overlay.selectedDB {
-			prefix = "> "
-			style = successStyle.Bold(true)
-		}
-		label := fmt.Sprintf("%s (%s, %s, %s)", record.Name, record.Backend, record.Size, record.Tags)
-		lines = append(lines, style.Render(prefix+label))
-	}
-	if len(lines) == 0 {
-		lines = append(lines, "No databases available.")
-	}
-	return lines
-}
-
-func (m Model) launchpadView(width, height int) string {
-	lines := []string{
-		titleStyle.Render("Launchpad"),
-		"Choose how you want to start Kodoo in this session.",
-		"",
-	}
-	for idx, option := range m.launchOptions {
-		prefix := "  "
-		style := lipgloss.NewStyle()
-		if idx == m.launchSelected {
-			prefix = "> "
-			style = successStyle.Bold(true)
-		}
-		lines = append(lines, style.Render(prefix+option.Title))
-		lines = append(lines, mutedStyle.Render("    "+option.Description))
-		lines = append(lines, "")
-	}
-	lines = append(lines, "Use ↑/↓ and press enter. Press esc to skip.")
-	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
-}
-
-func defaultLaunchOptions() []launchOption {
-	return []launchOption{
+func (m Model) buildPalette() []paletteOption {
+	return []paletteOption{
+		{Title: "Overview", Description: "Quick switch to the operational summary.", Mode: paletteSwitch, Tab: 0},
+		{Title: "Runtime", Description: "Quick switch to runtime mode control.", Mode: paletteSwitch, Tab: 1},
+		{Title: "Databases", Description: "Quick switch to database operations.", Mode: paletteSwitch, Tab: 2},
+		{Title: "Logs", Description: "Quick switch to incidents and raw logs.", Mode: paletteSwitch, Tab: 3},
+		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 4},
 		{
-			Title:       "Stable Docker · Public-Sector Runtime",
-			Description: "Launch the stable Docker stack with the public-sector runtime.",
+			Title:       "Start Stable Docker",
+			Description: "Boot the stable docker runtime.",
+			Mode:        paletteAction,
 			Request: event.RequestMakeTargetMsg{
 				Target:      "up",
 				Description: "Start the stable Docker stack with the public-sector runtime.",
@@ -686,30 +752,21 @@ func defaultLaunchOptions() []launchOption {
 			},
 		},
 		{
-			Title:       "Stable Docker · Plain Runtime",
-			Description: "Launch the stable Docker stack with the plain Odoo runtime image.",
+			Title:       "Start Stable Tunnel",
+			Description: "Boot the public Cloudflare tunnel runtime.",
+			Mode:        paletteAction,
 			Request: event.RequestMakeTargetMsg{
-				Target:      "up-base",
-				Description: "Start the stable Docker stack with the plain Odoo runtime.",
+				Target:      "up-tunnel",
+				Description: "Start the public Cloudflare-published stack.",
 				RelevantKeys: []string{
-					"DOMAIN", "PROD_DB_NAME", "OLLAMA_MODEL",
+					"DOMAIN", "CLOUDFLARED_TOKEN",
 				},
 			},
 		},
 		{
-			Title:       "Client Dev · Docker DB",
-			Description: "Pick a client database and run native Odoo over Docker PostgreSQL.",
-			Request: event.RequestMakeTargetMsg{
-				Target:          "dev",
-				Description:     "Run native Odoo over Docker PostgreSQL after choosing a client database.",
-				RelevantKeys:    []string{"DEV_PROJECT_HTTP_PORT", "DOCKER_DB_HOST_PORT"},
-				SelectDatabase:  true,
-				DatabaseBackend: "docker",
-			},
-		},
-		{
-			Title:       "Client Dev · Local DB",
-			Description: "Pick a client database and run native Odoo over local PostgreSQL.",
+			Title:       "Start Dev Host",
+			Description: "Run native Odoo against local PostgreSQL after DB selection.",
+			Mode:        paletteAction,
 			Request: event.RequestMakeTargetMsg{
 				Target:          "dev-safe",
 				Description:     "Run native Odoo over local PostgreSQL after choosing a client database.",
@@ -719,48 +776,112 @@ func defaultLaunchOptions() []launchOption {
 			},
 		},
 		{
-			Title:       "Database Manager · Docker DB",
-			Description: "Open the database manager over Docker PostgreSQL without pinning a client DB.",
+			Title:       "Start Dev Project",
+			Description: "Run native Odoo against Docker PostgreSQL after DB selection.",
+			Mode:        paletteAction,
 			Request: event.RequestMakeTargetMsg{
-				Target:       "dev-project-up",
-				Description:  "Open the database manager against Docker PostgreSQL.",
-				RelevantKeys: []string{"DEV_PROJECT_HTTP_PORT", "DOCKER_DB_HOST_PORT"},
+				Target:          "dev",
+				Description:     "Run native Odoo over Docker PostgreSQL after choosing a client database.",
+				RelevantKeys:    []string{"DEV_PROJECT_HTTP_PORT", "DOCKER_DB_HOST_PORT"},
+				SelectDatabase:  true,
+				DatabaseBackend: "docker",
 			},
 		},
 		{
-			Title:       "Database Manager · Local DB",
-			Description: "Open the database manager over local PostgreSQL without pinning a client DB.",
+			Title:       "Run Smoke",
+			Description: "Execute smoke checks from the Makefile.",
+			Mode:        paletteAction,
 			Request: event.RequestMakeTargetMsg{
-				Target:       "dev-host-up",
-				Description:  "Open the database manager against local PostgreSQL.",
-				RelevantKeys: []string{"DEV_HOST_HTTP_PORT", "PG_LOCAL_PORT"},
+				Target:      "smoke",
+				Description: "Run smoke checks.",
+				RelevantKeys: []string{
+					"DOMAIN", "LOCAL_HTTP_PORT",
+				},
+			},
+		},
+		{
+			Title:       "Run Troubleshoot",
+			Description: "Execute the detailed diagnostics target.",
+			Mode:        paletteAction,
+			Request: event.RequestMakeTargetMsg{
+				Target:      "troubleshoot",
+				Description: "Run the detailed diagnostics target.",
+				RelevantKeys: []string{
+					"DOMAIN",
+				},
 			},
 		},
 	}
 }
 
+func (m Model) contextualStartStop() event.RequestMakeTargetMsg {
+	switch m.snapshot.Runtime.Mode {
+	case "Stable Docker", "Stable Tunnel":
+		return event.RequestMakeTargetMsg{
+			Target:            "down",
+			Description:       "Stop the current Docker stack.",
+			RelevantKeys:      []string{"DOMAIN"},
+			RequireTypedCheck: true,
+			ConfirmWord:       "sim",
+		}
+	case "Dev Host":
+		return event.RequestMakeTargetMsg{
+			Target:          "dev-safe",
+			Description:     "Run native Odoo over local PostgreSQL after choosing a client database.",
+			RelevantKeys:    []string{"DEV_HOST_HTTP_PORT", "PG_LOCAL_PORT"},
+			SelectDatabase:  true,
+			DatabaseBackend: "local",
+		}
+	case "Dev Project":
+		return event.RequestMakeTargetMsg{
+			Target:          "dev",
+			Description:     "Run native Odoo over Docker PostgreSQL after choosing a client database.",
+			RelevantKeys:    []string{"DEV_PROJECT_HTTP_PORT", "DOCKER_DB_HOST_PORT"},
+			SelectDatabase:  true,
+			DatabaseBackend: "docker",
+		}
+	default:
+		return event.RequestMakeTargetMsg{
+			Target:      "up",
+			Description: "Start the stable Docker stack with the public-sector runtime.",
+			RelevantKeys: []string{
+				"DOMAIN", "PROD_DB_NAME", "OLLAMA_MODEL",
+			},
+		}
+	}
+}
+
+func openEditor(path string) tea.Cmd {
+	return func() tea.Msg {
+		editor := strings.TrimSpace(os.Getenv("EDITOR"))
+		if editor == "" {
+			editor = "vi"
+		}
+
+		cmd := exec.Command(editor, path)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Run(); err != nil {
+			return event.EditorDoneMsg{Path: path, Err: err}
+		}
+		return event.EditorDoneMsg{Path: path}
+	}
+}
+
 func clearsActiveDB(target string) bool {
 	switch target {
-	case "dev", "dev-safe", "dev-project", "dev-project-up", "dev-host-up", "db-init":
+	case "down", "db-init", "doctor", "up", "up-tunnel":
 		return true
 	default:
 		return false
 	}
 }
 
-func openEditor(path string) tea.Cmd {
-	editor := os.Getenv("EDITOR")
-	if editor == "" {
-		if _, err := exec.LookPath("nano"); err == nil {
-			editor = "nano"
-		} else {
-			editor = "vi"
-		}
-	}
-
-	command := exec.Command("sh", "-lc", fmt.Sprintf("%s %q", editor, path))
-	return tea.ExecProcess(command, func(execErr error) tea.Msg {
-		return event.EditorDoneMsg{Path: path, Err: execErr}
+func tickCmd(interval time.Duration) tea.Cmd {
+	return tea.Tick(interval, func(t time.Time) tea.Msg {
+		return tickMsg(t)
 	})
 }
 
