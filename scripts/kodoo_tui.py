@@ -18,7 +18,8 @@ from textual.widgets import Button, DataTable, Footer, Header, Log, RichLog, Sta
 
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-ENV_FILE = ROOT_DIR / ".env.make"
+ENV_FILE = ROOT_DIR / ".env"
+LEGACY_ENV_FILE = ROOT_DIR / ".env.make"
 DEV_HOST_PID_FILE = ROOT_DIR / "logs" / "odoo-dev-host.pid"
 DEV_HOST_LOG_PATH = ROOT_DIR / "logs" / "odoo-dev-host.log"
 DEV_PROJECT_PID_FILE = ROOT_DIR / "logs" / "odoo-dev-project.pid"
@@ -113,7 +114,10 @@ def load_env_file(path: Path) -> dict[str, str]:
 
 def merged_env() -> dict[str, str]:
     env = dict(DEFAULT_ENV)
-    env.update(load_env_file(ENV_FILE))
+    if ENV_FILE.exists():
+        env.update(load_env_file(ENV_FILE))
+    elif LEGACY_ENV_FILE.exists():
+        env.update(load_env_file(LEGACY_ENV_FILE))
     env.update({key: value for key, value in os.environ.items() if value})
     return env
 
@@ -395,7 +399,7 @@ def build_snapshot(env: dict[str, str]) -> Snapshot:
     else:
         endpoints.append(EndpointRow("public", public_url, "SKIP", "SMOKE_PUBLIC=0"))
 
-    env_file_ok = "yes" if ENV_FILE.exists() else "no"
+    env_file_ok = "yes" if ENV_FILE.exists() or LEGACY_ENV_FILE.exists() else "no"
     prod_config_ok = "yes" if (ROOT_DIR / "deploy/odoo/kodoo.prod.local.conf").exists() else "no"
     dev_config_ok = "yes" if (ROOT_DIR / "deploy/odoo/kodoo.dev-host.local.conf").exists() else "no"
     project_config_ok = "yes" if (ROOT_DIR / "deploy/odoo/kodoo.dev-project.local.conf").exists() else "no"
@@ -413,7 +417,7 @@ def build_snapshot(env: dict[str, str]) -> Snapshot:
     )
     files = "\n".join(
         [
-            f".env.make: {env_file_ok}",
+            f".env: {env_file_ok}",
             f"prod config: {prod_config_ok}",
             f"dev-host config: {dev_config_ok}",
             f"project config: {project_config_ok}",

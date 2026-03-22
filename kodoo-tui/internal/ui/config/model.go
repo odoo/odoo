@@ -79,7 +79,7 @@ func (m Model) HelpLines() []string {
 	return []string{
 		"/      search variables",
 		"enter  edit selected variable",
-		"e      open .env.make in $EDITOR",
+		"e      open .env in $EDITOR",
 		"p/h/j/i generate prod/dev-host/dev-project configs or env-init",
 	}
 }
@@ -158,7 +158,11 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 				return m, textinput.Blink
 			}
 		case "e":
-			return m, requestCmd(event.RequestOpenEditorMsg{Path: ".env.make"})
+			path := m.cfg.Path
+			if path == "" {
+				path = envconfig.PrimaryEnvFile
+			}
+			return m, requestCmd(event.RequestOpenEditorMsg{Path: path})
 		case "p":
 			return m, requestCmd(makeMsg("prod-config", "Generate deploy/odoo/kodoo.prod.local.conf.", []string{"PROD_DB_NAME", "PROD_DB_USER", "DOMAIN"}))
 		case "h":
@@ -166,7 +170,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		case "j":
 			return m, requestCmd(makeMsg("dev-project-config", "Generate deploy/odoo/kodoo.dev-project.local.conf.", []string{"DEV_PROJECT_HTTP_PORT", "DOCKER_DB_HOST_PORT"}))
 		case "i":
-			return m, requestCmd(makeMsg("env-init", "Create .env.make from the example file.", []string{"DOMAIN", "EMAIL"}))
+			return m, requestCmd(makeMsg("env-init", "Create .env from the example file.", []string{"DOMAIN", "EMAIL"}))
 		}
 
 		var cmd tea.Cmd
@@ -192,7 +196,7 @@ func (m Model) View(width, height int) string {
 		topLines = append(topLines, m.search.View())
 	}
 	if !m.cfg.Exists {
-		topLines = append(topLines, lipgloss.NewStyle().Foreground(lipgloss.Color("214")).Render(".env.make not found. Press i to create it."))
+		topLines = append(topLines, lipgloss.NewStyle().Foreground(lipgloss.Color("214")).Render(".env not found. Press i to create it."))
 	}
 
 	top := configPanelStyle.Width(width - 2).Height(max(10, height-12)).Render(strings.Join(topLines, "\n") + "\n\n" + m.table.View())
@@ -202,7 +206,7 @@ func (m Model) View(width, height int) string {
 		"h  make dev-host-config",
 		"j  make dev-project-config",
 		"i  make env-init",
-		"e  open .env.make",
+		"e  open .env",
 		"enter  edit selected",
 	}, "\n"))
 	return lipgloss.JoinVertical(lipgloss.Left, top, bottom)

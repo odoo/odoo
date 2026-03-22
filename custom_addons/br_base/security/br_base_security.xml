@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_user" model="res.groups">
+        <field name="name">BR Base User</field>
+        <field name="category_id" ref="base.module_category_localization"/>
+    </record>
+
+    <record id="group_manager" model="res.groups">
+        <field name="name">BR Base Manager</field>
+        <field name="category_id" ref="base.module_category_localization"/>
+        <field name="implied_ids" eval="[(4, ref('br_base.group_user'))]"/>
+    </record>
+</odoo>
+

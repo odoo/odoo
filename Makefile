@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 
--include .env.make
+ENV_FILE ?= $(if $(wildcard .env),.env,$(if $(wildcard .env.make),.env.make,.env))
+-include $(ENV_FILE)
 .EXPORT_ALL_VARIABLES:
 
 # Context defaults for local Linux/WSL and deploy stack.
@@ -8,7 +9,7 @@ HOSTNAME_SHORT ?= $(shell hostname -s 2>/dev/null || hostname 2>/dev/null || ech
 HOST_ROLE ?= $(if $(filter srv-01,$(HOSTNAME_SHORT)),srv01,$(if $(filter dex-00,$(HOSTNAME_SHORT)),dex00,$(if $(filter dex-01,$(HOSTNAME_SHORT)),dex01,unknown)))
 ORIGINAL_MAKE_GOALS ?= $(MAKECMDGOALS)
 OPERATIONS_DOC ?= doc/OPERATIONS_WORKFLOWS.md
-ENV_FILE_OPT := $(if $(wildcard .env.make),--env-file .env.make,)
+ENV_FILE_OPT := $(if $(wildcard $(ENV_FILE)),--env-file $(ENV_FILE),)
 COMPOSE ?= docker compose $(ENV_FILE_OPT)
 PYTHON_CANDIDATES := $(wildcard .venv/bin/python3 .venv/bin/python venv/bin/python3 venv/bin/python)
 PYTHON ?= $(if $(PYTHON_CANDIDATES),$(firstword $(PYTHON_CANDIDATES)),python3)
@@ -182,7 +183,7 @@ help:
 	@echo "                      # Use SMOKE_PUBLIC=0 to skip public domain check"
 	@echo ""
 	@echo "Config:"
-	@echo "  make env-init       # Create .env.make from .env.make.example if missing"
+	@echo "  make env-init       # Create .env from .env.example if missing"
 	@echo "  make config-list    # List every .conf/.env-style file in the repo"
 	@echo "  make config-view FILE=path # View one config file (or choose interactively)"
 	@echo "  make config-view-all # Print all config files with section headers"
@@ -273,7 +274,7 @@ help:
 	@echo "  make ollama-list    # List local Ollama models"
 	@echo ""
 	@echo "Examples:"
-	@echo "  cp .env.make.example .env.make"
+	@echo "  cp .env.example .env"
 
 context-status:
 	@HOST_ROLE="$(HOST_ROLE)" MAKE_CONTEXT_COMMAND="make $(ORIGINAL_MAKE_GOALS)" bash ./scripts/invocation-context.sh
@@ -429,11 +430,17 @@ deps-install:
 	fi
 
 env-init:
-	@if [ -f .env.make ]; then \
-	  echo ".env.make already exists."; \
+	@if [ -f .env ]; then \
+	  echo ".env already exists."; \
+	elif [ -f .env.example ]; then \
+	  cp .env.example .env; \
+	  echo "Created .env from .env.example."; \
+	elif [ -f .env.make ]; then \
+	  cp .env.make .env; \
+	  echo "Created .env from existing .env.make."; \
 	else \
-	  cp .env.make.example .env.make; \
-	  echo "Created .env.make from .env.make.example."; \
+	  echo "Missing .env.example. Create it first."; \
+	  exit 1; \
 	fi
 
 config-list:
@@ -599,7 +606,7 @@ prod-config:
 	PROD_DB_PASSWORD="$(PROD_DB_PASSWORD)" \
 	./scripts/render-prod-config.sh
 	@chmod 644 "$(PROD_CONFIG)"
-	@echo "Generated $(PROD_CONFIG) from .env.make (chmod 644)."
+	@echo "Generated $(PROD_CONFIG) from $(ENV_FILE) (chmod 644)."
 
 dev-host-config:
 	@CONFIG_OUTPUT="$(DEV_HOST_CONFIG)" \
@@ -611,7 +618,7 @@ dev-host-config:
 	APP_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
 	./scripts/render-dev-host-config.sh
 	@chmod 644 "$(DEV_HOST_CONFIG)"
-	@echo "Generated $(DEV_HOST_CONFIG) from .env.make (chmod 644)."
+	@echo "Generated $(DEV_HOST_CONFIG) from $(ENV_FILE) (chmod 644)."
 
 dev-project-config:
 	@CONFIG_OUTPUT="$(DEV_PROJECT_CONFIG)" \
@@ -623,7 +630,7 @@ dev-project-config:
 	APP_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
 	./scripts/render-dev-host-config.sh
 	@chmod 644 "$(DEV_PROJECT_CONFIG)"
-	@echo "Generated $(DEV_PROJECT_CONFIG) from .env.make (chmod 644)."
+	@echo "Generated $(DEV_PROJECT_CONFIG) from $(ENV_FILE) (chmod 644)."
 # Equivalent to scripts/start-with-lnav.ps1 for Linux/WSL environments.
 odoo-lnav:
 	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
@@ -962,7 +969,7 @@ troubleshoot-project:
 	echo "== Troubleshoot (project mode / $(DEV_PROJECT_DB)) =="; \
 	echo ""; \
 	echo "== Files =="; \
-	if [ -f .env.make ]; then echo "OK: .env.make found."; else echo "FAIL: .env.make missing."; rc=1; fi; \
+	if [ -f .env ] || [ -f .env.make ]; then echo "OK: env file found."; else echo "FAIL: .env/.env.make missing."; rc=1; fi; \
 	if [ -f "$(DEV_PROJECT_CONFIG)" ]; then echo "OK: $(DEV_PROJECT_CONFIG) found."; else echo "WARN: $(DEV_PROJECT_CONFIG) missing. Run: make dev-project-config"; rc=1; fi; \
 	echo ""; \
 	echo "== Docker DB =="; \
@@ -1290,7 +1297,7 @@ smoke:
 	    echo "FAIL: public endpoint https://$(DOMAIN) returned HTTP $$public_code."; \
 	    if [ "$$cloudflared_running" != "true" ]; then \
 	      echo "Hint: domain may be pointing to Cloudflare Tunnel, but 'kodoo-cloudflared' is not running."; \
-	      echo "Run: fill CLOUDFLARED_TOKEN in .env.make, then use make up-tunnel."; \
+	      echo "Run: fill CLOUDFLARED_TOKEN in .env, then use make up-tunnel."; \
 	    else \
 	      public_body="$$(curl -sS --max-time 20 https://$(DOMAIN) || true)"; \
 	      if printf '%s' "$$public_body" | grep -q 'error code: 1016'; then \
@@ -1315,7 +1322,7 @@ troubleshoot:
 	echo "== Troubleshoot ($(DOMAIN)) =="; \
 	echo ""; \
 	echo "== Files =="; \
-	if [ -f .env.make ]; then echo "OK: .env.make found."; else echo "FAIL: .env.make missing."; rc=1; fi; \
+	if [ -f .env ] || [ -f .env.make ]; then echo "OK: env file found."; else echo "FAIL: .env/.env.make missing."; rc=1; fi; \
 	if [ -f "$(PROD_CONFIG)" ]; then echo "OK: $(PROD_CONFIG) found."; else echo "WARN: $(PROD_CONFIG) missing. Run: make prod-config"; fi; \
 	if [ -f "$(DEV_HOST_CONFIG)" ]; then echo "OK: $(DEV_HOST_CONFIG) found."; else echo "INFO: $(DEV_HOST_CONFIG) not present."; fi; \
 	echo ""; \
@@ -1445,7 +1452,7 @@ tui-doctor:
 	else \
 	  echo "binary: not built"; \
 	fi; \
-	if [ -f .env.make ]; then echo ".env.make: present"; else echo ".env.make: missing"; fi; \
+	if [ -f .env ]; then echo ".env: present"; elif [ -f .env.make ]; then echo ".env.make: present (legacy)"; else echo ".env: missing"; fi; \
 	if command -v docker >/dev/null 2>&1; then \
 	  echo "docker cli: ok"; \
 	  docker_check="$$(docker version 2>&1 || true)"; \
@@ -1526,7 +1533,7 @@ up-tunnel:
 	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
-	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env.make first."; exit 1)
+	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env first."; exit 1)
 	@$(COMPOSE_TUNNEL) up -d db odoo nginx ollama cloudflared
 	@$(MAKE) ollama-pull
 	@echo "Cloudflare tunnel mode started."
@@ -1544,7 +1551,7 @@ up-lean-tunnel:
 	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) 80"
-	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env.make first."; exit 1)
+	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env first."; exit 1)
 	@$(COMPOSE_LEAN_TUNNEL) up -d db odoo nginx ollama cloudflared
 	@$(MAKE) ollama-pull
 	@echo "Lean Tunnel mode started."

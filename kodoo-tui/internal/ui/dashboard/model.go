@@ -183,7 +183,7 @@ func (m Model) View(width, height int) string {
 func (m Model) servicesView() string {
 	lines := []string{serviceTitleStyle.Render("Services")}
 	if !m.cfg.Exists {
-		lines = append(lines, warnStyle.Render(".env.make missing. Run make env-init"))
+		lines = append(lines, warnStyle.Render(".env missing. Run make env-init"))
 	}
 	if m.err != "" {
 		lines = append(lines, errStyle.Render(m.err))

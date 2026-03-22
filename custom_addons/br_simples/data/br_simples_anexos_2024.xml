@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="simples_anexo_i_2024" model="br.simples.anexo"><field name="code">I</field><field name="name">Anexo I</field><field name="descricao">Comercio</field><field name="date_from">2024-01-01</field></record>
+    <record id="simples_anexo_iii_2024" model="br.simples.anexo"><field name="code">III</field><field name="name">Anexo III</field><field name="descricao">Servicos com fator R</field><field name="date_from">2024-01-01</field></record>
+    <record id="simples_aliquota_i_f1_2024" model="br.simples.aliquota"><field name="anexo_id" ref="simples_anexo_i_2024"/><field name="receita_min">0.0</field><field name="receita_max">180000.0</field><field name="aliquota_nominal">0.04</field><field name="valor_deduzir">0.0</field></record>
+    <record id="simples_aliquota_i_f2_2024" model="br.simples.aliquota"><field name="anexo_id" ref="simples_anexo_i_2024"/><field name="receita_min">180000.01</field><field name="receita_max">360000.0</field><field name="aliquota_nominal">0.073</field><field name="valor_deduzir">5940.0</field></record>
+    <record id="simples_aliquota_iii_f1_2024" model="br.simples.aliquota"><field name="anexo_id" ref="simples_anexo_iii_2024"/><field name="receita_min">0.0</field><field name="receita_max">180000.0</field><field name="aliquota_nominal">0.06</field><field name="valor_deduzir">0.0</field></record>
+</odoo>
+

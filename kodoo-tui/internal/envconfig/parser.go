@@ -12,6 +12,12 @@ import (
 	"time"
 )
 
+const (
+	PrimaryEnvFile = ".env"
+	LegacyEnvFile  = ".env.make"
+	ExampleEnvFile = ".env.example"
+)
+
 var (
 	linePattern      = regexp.MustCompile(`^([A-Za-z_][A-Za-z0-9_]*)\s*(\?=|:=|=)\s*(.*)$`)
 	expansionPattern = regexp.MustCompile(`\$\(([A-Za-z_][A-Za-z0-9_]*)\)`)
@@ -24,71 +30,84 @@ type Entry struct {
 	Source string
 }
 
-// Config contains the typed view of .env.make used by the TUI.
+// Config contains the typed view of the local env file used by the TUI.
 type Config struct {
 	Path   string
 	Exists bool
 
-	Domain             string
-	Email              string
-	CloudflaredToken   string
-	ProdDBName         string
-	ProdDBUser         string
-	ProdDBPassword     string
-	ProdAdminPassword  string
-	DevHostHTTPPort    int
-	DevHostDB          string
-	DevHostTestDB      string
-	DevHostAdminPassword string
-	DevProjectHTTPPort int
-	DevProjectDB       string
+	Domain                  string
+	Email                   string
+	CloudflaredToken        string
+	ProdDBName              string
+	ProdDBUser              string
+	ProdDBPassword          string
+	ProdAdminPassword       string
+	DevHostHTTPPort         int
+	DevHostDB               string
+	DevHostTestDB           string
+	DevHostAdminPassword    string
+	DevProjectHTTPPort      int
+	DevProjectDB            string
 	DevProjectAdminPassword string
-	PGLocalHost        string
-	PGLocalPort        int
-	PGLocalUser        string
-	PGLocalPassword    string
-	DockerDBBindHost   string
-	DockerDBHostPort   int
-	LocalBindHost      string
-	LocalHTTPPort      int
-	OllamaModel        string
-	TUIRefreshSeconds  int
-	TUILogLines        int
-	SMOKEPublic        bool
+	PGLocalHost             string
+	PGLocalPort             int
+	PGLocalUser             string
+	PGLocalPassword         string
+	DockerDBBindHost        string
+	DockerDBHostPort        int
+	LocalBindHost           string
+	LocalHTTPPort           int
+	OllamaModel             string
+	TUIRefreshSeconds       int
+	TUILogLines             int
+	SMOKEPublic             bool
 
 	Values map[string]Entry
 }
 
 var defaultValues = map[string]string{
-	"DOMAIN":               "kodoo.online",
-	"EMAIL":                "",
-	"CLOUDFLARED_TOKEN":    "",
-	"PROD_DB_NAME":         "kodoo",
-	"PROD_DB_USER":         "kodoo",
-	"PROD_DB_PASSWORD":     "",
-	"PROD_ADMIN_PASSWORD":  "",
-	"DEV_HOST_HTTP_PORT":   "8070",
-	"DEV_HOST_DB":          "kodoo",
-	"DEV_HOST_TEST_DB":     "ktest",
-	"DEV_PROJECT_HTTP_PORT": "8071",
-	"DEV_PROJECT_DB":       "ktest",
-	"DEV_HOST_ADMIN_PASSWORD": "",
+	"DOMAIN":                     "kodoo.online",
+	"EMAIL":                      "",
+	"CLOUDFLARED_TOKEN":          "",
+	"PROD_DB_NAME":               "kodoo",
+	"PROD_DB_USER":               "kodoo",
+	"PROD_DB_PASSWORD":           "",
+	"PROD_ADMIN_PASSWORD":        "",
+	"DEV_HOST_HTTP_PORT":         "8070",
+	"DEV_HOST_DB":                "kodoo",
+	"DEV_HOST_TEST_DB":           "ktest",
+	"DEV_PROJECT_HTTP_PORT":      "8071",
+	"DEV_PROJECT_DB":             "ktest",
+	"DEV_HOST_ADMIN_PASSWORD":    "",
 	"DEV_PROJECT_ADMIN_PASSWORD": "",
-	"PG_LOCAL_HOST":        "127.0.0.1",
-	"PG_LOCAL_PORT":        "5432",
-	"PG_LOCAL_USER":        "kodoo",
-	"PG_LOCAL_PASSWORD":    "",
-	"DOCKER_DB_BIND_HOST":  "127.0.0.1",
-	"DOCKER_DB_HOST_PORT":  "5433",
-	"LOCAL_BIND_HOST":      "127.0.0.1",
-	"LOCAL_HTTP_PORT":      "8069",
-	"OLLAMA_MODEL":         "qwen3.5:0.8b",
-	"TUI_REFRESH_SECONDS":  "3",
-	"TUI_LOG_LINES":        "20",
-	"SMOKE_PUBLIC":         "1",
+	"PG_LOCAL_HOST":              "127.0.0.1",
+	"PG_LOCAL_PORT":              "5432",
+	"PG_LOCAL_USER":              "kodoo",
+	"PG_LOCAL_PASSWORD":          "",
+	"DOCKER_DB_BIND_HOST":        "127.0.0.1",
+	"DOCKER_DB_HOST_PORT":        "5433",
+	"LOCAL_BIND_HOST":            "127.0.0.1",
+	"LOCAL_HTTP_PORT":            "8069",
+	"OLLAMA_MODEL":               "qwen3.5:0.8b",
+	"TUI_REFRESH_SECONDS":        "3",
+	"TUI_LOG_LINES":              "20",
+	"SMOKE_PUBLIC":               "1",
 }
 
-// Load parses .env.make-style files with simple Make syntax.
+// ResolvePath returns .env when present, otherwise falls back to legacy .env.make.
+func ResolvePath(repoDir string) string {
+	primary := filepath.Join(repoDir, PrimaryEnvFile)
+	if _, err := os.Stat(primary); err == nil {
+		return primary
+	}
+	legacy := filepath.Join(repoDir, LegacyEnvFile)
+	if _, err := os.Stat(legacy); err == nil {
+		return legacy
+	}
+	return primary
+}
+
+// Load parses .env-style files with simple Make syntax.
 func Load(path string) (*Config, error) {
 	cfg := &Config{
 		Path:   path,
@@ -241,7 +260,7 @@ func (c *Config) Set(key, value string) {
 	c.applyTypedValues()
 }
 
-// Save persists the current configuration values back to the .env.make file.
+// Save persists the current configuration values back to the active env file.
 // It tries to preserve existing comments and structure by replacing matching lines.
 func (c *Config) Save() error {
 	if c.Path == "" {

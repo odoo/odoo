@@ -20,7 +20,7 @@ Essa abordagem reduz custo de CPU/RAM e evita o ciclo lento de rebuild do contai
 make env-init
 ```
 
-Preencha `.env.make`, principalmente:
+Preencha `.env`, principalmente:
 
 - `PG_LOCAL_PASSWORD`
 - `DEV_HOST_ADMIN_PASSWORD`

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_br_municipio_tree" model="ir.ui.view">
+        <field name="name">br.municipio.tree</field>
+        <field name="model">br.municipio</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code_ibge"/>
+                <field name="state_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_br_municipio_form" model="ir.ui.view">
+        <field name="name">br.municipio.form</field>
+        <field name="model">br.municipio</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code_ibge"/>
+                        <field name="state_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_br_municipio" model="ir.actions.act_window">
+        <field name="name">Municipios</field>
+        <field name="res_model">br.municipio</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_br_base_root" name="Brasil" parent="base.menu_custom" groups="br_base.group_user"/>
+    <menuitem id="menu_br_municipio" name="Municipios" parent="menu_br_base_root" action="action_br_municipio" groups="br_base.group_user"/>
+</odoo>
+

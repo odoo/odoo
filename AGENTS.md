@@ -70,3 +70,22 @@ ruff check .
 - Do not commit secrets, `.env`, or local config files.
 - Keep production credentials out of source; inject via environment/secret manager.
 - Review exposed ports and reverse proxy/SSL settings before production deploy.
+
+## br_* Development Rules
+- All Brazilian business/fiscal modules use the `br_*` prefix.
+- `gov_*` is public-sector contextualization, not a foundation for `br_*`.
+- Never add `gov_*` to `depends[]` of any `br_*` module.
+- If a concept already exists in `gov_*`, reimplement the clean core in `br_*`.
+- Use the `gov_*` file only as a logic reference, never as a dependency.
+- Document the source file inline when reusing a concept, for example:
+  `# ref: gov_account_fiscal_year/models/account_fiscal_year.py`
+- `br_account` must depend on `['br_base', 'account', 'accountant', 'l10n_br', 'l10n_br_sales']`.
+- Never use `gov_base`, `base_accounting_kit`, or `dynamic_accounts_report` in `depends[]` of `br_base`, `br_account`, or `br_tax_engine`.
+- `base_accounting_kit` and `dynamic_accounts_report` are donor stacks only.
+- Features from Option B must land as optional `br_*` modules such as `br_reports` or `br_bank_import`.
+- Never hardcode tax rates in Python for the fiscal engine.
+- All tax rates must live in `br.tax.rule` with `date_from` / `date_to`.
+- Changes in rates must be implemented by new data records, never by editing Python logic.
+- Legacy tax fields and models must not be removed before 2033.
+- The transition to CBS/IBS must be managed by `active=False` or dated records in `br.tax.rule`, not by destructive schema changes.
+- CBS/IBS rates are activated by inserting records with `date_from=2026-01-01`.

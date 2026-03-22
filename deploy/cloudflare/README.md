@@ -14,7 +14,7 @@ Use this mode when your ISP is behind CGNAT or your IPv4 changes often.
 
 ## 2) Local side
 
-Set the tunnel token in `.env.make` (preferred) or export it in shell:
+Set the tunnel token in `.env` (preferred; legacy `.env.make` still works) or export it in shell:
 
 ```bash
 CLOUDFLARED_TOKEN='PASTE_YOUR_TUNNEL_TOKEN'

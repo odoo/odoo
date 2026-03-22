@@ -37,7 +37,7 @@ make tui-menu
 - `1 Dashboard`: container state, inferred mode, ports, recent compose events
 - `2 Logs`: follow one service or all services with inline search
 - `3 Actions`: run grouped Make targets with confirmation and streamed output
-- `4 Config`: inspect `.env.make`, open it in `$EDITOR`, and generate Odoo config files
+- `4 Config`: inspect `.env`, open it in `$EDITOR`, and generate Odoo config files
 
 ## Global Keys
 
@@ -60,7 +60,7 @@ Any action launched from the TUI opens a lower output panel with:
 
 ## Config and Environment
 
-The TUI reads `.env.make` from the repository root and overlays any process environment variables with the same names.
+The TUI reads `.env` from the repository root and falls back to legacy `.env.make` when needed. It then overlays any process environment variables with the same names.
 
 Useful knobs:
 
@@ -69,4 +69,4 @@ TUI_REFRESH_SECONDS=3
 TUI_LOG_LINES=20
 ```
 
-If `.env.make` is missing, the dashboard warns and the config tab can create it with `make env-init`.
+If `.env` is missing, the dashboard warns and the config tab can create it with `make env-init`.

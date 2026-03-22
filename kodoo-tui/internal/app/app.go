@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -64,21 +63,21 @@ type launchOption struct {
 
 // Model is the root Bubble Tea application.
 type Model struct {
-	repoDir    string
-	cfg        *envconfig.Config
-	activeTab  int
-	width      int
-	height     int
-	dashboard  dashboard.Model
-	logs       logs.Model
-	actions    actions.Model
-	config     config.Model
-	helpVisible bool
+	repoDir          string
+	cfg              *envconfig.Config
+	activeTab        int
+	width            int
+	height           int
+	dashboard        dashboard.Model
+	logs             logs.Model
+	actions          actions.Model
+	config           config.Model
+	helpVisible      bool
 	launchpadVisible bool
 	launchOptions    []launchOption
 	launchSelected   int
-	overlay    overlayState
-	activeDB   string
+	overlay          overlayState
+	activeDB         string
 }
 
 // New creates the root kodoo-tui application.
@@ -89,12 +88,12 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 	input.Blur()
 
 	return Model{
-		repoDir:   repoDir,
-		cfg:       cfg,
-		dashboard: dashboard.New(cfg),
-		logs:      logs.New(cfg),
-		actions:   actions.New(cfg),
-		config:    config.New(cfg),
+		repoDir:          repoDir,
+		cfg:              cfg,
+		dashboard:        dashboard.New(cfg),
+		logs:             logs.New(cfg),
+		actions:          actions.New(cfg),
+		config:           config.New(cfg),
 		launchpadVisible: true,
 		launchOptions:    defaultLaunchOptions(),
 		overlay: overlayState{
@@ -428,7 +427,7 @@ func (m Model) prepareActionRequest(request event.RequestMakeTargetMsg) (Model, 
 }
 
 func (m Model) reloadConfig() (Model, tea.Cmd) {
-	cfg, err := envconfig.Load(filepath.Join(m.repoDir, ".env.make"))
+	cfg, err := envconfig.Load(envconfig.ResolvePath(m.repoDir))
 	if err != nil {
 		m.overlay.visible = true
 		m.overlay.done = true

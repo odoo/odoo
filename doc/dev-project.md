@@ -43,7 +43,7 @@ make down-project
 
 ## Environment
 
-Relevant `.env.make` values:
+Relevant `.env` values:
 
 ```bash
 DOCKER_DB_BIND_HOST=127.0.0.1
