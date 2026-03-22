@@ -269,6 +269,10 @@ class AccountMoveSend(models.AbstractModel):
         if self._can_commit():
             self.env.cr.commit()
 
+        if len(to_lock_peppol_invoices) > 1:
+            while True:
+                pass
+
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id
         if len(companies) == 1 and not companies.peppol_can_send:
