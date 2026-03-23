@@ -1,7 +1,6 @@
 import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
-import { positionInputBoxOverlay } from "@web/core/input_box/input_box";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -58,7 +57,6 @@ export function useInputField(params) {
         if (!component.props.record.isValid) {
             component.props.record.resetFieldValidity(fieldName);
         }
-        positionInputBoxOverlay(ev.target);
     }
 
     /**
@@ -94,7 +92,6 @@ export function useInputField(params) {
                 }
             }
         }
-        positionInputBoxOverlay(inputRef.el);
     }
     function onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);

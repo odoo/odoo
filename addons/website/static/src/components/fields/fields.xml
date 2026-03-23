@@ -2,7 +2,7 @@
 <templates>
 
 <t t-name="website.PageUrlField" t-inherit="web.UrlField" t-inherit-mode="primary">
-    <xpath expr="//InputBox" position="before">
+    <xpath expr="//input" position="before">
         <t t-set="slicingLength" t-value="this.env.isSmall ? 30 : 45"/>
         <div
             class="o_input_box_overlay_start inline"

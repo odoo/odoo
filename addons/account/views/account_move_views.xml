@@ -1116,25 +1116,22 @@
                                        readonly="is_move_sent and state != 'draft'"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
-                                <div class="d-flex" colspan="2" invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
-                                    <div class="o_col w-50" invisible="invoice_payment_term_id">
-                                        <label for="invoice_date_due"/>
-                                        <field name="invoice_date_due"
-                                            force_save="1"
-                                            placeholder="Date"/>
-                                    </div>
-                                    <div class="o_col">
-                                        <label for="invoice_payment_term_id"
-                                            invisible="not invoice_payment_term_id"/>
-                                        <label for="invoice_payment_term_id"
-                                            string="Or"
-                                            invisible="invoice_payment_term_id"/>
-                                        <field name="invoice_payment_term_id"
-                                            context="{'example_date': invoice_date, 'example_amount': tax_totals['total_amount_currency']}"
-                                            placeholder="Payment Terms"
-                                            options="{'no_quick_create':True}"
-                                            readonly="state in ['cancel', 'posted']"/>
-                                    </div>
+                                <div class="o_td_label" invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
+                                    <label for="invoice_date_due" string="Due Date"
+                                           invisible="invoice_payment_term_id"/>
+                                    <label for="invoice_payment_term_id" string="Payment terms"
+                                           invisible="not invoice_payment_term_id"/>
+                                </div>
+                                <div class="d-flex" invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')" name="due_date">
+                                    <field name="invoice_date_due" force_save="1"
+                                           placeholder="Date"
+                                           invisible="invoice_payment_term_id"/>
+                                    <span class="o_form_label mx-3 oe_edit_only text-center" style="width: 6ch;"
+                                          invisible="state != 'draft' or invoice_payment_term_id">or</span>
+                                    <field name="invoice_payment_term_id"
+                                           context="{'example_date': invoice_date, 'example_amount': tax_totals['total_amount_currency']}"
+                                           placeholder="Payment Terms"
+                                           options="{'no_quick_create':True}" readonly="state in ['cancel', 'posted']"/>
                                 </div>
                                 <field name="taxable_supply_date_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
                                 <field name="taxable_supply_date" invisible="not show_taxable_supply_date" readonly="state != 'draft'" options="{'placeholder_field': 'taxable_supply_date_placeholder'}"/>

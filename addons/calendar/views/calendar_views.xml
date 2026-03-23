@@ -217,11 +217,8 @@
                                 <group>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" readonly="not user_can_edit"/>
-                                    <label for="description" string="Calendar description" colspan="2"/>
                                     <field name="description"
-                                        colspan="2"
-                                        nolabel="1"
-                                        class="border border-1 rounded"
+                                        string="Calendar description"
                                         options="{'height': 120}"
                                         placeholder="Add description"
                                         readonly="not user_can_edit"

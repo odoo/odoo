@@ -17,7 +17,7 @@
     </t>
 
     <t t-name="web.Many2One">
-        <div class="o_many2one o_input_box" t-att-class="this.props.cssClass">
+        <div class="o_many2one" t-att-class="this.props.cssClass">
             <t t-if="this.props.readonly">
                 <t t-if="this.props.value">
                     <t t-if="this.props.canOpen">
@@ -30,10 +30,14 @@
             </t>
             <t t-else="">
                 <div class="o_field_many2one_selection" t-custom-ref="root">
-                    <Many2XAutocomplete t-props="this.many2XAutocompleteProps"/>
-                    <InternalLinkButton t-if="this.hasLinkButton" onClick.bind="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')" />
+                    <Many2XAutocomplete t-props="many2XAutocompleteProps"/>
+                    <t t-if="this.hasLinkButton">
+                        <button class="o_external_button btn btn-link text-action px-1 py-0" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')">
+                            <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+                        </button>
+                    </t>
                     <t t-if="this.hasBarcodeButton">
-                        <button class="o_barcode o_input_box_overlay_end btn btn-secondary" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
+                        <button class="btn ms-3 o_barcode" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
                     </t>
                 </div>
             </t>

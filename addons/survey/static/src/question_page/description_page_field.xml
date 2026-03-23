@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="survey.DescriptionPageField" t-inherit="web.CharField">
-        <xpath expr="//div[@class='o_field_input_buttons']" position="replace">
+    <t t-name="survey.CharField" t-inherit="web.CharField">
+        <xpath expr="//div[@class='o_field_input_buttons']" position="inside">
             <button type="button" title="Open section" class="btn btn-link o_input_box_overlay_end" t-on-click.stop="this.onExternalBtnClick">
                 <i class="fa fa-external-link"/>
             </button>
@@ -11,6 +11,14 @@
             <button class="btn btn-link o_input_box_overlay_end" t-if="this.props.record.data.is_page">
                 <i class="fa fa-pencil"/>
             </button>
+        </xpath>
+    </t>
+
+    <t t-name="survey.DescriptionPageField" t-inherit="survey.CharField">
+        <xpath expr="//t[@t-else='']" position="replace">
+            <div t-else="" class="input-group">
+                <t t-call="survey.CharField"/>
+            </div>
         </xpath>
     </t>
 

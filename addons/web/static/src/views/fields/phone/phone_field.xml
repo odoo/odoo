@@ -2,26 +2,47 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PhoneField">
-        <div class="o_input_box">
+        <div class="d-inline-flex align-items-baseline w-100">
             <t t-if="this.props.readonly">
-                <a t-if="this.props.record.data[this.props.name]" t-att-href="this.phoneHref" class="o_form_uri" t-custom-click.prevent.stop="() => this.onLinkClicked()" t-out="this.props.record.data[this.props.name]"/>
-                <t t-foreach="this.inlineButtons" t-as="btn" t-key="btn.name">
-                    <button t-attf-class="btn btn-link o_input_box_overlay_end" t-on-click.stop="btn.onSelected" t-att-data-tooltip="btn.name">
-                        <i t-attf-class="i fa {{ btn.icon }}" />
-                    </button>
-                </t>
+                <span t-out="this.props.record.data[this.props.name]"/>
+                <t t-call="web.PhoneFieldActions"/>
             </t>
             <t t-else="">
-                <t t-set="_overlayButtons" t-value="this.props.record.data[this.props.name] ? this.overlayButtons : []" />
-                <InputBox
-                    placeholder="this.props.placeholder"
-                    overlayButtons="_overlayButtons"
-                    type="'tel'"
-                    id="this.props.id"
-                    input="this.input"
+                <input
+                    class="o_input"
+                    t-att-id="this.props.id"
+                    type="tel"
+                    autocomplete="off"
+                    t-att-placeholder="this.props.placeholder"
+                    t-custom-ref="input"
                 />
+                <t t-call="web.PhoneFieldActions"/>
             </t>
         </div>
+    </t>
+
+    <t t-name="web.PhoneFieldActions">
+        <span class="d-flex flex-nowrap">
+            <t t-foreach="this.actionButtons" t-as="btn" t-key="btn.name">
+                <button
+                    t-if="props.record.data[props.name]"
+                    t-on-click.stop="btn.onSelected"
+                    class="o_phone_form_link btn btn-sm btn-link p-1 py-0 text-nowrap"
+                >
+                    <i t-attf-class="fa {{ btn.icon }}"/><small class="fw-bold ms-1"><t t-out="btn.name"/></small>
+                </button>
+            </t>
+        </span>
+        <Dropdown>
+            <button class="btn fa fa-ellipsis-v"/>
+            <t t-set-slot="content">
+                    <t t-foreach="this.actionButtons" t-as="btn" t-key="btn.name">
+                        <DropdownItem class="'o_phone_form_link d-flex align-items-baseline gap-1'" onSelected="(ev) => btn.onSelected()">
+                            <i t-attf-class="fa {{ btn.icon }}" /><t t-out="btn.name"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
     </t>
 
 </templates>

@@ -1,8 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import { PhoneField, phoneField, FormPhoneField, formPhoneField } from "@web/views/fields/phone/phone_field";
+import { user } from "@web/core/user";
+import { PhoneField, phoneField } from "@web/views/fields/phone/phone_field";
 
 patch(PhoneField, {
     defaultProps: {
@@ -14,35 +14,17 @@ patch(PhoneField, {
         enableButton: { type: Boolean, optional: true },
     },
 });
-
-const patchDescr = () => ({
-    extractProps({ options }) {
-        const props = super.extractProps(...arguments);
-        props.enableButton = options.enable_sms;
-        return props;
-    },
-    supportedOptions: [{
-        label: _t("Enable SMS"),
-        name: "enable_sms",
-        type: "boolean",
-        default: true,
-    }],
-});
-
-patch(phoneField, patchDescr());
-patch(formPhoneField, patchDescr());
-
-patch(FormPhoneField.prototype, {
+patch(PhoneField.prototype, {
     setup() {
         super.setup();
         this.action = useService("action");
     },
-    get overlayButtons() {
+    get actionButtons() {
         if (!this.props.enableButton || this.props.record.data[this.props.name].length === 0) {
-            return super.overlayButtons;
+            return super.actionButtons;
         }
         return [
-            ...super.overlayButtons,
+            ...super.actionButtons,
             {
                 icon: "fa-mobile",
                 onSelected: async () => {
@@ -71,8 +53,23 @@ patch(FormPhoneField.prototype, {
                     );
                 },
                 name: _t("SMS"),
-                showInReadonly: true,
             },
         ];
     },
 });
+
+const patchDescr = () => ({
+    extractProps({ options }) {
+        const props = super.extractProps(...arguments);
+        props.enableButton = options.enable_sms;
+        return props;
+    },
+    supportedOptions: [{
+        label: _t("Enable SMS"),
+        name: "enable_sms",
+        type: "boolean",
+        default: true,
+    }],
+});
+
+patch(phoneField, patchDescr());

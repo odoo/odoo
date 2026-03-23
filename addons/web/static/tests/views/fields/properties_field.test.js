@@ -1841,9 +1841,7 @@ test("properties: suffix", async () => {
     await animationFrame();
     await closePopover();
 
-    expect(".o_field_properties .o_property_field:last .o_input_box_overlay_end").toHaveText(
-        "kg"
-    );
+    expect(".o_field_properties .o_property_field:last .o_input_box_overlay_end").toHaveText("kg");
 });
 
 /**
@@ -2748,11 +2746,13 @@ test("properties: monetary with currency_id", async () => {
     ).click();
     expect(`.o_field_property_definition_currency_field select`).toHaveText("Currency");
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("currency_id");
-    expect(".o_field_property_definition_value span").toHaveText("$");
+    expect(".o_field_property_definition_value .o_input > span:eq(0)").toHaveText("$");
     expect(`.o_field_property_definition_value input`).toHaveValue("0.00");
 
     await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_value span").toHaveText("$");
+    expect(
+        ".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(0)"
+    ).toHaveText("$");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
 });
 
@@ -2805,11 +2805,13 @@ test("properties: monetary with multiple currency field", async () => {
         "another_currency_id"
     );
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("another_currency_id");
-    expect(".o_field_property_definition_value span").toHaveText("€");
+    expect(".o_field_property_definition_value .o_input > span:eq(1)").toHaveText("€");
     expect(`.o_field_property_definition_value input`).toHaveValue("0.00");
 
     await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_value span").toHaveText("€");
+    expect(
+        ".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(1)"
+    ).toHaveText("€");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
 });
 

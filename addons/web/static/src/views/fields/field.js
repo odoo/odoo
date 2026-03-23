@@ -1,14 +1,10 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { debounce } from "@web/core/utils/timing";
 import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
-import { positionInputBoxOverlay } from "@web/core/input_box/input_box";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
@@ -232,10 +228,15 @@ export class Field extends Component {
     static props = ["fieldInfo?", "*"];
     static parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         const name = node.getAttribute("name");
-        const widget = node.getAttribute("widget");
+        let widget = node.getAttribute("widget");
         const fields = models[modelName].fields;
         if (!fields[name]) {
             throw new Error(`"${modelName}"."${name}" field is undefined.`);
+        }
+        const isForceBooleanToggleField =
+            !widget && fields[name].type === "boolean" && viewType === "form" && isSmall();
+        if (isForceBooleanToggleField) {
+            widget = "boolean_toggle";
         }
         const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
         const fieldInfo = {
@@ -294,7 +295,10 @@ export class Field extends Component {
         if (widget === "handle") {
             fieldInfo.isHandle = true;
         }
-
+        if (isForceBooleanToggleField && !("autosave" in fieldInfo.options)) {
+            // Disable the default autosave default behavior to keep the same behavior has desktop
+            fieldInfo.options.autosave = false;
+        }
         if (X2M_TYPES.includes(fields[name].type)) {
             const views = {};
             let relatedFields = fieldInfo.field.relatedFields;
@@ -365,44 +369,12 @@ export class Field extends Component {
 
     setup() {
         this.offlineService = useService("offline");
-        this.fieldRef = useRef("fieldRef");
-
-        this.debouncedOverlayPositioning = debounce(() => {
-            positionInputBoxOverlay(this.fieldRef.el);
-        }, 500);
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
             const fieldType = this.props.record.fields[this.props.name].type;
             this.field = getFieldFromRegistry(fieldType, this.props.type);
         }
-
-        useLayoutEffect(
-            () => {
-                this.debouncedOverlayPositioning();
-            },
-            () => [this.props.record.data]
-        );
-
-        useLayoutEffect(
-            (fieldEl) => {
-                if (!fieldEl) {
-                    return;
-                }
-                positionInputBoxOverlay(fieldEl);
-                if (hasTouch() && this.props.fieldInfo?.viewType === "form") {
-                    const focusIn = () => this.onFieldFocus(true);
-                    const focusOut = () => this.onFieldFocus(false);
-                    fieldEl.addEventListener("focusin", focusIn);
-                    fieldEl.addEventListener("focusout", focusOut);
-                    return () => {
-                        fieldEl.removeEventListener("focusin", focusIn);
-                        fieldEl.removeEventListener("focusout", focusOut);
-                    };
-                }
-            },
-            () => [this.fieldRef.el]
-        );
     }
 
     get classNames() {

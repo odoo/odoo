@@ -76,7 +76,7 @@ test("HtmlMail save inline html", async function () {
     useCustomStyleRules(`.test-h1-inline .note-editable h1 { color: #111827 !important; }`);
     onRpc("web_save", ({ args }) => {
         expect(args[1].body.replace(/font-size: ?(\d+(\.\d+)?)px/, "font-size: []px")).toBe(
-            `<h1 style="border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-color: #111827; border-width: 0px; font-size: []px; color: #111827; line-height: 1.2; font-weight: 500; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, 'Noto Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; margin-bottom: 5px; margin-top: 0px;">first</h1>`
+            `<h1 style="border-radius:0px;border-style:none;padding:0px;margin:0px 0 8px 0;box-sizing:border-box;border-left-color:#111827;border-bottom-color:#111827;border-right-color:#111827;border-top-color:#111827;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size: []px;color:#111827;line-height:1.2;font-weight:500;font-family:'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, 'Noto Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';">first</h1>`
         );
         expect.step("web_save");
     });

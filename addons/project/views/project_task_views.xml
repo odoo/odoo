@@ -467,7 +467,7 @@
                             <label for="date_deadline"/>
                             <div id="date_deadline_and_recurring_task" class="o_input_box">
                                 <field name="date_deadline" nolabel="1" decoration-danger="date_deadline and date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
-                                <field name="recurring_task" nolabel="1" class="o_input_box_overlay_end"
+                                <field name="recurring_task" nolabel="1" class="w-auto w-lg-100"
                                        widget="boolean_icon" options="{'icon': 'fa-repeat'}"
                                        invisible="not active or parent_id or not allow_recurring_tasks"
                                        groups="project.group_project_recurring_tasks"/>

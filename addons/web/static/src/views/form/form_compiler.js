@@ -17,7 +17,6 @@ import {
 } from "@web/views/view_compiler";
 import { ViewCompiler } from "../view_compiler";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { hasTouch } from "@web/core/browser/feature_detection";
 
 const compilersRegistry = registry.category("form_compilers");
 
@@ -222,9 +221,7 @@ export class FormCompiler extends ViewCompiler {
             }
         }
         const displayClasses = sheetNode
-            ? `d-flex d-print-block {{ __comp__.uiService.size < ${
-                  SIZES.XXL
-              } ? "flex-column" : "flex-nowrap h-100" }} {{ ${hasTouch()} ? "o_field_highlight" : "" }}`
+            ? `d-flex d-print-block {{ __comp__.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
         const stateClasses =
             "{{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}";
@@ -327,6 +324,7 @@ export class FormCompiler extends ViewCompiler {
                 "t-slot-scope": "scope",
             });
             let itemSpan = parseInt(child.getAttribute("colspan") || "1", 10);
+            let noBox = false;
 
             if (forceNewline) {
                 mainSlot.setAttribute("newline", true);
@@ -335,6 +333,7 @@ export class FormCompiler extends ViewCompiler {
 
             if (getTag(child, true) === "separator") {
                 itemSpan = parseInt(formGroup.getAttribute("maxCols") || 2, 10);
+                noBox = true;
             }
 
             if (child.matches("div[class='clearfix']:empty")) {
@@ -391,6 +390,9 @@ export class FormCompiler extends ViewCompiler {
                 mainSlot.setAttribute("isVisible", isVisibleExpr);
                 if (itemSpan > 0) {
                     mainSlot.setAttribute("itemSpan", `${itemSpan}`);
+                }
+                if (noBox) {
+                    mainSlot.setAttribute("noBox", "true");
                 }
 
                 const groupClassExpr = `scope && scope.className`;

@@ -18,17 +18,20 @@
         </div>
         <t t-foreach="this.getRows()" t-as="row" t-key="row_index" t-if="row.isVisible">
             <t t-foreach="row" t-as="cell" t-key="cell_index">
+                <t t-set="marginOnSmallScreen" t-value="cell_last ? 'mb-3 mb-sm-0' : ''"/>
                 <t t-if="cell.subType === 'item_component'">
                     <t t-call="web.Form.InnerGroup.ItemComponent">
                         <t t-set="cell" t-value="cell" />
+                        <t t-set="marginOnSmallScreen" t-value="marginOnSmallScreen" />
                     </t>
                 </t>
 
                 <t t-else="">
                     <div
                         class="o_cell o_cell_custom"
+                        t-att-class="{'o_no_box': cell.noBox}"
                         t-attf-style="{{ cell.itemSpan > 1 ? '--o-grid-column-span: ' + cell.itemSpan + ';' : '' }}"
-                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : 'o_wrap_cell' }}"
+                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : '' }} {{ marginOnSmallScreen }}"
                         t-if="cell.isVisible">
                         <t t-slot="{{ cell.name }}" />
                     </div>
@@ -40,22 +43,23 @@
 </t>
 
 <t t-name="web.Form.InnerGroup.ItemComponent">
-    <t t-if="cell.props.fieldInfo.type !== 'boolean' and !['priority'].includes(cell.props.fieldInfo.widget)">
+    <t t-if="this.env.isSmall ? cell.props.fieldInfo.type !== 'boolean' : cell.props.fieldInfo.field.component.name !== 'BooleanField'">
         <div class="o_cell o_wrap_label text-break text-900">
             <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
         </div>
         <div
         class="o_cell o_wrap_input text-break"
+        t-attf-class="{{ marginOnSmallScreen }}"
         t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}">
             <t t-slot="{{ cell.name }}"/>
         </div>
     </t>
     <t t-else="">
-        <div class="o_wrap_field_inline d-flex d-sm-contents" t-att-class="{ 'o_input_box rounded' : this.hasTouch }">
+        <div class="o_wrap_field_boolean d-flex d-sm-contents" t-attf-class="{{ marginOnSmallScreen }}">
             <div class="o_cell o_wrap_label flex-sm-grow-0 text-break text-900">
                 <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
             </div>
-            <div class="o_cell o_wrap_input order-first flex-sm-grow-0 order-sm-0"
+            <div class="o_cell o_no_box o_wrap_input ms-auto ms-md-0"
                 t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}">
                 <t t-slot="{{ cell.name }}" />
             </div>

@@ -1490,28 +1490,3 @@ test("DateRangeField contains a calendar icon on touch devices", async () => {
     expect(".fa-calendar").toHaveCount(1);
     expect(".fa-calendar").toBeVisible();
 });
-
-test("DateRangeField has the right padding on touch devices with overlay suffix", async () => {
-    Partner._records[0].datetime_end = "2017-02-01 00:00:00";
-    // The icon is only visible on touch devices, using css rules
-    document.body.classList.add("o_touch_device");
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
-            <form>
-                <div class="o_input_box">
-                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
-                    <i class="fa fa-close btn btn-link o_input_box_overlay_end"/>
-                </div>
-            </form>`,
-        resId: 1,
-    });
-    const gap = parseInt(
-        getComputedStyle(queryFirst(".o_input_box")).getPropertyValue("--inputbox-spacing-unit")
-    );
-    const targetPaddingStart = 1.5 * gap + (queryFirst(".o_input_box_overlay_start").clientWidth + gap)
-    const targetPaddingEnd = queryFirst(".o_input_box_overlay_end").clientWidth + 2 * gap;
-    expect(getComputedStyle(queryFirst(".o_daterange_start")).paddingInline).toBe(`${targetPaddingStart}px 0px`);
-    expect(getComputedStyle(queryFirst(".o_daterange_end")).paddingInline).toBe(`0px ${targetPaddingEnd}px`);
-});

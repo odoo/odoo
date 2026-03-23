@@ -68,7 +68,6 @@ export class Many2ManyBinaryField extends Component {
 }
 
 export const many2ManyBinaryField = {
-    additionalClasses: ["w-100"],
     component: Many2ManyBinaryField,
     supportedOptions: [
         {

@@ -3,11 +3,11 @@
 
     <t t-name="hr.Many2OneAvatarEmployeeField">
         <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
-        <div class="o_input_box">
+        <div class="d-flex align-items-center gap-1">
             <t t-if="value !== false">
-                <Avatar cssClass="'o_m2o_avatar o_input_box_overlay_start'" resModel="this.relation" resId="value.id" noSpacing="true" uniqueId="this.uniqueId"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="this.relation" resId="value.id" noSpacing="true" uniqueId="this.uniqueId"/>
             </t>
-            <Many2One t-props="this.m2oProps">
+            <Many2One t-props="this.m2oProps" cssClass="'w-100'">
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
                         <Avatar resModel="this.relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>

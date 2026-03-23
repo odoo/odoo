@@ -1,4 +1,3 @@
-import { useRef, useLayoutEffect } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { getCurrency } from "@web/core/currency";
@@ -20,6 +19,7 @@ import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
+import { nbsp } from "@web/core/utils/strings";
 import { imageUrl } from "@web/core/utils/urls";
 import { formatInteger, formatMany2one, formatMonetary } from "@web/views/fields/formatters";
 import { Many2One } from "@web/views/fields/many2one/many2one";
@@ -28,7 +28,6 @@ import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relat
 import { PropertyTags } from "./property_tags";
 import { PropertyText } from "./property_text";
 import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
-import { positionInputBoxOverlay } from "@web/core/input_box/input_box";
 
 class PropertyValueTag extends Component {
     static template = "web.PropertyValueTag";
@@ -88,7 +87,6 @@ export class PropertyValue extends Component {
         currencyField: { type: String, optional: true },
         domain: { type: String, optional: true },
         string: { type: String, optional: true },
-        suffix: { type: String, optional: true },
         value: { optional: true },
         context: { type: Object },
         readonly: { type: Boolean, optional: true },
@@ -101,9 +99,10 @@ export class PropertyValue extends Component {
     };
 
     setup() {
+        this.nbsp = nbsp;
+
         this.orm = useService("orm");
         this.action = useService("action");
-        this.root = useRef("root");
 
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.props.model,
@@ -131,12 +130,6 @@ export class PropertyValue extends Component {
             },
             fieldString: this.props.string,
         });
-
-        useLayoutEffect(() => {
-            if (this.root.el) {
-                this._positionSuffixOverlay();
-            }
-        }, () => [this.root.el, this.props.suffix]);
     }
 
     /* --------------------------------------------------------
@@ -190,13 +183,19 @@ export class PropertyValue extends Component {
             return value.map((many2manyValue) => {
                 const hasAccess = many2manyValue[1] !== null;
                 const props = {
-                    imageUrl: this.showAvatar && hasAccess ? imageUrl(this.props.comodel, many2manyValue[0], "avatar_128") : undefined,
-                    onClick: hasAccess && this.clickableRelational
-                        ? (async () => await this._openRecord(this.props.comodel, many2manyValue[0]))
-                        : undefined,
-                    onDelete: !this.props.readonly && hasAccess
-                        ? (() => this.onMany2manyDelete(many2manyValue[0]))
-                        : undefined,
+                    imageUrl:
+                        this.showAvatar && hasAccess
+                            ? imageUrl(this.props.comodel, many2manyValue[0], "avatar_128")
+                            : undefined,
+                    onClick:
+                        hasAccess && this.clickableRelational
+                            ? async () =>
+                                  await this._openRecord(this.props.comodel, many2manyValue[0])
+                            : undefined,
+                    onDelete:
+                        !this.props.readonly && hasAccess
+                            ? () => this.onMany2manyDelete(many2manyValue[0])
+                            : undefined,
                     text: hasAccess ? many2manyValue[1] : _t("No Access"),
                 };
                 return {
@@ -326,9 +325,14 @@ export class PropertyValue extends Component {
                 // Make a RPC call to resolve the display name of the record.
                 newValue = await this._nameGet(newValue.id);
             } else if (newValue && !newValue.id && newValue.display_name) {
-                const result = await this.orm.call(this.props.comodel, "name_create", [newValue.display_name], {
-                    context: this.props.context,
-                });
+                const result = await this.orm.call(
+                    this.props.comodel,
+                    "name_create",
+                    [newValue.display_name],
+                    {
+                        context: this.props.context,
+                    }
+                );
                 newValue.id = result[0];
                 newValue.display_name = result[1];
             }
@@ -352,7 +356,6 @@ export class PropertyValue extends Component {
         } else if (this.props.type === "signature") {
             newValue = newValue.signatureImage.split(",")[1] || false;
         }
-        this._positionSuffixOverlay();
 
         // trigger the onchange event to notify the parent component
         this.props.onChange(newValue);
@@ -396,10 +399,6 @@ export class PropertyValue extends Component {
     /* --------------------------------------------------------
      * Private methods
      * -------------------------------------------------------- */
-
-    _positionSuffixOverlay() {
-        positionInputBoxOverlay(this.root.el);
-    }
 
     /**
      * Open the form view of the given record id / model.

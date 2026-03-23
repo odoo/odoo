@@ -121,40 +121,38 @@
                                 </div>
                             </button>
                         </div>
-                        <div class="o_form_header_group" name="employee_photo_and_info">
+                        <div class="d-flex flex-column flex-md-row align-items-center gap-3" name="employee_photo_and_info">
                             <div class="o_employee_avatar">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="image_1920" widget='image' options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <group class="o_form_header_details">
-                                <div colspan="2">
-                                    <h1 class="o_employee_form_header_info">
-                                        <label for="name" class="d-md-none"/>
-                                        <field name="name" placeholder="Employee's Name (e.g. John Doe, ...)" required="True"/>
-                                    </h1>
-                                    <label for="work_email" class="d-md-none"/>
-                                    <div class="o_input_box">
-                                        <i class="d-none d-md-inline-flex fa fa-envelope o_input_box_overlay_start" title="Work Email"/>
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
-                                    </div>
-                                    <label for="work_phone" class="d-md-none"/>
-                                    <div class="o_input_box">
-                                        <i class="d-none d-md-inline-flex fa fa-phone o_input_box_overlay_start" title="Work Phone"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
-                                    </div>
-                                    <label for="mobile_phone" class="d-md-none"/>
-                                    <div class="o_input_box">
-                                        <i class="d-none d-md-inline-flex fa fa-mobile o_input_box_overlay_start" title="Work Mobile"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
-                                    </div>
-                                    <label for="category_ids" class="d-md-none"/>
-                                    <div class="o_input_box">
-                                        <i class="d-none d-md-inline-flex fa fa-tags o_input_box_overlay_start" title="Tags"/>
-                                        <field name="category_ids" widget="many2many_tags"
-                                            options="{'color_field': 'color', 'no_create_edit': True}"
-                                            placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
-                                    </div>
+                            <group class="d-flex flex-column gap-md-0 w-100">
+                                <label for="name" class="d-md-none"/>
+                                <h1 class="o_employee_form_header_info">
+                                    <field name="name" placeholder="Employee's Name (e.g. John Doe, ...)" required="True"/>
+                                </h1>
+                                <label for="work_email" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-inline-flex fa fa-envelope" title="Work Email"/>
+                                    <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
+                                </div>
+                                <label for="work_phone" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-inline-flex fa fa-phone" title="Work Phone"/>
+                                    <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
+                                </div>
+                                <label for="mobile_phone" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-inline-flex fa fa-mobile" title="Work Mobile"/>
+                                    <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
+                                </div>
+                                <label for="category_ids" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-inline-flex fa fa-tags" title="Tags"/>
+                                    <field name="category_ids" widget="many2many_tags"
+                                        options="{'color_field': 'color', 'no_create_edit': True}"
+                                        placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
                                 </div>
                             </group>
                         </div>

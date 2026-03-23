@@ -17,9 +17,8 @@
                     resModel="this.props.record.resModel"
                     resId="this.props.record.resId or 0"
                 >
-                    <button class="btn d-flex justify-content-between align-items-center o_attach w-100 o_input_box o_input" data-tooltip="Attach">
-                        <span class="o_input" t-out="this.uploadText" />
-                        <i class="btn btn-link o_input_box_overlay_end position-static fa fa-paperclip" />
+                    <button class="btn btn-secondary o_attach" data-tooltip="Attach">
+                        <span class="fa fa-paperclip" aria-label="Attach"/> <t t-out="this.uploadText"/>
                     </button>
                 </FileInput>
             </div>

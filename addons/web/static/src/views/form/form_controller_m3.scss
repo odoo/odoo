@@ -1,0 +1,144 @@
+// Specific CSS rules for M3 style
+
+.o_form_view {
+    .o_input_box {
+        display: flex;
+        gap: map-get($spacers, 1);
+    }
+
+    .o_input_box {
+        align-items: baseline;
+    }
+
+    @include media-breakpoint-down(md) {
+        --field-spacing-unit: 8px;
+
+        %-o-field-box {
+            border-radius: calc(.5 * var(--field-spacing-unit));
+            border: 1px solid var(--o-input-border-color);
+            outline: 1px solid transparent;
+            padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
+
+            &:focus-within {
+                @include print-variable(o-input-border-color, $o-action);
+                outline: 1px solid var(--o-input-border-color);
+            }
+
+            .o_input {
+                border-width: 0;
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                all: unset;
+            }
+
+            &:has(.o_required_modifier:not(.o_readonly_modifier)) {
+                border: 2px solid var(--o-input-border-color);
+            }
+
+            &:has(.o_field_invalid) {
+                --o-input-border-color: o-text-color('danger');
+                background: #{$o-input-invalid-bg};
+
+                .o_field_invalid {
+                    --o-input-background-color: transparent;
+                }
+            }
+        }
+
+        %-o-field-label {
+            width: max-content;
+            transform: translate(var(--field-spacing-unit), calc(-.5 * var(--field-spacing-unit)));
+            z-index: 1; // TODO finetune for quick create kanban
+            padding: 0 calc(var(--field-spacing-unit) / 2) !important;
+            background: $o-view-background-color;
+            border-radius: var(--field-spacing-unit);
+            margin-bottom: 0 !important;
+
+            // Same as ligne +/- 592; TODO merge the rules after maybe
+            font-size: $font-size-sm !important;
+            font-weight: $font-weight-bold !important;
+
+            & * {
+                color: inherit !important;
+                font-size: inherit !important;
+                line-height: inherit !important;
+                font-weight: inherit !important;
+            }
+
+            sup {
+                color: $o-action !important;
+                height: 1em;
+                display: inline-flex;
+                align-items: center;
+                top: 0;
+            }
+        }
+
+        .o_inner_group {
+            :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box) {
+                @extend %-o-field-box;
+
+                &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
+                    background: rgba($body-color, .04);
+                }
+
+                a:has(i.fa), button.fa, .o_external_button {
+                    height: calc(3 * var(--field-spacing-unit));
+                    min-width: calc(3 * var(--field-spacing-unit));
+                    color: var(--body-color);
+                    background: var(--secondary-bg) !important;
+                    padding: 0 !important;
+                    border-radius: calc(1.5 * var(--field-spacing-unit));
+                    justify-content: center;
+                }
+            }
+
+            .o_wrap_label:has(+ .o_cell:not(.o_no_box)) {
+                margin-bottom: calc(-1 * var(--body-font-size));
+
+                .o_form_label {
+                    @extend %-o-field-label;
+                }
+
+                &:has(+ *:focus-within) .o_form_label {
+                    color: $o-action;
+                }
+
+                &:has(+ * .o_field_invalid) .o_form_label {
+                    color: o-text-color('danger') !important;
+                }
+
+                // For o_readonly_modifier input label
+                span.o_form_label {
+                    display: inline-block;
+                }
+            }
+
+            .o_wrap_field_boolean .o_form_label {
+                margin-inline-start: calc(1.5 * var(--field-spacing-unit));
+                font-weight: $font-weight-bold;
+            }
+
+            .o_property_field.o_wrap_label {
+                display: contents;
+
+                .o_property_field_value {
+                    @include print-variable(o-input-border-color, $o-form-lightsecondary);
+                    @extend %-o-field-box;
+                    margin-bottom: map-get($spacers, 3);
+                }
+
+                label {
+                    @extend %-o-field-label;
+                    width: max-content !important;
+                    margin-bottom: calc(-1 * var(--body-font-size)) !important;
+
+                    &:has(+ *:focus-within) {
+                        color: $o-action;
+                    }
+                }
+            }
+        }
+    }
+}

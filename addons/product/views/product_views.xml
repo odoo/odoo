@@ -49,18 +49,14 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="id" invisible="True"/>
-                    <group class="o_form_header_group flex-md-row-reverse">
-                        <field
-                            name="image_1920"
-                            widget="image_with_media_dialog"
-                            options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
-                        />
-                        <group class="o_form_header_details flex-grow-1">
-                            <h1 class="o_input_box" colspan="2">
-                                <field name="is_favorite" widget="boolean_favorite" nolabel="1" class="o_input_box_overlay_start"/>
+                    <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-3">
+                        <group class="d-flex flex-column w-100">
+                            <label for="name" class="d-md-none"/>
+                            <h1 class="d-flex gap-2">
+                                <field name="is_favorite" widget="boolean_favorite" nolabel="1" class="w-auto"/>
                                 <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cheese Burger"/>
                             </h1>
-                            <div name="options" class="d-flex flex-column flex-md-row flex-wrap" colspan="2">
+                            <div name="options" class="d-flex flex-column flex-md-row flex-wrap">
                                <span name="sale_option" class="d-inline-flex">
                                     <field name="sale_ok" class="w-auto"/>
                                     <label for="sale_ok"/>
@@ -71,7 +67,12 @@
                                 </span>
                             </div>
                         </group>
-                    </group>
+                        <field
+                            name="image_1920"
+                            widget="image_with_media_dialog"
+                            options="{'convert_to_webp': True, 'preview_image': 'image_128', 'size': [90, 90] }"
+                        />
+                    </div>
                     
                     <notebook>
                         <page string="General Information" name="general_information">
@@ -375,9 +376,10 @@
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <div class="o_form_header_group flex-md-row-reverse">
+                        <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                             <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                            <div class="o_form_header_details flex-grow-1">
+                            <group class="d-flex flex-column gap-md-0 w-100">
+                                <label for="name" class="d-md-none"/>
                                 <h1>
                                     <field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/>
                                 </h1>
@@ -386,7 +388,7 @@
                                     <span>All general settings about this product are managed on</span>
                                     <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
                                 </p>
-                            </div>
+                            </group>
                         </div>
                         <group>
                             <group name="codes" string="Codes">
@@ -579,7 +581,7 @@
                 <field name="name" position="after">
                     <field name="product_tmpl_id" readonly="1" invisible="1" required="id"/>
                 </field>
-                <xpath expr="//group[hasclass('o_form_header_details')]//h1" position="after">
+                <xpath expr="//div[@name='options']" position="before">
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" invisible="not product_template_variant_value_ids" groups="product.group_product_variant"/>
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
@@ -605,13 +607,14 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group class="o_form_header_group flex-md-row-reverse">
-                            <field name="image_1920" widget="image" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                            <group name="name" class="o_form_header_details" col="2">
+                        <div class="d-flex flex-column flex-md-row align-items-center gap-3">
+                            <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
+                            <group name="name" class="d-flex flex-column gap-md-0 w-100">
                                 <field name="company_id" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="cost_currency_id" invisible="1"/>
-                                <h1 colspan="2">
+                                <label for="name" class="d-md-none"/>
+                                <h1>
                                     <field name="name" placeholder="e.g. Cheese Burger"/>
                                 </h1>
                                 <field name="barcode" placeholder="e.g. 1234567890"/>
@@ -621,7 +624,7 @@
                                 <field name="weight" invisible="1"/>       <!-- Hide the weight field for set data in product barcodelookup -->
                                 <field name="categ_id" invisible="1"/>     <!-- Hide the categ_id field set data in product barcodelookup -->
                             </group>
-                        </group>
+                        </div>
                     </sheet>
                 </form>
             </field>

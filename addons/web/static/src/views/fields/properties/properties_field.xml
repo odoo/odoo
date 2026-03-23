@@ -55,7 +55,7 @@
                             <i t-if="this.state.isInEditMode"
                                 class="oi oi-draggable ms-1 d-none d-sm-block mt-1"/>
                         </label>
-                        <div class="o_property_field_value o_input_box">
+                        <div class="o_property_field_value">
                             <PropertyValue
                                 id="domId"
                                 canChangeDefinition="this.state.canChangeDefinition"
@@ -66,7 +66,6 @@
                                 readonly="this.props.readonly"
                                 selection="propertyConfiguration.selection"
                                 string="propertyConfiguration.string"
-                                suffix="propertyConfiguration.suffix"
                                 tags="propertyConfiguration.tags"
                                 type="propertyConfiguration.type"
                                 value="propertyConfiguration.value"

@@ -79,7 +79,7 @@ test("basic flow in form view - float field", async () => {
     expect(".o_field_widget input").toHaveValue("9.10", {
         message: "The input should be rendered without the currency symbol.",
     });
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 
@@ -109,7 +109,7 @@ test("basic flow in form view - monetary field", async () => {
     expect(".o_field_widget input").toHaveValue("9.10", {
         message: "The input should be rendered without the currency symbol.",
     });
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 
@@ -195,12 +195,11 @@ test("with currency digits != 2 - float field", async () => {
                 <field name="currency_id" invisible="1"/>
             </form>`,
     });
-
     expect(".o_field_widget input").toHaveValue("99.1234", {
         message: "The input should be rendered without the currency symbol.",
     });
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_end").toHaveText("Bs.F", {
-        message: "The input should be preceded by a span containing the currency symbol.",
+    expect(".o_field_widget span:eq(0)").toHaveText("Bs.F", {
+        message: "The input should be superposed with a span containing the currency symbol.",
     });
 
     await contains(".o_field_widget input").edit("99.111111111");
@@ -250,7 +249,7 @@ test("with currency digits != 2 - monetary field", async () => {
     expect(".o_field_widget input").toHaveValue("99.1234", {
         message: "The input should be rendered without the currency symbol.",
     });
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_end").toHaveText("Bs.F", {
+    expect(".o_field_widget span:eq(0)").toHaveText("Bs.F", {
         message: "The input should be superposed with a span containing the currency symbol.",
     });
 
@@ -328,7 +327,7 @@ test("basic flow in editable list view - float field", async () => {
         message: "The input should be rendered without the currency symbol.",
     });
 
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 
@@ -399,7 +398,7 @@ test("basic flow in editable list view - monetary field", async () => {
         message: "The input should be rendered without the currency symbol.",
     });
 
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 
@@ -431,7 +430,7 @@ test("changing currency updates the field - float field", async () => {
 
     await contains(".o_field_many2one_selection input").click();
     await contains(".o-autocomplete--dropdown-item:contains(EUR)").click();
-    expect(".o_field_widget[name='float_field'] .o_input_box .o_input_box_overlay_end").toHaveText("€", {
+    expect(".o_field_widget span:eq(0)").toHaveText("€", {
         message:
             "The input should be preceded by a span containing the currency symbol added on blur.",
     });
@@ -468,7 +467,7 @@ test("changing currency updates the field - monetary field", async () => {
     await contains(".o_field_many2one_selection input").click();
     await contains(".o-autocomplete--dropdown-item:contains(EUR)").click();
 
-    expect(".o_field_widget[name='monetary_field'] .o_input_box .o_input_box_overlay_end").toHaveText("€", {
+    expect(".o_field_widget span:eq(0)").toHaveText("€", {
         message:
             "The input should be preceded by a span containing the currency symbol added on blur.",
     });
@@ -658,7 +657,7 @@ test("float field with monetary widget and decimal precision", async () => {
     expect(".o_field_widget[name=float_field] input").toHaveValue("-8.9", {
         message: "The input should be rendered without the currency symbol.",
     });
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 
@@ -691,7 +690,6 @@ test("MonetaryField without currency symbol", async () => {
     expect(".o_field_widget[name=float_field] input").toHaveValue("9.10", {
         message: "The currency symbol is not displayed",
     });
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveCount(0);
 });
 
 test("required monetary field with zero value", async () => {
@@ -721,7 +719,7 @@ test("uses 'currency_id' as currency field by default", async () => {
     });
 
     expect(".o_form_editable").toHaveCount(1);
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 });
@@ -746,7 +744,7 @@ test("automatically uses currency_field if defined", async () => {
     });
 
     expect(".o_form_editable").toHaveCount(1);
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$", {
+    expect(".o_field_widget span:eq(0)").toHaveText("$", {
         message: "The input should be preceded by a span containing the currency symbol.",
     });
 });
@@ -792,5 +790,5 @@ test("with 'hide_trailing_zeros' option", async () => {
             </form>`,
     });
     expect(".o_field_widget input").toHaveValue("9.1");
-    expect(".o_field_widget .o_input_box .o_input_box_overlay_start").toHaveText("$");
+    expect(".o_field_widget span:eq(0)").toHaveText("$");
 });

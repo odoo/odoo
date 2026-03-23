@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { PageDependencies } from "@website/components/dialog/page_properties";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
@@ -13,7 +13,7 @@ import { charField, CharField } from "@web/views/fields/char/char_field";
  * is updated.
  */
 class PageUrlField extends UrlField {
-    static components = { ...UrlField.components, PageDependencies };
+    static components = { PageDependencies };
     static template = "website.PageUrlField";
     static defaultProps = {
         ...UrlField.defaultProps,
@@ -23,6 +23,7 @@ class PageUrlField extends UrlField {
     setup() {
         super.setup();
         this.serverUrl = `${window.location.origin}/`;
+        this.inputRef = useRef("input");
 
         // Trigger onchange api on input event to display redirection
         // parameters as soon as the user types.
@@ -52,7 +53,7 @@ class PageUrlField extends UrlField {
                     };
                 }
             },
-            () => [this.input.el]
+            () => [this.inputRef.el]
         );
     }
 
@@ -71,7 +72,6 @@ class PageUrlField extends UrlField {
 
 const pageUrlField = {
     ...urlField,
-    additionalClasses: ["o_input_box"],
     component: PageUrlField,
 };
 

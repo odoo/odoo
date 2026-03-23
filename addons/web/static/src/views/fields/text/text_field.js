@@ -106,7 +106,6 @@ export class TextField extends Component {
 }
 
 export const textField = {
-    additionalClasses: ["o_input_box"],
     component: TextField,
     displayName: _t("Multiline Text"),
     supportedOptions: [

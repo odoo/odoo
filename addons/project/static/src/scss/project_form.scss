@@ -31,16 +31,8 @@
 }
 
 .o_field_widget {
-    &.o_field_subtasks_one2many, &.o_field_many2many_tags_email, &.o_field_CopyClipboardChar {
+    &.o_field_subtasks_one2many {
         width: 100%;
-    }
-    &.o_field_CopyClipboardChar span:not(.fa-clipboard) {
-        white-space: unset;
-        width: calc(100% - var(--inputbox-overlay-end-size));
-        display: block;
-        overflow: hidden;
-        text-wrap: nowrap;
-        text-overflow: ellipsis;
     }
 }
 

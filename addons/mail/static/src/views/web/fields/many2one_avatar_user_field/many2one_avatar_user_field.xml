@@ -2,11 +2,11 @@
 <templates>
 
     <t t-name="mail.Many2OneAvatarUserField">
-        <div class="o_input_box">
+        <div class="d-flex align-items-center gap-1">
             <t t-if="this.value !== false">
-                <Avatar cssClass="'o_m2o_avatar o_input_box_overlay_start'" resModel="this.relation" resId="this.value.id" noSpacing="true" uniqueId="this.uniqueId"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="this.relation" resId="this.value.id" noSpacing="true" uniqueId="this.uniqueId"/>
             </t>
-            <Many2OneAvatarUser t-props="this.m2oProps">
+            <Many2OneAvatarUser t-props="this.m2oProps" cssClass="'w-100'">
                 <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
                     <div class="d-flex align-items-center">
                         <div class="o_icon d-flex align-items-center justify-content-center me-2">

@@ -10,7 +10,9 @@
 
     <t t-name="account.FieldMany2ManyTagsBanks" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="inside">
-            <InternalLinkButton onClick.bind="(_, isMiddleClick) => this.openBanksListView(isMiddleClick)" />
+            <button class="o_external_button btn btn-link text-action px-1 py-0" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openBanksListView(isMiddleClick)">
+                <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+            </button>
         </xpath>
     </t>
 </templates>

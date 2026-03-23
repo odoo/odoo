@@ -935,26 +935,3 @@ test("edit a char field should display the status indicator buttons without flic
     });
     expect.verifySteps(["onchange"]);
 });
-
-test("editable and readonly/empty fields have the same minimum size", async () => {
-    Partner._records[0].name = false;
-    // The o_input_box border is only visible on touch devices, using css rules
-    document.body.classList.add("o_touch_device");
-    await mountView({
-        type: "form",
-        resModel: "res.partner",
-        resId: 1,
-        arch: `
-        <form>
-            <field name="name"/>
-            <field name="name" readonly="1"/>
-            <field name="int_field"/>
-        </form>`,
-    });
-    const targetSize = queryFirst(".o_field_widget").getBoundingClientRect().height;
-    const readonlySize = queryFirst(".o_readonly_modifier").getBoundingClientRect().height;
-    const intSize = queryFirst("[name='int_field']").getBoundingClientRect().height;
-
-    expect(Math.abs(targetSize - readonlySize) <= 1).toBe(true);
-    expect(Math.abs(targetSize - intSize) <= 1).toBe(true);
-});

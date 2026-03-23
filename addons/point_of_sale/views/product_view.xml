@@ -205,28 +205,31 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group class="o_form_header_group flex-md-row-reverse">
-                        <field name="image_1920" widget="image" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                        <group name="name" class="o_form_header_details">
-                            <h1 colspan="2">
+                    <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-3">
+                        <group name="name" class="d-flex flex-column w-100">
+                            <label for="name" class="d-md-none"/>
+                            <h1>
                                 <field name="name" placeholder="e.g. Cheese Burger"/>
                             </h1>
-                            <field name="barcode" placeholder="e.g. 1234567890"/>
-                            <field name="is_storable" invisible="type != 'consu'" widget="boolean_toggle"/>
-                            <field name="tracking" invisible="type != 'consu' or not is_storable" groups="stock.group_production_lot"/>
-                            <field name="list_price" widget="monetary"
-                                    options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                            <label for="taxes_id"/>
-                            <div name="tax_info" class="o_input_box">
-                                <field name="taxes_id" widget="many2many_tags"
-                                    readonly="context.get('taxes_readonly', False)"
-                                    context="{'search_default_sale': 1}"
-                                    create="False"/>
-                                <field name="tax_string" class="o_input_box_overlay_end"/>
-                            </div>
-                            <field name="pos_categ_ids" string="POS Category" widget="many2many_tags"/>
-                            <field name="color" widget="color_picker" string="Color" />
                         </group>
+                        <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
+                    </div>
+                    <group>
+                        <field name="barcode" placeholder="e.g. 1234567890"/>
+                        <field name="is_storable" invisible="type != 'consu'" widget="boolean_toggle"/>
+                        <field name="tracking" invisible="type != 'consu' or not is_storable" groups="stock.group_production_lot"/>
+                        <field name="list_price" widget="monetary"
+                                options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        <label for="taxes_id"/>
+                        <div name="tax_info" class="o_input_box">
+                            <field name="taxes_id" widget="many2many_tags"
+                                readonly="context.get('taxes_readonly', False)"
+                                context="{'search_default_sale': 1}"
+                                create="False"/>
+                            <field name="tax_string" class="o_input_box_overlay_end"/>
+                        </div>
+                        <field name="pos_categ_ids" string="POS Category" widget="many2many_tags"/>
+                        <field name="color" widget="color_picker" string="Color" />
                     </group>
                 </sheet>
             </form>

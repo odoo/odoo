@@ -53,9 +53,9 @@ test("PhoneField in form view on normal screens (readonly)", async () => {
             </form>`,
         resId: 1,
     });
-    expect(".o_field_phone a").toHaveCount(1);
-    expect(".o_field_phone a").toHaveText("yop");
-    await assertUrl(`.o_field_phone a`, "tel:yop");
+    expect(".o_field_phone .o_phone_form_link").toHaveCount(1);
+    expect(".o_field_phone span:first-child").toHaveText("yop");
+    await assertUrl(`.o_field_phone .o_phone_form_link`, "tel:yop");
 });
 
 test("PhoneField in form view on normal screens (edit)", async () => {
@@ -94,8 +94,8 @@ test("PhoneField in editable list view on normal screens", async () => {
         arch: '<list editable="bottom"><field name="foo" widget="phone"/></list>',
     });
     expect("tbody td:not(.o_list_record_selector).o_data_cell").toHaveCount(2);
-    expect("tbody td:not(.o_list_record_selector) a:first").toHaveText("yop");
-    expect(".o_field_widget a.o_form_uri").toHaveCount(2);
+    expect("tbody td:not(.o_list_record_selector) span:first-child:eq(0)").toHaveText("yop");
+    expect(".o_field_widget .o_phone_form_link").toHaveCount(2);
 
     // Edit a line and check the result
     const cell = queryFirst("tbody td:not(.o_list_record_selector)");
@@ -111,8 +111,8 @@ test("PhoneField in editable list view on normal screens", async () => {
     await animationFrame();
 
     expect(".o_selected_row").toHaveCount(0);
-    expect("tbody td:not(.o_list_record_selector) a:first").toHaveText("new");
-    expect(".o_field_widget a.o_form_uri").toHaveCount(2);
+    expect("tbody td:not(.o_list_record_selector) span:first-child:eq(0)").toHaveText("new");
+    expect(".o_field_widget .o_phone_form_link").toHaveCount(2);
 });
 
 test("use TAB to navigate to a PhoneField", async () => {
@@ -203,8 +203,8 @@ test("url is correctly called in readonly", async () => {
         resId: 1,
     });
 
-    expect(".o_field_phone a").toHaveText("+12 345 67 89 00");
-    await assertUrl(`.o_field_phone a`, "tel:+12345678900");
+    expect(".o_field_phone span:first-child").toHaveText("+12 345 67 89 00");
+    await assertUrl(`.o_field_widget .o_phone_form_link`, "tel:+12345678900");
 });
 
 test("New record, fill in phone field, then click on call icon and save", async () => {
