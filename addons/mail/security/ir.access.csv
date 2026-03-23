@@ -48,10 +48,17 @@ ir_rule_discuss_channel_all_user_write,discuss.channel: can update channels (as 
 ir_rule_discuss_channel_group_system,discuss.channel: admin full access,discuss.channel,base.group_system,crud,
 access_discuss_category_user,discuss.category.user,discuss.category,base.group_user,r,
 access_discuss_category_erp_manager,discuss.category.erp_manager,discuss.category,base.group_erp_manager,crud,
-ir_rule_discuss_channel_member_is_self_all,discuss.channel.member: access their own entries,discuss.channel.member,base.group_everyone,ud,"
+ir_rule_discuss_channel_member_is_self_all,discuss.channel.member: access their own entries,discuss.channel.member,base.group_everyone,u,"
                 [
                     ('is_self', '=', True),
                     ('channel_id', 'access', 'read'),
+                ]
+            "
+ir_rule_discuss_channel_member_is_self_unlink,discuss.channel.member: leave a channel that can be left,discuss.channel.member,base.group_everyone,d,"
+                [
+                    ('is_self', '=', True),
+                    ('channel_id', 'access', 'read'),
+                    ('channel_id.channel_type', '!=', 'chat'),
                 ]
             "
 ir_rule_discuss_channel_member_read_all,discuss.channel.member: read members of accessible channels,discuss.channel.member,base.group_everyone,r,"
