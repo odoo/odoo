@@ -458,6 +458,74 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
         ])
 
+<<<<<<< 331e18f66dac9afd160afcabe96f0f852066de42
+||||||| 0ce5baf2918960591284eb494d82dfef07043af0
+    def test_multi_lot_component_consumption(self):
+        """
+        Check that indicated lot on raw move lines are conserved even if the first
+        lot has enough quantity on hand
+        """
+        self.bom_serial_lines[0].unlink()
+        self.bom_serial_lines[2].unlink()
+
+        quants = self.create_quant(self.raw_lot, 2)
+        quants |= self.create_quant(self.raw_lot, 2, offset=1)
+        quants.action_apply_inventory()
+
+        mo = self.create_mo(self.mo_serial_tmpl, 1)
+        mo.action_confirm()
+        mo.move_raw_line_ids.quantity = 1
+        mo.move_raw_ids.write({
+            'move_line_ids': [
+                Command.create({
+                    'quantity': 1,
+                    'product_id': self.raw_lot.id,
+                    'product_uom_id': self.raw_lot.uom_id.id,
+                    'lot_id': quants[1].lot_id.id
+                })
+            ]
+        })
+        mo.button_mark_done()
+        mo.invalidate_recordset()
+        self.assertRecordValues(mo.move_raw_line_ids, [
+            {'quantity': 1.0},
+            {'quantity': 1.0},
+        ])
+
+=======
+    def test_multi_lot_component_consumption(self):
+        """
+        Check that indicated lot on raw move lines are conserved even if the first
+        lot has enough quantity on hand
+        """
+        self.bom_serial_lines[0].unlink()
+        self.bom_serial_lines[2].unlink()
+
+        quants = self.create_quant(self.raw_lot, 2)
+        quants |= self.create_quant(self.raw_lot, 2, offset=1)
+        quants.action_apply_inventory()
+
+        mo = self.create_mo(self.mo_serial_tmpl, 1)
+        mo.action_confirm()
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.write({
+            'move_line_ids': [
+                Command.create({
+                    'quantity': 1,
+                    'product_id': self.raw_lot.id,
+                    'product_uom_id': self.raw_lot.uom_id.id,
+                    'lot_id': quants[1].lot_id.id
+                })
+            ]
+        })
+        mo.button_mark_done()
+        mo.invalidate_recordset()
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'quantity': 1.0},
+            {'quantity': 1.0},
+        ])
+
+>>>>>>> da44d69afc12f5234ed6acdafea9aafcc812a91a
     def test_no_component_consumption_on_lot_removal(self):
         """
         If we have a manufacturing order (MO) for a product tracked by lot, and we assign a lot number
