@@ -218,7 +218,8 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         """Cloud attachments should be converted to links in outgoing emails."""
         def normalize_html(html):
             return re.sub(r'(?=<)', '\n',
-                          " ".join(line.strip() for line in html.strip().splitlines() if line.strip()))
+                          " ".join(line.strip() for line in html.strip().splitlines() if line.strip())
+                          ).replace('⬇', '&#11015;')
 
         thread_model = self.env["res.partner"].create({"name": "Cloud Test Partner", "email": "cloud@test.com"})
         cloud_attachment = self.env["ir.attachment"].create({
@@ -251,7 +252,8 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
 
         for body, attachment in zip([m["body"] for m in self._mails], self._new_mails.attachment_ids):
             body = normalize_html(body)
-            large_attachment_link = normalize_html(str(self.env["mail.mail"]._render_attachments_links(attachment)))
+            large_attachment_link = normalize_html(str(
+                self.env["ir.qweb"]._render("mail.mail_attachment_links", {"attachments": attachment})))
             self.assertEqual(body.count(large_attachment_link), 1,
                     "Sending mail with cloud_storage attachment should rendered it as a link in the outgoing email.",
             )
@@ -289,7 +291,8 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
 
         for body, attachment in zip([m["body"] for m in self._mails], self._new_mails.attachment_ids):
             body = normalize_html(body)
-            large_attachment_link = normalize_html(str(self.env["mail.mail"]._render_attachments_links(cloud_attachment)))
+            large_attachment_link = normalize_html(str(
+                self.env["ir.qweb"]._render("mail.mail_attachment_links", {"attachments": cloud_attachment})))
             self.assertEqual(body.count(large_attachment_link), 1,
                     "Sending mail with cloud_storage attachment should rendered it as a link in the outgoing email.",
             )

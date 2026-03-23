@@ -7,7 +7,6 @@ import datetime
 import json
 import logging
 import lxml
-import markupsafe
 import re
 import smtplib
 from collections import defaultdict
@@ -388,33 +387,6 @@ class MailMail(models.Model):
         return body
 
     @api.model
-    def _render_attachments_links(self, attachments):
-        """ Temporary replacement for the mail.mail_attachment_links template in stable. """
-        rendered_attachments = [markupsafe.Markup("""
-            <div style="display: inline">
-                <div style="padding:0; margin:3px; vertical-align:middle; min-width:425px; width:fit-content; display:inline-block" width="fit-content" data-attachment-id="%(attachment_id)s">
-                    <div style="margin:0; padding: 10px; border-style:solid; border-width:0 0 0 3px; border-radius:5px; border-color:#a2dae3; background-color:#d1ecf1; color:#09414a;">
-                        <a href="%(attachment_base_url)s/web/content/%(attachment_id)s?download=1&amp;access_token=%(attachment_access_token)s"
-                            style="margin:0; padding:0; text-decoration:none; border-radius:0; border-style:none; border-color:#008f8c; border-width:0; font-weight:500; width:100%%; color:#008f8c; vertical-align: middle; font-size: 15px;"
-                            width="100%%" target="_blank">
-                             &#11015; %(attachment_name)s
-                        </a>
-                    </div>
-                </div>
-            </div>
-            """) % {
-            'attachment_id': a.id,
-            'attachment_access_token': a.access_token,
-            'attachment_name': a.name,
-            'attachment_base_url': a.get_base_url(),
-        }
-                                for a in attachments]
-        return markupsafe.Markup(
-            """<div class="o-attachments-container" style="margin-top: 10px; margin-bottom: 10px; max-width: 900px; width: 100%%;">
-                %(attachments)s
-            </div>""") % {'attachments': markupsafe.Markup('').join(rendered_attachments)}
-
-    @api.model
     def _render_attachment_links_in_body(self, body, attachments, force=False, append=False):
         """ Render the attachment container in the email body with download links when required.
 
@@ -456,7 +428,8 @@ class MailMail(models.Model):
                 return False
 
         attachments.generate_access_token()
-        attachments_node = lxml.html.fragment_fromstring(self._render_attachments_links(attachments))
+        attachments_node = lxml.html.fragment_fromstring(
+            self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': attachments}))
         if len(container) == 0:
             if root is None:
                 # We just add it at the end as the parsing of the body has failed
