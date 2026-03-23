@@ -9,11 +9,17 @@ class ProductPricelist(models.Model):
     @api.model
     def _load_pos_data_domain(self, data, config):
         pricelist_ids = [preset['pricelist_id'] for preset in data['pos.preset']]
-        return [('id', 'in', config._get_available_pricelists().ids + pricelist_ids)]
+        all_ids = config._get_available_pricelists().ids + pricelist_ids
+        referenced_base_pricelist_ids = self.env['product.pricelist.item'].search([
+            ('pricelist_id', 'in', all_ids),
+            ('base', '=', 'pricelist'),
+            ('base_pricelist_id', '!=', False),
+        ]).base_pricelist_id.ids
+        return [('id', 'in', list(set(all_ids + referenced_base_pricelist_ids)))]
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'display_name', 'item_ids']
+        return ['id', 'name', 'display_name', 'currency_id', 'item_ids']
 
 
 class ProductPricelistItem(models.Model):

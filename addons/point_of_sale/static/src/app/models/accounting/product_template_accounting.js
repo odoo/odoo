@@ -112,6 +112,15 @@ export class ProductTemplateAccounting extends Base {
             price = standardPrice;
         }
 
+        const posCurrency = this.models["pos.config"].getFirst().currency_id;
+        const pricelistCurrency = pricelist.currency_id;
+        const needsCurrencyConversion =
+            pricelistCurrency && posCurrency && pricelistCurrency.id !== posCurrency.id;
+
+        if (needsCurrencyConversion) {
+            price *= pricelistCurrency.rate / posCurrency.rate;
+        }
+
         if (rule.compute_price === "fixed") {
             price = rule.fixed_price;
         } else if (rule.compute_price === "percentage") {
@@ -131,6 +140,10 @@ export class ProductTemplateAccounting extends Base {
             if (rule.price_max_margin) {
                 price = Math.min(price, price_limit + rule.price_max_margin);
             }
+        }
+
+        if (needsCurrencyConversion) {
+            price *= posCurrency.rate / pricelistCurrency.rate;
         }
 
         // This return value has to be rounded with round_di before
