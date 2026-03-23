@@ -135,7 +135,7 @@ patch(OrderPaymentValidation.prototype, {
                         {
                             onClose: () => {
                                 onlinePaymentLine.onlinePaymentResolver(false);
-                                this.currentOrder.onlinePaymentData = {};
+                                this.order.onlinePaymentData = {};
                             },
                         }
                     );
