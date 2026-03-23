@@ -27,6 +27,10 @@ export class VersionsTimeline extends StatusBarField {
         });
     }
 
+    get showAddButton() {
+        return !('active' in this.props.record.fields) || this.props.record.data.active;
+    }
+
     /** @override **/
     getDomain() {
         const { record } = this.props;
