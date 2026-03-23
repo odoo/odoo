@@ -597,11 +597,19 @@ class HrEmployee(models.Model):
         return versions
 
     def _get_first_version_date(self, no_gap=True):
-        versions = self._get_first_versions_filtered(no_gap=no_gap)
+        if 'active_test' not in self.env.context:
+            self_ctx = self.with_context(active_test=self.active)
+        else:
+            self_ctx = self
+        versions = self_ctx._get_first_versions_filtered(no_gap=no_gap)
         return min(versions.mapped('date_start')) if versions else False
 
     def _get_first_contract_date(self, no_gap=True):
-        versions = self._get_first_versions_filtered(no_gap=no_gap).filtered(lambda x: x.contract_date_start)
+        if 'active_test' not in self.env.context:
+            self_ctx = self.with_context(active_test=self.active)
+        else:
+            self_ctx = self
+        versions = self_ctx._get_first_versions_filtered(no_gap=no_gap).filtered(lambda x: x.contract_date_start)
         return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')
@@ -687,10 +695,10 @@ class HrEmployee(models.Model):
             current_location = employee.exceptional_location_id or employee[dayfield]
             employee.work_location_type = current_location.location_type
 
-    @api.depends('version_ids.date_version', 'version_ids.active', 'active')
+    @api.depends('version_ids.date_version', 'version_ids.active')
     def _compute_current_version_id(self):
         for employee in self:
-            version = self.env['hr.version'].search(
+            version = self.env['hr.version'].with_context(active_test=employee.active).search(
                 [('employee_id', 'in', employee.ids), ('date_version', '<=', fields.Date.today())],
                 order='date_version desc',
                 limit=1,
@@ -698,8 +706,8 @@ class HrEmployee(models.Model):
             new_current_version = False
             if version:
                 new_current_version = version
-            elif employee.version_ids:
-                new_current_version = employee.version_ids[0]
+            elif employee.with_context(active_test=employee.active).version_ids:
+                new_current_version = employee.with_context(active_test=employee.active).version_ids[0]
             # To not trigger computed properties if still the same version
             if employee.current_version_id != new_current_version:
                 employee.current_version_id = new_current_version
@@ -927,6 +935,19 @@ class HrEmployee(models.Model):
         return False, False
 
     def _compute_versions_count(self):
+        if any(not e.active for e in self):
+            version_read_group = self.env['hr.version'].with_context(active_test=False)._read_group(
+                [('employee_id', 'in', self.ids)],
+                ['employee_id', 'active'],
+                ['id:count'],
+            )
+            version_count_per_employee = defaultdict(lambda: 0)
+            for employee, active, count in version_read_group:
+                if not employee.active or active:
+                    version_count_per_employee[employee] += count
+            for employee in self:
+                employee.versions_count = version_count_per_employee.get(employee, 0)
+            return
         version_count_per_employee = dict(
             self.env['hr.version']._read_group(
                 [('employee_id', 'in', self.ids)],
@@ -1779,7 +1800,10 @@ class HrEmployee(models.Model):
 
     def unlink(self):
         resources = self.mapped('resource_id')
+        # TODO: [XBO] (in master) would be better to define ondelete='cascade' on employee_id field in `hr.version`
+        versions = self.with_context(active_test=False).version_ids
         super().unlink()
+        versions.unlink()
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
@@ -1787,6 +1811,11 @@ class HrEmployee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
+
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        self.version_id.action_unarchive()
+        return res
 
     def action_archive(self):
         archived_employees = self.filtered('active')
@@ -1805,6 +1834,7 @@ class HrEmployee(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
+        self.version_ids.action_archive()
         return res
 
     @api.onchange('company_id')
@@ -2093,6 +2123,9 @@ class HrEmployee(models.Model):
 
     def action_open_versions(self):
         self.ensure_one()
+        context = {}
+        if not self.active:
+            context['search_default_archived'] = 1
         return {
             'type': 'ir.actions.act_window',
             'name': self.employee_id.name + self.env._(' Records'),
@@ -2101,7 +2134,8 @@ class HrEmployee(models.Model):
             'view_mode': 'list,graph,pivot',
             'views': [(self.env.ref('hr.hr_version_list_view').id, 'list'), (False, 'graph'), (False, 'pivot')],
             'domain': [('employee_id', '=', self.employee_id.id)],
-            'search_view_id': self.env.ref('hr.hr_version_search_view').id
+            'search_view_id': self.env.ref('hr.hr_version_search_view').id,
+            'context': context,
         }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):

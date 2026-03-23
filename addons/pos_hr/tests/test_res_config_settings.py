@@ -26,7 +26,7 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
            the current company. And if none exists it create one for the user."""
 
         # First test that an employee is created if none exists
-        self.env['hr.employee'].search([]).unlink()
+        self.env['hr.employee'].search([]).sudo().unlink()
         self.main_pos_config.with_context(from_settings_view=True).write({
             'basic_employee_ids': [],
         })
