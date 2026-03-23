@@ -86,21 +86,11 @@ class TestFieldsDiscussion(models.Model):
 
     name = fields.Char(string='Title', required=True, help="Description of discussion.")
     moderator = fields.Many2one('res.users')
-    categories = fields.Many2many('test_fields.category',
-        'test_fields_discussion_category', 'discussion', 'category')
+    categories = fields.Many2many('test_fields.category', 'test_fields_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users', context={'active_test': False})
     messages = fields.One2many('test_fields.message', 'discussion', copy=True)
-    message_concat = fields.Text(string='Message concatenate')
-    important_messages = fields.One2many('test_fields.message', 'discussion',
-                                         domain=[('important', '=', True)])
-    very_important_messages = fields.One2many(
-        'test_fields.message', 'discussion',
-        domain=lambda self: self._domain_very_important())
-    emails = fields.One2many('test_fields.emailmessage', 'discussion')
-    important_emails = fields.One2many('test_fields.emailmessage', 'discussion',
-                                       domain=[('important', '=', True)])
-
-    history = fields.Json('History', default={'delete_messages': []})
+    important_messages = fields.One2many('test_fields.message', 'discussion', domain=[('important', '=', True)])
+    very_important_messages = fields.One2many('test_fields.message', 'discussion', domain=lambda self: self._domain_very_important())
     attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
 
     def _domain_very_important(self):
@@ -149,18 +139,11 @@ class TestFieldsMessage(models.Model):
     label = fields.Char(translate=True)
     priority = fields.Integer()
     active = fields.Boolean(default=True)
-    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling')
 
     attributes = fields.Properties(
         string='Discussion Properties',
         definition='discussion.attributes_definition',
     )
-
-    @api.depends('discussion.messages.important')
-    def _compute_has_important_sibling(self):
-        for record in self:
-            siblings = record.discussion.with_context(active_test=False).messages - record
-            record.has_important_sibling = any(siblings.mapped('important'))
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
@@ -239,10 +222,7 @@ class TestFieldsEmailmessage(models.Model):
     _inherits = {'test_fields.message': 'message'}
     _inherit = 'properties.base.definition.mixin'
 
-    message = fields.Many2one('test_fields.message', 'Message',
-                              required=True, ondelete='cascade')
-    email_to = fields.Char('To')
-    active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
+    message = fields.Many2one('test_fields.message', 'Message', required=True, ondelete='cascade')
 
 
 class TestFieldsMultiTag(models.Model):
@@ -374,13 +354,6 @@ class TestFieldsComputeContainer(models.Model):
 
     name = fields.Char()
     name_translated = fields.Char(translate=True)
-    member_ids = fields.One2many('test_fields.compute.member', 'container_id')
-    member_count = fields.Integer(compute='_compute_member_count', store=True)
-
-    @api.depends('member_ids')
-    def _compute_member_count(self):
-        for record in self:
-            record.member_count = len(record.member_ids)
 
 
 class TestFieldsComputeMember(models.Model):
@@ -436,8 +409,7 @@ class TestFieldsMixed(models.Model):
     moment = fields.Datetime()
     now = fields.Datetime(compute='_compute_now')
     lang = fields.Selection(string='Language', selection='_get_lang')
-    reference = fields.Reference(string='Related Document',
-        selection='_reference_models')
+    reference = fields.Reference(string='Related Document', selection='_reference_models')
     comment0 = fields.Html()
     comment1 = fields.Html(sanitize=False)
     comment2 = fields.Html(sanitize_attributes=True, strip_classes=False)
@@ -561,8 +533,7 @@ class TestFieldsRecursiveTask(models.Model):
     _description = 'test_fields.recursive.task'
 
     value = fields.Integer()
-    line_id = fields.Many2one('test_fields.recursive.line',
-                              compute='_compute_line_id', recursive=True, store=True)
+    line_id = fields.Many2one('test_fields.recursive.line', compute='_compute_line_id', recursive=True, store=True)
 
     # the recursive nature of task.line_id is a bit artificial, but it makes
     # line.task_number be triggered by a recursive call in modified()
