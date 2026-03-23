@@ -5,14 +5,14 @@
     <section class="s_bento_grid_avatars pt64 pb64">
         <div class="container">
             <div class="row o_grid_mode" style="gap: 32px;" data-row-count="9">
-                <div class="o_grid_item g-col-lg-4 g-height-9 col-lg-4 oe_img_bg o_bg_img_center rounded o_cc o_cc5 o_colored_level"
+                <div class="o_grid_item g-col-lg-4 g-height-9 col-lg-4 oe_img_bg o_bg_img_center rounded o_cc o_cc5 o_colored_level justify-content-start"
                      style="grid-area: 1 / 1 / 10 / 5; z-index: 1; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important; background-image: url('/web/image/website.s_bento_grid_default_image_1'); background-position: 50% 80%;">
                     <div class="o_we_bg_filter bg-black-25"/>
                     <h2 class="h4-fs">Sustainable Materials</h2>
                     <p><br/></p>
                     <p>Made from ethically sourced wood and premium textiles, our furniture is as kind to the planet as it is to your living space.</p>
                 </div>
-                <div class="o_grid_item g-col-lg-4 g-height-6 col-lg-4 oe_img_bg o_bg_img_center rounded o_cc o_cc5 o_colored_level"
+                <div class="o_grid_item g-col-lg-4 g-height-6 col-lg-4 oe_img_bg o_bg_img_center rounded o_cc o_cc5 o_colored_level justify-content-start"
                      style="grid-area: 1 / 5 / 7 / 9; z-index: 2; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important; background-image: url('/web/image/website.s_bento_grid_default_image_4');">
                     <div class="o_we_bg_filter bg-black-25"/>
                     <h2 class="h4-fs">Timeless Design</h2>
@@ -21,7 +21,7 @@
                     <p><br/></p>
                     <t t-snippet-call="website.s_avatars" string="Avatars"/>
                 </div>
-                <div class="o_grid_item g-col-lg-4 g-height-3 col-lg-4 rounded o_cc o_cc5 o_colored_level"
+                <div class="o_grid_item g-col-lg-4 g-height-3 col-lg-4 rounded o_cc o_cc5 o_colored_level justify-content-start"
                      style="grid-area: 7 / 5 / 10 / 9; z-index: 3; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important;">
                     <h2 class="h4-fs">30% off wooden desks</h2>
                     <p>Enjoy 30% on all our wooden desks and elevate your workspace.</p>
@@ -29,7 +29,7 @@
                         Start saving&#160;&#160;<span class="fa fa-long-arrow-right" role="img"/>
                     </a>
                 </div>
-                <div class="o_grid_item g-col-lg-4 g-height-9 col-lg-4 rounded o_cc o_cc2 o_colored_level"
+                <div class="o_grid_item g-col-lg-4 g-height-9 col-lg-4 rounded o_cc o_cc2 o_colored_level justify-content-start"
                      style="grid-area: 1 / 9 / 10 / 13; z-index: 4; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important;">
                     <h2 style="text-align: center;" class="h4-fs"><br/><br/><br/>Expert’s review<br/></h2>
                     <blockquote class="s_blockquote s_blockquote_default o_cc o_cc2 o_animable position-relative d-flex flex-column gap-4 w-100 mx-auto p-1 fst-normal" data-vcss="001" data-snippet="s_blockquote" data-name="Blockquote">
@@ -55,5 +55,10 @@
         </div>
     </section>
 </template>
+
+<asset id="website.s_bento_grid_avatars_000_scss" name="Bento Grid Avatars 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_bento_grid_avatars/000.scss</path>
+</asset>
 
 </odoo>
