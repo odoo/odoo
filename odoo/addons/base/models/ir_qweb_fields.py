@@ -424,16 +424,19 @@ class IrQwebFieldHtml(models.AbstractModel):
     _description = 'Qweb Field HTML'
     _inherit = ['ir.qweb.field']
 
+    def _post_processing_att(self, tag, attrib):
+        self.env['ir.qweb']._remove_translate_suffix(attrib)
+        return self.env['ir.qweb']._post_processing_att(tag, attrib)
+
     @api.model
     def value_to_html(self, value, options):
-        irQweb = self.env['ir.qweb']
         # wrap value inside a body and parse it as HTML
         body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
         # use pos processing for all nodes with attributes
         for element in body.iter():
             if element.attrib:
                 attrib = dict(element.attrib)
-                attrib = irQweb._post_processing_att(element.tag, attrib)
+                attrib = self._post_processing_att(element.tag, attrib)
                 element.attrib.clear()
                 element.attrib.update(attrib)
         return Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])

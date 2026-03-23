@@ -1467,6 +1467,14 @@ class IrQweb(models.AbstractModel):
             for att in el.attrib
         )
 
+    def _remove_translate_suffix(self, attrib):
+        for key in list(attrib):
+            if key.endswith('.translate'):
+                attrib[key.removesuffix('.translate')] = attrib.pop(key)
+
+    def _pre_processing_att(self, attrib):
+        self._remove_translate_suffix(attrib)
+
     # compile python expression and format string
 
     def _compile_format(self, expr):
@@ -1814,6 +1822,7 @@ class IrQweb(models.AbstractModel):
 
     def _compile_static_node(self, el, compile_context, level):
         """ Compile a purely static element into a list of string. """
+        self._pre_processing_att(el.attrib)
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
             attrib = self._post_processing_att(el.tag, {**el.attrib, '__is_static_node': True})
@@ -1840,12 +1849,11 @@ class IrQweb(models.AbstractModel):
             ns = chain(compile_context['nsmap'].items(), el.nsmap.items())
             nsprefixmap = {v: k for k, v in ns}
             for key, value in el.attrib.items():
-                name = key.removesuffix(".translate")
-                attrib_qname = etree.QName(name)
+                attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
                     attrib[f'{nsprefixmap[attrib_qname.namespace]}:{attrib_qname.localname}'] = value
                 else:
-                    attrib[name] = value
+                    attrib[key] = value
 
             attrib = self._post_processing_att(el.tag, {**attrib, '__is_static_node': True})
 
@@ -1856,7 +1864,7 @@ class IrQweb(models.AbstractModel):
             original_nsmap = dict(compile_context['nsmap'])
 
         if unqualified_el_tag != 't':
-            attributes = ''.join(f' {name.removesuffix(".translate")}="{escape(str(value))}"'
+            attributes = ''.join(f' {name}="{escape(str(value))}"'
                                 for name, value in attrib.items() if value or isinstance(value, str))
             self._append_text(f'<{el_tag}{"".join(attributes)}', compile_context)
             if el_tag in VOID_ELEMENTS:
@@ -2020,6 +2028,8 @@ class IrQweb(models.AbstractModel):
                     key = f'xmlns:{ns_prefix}'
                 code.append(indent_code(f'attrs[{key!r}] = {ns_definition!r}', level))
 
+        self._pre_processing_att(el.attrib)
+
         # Compile the static attributes of the given element.
         #
         # Etree will also remove the ns prefixes indirection in the
@@ -2031,7 +2041,7 @@ class IrQweb(models.AbstractModel):
             for key in list(el.attrib):
                 if not key.startswith('t-'):
                     value = el.attrib.pop(key)
-                    name = key.removesuffix(".translate")
+                    name = key
                     attrib_qname = etree.QName(name)
                     if attrib_qname.namespace:
                         name = f'{nsprefixmap[attrib_qname.namespace]}:{attrib_qname.localname}'
@@ -2043,7 +2053,7 @@ class IrQweb(models.AbstractModel):
         for key in list(el.attrib):
             if key.startswith('t-attf-'):
                 value = el.attrib.pop(key)
-                name = key[7:].removesuffix(".translate")
+                name = key[7:]
                 code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value)}", level))
             elif key.startswith('t-att-'):
                 value = el.attrib.pop(key)
