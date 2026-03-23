@@ -2670,3 +2670,55 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             and l.partner_id == self.partner1
         ).balance
         self.assertEqual(order_balance + payment_balance, 0)
+
+    def test_zero_amount_invoice_marked_unallowed(self):
+        """
+        Checks that the partner_bank_id used in the case of an invoice
+        with zero value is the company's one and not the partner, as
+        it is still an invoice and should be treated as such
+        """
+        self.pos_config.open_ui()
+        blocked_bank, partner_bank = self.env["res.partner.bank"].create([
+            {
+                "acc_number": "FR7612345678901234567890124",
+                "partner_id": self.company.partner_id.id,
+                "bank_name": "Test Bank",
+            },
+            {
+                "acc_number": "FR0012345678901234567890123",
+                "partner_id": self.partner1.id,
+                "bank_name": "Partner Bank",
+            }
+        ])
+        self.cash_payment_method.journal_id.bank_account_id = blocked_bank
+        self.env.company.partner_id.bank_ids[0].allow_out_payment = True
+        partner_bank.allow_out_payment = False
+        current_session = self.pos_config.current_session_id
+        order = self.env["pos.order"].create({
+            "company_id": self.env.company.id,
+            "session_id": current_session.id,
+            "partner_id": self.partner1.id,
+            "lines": [[0, 0, {
+                "name": "OL/0001",
+                "product_id": self.product_a.id,
+                "price_unit": 0,
+                "qty": 1,
+                "price_subtotal": 0,
+                "price_subtotal_incl": 0,
+                "total_cost": 0,
+            }]],
+            "amount_paid": 0,
+            "amount_total": 0,
+            "amount_tax": 0,
+            "amount_return": 0,
+            "to_invoice": True,
+            "last_order_preparation_change": "{}",
+        })
+        ctx = {"active_ids": [order.id], "active_id": order.id}
+        self.PosMakePayment.with_context(ctx).create({
+            "amount": 10,
+            "payment_method_id": self.cash_payment_method.id,
+        }).with_context(ctx).check()
+        res = order.action_pos_order_invoice()
+        invoice = self.env["account.move"].browse(res["res_id"])
+        self.assertEqual(self.env.company.partner_id.bank_ids[0].id, invoice.partner_bank_id.id)
