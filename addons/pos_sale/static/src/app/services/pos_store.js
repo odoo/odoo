@@ -125,7 +125,7 @@ patch(PosStore.prototype, {
                     },
                 ]),
             };
-            if (line.display_type === "line_section") {
+            if (["line_section", "line_subsection"].includes(line.display_type)) {
                 continue;
             }
             newLineValues.attribute_value_ids = (line.product_custom_attribute_value_ids || []).map(
