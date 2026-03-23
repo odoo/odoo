@@ -80,8 +80,8 @@ class CalendarAlarm_Manager(models.AbstractModel):
             SELECT *
                 FROM ( %s ) AS ALL_EVENTS
             WHERE ALL_EVENTS.first_alarm < %s
-                AND ALL_EVENTS.last_alarm > (now() at time zone 'utc')
-        """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
+                AND ALL_EVENTS.last_alarm > ('%s' at time zone 'utc')
+        """ % (delta_request, base_request, first_alarm_max_value, fields.Datetime.now()), tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration in self.env.cr.fetchall():
             result[event_id] = {
@@ -250,7 +250,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         """ Sends through the bus the next alarm of given partners """
         users = self.env['res.users'].search([
             ('partner_id', 'in', tuple(partner_ids)),
-            ('group_ids', 'in', self.env.ref('base.group_user').ids),
+            ('share', '=', False),
         ])
         for user in users:
             notif = self.with_user(user).with_context(allowed_company_ids=user.sudo().company_ids.ids).get_next_notif()
