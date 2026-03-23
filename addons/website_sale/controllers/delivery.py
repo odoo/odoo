@@ -236,7 +236,7 @@ class Delivery(WebsiteSale):
                  value.
         """
         res = {}
-        for dm in order_sudo._get_delivery_methods():
+        for dm in order_sudo.with_context(is_express_checkout_flow=True)._get_delivery_methods():
             rate = Delivery._get_rate(dm, order_sudo, is_express_checkout_flow=True)
             if rate['success']:
                 fname = f'{dm.delivery_type}_use_locations'

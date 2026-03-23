@@ -66,7 +66,8 @@ class DeliveryCarrier(models.Model):
     )
 
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
-    state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
+    state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States',
+        help="States that this carrier applies to. Note that in some countries, state filtering won't work when using express checkout.")
     zip_prefix_ids = fields.Many2many(
         'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes',
         help="Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')")
@@ -193,7 +194,8 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if self.country_ids and partner.country_id not in self.country_ids:
             return False
-        if self.state_ids and partner.state_id not in self.state_ids:
+        if ((not self.env.context.get('is_express_checkout_flow') or partner.state_id) and
+            self.state_ids and partner.state_id not in self.state_ids):
             return False
         if self.zip_prefix_ids:
             regex = re.compile('|'.join(['^' + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped('name')]))
