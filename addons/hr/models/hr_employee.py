@@ -880,6 +880,19 @@ class HrEmployee(models.Model):
         return False, False
 
     def _compute_versions_count(self):
+        if any(not e.active for e in self):
+            version_read_group = self.env['hr.version'].with_context(active_test=False)._read_group(
+                [('employee_id', 'in', self.ids)],
+                ['employee_id', 'active'],
+                ['id:count'],
+            )
+            version_count_per_employee = defaultdict(lambda: 0)
+            for employee, active, count in version_read_group:
+                if not employee.active or active:
+                    version_count_per_employee[employee] += count
+            for employee in self:
+                employee.versions_count = version_count_per_employee.get(employee, 0)
+            return
         version_count_per_employee = dict(
             self.env['hr.version']._read_group(
                 [('employee_id', 'in', self.ids)],
@@ -2013,6 +2026,9 @@ class HrEmployee(models.Model):
 
     def action_open_versions(self):
         self.ensure_one()
+        context = {}
+        if not self.active:
+            context['search_default_archived'] = 1
         return {
             'type': 'ir.actions.act_window',
             'name': self.employee_id.name + self.env._(' Records'),
@@ -2021,7 +2037,8 @@ class HrEmployee(models.Model):
             'view_mode': 'list,graph,pivot',
             'views': [(self.env.ref('hr.hr_version_list_view').id, 'list'), (False, 'graph'), (False, 'pivot')],
             'domain': [('employee_id', '=', self.employee_id.id)],
-            'search_view_id': self.env.ref('hr.hr_version_search_view').id
+            'search_view_id': self.env.ref('hr.hr_version_search_view').id,
+            'context': context,
         }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
