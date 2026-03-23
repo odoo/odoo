@@ -48,6 +48,7 @@ export class BuilderRange extends Component {
                 ratioStep: t.number().optional(),
             })
             .optional(),
+        rangeClass: t.string().optional(""),
     });
     static components = { BuilderComponent, BuilderNumberInputBase };
 
@@ -64,15 +65,22 @@ export class BuilderRange extends Component {
 
         if (this.props.convertorRatio) {
             if (Object.keys(this.props.convertorRatio).length === 0) {
+                // When the slider is visually inverted, the displayed ratio
+                // must follow the same direction (100 = strongest effect).
+                const isInverted = this.props.rangeClass.includes("o_we_inverted_range");
                 this.convertorObject = {
                     toRatio: (value) => {
                         const ratioValue =
-                            ((parseFloat(value) - this.min) / (this.max - this.min)) * 99 + 1;
-                        return Math.round(ratioValue);
+                            ((parseFloat(value) - this.props.min) /
+                                (this.props.max - this.props.min)) *
+                                99 +
+                            1;
+                        return Math.round(isInverted ? 101 - ratioValue : ratioValue);
                     },
                     toValue: (ratio) => {
+                        ratio = isInverted ? 101 - parseFloat(ratio) : parseFloat(ratio);
                         const originalValue =
-                            ((parseFloat(ratio) - 1) / 99) * (this.max - this.min) + this.min;
+                            ((ratio - 1) / 99) * (this.props.max - this.props.min) + this.props.min;
                         return String(originalValue.toFixed(2));
                     },
                 };
@@ -81,7 +89,7 @@ export class BuilderRange extends Component {
             }
             if (!this.convertorObject.ratioStep) {
                 this.convertorObject.ratioStep = Math.round(
-                    (this.props.step / (this.max - this.min)) * (this.maxRatio - this.minRatio)
+                    (this.props.step / (this.props.max - this.props.min)) * (this.maxRatio - this.minRatio)
                 );
             }
         }
@@ -119,7 +127,7 @@ export class BuilderRange extends Component {
                 }
                 this.inputRefNumber().value = ratio;
                 // Syncronize the values of range and text inputs during preview
-                this.inputRefRange().value = value || this.min;
+                this.inputRefRange().value = value || this.props.min;
                 this.state.value = this.parseDisplayValue(value);
             }
             return preview(value);
@@ -159,9 +167,9 @@ export class BuilderRange extends Component {
         e.preventDefault();
         let value = parseFloat(e.target.value);
         if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-            value = Math.max(this.min, value - this.props.step);
+            value = Math.max(this.props.min, value - this.props.step);
         } else {
-            value = Math.min(this.max, value + this.props.step);
+            value = Math.min(this.props.max, value + this.props.step);
         }
         e.target.value = value;
         this.onInputRange(e);
@@ -187,7 +195,7 @@ export class BuilderRange extends Component {
     }
 
     commitInput(value) {
-        const originalValue = value ? this.convertToValue(value) : this.min.toString();
+        const originalValue = value ? this.convertToValue(value) : this.props.min.toString();
         const committedValue = this.commit(originalValue);
         return this.convertToRatio(committedValue);
     }
@@ -205,37 +213,30 @@ export class BuilderRange extends Component {
         if (isRatio) {
             return Math.min(this.maxRatio, Math.max(this.minRatio, value)).toString();
         } else {
-            return Math.min(this.max, Math.max(this.min, value)).toString();
+            return Math.min(this.props.max, Math.max(this.props.min, value)).toString();
         }
     }
 
     get inputValueRange() {
-        return this.formatRawValue(this.state.value || this.min);
+        return this.formatRawValue(this.state.value || this.props.min);
     }
 
     get displayValueNumber() {
-        return this.formatRawValue(this.convertToRatio(this.state.value || this.min));
+        return this.formatRawValue(this.convertToRatio(this.state.value || this.props.min));
     }
 
     get className() {
-        const baseClasses = "p-0 border-0";
-        return this.props.min > this.props.max ? `${baseClasses} o_we_inverted_range` : baseClasses;
-    }
-
-    get min() {
-        return this.props.min > this.props.max ? this.props.max : this.props.min;
-    }
-
-    get max() {
-        return this.props.min > this.props.max ? this.props.min : this.props.max;
+        return `p-0 border-0 ${this.props.rangeClass}`.trim();
     }
 
     get minRatio() {
-        return this.convertorObject.toRatio(this.min);
+        const { toRatio } = this.convertorObject;
+        return Math.min(toRatio(this.props.min), toRatio(this.props.max));
     }
 
     get maxRatio() {
-        return this.convertorObject.toRatio(this.max);
+        const { toRatio } = this.convertorObject;
+        return Math.max(toRatio(this.props.min), toRatio(this.props.max));
     }
 
     get textInputBaseProps() {
