@@ -1794,6 +1794,11 @@ class HrEmployee(models.Model):
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
 
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        self.version_id.action_unarchive()
+        return res
+
     def action_archive(self):
         archived_employees = self.filtered('active')
         res = super().action_archive()
@@ -1811,6 +1816,7 @@ class HrEmployee(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
+        self.version_ids.action_archive()
         return res
 
     @api.onchange('company_id')
