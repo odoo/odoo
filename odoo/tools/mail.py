@@ -78,6 +78,9 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-mimetype-before-conversion',
      'data-bs-toggle',  # support nav-tabs
      ])
+
+defs.link_attrs |= {'xlink:href'}
+
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
     'allow_tags': defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment]),
