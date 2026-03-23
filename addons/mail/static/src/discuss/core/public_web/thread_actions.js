@@ -13,7 +13,8 @@ registerThreadAction("show-threads", {
             channel: channel.parent_channel_id || channel,
         });
     },
-    actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
+    actionPanelOuterClass: ({ owner, store }) =>
+        owner.env.inMeetingView ? "" : store.discussDropdownMenuClass(owner),
     condition: ({ channel, owner }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,

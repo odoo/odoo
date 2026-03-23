@@ -177,7 +177,9 @@ registerThreadAction("invite-people", {
     actionPanelOuterClass: ({ owner, store }) =>
         `o-discuss-ChannelInvitation ${
             owner.props.chatWindow ? "bg-inherit" : ""
-        } border border-secondary ` + store.discussDropdownMenuClass(owner),
+        } border border-secondary ${
+            owner.env.inMeetingView ? "" : store.discussDropdownMenuClass(owner)
+        }`,
     condition: ({ channel, owner }) =>
         channel &&
         !owner.env.pipWindow &&
