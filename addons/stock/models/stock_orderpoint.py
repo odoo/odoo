@@ -196,8 +196,17 @@ class StockWarehouseOrderpoint(models.Model):
         # Small cache mapping (location_id, route_id, {all product routes}) -> stock.rule.
         # This reduces calls to _get_rules_from_location for products without routes and products with the same routes.
         rules_cache = {}
+        routes_cache = {}
         for orderpoint in orderpoints_to_compute:
-            all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids | orderpoint.product_id.get_total_routes()
+            # Get routes from cache
+            actions = orderpoint.product_id.get_routes_actions()
+            total_routes = self.env['stock.route']
+            for action in actions:
+                if action not in routes_cache:
+                    routes_cache[action] = self.env['stock.rule'].search([('action', '=', action)]).route_id
+                total_routes |= routes_cache[action]
+
+            all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids | total_routes
             cache_key = (orderpoint.location_id, orderpoint.route_id, all_product_routes)
             rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
                 orderpoint.location_id, route_ids=orderpoint.route_id
@@ -442,19 +451,16 @@ class StockWarehouseOrderpoint(models.Model):
             'warehouse_id': self.warehouse_id,
         })
 
-    def _get_default_route(self):
+    def _get_default_route(self, force_action=False):
         self.ensure_one()
-        rules_groups = self.env['stock.rule']._read_group([
-            '|', ('route_id.product_selectable', '!=', False),
-            ('route_id.product_categ_selectable', '!=', False),
-            ('location_dest_id', 'in', self.location_id.ids),
-            ('action', 'in', ['pull_push', 'pull']),
-            ('route_id.active', '!=', False)
-        ], ['location_dest_id', 'route_id'])
-        for location_dest, route in rules_groups:
-            if route in (self.product_id.route_ids | self.product_id.categ_id.route_ids) and self.location_id == location_dest:
-                return route
-        return self.env['stock.route']
+        applicable_routes = self.product_id.route_ids | self.product_id.categ_id.total_route_ids
+        matching_route = applicable_routes.filtered(lambda r: r.rule_ids.filtered(
+            lambda rule: rule.location_dest_id == self.location_id
+            and rule.action in ['pull_push', 'pull']
+            and r.active
+        ))
+
+        return matching_route[0] if matching_route else self.env['stock.route']
 
     def _get_replenishment_multiple_alternative(self, qty_to_order):
         """

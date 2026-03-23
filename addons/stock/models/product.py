@@ -301,9 +301,14 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.ids
 
-    def get_total_routes(self):
-        # Extend the total routes in other modules
-        return self.env['stock.route']
+    def get_routes_actions(self):
+        """Return the route action types expected for this product.
+
+        Installed modules can extend this list based on the product's relevant
+        field values, such as vendors or bills of materials.
+        """
+        self.ensure_one()
+        return []
 
     def _get_description(self, picking_type_id):
         """
