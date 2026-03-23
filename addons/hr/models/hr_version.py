@@ -311,8 +311,14 @@ class HrVersion(models.Model):
                 raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
 
         multiple_versions = self
+
+        def get_active_test(employee):
+            return employee.env.context.get('active_test', employee.active)
+
         if vals.get("contract_date_start"):
-            unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
+            unique_versions = multiple_versions.filtered(
+                lambda v: len(v.employee_id.with_context(active_test=get_active_test(v.employee_id)).version_ids) == 1
+            )
             multiple_versions -= unique_versions
             if len(unique_versions):
                 unique_versions.with_context(sync_contract_dates=True).write({
@@ -343,7 +349,7 @@ class HrVersion(models.Model):
                 dates_vals["contract_date_end"] = first_version.contract_date_end
 
             if first_version.contract_date_start:
-                versions_to_sync = employee._get_contract_versions(
+                versions_to_sync = employee.with_context(active_test=get_active_test(employee))._get_contract_versions(
                     date_start=first_version.contract_date_start,
                     date_end=first_version.contract_date_end,
                 )
