@@ -27,12 +27,31 @@ export class VersionsTimeline extends StatusBarField {
         });
     }
 
+    get showAddButton() {
+        return !("active" in this.props.record.fields) || this.props.record.data.active;
+    }
+
     /** @override **/
+<<<<<<< f5e7f51e6d372155663158d7ceba12e89fdb393e
     getDomain(props) {
         return Domain.and([
             super.getDomain(props),
             [["employee_id", "=", props.record.evalContext.id]],
         ]).toList();
+||||||| e4e3aa3283c36f6f6bf97e5a824b411805edd839
+    getDomain() {
+        return Domain.and([super.getDomain(),
+            [["employee_id", "=", this.props.record.evalContext.id]]]
+        ).toList()
+=======
+    getDomain() {
+        const { record } = this.props;
+        const additionalDomains = [[["employee_id", "=", record.evalContext.id]]];
+        if ("active" in record.fields && !record.data.active) {
+            additionalDomains.push([["active", "=", false]]);
+        }
+        return Domain.and([super.getDomain(), ...additionalDomains]).toList();
+>>>>>>> 2b9c70a07138ed4f7ece787759fb5bb479e10f70
     }
 
     /** @override **/

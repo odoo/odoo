@@ -306,10 +306,10 @@ class HrVersion(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
-        for employee_id, versions in self.grouped('employee_id').items():
-            if employee_id.version_ids == versions:
+        for employee, versions in self.grouped('employee_id').items():
+            if employee.active and employee.version_ids == versions:
                 raise ValidationError(
-                    self.env._('Employee %s must always have at least one active version.') % employee_id.name
+                    self.env._('Employee %s must always have at least one active version.', employee.name),
                 )
 
     def write(self, vals):
@@ -327,10 +327,10 @@ class HrVersion(models.Model):
 
         # Employee Versions Validation
         if 'employee_id' in vals:
-            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
+            if self.filtered(lambda v: v.employee_id.active and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
                 raise ValidationError(self.env._("Cannot unassign all the active versions of an employee."))
         if 'active' in vals and not vals['active']:
-            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
+            if self.filtered(lambda v: v.employee_id.active and v.employee_id.version_ids <= self):
                 raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
@@ -341,8 +341,14 @@ class HrVersion(models.Model):
                 raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
 
         multiple_versions = self
+
+        def get_active_test(employee):
+            return employee.env.context.get('active_test', employee.active)
+
         if vals.get("contract_date_start"):
-            unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
+            unique_versions = multiple_versions.filtered(
+                lambda v: len(v.employee_id.with_context(active_test=get_active_test(v.employee_id)).version_ids) == 1
+            )
             multiple_versions -= unique_versions
             if len(unique_versions):
                 unique_versions.with_context(sync_contract_dates=True).write({
@@ -373,7 +379,7 @@ class HrVersion(models.Model):
                 dates_vals["contract_date_end"] = first_version.contract_date_end
 
             if first_version.contract_date_start:
-                versions_to_sync = employee._get_contract_versions(
+                versions_to_sync = employee.with_context(active_test=get_active_test(employee))._get_contract_versions(
                     date_start=first_version.contract_date_start,
                     date_end=first_version.contract_date_end,
                 )
