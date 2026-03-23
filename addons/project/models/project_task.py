@@ -410,6 +410,10 @@ class ProjectTask(models.Model):
         if not self.project_id and not self.user_ids:
             self.user_ids = self.env.user
 
+        if not self.project_id and self.parent_id and self.parent_id.project_id:
+            self.project_id = self.parent_id.project_id.id
+            self.display_in_project = False
+
     def is_blocked_by_dependences(self):
         return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
 
