@@ -672,7 +672,27 @@ class _RelationalMulti(_Relational):
         Comodel = env.registry[self.comodel_name]
         corecords = Comodel(env, value, prefetch_ids)
         if not env.su and corecords and not self.bypass_search_access:
-            corecords = corecords._filtered_access('read')
+            # For performance, this slightly modified version of
+            # `_filtered_access` does not recheck permissions for records marked
+            # as inaccessible. Without this, we would recheck record access on
+            # each `convert_to_record` call if one of them in inaccessible.
+            read_access = env._access_cache[Comodel._name]
+            if all(map(read_access.get, corecords._ids)):
+                pass  # all records are accessible
+            elif all(map(read_access.__contains__, corecords._origin)):
+                # we have a value for all origins in access
+                # consider inaccessible records as inaccessible
+                if not corecords.browse().has_access('read'):
+                    return corecords.browse()
+                if corecords._origin:
+                    def accessible(rec):
+                        origin = rec._origin
+                        # no origin: new id without origin
+                        return not origin or read_access[origin.id]
+                    corecords = corecords.filtered(accessible)
+            else:
+                # default behaviour
+                corecords = corecords._filtered_access('read')
         if (
             Comodel._active_name
             and self.context.get('active_test', env.context.get('active_test', True))
