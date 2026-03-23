@@ -131,11 +131,12 @@ class test_inherits(common.TransactionCase):
             box.write({'another_unit_id': unit5.id, 'val1': 8, 'val2': 7})
 
     def test_access_rights_on_parent(self):
-        # introduce an ir.rule on the parent model of 'test.box'
-        self.env['ir.rule'].create({
+        # introduce an ir.access on the parent model of 'test.box'
+        self.env['ir.access'].create({
             'name': "Only access to state a",
             'model_id': self.env['ir.model']._get('test.unit').id,
-            'domain_force': [('state', '=', 'a')],
+            'operation': 'crud',
+            'domain': [('state', '=', 'a')],
         })
         user = self.env['res.users'].create({
             'name': 'test',
@@ -148,7 +149,7 @@ class test_inherits(common.TransactionCase):
             {'name': 'b', 'state': 'b'},
         ]).ids
 
-        # search with an order on the parent model: the ir.rule above should
+        # search with an order on the parent model: the ir.access above should
         # appear in the WHERE clause, but not in the JOIN clause used to reach
         # the inherited field(s)
         model.search([('id', 'in', box_ids)], order='readonly_name')  # warmup

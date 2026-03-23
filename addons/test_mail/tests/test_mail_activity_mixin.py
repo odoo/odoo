@@ -213,9 +213,11 @@ class TestActivityMixin(TestActivityCommon):
         user_admin = self.user_admin
         user_employee_c2 = self.user_employee_c2
         self.assertIn(self.company_2, user_admin.company_ids)
-        self.test_record.env['ir.rule'].create({
+        self.test_record.env['ir.access'].create({
+            'name': 'mail.test.activity company',
             'model_id': self.env.ref('test_mail.model_mail_test_activity').id,
-            'domain_force': "[('company_id', 'in', company_ids)]"
+            'operation': 'crud',
+            'domain': "[('company_id', 'in', company_ids)]",
         })
         self.test_record.activity_schedule(user_id=user_employee_c2.id)
         user_employee_c2.with_user(user_admin).with_context(

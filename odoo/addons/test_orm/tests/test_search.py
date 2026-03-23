@@ -517,27 +517,25 @@ class TestSearchRelated(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.rule'].create([{
+        cls.env['ir.access'].create([{
             'name': 'related',
             'model_id': cls.env['ir.model']._get('test_orm.related').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }, {
             'name': 'related_foo',
             'model_id': cls.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }, {
             'name': 'related_bar',
             'model_id': cls.env['ir.model']._get('test_orm.related_bar').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }])
 
     def test_related_simple(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
-            'name': 'related_foo',
-            'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
-        })
 
         # warmup
         model.search([('foo_name', '=', 'a')])
@@ -1461,15 +1459,20 @@ class TestSearchAccessOperator(TransactionCase):
         super().setUpClass()
         discussion_model_id = cls.env['ir.model']._get('test_orm.discussion').id
         message_model_id = cls.env['ir.model']._get('test_orm.message').id
-        cls.env['ir.rule'].search([('model_id', 'in', [discussion_model_id, message_model_id])]).unlink()
-        cls.rules = cls.env['ir.rule'].create([{
+        group_id = cls.env.ref('base.group_user').id
+        cls.env['ir.access'].search([('model_id', 'in', [discussion_model_id, message_model_id])]).unlink()
+        cls.rules = cls.env['ir.access'].create([{
             'name': 'related',
             'model_id': discussion_model_id,
-            'domain_force': "[('id', '<', 1000)]",
+            'group_id': group_id,
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }, {
             'name': 'related_foo',
             'model_id': message_model_id,
-            'domain_force': "[('discussion', 'access', 'read')]",
+            'group_id': group_id,
+            'operation': 'crud',
+            'domain': "[('discussion', 'access', 'read')]",
         }])
         cls.model = cls.env['test_orm.discussion'].with_user(cls.env.ref('base.user_admin'))
 
@@ -1508,18 +1511,21 @@ class TestSearchAny(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.rule'].create([{
+        cls.env['ir.access'].create([{
             'name': 'related',
             'model_id': cls.env['ir.model']._get('test_orm.related').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }, {
             'name': 'related_foo',
             'model_id': cls.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }, {
             'name': 'related_bar',
             'model_id': cls.env['ir.model']._get('test_orm.related_bar').id,
-            'domain_force': "[('id', '<', 1000)]",
+            'operation': 'crud',
+            'domain': "[('id', '<', 1000)]",
         }])
 
     def test_many2one_any(self):
@@ -1849,10 +1855,11 @@ class TestFlushSearch(TransactionCase):
 
     def test_flush_fields_in_access_rules(self):
         model = self.model.with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'city_rule',
             'model_id': self.env['ir.model']._get(model._name).id,
-            'domain_force': str([('name', 'like', 'a')]),
+            'operation': 'crud',
+            'domain': "[('name', 'like', 'a')]",
         })
         model.search([])
 

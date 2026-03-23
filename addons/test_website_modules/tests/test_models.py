@@ -17,6 +17,6 @@ class TestWebsiteModels(HttpCase):
         })
         post.write({'is_published': True})
         rule = self.env.ref('website_blog.website_blog_post_public')
-        rule.domain_force = "[('website_id', '=', website.id)]"
+        rule.domain = "[('website_id', '=', website.id)]"
         res = self.url_open(post.website_url, allow_redirects=False)
         res.raise_for_status()

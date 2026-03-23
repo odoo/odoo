@@ -4,13 +4,13 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
     steps: () => [
         // create new privileges
         {
-            trigger: 'button[data-menu-xmlid="base.menu_users"]',
-            content: "open user menu",
+            trigger: 'button[data-menu-xmlid="base.menu_custom"]',
+            content: "open technical menu",
             run: "click",
         },
         {
             trigger: 'a[data-menu-xmlid="base.menu_action_res_groups_privilege"]',
-            content: "open privilege menu",
+            content: "open scope menu",
             run: "click",
         },
         {
@@ -60,8 +60,12 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: 'div[name="implied_ids"] .o_field_x2many_list_row_add button',
+            trigger: 'div[name="implied_ids"] .o_field_many2many_selection .o_input',
             content: "switch to implied",
+            run: "click",
+        },
+        {
+            trigger: ".o_m2o_dropdown_option_search_more",
             run: "click",
         },
         {

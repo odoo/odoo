@@ -61,10 +61,11 @@ class Many2manyCase(TransactionCase):
             'res_model': self.ship._name,
             'res_id': self.ship.id,
         }).with_user(user)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "No access",
             'model_id': self.env['ir.model']._get(attachment._name).id,
-            'domain_force': [(0, '=', 1)],
+            'operation': 'crud',
+            'domain': str([(0, '=', 1)]),
         })
         record = self.env['test_orm.attachment.host'].create({
             'm2m_attachment_ids': [Command.link(attachment.id)],

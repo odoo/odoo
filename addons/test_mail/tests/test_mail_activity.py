@@ -192,10 +192,11 @@ class TestActivityRights(TestActivityCommon):
 
         # ---------------------------------------
         # Let only the creator access an activity
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'Hop hop hop Ernest',
-            'domain_force': '[("user_id", "=", user.id)]',
             'model_id': self.env['ir.model']._get('mail.activity').id,
+            'operation': 'crud',
+            'domain': '[("user_id", "=", user.id)]',
         })
 
         # cannot _search activities if no access to the document
