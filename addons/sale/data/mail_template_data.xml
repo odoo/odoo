@@ -4,7 +4,7 @@
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} {{ object.name or 'n/a' }}</field>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} {{ object.name or 'n/a' }} {{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -19,6 +19,9 @@
         Your <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
         <t t-if="object.origin">
             (with reference: <t t-out="object.origin or ''">S00052</t> )
+        </t>
+        <t t-if="object.client_order_ref">
+            (<t t-out="object.client_order_ref or ''">CUSTOMER REF</t>)
         </t>
         amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
         <br/>
@@ -72,6 +75,9 @@
         <t t-if="object.origin">
             (with reference: <t t-out="object.origin or ''"></t> )
         </t>
+        <t t-if="object.client_order_ref">
+            (<t t-out="object.client_order_ref or ''">CUSTOMER REF</t>)
+        </t>
         amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
@@ -88,7 +94,7 @@
         <record id="mail_template_sale_confirmation" model="mail.template">
             <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }}</field>
+            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} {{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -109,6 +115,9 @@
                         <br/><br/>
                         <t t-set="tx_sudo" t-value="object.get_portal_last_transaction()"/>
                         Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
+                        <t t-if="object.client_order_ref">
+                            (<t t-out="object.client_order_ref or ''">CUSTOMER REF</t>)
+                        </t>
                         <t t-if="object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
                             <t
                                 t-if="hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store'"
