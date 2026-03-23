@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, models, fields
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty, plaintext2html
 from odoo.addons.mail.tools.discuss import Store
@@ -190,7 +191,11 @@ class ChatbotScript(models.Model):
     def action_view_livechat_channels(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.im_livechat_channel_action')
-        action['domain'] = [('rule_ids.chatbot_script_id', 'in', self.ids)]
+        domain = Domain("rule_ids.chatbot_script_id", "in", self.ids)
+        channel_ids = self.env["im_livechat.channel"].search(domain, limit=2)
+        if len(channel_ids) == 1:
+            action.update(res_id=channel_ids[0].id, views=[(False, "form")])
+        action["domain"] = domain
         return action
 
     # --------------------------

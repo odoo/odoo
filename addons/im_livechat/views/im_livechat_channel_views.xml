@@ -9,11 +9,10 @@
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Define a new website live chat channel
+                No live chat channel found. Let's create one!
               </p><p>
-                You can create channels for each website on which you want
-                to integrate the website live chat widget, allowing your website
-                visitors to talk in real time with your operators.
+                Chat with your website visitors in real time by creating a
+                channel for each website where you want live chat enabled.
               </p>
             </field>
         </record>
@@ -350,10 +349,9 @@
 
         <menuitem
             id="livechat_technical"
-            name="Technical"
-            parent="menu_livechat_root"
-            groups="base.group_no_one"
-            sequence="75"/>
+            name="Live Chat"
+            parent="base.menu_custom"
+            groups="base.group_no_one"/>
 
         <menuitem
             id="canned_responses"

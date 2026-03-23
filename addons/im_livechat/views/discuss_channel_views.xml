@@ -16,18 +16,17 @@
                     <filter name="filter_my_sessions" domain="[('livechat_agent_partner_ids.user_ids', 'in', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="ongoing" string="Ongoing" domain="[('livechat_end_dt', '=', False)]"/>
-                    <separator/>
-                    <filter name="filter_session_rating_happy" domain="[('livechat_rating', '=', '5')]" string="Happy"/>
-                    <filter name="filter_session_rating_neutral" domain="[('livechat_rating', '=', '3')]" string="Neutral"/>
-                    <filter name="fiter_session_rating_unhappy" domain="[('livechat_rating', '=', '1') ]" string="Unhappy"/>
-                    <separator />
+                    <filter string="Rating">
+                        <filter name="filter_session_rating_happy" domain="[('livechat_rating', '=', '5')]" string="Happy"/>
+                        <filter name="filter_session_rating_neutral" domain="[('livechat_rating', '=', '3')]" string="Neutral"/>
+                        <filter name="fiter_session_rating_unhappy" domain="[('livechat_rating', '=', '1') ]" string="Unhappy"/>
+                    </filter>
                     <filter name="filter_session_date" date="create_date" string="Session Date">
                         <filter name="rated_on_last_24_hours" string="Last 24 Hours" domain="[('create_date', '&gt;', '-1d')]"/>
                         <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('create_date', '&gt;', 'today -7d +1d')]"/>
                         <filter name="rated_on_last_30_days" string="Last 30 Days" domain="[('create_date', '&gt;', 'today -30d +1d')]"/>
                         <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;', 'today -365d +1d')]"/>
                     </filter>
-                    <separator/>
                     <group>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <filter name="group_by_agent" string="Agent" domain="[]" context="{'group_by':'livechat_agent_partner_ids'}"/>
@@ -134,8 +133,8 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <pivot string="Sessions" display_quantity="1" sample="1">
-                    <field name="livechat_agent_partner_ids" type="row"/>
-                    <field name="create_date" interval="day" type="col"/>
+                    <field name="livechat_agent_partner_ids" type="col"/>
+                    <field name="create_date" interval="day" type="row"/>
                     <field name="livechat_rating_percentage" type="measure"/>
                 </pivot>
             </field>
