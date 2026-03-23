@@ -1704,6 +1704,7 @@ class HrEmployee(models.Model):
             'departure_description': False,
             'departure_date': False
         })
+        self.version_id.action_unarchive()
         return res
 
     def action_archive(self):
@@ -1734,6 +1735,7 @@ class HrEmployee(models.Model):
                     'context': {'active_id': self.id},
                     'views': [[False, 'form']]
                 }
+        self.version_ids.action_archive()
         return res
 
     @api.onchange('company_id')
