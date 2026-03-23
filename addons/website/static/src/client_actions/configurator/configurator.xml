@@ -260,15 +260,49 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-7 col-xl-8 col-xxl-9 h-100 bg-100">
-                        <div class="p-4 h-100">
-                            <div class="border rounded bg-white h-100 overflow-hidden position-relative">
+                    <div class="col-7 col-xl-8 col-xxl-9 d-flex bg-100">
+                        <div class="d-flex w-100 flex-column p-4 pt-3">
+                            <div class="d-flex justify-content-center flex-shrink-0">
+                                <div class="d-inline-flex align-items-center gap-1 p-1 pb-2">
+                                    <button
+                                        type="button"
+                                        aria-label="Desktop preview"
+                                        class="btn btn-sm border-0"
+                                        t-on-click="() => this.setPreviewDevice('desktop')"
+                                    >
+                                        <i class="fa fa-desktop"
+                                            t-att-class="{'active text-info bg-100': !this.isPreviewMobile, 'text-muted': this.isPreviewMobile}"
+                                            role="img" aria-hidden="true"
+                                        />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        aria-label="Mobile preview"
+                                        class="btn btn-sm border-0"
+                                        t-on-click="() => this.setPreviewDevice('mobile')"
+                                    >
+                                        <i class="fa fa-mobile"
+                                            t-att-class="{'active text-info bg-100': this.isPreviewMobile, 'text-muted': !this.isPreviewMobile}"
+                                            role="img" aria-hidden="true"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="border rounded bg-white overflow-hidden position-relative shadow-sm d-flex flex-column flex-grow-1"
+                                t-att-class="{'o_configurator_preview_mobile': this.isPreviewMobile}">
+                                <div class="d-flex align-items-center flex-shrink-0 gap-3 bg-200 border-bottom py-1 px-3">
+                                    <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                        <span class="d-block p-1 rounded-circle bg-300"/>
+                                        <span class="d-block p-1 rounded-circle bg-300"/>
+                                        <span class="d-block p-1 rounded-circle bg-300"/>
+                                    </div>
+                                    <div class="o_setup_style_screen_fake_searchbar py-1 bg-white rounded-pill opacity-75 mx-auto"/>
+                                </div>
                                 <iframe
-                                    class="w-100 h-100 border-0"
-                                    sandbox="allow-same-origin"
+                                    class="o_configurator_preview_iframe w-100 flex-grow-1 border-0"
                                     t-custom-ref="previewIframe"
                                     t-on-load="this.onPreviewIframeLoad"
-                                    t-att-srcdoc="this.previewSrcdoc"
+                                    t-att-src="this.previewUrl"
                                 />
                                 <div t-if="this.state.previewIsLoading" class="position-absolute top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center">
                                     <div class="spinner-border text-primary" role="status"/>
