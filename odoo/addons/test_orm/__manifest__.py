@@ -13,7 +13,6 @@
         'data/test_inherits.xml',
         'data/test_one2many.xml',
         'data/test_properties.xml',
-        'data/test_search.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
