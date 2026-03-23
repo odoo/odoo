@@ -1032,13 +1032,18 @@ class BaseCase(case.TestCase):
             return test_cursor.TestCursor(
                 cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
             )
+
+        def get_sequences(cr):
+            return registry.registry_sequence, registry.cache_sequences.copy()
+
         return [
             # New cursor should point to the test's cursor
             patch.object(registry, 'cursor', _patched_cursor),
             # Disable locking and signaling
             patch.object(Registry, '_lock', DummyRLock()),
-            patch.object(registry, 'setup_signaling', return_value=None), #noop
+            patch.object(registry, 'setup_signaling', return_value=None),  # noop
             patch.object(registry, 'check_signaling', return_value=registry),
+            patch.object(registry, 'get_sequences', get_sequences),
         ]
 
     @classmethod
