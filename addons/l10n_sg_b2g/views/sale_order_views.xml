@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='partner_details']/field[@name='partner_id']" position="after">
+                <field name="l10n_sg_statutory_board_subbusiness_unit"
+                    invisible="not l10n_sg_partner_is_statutory_board"
+                    options="{'no_create': True}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

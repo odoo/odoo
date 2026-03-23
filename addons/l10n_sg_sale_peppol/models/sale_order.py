@@ -62,6 +62,13 @@ class SaleOrder(models.Model):
         self._send_order_response_advanced(order_tx, "AP")
         order_tx.state = 'accepted'
 
+        if self.state in ('draft', 'sent'):
+            self.action_confirm()
+
+        self.message_post(
+            body=self.env._("The order document has been accepted."),
+        )
+
     def action_reject_peppol_order(self):
         order_tx = self.l10n_sg_peppol_order_tx_ids.filtered_domain([
             ('document_type', '=', 'order'),
@@ -71,6 +78,10 @@ class SaleOrder(models.Model):
 
         self._send_order_response_advanced(order_tx, "RE")
         order_tx.state = 'rejected'
+
+        self.message_post(
+            body=self.env._("The order document has been rejected."),
+        )
 
     def action_apply_peppol_order_change(self):
         order_change_tx = self.l10n_sg_peppol_order_tx_ids.filtered_domain([

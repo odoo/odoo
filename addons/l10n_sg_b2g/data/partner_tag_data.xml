@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="res_partner_category_ministry" model="res.partner.category">
+        <field name="name">Ministry</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="res_partner_category_statutory_board" model="res.partner.category">
+        <field name="name">Statutory Board</field>
+        <field name="parent_id" ref="res_partner_category_ministry"/>
+    </record>
+</odoo>

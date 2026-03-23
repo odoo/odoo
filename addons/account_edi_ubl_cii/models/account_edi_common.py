@@ -136,6 +136,9 @@ SUPPORTED_FILE_TYPES = {
     'image/jpeg': '.jpeg',
     'image/png': '.png',
     'text/csv': '.csv',
+    # Requirement for SG B2G e-invoices
+    'image/bmp': '.bmp',
+    'image/gif': '.gif',
 }
 
 
