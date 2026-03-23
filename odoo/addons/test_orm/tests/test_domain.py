@@ -848,32 +848,43 @@ class TestDomainOptimize(TransactionCase):
             'login': 'test_portal',
             'group_ids': [(6, 0, [self.ref('base.group_portal')])],
         }])
-        self.env['ir.model.access'].create({
-            'name': "read",
+        self.env['ir.access'].search(
+            [('model_id.name', 'in', [model._name, 'res.currency'])],
+        ).unlink()
+        self.env['ir.access'].create([{
+            'name': f"{model._name} user group",
+            'model_id': self.env['ir.model']._get_id(model._name),
+            'group_id': user_group,
+            'operation': 'crud',
+            'domain': str([('numeric', '>', 20)]),
+        }, {
+            'name': f"{model._name} elevated group",
+            'model_id': self.env['ir.model']._get_id(model._name),
+            'group_id': elevated_group,
+            'operation': 'crud',
+            'domain': str([]),
+        }, {
+            'name': 'res.currency user read',
             'model_id': self.env['ir.model']._get_id('res.currency'),
             'group_id': user_group,
-            'perm_write': True,
-        })
-        rules = self.env['ir.rule'].search([('model_id.name', 'in', [model._name, 'res.currency'])])
-        rules.unlink()
-        rules.create([{
-            'model_id': self.env['ir.model']._get_id(model._name),
-            'groups': [user_group],
-            'domain_force': str([('numeric', '>', 20)]),
+            'operation': 'r',
         }, {
-            'model_id': self.env['ir.model']._get_id(model._name),
-            'groups': [elevated_group],
-            'domain_force': str([]),
-        }, {
+            'name': 'res.currency user update',
             'model_id': self.env['ir.model']._get_id('res.currency'),
-            'groups': [user_group],
-            'domain_force': str([('name', '=', 'EUR')]),
-            'perm_read': False,
+            'group_id': user_group,
+            'domain': str([('name', '=', 'EUR')]),
+            'operation': 'u',
         }, {
+            'name': 'res.currency elevated read',
             'model_id': self.env['ir.model']._get_id('res.currency'),
-            'groups': [elevated_group],
-            'domain_force': str([('name', 'in', ['EUR', 'USD'])]),
-            'perm_read': False,
+            'group_id': elevated_group,
+            'operation': 'r',
+        }, {
+            'name': 'res.currency elevated updates',
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'group_id': elevated_group,
+            'domain': str([('name', 'in', ['EUR', 'USD'])]),
+            'operation': 'cud',
         }])
 
         with self.assertRaises(ValueError):
@@ -900,7 +911,7 @@ class TestDomainOptimize(TransactionCase):
 
         domain_full = domain_custom.optimize_full(model)
         if model.sudo(False).has_access('read'):
-            access_rule = model.env['ir.rule'].sudo(False)._compute_domain(model._name, 'read').optimize_full(model)
+            access_rule = model.sudo(False)._access_domain('read').optimize_full(model)
         else:
             access_rule = Domain.FALSE
         self.assertEqual(domain_full, access_rule)
@@ -911,9 +922,8 @@ class TestDomainOptimize(TransactionCase):
         domain_full = domain.optimize_full(model)
         currency_model = model.env['res.currency']
         if currency_model.sudo(False).has_access('write'):
-            access_rule = model.env['ir.rule'].sudo(False)._compute_domain(currency_model._name, 'write')
-            access_rule = Domain('currency_id', 'any!', access_rule)
-            access_rule = access_rule.optimize_full(model)
+            comodel_rule = currency_model.sudo(False)._access_domain('write')
+            access_rule = Domain('currency_id', 'any!', comodel_rule).optimize_full(model)
         else:
             access_rule = Domain.FALSE
         self.assertEqual(domain_full, access_rule)

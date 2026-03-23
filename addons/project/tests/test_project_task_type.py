@@ -258,7 +258,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
         self.stage_manager.with_user(self.user_projectmanager).write({"name": "foo"})
         self.stage_manager.with_user(self.user_projectmanager).unlink()
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule", "odoo.models.unlink")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models.unlink")
     def test_security(self):
         self._assert_access_portal()
         self._assert_access_employee()

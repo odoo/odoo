@@ -6340,9 +6340,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         (line_1 + line_2).reconcile()
         (line_3 + line_4).reconcile()
         (line_5 + line_6).reconcile()
-        self.env['ir.rule'].sudo().create({
+        self.env['ir.access'].sudo().create({
+            'name': "Forbid line_6",
             'model_id': self.env['ir.model']._get('account.move.line').id,
-            'domain_force': [('id', '!=', line_6.id)],
+            'operation': 'crud',
+            'domain': [('id', '!=', line_6.id)],
         })
 
         def test(self):

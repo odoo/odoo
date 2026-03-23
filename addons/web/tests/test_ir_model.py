@@ -13,28 +13,19 @@ class IrModelAccessTest(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(IrModelAccessTest, cls).setUpClass()
+        super().setUpClass()
 
-        cls.env['ir.model.access'].create({
+        cls.env['ir.access'].create([{
             'name': "read",
-            'model_id': cls.env['ir.model'].search([("model", "=", "res.company")]).id,
-            'group_id': cls.env.ref("base.group_public").id,
-            'perm_read': False,
-        })
-
-        cls.env['ir.model.access'].create({
-            'name': "read",
-            'model_id': cls.env['ir.model'].search([("model", "=", "res.company")]).id,
+            'model_id': cls.env['ir.model']._get("res.company").id,
             'group_id': cls.env.ref("base.group_portal").id,
-            'perm_read': True,
-        })
-
-        cls.env['ir.model.access'].create({
+            'operation': "r",
+        }, {
             'name': "read",
-            'model_id': cls.env['ir.model'].search([("model", "=", "res.company")]).id,
+            'model_id': cls.env['ir.model']._get("res.company").id,
             'group_id': cls.env.ref("base.group_user").id,
-            'perm_read': True,
-        })
+            'operation': "r",
+        }])
 
         cls.portal_user = new_test_user(
             cls.env, login="portalDude", groups="base.group_portal"

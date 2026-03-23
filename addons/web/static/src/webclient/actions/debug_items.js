@@ -104,7 +104,7 @@ function manageFilters({ action, env }) {
 }
 
 function viewAccessRights({ accessRights, action, env }) {
-    if (!action.res_model || !accessRights.canSeeModelAccess) {
+    if (!action.res_model || !accessRights.canSeeAccess) {
         return null;
     }
     const description = _t("Access Rights");
@@ -118,7 +118,7 @@ function viewAccessRights({ accessRights, action, env }) {
                 })
             )[0];
             env.services.action.doAction({
-                res_model: "ir.model.access",
+                res_model: "ir.access",
                 name: description,
                 views: [
                     [false, "list"],
@@ -136,39 +136,6 @@ function viewAccessRights({ accessRights, action, env }) {
     };
 }
 
-function viewRecordRules({ accessRights, action, env }) {
-    if (!action.res_model || !accessRights.canSeeRecordRules) {
-        return null;
-    }
-    const description = _t("Model Record Rules");
-    return {
-        type: "item",
-        description: _t("Record Rules"),
-        callback: async () => {
-            const modelId = (
-                await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {
-                    limit: 1,
-                })
-            )[0];
-            env.services.action.doAction({
-                res_model: "ir.rule",
-                name: description,
-                views: [
-                    [false, "list"],
-                    [false, "form"],
-                ],
-                domain: [["model_id", "=", modelId]],
-                type: "ir.actions.act_window",
-                context: {
-                    default_model_id: modelId,
-                },
-            });
-        },
-        sequence: 360,
-        section: "security",
-    };
-}
-
 debugRegistry
     .category("action")
     .add("editAction", editAction)
@@ -176,4 +143,3 @@ debugRegistry
     .add("ViewModel", ViewModel)
     .add("manageFilters", manageFilters)
     .add("viewAccessRights", viewAccessRights)
-    .add("viewRecordRules", viewRecordRules);
