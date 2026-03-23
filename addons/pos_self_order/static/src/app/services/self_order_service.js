@@ -499,9 +499,17 @@ export class SelfOrder extends Reactive {
                 order,
                 Object.values(printer.config.product_categories_ids)
             );
+            const lastsentlines = order.uiState.lastSentPreparationChange?.lines || {};
             if (orderlines.length > 0) {
                 const printingChanges = {
-                    new: orderlines,
+                    new: orderlines
+                        .map((line) => ({
+                            qty: line.qty - (lastsentlines[line.uuid]?.quantity || 0),
+                            full_product_name: line.full_product_name,
+                            customer_note: line.customer_note,
+                            combo_parent_id: line.combo_parent_id,
+                        }))
+                        .filter((line) => line.qty > 0),
                     tracker: order.table_stand_number,
                     trackingNumber: order.tracking_number || "unknown number",
                     name: order.pos_reference || "unknown order",
@@ -649,6 +657,9 @@ export class SelfOrder extends Reactive {
             const tableIdentifier = this.router.getTableIdentifier([]);
             let uuid = this.selectedOrderUuid;
             this.currentOrder.recomputeOrderData();
+            this.currentOrder.uiState.lastSentPreparationChange = JSON.parse(
+                JSON.stringify(this.currentOrder.last_order_preparation_change)
+            );
             if (this.shouldUpdateLastOrderChange()) {
                 this.currentOrder.updateLastOrderChange();
             }
