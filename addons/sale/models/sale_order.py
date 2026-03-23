@@ -480,19 +480,22 @@ class SaleOrder(models.Model):
 
     # === COMPUTE METHODS ===#
 
-    @api.depends("partner_id")
+    @api.depends("name", "partner_id", "client_order_ref")
     @api.depends_context("sale_show_partner_name", "formatted_display_name")
     def _compute_display_name(self):
-        if not self.env.context.get("sale_show_partner_name"):
-            return super()._compute_display_name()
+        super()._compute_display_name()
         for order in self:
-            if order.partner_id.name:
+            order_label = order.name
+            if order.client_order_ref:
+                order_label = f"{order_label} ({order.client_order_ref})"
+
+            if self.env.context.get("sale_show_partner_name") and order.partner_id.name:
                 if self.env.context.get("formatted_display_name"):
-                    order.display_name = f"{order.name} \t --{order.partner_id.name}--"
+                    order.display_name = f"{order_label} \t --{order.partner_id.name}--"
                 else:
-                    order.display_name = f"{order.name} - {order.partner_id.name}"
+                    order.display_name = f"{order_label} - {order.partner_id.name}"
             else:
-                order.display_name = order.name
+                order.display_name = order_label
 
     @api.depends("order_line.product_id")
     def _compute_has_archived_products(self):
