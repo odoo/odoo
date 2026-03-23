@@ -1293,8 +1293,7 @@ class TransactionCase(BaseCase):
             cls.registry.registry_invalidated = False
             cls.registry.cache_invalidated.clear()
 
-        cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
-        cls.startClassPatcher(cls._signal_changes_patcher)
+        cls.startClassPatcher(patch.object(cls.registry, 'signal_changes', signal_changes))
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(typing.cast('Cursor', cls.cr).close)
