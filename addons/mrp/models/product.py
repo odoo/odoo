@@ -222,12 +222,11 @@ class ProductProduct(models.Model):
             })
         return super().write(vals)
 
-    def get_total_routes(self):
-        routes = super().get_total_routes()
+    def get_routes_actions(self):
+        actions = super().get_routes_actions()
         if self.bom_ids:
-            manufacture_routes = self.env['stock.rule'].search([('action', '=', 'manufacture')]).route_id
-            routes |= manufacture_routes
-        return routes
+            actions += ['manufacture']
+        return actions
 
     def get_components(self):
         """ Return the components list ids in case of kit product.

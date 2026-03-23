@@ -244,12 +244,11 @@ class ProductProduct(models.Model):
 
         return start_date, limit_date
 
-    def get_total_routes(self):
-        routes = super().get_total_routes()
+    def get_routes_actions(self):
+        actions = super().get_routes_actions()
         if self.seller_ids:
-            buy_routes = self.env['stock.rule'].search([('action', '=', 'buy')]).route_id
-            routes |= buy_routes
-        return routes
+            actions += ['buy']
+        return actions
 
 
 class ProductSupplierinfo(models.Model):

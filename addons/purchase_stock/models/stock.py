@@ -212,7 +212,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _inverse_supplier_id(self):
         for orderpoint in self:
             if not orderpoint.route_id and orderpoint.supplier_id:
-                orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')])[0].route_id
+                orderpoint.route_id = orderpoint._get_default_route(force_action="buy")
 
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_supplier_id_placeholder(self):
@@ -226,10 +226,14 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.effective_vendor_id = (orderpoint.supplier_id if orderpoint.supplier_id else orderpoint._get_default_supplier()).partner_id
 
     def _search_effective_vendor_id(self, operator, value):
-        vendors = self.env['res.partner'].search([('id', operator, value)])
-        orderpoints = self.env['stock.warehouse.orderpoint'].search([]).filtered(
-            lambda orderpoint: orderpoint.effective_vendor_id in vendors
+        target_partners = self.env['res.partner'].search([('id', operator, value)])
+
+        orderpoints = self.env['stock.warehouse.orderpoint'].search([
+            ('vendor_ids.partner_id', 'in', target_partners.ids)
+        ]).filtered(
+            lambda op: op.effective_vendor_id in target_partners
         )
+
         return [('id', 'in', orderpoints.ids)]
 
     def _search_available_vendor(self, operator, value):
@@ -261,19 +265,21 @@ class StockWarehouseOrderpoint(models.Model):
 
         return result
 
-    def _get_default_route(self):
-        route_ids = self.env['stock.rule'].search([
-            ('action', '=', 'buy')
-        ]).route_id
-        route_id = self.rule_ids.route_id & route_ids
-        if self.product_id.seller_ids and route_id:
-            return route_id[0]
-        return super()._get_default_route()
+    def _get_default_route(self, force_action=False):
+        self.ensure_one()
+        if not force_action or force_action == 'buy':
+            if self.product_id.seller_ids:
+                route_id = self.rule_ids.filtered(lambda r: r.action == 'buy').route_id
+                if route_id:
+                    return route_id[0]
+            if force_action:
+                return self.env['stock.route']
+        return super()._get_default_route(force_action=force_action)
 
     def _get_default_supplier(self):
         self.ensure_one()
         if self.show_supplier and self.product_id:
-            return self._get_default_rule()._pick_supplier(
+            return self.env['stock.rule']._pick_supplier(
                 self.company_id, self.product_id, qty=self.qty_to_order, uom=self.uom_id
             )
         else:
