@@ -317,6 +317,7 @@ class HrAttendance(models.Model):
         overtime_vals_list = []
         for ruleset_sudo, ruleset_attendances in attendances_by_ruleset.items():
             attendances_dates = list(chain(*ruleset_attendances._get_dates().values()))
+            ruleset_attendances = ruleset_attendances.filtered_domain([('overtime_status', 'not in', ['approved', 'refused'])])
             overtime_vals_list.extend([
                 {
                     **val,
