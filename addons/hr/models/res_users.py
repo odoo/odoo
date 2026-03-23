@@ -20,6 +20,7 @@ HR_READABLE_FIELDS = [
     'can_edit',
     'is_hr_user',
     'is_system',
+    'employee_country_code',
     'employee_resource_calendar_id',
     'work_contact_id',
     'bank_account_id',
