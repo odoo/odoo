@@ -265,6 +265,11 @@ export class ClipboardPlugin extends Plugin {
         if (ONLY_LINK_REGEX.test(textContent)) {
             return false;
         }
+        const fragment = parseHTML(this.document, clipboardHtml);
+        this.dependencies.sanitize.sanitize(fragment);
+        if (this.delegateTo("paste_odoo_editor_html_overrides", selection, fragment)) {
+            return true;
+        }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
             if (this.delegateTo("paste_html_overrides", selection, clipboardElem)) {
