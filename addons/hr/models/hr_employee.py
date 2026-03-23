@@ -691,10 +691,10 @@ class HrEmployee(models.Model):
             current_location = employee.exceptional_location_id or employee[dayfield]
             employee.work_location_type = current_location.location_type
 
-    @api.depends('version_ids.date_version', 'version_ids.active', 'active')
+    @api.depends('version_ids.date_version', 'version_ids.active')
     def _compute_current_version_id(self):
         for employee in self:
-            version = self.env['hr.version'].search(
+            version = self.env['hr.version'].with_context(active_test=employee.active).search(
                 [('employee_id', 'in', employee.ids), ('date_version', '<=', fields.Date.today())],
                 order='date_version desc',
                 limit=1,
@@ -702,8 +702,8 @@ class HrEmployee(models.Model):
             new_current_version = False
             if version:
                 new_current_version = version
-            elif employee.version_ids:
-                new_current_version = employee.version_ids[0]
+            elif employee.with_context(active_test=employee.active).version_ids:
+                new_current_version = employee.with_context(active_test=employee.active).version_ids[0]
             # To not trigger computed properties if still the same version
             if employee.current_version_id != new_current_version:
                 employee.current_version_id = new_current_version
