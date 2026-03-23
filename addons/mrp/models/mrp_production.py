@@ -238,7 +238,7 @@ class MrpProduction(models.Model):
 
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
     reference_ids = fields.Many2many(
-        'stock.reference', 'stock_reference_production_rel', 'production_id', 'reference_id', 'References',
+        'stock.reference', 'stock_reference_production_rel', 'production_id', 'reference_id', 'References', copy=False,
     )
     product_description_variants = fields.Char('Custom Description')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
