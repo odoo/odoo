@@ -2459,25 +2459,28 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         Customers defined custom ACLs and record rules to support the possibility to assign a portal user to employees
         and still be able to manage their holidays.
         """
-        # Add the required ACLs and record rules to allow portal users to create `calendar.event`.
+        # Add the required accesses to allow portal users to create `calendar.event`.
         # This reflects the customization done by customers for the reason explained above.
-        self.env['ir.model.access'].create([
+        self.env['ir.access'].create([
             # Read access on `mail.activity.type` for portal required for
             # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L734
             {
                 'name': 'Portal can read mail.activity.type',
                 'model_id': self.env.ref('mail.model_mail_activity_type').id,
                 'group_id': self.env.ref('base.group_portal').id,
-                'perm_read': True, 'perm_create': False, 'perm_write': False, 'perm_unlink': False,
+                'operation': 'r',
             },
             # Read access on `mail.activity` for portal required for
             # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L786
             # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L882
+            # Restrict portals to their own activities
+            # so they cannot read the activities of other users
             {
-                'name': 'Portal can read mail.activity',
+                'name': 'Portal own mail activity',
                 'model_id': self.env.ref('mail.model_mail_activity').id,
                 'group_id': self.env.ref('base.group_portal').id,
-                'perm_read': True, 'perm_create': False, 'perm_write': False, 'perm_unlink': False,
+                'operation': 'r',
+                'domain': "['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",
             },
             # Read and create acess on `calendar.event` for portal required for
             # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/hr_holidays/models/hr_leave.py#L894-L898
@@ -2485,10 +2488,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # if you give create to portal for their own events,
             # you give write and unlink so they can manage their own events
             {
-                'name': 'Portal all CRUD on calendar.event',
+                'name': 'Portal own calendar events',
                 'model_id': self.env.ref('calendar.model_calendar_event').id,
                 'group_id': self.env.ref('base.group_portal').id,
-                'perm_read': True, 'perm_create': True, 'perm_write': True, 'perm_unlink': True,
+                'operation': 'crud',
+                'domain': "[('partner_ids', 'in', user.partner_id.id)]",
             },
             # Read and create acess on `calendar.event` for portal required for
             # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L760-L768
@@ -2496,37 +2500,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # if you give create to portal for their own events attendees,
             # you give write and unlink so they can manage their own attendees
             {
-                'name': 'Portal all CRUD on calendar.attendee',
-                'model_id': self.env.ref('calendar.model_calendar_attendee').id,
-                'group_id': self.env.ref('base.group_portal').id,
-                'perm_read': True, 'perm_create': True, 'perm_write': True, 'perm_unlink': True,
-            }])
-        self.env['ir.rule'].create([
-            # Restrict portals to their own activities
-            # so they cannot read the activities of other users
-            {
-                'name': 'Portal own mail activity',
-                'model_id': self.env.ref('mail.model_mail_activity').id,
-                'groups': [(4, self.env.ref('base.group_portal').id)],
-                'domain_force': "['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",
-            },
-            # Restrict portals to their own events
-            # so they cannot read the events of other users
-            {
-                'name': 'Portal own calendar events',
-                'model_id': self.env.ref('calendar.model_calendar_event').id,
-                'groups': [(4, self.env.ref('base.group_portal').id)],
-                'domain_force': "[('partner_ids', 'in', user.partner_id.id)]",
-            },
-            # Restrict portals to their own attendees
-            # so they cannot read the attendees of other users
-            {
                 'name': 'Portal own calendar attendees',
                 'model_id': self.env.ref('calendar.model_calendar_attendee').id,
-                'groups': [(4, self.env.ref('base.group_portal').id)],
-                'domain_force': "[('partner_id', '=', user.partner_id.id)]",
-            }
-        ])
+                'group_id': self.env.ref('base.group_portal').id,
+                'operation': 'crud',
+                'domain': "[('partner_id', '=', user.partner_id.id)]",
+            }])
 
         # Create a portal user and assign it to the employee
         user_portal = self.env['res.users'].create({

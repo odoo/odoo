@@ -18,20 +18,22 @@ class TestRules(TransactionCase):
         cls.forbidden = SomeObj.create({'val': -1, 'categ_id': cls.categ.id})
         # create a global rule forbidding access to records with a negative
         # (or zero) val
-        cls.env['ir.rule'].create({
+        cls.env['ir.access'].create({
             'name': 'Forbid negatives',
             'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
-            'domain_force': "[('val', '>', 0)]",
+            'operation': 'crud',
+            'domain': "[('val', '>', 0)]",
         })
         # create a global rule that forbid access to records without
         # categories, the search is part of the test
-        cls.env['ir.rule'].create({
+        cls.env['ir.access'].create({
             'name': 'See all categories',
             'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
-            'domain_force': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
+            'operation': 'crud',
+            'domain': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
         })
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_basic_access(self):
         env = self.env(user=self.env.ref('base.public_user'))
         allowed = self.allowed.with_env(env)
@@ -55,19 +57,15 @@ class TestRules(TransactionCase):
         with self.assertRaises(AccessError):
             self.assertEqual(allowed.new(origin=forbidden).val, -1)
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_group_rule(self):
         env = self.env(user=self.env.ref('base.public_user'))
         allowed = self.allowed.with_env(env)
         forbidden = self.forbidden.with_env(env)
 
         # we forbid access to the public group, to which the public user belongs
-        self.env['ir.rule'].create({
-            'name': 'Forbid public group',
-            'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
-            'groups': [Command.set([self.env.ref('base.group_public').id])],
-            'domain_force': "[(0, '=', 1)]",
-        })
+        access = self.env.ref('test_orm.access_test_access_right_some_obj_public')
+        access.domain = "[(0, '=', 1)]"
 
         # everything should blow up
         (allowed + forbidden).invalidate_model(['val'])
@@ -104,7 +102,7 @@ class TestRules(TransactionCase):
     def test_many2many_no_read_access(self):
         # create container and remove model access
         container_admin = self.env['test_access_right.container'].create({'some_ids': [Command.set([self.allowed.id])]})
-        self.env['ir.model.access'].search([('model_id', '=', self.env['ir.model']._get(container_admin.some_ids._name).id)]).unlink()
+        self.env['ir.access'].search([('model_id.model', '=', container_admin.some_ids._name)]).unlink()
 
         # user cannot see any records
         container_user = container_admin.with_user(self.env.ref('base.public_user'))
@@ -116,7 +114,7 @@ class TestRules(TransactionCase):
         # create container and remove model access
         parent_admin = self.allowed
         child_admin = self.env['test_access_right.child'].create({'parent_id': parent_admin.id})
-        self.env['ir.model.access'].search([('model_id', '=', self.env['ir.model']._get(child_admin._name).id)]).unlink()
+        self.env['ir.access'].search([('model_id.model', '=', child_admin._name)]).unlink()
 
         # user cannot see any records
         assert parent_admin.has_access('read')
@@ -128,7 +126,7 @@ class TestRules(TransactionCase):
     def test_access_rule_performance(self):
         env = self.env(user=self.env.ref('base.public_user'))
         Model = env['test_access_right.some_obj']
-        # cache warmup for check() in 'ir.model.access'
+        # cache warmup for check_access()
         Model.check_access('read')
         with self.assertQueryCount(0):
             Model._filtered_access('read')
@@ -180,10 +178,11 @@ class TestRules(TransactionCase):
         child = ChildModel.create([{'some_id': self.allowed.id}])
         self.env.flush_all()
 
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'Forbid 0 value',
             'model_id': self.env['ir.model']._get('test_access_right.some_obj').id,
-            'domain_force': str([('val', '!=', 0)]),
+            'operation': 'crud',
+            'domain': str([('val', '!=', 0)]),
         })
 
         user = self.env.ref('base.public_user')
@@ -201,10 +200,10 @@ class TestRules(TransactionCase):
     def test_domain_constrains(self):
         """ An error should be raised if domain is not correct """
 
-        rule = self.env['ir.rule'].create({
-            'name': 'Test record rule',
+        access = self.env['ir.access'].create({
+            'name': 'Test record access',
             'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
-            'domain_force': [],
+            'operation': 'crud',
         })
         invalid_domains = [
             'A really bad domain!',
@@ -214,7 +213,7 @@ class TestRules(TransactionCase):
 
         for domain in invalid_domains:
             with self.assertRaisesRegex(ValidationError, 'Invalid domain'):
-                rule.domain_force = domain
+                access.domain = domain
 
         valid_domains = [
             False,
@@ -223,9 +222,9 @@ class TestRules(TransactionCase):
         ]
         for domain in valid_domains:
             # no error is raised
-            rule.domain_force = domain
+            access.domain = domain
 
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_ir_rule_cache_after_error(self):
         NB_RECORD = 14  # At least twice 6, 6 is used by _make_access_error
         # copy the forbidden record 15 times

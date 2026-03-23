@@ -57,7 +57,7 @@ class QuotationDocument(models.Model):
         domain = super()._access_domain(operation)
         if domain.is_false():
             return domain
-        return self.env["ir.rule"]._compute_domain(self._name, operation, include_inherits=False)
+        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
 
     # === CONSTRAINT METHODS ===#
 

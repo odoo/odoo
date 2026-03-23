@@ -885,14 +885,15 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ],
             )
 
-        # group tasks with some ir.rule on users
+        # group tasks with some ir.access on users
         users_model = self.env['ir.model']._get(mario._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': users_model.id,
-            'domain_force': [('id', '=', mario.id)],
+            'operation': 'crud',
+            'domain': [('id', '=', mario.id)],
         })
-        # as demo user, ir.rule should apply
+        # as demo user, ir.access should apply
         tasks = tasks.with_user(self.base_user)
 
         # warming up various caches; this avoids extra queries
@@ -1187,6 +1188,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             FROM "test_read_group_related_inherits"
             JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
+            WHERE TRUE
             GROUP BY "test_read_group_related_inherits__base_id"."name"
             ORDER BY "test_read_group_related_inherits__base_id"."name" ASC
         """]):
@@ -1201,6 +1203,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             FROM "test_read_group_related_inherits"
             JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
+            WHERE TRUE
             GROUP BY "test_read_group_related_inherits__base_id"."name"
             ORDER BY "test_read_group_related_inherits__base_id"."name" ASC
         """]):
@@ -1220,6 +1223,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
             LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_inherits__base_id__foo_id"
                 ON ("test_read_group_related_inherits__base_id"."foo_id" = "test_read_group_related_inherits__base_id__foo_id"."id")
+            WHERE TRUE
             GROUP BY "test_read_group_related_inherits__base_id__foo_id"."name"
             ORDER BY "test_read_group_related_inherits__base_id__foo_id"."name" ASC
         """
@@ -1255,13 +1259,9 @@ class TestPrivateReadGroup(common.TransactionCase):
         field_info = RelatedFoo.fields_get(['bar_base_ids'], ['groupable'])
         self.assertTrue(field_info['bar_base_ids']['groupable'])
 
-        # With ir.rule on the comodel of the many2many
-        related_base_model = self.env['ir.model']._get('test_read_group.related_base')
-        self.env['ir.rule'].create({
-            'name': "Only The Lone Wanderer allowed",
-            'model_id': related_base_model.id,
-            'domain_force': str([('id', '=', 161)]),
-        })
+        # With access domain on the comodel of the many2many
+        access = self.env.ref('test_read_group.access_test_read_group_related_base_group_user')
+        access.domain = "[('id', '=', 161)]"
 
         # warmup
         RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
@@ -1372,10 +1372,11 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         # Test without sudo + ir_rules
         users_model = self.env['ir.model']._get(RelatedFoo._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': users_model.id,
-            'domain_force': [('id', 'in', foos[1:].ids)],
+            'operation': 'crud',
+            'domain': [('id', 'in', foos[1:].ids)],
         })
         RelatedBase = RelatedBase.with_user(self.base_user)
 
@@ -1483,10 +1484,11 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         # Test without sudo + ir_rules
         users_model = self.env['ir.model']._get(RelatedFoo._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': users_model.id,
-            'domain_force': [('id', 'in', foos[1:].ids)],
+            'operation': 'crud',
+            'domain': [('id', 'in', foos[1:].ids)],
         })
 
         # Warmup ormcache

@@ -16,7 +16,7 @@ from odoo.tools import mute_logger
 class TestEventSecurity(TestEventFullCommon):
 
     @users('user_employee')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_access')
     def test_event_access_employee(self):
         # Event: read ok
         event = self.test_event.with_user(self.env.user)
@@ -53,7 +53,7 @@ class TestEventSecurity(TestEventFullCommon):
             self.env['event.registration'].search([])
 
     @users('user_eventregistrationdesk')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_access')
     def test_event_access_event_registration(self):
         # Event: read ok
         event = self.test_event.with_user(self.env.user)
@@ -75,7 +75,7 @@ class TestEventSecurity(TestEventFullCommon):
             registration.unlink()
 
     @users('user_eventuser')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_access')
     def test_event_access_event_user(self):
         # Event
         event = self.test_event.with_user(self.env.user)
@@ -101,7 +101,7 @@ class TestEventSecurity(TestEventFullCommon):
             })
 
     @users('user_eventmanager')
-    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_access')
     def test_event_access_event_manager(self):
         # Event Type
         event_type = self.env['event.type'].create({

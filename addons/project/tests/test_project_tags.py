@@ -97,7 +97,7 @@ class TestProjectTagsSecurity(TestProjectCommon):
         (self.tag_project | self.tag_admin).with_user(self.user_projectmanager).write({"color": 1})
         (self.tag_project | self.tag_admin).with_user(self.user_projectmanager).unlink()
 
-    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule", "odoo.models.unlink")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models.unlink")
     def test_security(self):
         """Tests the access to `project.tags` for the different user groups"""
 

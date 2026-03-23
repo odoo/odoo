@@ -1442,15 +1442,13 @@ class TestEveryModel(TransactionCase):
                     model.onchange({}, [], fields_spec)
 
     def test_form_new_record(self):
-        allowed_models = set(self.env['ir.model.access']._get_allowed_models('create'))
-        allowed_models -= IGNORE_MODEL_NAMES_NEW_FORM
-
         for model_name, model in self.env.items():
             if (
                 model._abstract
                 or model._transient
                 or not model._auto
-                or model_name not in allowed_models
+                or model_name in IGNORE_MODEL_NAMES_NEW_FORM
+                or not self.env['ir.access']._get_groups_with_access(model_name, 'create')
             ):
                 continue
 
