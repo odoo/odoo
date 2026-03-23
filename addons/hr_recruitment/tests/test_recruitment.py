@@ -510,3 +510,17 @@ class TestRecruitment(MailCase, TransactionCase):
         applicant_get_refuse_reason._prepare_send_refusal_mails()
         mail = self.env['mail.mail'].search([('subject', '=', 'Application refused: Mario')], limit=1)
         self.assertEqual(mail.partner_ids, app_1.partner_id)
+
+    def test_create_and_get_alias_for_source(self):
+        """Test that create and get alias on a recruitment source."""
+        job = self.env['hr.job'].create({'name': 'Test Job'})
+        source = self.env['hr.recruitment.source'].create({
+            'job_id': job.id,
+        })
+
+        source.create_and_get_alias()
+        self.assertTrue(source.alias_id)
+        expected_alias_name = self.env['mail.alias']._sanitize_alias_name(
+            f"{source.job_id.name}+{source.source_id.name}"
+        )
+        self.assertEqual(source.alias_id.alias_name, expected_alias_name)
