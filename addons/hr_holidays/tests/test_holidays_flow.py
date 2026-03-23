@@ -11,6 +11,7 @@ from odoo import Command
 from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestHolidaysFlow(TestHrHolidaysCommon):
@@ -281,3 +282,34 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                         'request_date_from': date.today() + relativedelta(day=11),
                         'request_date_to': date.today() + relativedelta(day=10),
                     })
+
+    def test_manager_can_approve_from_leave_report_calendar(self):
+        """Check if an approval user that has not additional access rights for Time Off can approve a leave for an employee."""
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Manager Approval Time Off',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'manager',
+            'time_type': 'leave',
+        })
+
+        manager_user = mail_new_test_user(
+            self.env,
+            login='manager_no_timeoff',
+            groups='base.group_user',
+        )
+
+        self.employee_emp.leave_manager_id = manager_user
+
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Employee Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date.today() + relativedelta(days=1),
+            'request_date_to': date.today() + relativedelta(days=1),
+        })
+
+        leave_report = self.env['hr.leave.report.calendar'].with_user(manager_user).browse(leave.id)
+        self.assertEqual(leave.state, 'confirm')
+        leave_report.action_approve()
+        self.assertEqual(leave.state, 'validate')
