@@ -17,6 +17,7 @@ class TestLiveChatDigest(TestDigestCommon):
         super().setUpClass()
 
         other_partner = cls.env["res.partner"].create({"name": "Other Partner"})
+        cls.env["discuss.channel"].search([("channel_type", "=", "livechat")]).unlink()
         with (
             freeze_time(fields.Datetime.now() - datetime.timedelta(days=10)),
             patch.object(cls.env.cr, "_now", datetime.datetime.now() - datetime.timedelta(days=10)),
