@@ -245,8 +245,12 @@
                             <div class="o_configurator_typing_text ps-3 ps-xl-5 pt-3 mb-4">
                                 Set up your <b>style</b>
                             </div>
+                            <div>
+                                <button t-on-click="() => this.setFont('')">font 1</button>
+                                <button t-on-click="() => this.setFont('')">font 2</button>
+                            </div>
                         </div>
-                        <div class="d-flex gap-3 p-3 border-top bg-white flex-shrink-0 o_setup_style_screen_buttons">
+                        <div class="d-flex gap-3 p-3 bg-white flex-shrink-0 o_setup_style_screen_buttons">
                             <button type="button" class="btn btn-light btn-lg flex-fill" t-on-click="this.changeTheme">
                                 <i class="oi oi-chevron-left" role="img"/>
                                 Change Theme
@@ -258,7 +262,18 @@
                     </div>
                     <div class="col-7 col-xl-8 col-xxl-9 h-100 bg-100">
                         <div class="p-4 h-100">
-                            <div class="border rounded bg-white h-100"/>
+                            <div class="border rounded bg-white h-100 overflow-hidden position-relative">
+                                <iframe
+                                    class="w-100 h-100 border-0"
+                                    sandbox="allow-same-origin"
+                                    t-custom-ref="previewIframe"
+                                    t-on-load="this.onPreviewIframeLoad"
+                                    t-att-srcdoc="this.previewSrcdoc"
+                                />
+                                <div t-if="this.state.previewIsLoading" class="position-absolute top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center">
+                                    <div class="spinner-border text-primary" role="status"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
