@@ -135,7 +135,7 @@
                     <div>
                         <div t-if="company.vat" t-out="vatText"/>
                         <div t-if="company.phone">
-                            Tel: <t t-out="company.phone"/>
+                            Tel: <span dir="ltr"><t t-out="company.phone"/></span>
                         </div>
                         <div t-if="company.email" t-out="company.email"/>
                         <div t-if="company.website" t-out="company.website"/>
