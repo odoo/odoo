@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
@@ -27,10 +28,18 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /**
+ * @typedef {((translateEl: HTMLElement, spanEl: HTMLElement, attr: string) => void)[]} on_get_dirty_translations_handlers
  * @typedef {((editableEls: HTMLElement[]) => void)[]} on_nodes_marked_translatable_handlers
  */
 
-const TRANSLATED_ATTRS = ["placeholder", "title", "alt", "value"];
+const TRANSLATED_ATTRS = [
+    "placeholder",
+    "title",
+    "alt",
+    "value",
+    "data-oe-translate-src",
+    "data-oe-translate-srcset",
+];
 const TRANSLATION_ATTRIBUTES_SELECTOR = TRANSLATED_ATTRS.map(
     (att) => `[${att}*="data-oe-translation-source-sha="]`
 ).join(", ");
@@ -158,6 +167,9 @@ export class TranslationPlugin extends Plugin {
             if (ev.target.closest(".s_table_of_content_navbar_wrap")) {
                 message = _t("Translate header in the text. Menu is generated automatically.");
             }
+            if (ev.target.closest(".o_carousel_controllers")) {
+                return;
+            }
             this.notificationService.add(message, {
                 type: "info",
                 sticky: false,
@@ -177,6 +189,12 @@ export class TranslationPlugin extends Plugin {
             ".o_not_editable .o_savable, .o_not_editable .o_savable_attribute"
         );
         for (const savableInsideNotEditableEl of savableInsideNotEditableEls) {
+            if (
+                savableInsideNotEditableEl.matches(".o_editable_media") &&
+                shouldEditableMediaBeEditable(savableInsideNotEditableEl)
+            ) {
+                continue;
+            }
             this.addDomListener(savableInsideNotEditableEl, "click", showNotification);
         }
         // Keep the original values of elToTranslationInfoMap so that we know
@@ -212,7 +230,6 @@ export class TranslationPlugin extends Plugin {
     buildTranslationInfoMap(editableEls) {
         /** @type {ElToTranslationInfoMap} */
         this.elToTranslationInfoMap = new Map();
-        const translatedAttrs = ["placeholder", "title", "alt", "value"];
         const translationRegex =
             /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
@@ -232,7 +249,7 @@ export class TranslationPlugin extends Plugin {
             el.setAttribute("placeholder", match[2]);
         }
 
-        for (const translatedAttr of translatedAttrs) {
+        for (const translatedAttr of TRANSLATED_ATTRS) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>
                     editableEl.hasAttribute(translatedAttr) &&
@@ -243,9 +260,17 @@ export class TranslationPlugin extends Plugin {
             );
             for (const filteredEditableEl of filteredEditableEls) {
                 const translation = filteredEditableEl.getAttribute(translatedAttr);
-                this.setupTranslationMap(filteredEditableEl, translation, translatedAttr);
                 const match = translation.match(translationRegex);
-                filteredEditableEl.setAttribute(translatedAttr, match[2]);
+                if (translatedAttr.startsWith("data-oe-translate-")) {
+                    filteredEditableEl.removeAttribute(translatedAttr);
+                    const originalAttr = translatedAttr.split("data-oe-translate-")[1];
+                    // Use the original attribute in the translation map to make
+                    // it easier to update later.
+                    this.setupTranslationMap(filteredEditableEl, translation, originalAttr);
+                } else {
+                    this.setupTranslationMap(filteredEditableEl, translation, translatedAttr);
+                    filteredEditableEl.setAttribute(translatedAttr, match[2]);
+                }
                 if (translatedAttr === "value") {
                     filteredEditableEl.value = match[2];
                 }
@@ -415,6 +440,7 @@ export class TranslationPlugin extends Plugin {
                     const translation = spanEl.dataset.translation;
                     delete spanEl.dataset.translation;
                     spanEl.innerHTML = translation;
+                    this.trigger("on_get_dirty_translations_handlers", translateEl, spanEl, attr);
                     dirtyEls.push(spanEl);
                 }
             }

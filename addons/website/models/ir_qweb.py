@@ -9,6 +9,7 @@ from odoo.addons.website.tools import add_form_signature
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
+re_translate_span = re.compile(r'<span.+?data-oe-translation-source-sha.+?>(.+?)</span>')
 
 
 class IrQweb(models.AbstractModel):
@@ -48,6 +49,26 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    def _pre_processing_att(self, attrib):
+        self._copy_translate_attributes(attrib)
+        super()._pre_processing_att(attrib)
+
+    def _copy_translate_attributes(self, atts):
+        """
+        In translation mode, store `***.translate` attributes into a sibling
+        attribute `data-oe-translate-***`. This is necessary for attributes that
+        expect a value in a specific format (e.g. `src` which needs a URL) and
+        cannot keep the translation span (see `translate_func`) in the HTML
+        output. Other attributes can also take advantage of it.
+        """
+        if self.env.website and self.env.context.get('edit_translations'):
+            for att, value in list(atts.items()):
+                if att.endswith('.translate'):
+                    match = re.search(re_translate_span, value)
+                    if match:
+                        atts['data-oe-translate-{}'.format(att.removesuffix('.translate'))] = value
+                        atts[att] = match.group(1)
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):

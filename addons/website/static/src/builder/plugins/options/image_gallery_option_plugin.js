@@ -585,3 +585,5 @@ export class IndicatorsStyleClassAction extends ClassAction {
 }
 
 registry.category("website-plugins").add(ImageGalleryOptionPlugin.id, ImageGalleryOptionPlugin);
+// Add it to translation plugins for the thumbnails update.
+registry.category("translation-plugins").add(ImageGalleryOptionPlugin.id, ImageGalleryOptionPlugin);

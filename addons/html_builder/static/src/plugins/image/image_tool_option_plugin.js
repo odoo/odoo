@@ -18,6 +18,10 @@ import { setHrefUrl } from "../utils";
 
 const IMAGE_LINK_ALIGN_CLASSES = ["mx-auto", "ms-auto", "me-auto"];
 
+/**
+ * @typedef {(() => boolean)[]} should_optimize_image_predicates
+ */
+
 export class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
@@ -41,6 +45,7 @@ export class ImageToolOptionPlugin extends Plugin {
             SetNewWindowAction,
             AltAction,
         },
+        should_optimize_image_predicates: () => true, // default
         on_will_save_media_dialog_handlers: this.onWillSaveMediaDialogHandlers.bind(this),
         normalize_processors: this.migrateImages.bind(this),
     };
@@ -82,22 +87,25 @@ export class ImageToolOptionPlugin extends Plugin {
                 if (!imgInfo.originalSrc || !imgInfo.originalId) {
                     continue;
                 }
-                const isImgSupportedForProcessing = await isImageSupportedForProcessing(
-                    image,
-                    await getMimetype(image, imgInfo)
-                );
                 const newDataset = {};
-                if (isImgSupportedForProcessing) {
-                    newDataset.formatMimetype = this.config.defaultImageMimetype ?? "image/webp";
-                    const original = await loadImage(imgInfo.originalSrc);
-                    const maxWidth = image.dataset.width
-                        ? image.naturalWidth
-                        : original.naturalWidth;
-                    const optimizedWidth = Math.min(
-                        maxWidth,
-                        computeMaxDisplayWidth(node || this.editable)
+                if (this.checkPredicates("should_optimize_image_predicates")) {
+                    const isImgSupportedForProcessing = await isImageSupportedForProcessing(
+                        image,
+                        await getMimetype(image, imgInfo)
                     );
-                    newDataset.resizeWidth = optimizedWidth;
+                    if (isImgSupportedForProcessing) {
+                        newDataset.formatMimetype =
+                            this.config.defaultImageMimetype ?? "image/webp";
+                        const original = await loadImage(imgInfo.originalSrc);
+                        const maxWidth = image.dataset.width
+                            ? image.naturalWidth
+                            : original.naturalWidth;
+                        const optimizedWidth = Math.min(
+                            maxWidth,
+                            computeMaxDisplayWidth(node || this.editable)
+                        );
+                        newDataset.resizeWidth = optimizedWidth;
+                    }
                 }
                 const updateImageAttributes = await this.dependencies.imagePostProcess.processImage(
                     {
@@ -271,3 +279,4 @@ export class AltAction extends BuilderAction {
 }
 
 registry.category("builder-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
+registry.category("translation-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);

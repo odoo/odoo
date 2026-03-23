@@ -8,6 +8,10 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
     &, .oe_translated, &[data-oe-field="mega_menu_content"] *, .o_translation_state_inner_span {
         background-color: var(--text-translate-highlight-color) !important;
+
+        &:where(img) {
+            outline: 8px solid var(--text-translate-highlight-color) !important;
+        }
     }
 }
 

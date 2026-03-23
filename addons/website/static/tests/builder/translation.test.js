@@ -18,6 +18,22 @@ import { dummyBase64Img } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
+function getTranslateEditable({
+    inWrap,
+    oeId = "526",
+    sourceSha = "sourceSha",
+    containerEditable = true,
+}) {
+    return `
+        <main>
+            <div class="container s_allow_columns${containerEditable ? "" : " o_not_editable"}">
+                <p>
+                    <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="translate_branding">${inWrap}</span>
+                </p>
+            </div>
+        </main>`;
+}
+
 test("systray in translate mode", async () => {
     mockService("website", {
         get currentWebsite() {
@@ -221,7 +237,13 @@ test("translate attribute", async () => {
     onRpc("ir.ui.view", "save", ({ args }) => true);
     await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <img
+                src="/web/image/website.landscape_md_9"
+                class="img img-fluid mx-auto rounded"
+                data-oe-translate-src="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>/web/image/website.landscape_md_9</span>"
+                title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>"
+                loading="lazy"
+                style="">
         `,
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
@@ -237,7 +259,13 @@ test("translate attribute", async () => {
 test("translate attribute history", async () => {
     const { getEditor } = await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.landscape_md_9" class="img img-fluid" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <img
+                src="/web/image/website.landscape_md_9"
+                class="img img-fluid"
+                loading="lazy"
+                data-oe-translate-src="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>/web/image/website.landscape_md_9</span>"
+                title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>"
+                style="">
         `,
     });
     const wrapEl = getEditor().editable.querySelector("#wrap");
@@ -249,7 +277,7 @@ test("translate attribute history", async () => {
     const getImg = ({ titleName, translated }) =>
         `<img src="/web/image/website.landscape_md_9" class="img img-fluid o_savable_attribute o_translatable_attribute${
             translated ? " oe_translated" : ""
-        }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate"></img>`;
+        }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate">`;
     expect(wrapEl).toHaveInnerHTML(getImg({ titleName: "titre", translated: true }));
     await contains(".o-snippets-menu button.fa-undo").click();
     expect(wrapEl).toHaveInnerHTML(getImg({ titleName: "title", translated: false }));
@@ -799,7 +827,13 @@ test("it should be possible to translate the attribute of an image that has the 
     await setupSidebarBuilderForTranslation({
         websiteContent: `
             <div class="o_not_editable">
-                <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded o_editable_media" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+                <img
+                    src="/web/image/website.landscape_md_9"
+                    class="img img-fluid mx-auto rounded o_editable_media"
+                    loading="lazy"
+                    data-oe-translate-src="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>/web/image/website.landscape_md_9</span>"
+                    title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>"
+                    style="">
             <div/>
         `,
     });
@@ -857,18 +891,115 @@ test("sidebar should open even when translated elements fetch is slow", async ()
     expect(".o_builder_sidebar_open").toHaveCount(1);
 });
 
-function getTranslateEditable({
-    inWrap,
-    oeId = "526",
-    sourceSha = "sourceSha",
-    containerEditable = true,
-}) {
-    return `
-        <main>
-            <div class="container s_allow_columns${containerEditable ? "" : " o_not_editable"}">
-                <p>
-                    <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="translate_branding">${inWrap}</span>
-                </p>
-            </div>
-        </main>`;
-}
+describe("translate images", () => {
+    const baseImgHTML = `
+        <div>
+            <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded" loading="lazy"
+                srcset="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>/web/image/website.landscape_md_9 1234w</span>"
+                data-oe-translate-src="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>/web/image/website.landscape_md_9</span>"
+                title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>"
+                alt="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>alt</span>"
+                data-gl-filter="inkwell"
+                data-shape="html_builder/geometric/geo_shuriken"
+                data-shape-colors=";;;;"
+                data-resize-width="1234"
+                style="">
+        </div>`;
+
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 10,
+            name: "img1.jpeg",
+            mimetype: "image/jpeg",
+            description: false,
+            checksum: "fed1943c3afc3fc06513cb0bd47efe33ee093fb5",
+            url: false,
+            type: "binary",
+            res_id: 0,
+            res_model: "ir.ui.view",
+            public: true,
+            access_token: false,
+            image_src: "/web/image/10-fed1943c/img1.jpeg",
+            image_width: 1920,
+            image_height: 1280,
+            original_id: false,
+        },
+        {
+            id: 20,
+            name: "img2.jpeg",
+            mimetype: "image/jpeg",
+            description: false,
+            checksum: "cead14c69cd60b55c0193959a9d3ad701f58efe8",
+            url: false,
+            type: "binary",
+            res_id: 0,
+            res_model: "ir.ui.view",
+            public: true,
+            access_token: false,
+            image_src: "/web/image/20-cead14c6/img2.jpeg",
+            image_width: 1920,
+            image_height: 1281,
+            original_id: false,
+        },
+    ]);
+
+    test("translating an image keeps the alt and title attributes", async () => {
+        const { waitSidebarUpdated } = await setupSidebarBuilderForTranslation({
+            websiteContent: baseImgHTML,
+        });
+        await contains(".modal .btn:contains(Ok, never show me this again)").click();
+        await contains(":iframe img").click();
+        await waitSidebarUpdated();
+        await contains("[data-action-id='translateMediaSrc']").click();
+        await contains(".modal .o_existing_attachment_cell .o_button_area").click();
+        await waitSidebarUpdated();
+        expect("[data-action-id='translateAttribute'][data-action-param='alt'] input").toHaveValue(
+            "alt"
+        );
+        expect(
+            "[data-action-id='translateAttribute'][data-action-param='title'] input"
+        ).toHaveValue("title");
+    });
+
+    test("translating the alt and title, then translating an image keeps the translated alt and title", async () => {
+        const { waitSidebarUpdated } = await setupSidebarBuilderForTranslation({
+            websiteContent: baseImgHTML,
+        });
+        await contains(".modal .btn:contains(Ok, never show me this again)").click();
+        await contains(":iframe img").click();
+        await waitSidebarUpdated();
+        await contains("[data-action-id='translateAttribute'][data-action-param='alt'] input").edit(
+            "alt translated"
+        );
+        await contains(
+            "[data-action-id='translateAttribute'][data-action-param='title'] input"
+        ).edit("title translated");
+        await contains("[data-action-id='translateMediaSrc']").click();
+        await contains(".modal .o_existing_attachment_cell .o_button_area").click();
+        await waitSidebarUpdated();
+        expect("[data-action-id='translateAttribute'][data-action-param='alt'] input").toHaveValue(
+            "alt translated"
+        );
+        expect(
+            "[data-action-id='translateAttribute'][data-action-param='title'] input"
+        ).toHaveValue("title translated");
+    });
+
+    test("translating an image preserves the shape, filter and resize-width", async () => {
+        const { waitSidebarUpdated } = await setupSidebarBuilderForTranslation({
+            websiteContent: baseImgHTML,
+        });
+        await contains(".modal .btn:contains(Ok, never show me this again)").click();
+        await contains(":iframe img").click();
+        await waitSidebarUpdated();
+        await contains("[data-action-id='translateMediaSrc']").click();
+        await contains(".modal .o_existing_attachment_cell .o_button_area").click();
+        await waitSidebarUpdated();
+        expect(":iframe img.o_modified_image_to_save").toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_shuriken"
+        );
+        expect(":iframe img.o_modified_image_to_save").toHaveAttribute("data-gl-filter", "inkwell");
+        expect(":iframe img.o_modified_image_to_save").toHaveAttribute("data-resize-width", "1234");
+    });
+});

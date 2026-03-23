@@ -28,6 +28,13 @@ export const TRANSLATABLE_ATTRIBUTES = [
     },
 ];
 
+export const translatableAttributesSelectors = [
+    ".o_translatable_text",
+    `.o_translatable_attribute:where(${TRANSLATABLE_ATTRIBUTES.map(
+        (attr) => `[${attr.attribute}]`
+    ).join(",")})`,
+];
+
 export class AttributeTranslationPlugin extends Plugin {
     static id = "attributeTranslation";
 
@@ -35,7 +42,7 @@ export class AttributeTranslationPlugin extends Plugin {
     resources = {
         builder_actions: { TranslateAttributeAction },
         builder_options_render_context: {
-            translateAttributeOptionSelector: ".o_translatable_text, .o_translatable_attribute",
+            translateAttributeOptionSelector: translatableAttributesSelectors.join(", "),
         },
     };
 }

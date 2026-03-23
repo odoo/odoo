@@ -133,7 +133,7 @@ test("pasted/dropped images are converted to attachments on save in website edit
 
     onRpc("ir.ui.view", "save", ({ args }) => {
         expect.step("save");
-        expect(args[1]).toInclude('src="/test_image_url.png?access_token=1234"');
+        expect(args[1]).toInclude('src.translate="/test_image_url.png?access_token=1234"');
         return true;
     });
 
@@ -190,8 +190,8 @@ test("pasted/dropped images are converted to attachments on snippet save", async
 
     onRpc("ir.ui.view", "save", ({ args }) => {
         expect.step("save");
-        expect(args[1]).toInclude('src="/url_image-1.png?access_token=1234"');
-        expect(args[1]).toInclude('src="/url_image-2.png?access_token=1234"');
+        expect(args[1]).toInclude('src.translate="/url_image-1.png?access_token=1234"');
+        expect(args[1]).toInclude('src.translate="/url_image-2.png?access_token=1234"');
         return true;
     });
 

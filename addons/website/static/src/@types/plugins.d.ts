@@ -31,7 +31,7 @@ declare module "plugins" {
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
-    import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
+    import { on_get_dirty_translations_handlers, on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
@@ -77,6 +77,7 @@ declare module "plugins" {
         // Handlers
         on_content_manually_updated_handlers: on_content_manually_updated_handlers;
         on_dynamic_snippet_template_updated_handlers: on_dynamic_snippet_template_updated_handlers;
+        on_get_dirty_translations_handlers: on_get_dirty_translations_handlers;
         on_hover_animation_mode_cleaned_handlers: on_hover_animation_mode_cleaned_handlers;
         on_hover_animation_mode_applied_handlers: on_hover_animation_mode_applied_handlers;
         on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
