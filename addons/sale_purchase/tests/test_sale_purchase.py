@@ -484,3 +484,34 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(self.product.outgoing_qty, 0.0)
 
         self.product.is_storable = False  # revert to original state
+
+    def test_purchase_service_qty_increase_with_uom_conversion(self):
+        """Ensure that increasing the quantity of a service-to-purchase product
+        with different Sales UoM and Purchase UoM correctly computes the qty
+        in the Purchase Order.
+
+        Case:
+        - SO created with 1 dozen → PO = 12 units
+        - SO increased to 2 dozen → new PO should be 12 units
+        """
+        self.service_purchase_2.seller_ids.uom_id = self.env.ref('uom.product_uom_unit')
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.service_purchase_2.name,
+                    'product_id': self.service_purchase_2.id,
+                    'product_uom_qty': 1,
+                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                })
+            ],
+        })
+        so.action_confirm()
+        # Case 1: initial confirmation with 1 dozen
+        po_1 = so._get_purchase_orders()
+        self.assertEqual(po_1.order_line.product_qty, 12, "Initial PO should have 12 units (1 dozen  from SOL converted to PO uom)")
+        po_1.button_confirm()
+        # Case 2: increase SO quantity to 2 dozen
+        so.order_line.product_uom_qty = 2
+        po_2 = so._get_purchase_orders() - po_1
+        self.assertEqual(po_2.order_line.product_qty, 12, "The quantity on the SO line should be converted to the purchase UoM.")
