@@ -74,10 +74,9 @@ contract_costs AS (
         ve.fuel_type AS fuel_type,
         date(date_trunc('month', d)) AS date_start,
         vem.vehicle_type as vehicle_type,
-        (COALESCE(sum(co.amount), 0) + COALESCE(sum(cod.cost_generated * extract(day FROM least (date_trunc('month', d) + interval '1 month', cod.expiration_date) - greatest (date_trunc('month', d), cod.start_date))), 0) + COALESCE(sum(com.cost_generated), 0) + COALESCE(sum(coy.cost_generated), 0)) AS
-        COST,
+        COALESCE(cost_calc.total_cost, 0) AS cost,
         'contract' AS cost_type,
-        cot.cost_subtype_id AS service_type
+        cost_calc.cost_subtype_id AS service_type
     FROM
         fleet_vehicle ve
     JOIN
@@ -86,31 +85,36 @@ contract_costs AS (
             SELECT
                 min(acquisition_date)
                 FROM fleet_vehicle), CURRENT_DATE + '1 month'::interval, '1 month') d
-        LEFT JOIN fleet_vehicle_log_contract co ON co.vehicle_id = ve.id
-            AND date_trunc('month', co.date) = date_trunc('month', d)
-        LEFT JOIN fleet_vehicle_log_contract cod ON cod.vehicle_id = ve.id
-            AND date_trunc('month', cod.start_date) <= date_trunc('month', d)
-            AND date_trunc('month', cod.expiration_date) >= date_trunc('month', d)
-            AND cod.cost_frequency = 'daily'
-    LEFT JOIN fleet_vehicle_log_contract com ON com.vehicle_id = ve.id
-        AND date_trunc('month', com.start_date) <= date_trunc('month', d)
-        AND date_trunc('month', com.expiration_date) >= date_trunc('month', d)
-        AND com.cost_frequency = 'monthly'
-    LEFT JOIN fleet_vehicle_log_contract coy ON coy.vehicle_id = ve.id
-        AND d BETWEEN coy.start_date and coy.expiration_date
-        AND date_part('month', coy.date) = date_part('month', d)
-        AND coy.cost_frequency = 'yearly'
-    LEFT JOIN fleet_vehicle_log_contract cot ON cot.vehicle_id = ve.id
+    LEFT JOIN LATERAL (
+        SELECT
+            c.cost_subtype_id,
+            SUM(
+                (CASE WHEN date_trunc('month', c.date) = date_trunc('month', d)
+                      THEN COALESCE(c.amount, 0) ELSE 0 END) +
+                (CASE WHEN c.cost_frequency = 'daily'
+                           AND date_trunc('month', c.start_date) <= date_trunc('month', d)
+                           AND date_trunc('month', c.expiration_date) >= date_trunc('month', d)
+                      THEN c.cost_generated * extract(day FROM least(date_trunc('month', d) + interval '1 month', c.expiration_date) - greatest(date_trunc('month', d), c.start_date))
+                      ELSE 0 END) +
+                (CASE WHEN c.cost_frequency = 'monthly'
+                           AND date_trunc('month', c.start_date) <= date_trunc('month', d)
+                           AND date_trunc('month', c.expiration_date) >= date_trunc('month', d)
+                      THEN c.cost_generated
+                      ELSE 0 END) +
+                (CASE WHEN c.cost_frequency = 'yearly'
+                           AND d BETWEEN c.start_date AND c.expiration_date
+                           AND date_part('month', c.date) = date_part('month', d)
+                      THEN c.cost_generated
+                      ELSE 0 END)
+            ) AS total_cost
+        FROM
+            fleet_vehicle_log_contract c
+        WHERE
+            c.vehicle_id = ve.id
+        GROUP BY c.cost_subtype_id
+    ) cost_calc ON TRUE
     WHERE
         ve.active
-    GROUP BY
-        ve.id,
-        ve.company_id,
-        vem.vehicle_type,
-        ve.name,
-        date_start,
-        d,
-        service_type
     ORDER BY
         ve.id,
         date_start
