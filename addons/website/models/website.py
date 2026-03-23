@@ -694,6 +694,82 @@ class Website(models.CachedModel):
         return themes_suggested
 
     @api.model
+    def configurator_theme_preview_body(self, theme_name, install_theme=False):
+        """Build a simple body preview using a theme configurator homepage snippets."""
+        website = self.get_current_website()
+        if not theme_name:
+            return ''
+
+        Module = request.env['ir.module.module']
+        theme = Module.search(Domain.AND([Module.get_themes_domain(), [('name', '=', theme_name)]]), limit=1)
+        if not theme:
+            return ''
+
+        if install_theme and website.theme_id != theme:
+            theme.button_choose_theme()
+
+        snippet_list = website.get_theme_configurator_snippets(theme_name).get('homepage', [])
+        if not snippet_list:
+            return '<div class="oe_structure"></div>'
+
+        cta_data = website.get_cta_data(None, None)
+        IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
+        html_text_processor = self.env['website.html.text.processor']._with_processing_context(
+            IrQweb=IrQweb,
+            cta_data=cta_data,
+            text_generation_target_lang=website.default_lang_id.code,
+            text_must_be_translated_for_openai=False,
+        )
+        generated_content = {}
+        for snippet in snippet_list:
+            snippet_key = website._get_snippet_view_key(snippet, 'homepage')
+            html_text_processor, snippet_generated_content, _translated_content = html_text_processor._get_snippet_content(snippet_key)
+            generated_content.update(snippet_generated_content)
+
+        theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
+        rendered_snippets = []
+        nb_snippets = len(snippet_list)
+        for i, snippet in enumerate(snippet_list, start=1):
+            try:
+                snippet_key = website._get_snippet_view_key(snippet, 'homepage')
+                el = html_text_processor._update_snippet_content(generated_content, snippet_key)
+
+                # Add the data-snippet attribute to identify the snippet
+                # for compatibility code
+                el.attrib['data-snippet'] = snippet
+
+                # Theme specific customizations for non-website snippets
+                customizations = theme_customizations.get(snippet, {})
+
+                # Configure non-website snippet with defaults and theme-level customizations.
+                website._preconfigure_snippet(snippet, el, customizations)
+
+                # Remove the previews needed for the snippets dialog
+                dialog_preview_els = el.find_class('s_dialog_preview')
+                for preview_el in dialog_preview_els:
+                    preview_el.getparent().remove(preview_el)
+
+                # Tweak the shape of the first snippet to connect it
+                # properly with the header color in some themes
+                if i == 1:
+                    shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                    if shape_el:
+                        shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
+
+                # Tweak the shape of the last snippet to connect it
+                # properly with the footer color in some themes
+                if i == nb_snippets:
+                    shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                    if shape_el:
+                        shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+
+                rendered_snippets.append(html.tostring(el, encoding='unicode'))
+            except ValueError as e:
+                logger.warning(e)
+
+        return f'<div id="wrap" class="oe_structure">{"".join(rendered_snippets)}</div>'
+
+    @api.model
     def configurator_skip(self):
         website = self.get_current_website()
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
