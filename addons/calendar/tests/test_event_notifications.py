@@ -311,6 +311,52 @@ class TestEventNotifications(CalendarMailCommon):
                     'alarm_ids': [(4, alarm.id)]
                 })
 
+    def test_bus_notif_organizer(self):
+        """Test that Admin user receives bus alarm notifications."""
+        alarm = self.env['calendar.alarm'].create({
+            'name': "Alarm",
+            'alarm_type': "notification",
+            'interval': "minutes",
+            'duration': 30,
+        })
+        now = fields.Datetime.now()
+        admin_partner = self.user_admin.partner_id
+        event = self.env['calendar.event'].with_user(self.user_admin).with_context(no_mail_to_attendees=True).create({
+            'name': "Admin Meeting",
+            'start': now + relativedelta(minutes=50),
+            'stop': now + relativedelta(minutes=55),
+            'user_id': self.user_admin.id,
+            'partner_ids': [fields.Command.set(admin_partner.ids)],
+            'alarm_ids': [fields.Command.set([alarm.id])],
+        })
+        self._reset_bus()
+
+        def get_bus_params():
+            return (
+                [(self.env.cr.dbname, "res.partner", admin_partner.id)],
+                [
+                    {
+                        'type': "calendar.alarm",
+                        'payload': [
+                            {
+                                'alarm_id': alarm.id,
+                                'event_id': event.id,
+                                'title': "Admin Meeting",
+                                'message': event.display_time,
+                                'timer': 20 * 60,
+                                'notify_at': fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                            },
+                        ],
+                    },
+                ],
+            )
+
+        with freeze_time(now):
+            with self.assertBus(get_params=get_bus_params):
+                event.with_context(no_mail_to_attendees=True).write({
+                    'alarm_ids': [fields.Command.set([alarm.id])],
+                })
+
     def test_email_alarm(self):
         now = fields.Datetime.now()
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
