@@ -18,8 +18,8 @@
                 class="o-hb-rangeInput"
                 t-ref="inputRefRange"
                 t-att-class="className"
-                t-att-min="min"
-                t-att-max="max"
+                t-att-min="props.min"
+                t-att-max="props.max"
                 t-att-step="props.step"
                 t-att-value="inputValueRange"
                 t-on-change="onChangeRange"
@@ -39,8 +39,8 @@
             clampValue.bind="clampValue"
             onKeydown.bind="onKeydownNumber"
             selectTextOnFocus="true"
-            min="min"
-            max="max"
+            min="props.min"
+            max="props.max"
             step="props.step"
         >
             <span class="o-hb-input-field-unit" t-out="props.unit"/>

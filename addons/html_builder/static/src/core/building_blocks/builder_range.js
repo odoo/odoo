@@ -27,6 +27,7 @@ export class BuilderRange extends Component {
         saveUnit: { type: String, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
         withNumberInput: { type: Boolean, optional: true },
+        rangeClass: { type: String, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,
@@ -37,6 +38,7 @@ export class BuilderRange extends Component {
         displayRangeValue: false,
         applyWithUnit: true,
         withNumberInput: false,
+        rangeClass: "",
     };
     static components = { BuilderComponent, BuilderNumberInputBase };
 
@@ -98,9 +100,9 @@ export class BuilderRange extends Component {
         e.preventDefault();
         let value = parseFloat(e.target.value);
         if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-            value = Math.max(this.min, value - this.props.step);
+            value = Math.max(this.props.min, value - this.props.step);
         } else {
-            value = Math.min(this.max, value + this.props.step);
+            value = Math.min(this.props.max, value + this.props.step);
         }
         e.target.value = value;
         this.onInputRange(e);
@@ -130,16 +132,7 @@ export class BuilderRange extends Component {
     }
 
     get className() {
-        const baseClasses = "p-0 border-0";
-        return this.props.min > this.props.max ? `${baseClasses} o_we_inverted_range` : baseClasses;
-    }
-
-    get min() {
-        return this.props.min > this.props.max ? this.props.max : this.props.min;
-    }
-
-    get max() {
-        return this.props.min > this.props.max ? this.props.min : this.props.max;
+        return `p-0 border-0 ${this.props.rangeClass}`.trim();
     }
 
     get textInputBaseProps() {
