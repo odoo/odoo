@@ -317,6 +317,40 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, self.partner_be)
 
+    def test_import_partner_peppol_fields_2(self):
+        """ Test that UBL files missing the <cac:Contact> wrapper still correctly map partner info """
+        xml_content = '''<?xml version="1.0" encoding="UTF-8"?>
+            <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd">
+                <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+                <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0</cbc:CustomizationID>
+                <cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver2.0</cbc:ProfileID>
+                <cbc:ID>INV-1234</cbc:ID>
+                <cbc:IssueDate>2023-01-01</cbc:IssueDate>
+                <cac:AccountingCustomerParty>
+                    <cac:Party>
+                        <cac:PartyName>
+                            <cbc:Name>My Test Partner</cbc:Name>
+                        </cac:PartyName>
+                    </cac:Party>
+                </cac:AccountingCustomerParty>
+                <cac:LegalMonetaryTotal>
+                    <cbc:PayableAmount currencyID="USD">100.00</cbc:PayableAmount>
+                </cac:LegalMonetaryTotal>
+            </Invoice>
+        '''
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': xml_content,
+            'name': 'test_invoice.xml',
+        })
+        partner = self.env['res.partner'].create({
+            'name': "My Test Partner",
+            'email': "test@example.com",
+        })
+        # The partner should be retrieved based on the peppol fields
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertEqual(imported_invoice.partner_id, partner)
+
     def test_import_partner_postal_address(self):
         " Test importing postal address when creating new partner from UBL xml."
         file_path = "bis3_bill_example.xml"
@@ -1014,8 +1048,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             ("x_studio_peppol_accounting_cost", "char"),
             ("x_studio_peppol_project_reference_id", "char"),
             ("x_studio_peppol_order_reference_id", "char"),
-            ("x_studio_peppol_invoice_period_start_date", "date"),
-            ("x_studio_peppol_invoice_period_end_date", "date"),
         ]
 
         self.env["ir.model.fields"].create([{
@@ -1065,8 +1097,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'x_studio_peppol_accounting_cost': "88.5",
             'x_studio_peppol_project_reference_id': "project-1234",
             'x_studio_peppol_order_reference_id': "order-1234",
-            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
-            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
         })
 
         invoice.action_post()
@@ -1092,12 +1122,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
         self.assertEqual(order_reference_id.text, 'order-1234')
 
-        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
-        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
-
-        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
-        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
-
         order_line_reference_id = xml_tree.findall('.//cac:InvoiceLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
         self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
         self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
@@ -1116,8 +1140,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             ("x_studio_peppol_despatch_document_reference_id", "char"),
             ("x_studio_peppol_accounting_cost", "char"),
             ("x_studio_peppol_order_reference_id", "char"),
-            ("x_studio_peppol_invoice_period_start_date", "date"),
-            ("x_studio_peppol_invoice_period_end_date", "date"),
         ]
 
         self.env["ir.model.fields"].create([{
@@ -1165,8 +1187,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
             'x_studio_peppol_accounting_cost': "88.5",
             'x_studio_peppol_order_reference_id': "order-1234",
-            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
-            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
         })
 
         credit_note.action_post()
@@ -1188,12 +1208,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
         order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
         self.assertEqual(order_reference_id.text, 'order-1234')
-
-        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
-        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
-
-        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
-        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
 
         order_line_reference_id = xml_tree.findall('.//cac:CreditNoteLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
         self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')

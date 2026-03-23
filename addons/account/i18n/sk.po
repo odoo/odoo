@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-03-06 17:51+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-17 22:07+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/account/"
 "sk/>\n"
@@ -31,9 +31,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
-"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.16.1\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -87,6 +87,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Obráťte sa, prosím, na svojho správcu."
 
 #. module: account
 #. odoo-python
@@ -212,6 +214,16 @@ msgstr "%(name)s%(ref)s v hodnote %(currency_amount)s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
+"delivered at %(unit_price)s"
+msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s fakturované, %(qty_delivered)s "
+"dodané za %(unit_price)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
@@ -232,7 +244,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; cenový rozdiel pre %(product)s"
 
 #. module: account
 #. odoo-python
@@ -320,18 +332,6 @@ msgstr "'%(filename)s' (extrahované z '%(root_filename)s', type=%(type)s)"
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (typ=%(type)s)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
-msgstr "(*) Tovar dodaný ale nefakturovaný (priebežné oceňovanie)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
-msgstr "(*) Tovar fakturovaný, nedodaný (priebežné oceňovanie)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -1767,7 +1767,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19 250,00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2934,7 +2934,8 @@ msgstr "Výpis by mal obsahovať riadky len z toho istého denníka."
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
 msgid ""
 "A tag with the same name and applicability already exists in this country."
-msgstr "Štítok s rovnakým názvom a použiteľnosťou pre tuto krajinu už existuje."
+msgstr ""
+"Štítok s rovnakým názvom a použiteľnosťou pre tuto krajinu už existuje."
 
 #. module: account
 #. odoo-python
@@ -5096,7 +5097,7 @@ msgstr "Odoo banka"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Nastavenia banky"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5511,7 +5512,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel"
-msgstr "Zrušené"
+msgstr "Zrušiť"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6058,7 +6059,7 @@ msgstr "Štart prefixu kódu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
 msgid "Code Store"
-msgstr ""
+msgstr "Obchod s kódom"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9814,6 +9815,18 @@ msgstr "Dobrý dlžník"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Goods"
 msgstr "Tovar"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Delivered not Invoiced (perpetual valuation)"
+msgstr "Dodaný tovar, nefakturovaný (priebežné oceňovanie)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Invoiced not Delivered (perpetual valuation)"
+msgstr "Fakturovaný tovar, nedodaný (priebežné oceňovanie)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -18251,6 +18264,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Bankový účet vašej spoločnosti nie je dôveryhodný. Požiadajte správcu alebo "
+"osobu s oprávnením na schvaľovanie, aby ho skontrolovala."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18337,6 +18352,9 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Bankový účet spoločnosti (%(account_number)s) spojený s touto faktúrou nie "
+"je overený. Prejdite do nastavení banky, skontrolujte, či ide o váš účet, "
+"alebo opravte číslo, a kliknutím na tlačidlo „Poslať peniaze“ ho overte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18866,6 +18884,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"Naplánovaná akcia „Automatické odosielanie faktúr“ bola archivovaná. "
+"Hromadné odosielanie faktúr nebude možné."
 
 #. module: account
 #. odoo-python
@@ -19204,6 +19224,14 @@ msgid ""
 msgstr ""
 "Pri pokuse o pridanie banneru do pôvodného súboru PDF došlo k chybe.\n"
 "Uistite sa, že zdrojový súbor je platný."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19919,6 +19947,11 @@ msgid "Transfer to %s"
 msgstr "Prevod na %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+msgid "Translated Product Name"
+msgstr "Preložený názov produktu"
+
+#. module: account
 #: model:account.group,name:account.2_us_group_661
 msgid "Travel Expenses"
 msgstr "Cestovné výdavky"
@@ -20080,7 +20113,7 @@ msgstr "Jednotková cena:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "Jednotky"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20538,6 +20571,23 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Hodnota sumy v riadku odpisu zostatku\n"
+"    * Percento: Percento zostatku v rozmedzí od 0 do 100.\n"
+"    * Pevná suma: Pevná hodnota odpisu zostatku. Ak je suma záporná, bude sa "
+"považovať za debet, ak je kladná, za kredit.\n"
+"    * Z popisu: Nie je potrebný oddeľovač regex, stačí len regex. Napríklad "
+"ak chcete extrahovať sumu z\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"môžete zadať\n"
+"BRT: ([\\d,]+)\n"
+"    Ak je popisok „01870912 0009065 00115“ a potrebujete sumu v desatinnom\n"
+"    formáte (napr. 90,65), môžete použiť regulárny výraz so zachytávacími "
+"skupinami, napríklad:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    V tomto prípade:\n"
+"    • prvá skupina zachytáva celú časť\n"
+"    • druhá skupina zachytáva desatinnú časť (posledné dve číslice)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21194,6 +21244,7 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Nie je možné zmeniť výšku platby v prípade viacerých likvidných riadkov."
 
 #. module: account
 #. odoo-python
@@ -21461,6 +21512,12 @@ msgstr "Nemôžete pridať záznam do archivovaného denníka (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr "Nie je možné zaúčtovať záznam s archivovaným analytickým účtom: %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -21573,6 +21630,7 @@ msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové párovania."
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Nie je možné zmeniť typ dokumentu, ktorý už má pridelené poradové číslo."
 
 #. module: account
 #. odoo-python
@@ -22390,6 +22448,12 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selfbilling faktúra (Ref. {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+#~ msgstr "(*) Tovar dodaný ale nefakturovaný (priebežné oceňovanie)"
+
+#~ msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+#~ msgstr "(*) Tovar fakturovaný, nedodaný (priebežné oceňovanie)"
 
 #~ msgid ""
 #~ "Value for the amount of the writeoff line\n"

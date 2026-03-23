@@ -174,7 +174,8 @@ class SaleOrderLine(models.Model):
         for line in lines_by_timesheet:
             qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
-                line.qty_to_invoice = qty_to_invoice
+                units_to_invoice = sum(line.timesheet_ids.filtered(lambda ts: start_date <= ts.date <= end_date and not ts.timesheet_invoice_id).mapped('unit_amount'))
+                line.qty_to_invoice = units_to_invoice
             else:
                 prev_inv_status = line.invoice_status
                 line.qty_to_invoice = qty_to_invoice

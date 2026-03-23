@@ -705,7 +705,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(invoice_pdf_content.count('Product B'), 1)
         self.assertEqual(invoice_pdf_content.count('Product C'), 1)
 
-        for order_line in sale_order.order_line.filtered(lambda l: l.product_id == self.downpayment_product):
+        downpayment_lines = sale_order.order_line.filtered(lambda l: l.product_id == self.downpayment_product)
+        self.assertEqual(len(downpayment_lines), 3)
+        for order_line in downpayment_lines:
             order_line = order_line.with_context(lang=partner_test.lang)
             self.assertIn(format_date(order_line.env, order_line.order_id.date_order), order_line.name)
 

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4187,6 +4187,7 @@ msgstr "Ishlab chiqarish buyurtmasi"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -5591,7 +5592,6 @@ msgstr "Ishlab chiqarish kechikib boshlandi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 #, fuzzy
 msgid "Productions"
@@ -8330,17 +8330,6 @@ msgstr ""
 "raqami(lar)ni yaratishingiz kerak"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
-msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
-msgstr ""
-"Mahsulotlar uchun partiya/seriya raqamini taqdim etishingiz va ularni "
-"\"sarflashingiz\" kerak: %(missing_products)s"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 #, fuzzy
 msgid "You produced less than the initial demand"
@@ -8492,3 +8481,11 @@ msgstr "haqiqiy davomiylik"
 #, fuzzy
 msgid "split"
 msgstr "ajratish"
+
+#, fuzzy
+#~ msgid ""
+#~ "You need to supply Lot/Serial Number for products and 'consume' them: %"
+#~ "(missing_products)s"
+#~ msgstr ""
+#~ "Mahsulotlar uchun partiya/seriya raqamini taqdim etishingiz va ularni "
+#~ "\"sarflashingiz\" kerak: %(missing_products)s"
