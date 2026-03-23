@@ -934,3 +934,65 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         )
         self.assertEqual(results['value']['tax_totals']['base_amount'], 2000.0)
         self.assertEqual(results['value']['tax_totals']['total_amount'], 2600.0)
+
+    def test_imported_invoice_tax_preserved_on_analytic_change(self):
+        """
+        When a vendor bill is imported (is_imported=True on its lines), the tax amounts
+        may differ from what Odoo would compute (e.g. due to rounding at the source).
+        Changing only the analytic distribution in the UI triggers an onchange that
+        recomputes taxes, which must NOT alter the imported tax amounts.
+        """
+        tax_rep = self.percent_tax_1.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax')
+        move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'Imported line',
+                    'display_type': 'product',
+                    'price_unit': 82.64,
+                    'quantity': 1,
+                    'amount_currency': 82.64,
+                    'balance': 82.64,
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'tax_ids': [Command.set(self.percent_tax_1.ids)],
+                    'is_imported': True,
+                }),
+                Command.create({
+                    'name': 'Tax 21%',
+                    'display_type': 'tax',
+                    'amount_currency': 17.36,
+                    'balance': 17.36,
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'tax_repartition_line_id': tax_rep.id,
+                    'is_imported': True,
+                }),
+                Command.create({
+                    'display_type': 'payment_term',
+                    'amount_currency': -100.00,
+                    'balance': -100.00,
+                    'account_id': self.company_data['default_account_payable'].id,
+                }),
+            ],
+        })
+
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Test Plan'})
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Test Analytic',
+            'plan_id': analytic_plan.id,
+        })
+
+        # Simulate the frontend onchange when assigning analytic distribution
+        res = move.onchange(
+            {'invoice_line_ids': [
+                Command.update(move.invoice_line_ids[0].id, {
+                    'analytic_distribution': {str(analytic_account.id): 100},
+                }),
+            ]},
+            ['invoice_line_ids'],
+            {"invoice_line_ids": {}, "tax_totals": {}},
+        )
+
+        tax_totals = res.get('value', {}).get('tax_totals')
+        self.assertIsNone(tax_totals)

@@ -1640,7 +1640,19 @@ class AccountMove(models.Model):
             # The move is not stored yet so the only thing we have is the invoice lines.
             base_lines += self._prepare_epd_base_lines_for_taxes_computation_from_base_lines(base_amls)
             AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+            # For imported invoices, preserve origin tax lines to maintain rounding
+            origin_tax_lines = []
+            if self._origin.id and all(l.is_imported for l in base_amls):
+                origin_lines = self._origin.line_ids.filtered(lambda l: l.display_type == 'product')
+                if any(
+                    a.analytic_distribution != o.analytic_distribution
+                    for a, o in zip(base_amls, origin_lines)
+                ):
+                    origin_tax_amls = self._origin.line_ids.filtered('tax_repartition_line_id')
+                    origin_tax_lines = [self._prepare_tax_line_for_taxes_computation(tl) for tl in origin_tax_amls]
+
+            AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=origin_tax_lines)
+            tax_lines = origin_tax_lines
         return base_lines, tax_lines
 
     @api.depends_context('lang')
@@ -3030,6 +3042,15 @@ class AccountMove(models.Model):
                 # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
                 round_from_tax_lines = 'reapply_currency_rate'
             elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
+                if all(line.is_imported for line in changed_lines):
+                    if not any(
+                        field_has_changed(move_base_lines_values_before, line, field)
+                        for line in changed_lines
+                        if line in move_base_lines_values_before
+                        for field in move_base_lines_values_before[line]
+                        if field != 'analytic_distribution'
+                    ):
+                        continue
                 # A base line has been modified.
                 round_from_tax_lines = (
                     # The changed lines don't affect the taxes.
