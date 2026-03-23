@@ -20,3 +20,10 @@ class ResPartner(models.Model):
         action['context'] = ctx | json.loads(action['context'])
 
         return action
+
+    def action_view_mailing_contact(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action['views'] = [(False, 'form')]
+        action['res_id'] = self.mailing_contact_id.id
+
+        return action

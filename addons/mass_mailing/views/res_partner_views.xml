@@ -15,5 +15,23 @@
         </field>
     </record>
 
+    <record id="mass_mailing_view_mailing_contacts_form" model="ir.ui.view">
+        <field name="name">mass.mailing.view.mailing.contacts.form.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object"
+                        name="action_view_mailing_contact"
+                        icon="fa-paper-plane"
+                        groups="mass_mailing.group_mass_mailing_user"
+                        invisible="not mailing_contact_id">
+                        <field string="Mailing Contact" name="mailing_contact_id" widget="statinfo"/>
+                    </button>
+                </div>
+            </data>
+        </field>
+    </record>
 
 </odoo>
