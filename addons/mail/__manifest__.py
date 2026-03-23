@@ -182,6 +182,9 @@ For more specific needs, you may also assign custom-defined actions
             "mail/static/src/utils/common/format.js",
             "mail/static/src/utils/common/html.js",
         ],
+        "web.assets_web_print": [
+            "mail/static/src/scss/discuss_print.scss",
+        ],
         'mail.assets_discuss_public_test_tours': [
             'web/static/lib/hoot-dom/**/*',
             'web_tour/static/src/js/**/*',

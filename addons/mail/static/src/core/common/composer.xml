@@ -5,7 +5,7 @@
     <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
     <t t-set="partitionedActions" t-value="this.composerActions.partition"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
-    <div t-custom-ref="root">
+    <div class="d-print-none" t-custom-ref="root">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
                 t-att-class="{
                     'pb-2': this.extended and !this.props.composer.message,

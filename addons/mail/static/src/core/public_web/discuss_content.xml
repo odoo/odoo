@@ -45,7 +45,7 @@
                     </div>
                     <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.state.correspondentLocalDateTimeFormatted"/>
                 </div>
-                <div class="pe-3">
+                <div class="pe-3 d-print-none">
                     <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true"/>
                 </div>
                 <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
@@ -65,7 +65,7 @@
                             <Composer t-if="(this.thread.model !== 'mail.box' and !this.thread.channel?.composerHidden) or this.thread.composer.replyToMessage" t-key="this.thread.localId" composer="this.thread.composer" autofocus="true" onDiscardCallback="() => (this.thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.root" type="this.thread.composer.replyToMessage ? (this.thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                             <span t-if="this.thread.channel?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-out="this.thread.channel?.composerHiddenText"/>
                         </div>
-                        <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0" t-att-class="{ 'w-100': this.ui.isSmall }">
+                        <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall }">
                             <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
