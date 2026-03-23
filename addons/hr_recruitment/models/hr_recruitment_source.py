@@ -39,7 +39,7 @@ class HrRecruitmentSource(models.Model):
                 },
                 'alias_domain_id': source.job_id.company_id.alias_domain_id.id or self.env.company.alias_domain_id.id,
                 'alias_model_id': self.env['ir.model']._get_id('hr.applicant'),
-                'alias_name': f"{source.job_id.alias_name or source.job_id.name}+{source.name}",
+                'alias_name': f"{source.job_id.alias_name or source.job_id.name}+{source.source_id.name}",
                 'alias_parent_thread_id': source.job_id.id,
                 'alias_parent_model_id': self.env['ir.model']._get_id('hr.job'),
             }
