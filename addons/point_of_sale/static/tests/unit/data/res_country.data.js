@@ -14,6 +14,7 @@ export class ResCountry extends webModels.ResCountry {
             name: "United States",
             code: "US",
             vat_label: "TIN",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

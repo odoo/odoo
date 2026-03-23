@@ -2,30 +2,22 @@ import { PosData } from "@point_of_sale/app/services/data_service";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
-import { registerPythonTemplate } from "@point_of_sale/app/utils/convert_python_template";
 
 export const unpatchSelf = patch(PosData.prototype, {
     async loadInitialData() {
+        if (odoo.debug === "assets") {
+            window.performance.mark("pos_data_service_init");
+        }
         const configId = session.data.config_id;
-        const localData = await this.getCachedServerDataFromIndexedDB();
-        const partners = localData?.["res.partner"] || [];
-        await this.fetchReceiptTemplate();
         const data = await rpc(`/pos-self/data/${parseInt(configId)}`, {
             access_token: odoo.access_token,
         });
-        data["res.partner"] = partners;
-        return data;
-    },
-    async fetchReceiptTemplate() {
-        const configId = session.data.config_id;
-        const data = await rpc(`/pos-self/receipt-template/${parseInt(configId)}`);
-        for (const [name, string] of data) {
-            registerPythonTemplate(name, "", string);
-        }
-    },
-    async loadFieldsAndRelations() {
-        const configId = session.data.config_id;
-        return await rpc(`/pos-self/relations/${parseInt(configId)}`);
+        const params = this.getFieldsAndRelations(data);
+        await this.initIndexedDB(params);
+        const localData = await this.getCachedServerDataFromIndexedDB();
+        this.initFieldsAndRelations(params);
+        await this.syncInitialData(data, localData);
+        return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, value.records]));
     },
     get databaseName() {
         return `pos-self-order-${odoo.access_token}`;
@@ -38,6 +30,11 @@ export const unpatchSelf = patch(PosData.prototype, {
             ? super.initIndexedDB(...arguments)
             : true;
     },
+    async resetIndexedDB() {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.resetIndexedDB(...arguments)
+            : true;
+    },
     initListeners() {
         return session.data.self_ordering_mode === "mobile"
             ? super.initListeners(...arguments)
@@ -46,6 +43,11 @@ export const unpatchSelf = patch(PosData.prototype, {
     synchronizeLocalDataInIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? super.synchronizeLocalDataInIndexedDB(...arguments)
+            : true;
+    },
+    async synchronizeServerDataInIndexedDB(serverData = {}) {
+        return session.data.self_ordering_mode === "mobile"
+            ? super.synchronizeServerDataInIndexedDB(...arguments)
             : true;
     },
     async getCachedServerDataFromIndexedDB() {
@@ -57,6 +59,21 @@ export const unpatchSelf = patch(PosData.prototype, {
         return session.data.self_ordering_mode === "mobile"
             ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
+    },
+    async getCachedServerIdsFromIndexedDB(models = []) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.getCachedServerIdsFromIndexedDB(...arguments)
+            : {};
+    },
+    async cleanOldModels(localData, data) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.cleanOldModels(...arguments)
+            : true;
+    },
+    async cleanLocalData(data, localData) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.cleanLocalData(...arguments)
+            : true;
     },
     async missingRecursive(recordMap) {
         return recordMap;

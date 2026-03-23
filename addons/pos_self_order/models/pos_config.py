@@ -106,9 +106,8 @@ class PosConfig(models.Model):
             'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
             'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
             'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'has_paper',
-            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
-            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
-            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
+            'floor_ids', 'fiscal_position_ids', 'receipt_header', 'receipt_footer', 'current_session_id', 'pricelist_id',
+            'available_pricelist_ids', 'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant',
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
             'status', 'self_ordering_image_background_ids', 'preparation_printer_ids', 'default_receipt_printer_id',
@@ -298,52 +297,47 @@ class PosConfig(models.Model):
             'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze']
+            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze', 'ir.ui.view']
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return [('id', '=', config.id)]
+    def _load_pos_self_data_domain(self, data):
+        return [('id', '=', data['pos.config'].id)]
 
     @api.model
     def _load_pos_self_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        read_records = super()._load_pos_self_data_read(records, config)
         if not read_records:
             return read_records
         record = read_records[0]
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
-        record['_pos_special_products_ids'] = config._get_special_products().ids
         record['_self_order_pos'] = True
         return read_records
 
     def load_self_data(self):
-        response = {}
-        response['pos.config'] = self.env['pos.config']._load_pos_self_data_search_read(response, self)
+        metadata = self._load_self_metadata()
+        return self._read_pos_self_data_from_metadata(metadata, self)
 
-        for model in self._load_self_data_models():
-            try:
-                response[model] = self.env[model]._load_pos_self_data_search_read(response, self)
-            except AccessError:
-                response[model] = []
-
-        return response
-
-    def load_data_params(self):
-        response = {}
+    def _load_self_metadata(self):
+        models = self._load_self_data_models()
+        records = {}
         fields = self._load_pos_self_data_fields(self)
-        response['pos.config'] = {
+        domain = [('id', '=', self.id)]
+        records['pos.config'] = {
+            'domain': domain,
             'fields': fields,
-            'relations': self.env['pos.session']._load_pos_data_relations('pos.config', fields)
+            'records': self.search(domain, limit=1),
+            'relations': self._load_data_relations(fields),
         }
-
-        for model in self._load_self_data_models():
-            fields = self.env[model]._load_pos_self_data_fields(self)
-            response[model] = {
-                'fields': fields,
-                'relations': self.env['pos.session']._load_pos_data_relations(model, fields)
-            }
-
-        return response
+        for model in models:
+            try:
+                self.env[model]._load_pos_self_metadata(records, {})
+            except AccessError:
+                records[model] = {
+                    **self.env[model]._load_pos_data_domain_and_dependencies(records),
+                    'records': self.env[model],
+                }
+        return records
 
     def _compute_self_ordering_url(self):
         for record in self:
@@ -389,7 +383,7 @@ class PosConfig(models.Model):
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """
         self.ensure_one()
-        domain = self.payment_method_ids._load_pos_self_data_domain({}, self)
+        domain = self.payment_method_ids._load_pos_self_data_domain({'pos.config': self})
         return bool(self.payment_method_ids.filtered_domain(domain))
 
     @api.model

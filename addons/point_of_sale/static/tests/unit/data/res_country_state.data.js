@@ -13,6 +13,7 @@ export class ResCountryState extends models.ServerModel {
             name: "Armed Forces Europe",
             code: "AE",
             country_id: 233,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

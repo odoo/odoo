@@ -14,3 +14,4 @@ from . import test_self_order_controller
 from . import test_self_order_payment_method
 from . import test_takeaway_preset_mail
 from . import test_self_order_prices
+from . import test_self_order_data_loading

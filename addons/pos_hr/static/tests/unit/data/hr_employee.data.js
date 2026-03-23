@@ -17,12 +17,14 @@ export class HrEmployee extends models.ServerModel {
             name: "Administrator",
             user_id: 2,
             work_contact_id: 3,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
             name: "Employee1",
             user_id: 3,
             work_contact_id: 3,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 

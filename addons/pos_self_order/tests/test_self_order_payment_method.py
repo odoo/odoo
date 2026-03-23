@@ -24,17 +24,19 @@ class TestSelfOrderPaymentMethod(SelfOrderCommonTest):
     def test_self_order_kiosk_loads_terminal_payment_method(self):
         self.pos_config.write({"self_ordering_mode": "kiosk"})
 
-        payment_methods_to_load = self.pos_config.payment_method_ids._load_pos_self_data_search_read({}, self.pos_config)
+        data = self.pos_config.payment_method_ids._load_pos_self_metadata({'pos.config': {'records': self.pos_config}})
+        payment_methods_to_load = data['pos.payment.method']['records']
 
         self.assertEqual(len(payment_methods_to_load), 1)
-        self.assertEqual(payment_methods_to_load[0]["id"], self.terminal_payment_method.id)
+        self.assertEqual(payment_methods_to_load.id, self.terminal_payment_method.id)
         self.assertTrue(self.pos_config.has_valid_self_payment_method())
 
     def test_self_order_non_kiosk_does_not_load_payment_method(self):
         for ordering_mode in ["mobile", "consultation"]:
             self.pos_config.write({"self_ordering_mode": ordering_mode})
 
-            payment_methods_to_load = self.pos_config.payment_method_ids._load_pos_self_data_search_read({}, self.pos_config)
+            data = self.pos_config.payment_method_ids._load_pos_self_metadata({'pos.config': {'records': self.pos_config}})
+            payment_methods_to_load = data['pos.payment.method']['records']
 
             self.assertEqual(len(payment_methods_to_load), 0)
             self.assertFalse(self.pos_config.has_valid_self_payment_method())

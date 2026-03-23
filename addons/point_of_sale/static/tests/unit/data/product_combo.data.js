@@ -16,6 +16,10 @@ export class ProductCombo extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return ["product.combo.item"];
+    }
+
     _records = [
         {
             id: 1,
@@ -26,6 +30,7 @@ export class ProductCombo extends models.ServerModel {
             qty_free: 0,
             qty_max: 10,
             sequence: 0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -36,6 +41,7 @@ export class ProductCombo extends models.ServerModel {
             qty_free: 1,
             qty_max: 1,
             sequence: 1,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -46,6 +52,7 @@ export class ProductCombo extends models.ServerModel {
             qty_free: 1,
             qty_max: 3,
             sequence: 2,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -56,6 +63,7 @@ export class ProductCombo extends models.ServerModel {
             qty_free: 2,
             qty_max: 4,
             sequence: 3,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 5,
@@ -66,6 +74,7 @@ export class ProductCombo extends models.ServerModel {
             qty_free: 0,
             qty_max: 1,
             sequence: 4,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
@@ -76,6 +85,7 @@ export class ProductCombo extends models.ServerModel {
             qty_free: 0,
             qty_max: 5,
             sequence: 5,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

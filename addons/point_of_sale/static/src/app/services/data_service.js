@@ -11,6 +11,7 @@ import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registerPythonTemplate } from "../utils/convert_python_template";
 
 const { DateTime } = luxon;
@@ -49,7 +50,7 @@ export class PosData {
 
         this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
-        await this.intializeDataRelation();
+        await this.initializeDataRelation();
 
         browser.addEventListener("online", () => this.checkConnectivity());
         browser.addEventListener("offline", () => this.checkConnectivity());
@@ -90,13 +91,6 @@ export class PosData {
                     );
                 }
             }
-        }
-    }
-
-    async fetchReceiptTemplate() {
-        const data = await this.orm.call("pos.order", "get_receipt_template_for_pos_frontend");
-        for (const [name, string] of data) {
-            registerPythonTemplate(name, "", string);
         }
     }
 
@@ -298,94 +292,200 @@ export class PosData {
     async getCachedServerDataFromIndexedDB() {
         // Used to load models that have not yet been loaded into related_models.
         // These models have been sent to the indexedDB directly after the RPC load_data.
-        return await this.indexedDB.readAllExceptStores(Object.keys(this.opts.databaseTable));
+        const data = await this.indexedDB.readAll();
+        const results = {};
+
+        for (const name in data) {
+            results[name] = data[name];
+        }
+
+        return results;
+    }
+
+    async getCachedServerIdsFromIndexedDB(models = []) {
+        const allModels = this.indexedDB.dbStores.map((store) => store[1]);
+        const modelsToIgnore = allModels.filter((model) => !models.includes(model));
+        const data = await this.indexedDB.readAllExceptStores(modelsToIgnore);
+        const results = {};
+
+        for (const name in data) {
+            results[name] = data[name].reduce((acc, item) => {
+                if (typeof item.id === "number") {
+                    // deserializeDateTime(item.write_date) is precise to the second,
+                    // we can divide by 1000 without losing precision.
+                    // Timestamp in Python is giving timestamp in seconds,
+                    // we will thus compare both in seconds.
+                    const date = deserializeDateTime(item.write_date).ts / 1000 || 0; // seconds since epoch
+                    acc[item.id] = date;
+                }
+                return acc;
+            }, {});
+        }
+
+        return results;
+    }
+
+    initFieldsAndRelations(params) {
+        const modelClasses = {};
+        const fields = {};
+        const relations = {};
+        const dependencies = {};
+        for (const [model, values] of Object.entries(params)) {
+            dependencies[model] = values.dependencies;
+            relations[model] = values.relations;
+            fields[model] = values.fields;
+        }
+
+        for (const posModel of registry.category("pos_available_models").getAll()) {
+            const pythonModel = posModel.pythonModel;
+            const extraFields = posModel.extraFields || {};
+
+            modelClasses[pythonModel] = posModel;
+            relations[pythonModel] = {
+                ...relations[pythonModel],
+                ...extraFields,
+            };
+        }
+
+        const { models, baseData } = createRelatedModels(relations, modelClasses, this.opts);
+
+        this.baseData = baseData;
+        this.dependencies = dependencies;
+        this.fields = fields;
+        this.relations = relations;
+        this.models = models;
     }
 
     async loadInitialData() {
-        let localData = await this.getCachedServerDataFromIndexedDB();
+        // Here the order is important. We first init the indexedDB with stored params
+        // about the models loaded in the PoS. Then we load the data from the server
+        // and init the indexedDB with the new params. We then init the related models
+        // with the more up to date params we have. Finally, we write the data we have
+        // in the indexedDB.
+
+        let params = {};
+
+        if (odoo.debug === "assets") {
+            window.performance.mark("pos_data_service_init");
+        }
+
+        let localData = {};
+        let recordsWriteDate = {};
+        let data;
+
+        const key = `pos_data_params_${odoo.pos_config_id}`;
+        params = JSON.parse(localStorage.getItem(key));
+        if (params) {
+            await this.initIndexedDB(params);
+            localData = await this.getCachedServerDataFromIndexedDB();
+        }
         this.dataLoadedFromCache = true;
-        const session = localData?.["pos.session"]?.[0];
-        await this.fetchReceiptTemplate();
 
-        if (
-            (!this.network.offline && session?.state !== "opened") ||
-            session?.id !== odoo.pos_session_id ||
-            odoo.from_backend
-        ) {
-            try {
-                const limitedLoading = this.isLimitedLoading();
-                const serverDate = localData["pos.config"]?.[0]?._data_server_date;
-                const lastConfigChange = DateTime.fromSQL(odoo.last_data_change);
-                const serverDateTime = DateTime.fromSQL(serverDate);
-
-                if (serverDateTime < lastConfigChange) {
-                    await this.resetIndexedDB();
-                    await this.initIndexedDB(this.relations);
-                    localData = {};
+        try {
+            if (!this.network.offline) {
+                if (this.indexedDB) {
+                    recordsWriteDate = await this.getCachedServerIdsFromIndexedDB();
                 }
 
-                const data = await this.orm.call(
-                    "pos.session",
-                    "load_data",
-                    [odoo.pos_session_id, PosData.modelToLoad],
-                    {
-                        context: {
-                            pos_last_server_date: serverDateTime > lastConfigChange && serverDate,
-                            pos_limited_loading: limitedLoading,
-                        },
-                    }
-                );
-
-                const local_records_to_filter = {};
-                for (const model of this.opts.cleanupModels) {
-                    const local = localData[model] || [];
-                    if (local.length > 0) {
-                        local_records_to_filter[model] = local.map((r) => r.id);
-                    }
-                }
-
-                const data_to_remove = await this.orm.call("pos.session", "filter_local_data", [
+                const testLocalData = {
+                    models: Object.keys(recordsWriteDate),
+                    records: recordsWriteDate,
+                    search_params: {},
+                };
+                data = await this.orm.call("pos.session", "load_data", [
                     odoo.pos_session_id,
-                    local_records_to_filter,
+                    testLocalData,
                 ]);
-
-                for (const [model, values] of Object.entries(data)) {
-                    let local = localData[model] || [];
-
-                    if (this.opts.uniqueModels.includes(model) && values.length > 0) {
-                        this.indexedDB.delete(
-                            model,
-                            local.map((r) => r.id)
-                        );
-                        localData[model] = values;
-                    } else {
-                        if (data_to_remove[model] && data_to_remove[model].length > 0) {
-                            const remove_ids = data_to_remove[model];
-                            local = local.filter((r) => !remove_ids.includes(r.id));
-                            this.indexedDB.delete(model, remove_ids);
-                        }
-                        localData[model] = local.concat(values);
-                    }
-                }
-                this.dataLoadedFromCache = false;
-                this.synchronizeServerDataInIndexedDB(localData);
-            } catch (error) {
-                let message = _t("An error occurred while loading the Point of Sale: \n");
-                if (error instanceof RPCError) {
-                    message += error.data.message;
-                } else {
-                    message += error.message;
-                }
-                window.alert(message);
-                return localData;
+                params = this.getFieldsAndRelations(data);
+                localStorage.setItem(key, JSON.stringify(params));
+                await this.initIndexedDB(params);
+                this.dataLoadedFromCache = true;
             }
+        } catch (error) {
+            return this.handleLoadingDataError(error, localData);
+        } finally {
+            this.initFieldsAndRelations(params);
+        }
+
+        try {
+            await this.syncInitialData(data, localData);
+        } catch (error) {
+            return this.handleLoadingDataError(error, localData);
         }
 
         return localData;
     }
 
-    async initData(hard = false, limit = true) {
-        const data = await this.loadInitialData(hard, limit);
+    async syncInitialData(data, localData) {
+        for (const template of data["ir.ui.view"]["records"]) {
+            if (template._template) {
+                registerPythonTemplate(template.key, "", template._template);
+            }
+        }
+        await this.cleanLocalData(data, localData);
+        this.synchronizeServerDataInIndexedDB(localData);
+    }
+
+    async cleanOldModels(localData, data) {
+        // Remove data related to models previously loaded but not anymore.
+        // This can happen when uninstalling a module.
+        const allModelNames = Object.keys(data);
+        for (const [model, values] of Object.entries(localData)) {
+            if (!allModelNames.includes(model)) {
+                const idsToRemove = values.map((r) => r.id);
+                await this.indexedDB.delete(model, idsToRemove);
+                delete localData[model];
+            }
+        }
+    }
+
+    async cleanLocalData(data, localData) {
+        await this.cleanOldModels(localData, data);
+        for (const [model, values] of Object.entries(data)) {
+            let local = localData[model] || [];
+
+            if (this.opts.uniqueModels.includes(model) && values.records.length > 0) {
+                this.indexedDB.delete(
+                    model,
+                    local.map((r) => r.id)
+                );
+                localData[model] = values.records;
+            } else {
+                const dataToRemove = values.to_remove || [];
+                if (dataToRemove.length > 0) {
+                    local = local.filter((r) => !dataToRemove.includes(r.id));
+                    this.indexedDB.delete(model, dataToRemove);
+                }
+                localData[model] = local.concat(values.records);
+            }
+        }
+    }
+
+    handleLoadingDataError(error, localData) {
+        let message = _t("An error occurred while loading the Point of Sale: \n");
+        if (error instanceof RPCError) {
+            message += error.data.message;
+        } else {
+            message += error.message;
+        }
+        window.alert(message);
+        return localData;
+    }
+
+    getFieldsAndRelations(data) {
+        const response = {};
+        for (const [model, values] of Object.entries(data)) {
+            response[model] = {
+                dependencies: values.dependencies,
+                fields: values.fields,
+                relations: values.relations,
+            };
+        }
+        return response;
+    }
+
+    async initData() {
+        const data = await this.loadInitialData();
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];
 
@@ -408,59 +508,7 @@ export class PosData {
         }
     }
 
-    async loadFieldsAndRelations() {
-        const key = `pos_data_params_${odoo.pos_config_id}`;
-        if (this.network.offline) {
-            return JSON.parse(localStorage.getItem(key));
-        }
-
-        try {
-            const params = await this.orm.call("pos.session", "load_data_params", [
-                odoo.pos_session_id,
-            ]);
-            localStorage.setItem(key, JSON.stringify(params));
-            return params;
-        } catch {
-            return JSON.parse(localStorage.getItem(key));
-        }
-    }
-
-    async intializeDataRelation() {
-        // Here the order is important. loadFieldsAndRelations will load all the information
-        // about the models loaded in the PoS. Then initIndexedDB needs it to update/create
-        // the indexedDB. loadInitialData needs indexedDB, so it comes at the end.
-        const modelClasses = {};
-        const fields = {};
-        const relations = {};
-        const dataParams = await this.loadFieldsAndRelations();
-        await this.initIndexedDB(dataParams);
-
-        for (const [model, values] of Object.entries(dataParams)) {
-            relations[model] = values.relations;
-            fields[model] = values.fields;
-        }
-
-        for (const posModel of registry.category("pos_available_models").getAll()) {
-            const pythonModel = posModel.pythonModel;
-            const extraFields = posModel.extraFields || {};
-
-            modelClasses[pythonModel] = posModel;
-            relations[pythonModel] = {
-                ...relations[pythonModel],
-                ...extraFields,
-            };
-        }
-
-        const { models } = createRelatedModels(relations, modelClasses, this.opts);
-
-        this.fields = fields;
-        this.relations = relations;
-        this.models = models;
-
-        if (odoo.debug === "assets") {
-            window.performance.mark("pos_data_service_init");
-        }
-
+    async initializeDataRelation() {
         await this.initData();
         await this.getLocalDataFromIndexedDB();
         this.initListeners();
@@ -733,7 +781,7 @@ export class PosData {
             );
 
             for (const [, rel] of relations) {
-                if (this.opts.pohibitedAutoLoadedModels.includes(rel.relation)) {
+                if (this.opts.prohibitedAutoLoadedModels.includes(rel.relation)) {
                     continue;
                 }
 
@@ -766,7 +814,12 @@ export class PosData {
             }
         }
 
-        const newRecordMap = {};
+        const data = {
+            models: [],
+            records: {},
+            search_params: {},
+            only_records: true,
+        };
         for (const [model, ids] of Object.entries(missingRecords)) {
             if (!idsMap[model]) {
                 idsMap[model] = new Set(ids);
@@ -774,63 +827,92 @@ export class PosData {
                 idsMap[model] = idsMap[model] = new Set([...idsMap[model], ...ids]);
             }
 
-            try {
-                if (["product.product", "product.template"].includes(model)) {
-                    const domain = model === "product.product" ? "product_variant_ids.id" : "id";
-                    await this.loadProductFromPos([[domain, "in", Array.from(ids)]]);
-                    continue;
-                }
+            const models = this.getRelatedModels(model);
+            data.models.push(...models);
 
-                const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
-                    load: false,
-                });
-                newRecordMap[model] = data;
-            } catch {
-                newRecordMap[model] = [];
+            const domain = [["id", "in", Array.from(ids)]];
+            if (["product.product", "product.template"].includes(model)) {
+                if (model === "product.product") {
+                    data.search_params[model] = {
+                        domain: domain,
+                        context: { active_test: false },
+                    };
+                    data.search_params["product.template"] = {
+                        domain: [["product_variant_ids", "in", Array.from(ids)]],
+                        context: { active_test: false },
+                    };
+                } else {
+                    data.search_params[model] = {
+                        domain: domain,
+                        context: { active_test: false },
+                    };
+                    data.search_params["product.product"] = {
+                        domain: [["product_tmpl_id", "in", Array.from(ids)]],
+                        context: { active_test: false },
+                    };
+                }
+            } else {
+                data.search_params[model] = {
+                    domain: domain,
+                };
             }
         }
+        data.models = [...new Set(data.models)];
+        data.records = await this.getCachedServerIdsFromIndexedDB(data.models);
 
-        if (Object.keys(newRecordMap).length > 0) {
-            return await this.missingRecursive(newRecordMap, idsMap, acc);
-        } else {
-            return acc;
+        if (data.models.length > 0) {
+            await this.callRelated(
+                "pos.session",
+                "load_data",
+                [odoo.pos_session_id, data],
+                {},
+                true,
+                true
+            );
         }
+        return acc;
     }
 
-    async loadProductFromPos(domain, offset = 0, limit = 0) {
-        const result = {};
-        const data = await this.call(
-            "product.template",
-            "load_product_from_pos",
-            [odoo.pos_config_id, domain, offset, limit],
-            {
-                context: {
-                    load_archived: true,
-                },
+    async loadRecordsFromPos(
+        models,
+        domain = {},
+        offset = {},
+        limit = {},
+        context = {},
+        loadRelated = true
+    ) {
+        if (loadRelated) {
+            models = new Set(models);
+            for (const model of models) {
+                const related = this.getRelatedModels(model);
+                related.forEach((m) => models.add(m));
             }
+            models = [...models];
+        }
+        const localData = await this.getCachedServerIdsFromIndexedDB(models);
+        const search_params = {};
+        for (const model of models) {
+            search_params[model] = {
+                domain: domain[model] || false,
+                offset: offset[model] || 0,
+                limit: limit[model] || false,
+            };
+        }
+        const loadDataParams = {
+            models: Array.from(models),
+            records: localData,
+            search_params,
+            only_records: true,
+        };
+        return await this.callRelated(
+            "pos.session",
+            "load_data",
+            [odoo.pos_session_id, loadDataParams],
+            {
+                context,
+            },
+            false
         );
-
-        // In case of scan unknown barcode, the backend may return an empty list
-        this.synchronizeServerDataInIndexedDB(data);
-        if (!data["product.template"][0]) {
-            return this.models.loadConnectedData(data);
-        }
-
-        const categoryIds = data["product.template"][0].pos_categ_ids;
-        const loadedCategs = new Set(this.models["pos.category"].map((c) => c.id));
-        const notLoaded = categoryIds.filter((categId) => !loadedCategs.has(categId));
-        const config = this.models["pos.config"].get(odoo.pos_config_id);
-
-        if (notLoaded.length) {
-            result["pos.category"] = await this.read("pos.category", Array.from(notLoaded));
-        }
-
-        if (notLoaded.length && config.limit_categories) {
-            await this.read("pos.config", [config.id], ["iface_available_categ_ids"]);
-        }
-
-        const productData = this.models.loadConnectedData(data); // Need to be loaded after categories for indexes computations
-        return Object.assign(result, productData);
     }
 
     async syncData() {
@@ -1020,16 +1102,42 @@ export class PosData {
         return data;
     }
 
-    isLimitedLoading() {
-        const url = new URL(window.location.href);
-        const limitedLoading = url.searchParams.get("limited_loading") === "0" ? false : true;
-
-        if (!limitedLoading) {
-            url.searchParams.delete("limited_loading");
-            window.history.replaceState({}, "", url);
+    getRelatedModels(model) {
+        // The list of dependent models can be compare to a graph.
+        // We give it a node and it gives all nodes connected to it in the graph.
+        // We also add the independent nodes at the end as those should always be loaded
+        // if they change.
+        const graph = this.dependencies;
+        const adj = {};
+        for (const [model, dep_models] of Object.entries(graph)) {
+            if (!adj[model]) {
+                adj[model] = new Set();
+            }
+            for (const dep_model of dep_models) {
+                if (!adj[dep_model]) {
+                    adj[dep_model] = new Set();
+                }
+                adj[model].add(dep_model);
+                adj[dep_model].add(model);
+            }
         }
 
-        return limitedLoading;
+        const visited = new Set();
+        const stack = [model];
+
+        while (stack.length) {
+            const mod = stack.pop();
+            if (!visited.has(mod)) {
+                visited.add(mod);
+                (adj[mod] || []).forEach((dep_model) => {
+                    if (!visited.has(dep_model)) {
+                        stack.push(dep_model);
+                    }
+                });
+            }
+        }
+
+        return Array.from(visited);
     }
 
     isDataLoadedFromCache() {

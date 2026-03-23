@@ -16,6 +16,7 @@ export class RestaurantFloor extends models.ServerModel {
             table_ids: [2, 3, 4],
             sequence: 1,
             pos_config_ids: [1],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -23,6 +24,7 @@ export class RestaurantFloor extends models.ServerModel {
             table_ids: [14, 15, 16],
             sequence: 1,
             pos_config_ids: [1],
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

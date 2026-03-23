@@ -12,6 +12,7 @@ from . import test_point_of_sale
 from . import test_pos_controller
 from . import test_pos_invoice_consolidation
 from . import test_pos_cash_rounding
+from . import test_pos_data_loading
 from . import test_pos_setup
 from . import test_pos_simple_orders
 from . import test_pos_simple_invoiced_orders

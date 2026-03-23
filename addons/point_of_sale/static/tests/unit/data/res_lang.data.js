@@ -14,6 +14,7 @@ export class ResLang extends models.ServerModel {
             code: "en_US",
             flag_image_url: "/base/static/img/country_flags/us.png",
             display_name: "English (US)",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

@@ -5,6 +5,13 @@ patch(ProductProduct.prototype, {
     _load_pos_data_fields() {
         return [...super._load_pos_data_fields(), "self_order_available"];
     },
+
+    _load_pos_self_data_read(records) {
+        for (const record of records) {
+            record._is_pos_special_product = record.id == 1; // TIP product is the only special product in tests
+        }
+        return records;
+    },
 });
 
 ProductProduct._records = [

@@ -32,8 +32,8 @@ class PosPaymentMethod(models.Model):
     ], 'QFPay Payment Type', copy=False)
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['qfpay_terminal_ip_address', 'qfpay_payment_type']
         return params
 

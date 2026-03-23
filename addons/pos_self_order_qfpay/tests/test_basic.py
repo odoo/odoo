@@ -40,7 +40,7 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
 
     def test_kiosk_qfpay(self):
         res = self.pos_config.load_self_data()
-        pm = res.get('pos.payment.method', [])
+        pm = res.get('pos.payment.method', {}).get('records', [])
         self.assertEqual(len(pm), 1, 'Only one payment method should be loaded')
         self.assertEqual(pm[0]['name'], 'Qfpay', 'The loaded payment method should be Qfpay')
 

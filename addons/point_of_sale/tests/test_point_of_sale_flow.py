@@ -1069,9 +1069,9 @@ class TestPointOfSaleFlow(CommonPosTest):
             'use_pricelist': False,
         })
         self.pos_config_usd.open_ui()
-        loaded_data = self.pos_config_usd.current_session_id.load_data([])
+        loaded_data = self.pos_config_usd.current_session_id.load_data({'only_records': False})
 
-        self.assertFalse(loaded_data['pos.config'][0]['pricelist_id'], False)
+        self.assertFalse(loaded_data['pos.config']['records'][0]['pricelist_id'], False)
 
     def test_refund_rounding_backend(self):
         self.account_cash_rounding_up.rounding = 5.0
@@ -2212,7 +2212,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'state': 'draft',
         } for product in (self.product_a, self.product_b)])
 
-        data = current_session.with_context(pos_limited_loading=True).load_data([])
+        data = current_session.with_context(pos_limited_loading=True).load_data({'only_records': True})
         loaded_product_ids = [p['id'] for p in data['product.product']]
         self.assertIn(self.product_a.id, loaded_product_ids)
         self.assertIn(self.product_b.id, loaded_product_ids)

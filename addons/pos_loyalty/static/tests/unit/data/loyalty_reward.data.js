@@ -51,6 +51,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -73,6 +74,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
