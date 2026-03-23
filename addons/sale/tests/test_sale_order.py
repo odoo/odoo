@@ -288,6 +288,48 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(so2.order_line.product_packaging_id, company2_pack_of_10)
         self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
 
+    def test_compute_packaging_02(self):
+        """Create a SO and use packaging. Check product_qty and product_packaging
+        are correctly calculated when packaging_qty is manually changed.
+        """
+        # Required for `product_packaging_qty` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
+        packaging_one, packaging_four = self.env['product.packaging'].create([{
+            'name': "One pack",
+            'product_id': self.product.id,
+            'qty': 1.0,
+        }, {
+            'name': "Four pack",
+            'product_id': self.product.id,
+            'qty': 4.0,
+        }])
+
+        so = self.empty_order
+        so_form = Form(so)
+        with so_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 1.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_one)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 4.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_uom_qty, 4.0)
+        self.assertEqual(so.order_line.product_packaging_id, packaging_one)
+
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 5.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_one)
+        self.assertEqual(so.order_line.product_packaging_qty, 5.0)
+
+        with so_form.order_line.edit(0) as line:
+            line.product_uom_qty = 4.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_four)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""
         return self.env['sale.order'].with_context(
