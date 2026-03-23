@@ -14,16 +14,6 @@
         </div>
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
-                <!-- contact address -->
-                <div t-if="order.company?.name" t-esc="order.company.name" />
-                <t t-if="order.company.phone">
-                    <div>Tel:<span dir="ltr"><t t-esc="order.company.phone" /></span></div>
-                </t>
-                <t t-if="order.company.vat">
-                    <div t-esc="vatText"/>
-                </t>
-                <div t-if="order.company.email" t-esc="order.company.email" />
-                <div t-if="order.company.website" t-esc="order.company.website" />
                 <div t-if="order.config.receipt_header" style="white-space:pre-line" t-esc="order.config.receipt_header" />
                 <div t-if="order?.getCashierName()" class="cashier">
                     <div>Served by: <t t-esc="order.getCashierName()" /></div>
