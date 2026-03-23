@@ -72,8 +72,16 @@
                                             data-tooltip-template="web.FieldTooltip"
                                             t-att-data-tooltip-info="this.getTooltipDetails(column.fieldInfo)"
                                         ></i>
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
                                         <span class="ms-1 ps-4">
                                             <t t-out="column.fieldInfo.label" />
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+                                        <span class="ps-5">
+                                            <t t-esc="column.fieldInfo.label" />
+=======
+                                        <span class="ms-1 ps-4">
+                                            <t t-esc="column.fieldInfo.label" />
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
                                         </span>
                                     </t>
                                     <span t-else="" class="text-warning">To import, select a field...</span>

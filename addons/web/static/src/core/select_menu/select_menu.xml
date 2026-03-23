@@ -10,6 +10,7 @@
         <input
             type="text"
             t-attf-class="o_input {{inputClass}}"
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
             t-custom-ref="inputRef"
             t-on-input="this.debouncedOnInput"
             t-on-focus="this.onInputFocus"
@@ -21,6 +22,31 @@
             t-att-disabled="this.props.disabled"
             t-on-click="this.onInputClick"
             t-on-keydown="this.onKeyDown"
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+            t-ref="inputRef"
+            t-on-input="debouncedOnInput"
+            t-on-focus="onInputFocus"
+            t-on-blur="onInputBlur"
+            t-att-placeholder="placeholderValue"
+            t-att-value="displayValue"
+            t-att-id="props.id"
+            t-att-name="props.name"
+            t-att-disabled="props.disabled"
+            t-on-click="onInputClick"
+            t-on-keydown="onKeyDown"
+=======
+            t-ref="inputRef"
+            t-on-input="debouncedOnInput"
+            t-on-focus="onInputFocus"
+            t-on-blur="onInputBlur"
+            t-att-placeholder="this.placeholderValue"
+            t-att-value="displayValue"
+            t-att-id="props.id"
+            t-att-name="props.name"
+            t-att-disabled="props.disabled"
+            t-on-click="onInputClick"
+            t-on-keydown="onKeyDown"
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
             autocomplete="selectMenuAutocompleteOff"
             autocorrect="off"
             spellcheck="false"
@@ -62,17 +88,42 @@
                     </button>
                 </t>
                 <t t-set-slot="content">
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
                     <button t-if="this.isBottomSheet and this.canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="this.onInputClear">Clear</button>
                     <div class="o_select_menu_searchbox d-empty-none ps-2" t-att-data-id="this.selectMenuId">
                         <t t-if="this.displayInputInDropdown">
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+                    <button t-if="isBottomSheet and canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="onInputClear">Clear</button>
+                    <div class="o_select_menu_searchbox position-sticky start-0 d-empty-none" t-att-data-id="selectMenuId">
+                        <t t-if="displayInputInDropdown">
+=======
+                    <button t-if="isBottomSheet and canDeselect" class="btn o_clear_button px-4 d-block ms-auto" t-on-click="onInputClear">Clear</button>
+                    <div class="o_select_menu_searchbox d-empty-none ps-2" t-att-data-id="selectMenuId">
+                        <t t-if="displayInputInDropdown">
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
                             <t t-set="inputClass" t-value="'o_select_menu_input dropdown-item'"/>
                             <t t-call="web.SelectMenu.search" />
                         </t>
                     </div>
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
                     <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-ref="choicesRef">
                         <t t-if="this.state.choices.length === 0">
                             <p class="text-muted fst-italic mx-4 my-1">No results</p>
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+                    <t t-if="state.choices.length === 0">
+                        <p class="text-muted fst-italic mx-4 my-1">No results</p>
+                    </t>
+                    <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
+                        <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                            <t t-set="choice" t-value="choice" />
+                            <t t-set="choice_index" t-value="choice_index" />
+=======
+                    <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-ref="choicesRef">
+                        <t t-if="state.choices.length === 0">
+                            <p class="text-muted fst-italic mx-4 my-1">No results</p>
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
                         </t>
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
                         <t t-foreach="this.state.displayedOptions" t-as="choice" t-key="choice_index">
                             <t t-call="{{ this.constructor.choiceItemTemplate }}">
                                 <t t-set="choice" t-value="choice" />
@@ -81,6 +132,19 @@
                         </t>
                         <t t-if="this.props.slots and this.props.slots.bottomArea" t-slot="bottomArea" data="this.state"/>
                     </div>
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+                    </t>
+                    <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
+=======
+                        <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
+                            <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                                <t t-set="choice" t-value="choice" />
+                                <t t-set="choice_index" t-value="choice_index" />
+                            </t>
+                        </t>
+                        <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
+                    </div>
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
                 </t>
             </Dropdown>
         </div>

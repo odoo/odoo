@@ -1,3 +1,4 @@
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
 import {
     animationFrame,
     expect,
@@ -7,6 +8,22 @@ import {
     test,
 } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+import { animationFrame, expect, runAllTimers, test } from "@odoo/hoot";
+import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
+=======
+import { animationFrame, expect, runAllTimers, test } from "@odoo/hoot";
+import {
+    click,
+    edit,
+    press,
+    queryAllTexts,
+    queryOne,
+    queryAll,
+    pointerDown,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
 import { Component, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -1371,6 +1388,7 @@ test("Disabled choice", async () => {
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["Hello", "World"]);
     expect(".o_select_menu_item:eq(0)").toHaveClass("text-muted");
 });
+<<<<<<< 6f5fa0b9a6e061f551609eb9228276d8976b87e8
 
 test.tags("desktop");
 test("prevent glitch on open or focusout", async () => {
@@ -1415,3 +1433,50 @@ test("prevent glitch on open or focusout", async () => {
     expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
     expect(searchInput.placeholder).toBe("searchPlaceholder");
 });
+||||||| 433d6e730638759537d0f781542300cf8bc8c304
+=======
+
+test.tags("desktop");
+test("prevent glitch on open or focusout", async () => {
+    const slots = `
+        <t t-set-slot="default">
+            <button class="custom_button">Open</button>
+        </t>
+    `;
+    class Wrapper extends Component {
+        static components = { SelectMenu };
+        static props = ["*"];
+        static template = xml`
+            <SelectMenu t-props="props">${slots}</SelectMenu>`;
+    }
+    await mountSingleApp(Wrapper, {
+        choices: [
+            {
+                label: "C1",
+                value: "C1",
+            },
+        ],
+        placeholder: "placeholder",
+        searchPlaceholder: "searchPlaceholder",
+    });
+
+    await contains(".custom_button").click();
+    const searchInput = queryOne(".o_select_menu_searchbox input");
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+    expect(document.activeElement).toBe(searchInput);
+    await contains(".o_select_menu_searchbox input").click();
+
+    await pointerDown(searchInput);
+    await animationFrame();
+    manuallyDispatchProgrammaticEvent(searchInput, "focus");
+    await animationFrame();
+    expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+
+    pointerDown(".custom_button");
+    await animationFrame();
+
+    expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+});
+>>>>>>> c659c4ac2c3a934815bbfa516ef91c879b064c4b
