@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
@@ -20,10 +19,6 @@ from odoo.tools.cache import get_cache_key_counter
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-def registry():
-    return Registry(common.get_db_name())
-
-
 class TestOrmCache(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -32,13 +27,6 @@ class TestOrmCache(TransactionCase):
             raise AssertionError('Registry should not be invalidated when starting this test')
         if cls.registry.cache_invalidated:
             raise AssertionError('Cache should not be invalidated when starting this test')
-
-        # this test verifies the actual side effects of signaling changes
-        cls._signal_changes_patcher.stop()
-        # if something invalidate the cache or registry before test_signaling_01_multiple,
-        # the test may fail the first time but succeed on retry
-        # disabling autoretry to avoid hidding "real" errrors
-        cls._retry = False
 
     def test_ormcache(self):
         """ Test the effectiveness of the ormcache() decorator. """
@@ -91,6 +79,57 @@ class TestOrmCache(TransactionCase):
         self.assertEqual(self.env.registry.cache_invalidated, {'assets'})
         self.env.registry.reset_changes()
         self.assertEqual(self.env.registry.cache_invalidated, set())
+
+    def test_signaling_gc(self):
+        cr = self.env.cr
+        cr.execute('SELECT last_value FROM orm_signaling_registry_id_seq')
+        sequence_start = cr.fetchone()[0]
+
+        def assertSignalCount(expected_count, expected_max_id, message):
+            cr.execute("SELECT count(*), max(id) FROM orm_signaling_registry")
+            count, max_id = cr.fetchone()
+            self.assertEqual(expected_count, count, message)
+            self.assertEqual(expected_max_id, max_id - sequence_start, message)
+
+        cr.execute('DELETE FROM orm_signaling_registry')
+
+        for _ in range(7):
+            cr.execute("INSERT INTO orm_signaling_registry (date) VALUES (NOW() - interval '2 hours')")
+
+        cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
+
+        assertSignalCount(8, 8, "8 signals were inserted")
+        self.env['ir.autovacuum']._gc_orm_signaling()
+        assertSignalCount(8, 8, "less than 10 signals, no deletion")
+
+        for _ in range(5):
+            cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
+
+        assertSignalCount(13, 13, "5 more signals were inserted")
+        self.env['ir.autovacuum']._gc_orm_signaling()
+        assertSignalCount(10, 13, "more than 10 signals, some should have been deleted")
+
+        for _ in range(7):
+            cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
+
+        assertSignalCount(17, 20, "7 more signals were inserted")
+        self.env['ir.autovacuum']._gc_orm_signaling()
+        assertSignalCount(13, 20, "Keeping the 13 signals having less than one hour")
+
+        # reset sequence to avoid side effects
+        cr.execute(f"SELECT setval('orm_signaling_registry_id_seq', {sequence_start})")
+
+
+class TestOrmCacheSignaling(BaseCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # do not retry, these tests must always succeed the first time and avoid
+        # an autoretry hidding errors
+        cls._retry = False
+        cls.registry = Registry(common.get_db_name())
+        if cls.registry.registry_invalidated:
+            raise AssertionError('Registry should not be invalidated when starting this test')
 
     def test_signaling_01_single(self):
         self.assertFalse(self._registry_patched)
@@ -167,54 +206,19 @@ class TestOrmCache(TransactionCase):
             ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
         )
 
-    def test_signaling_gc(self):
-        cr = self.env.cr
-        cr.execute('SELECT last_value FROM orm_signaling_registry_id_seq')
-        sequence_start = cr.fetchone()[0]
-
-        def assertSignalCount(expected_count, expected_max_id, message):
-            cr.execute("SELECT count(*), max(id) FROM orm_signaling_registry")
-            count, max_id = cr.fetchone()
-            self.assertEqual(expected_count, count, message)
-            self.assertEqual(expected_max_id, max_id-sequence_start, message)     
-
-        cr.execute('DELETE FROM orm_signaling_registry')
-    
-        for _ in range (7):
-            cr.execute("INSERT INTO orm_signaling_registry (date) VALUES (NOW() - interval '2 hours')")
-
-        cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
-
-        assertSignalCount(8, 8, "8 signals were inserted")
-        self.env['ir.autovacuum']._gc_orm_signaling()
-        assertSignalCount(8, 8, "less than 10 signals, no deletion")
-
-        for _ in range (5):
-            cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
-
-        assertSignalCount(13, 13, "5 more signals were inserted")
-        self.env['ir.autovacuum']._gc_orm_signaling()
-        assertSignalCount(10, 13, "more than 10 signals, some should have been deleted")
-
-        for _ in range (7):
-            cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
-
-        assertSignalCount(17, 20, "7 more signals were inserted")
-        self.env['ir.autovacuum']._gc_orm_signaling()
-        assertSignalCount(13, 20, "Keeping the 13 signals having less than one hour")
-
-        # reset sequence to avoid side effects
-        cr.execute(f"SELECT setval('orm_signaling_registry_id_seq', {sequence_start})")
-
 
 @tagged('at_install', '-post_install')
 class TestRealCursor(BaseCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.registry = Registry(common.get_db_name())
 
     def test_execute_bad_params(self):
         """
         Try to use iterable but non-list or int params in query parameters.
         """
-        with registry().cursor() as cr:
+        with self.cursor() as cr:
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE login=%s", 'admin')
             with self.assertRaises(ValueError):
@@ -223,29 +227,28 @@ class TestRealCursor(BaseCase):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
 
     def test_using_closed_cursor(self):
-        with registry().cursor() as cr:
+        with self.cursor() as cr:
             cr.close()
             with self.assertRaises(psycopg2.InterfaceError):
                 cr.execute("SELECT 1")
 
     def test_multiple_close_call_cursor(self):
-        cr = registry().cursor()
+        cr = self.cursor()
         cr.close()
         cr.close()
 
     def test_transaction_isolation_cursor(self):
-        with registry().cursor() as cr:
+        with self.cursor() as cr:
             self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
     def test_connection_readonly(self):
         # even without db_replica, we expect the connection to be readonly for consistency
-        registry_ = registry()
-        with registry_.cursor(readonly=False) as cr:
+        with self.registry.cursor(readonly=False) as cr:
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('off',))
             self.assertFalse(cr._cnx.readonly)
 
-        with registry_.cursor(readonly=True) as cr:
+        with self.registry.cursor(readonly=True) as cr:
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('on',))
             self.assertTrue(cr._cnx.readonly)
@@ -293,7 +296,6 @@ class TestHTTPCursor(HttpCase):
             ok, readonly = result_read.json()['result']
             self.assertEqual(ok, 'ok')
             self.assertEqual(readonly, True, 'Call to read are expecte to be read only')
-
 
         with patch.object(type(self.env['res.partner']), 'write', return_readonly):
             result_write = self.url_open('/web/dataset/call_kw', data=json.dumps({
