@@ -241,7 +241,15 @@ class AccountAnalyticLine(models.Model):
         if not self:
             return
 
-        plan_id = self.env.ref('sale.analytic_plan_sale_orders', raise_if_not_found=False)
+        plan_id = self.env['account.analytic.plan'].browse(
+            self.env['ir.config_parameter'].get_int('sale.analytic_plan_sale_orders')
+        )
+        if not plan_id:
+            # This plan was available in 19.2 under which all of the AAs of sale orders were created
+            # which was decided to drop and to always use the `analytic.project_plan` plan, if users
+            # want to use custom plans, they can use the `sale.analytic_plan_sale_orders` parameter
+            # TODO: remove in master
+            plan_id = self.env.ref('sale.analytic_plan_sale_orders', raise_if_not_found=False)
         if not plan_id:
             plan_id, _other_plans = self.env['account.analytic.plan']._get_all_plans()
         column_name = plan_id._column_name()
