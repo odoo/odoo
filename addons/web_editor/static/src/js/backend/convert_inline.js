@@ -674,6 +674,15 @@ function enforceImagesResponsivity(editable) {
         image.removeAttribute('height');
     }
 }
+
+function fixSNumbersSnippet(editable) {
+    [...editable.querySelectorAll(".s_numbers")].forEach((numbersSnippet) => {
+        const row = numbersSnippet.querySelector(".container > .row");
+        if (row) {
+            row.classList.add("d-flex", "align-items-stretch");
+        }
+    });
+}
 /**
  * Convert the contents of an editable area (as a JQuery element) into content
  * that is widely compatible with email clients. If no CSS Rules are given, they
@@ -720,7 +729,7 @@ export async function toInline($editable, cssRules, $iframe) {
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
     }
-
+    fixSNumbersSnippet(editable);
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
