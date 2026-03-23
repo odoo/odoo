@@ -781,9 +781,23 @@ class StockMove(models.Model):
     def _is_returned(self, valued_type):
         self.ensure_one()
         if valued_type == 'in':
-            return self.location_id and self.location_id.usage == 'customer'   # goods returned from customer
+            return self.location_id and (
+                self.location_id.usage == 'customer'
+                or (
+                    self.location_id.usage == 'transit'
+                    and self.origin_returned_move_id
+                    and not self.origin_returned_move_id._is_returned('out')
+                )
+            )  # goods returned from customer or inter-company return
         if valued_type == 'out':
-            return self.location_dest_id and self.location_dest_id.usage == 'supplier'   # goods returned to supplier
+            return self.location_dest_id and (
+                self.location_dest_id.usage == 'supplier'
+                or (
+                    self.location_dest_id.usage == 'transit'
+                    and self.origin_returned_move_id
+                    and not self.origin_returned_move_id._is_returned('in')
+                )
+            )  # goods returned to supplier or inter-company return
 
     def _get_all_related_aml(self):
         return self.account_move_ids.line_ids
