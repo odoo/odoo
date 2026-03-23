@@ -120,6 +120,31 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.assertFalse(self.env['mail.message'].sudo().search(
             [('model', '=', 'blog.post'), ('attachment_ids', 'in', second_attachment.ids)]))
 
+    def test_blog_notification_website_domain(self):
+        backend_domain = 'https://backend.example'
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', backend_domain)
+        rendered_html = self.env['ir.qweb']._render(
+            'website_blog.blog_post_template_new_post',
+            {
+                'post': self.test_blog_post,
+                'object': self.test_blog,
+            }
+        )
+        self.assertIn(f'href="{backend_domain}/blog/', rendered_html)
+
+        frontend_domain = 'https://frontend.example'
+        website = self.env['website'].search([], limit=1)
+        website.domain = frontend_domain
+        self.test_blog.website_id = website
+        rendered_html = self.env['ir.qweb']._render(
+            'website_blog.blog_post_template_new_post',
+            {
+                'post': self.test_blog_post,
+                'object': self.test_blog,
+            }
+        )
+        self.assertIn(f'href="{frontend_domain}/blog/', rendered_html)
+
     def test_website_blog_teaser_content(self):
         """ Make sure that the content of the post is correctly rendered in
             proper plain text. """
