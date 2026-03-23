@@ -225,12 +225,14 @@ class StockLot(models.Model):
     @api.depends('name')
     def _compute_sale_order_ids(self):
         sale_orders = defaultdict(set)
-        move_lines = self.env['stock.move.line'].search([
+        unfiltered_move_lines = self.env['stock.move.line'].search([
             ('lot_id', 'in', self.ids),
             ('state', '=', 'done'),
-            ('move_id.sale_line_id.order_id', '!=', False),
-            ('move_id.picking_id.location_dest_id.usage', 'in', ('customer', 'transit')),
         ])
+        move_lines = unfiltered_move_lines.filtered(
+            lambda ml: ml.move_id.sale_line_id.order_id and
+            ml.move_id.picking_id.location_dest_id.usage in ('customer', 'transit')
+        )
         for ml in move_lines:
             so = ml.move_id.sale_line_id.order_id
             if so.with_user(self.env.user).has_access('read'):
