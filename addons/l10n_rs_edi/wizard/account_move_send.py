@@ -80,15 +80,10 @@ class AccountMoveSend(models.TransientModel):
                     "errors": [error],
                 }
                 continue
-            invoice_data['l10n_rs_edi_attachment_values'] = invoice._l10n_rs_edi_get_attachment_values(xml)
 
-            if self._can_commit():
-                self._cr.commit()
-
-    @api.model
-    def _link_invoice_documents(self, invoice, invoice_data):
-        # EXTENDS 'account'
-        super()._link_invoice_documents(invoice, invoice_data)
-        if attachment_values := invoice_data.get('l10n_rs_edi_attachment_values'):
+            attachment_values = invoice._l10n_rs_edi_get_attachment_values(xml)
             self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_values)
             invoice.invalidate_recordset(fnames=['l10n_rs_edi_attachment_id', 'l10n_rs_edi_attachment_file'])
+
+            if self._can_commit():
+                self.env.cr.commit()
