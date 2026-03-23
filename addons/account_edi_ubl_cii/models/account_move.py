@@ -105,6 +105,9 @@ class AccountMove(models.Model):
         Group lines by tax, based on the invoice lines
         """
         self.ensure_one()
+        if not self.is_invoice(include_receipts=True):
+            raise UserError(_("You can only group lines of an invoice"))
+
         line_vals = self._get_line_vals_group_by_tax(self.partner_id)
         self.invoice_line_ids = [Command.clear()]
         self.invoice_line_ids = line_vals
