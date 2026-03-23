@@ -11,22 +11,10 @@ export class HrEmployeePublic extends models.ServerModel {
 
     _get_store_avatar_card_fields() {
         return [
-            "company_id",
-            mailDataHelpers.Store.one("department_id", ["name"]),
-            "hr_icon_display",
-            "name",
-            "job_title",
-            "show_hr_icon_display",
-            mailDataHelpers.Store.one("user_id", [
-                "share",
-                mailDataHelpers.Store.one(
-                    "partner_id",
-                    this.env["res.partner"]._get_store_im_status_fields()
-                ),
-            ]),
-            "work_email",
-            mailDataHelpers.Store.one("work_location_id", ["location_type", "name"]),
-            "work_phone",
+            mailDataHelpers.Store.one(
+                "employee_id",
+                this.env["hr.employee"]._get_store_avatar_card_fields(...arguments)
+            ),
         ];
     }
 }

@@ -14,7 +14,7 @@
                     </span>
                 </t>
                 <t t-elif="this.props.record.data.resource_type === 'user'">
-                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
+                    <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
                 </t>
             </t>
             <Many2One t-props="this.m2oProps" cssClass="'w-100'">

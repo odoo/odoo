@@ -5,6 +5,7 @@ import { ResourceResource } from "@resource_mail/core/common/resource_resource_m
 patch(ResourceResource.prototype, {
     setup() {
         super.setup();
-        this.employee_id = fields.One("hr.employee");
+        /** ⚠️ This field is named like a One but it is actually a Many. */
+        this.employee_id = fields.Many("hr.employee", { inverse: "resource_id" });
     },
 });

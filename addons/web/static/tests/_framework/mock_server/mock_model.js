@@ -20,8 +20,7 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, copyFields, isComputed } =
-    fields;
+const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, copyFields } = fields;
 
 /**
  * @typedef {import("fields").INumerical["aggregator"]} Aggregator
@@ -3695,7 +3694,7 @@ export class Model extends Array {
                         record[fieldName][property.name] = value;
                     }
                 }
-            } else if (!isComputed(field)) {
+            } else {
                 record[fieldName] = value;
             }
             i++;

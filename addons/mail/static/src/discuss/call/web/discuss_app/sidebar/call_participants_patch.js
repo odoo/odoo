@@ -1,5 +1,5 @@
 import { DiscussSidebarCallParticipants } from "@mail/discuss/call/public_web/discuss_app/sidebar/call_participants";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
@@ -7,9 +7,7 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussSidebarCallParticipants.prototype, {
     setup() {
         super.setup();
-        this.avatarCard = usePopover(AvatarCardPopover, {
-            position: "right",
-        });
+        this.avatarCard = usePopover(AvatarCard, { position: "right" });
     },
     attClass(session) {
         return {
@@ -24,8 +22,9 @@ patch(DiscussSidebarCallParticipants.prototype, {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
                 id: session.persona.main_user_id.id,
+                model: "res.users",
             });
         }
     },
 });
-Object.assign(DiscussSidebarCallParticipants.components, { AvatarCardPopover });
+Object.assign(DiscussSidebarCallParticipants.components, { AvatarCard });

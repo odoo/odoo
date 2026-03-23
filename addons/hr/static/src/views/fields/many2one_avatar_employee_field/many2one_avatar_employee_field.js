@@ -1,4 +1,5 @@
-import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
+
 import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -11,7 +12,7 @@ import {
 
 export class Many2OneAvatarEmployeeField extends Component {
     static template = "hr.Many2OneAvatarEmployeeField";
-    static components = { AvatarEmployee, Many2One };
+    static components = { Avatar, Many2One };
     static props = {
         ...Many2OneField.props,
         relation: { type: String, optional: true },

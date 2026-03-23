@@ -6,11 +6,11 @@ import { patch } from "@web/core/utils/patch";
 patch(ResourceResource.prototype, {
     _get_store_avatar_card_fields() {
         return [
-            ...super._get_store_avatar_card_fields(),
+            ...super._get_store_avatar_card_fields(...arguments),
             "department_id",
             mailDataHelpers.Store.one(
                 "employee_id",
-                this.env["hr.employee"]._get_store_avatar_card_fields()
+                this.env["hr.employee"]._get_store_avatar_card_fields(...arguments)
             ),
         ];
     },

@@ -1,9 +1,8 @@
-import { render, useState } from "@web/owl2/utils";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
@@ -11,6 +10,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { render, useState } from "@web/owl2/utils";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -30,7 +30,7 @@ export class Activity extends Component {
         this.store = useService("mail.store");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
-        this.avatarCard = usePopover(AvatarCardPopover);
+        this.avatarCard = usePopover(AvatarCard);
         onMounted(() => {
             this.updateDelayAtNight();
         });
@@ -91,6 +91,7 @@ export class Activity extends Component {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
                 id: this.props.activity.user_id.id,
+                model: "res.users",
             });
         }
     }

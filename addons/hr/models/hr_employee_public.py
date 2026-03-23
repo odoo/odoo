@@ -235,15 +235,5 @@ class HrEmployeePublic(models.Model):
         )""" % (self._table, self._get_fields()))
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
-        res.one("department_id", ["name"])
-        res.one(
-            "user_id",
-            lambda res: (
-                res.attr("share"),
-                res.one("partner_id", ["tz"]),
-                res.from_method("_store_im_status_fields"),
-            ),
-        )
-        res.one("work_location_id", ["location_type", "name"])
-        res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
-        res.extend(["work_email", "work_phone"])
+        # sudo: hr.public.employee - reading _store_avatar_card_fields of accessible public employee is acceptable
+        res.one("employee_id", "_store_avatar_card_fields", sudo=True)

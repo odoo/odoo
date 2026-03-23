@@ -9,6 +9,9 @@ declare module "models" {
     export interface HrEmployeePublic extends HrEmployeePublicClass {}
     export interface HrWorkLocation extends HrWorkLocationClass {}
 
+    export interface ResourceResource {
+        employee_id: HrEmployee[];
+    }
     export interface ResPartner {
         employee_id: HrEmployee;
         employee_ids: HrEmployee[];
@@ -19,7 +22,6 @@ declare module "models" {
         employee_ids: HrEmployee[];
     }
     export interface Store {
-        employees: {[key: number]: {id: number, user_id: number, hasCheckedUser: boolean}};
         "hr.department": StaticMailRecord<HrDepartment, typeof HrDepartmentClass>;
         "hr.employee": StaticMailRecord<HrEmployee, typeof HrEmployeeClass>;
         "hr.employee.public": StaticMailRecord<HrEmployeePublic, typeof HrEmployeePublicClass>;

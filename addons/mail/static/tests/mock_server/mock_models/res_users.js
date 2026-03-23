@@ -207,14 +207,20 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 
-    _get_store_avatar_card_fields() {
-        return [
-            "share",
-            mailDataHelpers.Store.one(
-                "partner_id",
-                this.env["res.partner"]._get_store_avatar_card_fields()
-            ),
-        ];
+    _get_store_avatar_card_fields({ add_partner = true, ...args } = {}) {
+        const res = ["share"];
+        if (add_partner) {
+            res.push(
+                mailDataHelpers.Store.one(
+                    "partner_id",
+                    this.env["res.partner"]._get_store_avatar_card_fields({
+                        ...args,
+                        add_user: false,
+                    })
+                )
+            );
+        }
+        return res;
     }
 
     get _to_store_defaults() {

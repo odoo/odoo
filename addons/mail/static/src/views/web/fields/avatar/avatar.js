@@ -1,11 +1,10 @@
 import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 import { Component } from "@odoo/owl";
 
 export class Avatar extends Component {
     static template = "mail.Avatar";
-    static components = { Popover: AvatarCardPopover };
     static props = {
         resModel: { type: String },
         resId: { type: Number },
@@ -20,7 +19,7 @@ export class Avatar extends Component {
     };
 
     setup() {
-        this.avatarCard = usePopover(this.constructor.components.Popover);
+        this.avatarCard = usePopover(AvatarCard);
     }
 
     get canOpenPopover() {

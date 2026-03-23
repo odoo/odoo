@@ -1,6 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -59,7 +59,7 @@ const StorePatch = {
      * @param {number} id
      */
     onClickPartnerMention(ev, id) {
-        this.env.services.popover.add(ev.target, AvatarCardPopover, {
+        this.env.services.popover.add(ev.target, AvatarCard, {
             id,
             model: "res.partner",
         });

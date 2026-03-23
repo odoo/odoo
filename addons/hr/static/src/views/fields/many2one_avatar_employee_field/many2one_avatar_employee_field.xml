@@ -5,12 +5,12 @@
         <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
         <div class="o_input_box">
             <t t-if="value !== false">
-                <AvatarEmployee cssClass="'o_m2o_avatar o_input_box_overlay_start'" resModel="this.relation" resId="value.id" noSpacing="true" uniqueId="this.uniqueId"/>
+                <Avatar cssClass="'o_m2o_avatar o_input_box_overlay_start'" resModel="this.relation" resId="value.id" noSpacing="true" uniqueId="this.uniqueId"/>
             </t>
             <Many2One t-props="this.m2oProps">
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
-                        <AvatarEmployee resModel="this.relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
+                        <Avatar resModel="this.relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
                         <span t-out="autoCompleteItemScope.label"/>
                     </div>
                 </t>

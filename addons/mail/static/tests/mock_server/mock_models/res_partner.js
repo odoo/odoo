@@ -449,8 +449,8 @@ export class ResPartner extends webModels.ResPartner {
         return [this.browse(this.env.user.partner_id)[0], null];
     }
 
-    _get_store_avatar_card_fields() {
-        return [
+    _get_store_avatar_card_fields({ add_user = true, ...args } = {}) {
+        const res = [
             "email",
             "partner_share",
             "name",
@@ -458,6 +458,18 @@ export class ResPartner extends webModels.ResPartner {
             "tz",
             ...this._get_store_im_status_fields(),
         ];
+        if (add_user) {
+            res.push(
+                mailDataHelpers.Store.one(
+                    "main_user_id",
+                    this.env["res.users"]._get_store_avatar_card_fields({
+                        ...args,
+                        add_partner: false,
+                    })
+                )
+            );
+        }
+        return res;
     }
 
     _get_store_im_status_fields() {

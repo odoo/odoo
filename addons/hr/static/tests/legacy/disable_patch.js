@@ -1,3 +1,3 @@
-import { unpatchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
+import { unpatchAvatarCard } from "@hr/core/web/avatar_card/avatar_card_patch";
 
-unpatchAvatarCardPopover();
+unpatchAvatarCard();

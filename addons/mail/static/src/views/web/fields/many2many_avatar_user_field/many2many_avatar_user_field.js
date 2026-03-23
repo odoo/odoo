@@ -2,7 +2,7 @@ import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command
 
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
@@ -20,7 +20,7 @@ const WithUserChatter = (T) =>
             if (this.props.withCommand) {
                 useAssignUserCommand();
             }
-            this.avatarCard = usePopover(AvatarCardPopover);
+            this.avatarCard = usePopover(AvatarCard);
         }
 
         displayAvatarCard(record) {

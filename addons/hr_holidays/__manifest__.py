@@ -67,6 +67,8 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'application': True,
     'assets': {
         'web.assets_backend': [
+            "hr_holidays/static/src/core/common/**/*",
+            "hr_holidays/static/src/core/web/**/*",
             'hr_holidays/static/src/**/*',
             ('remove', 'hr_holidays/static/src/views/graph/**'),
             # Don't include dark mode files in light mode

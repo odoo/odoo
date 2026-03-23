@@ -1,3 +1,5 @@
+import { createPublicEmployee } from "@hr/../tests/hr_test_helpers";
+
 import { click, start } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { defineHrGamificationModels } from "@hr_gamification/../tests/hr_gamification_test_helpers";
@@ -14,7 +16,7 @@ test("badge notification opens employee form", async () => {
         user_id: serverState.userId,
         user_partner_id: serverState.partnerId,
     });
-    const employeeId = env["hr.employee.public"].create({
+    const employeeId = createPublicEmployee(env, {
         name: "Demo",
         user_id: serverState.userId,
         company_id: user.activeCompany.id,
@@ -44,6 +46,6 @@ test("badge notification opens employee form", async () => {
 
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "You've received a badge!" });
+    await click(".o-mail-NotificationItem:has(:text(You: You've received a badge!");
     await expect.waitForSteps(["do_action"]);
 });

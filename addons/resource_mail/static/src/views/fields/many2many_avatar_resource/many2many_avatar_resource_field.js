@@ -1,3 +1,7 @@
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+
+import { Component } from "@odoo/owl";
+
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -10,10 +14,8 @@ import {
     many2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 import { Domain } from "@web/core/domain";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
-import { Component } from "@odoo/owl";
 
 export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
     /**
@@ -62,7 +64,7 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
     setup() {
         super.setup(...arguments);
         if (this.relation == "resource.resource") {
-            this.avatarCard = usePopover(AvatarCardResourcePopover);
+            this.avatarCard = usePopover(AvatarCard);
         }
     }
 

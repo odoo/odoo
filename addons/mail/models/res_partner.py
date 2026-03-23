@@ -263,6 +263,8 @@ class ResPartner(models.Model):
         res.extend(["name", "partner_share"])
         self._store_avatar_fields(res)
         self._store_im_status_fields(res)
+        # sudo: can access avatar card fields of user of accessible partner
+        res.one("main_user_id", "_store_avatar_card_fields", sudo=True)
         if res.is_for_internal_users():
             res.extend(["email", "phone", "tz"])
 

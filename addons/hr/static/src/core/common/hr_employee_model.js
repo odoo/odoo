@@ -10,6 +10,7 @@ export class HrEmployee extends Record {
     department_id = fields.One("hr.department");
     /** @type {string} */
     job_title;
+    resource_id = fields.One("resource.resource", { inverse: "employee_id" });
     work_contact_id = fields.One("res.partner");
     user_id = fields.One("res.users");
     /** @type {string} */

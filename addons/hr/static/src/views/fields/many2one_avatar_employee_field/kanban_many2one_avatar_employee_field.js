@@ -1,4 +1,5 @@
-import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
+
 import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -13,7 +14,7 @@ import {
 
 export class KanbanMany2OneAvatarEmployeeField extends Component {
     static template = "hr.KanbanMany2OneAvatarEmployeeField";
-    static components = { AvatarEmployee, KanbanMany2One };
+    static components = { Avatar, KanbanMany2One };
     static props = {
         ...Many2OneField.props,
         displayAvatarName: { type: Boolean, optional: true },

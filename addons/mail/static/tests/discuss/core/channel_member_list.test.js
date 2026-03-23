@@ -8,7 +8,7 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { animationFrame, describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 
@@ -136,7 +136,7 @@ test("Avatar card shows local timezone", async () => {
     });
     listenStoreFetch(["avatar_card"]);
     let changeTzResolver = Promise.withResolvers();
-    patchWithCleanup(AvatarCardPopover.prototype, {
+    patchWithCleanup(AvatarCard.prototype, {
         /**
          * This assumes this is internal code to compute formatting of tz,
          * and next animation frame implies showing or not of timezone on the card

@@ -1,4 +1,4 @@
-import { defineHrModels } from "@hr/../tests/hr_test_helpers";
+import { createPublicEmployee, defineHrModels } from "@hr/../tests/hr_test_helpers";
 import { start } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
@@ -18,7 +18,7 @@ test("many2one in list view", async () => {
         { partner_id: partnerId_1 },
         { partner_id: partnerId_2 },
     ]);
-    const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
+    const [employeeId_1, employeeId_2] = createPublicEmployee(env, [
         {
             name: "Mario",
             user_id: userId_1,
@@ -85,7 +85,7 @@ test("many2one in kanban view", async () => {
     const { env } = await makeMockServer();
     const partnerId = env["res.partner"].create({});
     const userId = env["res.users"].create({ partner_id: partnerId });
-    const employeeId = env["hr.employee.public"].create({
+    const employeeId = createPublicEmployee(env, {
         user_id: userId,
         user_partner_id: partnerId,
         write_date: "2023-02-13 10:00:00",
@@ -116,7 +116,7 @@ test("many2one in kanban view", async () => {
 
 test("many2one: click on an employee not associated with a user", async () => {
     const { env } = await makeMockServer();
-    const employeeId = env["hr.employee.public"].create({ name: "Mario" });
+    const employeeId = createPublicEmployee(env, { name: "Mario" });
     const avatarId = env["m2x.avatar.employee"].create({ employee_id: employeeId });
     onRpc("has_group", () => false);
     await mountView({
@@ -133,7 +133,7 @@ test("many2one with hr group widget in kanban view", async () => {
     const { env } = await makeMockServer();
     const partnerId = env["res.partner"].create({});
     const userId = env["res.users"].create({ partner_id: partnerId });
-    const employeeId = env["hr.employee.public"].create({
+    const employeeId = createPublicEmployee(env, {
         user_id: userId,
         user_partner_id: partnerId,
         write_date: "2023-02-13 10:00:00",
@@ -165,7 +165,7 @@ test("many2one with relation set in options", async () => {
     const { env } = await makeMockServer();
     const partnerId = env["res.partner"].create({});
     const userId = env["res.users"].create({ partner_id: partnerId });
-    const employeeId = env["hr.employee.public"].create({
+    const employeeId = createPublicEmployee(env, {
         user_id: userId,
         user_partner_id: partnerId,
         write_date: "2023-02-13 10:00:00",
@@ -197,7 +197,7 @@ test("many2one without hr.group_hr_user", async () => {
     const { env } = await makeMockServer();
     env["m2x.avatar.employee"].create({});
     env["hr.employee"].create({ name: "babar" });
-    env["hr.employee.public"].create({ name: "babar" });
+    createPublicEmployee(env, { name: "babar" });
     onRpc("web_name_search", (args) => {
         expect.step("web_name_search");
         expect(args.model).toBe("hr.employee.public");
@@ -232,7 +232,7 @@ test("many2one in form view", async () => {
         { partner_id: partnerId_1 },
         { partner_id: partnerId_2 },
     ]);
-    const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
+    const [employeeId_1, employeeId_2] = createPublicEmployee(env, [
         {
             user_id: userId_1,
             user_partner_id: partnerId_1,
@@ -295,7 +295,7 @@ test("many2one with hr group widget in form view", async () => {
         { user_id: userId_2, user_partner_id: partnerId_2, write_date: "2023-02-13 10:00:00" },
     ];
     env["hr.employee"].create([{ ...employeeData_1 }, { ...employeeData_2 }]);
-    const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
+    const [employeeId_1, employeeId_2] = createPublicEmployee(env, [
         { ...employeeData_1 },
         { ...employeeData_2 },
     ]);
@@ -330,7 +330,7 @@ test("many2one widget in list view", async () => {
         { partner_id: partnerId_1 },
         { partner_id: partnerId_2 },
     ]);
-    const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
+    const [employeeId_1, employeeId_2] = createPublicEmployee(env, [
         {
             name: "Mario",
             user_id: userId_1,
@@ -383,7 +383,7 @@ test("many2many in kanban view", async () => {
         { partner_id: partnerId_1 },
         { partner_id: partnerId_2 },
     ]);
-    const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
+    const [employeeId_1, employeeId_2] = createPublicEmployee(env, [
         {
             user_id: userId_1,
             user_partner_id: partnerId_1,
@@ -455,7 +455,7 @@ test("many2many: click on an employee not associated with a user", async () => {
     const { env } = await makeMockServer();
     const partnerId = env["res.partner"].create({ name: "Luigi" });
     const userId = env["res.users"].create({ partner_id: partnerId });
-    const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
+    const [employeeId_1, employeeId_2] = createPublicEmployee(env, [
         {
             name: "Mario",
             work_email: "Mario@partner.com",

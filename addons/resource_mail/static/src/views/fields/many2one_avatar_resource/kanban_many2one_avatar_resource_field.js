@@ -1,12 +1,12 @@
 import { Component } from "@odoo/owl";
-import { AvatarResource } from "@resource_mail/components/avatar_resource/avatar_resource";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 export class KanbanMany2OneAvatarResourceField extends Component {
     static template = "resource_mail.KanbanMany2OneAvatarResourceField";
-    static components = { AvatarResource, KanbanMany2One };
+    static components = { Avatar, KanbanMany2One };
     static props = { ...Many2OneField.props };
 
     get m2oProps() {

@@ -121,8 +121,7 @@ test("many2many_avatar_resource widget in form view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
-    await click(".o_avatar_card_buttons button");
+    await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");
     expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
 });
@@ -191,8 +190,7 @@ test("many2many_avatar_resource widget in list view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(queryFirst(".o_avatar_card_buttons button").textContent).toBe("Send message");
-    await click(".o_avatar_card_buttons button");
+    await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");
     expect(queryFirst(".o-mail-ChatWindow-moreActions > .text-truncate").textContent).toBe(
         "Pierre"
@@ -278,8 +276,7 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
-    await click(".o_avatar_card_buttons button");
+    await click(".o_avatar_card_buttons button:first:text(Send message)");
     await contains(".o-mail-ChatWindow");
     expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
 });
