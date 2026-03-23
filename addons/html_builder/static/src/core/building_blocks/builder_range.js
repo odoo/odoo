@@ -50,7 +50,9 @@ export class BuilderRange extends Component {
             this.debouncedCommitNumberValue = useInputDebouncedCommit(this.inputRefNumber);
         }
 
-        const { formatRawValue, parseDisplayValue, clampValue } = useBuilderNumberInputUnits();
+        const { formatRawValue, parseDisplayValue, clampValue } = useBuilderNumberInputUnits({
+            getEffectiveBounds: () => ({ min: this.min, max: this.max }),
+        });
         this.formatRawValue = formatRawValue;
         this.parseDisplayValue = parseDisplayValue;
         this.clampValue = clampValue;
