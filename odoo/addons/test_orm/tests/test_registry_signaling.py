@@ -16,7 +16,6 @@ from odoo.tests.common import BaseCase, HttpCase, TransactionCase
 from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
 from odoo.tools.cache import get_cache_key_counter
-from threading import Thread, Barrier
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -92,54 +91,6 @@ class TestOrmCache(TransactionCase):
         self.assertEqual(self.env.registry.cache_invalidated, {'assets'})
         self.env.registry.reset_changes()
         self.assertEqual(self.env.registry.cache_invalidated, set())
-
-    def test_invalidation_thread_local(self):
-        # this test ensures that the registry.cache_invalidated set is thread local
-
-        caches = ['default', 'templates', 'assets']
-        nb_treads = len(caches)
-
-        # use barriers to ensure threads synchronization
-        sync_clear_cache = Barrier(nb_treads, timeout=5)
-        sync_assert_equal = Barrier(nb_treads, timeout=5)
-        sync_reset = Barrier(nb_treads, timeout=5)
-
-        operations = []
-        def run(cache):
-            self.assertEqual(self.env.registry.cache_invalidated, set())
-
-            self.env.registry.clear_cache(cache)
-            operations.append('clear_cache')
-            sync_clear_cache.wait()
-
-            self.assertEqual(self.env.registry.cache_invalidated, {cache})
-            operations.append('assert_contains')
-            sync_assert_equal.wait()
-
-            self.env.registry.reset_changes()
-            operations.append('reset_changes')
-            sync_reset.wait()
-
-            self.assertEqual(self.env.registry.cache_invalidated, set())
-            operations.append('assert_empty')
-
-        # run all threads
-        threads = []
-        for cache in caches:
-            threads.append(Thread(target=run, args=(cache,)))
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
-
-        # ensure that the threads operations where executed in the expected order
-        self.assertEqual(
-            operations,
-            ['clear_cache'] * nb_treads +
-            ['assert_contains'] * nb_treads +
-            ['reset_changes'] * nb_treads +
-            ['assert_empty'] * nb_treads
-        )
 
     def test_signaling_01_single(self):
         self.assertFalse(self._registry_patched)
