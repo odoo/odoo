@@ -695,7 +695,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_theme_preview_body(self, theme_name, install_theme=False):
-        """Build a simple body preview using a theme configurator homepage snippets."""
+        """Build homepage preview content using a theme configurator snippets."""
         website = self.get_current_website()
         if not theme_name:
             return ''
@@ -767,7 +767,7 @@ class Website(models.CachedModel):
             except ValueError as e:
                 logger.warning(e)
 
-        return f'<div id="wrap" class="oe_structure">{"".join(rendered_snippets)}</div>'
+        return ''.join(rendered_snippets)
 
     @api.model
     def configurator_skip(self):

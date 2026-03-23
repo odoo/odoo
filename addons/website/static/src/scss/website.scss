@@ -438,7 +438,8 @@ body {
     }
     .top_menu {
         flex-wrap: nowrap !important;
-        &.o_menu_loading {
+
+        body:not(.o_website_configurator_theme_preview) &.o_menu_loading {
             overflow: hidden !important;
             opacity: 0 !important;
         }
