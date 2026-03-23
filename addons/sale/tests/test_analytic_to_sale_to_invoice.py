@@ -136,8 +136,8 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
 
         self.assertEqual(
             self.services_sale_order.analytic_account_id.plan_id,
-            self.env.ref("sale.analytic_plan_sale_orders"),
-            "The sale order analytic account should have the sale orders analytic plan",
+            self.env.ref("analytic.analytic_plan_projects"),
+            "The sale order analytic account should have the Project analytic plan",
         )
 
     def test_quantity_update_on_analytic_line_updates_upsale_lines(self):

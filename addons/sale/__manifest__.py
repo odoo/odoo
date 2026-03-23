@@ -21,7 +21,6 @@ This module contains all the common features of Sales Management and eCommerce.
         "report/ir_actions_report_templates.xml",
         "report/ir_actions_report.xml",
         "report/sale_report_views.xml",
-        "data/analytic_plan_data.xml",
         "data/ir_cron.xml",
         "data/ir_sequence_data.xml",
         "data/mail_message_subtype_data.xml",
