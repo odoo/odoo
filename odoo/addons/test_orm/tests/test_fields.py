@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged, users
-from odoo.tools import float_repr, mute_logger
+from odoo.tools import float_repr, float_round, mute_logger
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -1018,6 +1018,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         precision = self.env.ref('test_orm.decimal_orm_number')
         description = self.env['test_orm.mixed'].fields_get()['number2']
         self.assertEqual(description['digits'], (16, precision.digits))
+
+    def test_float_round_100_digits(self):
+        self.assertEqual(float_round(50, 100), 50)
 
     def check_monetary(self, record, amount, currency, msg=None):
         # determine the possible roundings of amount

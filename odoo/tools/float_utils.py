@@ -130,6 +130,9 @@ def float_round(
     # more tolerant of inaccuracies accumulated after multiple floating point operations
     epsilon = 2**(epsilon_magnitude - 50)
 
+    if normalized_value.is_integer():
+        return denormalize(value)
+
     match rounding_method:
         case 'HALF-UP':  # 0.5 rounds away from 0
             result = round(normalized_value + math.copysign(epsilon, normalized_value))
