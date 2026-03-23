@@ -928,6 +928,7 @@ describe("keyboard navigation", () => {
         await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
         expect(".o_font_color_selector .o_picker_pointer").toBeFocused();
         const hexInputEl = await getIframeInput(
             ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
@@ -961,6 +962,7 @@ describe("keyboard navigation", () => {
         expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
         await press("Enter");
         await animationFrame();
+        await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
@@ -1013,6 +1015,7 @@ describe("keyboard navigation", () => {
         expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
         await press("Enter");
         await animationFrame();
+        await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });
         await press("Tab", { shiftKey: true });

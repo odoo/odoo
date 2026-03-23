@@ -21,7 +21,7 @@
                 <div t-custom-ref="opacitySliderPointer" class="o_opacity_pointer" tabindex="0" t-on-keydown="this.onOpacitySliderKeydown" role="slider" aria-label="Opacity" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100"/>
             </div>
         </div>
-        <div class="o_color_picker_inputs d-flex justify-content-between mb-2">
+        <div class="o_color_picker_inputs d-flex mb-2">
             <div class="o_hex_div px-1 d-flex align-items-center">
                 <IframeInput
                     value="this.hexDisplay.value"
@@ -34,6 +34,9 @@
                 />
                 <label class="flex-grow-0 ms-1">hex</label>
             </div>
+            <button t-if="window.EyeDropper" class="btn btn-sm p-0 px-1" title="Pick a color from the screen" t-on-click="this.pickColor">
+                <i class="fa fa-eyedropper"/>
+            </button>
         </div>
     </div>
 </t>

@@ -287,7 +287,7 @@ describe("Custom colorpicker: preview and commit", () => {
         await waitFor(".o-overlay-item .o_color_pick_area");
         expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
         // Press shift+tab until it gets to the colorpicker area.
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
             await press("Tab", { shiftKey: true });
         }
         expect(".o-overlay-item .o_color_pick_area .o_picker_pointer").toBeFocused();
