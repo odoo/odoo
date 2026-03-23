@@ -27,6 +27,7 @@ type Model struct {
 	snapshot state.Snapshot
 	modes    []modeSpec
 	selected int
+	ready    bool
 }
 
 var (
@@ -191,10 +192,23 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
+	currentKey := ""
+	if m.selected >= 0 && m.selected < len(m.modes) {
+		currentKey = m.modes[m.selected].Key
+	}
 	m.snapshot = snapshot
+	if m.ready && currentKey != "" {
+		for idx, mode := range m.modes {
+			if mode.Key == currentKey {
+				m.selected = idx
+				return m
+			}
+		}
+	}
 	for idx, mode := range m.modes {
 		if mode.Key == snapshot.Runtime.Mode {
 			m.selected = idx
+			m.ready = true
 			break
 		}
 	}

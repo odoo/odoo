@@ -107,6 +107,11 @@ func ResolvePath(repoDir string) string {
 	return primary
 }
 
+// PrimaryPath returns the canonical .env path for the repository.
+func PrimaryPath(repoDir string) string {
+	return filepath.Join(repoDir, PrimaryEnvFile)
+}
+
 // Load parses .env-style files with simple Make syntax.
 func Load(path string) (*Config, error) {
 	cfg := &Config{
@@ -265,6 +270,15 @@ func (c *Config) Set(key, value string) {
 func (c *Config) Save() error {
 	if c.Path == "" {
 		return fmt.Errorf("no path defined for config")
+	}
+
+	if filepath.Base(c.Path) == LegacyEnvFile {
+		c.Path = filepath.Join(filepath.Dir(c.Path), PrimaryEnvFile)
+		if _, err := os.Stat(c.Path); err == nil {
+			c.Exists = true
+		} else {
+			c.Exists = false
+		}
 	}
 
 	var lines []string

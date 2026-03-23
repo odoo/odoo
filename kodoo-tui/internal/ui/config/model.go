@@ -82,7 +82,7 @@ func (m Model) HelpLines() []string {
 	return []string{
 		"/ search variables",
 		"enter edit selected variable",
-		"e open .env in $EDITOR",
+		"e open the active env file in $EDITOR",
 		"p/h/j generate prod/dev-host/dev-project configs",
 		"i create .env from the example file",
 	}
@@ -197,7 +197,7 @@ func (m Model) View(width, height int) string {
 	bottom := configPanelStyle.Width(width - 2).Height(7).Render(strings.Join([]string{
 		configTitleStyle.Render("Generate / Validate"),
 		"p  make prod-config    h  make dev-host-config    j  make dev-project-config",
-		"i  make env-init       e  open .env               enter  edit selected",
+		"i  make env-init       e  open active env file    enter  edit selected",
 		"Validation: .env, generated configs, missing required keys, DB reachability incidents",
 	}, "\n"))
 	return lipgloss.JoinVertical(lipgloss.Left, top, middle, bottom)
@@ -209,6 +209,9 @@ func (m Model) summaryView() string {
 		fmt.Sprintf("env file: %s", fallback(m.snapshot.Config.EnvPath, m.cfg.Path)),
 		fmt.Sprintf("exists: %t", m.snapshot.Config.EnvExists),
 		fmt.Sprintf("missing required keys: %d", len(m.snapshot.Config.MissingKeys)),
+	}
+	if m.snapshot.Config.UsesLegacyFile {
+		lines = append(lines, warnStyle.Render("legacy fallback active: docker compose will expect .env"))
 	}
 	for path, ok := range m.snapshot.Config.GeneratedFiles {
 		status := warnStyle.Render("missing")
@@ -237,6 +240,7 @@ func (m Model) tableView() string {
 }
 
 func (m *Model) refreshRows() {
+	selectedKey := m.selectedKey()
 	query := strings.ToLower(strings.TrimSpace(m.search.Value()))
 	required := map[string]bool{
 		"DOMAIN":                  true,
@@ -258,6 +262,34 @@ func (m *Model) refreshRows() {
 		rows = append(rows, table.Row{entry.Key, m.cfg.MaskedValue(entry.Key), entry.Source, requiredFlag})
 	}
 	m.table.SetRows(rows)
+	m.restoreSelection(selectedKey, len(rows))
+}
+
+func (m Model) selectedKey() string {
+	row := m.table.SelectedRow()
+	if len(row) == 0 {
+		return ""
+	}
+	return row[0]
+}
+
+func (m *Model) restoreSelection(key string, size int) {
+	if size == 0 {
+		m.table.SetCursor(0)
+		return
+	}
+	if key != "" {
+		for idx, row := range m.table.Rows() {
+			if len(row) > 0 && row[0] == key {
+				m.table.SetCursor(idx)
+				return
+			}
+		}
+	}
+	cursor := m.table.Cursor()
+	if cursor >= size {
+		m.table.SetCursor(size - 1)
+	}
 }
 
 func makeMsg(target, description string, relevant []string) tea.Msg {

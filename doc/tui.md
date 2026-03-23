@@ -25,8 +25,9 @@ The backend Makefile remains the operational engine; the redesign changes naviga
 - `1 Overview`: mode, active DB, local/public URLs, service health, smoke, incidents, suggested next step
 - `2 Runtime`: operational modes such as Stable Docker, Stable Tunnel, Dev Host, Dev Project, Local Diagnostic / Manager, and Stopped
 - `3 Databases`: docker/local database inventory with connectivity, compatibility, and direct actions
-- `4 Logs`: incident-first view plus raw compose logs
-- `5 Config`: setup/validation summary, config values table, edit flow, and config generation actions
+- `4 Doctor`: diagnostics by stack modality, prioritizing the current failure and common incident patterns
+- `5 Logs`: incident-first view plus raw compose logs
+- `6 Config`: setup/validation summary, config values table, edit flow, and config generation actions
 
 ## Command Palette
 
@@ -39,7 +40,7 @@ Use `p` to open the command palette / quick switcher for:
 
 ## Global Keys
 
-- `1`–`5`: jump directly to a main screen
+- `1`–`6`: jump directly to a main screen
 - `tab` / `shift+tab`: switch screens
 - `p`: command palette
 - `r`: refresh the aggregated snapshot

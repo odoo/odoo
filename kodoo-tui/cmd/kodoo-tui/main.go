@@ -28,7 +28,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	configPath := envconfig.ResolvePath(cwd)
+	configPath := envconfig.PrimaryPath(cwd)
 	if err := ensureEnvFile(cwd, configPath, os.Stdin, os.Stdout); err != nil {
 		fmt.Fprintf(os.Stderr, "prepare env file: %v\n", err)
 		os.Exit(1)

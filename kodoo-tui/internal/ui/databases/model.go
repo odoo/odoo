@@ -105,7 +105,21 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
+	currentName := ""
+	currentBackend := ""
+	if current, ok := m.current(); ok {
+		currentName = current.Name
+		currentBackend = current.Backend
+	}
 	m.snapshot = snapshot
+	if currentName != "" {
+		for idx, item := range snapshot.Databases {
+			if item.Name == currentName && item.Backend == currentBackend {
+				m.selected = idx
+				return m
+			}
+		}
+	}
 	if m.selected >= len(snapshot.Databases) {
 		m.selected = max(0, len(snapshot.Databases)-1)
 	}

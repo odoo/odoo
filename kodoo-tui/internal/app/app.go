@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -20,6 +22,7 @@ import (
 	"github.com/kodoo/kodoo-tui/internal/state"
 	"github.com/kodoo/kodoo-tui/internal/ui/config"
 	"github.com/kodoo/kodoo-tui/internal/ui/databases"
+	"github.com/kodoo/kodoo-tui/internal/ui/doctor"
 	"github.com/kodoo/kodoo-tui/internal/ui/logs"
 	"github.com/kodoo/kodoo-tui/internal/ui/overview"
 	"github.com/kodoo/kodoo-tui/internal/ui/runtime"
@@ -37,23 +40,40 @@ var (
 )
 
 type overlayState struct {
-	visible     bool
-	request     *event.RequestMakeTargetMsg
-	running     bool
-	done        bool
-	runnerID    string
-	title       string
-	description string
-	lines       []string
-	viewport    viewport.Model
-	startedAt   time.Time
-	statusText  string
-	input       textinput.Model
-	errorText   string
-	selectingDB bool
-	loadingDBs  bool
-	databases   []database.Record
-	selectedDB  int
+	visible      bool
+	request      *event.RequestMakeTargetMsg
+	running      bool
+	done         bool
+	runnerID     string
+	title        string
+	description  string
+	lines        []string
+	viewport     viewport.Model
+	startedAt    time.Time
+	statusText   string
+	input        textinput.Model
+	errorText    string
+	selectingDB  bool
+	loadingDBs   bool
+	databases    []database.Record
+	selectedDB   int
+	sessionIndex int
+	autoFollow   bool
+}
+
+type actionRun struct {
+	Title       string
+	Description string
+	StartedAt   time.Time
+	FinishedAt  time.Time
+	StatusText  string
+	Lines       []string
+	SavedPath   string
+}
+
+type overlaySavedMsg struct {
+	path string
+	err  error
 }
 
 type paletteMode int
@@ -83,6 +103,7 @@ type Model struct {
 	overview       overview.Model
 	runtime        runtime.Model
 	databases      databases.Model
+	doctor         doctor.Model
 	logs           logs.Model
 	config         config.Model
 	helpVisible    bool
@@ -90,6 +111,7 @@ type Model struct {
 	palette        []paletteOption
 	paletteIndex   int
 	overlay        overlayState
+	sessionRuns    []actionRun
 	activeDB       string
 	lastError      string
 }
@@ -106,6 +128,7 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 		overview:  overview.New(),
 		runtime:   runtime.New(),
 		databases: databases.New(),
+		doctor:    doctor.New(),
 		logs:      logs.New(),
 		config:    config.New(cfg),
 		overlay: overlayState{
@@ -144,6 +167,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.overview = m.overview.SetSnapshot(msg.Snapshot)
 		m.runtime = m.runtime.SetSnapshot(msg.Snapshot)
 		m.databases = m.databases.SetSnapshot(msg.Snapshot)
+		m.doctor = m.doctor.SetSnapshot(msg.Snapshot)
 		m.logs = m.logs.SetSnapshot(msg.Snapshot)
 		m.config = m.config.SetSnapshot(msg.Snapshot)
 		m.palette = m.buildPalette()
@@ -209,6 +233,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if len(m.overlay.lines) > 2000 {
 				m.overlay.lines = m.overlay.lines[len(m.overlay.lines)-2000:]
 			}
+			if m.overlay.sessionIndex >= 0 && m.overlay.sessionIndex < len(m.sessionRuns) {
+				m.sessionRuns[m.overlay.sessionIndex].Lines = append(m.sessionRuns[m.overlay.sessionIndex].Lines, msg.Line)
+			}
 			m.syncOverlayViewport()
 			return m, runner.Next(msg.ID)
 		}
@@ -221,9 +248,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.overlay.statusText = "completed"
 			}
+			if m.overlay.sessionIndex >= 0 && m.overlay.sessionIndex < len(m.sessionRuns) {
+				m.sessionRuns[m.overlay.sessionIndex].StatusText = m.overlay.statusText
+				m.sessionRuns[m.overlay.sessionIndex].FinishedAt = time.Now()
+			}
 			m.syncOverlayViewport()
 			return m, tea.Batch(state.RefreshCmd(m.cfg, m.repoDir, m.activeDB))
 		}
+	case overlaySavedMsg:
+		if msg.err != nil {
+			m.overlay.statusText = "save failed"
+			m.overlay.lines = append(m.overlay.lines, "save error: "+msg.err.Error())
+		} else {
+			m.overlay.statusText = "saved to " + msg.path
+			if m.overlay.sessionIndex >= 0 && m.overlay.sessionIndex < len(m.sessionRuns) {
+				m.sessionRuns[m.overlay.sessionIndex].SavedPath = msg.path
+			}
+		}
+		m.syncOverlayViewport()
+		return m, nil
 	case tea.KeyMsg:
 		if handled, next, cmd := m.handleGlobalKey(msg); handled {
 			return next, cmd
@@ -328,11 +371,14 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 	case "5":
 		m.activeTab = 4
 		return true, m, nil
+	case "6":
+		m.activeTab = 5
+		return true, m, nil
 	case "tab":
-		m.activeTab = (m.activeTab + 1) % 5
+		m.activeTab = (m.activeTab + 1) % 6
 		return true, m, nil
 	case "shift+tab":
-		m.activeTab = (m.activeTab + 4) % 5
+		m.activeTab = (m.activeTab + 5) % 6
 		return true, m, nil
 	case "?":
 		m.helpVisible = true
@@ -341,6 +387,11 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 		m.paletteVisible = true
 		m.palette = m.buildPalette()
 		m.paletteIndex = 0
+		return true, m, nil
+	case "y":
+		if len(m.sessionRuns) > 0 {
+			m = m.openSessionRun(len(m.sessionRuns) - 1)
+		}
 		return true, m, nil
 	case "r":
 		return true, m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
@@ -355,10 +406,10 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 			m.activeTab = 2
 			return true, m, nil
 		case "l":
-			m.activeTab = 3
+			m.activeTab = 4
 			return true, m, nil
 		case "c":
-			m.activeTab = 4
+			m.activeTab = 5
 			return true, m, nil
 		case "t":
 			next, cmd := m.prepareActionRequest(event.RequestMakeTargetMsg{
@@ -380,10 +431,16 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 
 func (m Model) handleOverlayKey(msg tea.KeyMsg) (Model, tea.Cmd) {
 	if m.overlay.running {
+		if handled, next, cmd := m.handleOverlayViewportKey(msg); handled {
+			return next, cmd
+		}
 		return m, nil
 	}
 
 	if m.overlay.done {
+		if handled, next, cmd := m.handleOverlayViewportKey(msg); handled {
+			return next, cmd
+		}
 		if msg.String() == "esc" || msg.String() == "enter" {
 			m.overlay = m.newOverlay()
 		}
@@ -461,6 +518,14 @@ func (m Model) startAction() (Model, tea.Cmd) {
 	m.overlay.lines = nil
 	m.overlay.errorText = ""
 	m.overlay.title = request.Target
+	m.overlay.autoFollow = true
+	m.overlay.sessionIndex = len(m.sessionRuns)
+	m.sessionRuns = append(m.sessionRuns, actionRun{
+		Title:       request.Target,
+		Description: request.Description,
+		StartedAt:   m.overlay.startedAt,
+		StatusText:  m.overlay.statusText,
+	})
 	if selected := strings.TrimSpace(request.Vars["DB"]); selected != "" {
 		m.activeDB = selected
 	} else if clearsActiveDB(request.Target) {
@@ -525,6 +590,10 @@ func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
+	m.doctor, cmd = m.doctor.Update(msg)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
 	m.logs, cmd = m.logs.Update(msg)
 	if cmd != nil {
 		cmds = append(cmds, cmd)
@@ -551,6 +620,10 @@ func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.databases = next
 		return m, cmd
 	case 3:
+		next, cmd := m.doctor.Update(msg)
+		m.doctor = next
+		return m, cmd
+	case 4:
 		next, cmd := m.logs.Update(msg)
 		m.logs = next
 		return m, cmd
@@ -566,8 +639,9 @@ func (m Model) tabsView() string {
 		m.renderTab(0, "1 Overview"),
 		m.renderTab(1, "2 Runtime"),
 		m.renderTab(2, "3 Databases"),
-		m.renderTab(3, "4 Logs"),
-		m.renderTab(4, "5 Config"),
+		m.renderTab(3, "4 Doctor"),
+		m.renderTab(4, "5 Logs"),
+		m.renderTab(5, "6 Config"),
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
 }
@@ -588,6 +662,8 @@ func (m Model) activeTabView(width, height int) string {
 	case 2:
 		return m.databases.View(width, height)
 	case 3:
+		return m.doctor.View(width, height)
+	case 4:
 		return m.logs.View(width, height)
 	default:
 		return m.config.View(width, height)
@@ -597,7 +673,7 @@ func (m Model) activeTabView(width, height int) string {
 func (m Model) helpView(width, height int) string {
 	lines := []string{titleStyle.Render("Help")}
 	lines = append(lines, m.currentHelpLines()...)
-	lines = append(lines, "", "Global keys: 1-5 tabs · tab/shift+tab cycle · p palette · r refresh · q quit · esc close overlay")
+	lines = append(lines, "", "Global keys: 1-6 tabs · tab/shift+tab cycle · p palette · r refresh · q quit · esc close overlay")
 	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
@@ -638,6 +714,13 @@ func (m Model) overlayView(width, height int) string {
 	}
 
 	lines = append(lines, fmt.Sprintf("started: %s", m.overlay.startedAt.Format("15:04:05")))
+	if m.overlay.sessionIndex >= 0 && m.overlay.sessionIndex < len(m.sessionRuns) {
+		run := m.sessionRuns[m.overlay.sessionIndex]
+		if run.SavedPath != "" {
+			lines = append(lines, "saved: "+run.SavedPath)
+		}
+	}
+	lines = append(lines, "keys: ↑/↓ scroll  pgup/pgdn page  g top  G end/follow  w save")
 	lines = append(lines, "", m.overlay.viewport.View(), "", m.overlay.statusText)
 	if m.overlay.done {
 		lines = append(lines, "Press esc to close.")
@@ -679,7 +762,7 @@ func (m Model) statusBar(width int) string {
 	if m.lastError != "" {
 		incident = m.lastError
 	}
-	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  p palette · r refresh · q quit · ? help",
+	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  p palette · y last run · r refresh · q quit · ? help",
 		m.cfg.Domain, mode, db, incident,
 	)
 	return statusStyle.Width(width).Render(bar)
@@ -694,6 +777,8 @@ func (m Model) currentHelpLines() []string {
 	case 2:
 		return m.databases.HelpLines()
 	case 3:
+		return m.doctor.HelpLines()
+	case 4:
 		return m.logs.HelpLines()
 	default:
 		return m.config.HelpLines()
@@ -701,10 +786,15 @@ func (m Model) currentHelpLines() []string {
 }
 
 func (m *Model) syncOverlayViewport() {
+	offset := m.overlay.viewport.YOffset
 	m.overlay.viewport.Width = max(20, m.width-8)
 	m.overlay.viewport.Height = max(6, (m.height/2)-8)
 	m.overlay.viewport.SetContent(strings.Join(m.overlay.lines, "\n"))
-	m.overlay.viewport.GotoBottom()
+	if m.overlay.autoFollow {
+		m.overlay.viewport.GotoBottom()
+		return
+	}
+	m.overlay.viewport.YOffset = offset
 }
 
 func (m Model) databaseSelectionView() []string {
@@ -727,9 +817,113 @@ func (m Model) newOverlay() overlayState {
 	input.CharLimit = 16
 	input.Blur()
 	return overlayState{
-		viewport: viewport.New(60, 10),
-		input:    input,
+		viewport:     viewport.New(60, 10),
+		input:        input,
+		sessionIndex: -1,
+		autoFollow:   true,
 	}
+}
+
+func (m Model) openSessionRun(index int) Model {
+	if index < 0 || index >= len(m.sessionRuns) {
+		return m
+	}
+	run := m.sessionRuns[index]
+	m.overlay = m.newOverlay()
+	m.overlay.visible = true
+	m.overlay.done = true
+	m.overlay.title = run.Title
+	m.overlay.description = run.Description
+	m.overlay.startedAt = run.StartedAt
+	m.overlay.statusText = run.StatusText
+	m.overlay.lines = append([]string(nil), run.Lines...)
+	m.overlay.sessionIndex = index
+	m.overlay.autoFollow = false
+	m.syncOverlayViewport()
+	return m
+}
+
+func (m Model) handleOverlayViewportKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
+	switch msg.String() {
+	case "up":
+		m.overlay.autoFollow = false
+		m.overlay.viewport.LineUp(1)
+		return true, m, nil
+	case "down":
+		m.overlay.autoFollow = false
+		m.overlay.viewport.LineDown(1)
+		return true, m, nil
+	case "pgup":
+		m.overlay.autoFollow = false
+		m.overlay.viewport.HalfViewUp()
+		return true, m, nil
+	case "pgdown":
+		m.overlay.autoFollow = false
+		m.overlay.viewport.HalfViewDown()
+		return true, m, nil
+	case "g", "home":
+		m.overlay.autoFollow = false
+		m.overlay.viewport.GotoTop()
+		return true, m, nil
+	case "G", "end":
+		m.overlay.autoFollow = true
+		m.overlay.viewport.GotoBottom()
+		return true, m, nil
+	case "w":
+		run, ok := m.currentSessionRun()
+		if !ok {
+			return true, m, nil
+		}
+		m.overlay.statusText = "saving..."
+		return true, m, saveSessionRunCmd(m.repoDir, run)
+	default:
+		return false, m, nil
+	}
+}
+
+func (m Model) currentSessionRun() (actionRun, bool) {
+	if m.overlay.sessionIndex < 0 || m.overlay.sessionIndex >= len(m.sessionRuns) {
+		return actionRun{}, false
+	}
+	return m.sessionRuns[m.overlay.sessionIndex], true
+}
+
+func saveSessionRunCmd(repoDir string, run actionRun) tea.Cmd {
+	return func() tea.Msg {
+		dir := filepath.Join(repoDir, "logs", "tui-session")
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return overlaySavedMsg{err: err}
+		}
+		name := fmt.Sprintf("%s_%s.log", run.StartedAt.Format("20060102_150405"), slugify(run.Title))
+		path := filepath.Join(dir, name)
+		var body []string
+		body = append(body, "title: "+run.Title)
+		body = append(body, "started: "+run.StartedAt.Format(time.RFC3339))
+		if !run.FinishedAt.IsZero() {
+			body = append(body, "finished: "+run.FinishedAt.Format(time.RFC3339))
+		}
+		body = append(body, "status: "+run.StatusText)
+		if strings.TrimSpace(run.Description) != "" {
+			body = append(body, "description: "+run.Description)
+		}
+		body = append(body, "", strings.Join(run.Lines, "\n"))
+		if err := os.WriteFile(path, []byte(strings.Join(body, "\n")+"\n"), 0o644); err != nil {
+			return overlaySavedMsg{err: err}
+		}
+		return overlaySavedMsg{path: path}
+	}
+}
+
+var slugPattern = regexp.MustCompile(`[^a-z0-9]+`)
+
+func slugify(value string) string {
+	slug := strings.ToLower(strings.TrimSpace(value))
+	slug = slugPattern.ReplaceAllString(slug, "-")
+	slug = strings.Trim(slug, "-")
+	if slug == "" {
+		return "run"
+	}
+	return slug
 }
 
 func (m Model) buildPalette() []paletteOption {
@@ -737,8 +931,9 @@ func (m Model) buildPalette() []paletteOption {
 		{Title: "Overview", Description: "Quick switch to the operational summary.", Mode: paletteSwitch, Tab: 0},
 		{Title: "Runtime", Description: "Quick switch to runtime mode control.", Mode: paletteSwitch, Tab: 1},
 		{Title: "Databases", Description: "Quick switch to database operations.", Mode: paletteSwitch, Tab: 2},
-		{Title: "Logs", Description: "Quick switch to incidents and raw logs.", Mode: paletteSwitch, Tab: 3},
-		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 4},
+		{Title: "Doctor", Description: "Quick switch to mode-specific diagnostics.", Mode: paletteSwitch, Tab: 3},
+		{Title: "Logs", Description: "Quick switch to incidents and raw logs.", Mode: paletteSwitch, Tab: 4},
+		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 5},
 		{
 			Title:       "Start Stable Docker",
 			Description: "Boot the stable docker runtime.",

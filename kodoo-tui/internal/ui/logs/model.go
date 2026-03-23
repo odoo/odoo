@@ -108,7 +108,14 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			m.err = msg.err.Error()
 			return m, nil
 		}
+		currentService := m.currentService()
 		m.services = msg.services
+		for idx, service := range m.services {
+			if service == currentService {
+				m.selected = idx
+				break
+			}
+		}
 		return m, m.restartStream()
 	case streamLineMsg:
 		if msg.done {

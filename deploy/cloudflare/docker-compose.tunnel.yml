@@ -1,7 +1,8 @@
 # Tunnel mode nginx overlay.
-# Removes host port bindings so nginx is only reachable via the internal Docker
-# network (kodoo-net). The cloudflared container contacts nginx directly on
-# http://nginx:80 — no host exposure needed.
+# Overrides the base public ports so nginx is exposed only on the localhost
+# development bind expected by the TUI/Makefile, while cloudflared continues to
+# reach nginx internally on http://nginx:80 over kodoo-net.
 services:
   nginx:
-    ports: []
+    ports: !override
+      - "${LOCAL_BIND_HOST:-127.0.0.1}:${LOCAL_HTTP_PORT:-8069}:80"

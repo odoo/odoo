@@ -55,6 +55,7 @@ type Incident struct {
 type ConfigState struct {
 	EnvPath        string
 	EnvExists      bool
+	UsesLegacyFile bool
 	GeneratedFiles map[string]bool
 	MissingKeys    []string
 }
@@ -104,8 +105,9 @@ func RefreshCmd(cfg *envconfig.Config, repoDir, activeDB string) tea.Cmd {
 func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) (Snapshot, error) {
 	snapshot := Snapshot{
 		Config: ConfigState{
-			EnvPath:   cfg.Path,
-			EnvExists: cfg.Exists,
+			EnvPath:        cfg.Path,
+			EnvExists:      cfg.Exists,
+			UsesLegacyFile: filepath.Base(cfg.Path) == envconfig.LegacyEnvFile,
 			GeneratedFiles: map[string]bool{
 				"deploy/odoo/kodoo.prod.local.conf":        fileExists(filepath.Join(repoDir, "deploy/odoo/kodoo.prod.local.conf")),
 				"deploy/odoo/kodoo.dev-host.local.conf":    fileExists(filepath.Join(repoDir, "deploy/odoo/kodoo.dev-host.local.conf")),
@@ -251,6 +253,14 @@ func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, docker
 			Summary:    "Configuração incompleta",
 			Cause:      "Há variáveis obrigatórias vazias para modos operacionais.",
 			Suggestion: "Revise Config Values e preencha domínio, senhas e token quando aplicável.",
+		})
+	}
+	if snapshot.Config.UsesLegacyFile {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityWarning,
+			Summary:    "Configuração ainda está em .env.make",
+			Cause:      "A TUI leu o arquivo legado, mas docker compose usa .env como arquivo primário.",
+			Suggestion: "Reabra a TUI para migrar automaticamente para .env ou salve qualquer valor na aba Config para promover o arquivo.",
 		})
 	}
 	if !snapshot.Config.GeneratedFiles["deploy/odoo/kodoo.prod.local.conf"] {
