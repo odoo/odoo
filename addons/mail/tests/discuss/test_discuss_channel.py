@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from io import BytesIO
 from PIL import Image
 from markupsafe import Markup
+from psycopg2 import errors
 
 from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
@@ -14,7 +15,7 @@ from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import group_avatar
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import HttpCase, users
 from odoo.tools import BinaryBytes, html_escape, mute_logger
 
@@ -1410,3 +1411,73 @@ class TestChannelInternals(MailCommon, HttpCase):
             meeting.with_user(self.test_user).write({"default_display_mode": False})
         meeting.with_user(self.user_employee).write({"default_display_mode": False})
         self.assertFalse(meeting.default_display_mode)
+
+    @users("employee")
+    def test_chat_is_kept_when_its_correspondent_is_deleted(self):
+        partner = self.env["res.partner"].sudo().create({"name": "Gone Correspondent"})
+        chat = self.env["discuss.channel"]._get_or_create_chat(partner.ids)
+        member_indices = chat.member_indices
+        partner.sudo().unlink()
+        self.assertTrue(chat.exists())
+        self.assertEqual(chat.channel_member_ids.partner_id, self.partner_employee)
+        self.assertEqual(chat.member_indices, member_indices)
+
+    @mute_logger("odoo.sql_db")
+    @users("employee")
+    def test_chat_is_rejoined_when_its_member_was_removed(self):
+        chat = self.env["discuss.channel"]._get_or_create_chat(self.test_partner.ids)
+        chat.channel_member_ids.sudo().unlink()
+        same_chat = self.env["discuss.channel"]._get_or_create_chat(self.test_partner.ids)
+        self.assertEqual(same_chat, chat)
+        self.assertEqual(
+            same_chat.channel_member_ids.partner_id,
+            self.partner_employee | self.test_partner,
+        )
+
+    @users("employee")
+    def test_chat_cannot_get_a_third_member(self):
+        chat = self.env["discuss.channel"]._get_or_create_chat(self.test_partner.ids)
+        with self.assertRaises(UserError):
+            chat._add_members(partners=self.partner_employee_nomail)
+        self.assertEqual(
+            chat.channel_member_ids.partner_id,
+            self.partner_employee | self.test_partner,
+        )
+
+    @mute_logger("odoo.sql_db")
+    @users("employee")
+    def test_chat_is_joined_when_created_concurrently(self):
+        chat = self.env["discuss.channel"]._get_or_create_chat(self.test_partner.ids)
+        Channel = self.registry["discuss.channel"]
+        search_fetch = Channel.search_fetch
+        searches = []
+
+        def search_fetch_missing_the_chat(records, *args, **kwargs):
+            # Simulate a concurrent request committing the chat right after this search.
+            searches.append(records)
+            if len(searches) == 1:
+                return records.browse()
+            return search_fetch(records, *args, **kwargs)
+
+        self.patch(Channel, "search_fetch", search_fetch_missing_the_chat)
+        same_chat = self.env["discuss.channel"]._get_or_create_chat(self.test_partner.ids)
+        self.assertEqual(same_chat, chat)
+        self.assertEqual(
+            same_chat.channel_member_ids.partner_id,
+            self.partner_employee | self.test_partner,
+        )
+
+    @mute_logger("odoo.sql_db")
+    def test_chat_cannot_be_duplicated_with_same_partners(self):
+        self.env["discuss.channel"]._get_or_create_chat(self.partner_employee.ids)
+        with self.assertRaises(errors.UniqueViolation):
+            self.env["discuss.channel"].create(
+                {
+                    "name": "Chat",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        Command.create({"partner_id": self.partner_employee.id}),
+                        Command.create({"partner_id": self.env.user.partner_id.id}),
+                    ],
+                }
+            )
