@@ -55,6 +55,14 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    @template('ca_2023', 'account.fiscal.position')
+    def _get_ca_account_fiscal_position(self):
+        """ Ensure the appropriate domestic_fiscal_position_id gets set. """
+        code = (self.env.company.state_id.code or '').lower()
+        if code in ('ab', 'bc', 'mb', 'nb', 'nl', 'ns', 'nt', 'nu', 'on', 'pe', 'qc', 'sk', 'yt'):
+            return {f'fiscal_position_template_{code}': {'sequence': 1}}
+        return {}
+
     def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
         accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
         if company.account_fiscal_country_id.code == 'CA':
