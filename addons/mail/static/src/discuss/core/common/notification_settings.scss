@@ -10,6 +10,10 @@
     .btn {
         &:hover, &.show {
             background-color: var(--mail-NotificationSettings-btnHoverBg, mix($gray-100, $gray-200));
+
+            .o-simulateDarkTheme & {
+                background-color: mix($gray-700, $gray-800);
+            }
         }
     }
 }
