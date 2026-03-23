@@ -29,6 +29,7 @@
         'data/cron.xml',
         'data/mail_templates_email_layouts.xml',
         'data/res_partner_data.xml',
+        'data/peppol_activate_views.xml',
         'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/account_portal_templates.xml',
@@ -49,6 +50,7 @@
         ],
         'web.assets_frontend': [
             'account_peppol/static/src/interactions/*',
+            'account_peppol/static/src/css/**/*',
         ],
     },
     'auto_install': ['account_edi_ubl_cii'],  # auto-install when account_edi_ubl_cii AND one company exists in countries above

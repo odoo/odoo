@@ -29,21 +29,25 @@
                         </div>
                         <div class="row mt-1"
                             invisible="peppol_use_parent_company or account_peppol_proxy_state == 'not_registered'">
-                            <label string="Peppol Contact Email"
+                            <label string="Peppol Contact Email:"
                                 for="account_peppol_contact_email"
                                 class="col-lg-5 o_light_label"/>
-                            <field name="account_peppol_contact_email"
-                                    required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
-                        </div>
-                        <div class="o_setting_right_pane" id="peppol_participation_role_config" company_dependent="1"
-                            invisible="not peppol_participation_role or peppol_use_parent_company">
-                            <div class="mb-2">
-                                <span class="o_form_label">
-                                    <label string="Peppol Participation Role" for="peppol_participation_role"/>
-                                </span>
+                            <div class="col-lg-7 p-0 ms-n3">
+                                <field name="account_peppol_contact_email"
+                                       required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
                             </div>
-                            <field name="peppol_participation_role" widget="radio"/>
                         </div>
+                        <setting class="col-lg-12 ms-n4">
+                            <div class="mt-3" id="peppol_participation_role_config" company_dependent="1"
+                                invisible="not peppol_participation_role or peppol_use_parent_company">
+                                <div class="mb-2">
+                                    <span class="o_form_label">
+                                        <label string="Peppol Participation Role" for="peppol_participation_role"/>
+                                    </span>
+                                </div>
+                                <field name="peppol_participation_role" widget="radio"/>
+                            </div>
+                        </setting>
                         <!-- Info in case of rejected. -->
                         <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'rejected'">
                             You registration has been rejected, the reason has been sent to you via email.
@@ -69,7 +73,7 @@
                                 </div>
                                 <button name="action_open_peppol_form"
                                         type="object"
-                                        string="Activate Electronic Invoicing"
+                                        string="Activate Peppol"
                                         class="oe_highlight mt-2"/>
                             </div>
                             <!--Branch company connected to parent's active peppol connection.-->

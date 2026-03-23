@@ -3,6 +3,7 @@
 import contextlib
 import re
 import requests
+import hashlib
 from lxml import etree
 from stdnum import get_cc_module, ean
 
@@ -183,6 +184,12 @@ class ResCompany(models.Model):
 
         return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
 
+    def _get_portal_hash(self):
+        self.ensure_one()
+        db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+        raw_string = f"{db_uuid}-{self.id}"
+
+        return hashlib.sha256(raw_string.encode()).hexdigest()[:12]
     # -------------------------------------------------------------------------
     # CONSTRAINTS
     # -------------------------------------------------------------------------

@@ -88,6 +88,7 @@ class PeppolRegistration(models.TransientModel):
     peppol_can_connect_data = fields.Json(compute='_compute_peppol_can_connect_data')
     display_itsme_login = fields.Boolean(compute='_compute_peppol_can_connect_data')
     display_no_auth_buttons = fields.Boolean(compute='_compute_peppol_can_connect_data')
+    peppol_new_auth_url = fields.Char(compute='_compute_peppol_new_auth_url')
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -217,6 +218,12 @@ class PeppolRegistration(models.TransientModel):
             wizard.display_itsme_login = bool(connect_vals.get('available_auths', {}).get('itsme'))
             wizard.display_no_auth_buttons = not bool(connect_vals.get('auth_required'))
 
+    @api.depends_context('flow')
+    def _compute_peppol_new_auth_url(self):
+        for wizard in self:
+            res = wizard._can_connect("new")
+            wizard.peppol_new_auth_url = res.get('available_auths', {}).get('itsme', {}).get('authorization_url')
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -244,7 +251,7 @@ class PeppolRegistration(models.TransientModel):
 
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
-            'name': _("Activate Electronic Invoicing (via Peppol)"),
+            'name': _("Activate Peppol"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'peppol.registration',
@@ -326,7 +333,7 @@ class PeppolRegistration(models.TransientModel):
         }
 
     @handle_demo
-    def _can_connect(self):
+    def _can_connect(self, flow=None):
         self.ensure_one()
         db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         peppol_identifier = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
@@ -337,6 +344,7 @@ class PeppolRegistration(models.TransientModel):
             db_uuid=db_uuid,
             callback_url=callback_url,
             connect_token=connect_token,
+            flow=flow,
         )
 
     @api.model
@@ -394,30 +402,39 @@ class PeppolRegistration(models.TransientModel):
             'peppol_webhook_token': self.env['account_edi_proxy_client.user']._generate_webhook_token(company),
         }
 
+    # deprecated, only used in <= v19.1
     def button_register_with_itsme(self):
         self.ensure_one()
+        res = PeppolIAPConnector(self.company_id).kyb_cbe(self.peppol_eas, self.peppol_endpoint, self.company_id.account_peppol_phone_number)
+        if res["status"] != 200:
+            raise ValidationError(_("Error registering user, %s", res["message"]))
         return self.button_register_peppol_participant(selected_auth='itsme')
+
+    def kyb_button(self):
+        self.ensure_one()
+
+        if self.peppol_eas in {'0208', '9925'}:
+            self.with_context(flow='new')
+            res = PeppolIAPConnector(self.company_id).kyb_cbe(self.peppol_eas, self.peppol_endpoint, self.company_id.account_peppol_phone_number)
+            if res["status"] != 200:
+                raise ValidationError(_("Error registering user, %s", res["message"]))
+
+        self.archive_users()
+        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
+        portal_hash = self.company_id._get_portal_hash()
+
+        auth_type = next(iter(self.peppol_can_connect_data["available_auths"]))
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"{base_url}/peppol/activate/{auth_type}/{portal_hash}/0",
+            'target': 'new',
+        }
 
     def button_register_peppol_participant(self, selected_auth=None):
         self.ensure_one()
         self._ensure_mandatory_fields()
 
-        # Make sure we archive possible existing proxy user when (re-)registering
-        old_proxy_users = self.env['account_edi_proxy_client.user'].search([
-            ('company_id', '=', self.company_id.id),
-            ('proxy_type', '=', 'peppol'),
-            ('edi_identification', '=', f'{self.peppol_eas}:{self.peppol_endpoint}')
-        ])
-        old_proxy_users.active = False
-        _logger.debug("De-registering existing Peppol proxy user for company %s", self.company_id.display_name)
-
-        if self.use_parent_connection:
-            self.company_id.write({
-                'peppol_eas': self.peppol_eas,
-                'peppol_endpoint': self.peppol_endpoint,
-                'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
-            })
+        self.archive_users()
         self._ensure_can_connect(self.peppol_can_connect_data, selected_auth=selected_auth)
         if self.peppol_can_connect_data.get('auth_required'):
             return {
@@ -449,3 +466,24 @@ class PeppolRegistration(models.TransientModel):
             title=None,
             message=notifications[self.company_id.account_peppol_proxy_state]['message'],
         )
+
+    def archive_users(self):
+        self.ensure_one()
+        self._ensure_mandatory_fields()
+
+        # Make sure we archive possible existing proxy user when (re-)registering
+        old_proxy_users = self.env['account_edi_proxy_client.user'].search([
+            ('company_id', '=', self.company_id.id),
+            ('proxy_type', '=', 'peppol'),
+            ('edi_identification', '=', f'{self.peppol_eas}:{self.peppol_endpoint}')
+        ])
+        old_proxy_users.active = False
+        _logger.debug("De-registering existing Peppol proxy user for company %s", self.company_id.display_name)
+
+        if self.use_parent_connection:
+            self.company_id.write({
+                'peppol_eas': self.peppol_eas,
+                'peppol_endpoint': self.peppol_endpoint,
+                'account_peppol_contact_email': self.contact_email,
+                'account_peppol_phone_number': self.phone_number,
+            })
