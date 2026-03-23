@@ -64,6 +64,11 @@ class TestCursor(Cursor):
                 and last_cursor._cnx._savepoint
             ):
                 raise Exception('Opening a read/write test cursor from a readonly one')  # noqa: TRY301
+            # Flush the main cursor
+            from .common import flushing_cursor  # noqa: PLC0415
+            flushing = flushing_cursor(cursor)
+            flushing.__enter__()
+            self._cnx._when_closed = lambda: flushing.__exit__(None, None, None)
         except Exception:
             self._lock.release()
             raise
@@ -116,12 +121,14 @@ class MockedPsycoConnection(_base_PsycoConnection):
         # savepoint at its last commit. This savepoint is created lazily.
         self._savepoint: Savepoint | None = None
         self._obj = None
+        self._when_closed = lambda: None
 
     def set_session(self, *a, **kw):
         pass  # ignoring
 
     def give_back(self, keep_in_pool=True):
         del self._obj
+        self._when_closed()
 
     def _check_savepoint(self) -> None:
         if self._savepoint:
