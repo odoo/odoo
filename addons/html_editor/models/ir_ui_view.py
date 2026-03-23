@@ -50,17 +50,18 @@ class IrUiView(models.Model):
 
         views_to_return = view
 
-        node = etree.fromstring(view.arch)
-        xpath = "//t[@t-call]"
-        if bundles:
-            xpath += "| //t[@t-call-assets]"
-        for child in node.xpath(xpath):
-            try:
-                called_view = self._get_template_view(child.get('t-call', child.get('t-call-assets')))
-            except MissingError:
-                continue
-            if called_view and called_view not in views_to_return and called_view.id not in visited:
-                views_to_return += self._views_get(called_view, get_children=get_children, bundles=bundles, visited=visited + views_to_return.ids)
+        if view.arch and view.arch.strip():
+            node = etree.fromstring(view.arch)
+            xpath = "//t[@t-call]"
+            if bundles:
+                xpath += "| //t[@t-call-assets]"
+            for child in node.xpath(xpath):
+                try:
+                    called_view = self._get_template_view(child.get('t-call', child.get('t-call-assets')))
+                except MissingError:
+                    continue
+                if called_view and called_view not in views_to_return and called_view.id not in visited:
+                    views_to_return += self._views_get(called_view, get_children=get_children, bundles=bundles, visited=visited + views_to_return.ids)
 
         if not get_children:
             return views_to_return.with_prefetch()  # simplify prefetching to avoid memory error
