@@ -95,9 +95,10 @@ export class MentionList extends Component {
                 }));
                 break;
             case "channel":
-                props.optionTemplate = "mail.Composer.suggestionThread";
+                props.optionTemplate = "mail.Composer.suggestionChannel";
                 props.options = this.state.options.map((suggestion) => ({
                     label: suggestion.displayName,
+                    channel: suggestion,
                     thread: suggestion,
                     classList: "o-mail-Composer-suggestion",
                 }));
