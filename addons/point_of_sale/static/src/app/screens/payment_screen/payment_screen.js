@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
+import { formatCurrency } from "@web/core/currency";
 import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -227,7 +228,10 @@ export class PaymentScreen extends Component {
 
         this.dialog.add(NumberPopup, {
             title: tip.amount > 0 ? _t("Change Tip") : _t("Add Tip"),
-            startingValue: String(tip.value || amount || 0),
+            startingValue:
+                tip.type === "percent"
+                    ? String(tip.value || 0)
+                    : formatCurrency(tip.amount || amount || 0),
             startingType: tip.type || "fixed",
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
