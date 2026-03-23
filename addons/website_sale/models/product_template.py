@@ -977,7 +977,7 @@ class ProductTemplate(models.Model):
         """ Override to fallback on website current pricelist """
         pricelist = super()._get_contextual_pricelist()
         if request and request.is_frontend and not pricelist:
-            return request.pricelist
+            return request.pricelist.with_context(request.env.context)
         return pricelist
 
     def _website_show_quick_add(self):
