@@ -247,6 +247,11 @@ class AccountMoveLine(models.Model):
 
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
 
+    def create(self, vals_list):
+        if self._context.get('is_price_change'):
+            vals_list = [val for val in vals_list if val.get('display_type') != 'tax']
+        return super().create(vals_list)
+
     def _compute_account_id(self):
         super()._compute_account_id()
         input_lines = self.filtered(lambda line: (
