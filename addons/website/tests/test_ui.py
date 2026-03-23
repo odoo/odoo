@@ -528,7 +528,8 @@ class TestUi(HttpCaseWithWebsiteUser):
             'parent_id': menu_root.id,
             'action': 'ir.actions.act_window,%d' % (self.env.ref('base.open_module_tree').id,),
         })
-        self.env.ref('base.user_admin').action_id = self.env.ref('base.menu_administration').id
+        self.env.ref('base.user_admin').action_id = self.env['ir.actions.actions'].search([('name', '=', 'Settings')], limit=1)
+        self.assertTrue(self.env.ref('base.user_admin').action_id, 'The user should have an action (or the test/tour will not test anything).')
         self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
 
