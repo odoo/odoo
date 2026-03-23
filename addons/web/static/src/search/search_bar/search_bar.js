@@ -620,10 +620,7 @@ export class SearchBar extends Component {
 
     onFacetLabelClick(target, facet) {
         const { domain, groupId } = facet;
-        if (this.env.searchModel.canOrderByCount && facet.type === "groupBy") {
-            this.env.searchModel.switchGroupBySort();
-            return;
-        } else if (!domain) {
+        if ((this.env.searchModel.canOrderByCount && facet.type === "groupBy") || !domain) {
             return;
         }
         const { resModel } = this.env.searchModel;

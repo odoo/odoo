@@ -264,10 +264,24 @@
             }
         }
 
+        .o_count_header, .o_count_column {
+            min-width: 105px;
+            white-space: nowrap;
+            background-color: var(--ListRenderer-thead-bg-color);
+            .o_pager {
+                > .btn-group {
+                    display: none;
+                }
+            }
+        }
+        .o_pager_cell_buttons .o_pager_counter {
+            display: none;
+        }
+
         // Grouped list views
         tbody > tr.o_group_header {
-            --table-bg: var(--table-striped-bg);
-            --table-color: var(--table-striped-color);
+            --table-bg: var(--ListRenderer-thead-bg-color);
+            --table-color: var(--ListRenderer-thead-bg-color);
             height: 40px;
 
             &:hover .o_group_config {
@@ -293,34 +307,44 @@
                     margin-right: 3px;
                 }
             }
-            .o_pager {
-                cursor: text;
-                user-select: none;
-                text-align: right;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-                margin-top: -2px;
-                margin-bottom: -2px;
+            .o_pager_cell_buttons {
+                width: 100%;
+                display: flex;
+                justify-content: center;
 
-                .o_pager_previous,
-                .o_pager_next {
-                    max-height: 30px;
-                    padding: 0 5px;
-                    background-color: lighten($o-brand-lightsecondary, 10%);
-                    &:hover {
-                        background-color: $o-brand-lightsecondary;
-                    }
-                }
-            }
-            .o_pager_hidden {
                 .o_pager {
-                    visibility: hidden;
+                    gap: 0 !important;
+                    margin: 0;
+                    padding: 0;
 
-                    .o_pager_counter {
-                        display: none;
+                    .btn-group {
+                        display: flex;
+                    }
+
+                    .o_pager_previous,
+                    .o_pager_next {
+                        padding: 0 !important;
+                        width: 16px !important;
+                        height: 24px !important;
+
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+
+                        background-color: lighten($o-brand-lightsecondary, 10%);
+                        &:hover {
+                            background-color: $o-brand-lightsecondary;
+                        }
+                        i {
+                            // Needed to avoid the chevrons to be misaligned
+                            line-height: 0 !important;
+                            font-size: 10px;
+                            margin: 0;
+                        }
                     }
                 }
             }
+
             .o_group_caret {
                 margin-inline-start: calc(var(--o-list-group-level, 0) * #{map-get($spacers, 4)});
             }
@@ -378,8 +402,8 @@
         }
 
         .o_list_actions_header {
-            width: 32px;
-            min-width: 32px;
+            width: 36px !important;
+            min-width: 36px;
             background-color: var(--ListRenderer-thead-bg-color);
         }
 

@@ -259,7 +259,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
         groupBy: ["int_field"],
     });
     expect(`.o_resize`).toHaveCount(9);
-    expectedColumnWidthsToBeCloseTo([40, 29, 89, 80, 89, 102, 99, 188, 114, 34, 32]);
+    expectedColumnWidthsToBeCloseTo([40, 29, 89, 80, 89, 102, 99, 188, 114, 34, 64, 36]);
 });
 
 test(`width computation: with records, few fields`, async () => {
@@ -1245,20 +1245,20 @@ test(`freeze widths: toggle optional fields`, async () => {
         `,
     });
 
-    expectedColumnWidthsToBeCloseTo([40, 99, 440, 188, 32]);
+    expectedColumnWidthsToBeCloseTo([40, 99, 436, 188, 36]);
 
     await contains(".o_optional_columns_dropdown_toggle").click();
     await contains(".dropdown-item input:eq(0)").click();
-    expectedColumnWidthsToBeCloseTo([40, 99, 337, 102, 189, 32]);
+    expectedColumnWidthsToBeCloseTo([40, 99, 334, 102, 189, 36]);
 
     await contains(".dropdown-item input:eq(1)").click();
-    expect(getColumnWidths()).toEqual([40, 99, 526, 102, 32]);
+    expect(getColumnWidths()).toEqual([40, 99, 522, 102, 36]);
 
     await contains(".dropdown-item input:eq(2)").click();
-    expect(getColumnWidths()).toEqual([40, 99, 89, 102, 437, 32]);
+    expect(getColumnWidths()).toEqual([40, 99, 89, 102, 433, 36]);
 
     await contains(".dropdown-item input:eq(1)").click();
-    expectedColumnWidthsToBeCloseTo([40, 99, 89, 103, 189, 247, 32]);
+    expectedColumnWidthsToBeCloseTo([40, 99, 89, 103, 189, 244, 36]);
 });
 
 test(`freeze widths: x2many, add first record`, async () => {
@@ -1353,16 +1353,16 @@ test(`freeze widths: x2many, toggle optional field`, async () => {
             </form>`,
     });
 
-    expect(getColumnWidths()).toEqual([110, 626, 32]);
+    expect(getColumnWidths()).toEqual([110, 622, 36]);
 
     // create a record to store the current widths, but discard it directly to keep
     // the list empty (otherwise, the browser automatically computes the optimal widths)
     await contains(".o_field_x2many_list_row_add button").click();
-    expect(getColumnWidths()).toEqual([110, 626, 32]);
+    expect(getColumnWidths()).toEqual([110, 622, 36]);
 
     await contains(".o_optional_columns_dropdown_toggle").click();
     await contains(".dropdown-item input").click();
-    expect(getColumnWidths()).toEqual([110, 545, 80, 32]);
+    expect(getColumnWidths()).toEqual([110, 541, 80, 36]);
 });
 
 // manually resize columns

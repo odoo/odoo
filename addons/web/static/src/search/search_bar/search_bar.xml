@@ -18,7 +18,6 @@
                     t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
                         'text-bg-action': facet.type == 'groupBy',
-                        'btn': facet.type == 'groupBy' and this.env.searchModel.canOrderByCount,
                         'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
                         'btn btn-favourite': facet.type == 'favorite'
                     }"
@@ -32,12 +31,6 @@
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >
                         <i class="fa fa-fw fa-pencil"/>
-                    </span>
-                    <span t-if="this.env.searchModel.canOrderByCount and facet.type === 'groupBy' and !this.env.searchModel.orderByCount"
-                        class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
-                        t-att-class="{'px-2 transition-base': !facet.icon}"
-                        >
-                        <i class="fa fa-fw fa-sort"/>
                     </span>
                 </div>
 

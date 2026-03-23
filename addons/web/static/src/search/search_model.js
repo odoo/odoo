@@ -1928,12 +1928,7 @@ export class SearchModel extends EventBus {
             if (type === "field") {
                 facet.title = title;
             } else {
-                if (type === "groupBy" && this.orderByCount) {
-                    facet.icon =
-                        FACET_ICONS[this.orderByCount === "Asc" ? "groupByAsc" : "groupByDesc"];
-                } else {
-                    facet.icon = FACET_ICONS[type];
-                }
+                facet.icon = FACET_ICONS[type];
                 facet.color = FACET_COLORS[type];
             }
             if (tooltip) {
