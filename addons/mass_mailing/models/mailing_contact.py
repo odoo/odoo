@@ -49,7 +49,7 @@ class MailingContact(models.Model):
         compute='_compute_opt_out', search='_search_opt_out',
         help='Opt out flag for a specific mailing list. '
              'This field should not be used in a view without a unique and active mailing list context.')
-    res_partner_id = fields.Many2one('res.partner', "Partner")
+    res_partner_id = fields.Many2one('res.partner', "Partner", index='btree_not_null')
 
     _res_partner_id = models.Constraint(
         "UNIQUE(res_partner_id)",
