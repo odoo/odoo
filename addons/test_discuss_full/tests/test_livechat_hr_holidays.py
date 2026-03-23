@@ -28,6 +28,8 @@ class TestLivechatHrHolidays(HttpCase, MailCommon):
                 "state": "validate",
             }
         )
+        # necessary due to missing dependecies in im_status compute overrides
+        cls.user_employee.invalidate_recordset(["im_status"])
 
     def test_operator_available_on_leave(self):
         """Test operator is available on leave when they are online."""
