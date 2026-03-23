@@ -3,7 +3,7 @@
 
     <t t-name="project.ProjectTaskControlPanel" t-inherit="web.ControlPanel">
         <xpath expr="//button[@name='embedded_actions']" position="replace">
-            <t t-if="showTaskOptions and !env.isSmall or env.isSmall and !state.embeddedInfos.embeddedActions?.length">
+            <t t-if="showTaskOptions and (!env.isSmall or !state.embeddedInfos.embeddedActions?.length)">
                 <Dropdown>
                     <button class="btn btn-secondary" t-att-title="taskOptionsTitle">
                         <i class="fa fa-sliders"/>
