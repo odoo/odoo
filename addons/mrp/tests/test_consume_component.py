@@ -478,7 +478,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         mo = self.create_mo(self.mo_serial_tmpl, 1)
         mo.action_confirm()
-        mo.move_raw_line_ids.quantity = 1
+        mo.move_raw_ids.move_line_ids.quantity = 1
         mo.move_raw_ids.write({
             'move_line_ids': [
                 Command.create({
@@ -491,7 +491,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         })
         mo.button_mark_done()
         mo.invalidate_recordset()
-        self.assertRecordValues(mo.move_raw_line_ids, [
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
             {'quantity': 1.0},
             {'quantity': 1.0},
         ])
