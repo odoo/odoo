@@ -450,7 +450,7 @@ test("should break gradient color on selected text", async () => {
         ),
         contentAfter:
             '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab</font>' +
-            '<font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</font>' +
+            '<font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%); background-color: transparent;">[ca]</font>' +
             '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">bc</font></p>',
     });
 });
@@ -505,7 +505,7 @@ test("should apply gradient color on selected text", async () => {
             "backgroundColor"
         ),
         contentAfter:
-            '<div style="background-image:none"><p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
+            '<div style="background-image:none"><p><font style="background-color: transparent; background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
     });
 });
 test("should apply gradient text color on selected text", async () => {
@@ -672,7 +672,7 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${greenToBlueGradient};'>a</div>`,
+            contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${greenToBlueGradient}; background-color: transparent;'>a</div>`,
         });
     });
     test("should keep the background image when switching o_cc class", async () => {
@@ -862,7 +862,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${greenToBlueGradient};">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${greenToBlueGradient}; background-color: transparent;">a</div>`,
                 });
             });
         });

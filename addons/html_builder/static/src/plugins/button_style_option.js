@@ -225,7 +225,7 @@ export class ButtonFillColorAction extends StyleAction {
         // This override is needed because when the button is in outline mode,
         // the color is not shown unless we hover the button
         const { editingElement: el } = context;
-        return el.style.backgroundColor || el.style.backgroundImage || super.getValue(context);
+        return el.style.backgroundImage || el.style.backgroundColor || super.getValue(context);
     }
 }
 
