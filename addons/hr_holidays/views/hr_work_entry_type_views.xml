@@ -121,21 +121,18 @@
     </record>
 
     <record id="view_work_entry_type_normal_tree" model="ir.ui.view">
-        <field name="name">hr.work.entry.type.normal.list</field>
+        <field name="name">hr.work.entry.type.view.tree.inherit.hr_holidays</field>
         <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_tree"/>
         <field name="arch" type="xml">
-            <list string="Time Type" multi_edit="1">
-                <field name="sequence" widget="handle"/>
-                <field name="display_name"/>
-                <field name="unit_of_measure" optional="hide"/>
-                <field name="request_unit" optional="hide"/>
+            <field name="count_as" position="after">
+                <field name="unit_of_measure"/>
+                <field name="request_unit"/>
                 <field name="leave_validation_type" optional="hide" string="Time Type Approval"/>
                 <field name="requires_allocation" optional="hide"/>
-                <field name="allocation_validation_type" string="Allocation Approval"/>
+                <field name="allocation_validation_type" string="Allocation Approval" optional="hide" invisible="not requires_allocation"/>
                 <field name="employee_requests" optional="hide"/>
-                <field name="color" widget="color_picker" optional="hide"/>
-                <field name="country_id" groups="base.group_multi_company" optional="show" readonly="is_used"/>
-            </list>
+            </field>
         </field>
     </record>
 
