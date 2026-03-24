@@ -5,6 +5,7 @@ from . import account_journal
 from . import account_move_line
 from . import account_payment
 from . import account_tax
+from . import base_document_layout
 from . import company
 from . import iap_account
 from . import product_template

@@ -142,4 +142,24 @@
         </div>
     </template>
 
+    <template id="l10n_in_invoice_document_duplicate">
+        <t t-call="l10n_in.document_renderer" copies_to_print="['ORIGINAL FOR RECIPIENT', 'DUPLICATE FOR SUPPLIER']"/>
+    </template>
+
+    <template id="l10n_in_invoice_document_triplicate">
+        <t t-call="l10n_in.document_renderer" copies_to_print="['ORIGINAL FOR RECIPIENT', 'DUPLICATE FOR TRANSPORTER', 'TRIPLICATE FOR SUPPLIER']"/>
+    </template>
+
+    <template id="document_renderer">
+        <t t-foreach="copies_to_print" t-as="l10n_in_report_title">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="l10n_in.l10n_in_report_invoice_document_inherit" t-lang="lang">
+                </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
 </odoo>

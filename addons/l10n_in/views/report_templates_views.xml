@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_report_document_title">
+        <t t-if="l10n_in_report_title">
+            <span class="text-primary text-center" style="text-decoration:underline;" t-out="l10n_in_report_title"/>
+        </t>
+    </template>
+
+    <template id="l10n_in_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//table/.." position="attributes">
+            <attribute name="t-attf-class" add="position-relative" separator=" "/>
+        </xpath>
+        <xpath expr="//table" position="before">
+            <div class="d-flex justify-content-end mb-2" style="position:absolute; top:1rem; left:0; right:0;">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_folder_company_info')]" position="before">
+            <div class="d-flex justify-content-center mb-2" style="position:absolute; top:1rem; left:0; right:0;">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[hasclass('justify-content-between')]" position="before">
+            <div class="d-flex justify-content-center mb-2" style="position:absolute; top:1rem; left:0; right:0;">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//table[hasclass('o_ignore_layout_styling')]" position="before">
+            <div class="d-flex justify-content-center mb-2" style="position:absolute; top:1rem; left:0; right:0;">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_center" inherit_id="web.external_layout_center">
+        <xpath expr="//img" position="before">
+            <div class="d-flex justify-content-center mb-2">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_dual" inherit_id="web.external_layout_dual">
+        <xpath expr="//table[hasclass('table-borderless')]" position="before">
+            <div class="d-flex justify-content-center mb-2" style="position:absolute; top:1rem; left:0; right:0;">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_lines" inherit_id="web.external_layout_lines">
+        <xpath expr="//table[hasclass('table-borderless')]" position="before">
+            <div class="d-flex justify-content-center mb-2" style="position:absolute; top:1rem; left:0; right:0;">
+                <t t-call="l10n_in.l10n_in_report_document_title"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

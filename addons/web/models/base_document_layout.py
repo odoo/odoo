@@ -24,10 +24,13 @@ class BaseDocumentLayout(models.TransientModel):
     _name = 'base.document.layout'
     _description = 'Company Document Layout'
 
+    def _get_footer_fields(self):
+        company = self.env.company
+        return [company.phone, company.email, company.website, company.vat]
+
     @api.model
     def _default_report_footer(self):
-        company = self.env.company
-        footer_fields = [field for field in [company.phone, company.email, company.website, company.vat] if isinstance(field, str) and len(field) > 0]
+        footer_fields = [field for field in self._get_footer_fields() if isinstance(field, str) and len(field) > 0]
         return Markup(' ').join(footer_fields)
 
     @api.model
