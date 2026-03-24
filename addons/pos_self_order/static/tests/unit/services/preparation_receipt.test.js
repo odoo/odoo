@@ -43,8 +43,8 @@ describe("preparation ticket", () => {
 
         const result = checkKioskPreparationTicketData(store, [
             { name: "Product combo", qty: 2 },
-            { name: "Wood desk", qty: 2 },
             { name: "Wood chair", qty: 2 },
+            { name: "Wood desk", qty: 2 },
         ]);
         expect(result).toBe(true);
     });
