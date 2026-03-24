@@ -23,13 +23,11 @@
         'security/test_company_checks/ir.model.access.csv',
         'security/test_convert/ir.model.access.csv',
         'security/test_convert_env/ir.model.access.csv',
-        'security/test_create/ir.model.access.csv',
         'security/test_domain/ir.model.access.csv',
         'security/test_fields/ir.model.access.csv',
         'security/test_indexed_translation/ir.model.access.csv',
         'security/test_inherits/ir.model.access.csv',
         'security/test_ir_rules/ir.model.access.csv',
-        'security/test_json_field/ir.model.access.csv',
         'security/test_many2many/ir.model.access.csv',
         'security/test_one2many/ir.model.access.csv',
         'security/test_performance/ir.model.access.csv',
@@ -43,6 +41,7 @@
         'security/test_search/ir.model.access.csv',
         'security/test_sort/ir.model.access.csv',
         'security/test_views/ir.model.access.csv',
+        'security/ir.model.access.csv',
 
         # VIEWS
         'views/test_views.xml',
