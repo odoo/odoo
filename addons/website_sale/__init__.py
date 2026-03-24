@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tools.safe_eval import safe_whitelist
+
 from . import controllers, models, report
 
 
@@ -26,3 +28,7 @@ def uninstall_hook(env):  # noqa: RUF067
     multi_company_rules = pl_rule or env["ir.rule"]
     multi_company_rules += pl_item_rule or env["ir.rule"]
     multi_company_rules.write({"active": True})
+
+
+safe_whitelist.add_function('odoo.addons.website_sale.controllers.main.WebsiteSale.shop.<locals>.*')
+safe_whitelist.add_function('odoo.addons.website_sale.models.website.Website._get_product_sort_mapping')

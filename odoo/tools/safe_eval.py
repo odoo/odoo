@@ -1094,68 +1094,6 @@ def _initialize_safe_whitelist():
     # Monkey patches
     safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
     safe_whitelist.add_function('odoo._monkeypatches.*')
-
-    # Addons
-    # [base]
-    safe_whitelist.add_instance('odoo.addons.base.models.ir_qweb.QWebError')
-    safe_whitelist.add_instance('odoo.addons.base.models.ir_qweb.QwebContent')
-    safe_whitelist.add_instance('odoo.addons.base.models.ir_qweb.QwebJSON')
-    safe_whitelist.add_instance('odoo.addons.base.models.res_lang.LangDataDict')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_actions.LoggerProxy.error')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_actions.LoggerProxy.exception')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_actions.LoggerProxy.info')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_actions.LoggerProxy.log')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_actions.LoggerProxy.warning')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_actions_report.IrActionsReport._render_template.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.base.models.ir_qweb.generate_functions.<locals>.*')  # `__name__` is present in globals for Qweb compiled template
-    safe_whitelist.add_function('odoo.addons.base.models.ir_qweb.keep_query')
-    safe_whitelist.add_function('odoo.addons.base.models.res_partner._tz_get')
-    # [portal]
-    safe_whitelist.add_function('odoo.addons.portal.controllers.portal.get_error')
-    safe_whitelist.add_function('odoo.addons.portal.models.ir_qweb.IrQweb._prepare_frontend_environment.<locals>.*')
-    # [sale_subscription]
-    safe_whitelist.add_function('odoo.addons.sale_subscription.controllers.portal.CustomerPortal.subscription.<locals>.*')
-    # [website_{blog, event, sale, slides}]
-    safe_whitelist.add_instance('odoo.addons.website.controllers.main.QueryURL')
-    safe_whitelist.add_function('odoo.addons.website.controllers.model_page.ModelPageController.generic_model.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.website.models.ir_qweb.IrQweb._prepare_frontend_environment.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.website_blog.controllers.main.WebsiteBlog.tags_list')
-    safe_whitelist.add_function('odoo.addons.website_event.controllers.main.WebsiteEventController._slugify_tags')
-    safe_whitelist.add_function('odoo.addons.website_sale.controllers.main.WebsiteSale.shop.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.website_sale.models.website.Website._get_product_sort_mapping')
-    safe_whitelist.add_function('odoo.addons.website_slides.controllers.main.WebsiteSlides._slugify_tags')
-    # [mail]
-    safe_whitelist.add_function('odoo.addons.mail.models.mail_render_mixin.MailRenderMixin._render_eval_context.<locals>.*')
-    # [account_{*} + l10n_{*}]
-    safe_whitelist.add_instance('odoo.addons.account_reports.utils.report_data_objects.AccountReportLineData')
-    safe_whitelist.add_instance('odoo.addons.hr_payroll.models.hr_payslip.DefaultDictPayroll')
-    safe_whitelist.add_function('odoo.addons.account_edi_ubl_cii.models.account_edi_xml_cii_facturx.AccountEdiXmlCii._export_invoice_vals.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.account_saft.models.account_general_ledger.AccountGeneralLedgerReportHandler._saft_prepare_report_values.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_be_hr_payroll.models.l10n_be_273S.L10n_Be273s._get_rendering_data.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_ec_reports_ats.models.tax_report.AccountTaxReportHandler._generate_ats.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.L10n_Es_Edi_TbaiDocument._generate_xml.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection.format_bool')
-    safe_whitelist.add_function('odoo.addons.l10n_in_hr_payroll.models.hr_payslip.HrPayslip._get_base_local_dict.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_in_hr_payroll.report.report_hr_yearly_salary_detail.ReportL10n_In_Hr_PayrollReport_Hryearlysalary._get_report_values.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_get_formatters.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_lu_reports.wizard.l10n_lu_generate_xml.L10n_LuGenerateXml._save_xml_report.<locals>.*')
-    safe_whitelist.add_function('odoo.addons.l10n_mx_edi.models.l10n_mx_edi_document.L10n_Mx_EdiDocument._add_base_cfdi_values.<locals>.format_string')
-    safe_whitelist.add_function('odoo.addons.l10n_mx_edi.models.l10n_mx_edi_document.L10n_Mx_EdiDocument._add_currency_cfdi_values.<locals>.format_float')
-    safe_whitelist.add_function('odoo.addons.l10n_pe_edi_stock.models.stock_picking.StockPicking._l10n_pe_edi_get_delivery_guide_values.<locals>.format_date')
-    safe_whitelist.add_function('odoo.addons.l10n_pe_edi_stock.models.stock_picking.StockPicking._l10n_pe_edi_get_delivery_guide_values.<locals>.format_float')
-    safe_whitelist.add_function('odoo.addons.l10n_pl_edi.models.account_move.AccountMove._l10n_pl_edi_get_xml_values.<locals>.get_vat_country')
-    safe_whitelist.add_function('odoo.addons.l10n_pl_edi.models.account_move.AccountMove._l10n_pl_edi_get_xml_values.<locals>.get_amounts_from_tag')
-    safe_whitelist.add_function('odoo.addons.l10n_pl_edi.models.account_move.AccountMove._l10n_pl_edi_get_xml_values.<locals>.get_amounts_from_tag_in_PLN_currency')
-    safe_whitelist.add_function('odoo.addons.l10n_uy_edi.models.account_move.format_float')
-    # [documents]
-    safe_whitelist.add_function('odoo.addons.documents.controllers.documents.ShareRoute._documents_render_public_view.<locals>.*')
-    # [planning]
-    safe_whitelist.add_function('odoo.addons.planning.controllers.main.ShiftController._planning_get.<locals>.*')
-    # [project]
-    safe_whitelist.add_function('odoo.addons.project.models.project_update.ProjectUpdate._get_template_values.<locals>.*')
-    # [survey]
-    safe_whitelist.add_function('odoo.addons.survey.controllers.main.Survey._prepare_survey_data.<locals>.*')
-
     # Core
     safe_whitelist.add_class('odoo.upgrade.*')
     safe_whitelist.add_function('odoo.upgrade.*')
