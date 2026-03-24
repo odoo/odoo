@@ -18,6 +18,7 @@ player_regexes = {
     'vimeo': r'//(player.)?vimeo.com/([a-z]*/)*([0-9]{6,11})[?]?.*',
     'dailymotion': r'(https?://|//)?(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
+    'peertube': r'(https?://|//)(?P<base_url>.*)/(videos\/embed|w)/(?P<video_id>[a-zA-Z0-9-_]*)',
 }
 
 
@@ -41,10 +42,13 @@ def get_video_source_data(video_url):
         instagram_match = re.search(player_regexes['instagram'], video_url)
         if instagram_match:
             return ('instagram', instagram_match[2], instagram_match)
+        peertube_match = re.search(player_regexes['peertube'], video_url)
+        if peertube_match:
+            return ('peertube', peertube_match.group("video_id"), peertube_match)
     return None
 
 
-def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_dm_logo=False, hide_dm_share=False):
+def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_dm_logo=False, hide_dm_share=False, peer_to_peer=False):
     """ Computes the platform name, the embed_url, the video id and the video params of the given URL
         (or error message in case of invalid URL).
     """
@@ -91,6 +95,16 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         embed_url = f'//www.dailymotion.com/embed/video/{video_id}'
     elif platform == 'instagram':
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
+    elif platform == 'peertube':
+        params['autoplay'] = autoplay and 1 or 0
+        params['p2p'] = peer_to_peer and 1 or 0
+        if autoplay:
+            params['muted'] = 1
+        if hide_controls:
+            params['controls'] = 0
+        if loop:
+            params['loop'] = 1
+        embed_url = f'//{platform_match.group('base_url')}/videos/embed/{video_id}'
 
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'
