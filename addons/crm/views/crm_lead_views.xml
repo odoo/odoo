@@ -39,6 +39,9 @@
                                     <field name="meeting_display_date" class="o_stat_value" invisible="not meeting_display_date"/>
                                 </div>
                             </button>
+                            <button name="action_open_origin_channel" type="object" class="oe_stat_button" icon="fa-comments" invisible="not origin_channel_id" groups="sales_team.group_sale_salesman">
+                                <div class="o_stat_info"><span class="o_stat_text">View Conversation</span></div>
+                            </button>
                             <button name="action_show_potential_duplicates" type="object"
                                 class="oe_stat_button" icon="fa-star"
                                 invisible="duplicate_lead_count &lt; 1">

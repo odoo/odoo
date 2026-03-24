@@ -10,7 +10,7 @@ from markupsafe import Markup
 from odoo import Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import BinaryBytes, email_normalize, format_list, html_escape
+from odoo.tools import BinaryBytes, email_normalize, format_list, html_escape, html2plaintext
 from odoo.tools.misc import OrderedSet, hash_sign, limited_field_access_token
 from odoo.tools.sql import SQL
 
@@ -1746,3 +1746,41 @@ class DiscussChannel(models.Model):
         else:
             msg = _("You are alone in this channel.")
         self.env.user._bus_send_transient_message(self, msg)
+
+    def _get_channel_history(self):
+        """
+        Converting message body back to plaintext for correct data formatting in HTML field.
+        """
+        self.ensure_one()
+        parts = []
+        previous_message_author = None
+        message_domain = self._prepare_channel_history_message_domain()
+        # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
+        filtered_messages = (
+            self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
+        ).filtered_domain(message_domain)
+        for message in filtered_messages.sorted("id"):
+            # sudo - res.partner: accessing livechat username or name is allowed to visitor
+            message_author = message.author_id.sudo() or message.author_guest_id
+            if previous_message_author != message_author:
+                if parts:
+                    parts.append(Markup("<br/>"))
+                parts.append(
+                    Markup("<strong>%s:</strong><br/>")
+                    % self._get_message_author_display_name(message_author),
+                )
+            if not tools.is_html_empty(message.body):
+                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+                previous_message_author = message_author
+            for attachment in message.attachment_ids:
+                previous_message_author = message_author
+                # sudo - ir.attachment: public user can read attachment metadata
+                parts.append(Markup("%s<br/>") % self._attachment_to_html(attachment.sudo()))
+        return Markup("").join(parts)
+
+    def _prepare_channel_history_message_domain(self):
+        message_domain = Domain("message_type", "!=", "notification")
+        return message_domain
+
+    def _get_message_author_display_name(self, author):
+        return author.name
