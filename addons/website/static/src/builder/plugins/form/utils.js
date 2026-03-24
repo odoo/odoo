@@ -96,7 +96,7 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
-    if (field.records && (field.type === "many2one" || field.type === "selection")) {
+    if (field.records && field.type === "many2one") {
         const hasDefault =
             field.records[0]?.["display_name"] === "" ||
             field.records.some((value) => value.selected);
