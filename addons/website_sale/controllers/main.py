@@ -1242,7 +1242,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if use_delivery_as_billing:
                 partner_fnames.add('partner_invoice_id')
 
-        order_sudo._update_address(partner_sudo.id, partner_fnames)
+        try:
+            order_sudo._update_address(partner_sudo.id, partner_fnames)
+        except ValidationError as e:
+            feedback_dict.pop('redirectUrl', None)
+            feedback_dict['messages'] = list(e.args)
+            self.env.cr.rollback()
+            return json.dumps(feedback_dict)
 
         if order_sudo._is_anonymous_cart():
             # Unsubscribe the public partner if the cart was previously anonymous.

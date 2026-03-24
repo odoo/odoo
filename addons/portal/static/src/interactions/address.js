@@ -149,7 +149,7 @@ export class CustomerAddress extends Interaction {
                     element.classList.remove('is-invalid');
                 }
             })
-            result.invalid_fields.forEach(
+            result?.invalid_fields?.forEach(
                 fieldName => this.addressForm[fieldName].classList.add('is-invalid')
             );
 
