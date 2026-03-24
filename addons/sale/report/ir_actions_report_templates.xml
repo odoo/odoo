@@ -88,7 +88,7 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
-            <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
+            <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report)"/>
             <!-- Hide taxes AND show taxed amounts on lines -->
             <t t-set="hide_taxes_details" t-value="False"/>
             <t t-set="display_taxes" t-value="not hide_taxes_details and any(l._has_taxes() for l in lines_to_report)"/>
@@ -235,7 +235,12 @@
                                 </td>
                                 <td name="td_product_priceunit" class="text-end text-nowrap">
                                     <span
-                                        t-if="not collapse_prices"
+                                        t-if="not collapse_prices and line.discount &lt; 0"
+                                        t-out="(1 - line.discount / 100.0) * line.price_unit"
+                                        t-options='{"widget": "float", "decimal_precision": "Product Price"}'
+                                    />
+                                    <span
+                                        t-elif="not collapse_prices"
                                         t-field="line.price_unit"
                                     >
                                         25.00
@@ -244,7 +249,7 @@
                                 <td t-if="display_discount" name="td_product_discount" class="text-end">
                                     <t t-if="not collapse_prices">
                                         <!-- ! Always check collapse_prices separately; keep discount condition below for XPath -->
-                                        <span t-field="line.discount">-</span>
+                                        <span t-if="line.discount > 0" t-field="line.discount">-</span>
                                     </t>
                                 </td>
                                 <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
