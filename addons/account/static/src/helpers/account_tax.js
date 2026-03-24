@@ -51,26 +51,26 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-     flatten_taxes_and_sort_them(taxes) {
-         function sort_key(taxes) {
-             return taxes.toSorted((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
-         }
+    flatten_taxes_and_sort_them(taxes) {
+        function sort_key(taxes) {
+            return taxes.toSorted((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
+        }
 
-         const group_per_tax = {};
-         const sorted_taxes = [];
-         for (const tax of sort_key(taxes)) {
-             if (tax.amount_type === "group") {
-                 const children = sort_key(tax.children_tax_ids);
-                 for (const child of children) {
-                     group_per_tax[child.id] = tax;
-                     sorted_taxes.push(child);
-                 }
-             } else {
-                 sorted_taxes.push(tax);
-             }
-         }
-         return { sorted_taxes, group_per_tax };
-     },
+        const group_per_tax = {};
+        const sorted_taxes = [];
+        for (const tax of sort_key(taxes)) {
+            if (tax.amount_type === "group") {
+                const children = sort_key(tax.children_tax_ids);
+                for (const child of children) {
+                    group_per_tax[child.id] = tax;
+                    sorted_taxes.push(child);
+                }
+            } else {
+                sorted_taxes.push(tax);
+            }
+        }
+        return { sorted_taxes, group_per_tax };
+    },
 
     /**
      * [!] Mirror of the same method in account_tax.py.
@@ -167,7 +167,7 @@ export const accountTaxHelpers = {
                     add_extra_base(other_tax, -1);
                 }
 
-            // Case: special_mode = 'total_excluded'
+                // Case: special_mode = 'total_excluded'
             } else {
                 if (tax.include_base_amount) {
                     for (const other_tax of get_tax_after()) {
@@ -189,7 +189,7 @@ export const accountTaxHelpers = {
                     }
                 }
 
-            // Case: special_mode = 'total_included'
+                // Case: special_mode = 'total_included'
             } else {
                 if (!tax.include_base_amount) {
                     for (const other_tax of get_tax_after()) {
@@ -290,7 +290,7 @@ export const accountTaxHelpers = {
                     precision_rounding
                 );
             }
-            if (tax.has_negative_factor){
+            if (tax.has_negative_factor) {
                 reverse_charge_taxes_data[tax.id].tax_amount = -taxes_data[tax.id].tax_amount;
             }
 
@@ -450,7 +450,7 @@ export const accountTaxHelpers = {
         const taxes_data_list = [];
         for (const tax of sorted_taxes) {
             const tax_data = taxes_data[tax.id];
-            if ("tax_amount" in tax_data){
+            if ("tax_amount" in tax_data) {
                 taxes_data_list.push(tax_data);
                 if (tax.has_negative_factor) {
                     taxes_data_list.push(reverse_charge_taxes_data[tax.id]);
@@ -556,7 +556,7 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    prepare_base_line_for_taxes_computation(record, kwargs = {}){
+    prepare_base_line_for_taxes_computation(record, kwargs = {}) {
         const load = (field, fallback) => this.get_base_line_field_value_from_record(record, field, kwargs, fallback);
 
         const currency = (
@@ -661,7 +661,7 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     add_tax_details_in_base_lines(base_lines, company) {
-        for(const base_line of base_lines){
+        for (const base_line of base_lines) {
             this.add_tax_details_in_base_line(base_line, company);
         }
     },
@@ -1043,7 +1043,7 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    get_tax_totals_summary(base_lines, currency, company, {cash_rounding = null} = {}) {
+    get_tax_totals_summary(base_lines, currency, company, { cash_rounding = null } = {}) {
         const company_pd = company.currency_id.rounding;
         const tax_totals_summary = {
             currency_id: currency.id,
@@ -1100,12 +1100,16 @@ export const accountTaxHelpers = {
 
             // Get all involved taxes in the tax group.
             const involved_tax_ids = new Set();
+            const involved_taxes = [];
             const involved_amount_types = new Set();
             const involved_price_include = new Set();
             values.base_line_x_taxes_data.forEach(([base_line, taxes_data]) => {
                 taxes_data.forEach(tax_data => {
                     const tax = tax_data.tax;
-                    involved_tax_ids.add(tax.id);
+                    if (!involved_tax_ids.has(tax.id)) {
+                        involved_tax_ids.add(tax.id);
+                        involved_taxes.push(tax);
+                    }
                     involved_amount_types.add(tax.amount_type);
                     involved_price_include.add(tax.price_include);
                 });
@@ -1172,6 +1176,7 @@ export const accountTaxHelpers = {
                 display_base_amount,
                 group_name: tax_group.name,
                 group_label: tax_group.pos_receipt_label,
+                is_price_included: involved_taxes.some(tax => tax.price_include),
             });
         }
 
@@ -1440,7 +1445,7 @@ export const accountTaxHelpers = {
             for (const [raw_grouping_key, values] of Object.entries(aggregated_values)) {
                 const grouping_key = values.grouping_key;
 
-                if(!(raw_grouping_key in values_per_grouping_key)){
+                if (!(raw_grouping_key in values_per_grouping_key)) {
                     const initial_values = values_per_grouping_key[raw_grouping_key] = {
                         base_line_x_taxes_data: [],
                         grouping_key: grouping_key,

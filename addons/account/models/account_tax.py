@@ -2087,8 +2087,8 @@ class AccountTax(models.Model):
                     tax_details[f'total_included{suffix}'] += tax_data[f'tax_amount{suffix}']
 
         self._round_tax_details_tax_amounts(base_lines, company)
-        self._round_tax_details_base_lines(base_lines, company)
         self._round_tax_details_tax_amounts_from_tax_lines(base_lines, company, tax_lines)
+        self._round_tax_details_base_lines(base_lines, company)
 
     @api.model
     def _prepare_base_line_grouping_key(self, base_line):
@@ -2666,6 +2666,7 @@ class AccountTax(models.Model):
                 'display_base_amount': display_base_amount,
                 'group_name': tax_group.name,
                 'group_label': tax_group.pos_receipt_label,
+                'is_price_included': True in involved_taxes.mapped('price_include'),
             })
 
         # Subtotals.
