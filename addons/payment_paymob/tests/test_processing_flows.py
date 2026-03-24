@@ -22,11 +22,11 @@ class TestProcessingFlows(PaymobCommon, PaymentHttpCommon):
                 "odoo.addons.payment_paymob.controllers.main.PaymobController._compute_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_get_request(url, params=self.redirection_data)
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_paymob.controllers.main")
     def test_webhook_notification_triggers_processing(self):
@@ -38,13 +38,13 @@ class TestProcessingFlows(PaymobCommon, PaymentHttpCommon):
                 "odoo.addons.payment_paymob.controllers.main.PaymobController._compute_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(
                 url, data={"obj": self.webhook_data, "hmac": self.hmac_signature}
             )
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_paymob.controllers.main")
     def test_redirect_notification_triggers_signature_check(self):
@@ -55,7 +55,6 @@ class TestProcessingFlows(PaymobCommon, PaymentHttpCommon):
             patch(
                 "odoo.addons.payment_paymob.controllers.main.PaymobController._compute_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_http_get_request(url, params=self.redirection_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.hmac_signature)
@@ -69,7 +68,6 @@ class TestProcessingFlows(PaymobCommon, PaymentHttpCommon):
             patch(
                 "odoo.addons.payment_paymob.controllers.main.PaymobController._compute_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_json_request(url, data={"obj": self.webhook_data})
             self.assertEqual(signature_check_mock.call_args[0][0], self.hmac_signature)

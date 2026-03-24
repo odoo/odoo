@@ -2,3 +2,6 @@
 
 # The codes of the payment methods to activate when Wire Transfer is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {"wire_transfer"}
+
+# The key used in payment.data payloads to confirm custom transactions
+CUSTOM_STATE_DONE_KEY = "confirmed"

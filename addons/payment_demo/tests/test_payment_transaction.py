@@ -15,7 +15,9 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
         """Test that the transaction state is set to 'pending' when the payment data indicate
         a pending payment."""
         tx = self._create_transaction("direct")
-        tx._apply_updates(dict(self.payment_data, simulated_state="pending"))
+        tx.with_context(payment_safe_write=True)._apply_updates(
+            dict(self.payment_data, simulated_state="pending")
+        )
         self.assertEqual(tx.state, "pending")
 
     def test_apply_updates_authorizes_transaction(self):
@@ -23,28 +25,32 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
         indicate a successful payment and manual capture is enabled."""
         self.provider.capture_manually = True
         tx = self._create_transaction("direct")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "authorized")
 
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction("direct")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "done")
 
     def test_apply_updates_cancels_transaction(self):
         """Test that the transaction state is set to 'cancel' when the payment data indicate
         an unsuccessful payment."""
         tx = self._create_transaction("direct")
-        tx._apply_updates(dict(self.payment_data, simulated_state="cancel"))
+        tx.with_context(payment_safe_write=True)._apply_updates(
+            dict(self.payment_data, simulated_state="cancel")
+        )
         self.assertEqual(tx.state, "cancel")
 
     def test_apply_updates_sets_transaction_in_error(self):
         """Test that the transaction state is set to 'error' when the payment data indicate
         an error during the payment."""
         tx = self._create_transaction("direct")
-        tx._apply_updates(dict(self.payment_data, simulated_state="error"))
+        tx.with_context(payment_safe_write=True)._apply_updates(
+            dict(self.payment_data, simulated_state="error")
+        )
         self.assertEqual(tx.state, "error")
 
     def test_apply_updates_tokenizes_transaction(self):
@@ -54,7 +60,7 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
         with patch(
             "odoo.addons.payment.models.payment_transaction.PaymentTransaction._tokenize"
         ) as tokenize_mock:
-            tx._apply_updates(self.payment_data)
+            tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tokenize_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_demo.models.payment_transaction")
@@ -65,7 +71,9 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
             tx = self._create_transaction(
                 "direct", reference=f"{self.reference}-{counter}", tokenize=True
             )
-            tx._apply_updates(dict(self.payment_data, simulated_state=state))
+            tx.with_context(payment_safe_write=True)._apply_updates(
+                dict(self.payment_data, simulated_state=state)
+            )
             self.assertEqual(tx.token_id.demo_simulated_state, state)
 
     def test_making_a_payment_request_propagates_token_simulated_state_to_transaction(self):
@@ -73,6 +81,8 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
         payment request."""
         for counter, state in enumerate(["pending", "done", "cancel", "error"]):
             tx = self._create_transaction("direct", reference=f"{self.reference}-{counter}")
-            tx.token_id = self._create_token(demo_simulated_state=state)
+            token = self._create_token(demo_simulated_state=state)
+            self._update_transaction(tx, token_id=token.id)
             tx._charge_with_token()
+            self._run_processing()
             self.assertEqual(tx.state, tx.token_id.demo_simulated_state)

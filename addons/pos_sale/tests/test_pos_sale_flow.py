@@ -1206,15 +1206,15 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Test',
             'code': 'none',
         })
-        transaction = self.env['payment.transaction'].create({
+        self.env['payment.transaction'].create({
             'provider_id': provider.id,
             'payment_method_id': self.env.ref('payment.payment_method_unknown').id,
             'amount': sale_order.amount_total,
             'currency_id': sale_order.currency_id.id,
             'partner_id': sale_order.partner_id.id,
+            'state': 'done',
             'sale_order_ids': [(6, 0, [sale_order.id])],
         })
-        transaction._set_done()
         sale_order.invalidate_recordset(['transaction_ids'])
 
         self.assertEqual(
@@ -1627,8 +1627,7 @@ class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
                 state='done',
                 reference='Test Transaction',
             )
-        tx._set_done()
-        tx._post_process()
+        self._run_post_processing(tx)
         self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_pos_settle_so_with_downpayment', login="accountman")

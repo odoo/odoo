@@ -28,6 +28,11 @@ class WorldlineCommon(PaymentCommon):
         }
 
         cls.payment_data_signature = "nKI5BljRrj29B49JvWgXW8VajVr19qTU9Gvhs6S4P18="
+        cls.hostedcheckouts_response = {
+            "createdPaymentOutput": {
+                "payment": {"paymentOutput": {"references": {"merchantReference": cls.reference}}}
+            }
+        }
         cls.payment_data = {
             "payment": {
                 "paymentOutput": {

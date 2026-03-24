@@ -57,7 +57,7 @@ class StripeController(http.Controller):
             else:
                 self._include_setup_intent_in_payment_data(response_content, data)
             # Process the payment data crafted with Stripe API's objects.
-            tx_sudo._process("stripe", data)
+            tx_sudo._record(data)
 
         # Redirect the user to the status page.
         with mute_logger("werkzeug"):  # avoid logging secret URL params
@@ -132,7 +132,7 @@ class StripeController(http.Controller):
                     for refund in filter(lambda r: r["id"] not in processed_refund_ids, refunds):
                         refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
                         self._include_refund_in_payment_data(refund, data)
-                        refund_tx_sudo._process("stripe", data)
+                        refund_tx_sudo._record(data)
                     # Don't process the payment data for the source transaction.
                     return request.make_json_response("")
                 elif event["type"] == "charge.refund.updated":  # Refund operation (with update).
@@ -143,7 +143,7 @@ class StripeController(http.Controller):
                     self._include_refund_in_payment_data(stripe_object, data)
 
                 # Process the payment data crafted with Stripe API objects
-                tx_sudo._process("stripe", data)
+                tx_sudo._record(data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("Unable to process the payment data; skipping to acknowledge")
         return request.make_json_response("")

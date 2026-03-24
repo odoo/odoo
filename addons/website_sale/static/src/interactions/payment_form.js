@@ -13,9 +13,8 @@ patch(PaymentForm.prototype, {
         const submitButtons = document.querySelectorAll('button[name="o_payment_submit_button"]');
         const boundSubmitForm = this.submitForm.bind(this);
         // Create an event listener for the payment submit buttons located outside the payment form.
+        // The payment form already handles those that are located inside it.
         submitButtons.forEach(submitButton => {
-            //Buttons that are inside the payment form are ignored as they are already handled by
-            // the payment form.
             if (!this.el.contains(submitButton)) { // The button is outside the payment form.
                 submitButton.addEventListener('click', boundSubmitForm);
                 this.registerCleanup(

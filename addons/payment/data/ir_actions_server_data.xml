@@ -10,4 +10,13 @@ action = env.company._start_payment_onboarding()
         </field>
     </record>
 
+    <record id="action_confirm_payment_transaction" model="ir.actions.server">
+        <field name="name">Mark as Confirmed</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="binding_model_id" ref="payment.model_payment_transaction"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm()</field>
+    </record>
+
 </odoo>

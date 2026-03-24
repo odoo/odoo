@@ -48,7 +48,8 @@ class PaypalController(http.Controller):
                 .sudo()
                 ._search_by_reference("paypal", normalized_response)
             )
-            tx_sudo._process("paypal", normalized_response)
+            if tx_sudo:
+                tx_sudo._record(normalized_response)
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
     def paypal_webhook(self):
@@ -72,7 +73,7 @@ class PaypalController(http.Controller):
             )
             if tx_sudo:
                 self._verify_notification_origin(data, tx_sudo)
-                tx_sudo._process("paypal", normalized_data)
+                tx_sudo._record(normalized_data)
         return request.make_json_response("")
 
     def _normalize_paypal_data(self, data, from_webhook=False):
@@ -129,7 +130,10 @@ class PaypalController(http.Controller):
                 "POST", "/v1/notifications/verify-webhook-signature", json=data
             )
         except ValidationError:
-            tx_sudo._set_error(self.env._("Unable to verify the payment data"))
+            tx_sudo.with_context(
+                # The verification request is idempotent; the handler is safe to replay
+                payment_safe_write=True
+            )._set_error(self.env._("Unable to verify the payment data"))
             return
 
         if verification.get("verification_status") != "SUCCESS":

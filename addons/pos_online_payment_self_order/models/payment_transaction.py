@@ -18,11 +18,10 @@ class PaymentTransaction(models.Model):
                     tx.pos_order_id._send_self_order_receipt()
                 tx.pos_order_id._send_notification_online_payment_status('success')
 
-    def _process(self, provider_code, payment_data):
-        tx = super()._process(provider_code, payment_data)
-        if tx._is_self_order_payment_confirmed():
+    def _process(self, payment_data):
+        super()._process(payment_data)
+        if self._is_self_order_payment_confirmed():
             self.env.ref('payment.cron_post_process_payment_tx')._trigger()
-        return tx
 
     def _is_self_order_payment_confirmed(self):
         self.ensure_one()

@@ -13,14 +13,11 @@ _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
-class PaymentPostProcessing(http.Controller):
-    """
-    This controller is responsible for the monitoring and finalization of the post-processing of
-    transactions.
+class PaymentStatus(http.Controller):
+    """Controller for the payment status page.
 
-    It exposes the route `/payment/status`: All payment flows must go through this route at some
-    point to allow the user checking on the transactions' status, and to trigger the finalization of
-    their post-processing.
+    It keeps track of the transaction being monitored via the user's session and exposes routes to
+    display it and trigger the immediate processing and post-processing of the transaction.
     """
 
     MONITORED_TX_ID_KEY = "__payment_monitored_tx_id__"
@@ -36,6 +33,8 @@ class PaymentPostProcessing(http.Controller):
     def display_status(self, **_kwargs):
         """Fetch the transaction and display it on the payment status page.
 
+        All payment flows that go through the payment form land on this route.
+
         :param dict _kwargs: Optional data. This parameter is not used here
         :return: The rendered status page
         :rtype: str
@@ -43,7 +42,7 @@ class PaymentPostProcessing(http.Controller):
         monitored_tx = self._get_monitored_transaction()
         # The session might have expired, or the transaction never existed.
         if monitored_tx:
-            notification_access_token = payment_utils.generate_access_token([monitored_tx.id])
+            notification_access_token = payment_utils.generate_access_token(monitored_tx.id)
             notification_channel = (
                 f"payment_transaction_channel:{monitored_tx.id},{notification_access_token}"
             )
@@ -56,22 +55,29 @@ class PaymentPostProcessing(http.Controller):
     def get_payment_status_template_xmlid(self, tx):  # noqa: ARG002
         return "payment.payment_status"
 
+    @http.route("/payment/process", type="jsonrpc", auth="public")
+    def payment_process(self):
+        """Run the processing of the current transaction.
+
+        :rtype: None
+        """
+        monitored_tx_sudo = self._get_monitored_transaction()
+        if not monitored_tx_sudo.payment_data_ids:  # The transaction has already been processed
+            return
+
+        self.env["payment.transaction"]._run_processing()
+
     @http.route("/payment/post_process", type="jsonrpc", auth="public")
     def payment_post_process(self, **_kwargs):
-        """Fetch the transaction and trigger its post-processing.
+        """Fetch the transaction and run its post-processing.
 
         :return: The post-processing values of the transaction.
         :rtype: dict
         """
-        # We only call the payment post-processing on existing transactions.
         monitored_tx = self._get_monitored_transaction()
-
-        # Post-process the transaction before redirecting the user to the landing route and its
-        # document.
-        _logger.info("Post-processing tx with id %s.", monitored_tx.id)
         if monitored_tx and not monitored_tx.is_post_processed:
+            post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
             try:
-                post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
                 post_processing_cron.lock_for_update(allow_referencing=True)
             except LockError:  # The cron is already running.
                 # Schedule it to run ASAP in case it missed the current tx.

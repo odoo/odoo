@@ -13,4 +13,5 @@ class PaymentDemoController(http.Controller):
         :param dict data: The simulated payment data.
         :return: None
         """
-        self.env["payment.transaction"].sudo()._process("demo", data)
+        if tx_sudo := self.env["payment.transaction"].sudo()._search_by_reference("demo", data):
+            tx_sudo._record(data)

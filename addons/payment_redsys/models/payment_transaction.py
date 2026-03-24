@@ -23,7 +23,10 @@ class PaymentTransaction(models.Model):
         """Override of `payment` to set the Redsys-specific `provider_reference`."""
         transactions = super().create(vals_list)
         for tx in transactions.filtered(lambda t: t.provider_code == "redsys"):
-            tx.provider_reference = tx.reference
+            tx.with_context(
+                # The transaction was just created; no concurrent write is possible
+                payment_safe_write=True
+            ).provider_reference = tx.reference
         return transactions
 
     def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):
@@ -75,7 +78,7 @@ class PaymentTransaction(models.Model):
         payment_data = self._send_api_request(
             "POST", "/rest/trataPeticionREST", json=self._redsys_prepare_request_payload()
         )
-        self._process("redsys", payment_data)
+        self._record(payment_data)
 
     def _redsys_prepare_request_payload(self):
         """Prepare the Redsys request payload with encoded merchant parameters and signature.

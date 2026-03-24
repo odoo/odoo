@@ -6,6 +6,7 @@ from . import (
     test_flows,
     test_multicompany_flows,
     test_payment_capture_wizard,
+    test_payment_data,
     test_payment_method,
     test_payment_provider,
     test_payment_token,

@@ -25,11 +25,11 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
                 "._redsys_calculate_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_get_request(url, params=self.payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_redsys.controllers.main")
     def test_webhook_triggers_processing(self):
@@ -44,11 +44,11 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
                 "._redsys_calculate_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_post_request(url, data=self.payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_redsys.controllers.main")
     def test_returning_from_payment_triggers_signature_check(self):
@@ -60,7 +60,6 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
                 "odoo.addons.payment_redsys.models.payment_provider.PaymentProvider"
                 "._redsys_calculate_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_http_get_request(url, params=self.payment_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)
@@ -75,7 +74,6 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
                 "odoo.addons.payment_redsys.models.payment_provider.PaymentProvider"
                 "._redsys_calculate_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_http_post_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)

@@ -112,7 +112,9 @@ class PaymentTransaction(models.Model):
         try:
             order_data = self._send_api_request("POST", "orders", json=payload)
         except ValidationError as e:
-            self._set_error(str(e))
+            self.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(e))
         return order_data
 
     def _razorpay_prepare_order_payload(self, customer_id=None):
@@ -216,7 +218,9 @@ class PaymentTransaction(models.Model):
             limit=1,
         )
         if earlier_pending_tx:
-            self._set_error(
+            self.with_context(
+                payment_safe_write=True  # No API call was made; safe to replay
+            )._set_error(
                 self.env._(
                     "Your last payment %s will soon be processed. Please wait up to 24 hours before"
                     " trying again, or use another payment method.",
@@ -225,28 +229,24 @@ class PaymentTransaction(models.Model):
             )
             return
 
-        try:
-            order_data = self._razorpay_create_order()
-            phone = self._validate_phone_number(self.partner_phone)
-            customer_id, token_id = self.token_id.provider_ref.split(",")
-            payload = {
-                "email": self.partner_email,
-                "contact": phone,
-                "amount": order_data["amount"],
-                "currency": self.currency_id.name,
-                "order_id": order_data["id"],
-                "customer_id": customer_id,
-                "token": token_id,
-                "description": self.reference,
-                "recurring": "1",
-            }
-            recurring_payment_data = self._send_api_request(
-                "POST", "payments/create/recurring", json=payload
-            )
-        except ValidationError as e:
-            self._set_error(str(e))
-        else:
-            self._process("razorpay", recurring_payment_data)
+        order_data = self._razorpay_create_order()
+        phone = self._validate_phone_number(self.partner_phone)
+        customer_id, token_id = self.token_id.provider_ref.split(",")
+        payload = {
+            "email": self.partner_email,
+            "contact": phone,
+            "amount": order_data["amount"],
+            "currency": self.currency_id.name,
+            "order_id": order_data["id"],
+            "customer_id": customer_id,
+            "token": token_id,
+            "description": self.reference,
+            "recurring": "1",
+        }
+        recurring_payment_data = self._send_api_request(
+            "POST", "payments/create/recurring", json=payload
+        )
+        self._record(recurring_payment_data)
 
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Razorpay."""
@@ -267,7 +267,7 @@ class PaymentTransaction(models.Model):
             "POST", f"payments/{self.provider_reference}/refund", json=payload
         )
         response_content.update(entity_type="refund")
-        self._process("razorpay", response_content)
+        self._record(response_content)
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Razorpay."""
@@ -281,7 +281,7 @@ class PaymentTransaction(models.Model):
         )
 
         # Process the capture request response.
-        self._process("razorpay", response_content)
+        self._record(response_content)
 
     def _send_void_request(self):
         """Override of `payment` to explain that it is impossible to void a Razorpay transaction."""

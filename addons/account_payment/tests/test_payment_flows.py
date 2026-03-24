@@ -132,7 +132,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
                 tx_route=tx_context['transaction_route'], **tx_route_values
             )
         tx_sudo = self._get_tx(processing_values['reference'])
-        tx_sudo._set_done()
+        self._update_transaction(tx_sudo, state='done')
 
         url = self._build_url('/payment/post_process')
         resp = self.make_jsonrpc_request(url, {})
@@ -194,7 +194,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
                 tx_route=tx_context['transaction_route'], **tx_route_values
             )
         tx_sudo = self._get_tx(processing_values['reference'])
-        tx_sudo._set_done()
+        self._update_transaction(tx_sudo, state='done')
 
         # Validate the transaction amount is equal to the invoice amount
         self.assertEqual(tx_sudo.amount, invoice.amount_total)

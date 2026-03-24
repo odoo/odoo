@@ -17,15 +17,14 @@ class PaymentTransaction(models.Model):
             lambda so: so.state == "sale" and so.website_id
         )._archive_partner_if_no_user()
 
-    def _process(self, provider_code, payment_data):
+    def _process(self, payment_data):
         """Override of `payment` to allow retrying if the transaction is canceled or has an error,
-        redirecting to the payment page."""
-        tx = super()._process(provider_code, payment_data)
-        if tx.sale_order_ids.website_id and tx.state in ["cancel", "error"]:
+        by redirecting the user back to the payment page."""
+        super()._process(payment_data)
+        if self.sale_order_ids.website_id and self.state in ["cancel", "error"]:
             default_msg = self.env._("Payment was not successful, please try again.")
-            params = {"error_msg": tx.state_message or default_msg}
-            tx.landing_route = f"/shop/payment?{urlencode(params)}"
-        return tx
+            params = {"error_msg": self.state_message or default_msg}
+            self.landing_route = f"/shop/payment?{urlencode(params)}"
 
     def _get_status_message(self, *, order=None, **kwargs):
         """Override of `payment` to add a custom message when the cart amount is different after

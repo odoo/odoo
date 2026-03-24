@@ -46,10 +46,10 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     def test_feedback_processing(self):
         payment_data = BuckarooController._normalize_data_keys(self.sync_payment_data)
         tx = self._create_transaction(flow="redirect")
-        tx._process("buckaroo", payment_data)
+        tx.with_context(payment_safe_write=True)._process(payment_data)
         self.assertEqual(tx.state, "done")
         self.assertEqual(tx.provider_reference, payment_data.get("brq_transactions"))
-        tx._process("buckaroo", payment_data)
+        tx.with_context(payment_safe_write=True)._process(payment_data)
         self.assertEqual(tx.state, "done", "Buckaroo: validation did not put tx into done state")
         self.assertEqual(tx.provider_reference, payment_data.get("brq_transactions"))
 
@@ -63,7 +63,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
                 brq_signature="b8e54e26b2b5a5e697b8ed5085329ea712fd48b2",
             )
         )
-        self.env["payment.transaction"]._process("buckaroo", payment_data)
+        tx.with_context(payment_safe_write=True)._process(payment_data)
         self.assertEqual(tx.state, "error")
 
     @mute_logger("odoo.addons.payment_buckaroo.controllers.main")
@@ -73,6 +73,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         url = self._build_url(BuckarooController._webhook_url)
         with patch("odoo.addons.payment.utils.verify_signature"):
             self._make_http_post_request(url, data=self.async_payment_data)
+        self._run_processing()
         self.assertEqual(tx.state, "done")
 
     def test_signature_is_computed_based_on_lower_case_data_keys(self):

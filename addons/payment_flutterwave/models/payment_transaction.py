@@ -125,12 +125,8 @@ class PaymentTransaction(models.Model):
             "redirect_url": urls.urljoin(base_url, FlutterwaveController._auth_return_url),
         }
 
-        try:
-            response_content = self._send_api_request("POST", "tokenized-charges", json=data)
-        except ValidationError as error:
-            self._set_error(str(error))
-        else:
-            self._process("flutterwave", response_content)
+        response_content = self._send_api_request("POST", "tokenized-charges", json=data)
+        self._record(response_content)
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

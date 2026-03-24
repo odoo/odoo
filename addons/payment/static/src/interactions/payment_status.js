@@ -2,7 +2,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
-export class PaymentPostProcessing extends Interaction {
+export class PaymentStatus extends Interaction {
     static selector = "div[name='o_payment_status']";
 
     setup() {
@@ -14,14 +14,18 @@ export class PaymentPostProcessing extends Interaction {
         this.busService.addChannel(this.notificationChannel);
         this.busService.subscribe(this.notificationType, this.onProcessingCompleteBind);
 
-        // Redirect automatically after 7 seconds to avoid waiting for post-processing forever.
+        // Redirect automatically after 10 seconds to avoid waiting for post-processing forever.
         this.redirectTimeout = this.waitForTimeout(() => {
             this.redirectToLandingPage();
-        }, 7000);
+        }, 10000);
     }
 
     async willStart() {
-        // Assume we missed a notification from the postprocessing
+        // Trigger immediate processing instead of waiting for the next scheduled cron run
+        await rpc("/payment/process");
+
+        // Trigger immediate post-processing as fallback for the case where the bus notification was
+        // sent before we had time to subscribe to the channel
         await this.onProcessingComplete();
     }
 
@@ -35,7 +39,7 @@ export class PaymentPostProcessing extends Interaction {
             "/payment/post_process", { csrf_token: odoo.csrf_token }
         );
         const { provider_code, state, is_post_processed } = postProcessingData;
-        if (is_post_processed && PaymentPostProcessing.getFinalStates(provider_code).has(state)) {
+        if (is_post_processed && PaymentStatus.getFinalStates(provider_code).has(state)) {
             this.redirectToLandingPage();
         }
     }
@@ -66,6 +70,4 @@ export class PaymentPostProcessing extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("payment.payment_post_processing", PaymentPostProcessing);
+registry.category("public.interactions").add("payment.payment_status", PaymentStatus);

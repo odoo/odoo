@@ -241,7 +241,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs.pop('pos_order_id', None) # _create_transaction kwargs keys must be different than custom_create_values keys
 
         tx_sudo = self._create_transaction(**kwargs)
-        tx_sudo.landing_route = PaymentPortal._get_landing_route(pos_order_sudo.id, access_token, exit_route=exit_route, tx_id=tx_sudo.id)
+        tx_sudo.with_context(
+            # The transaction was just created; no concurrent write is possible
+            payment_safe_write=True
+        ).landing_route = PaymentPortal._get_landing_route(
+            pos_order_sudo.id, access_token, exit_route=exit_route, tx_id=tx_sudo.id
+        )
 
         return tx_sudo._get_processing_values()
 
@@ -288,7 +293,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             rendering_context['state'] = 'tx_error'
             return self._render_pay_confirmation(rendering_context)
 
-        tx_sudo._process_pos_online_payment()
+        tx_sudo.with_context(
+            payment_safe_write=True  # Actually not; post-processing should be kept separate
+        )._process_pos_online_payment()
 
         rendering_context['state'] = 'success'
         if exit_route:

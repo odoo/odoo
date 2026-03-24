@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from contextlib import nullcontext
 from unittest.mock import patch
 
 from lxml import objectify
 
 from odoo.fields import Command, Domain
 from odoo.tools.misc import hmac as hmac_tool
+from odoo.tools.misc import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -95,11 +97,15 @@ class PaymentCommon(BaseCommon):
     def setUp(self):
         super().setUp()
         if self.account_payment_installed and self.enable_post_process_patcher:
-            # disable account payment generation if account_payment is installed
-            # because the accounting setup of providers is not managed in this common
+            # Disable the generation of account payments if account_payment is installed, because
+            # the accounting setup of providers is not managed in this common, but mark transactions
+            # as post-processed to allow redirecting users from /payment/status to the landing page.
             self.post_process_patcher = patch(
                 "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction"
-                "._post_process"
+                "._post_process",
+                new=lambda self_: self_.with_context(payment_safe_write=True).write({
+                    "is_post_processed": True
+                }),
             )
             self.startPatcher(self.post_process_patcher)
 
@@ -162,6 +168,21 @@ class PaymentCommon(BaseCommon):
         }
         return self.env["payment.transaction"].sudo(sudo).create(dict(default_values, **values))
 
+    def _update_transaction(self, transaction, **values):
+        """Update a transaction while bypassing the write guard.
+
+        Use this method to condition a transaction before testing business logic, where the write
+        guard is only relevant for the business logic but not for the test setup. It must not be
+        used as a mock for business logic that must be safeguarded against concurrent writes.
+
+        :param payment.transaction transaction: The transaction to update
+        :param dict values: The values to update the transaction with
+        :return: The updated transaction with its original context restored
+        :rtype: payment.transaction
+        """
+        transaction.with_context(payment_safe_write=True).write(values)
+        return transaction
+
     def _create_token(self, sudo=True, **values):
         default_values = {
             "provider_id": self.provider.id,
@@ -209,6 +230,27 @@ class PaymentCommon(BaseCommon):
             "method": html_tree.get("method"),
             "inputs": inputs,
         }
+
+    @mute_logger("odoo.addons.base.models.ir_cron")
+    def _run_processing(self):
+        """Run the processing of all transactions with pending payment data.
+
+        Use this method to apply updates sent to a controller, or after passing them to `_record()`.
+
+        By running the processing through the cron, this method bypasses the write guard.
+
+        :rtype: None
+        """
+        with nullcontext() if self._registry_patched else self.registry_test_mode():
+            self.env(su=True).ref("payment.processing_cron").method_direct_trigger()
+
+    def _run_post_processing(self, transactions):
+        """Run the post-processing of the given transactions while bypassing the write guard.
+
+        :param payment.transaction transactions: The transactions to post-process.
+        :rtype: None
+        """
+        transactions.with_context(payment_safe_write=True)._post_process()
 
     def _assert_does_not_raise(self, exception_class, func, *args, **kwargs):
         """Fail if an exception of the provided class is raised when calling the function.

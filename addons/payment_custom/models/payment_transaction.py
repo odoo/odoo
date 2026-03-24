@@ -6,6 +6,7 @@ from odoo import models
 from odoo.tools import is_html_empty
 
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_custom import const
 from odoo.addons.payment_custom.controllers.main import CustomController
 
 _logger = get_payment_logger(__name__)
@@ -54,8 +55,13 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "custom":
             return super()._apply_updates(payment_data)
 
-        _logger.info("Validated custom payment for transaction %s: set as pending.", self.reference)
-        self._set_pending()
+        if payment_data.get(const.CUSTOM_STATE_DONE_KEY):
+            self._set_done()
+        else:
+            self._set_pending()
+        _logger.info(
+            "Validated custom payment for transaction %s: set as %s.", self.reference, self.state
+        )
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to skip the amount validation for custom flows."""

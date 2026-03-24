@@ -41,7 +41,7 @@ class BuckarooController(http.Controller):
                 raw_data, incoming=True
             )
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("buckaroo", data)
+            tx_sudo._record(data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -64,7 +64,7 @@ class BuckarooController(http.Controller):
                 raw_data, incoming=True
             )
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("buckaroo", data)
+            tx_sudo._record(data)
         return ""
 
     @staticmethod

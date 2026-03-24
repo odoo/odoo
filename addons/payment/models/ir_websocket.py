@@ -9,9 +9,10 @@ class IrWebsocket(models.AbstractModel):
     _inherit = "ir.websocket"
 
     def _build_bus_channel_list(self, channels):
-        """
-        When `_send_bus` is called, it sends notifications to channels based on the record type and
-        record id.
+        """Override of `bus` to register `payment.transaction` records as channels.
+
+        When `_send_bus` is called, it sends notifications to channels based on the record type
+        and record id.
 
         In the frontend, `payment.transaction` records cannot be directly used as channels, so a
         string channel containing the transaction id and an access token is used instead.
@@ -21,6 +22,10 @@ class IrWebsocket(models.AbstractModel):
         with the corresponding `payment.transaction` record.
 
         Channels that do not match or fail validation are filtered out.
+
+        :param list[any] channels: The channel list sent by the client.
+        :return: The filtered channel list.
+        :rtype: list[any]
         """
         new_channels = []
         for channel in channels:

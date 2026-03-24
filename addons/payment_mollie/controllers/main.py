@@ -72,4 +72,4 @@ class MollieController(http.Controller):
         except ValidationError:
             _logger.error("Unable to process the payment data")
         else:
-            tx_sudo._process("mollie", verified_data)
+            tx_sudo._record(verified_data)

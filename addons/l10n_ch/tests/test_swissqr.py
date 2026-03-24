@@ -190,9 +190,9 @@ class TestSwissQR(AccountTestInvoicingCommon):
             'partner_id': self.env['res.partner'].search([("name", '=', 'Partner')])[0].id,
             'amount': 100,
             'currency_id': self.env.company.currency_id.id,
+            'state': 'pending',
         })
-        payment_transaction._set_pending()
-        payment_transaction._post_process()
+        payment_transaction.with_context(payment_safe_write=True)._post_process()
 
         self.assertEqual(order.reference, mod10r(order.reference[:-1]))
 

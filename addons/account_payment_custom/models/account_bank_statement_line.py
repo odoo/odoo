@@ -2,6 +2,8 @@
 
 from odoo import api, models
 
+from odoo.addons.payment_custom import const
+
 
 class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
@@ -56,4 +58,4 @@ class AccountBankStatementLine(models.Model):
                     and tx.currency_id.compare_amounts(line.amount, tx.amount) == 0
                     for line in lines_by_ref.get(tx.reference, self)
                 ):
-                    tx._set_done()
+                    tx._record({const.CUSTOM_STATE_DONE_KEY: True})

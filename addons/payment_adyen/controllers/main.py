@@ -157,7 +157,7 @@ class AdyenController(http.Controller):
         response_content = provider_sudo._send_api_request(
             "POST", "/payments", json=data, idempotency_key=idempotency_key
         )
-        tx_sudo._process("adyen", dict(response_content, merchantReference=reference))
+        tx_sudo._record(dict(response_content, merchantReference=reference))
         return response_content
 
     @http.route("/payment/adyen/payments/details", type="jsonrpc", auth="public")
@@ -190,10 +190,9 @@ class AdyenController(http.Controller):
             "POST", "/payments/details", json=payment_details, idempotency_key=idempotency_key
         )
 
-        # Process the payment data request response.
-        self.env["payment.transaction"].sudo()._process(
-            "adyen", dict(response_content, merchantReference=reference)
-        )
+        # Process the payment details request response.
+        if tx_sudo:
+            tx_sudo._record(dict(response_content, merchantReference=reference))
 
         return response_content
 
@@ -221,7 +220,10 @@ class AdyenController(http.Controller):
         # though Adyen is implemented as a direct payment provider, it will redirect the user out
         # of Odoo in some cases. For instance, when a 3DS1 authentication is required, or for
         # special payment methods that are not handled by the drop-in (e.g. Sofort).
-        tx_sudo.operation = "online_redirect"
+        tx_sudo.with_context(
+            # The /payments/details request uses an idempotency key; the handler is safe to replay
+            payment_safe_write=True
+        ).operation = "online_redirect"
 
         # Query and process the result of the additional actions that have been performed
         _logger.info(
@@ -280,7 +282,7 @@ class AdyenController(http.Controller):
                     payment_data["resultCode"] = "Error"
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-                tx_sudo._process("adyen", payment_data)
+                tx_sudo._record(payment_data)
         return request.make_json_response("[accepted]")  # Acknowledge the notification
 
     @staticmethod
