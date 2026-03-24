@@ -2,6 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { ParallaxOption } from "./parallax_option";
+import { BgBlurOption } from "./bg_blur_option_plugin";
 import { useBackgroundOption } from "@html_builder/plugins/background_option/background_hook";
 import { registry } from "@web/core/registry";
 
@@ -11,6 +12,7 @@ export class WebsiteBackgroundOption extends BaseOptionComponent {
     static components = {
         ...BackgroundOption.components,
         ParallaxOption,
+        BgBlurOption,
     };
     static props = {
         ...BackgroundOption.props,
@@ -33,10 +35,17 @@ export class WebsiteBackgroundOption extends BaseOptionComponent {
         // ":scope > .s_parallax_bg" is kept for compatibility.
         const parallaxBgSelector =
             ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap > .s_parallax_bg";
-        this.websiteBgOptionDomState = useDomState((el) => ({
+        this.websiteBgOptionDomState = useDomState((el) => {
             // Only search for .s_parallax_bg that are direct children
-            applyTo: el.querySelector(parallaxBgSelector) ? parallaxBgSelector : "",
-        }));
+            const parallaxBgEl = el.querySelector(parallaxBgSelector);
+            const target = parallaxBgEl || el;
+            return {
+                applyTo: parallaxBgEl ? parallaxBgSelector : "",
+                hasBgMedia:
+                    target.style.backgroundImage.includes("url(") ||
+                    el.classList.contains("o_background_video"),
+            };
+        });
     }
 }
 

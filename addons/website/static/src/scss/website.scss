@@ -906,6 +906,30 @@ font[class*='bg-'] {
     }
 }
 
+// Prevent nested snippets from inheriting the blur values of their parents.
+@property --o-bg-blur {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+@property --o-bg-blur-enhance {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 1.25;
+}
+
+// Background blur option
+.o_bg_blur_option {
+    backdrop-filter: contrast(MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25)))
+                     brightness(MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25)))
+                     blur(calc(var(--o-bg-blur, 0) * 1px));
+
+    &.o_bg_blur_no_enhance {
+        --o-bg-blur-enhance: 1;
+    }
+}
+
 // Background videos
 .o_bg_video_container {
     @extend %o-we-background-layer;
