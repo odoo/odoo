@@ -302,7 +302,7 @@
                                         invisible="not show_partner_bank_account or payment_type == 'outbound'"
                                         required="require_partner_bank_account"/>
                             </group>
-                            <group>
+                            <group class="d-none d-md-block">
                                 <field name="qr_code" invisible="1"/>
                                 <div invisible="not qr_code" colspan="2" class="text-center">
                                     <field name="qr_code" widget="html"/>
