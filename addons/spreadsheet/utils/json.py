@@ -5,6 +5,7 @@ def extend_serialized_json(json: str, key_value_pairs: list) -> str:
     Add key-value pairs to a serialized JSON object string.
     value should be already serialized.
     """
+    json = json.strip()
     # avoid copying strings as much as possible for performance reasons
     parts = [json.removesuffix('}')]
     if json != '{}':
