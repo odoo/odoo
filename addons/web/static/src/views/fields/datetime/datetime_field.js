@@ -2,6 +2,7 @@ import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils
 import { Component } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -153,6 +154,7 @@ export class DateTimeField extends Component {
         this.state = useState(dateTimePicker.state);
         this.picker = useState({ activeInput: "" });
         this.openPicker = dateTimePicker.open;
+        this.isPickerOpen = dateTimePicker.isOpen;
 
         this.startDate = useRef("start-date");
         this.endDate = useRef("end-date");
@@ -162,7 +164,11 @@ export class DateTimeField extends Component {
                 [this.startDate, this.endDate].forEach((ref, index) => {
                     if (ref.el?.getAttribute("data-field") === this.picker.activeInput) {
                         ref.el.focus();
-                        this.openPicker(index);
+                        // openPickerOnNextPatch is set in the template on pointerdown on the button
+                        if (this.openPickerOnNextPatch) {
+                            this.openPicker(index);
+                            this.openPickerOnNextPatch = false;
+                        }
                     }
                 });
             },
@@ -207,6 +213,32 @@ export class DateTimeField extends Component {
             pickerProps.minPrecision = this.props.minPrecision;
         }
         return pickerProps;
+    }
+
+    /**
+     * Returns the placeholder for the input of the given fieldName. If a placeholder has been given
+     * in props, we want to always display that placeholder (on both inputs if any). If no
+     * placeholder has been given, we display a technical placeholder, which is the localized date
+     * or datetime format, on the focused input only. This prevent from displaying a bunch of
+     * technical placeholders.
+     *
+     * @param {string} [fieldName]
+     * @returns string
+     */
+    getPlaceholder(fieldName) {
+        if (this.props.placeholder) {
+            return this.props.placeholder;
+        }
+        if (this.picker.activeInput === fieldName) {
+            let placeholder = localization.dateFormat.toLowerCase();
+            // we purposely avoid using the dateTimeFormat because we don't want to see the `a`
+            // token (which stands for AM/PM)
+            if (this.field.type === "datetime") {
+                placeholder += " hh:mm";
+            }
+            return placeholder;
+        }
+        return "";
     }
 
     onToggleRange() {
@@ -357,6 +389,12 @@ export class DateTimeField extends Component {
 
     onInput() {
         this.triggerIsDirty(true);
+    }
+
+    onInputBlured() {
+        if (!this.isPickerOpen()) {
+            this.picker.activeInput = "";
+        }
     }
 }
 

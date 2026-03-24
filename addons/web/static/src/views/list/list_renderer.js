@@ -308,10 +308,7 @@ export class ListRenderer extends Component {
                     const forward = this.cellToFocus.forward;
                     this.focusCell(column, forward);
                 } else {
-                    const column = this.lastEditedCell?.column || this.columns[0];
-                    if (column.widget !== "daterange" || !this.editedRecord.data[column.name]) {
-                        this.focusCell(column);
-                    }
+                    this.focusCell(this.lastEditedCell?.column || this.columns[0]);
                 }
             }
             this.cellToFocus = null;

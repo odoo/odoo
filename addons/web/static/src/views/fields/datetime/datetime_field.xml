@@ -15,6 +15,7 @@
                         t-att-data-tooltip="this.getFormattedValue(0, true)"
                         t-att-id="showSeparator ? this.props.endDateField and this.props.id : this.props.id"
                         t-on-focus="() => this.picker.activeInput = this.startDateField"
+                        t-on-pointerdown="() => this.openPickerOnNextPatch = true"
                         t-att-data-field="this.startDateField"
                         data-available-offline=""
                         t-att-class="'o_input o_daterange_start w-100 text-start ' + (this.props.warnFuture and this.isDateInTheFuture(0) ? 'text-danger' : '')">
@@ -29,10 +30,11 @@
                         t-att-class="'o_input cursor-pointer user-select-none' + (this.props.warnFuture and this.isDateInTheFuture(0) ? 'text-danger' : '')"
                         autocomplete="off"
                         inputmode="none"
-                        t-att-placeholder="this.props.placeholder"
+                        t-att-placeholder="this.getPlaceholder(this.startDateField)"
                         t-att-data-field="this.startDateField"
                         t-on-input="this.onInput"
                         t-on-focus="() => this.picker.activeInput = this.startDateField"
+                        t-on-blur="this.onInputBlured"
                         t-att-title="this.props.warnFuture and this.isDateInTheFuture(0) ? this.futureWarningMsg : ''"
                     />
                 </t>
@@ -54,6 +56,7 @@
                             t-custom-ref="end-date"
                             t-att-data-tooltip="this.getFormattedValue(1, true)"
                             t-on-focus="() => this.picker.activeInput = this.endDateField"
+                            t-on-pointerdown="() => this.openPickerOnNextPatch = true"
                             t-att-id="this.props.startDateField and this.props.id"
                             t-att-data-field="this.endDateField"
                             data-available-offline=""
@@ -69,10 +72,11 @@
                             t-att-class="'o_input cursor-pointer user-select-none' + (this.props.warnFuture and this.isDateInTheFuture(1) ? 'text-danger' : '')"
                             autocomplete="off"
                             inputmode="none"
-                            t-att-placeholder="this.props.placeholder"
+                            t-att-placeholder="this.getPlaceholder(this.endDateField)"
                             t-att-data-field="this.endDateField"
                             t-on-input="this.onInput"
                             t-on-focus="() => this.picker.activeInput = this.endDateField"
+                            t-on-blur="this.onInputBlured"
                             t-att-title="this.props.warnFuture and this.isDateInTheFuture(1) ? this.futureWarningMsg : ''"
                         />
                     </t>

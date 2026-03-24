@@ -24,7 +24,9 @@ import {
     mountView,
     onRpc,
     contains,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
 class Partner extends models.Model {
@@ -719,4 +721,35 @@ test("DateTimeField contains a calendar icon on touch devices", async () => {
     });
     expect(".fa-calendar").toHaveCount(1);
     expect(".fa-calendar").toBeVisible();
+});
+
+test("DateTimeField: placeholder", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="datetime" placeholder="I'm the placeholder"/>
+                    <field name="datetime"/>
+                </group>
+            </form>`,
+    });
+
+    patchWithCleanup(localization, {
+        dateFormat: "MM yyyy dd",
+    });
+
+    expect(".o_field_widget[name=datetime]:eq(0) input").toHaveAttribute(
+        "placeholder",
+        "I'm the placeholder"
+    );
+    expect(".o_field_widget[name=datetime]:eq(1) input").toHaveAttribute("placeholder", "");
+
+    // when focused, a default placeholder is displayed and it depends on the localization
+    await contains(".o_field_widget[name=datetime]:eq(1) input").focus();
+    expect(".o_field_widget[name=datetime]:eq(1) input").toHaveAttribute(
+        "placeholder",
+        "mm yyyy dd hh:mm"
+    );
 });

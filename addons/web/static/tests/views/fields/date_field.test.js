@@ -29,8 +29,10 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -637,4 +639,65 @@ test("DateField contains a calendar icon on touch devices", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
     expect(".fa-calendar").toHaveCount(1);
     expect(".fa-calendar").toBeVisible();
+});
+
+test(`DateField in x2many list: open/close picker`, async () => {
+    Partner._fields.foo_o2m = fields.One2many({ relation: "res.partner" });
+
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo_o2m">
+                    <list editable="bottom">
+                        <field name="date" />
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add button`).click();
+    await contains(`.o_data_row .o_field_widget[name=date] input`).click();
+    await waitFor(".o_datetime_picker");
+    expect(".o_datetime_picker").toBeDisplayed();
+    expect(".o_field_widget[name=date] input").toBeFocused();
+
+    await contains(getPickerCell("15")).click();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+
+    // Wait to check if the picker is still closed
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+});
+
+test("DateField: placeholder", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="date" placeholder="I'm the placeholder"/>
+                    <field name="date"/>
+                </group>
+            </form>`,
+    });
+
+    patchWithCleanup(localization, {
+        dateFormat: "MM yyyy dd",
+    });
+
+    expect(".o_field_widget[name=date]:eq(0) input").toHaveAttribute(
+        "placeholder",
+        "I'm the placeholder"
+    );
+    expect(".o_field_widget[name=date]:eq(1) input").toHaveAttribute("placeholder", "");
+
+    // when focused, a default placeholder is displayed and it depends on the localization
+    await contains(".o_field_widget[name=date]:eq(1) input").focus();
+    expect(".o_field_widget[name=date]:eq(1) input").toHaveAttribute("placeholder", "mm yyyy dd");
 });
