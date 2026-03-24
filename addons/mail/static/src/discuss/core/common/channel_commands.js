@@ -10,8 +10,12 @@ commandRegistry
         methodName: "execute_command_help",
     })
     .add("leave", {
-        condition: ({ store }) => store.self_user && !store.self_user.share,
-        help: _t("Leave this channel"),
+        /**
+         * @param {Object} param0
+         * @param {import("models").DiscussChannel} param0.channel
+         */
+        condition: ({ channel }) => channel.isAllowedToLeave || channel.channel_type === "chat",
+        help: _t("Leave this conversation"),
         /** @param {import("models").DiscussChannel} channel */
         async onExecute(channel) {
             await channel.leaveChannel();

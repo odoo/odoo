@@ -106,6 +106,14 @@ export class DiscussChannel extends Record {
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
     }
+    get isAllowedToLeave() {
+        return (
+            this.store.self_user &&
+            this.self_member_id &&
+            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
+            this.group_ids.length === 0
+        );
+    }
     get allowedToRenameChannelTypes() {
         return ["channel", "group"];
     }

@@ -130,7 +130,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item:text('Add to Favorites')");
     await contains(".o-dropdown-item:text('Voice & Video Settings')");
     await contains(".o-dropdown-item:text('Hide Until New Message')");
-    await contains(".o-dropdown-item:text('Leave Channel')");
+    await contains(".o-dropdown-item:text('Leave Conversation')");
 });
 
 test.skip("Fold state of chat window is sync among browser tabs", async () => {

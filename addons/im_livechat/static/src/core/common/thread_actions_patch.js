@@ -57,6 +57,6 @@ patch(threadActionsRegistry.get("leave"), {
         if (channel?.livechatShouldAskLeaveConfirmation) {
             return _t("Close Conversation");
         }
-        return _t("Leave Channel");
+        return typeof super.name === "function" ? super.name(...arguments) : super.name;
     },
 });

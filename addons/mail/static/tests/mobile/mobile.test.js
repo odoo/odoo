@@ -76,7 +76,7 @@ test("can leave channel in mobile", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains(".o-mail-ChatWindow-moreActions:text('General')");
     await click(".o-mail-ChatWindow-moreActions:text('General')");
-    await contains(".o-dropdown-item:text('Leave Channel')");
+    await contains(".o-dropdown-item:text('Leave Conversation')");
 });
 
 test("enter key should create a newline in composer", async () => {

@@ -107,6 +107,6 @@ test("bus subscription is refreshed when channel is left", async () => {
     await openDiscuss();
     await expect.waitForSteps([]);
     await click("[title='Channel Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click(".o-dropdown-item:contains('Leave Conversation')");
     await expect.waitForSteps(["subscribe"]);
 });
