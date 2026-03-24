@@ -509,6 +509,27 @@ describe("sanitize", () => {
             },
         });
     });
+    test("should sanitize form tag when adding a node", async () => {
+        await testMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: "<p>abc[c1}{c1][c2}{c2]</p>",
+            afterCreate: (peerInfos) => {
+                const document = peerInfos.c1.editor.document;
+                const div = document.createElement("div");
+                div.innerHTML = 'test<form><input type="text"/></form>';
+                peerInfos.c1.editor.editable.append(div);
+                commit(peerInfos.c1.editor);
+                peerInfos.c2.collaborationPlugin.insertRemoteHistoryCommits([
+                    peerInfos.c1.historyPlugin.commits[1],
+                ]);
+            },
+            afterCursorInserted: (peerInfos) => {
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML(
+                    '<p>abc[c1}{c1][c2}{c2]</p><div class="o-paragraph">test</div>'
+                );
+            },
+        });
+    });
     test("should not sanitize contenteditable attribute (check DOMPurify DEFAULT_ALLOWED_ATTR)", async () => {
         await testMultiEditor({
             peerIds: ["c1"],

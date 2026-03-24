@@ -46,6 +46,7 @@ export class CollaborationPlugin extends Plugin {
                 return false;
             }
         },
+        add_node_mutation_processors: this.sanitizeNode.bind(this),
     };
     static shared = [
         "getBranchIds",
@@ -118,6 +119,15 @@ export class CollaborationPlugin extends Plugin {
             node.setAttribute(attributeName, clone.getAttribute(attributeName));
         } else {
             node.removeAttribute(attributeName);
+        }
+    }
+
+    sanitizeNode(node) {
+        if (node) {
+            const fakeNode = this.document.createElement("fake-el");
+            fakeNode.appendChild(node);
+            this.dependencies.sanitize.sanitize(fakeNode, { FORBID_TAGS: ["form", "input"] });
+            return fakeNode.firstChild;
         }
     }
 

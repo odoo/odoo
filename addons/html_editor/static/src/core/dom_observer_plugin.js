@@ -1053,9 +1053,10 @@ export class DomObserverPlugin extends Plugin {
     applyAddMutation(mutation) {
         const { nodeId, serializedNode, parentNodeId, nextNodeId, previousNodeId } = mutation;
 
-        const toAdd =
+        let toAdd =
             this.dependencies.domReferenceMap.getNodeById(nodeId) ||
             this.dependencies.domReferenceMap.unserializeNode(serializedNode);
+        toAdd = this.processThrough("add_node_mutation_processors", toAdd);
         if (!toAdd) {
             return;
         }
