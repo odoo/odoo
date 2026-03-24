@@ -131,3 +131,15 @@ class TestHrAttendance(TransactionCase):
         self.assertEqual(attendance.in_mode, 'manual')
         self.assertEqual(attendance.out_mode, 'manual')
         self.assertEqual(attendance.color, 0)
+
+    def test_attendance_checkout_while_employee_archived(self):
+        """An employee should be checked out by the system, if employee is getting archive."""
+        test_attendance = self.env['hr.attendance'].create({
+            'check_in': datetime(2024, 1, 1, 8, 0),
+            'employee_id': self.test_employee.id,
+        })
+
+        with freeze_time("2024-01-01 17:00:00"):
+            self.test_employee.action_archive()
+            self.assertEqual(test_attendance.check_out, fields.Datetime.now())
+            self.assertEqual(test_attendance.worked_hours, 8.0)
