@@ -40,8 +40,8 @@ describe("preparation ticket", () => {
 
         const result = await checkKioskPreparationTicketData(store, [
             { name: "Product combo", quantity: 2 },
-            { name: "Wood desk", quantity: 2 },
             { name: "Wood chair", quantity: 2 },
+            { name: "Wood desk", quantity: 2 },
         ]);
         expect(result).toBe(true);
     });
