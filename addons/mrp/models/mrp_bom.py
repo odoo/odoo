@@ -462,6 +462,7 @@ class MrpBom(models.Model):
     def _set_outdated_bom_in_productions(self):
         # Searches for MOs using these BoMs to notify them that their BoM has been updated.
         list_of_domain_by_bom = []
+        list_of_domain_by_bom_to_unmark = []
         for bom in self:
             domain_by_products = [('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)]
             if bom.product_id:
@@ -475,6 +476,18 @@ class MrpBom(models.Model):
             productions = self.env['mrp.production'].search(domain)
             if productions:
                 productions.is_outdated_bom = True
+        # Manually sets the MO's bom to not outdated if product or its variant is changed.
+        if not self.env.context.get('skip_bom_outdated_unmark'):
+            for bom in self:
+                template_domain = [('state', '=', 'confirmed'), ('is_outdated_bom', '=', True), ('bom_id', '=', bom.id)]
+                if bom.product_id:
+                    template_domain.append(('product_id', '!=', bom.product_id.id))
+                else:
+                    template_domain.append(('product_tmpl_id', '!=', bom.product_tmpl_id.id))
+                list_of_domain_by_bom_to_unmark.append(template_domain)
+            if list_of_domain_by_bom_to_unmark:
+                unmark_domain = OR(list_of_domain_by_bom_to_unmark)
+                self.env['mrp.production'].search(unmark_domain).write({'is_outdated_bom': False})
 
     # -------------------------------------------------------------------------
     # CATALOG

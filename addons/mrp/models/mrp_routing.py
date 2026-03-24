@@ -112,11 +112,11 @@ class MrpRoutingWorkcenter(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        res.bom_id._set_outdated_bom_in_productions()
+        res.bom_id.with_context(skip_bom_outdated_unmark=True)._set_outdated_bom_in_productions()
         return res
 
     def write(self, vals):
-        self.bom_id._set_outdated_bom_in_productions()
+        self.bom_id.with_context(skip_bom_outdated_unmark=True)._set_outdated_bom_in_productions()
         if 'bom_id' in vals:
             for op in self:
                 op.bom_id.bom_line_ids.filtered(lambda line: line.operation_id == op).operation_id = False
@@ -130,12 +130,12 @@ class MrpRoutingWorkcenter(models.Model):
         bom_lines.write({'operation_id': False})
         byproduct_lines = self.env['mrp.bom.byproduct'].search([('operation_id', 'in', self.ids)])
         byproduct_lines.write({'operation_id': False})
-        self.bom_id._set_outdated_bom_in_productions()
+        self.bom_id.with_context(skip_bom_outdated_unmark=True)._set_outdated_bom_in_productions()
         return res
 
     def action_unarchive(self):
         res = super().action_unarchive()
-        self.bom_id._set_outdated_bom_in_productions()
+        self.bom_id.with_context(skip_bom_outdated_unmark=True)._set_outdated_bom_in_productions()
         return res
 
     def copy_to_bom(self):
