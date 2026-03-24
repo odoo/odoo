@@ -15,6 +15,7 @@ from . import (
     test_product_catalog,
     test_product_configurator_data,
     test_sale_combo_configurator,
+    test_sale_early_payment_discount,
     test_sale_flow,
     test_sale_order,
     test_sale_order_product_catalog,
