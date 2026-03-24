@@ -279,15 +279,18 @@ class ResUsers(models.Model):
     @api.depends('employee_ids')
     @api.depends_context('company', 'uid')
     def _compute_company_employee(self):
-        Employee = self.env['hr.employee']
-        if self == self.env.user:
-            Employee = Employee.sudo()
-        employee_per_user = {
-            employee.user_id: employee
-            for employee in Employee.search([('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)])
-        }
+        employee_per_user = dict(self.env['hr.employee'].sudo()._read_group(
+            domain=[('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)],
+            groupby=['user_id'],
+            aggregates=['id:recordset'],
+        ))
+
         for user in self:
-            user.employee_id = employee_per_user.get(user)
+            employee = employee_per_user.get(user, self.env['hr.employee'])
+            if user != self.env.user and not self.env.su:
+                # since the search is done in sudo to avoid cache issues, apply access rules
+                employee = employee.filtered(lambda e: e.has_access('read'))
+            user.employee_id = employee
 
     def _search_company_employee(self, operator, value):
         # Equivalent to `[('employee_ids', operator, value)]`,
