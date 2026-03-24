@@ -39,7 +39,11 @@
                 actionParam="'saturation'"
                 min="-100"
                 max="100"
-                step="10" />
+                step="10"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                displayNormalizedValue="true" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Contrast">
             <BuilderRange
@@ -47,7 +51,11 @@
                 actionParam="'contrast'"
                 min="-100"
                 max="100"
-                step="10" />
+                step="10"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                displayNormalizedValue="true" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Brightness">
             <BuilderRange
@@ -55,7 +63,11 @@
                 actionParam="'brightness'"
                 min="-100"
                 max="100"
-                step="10" />
+                step="10"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                displayNormalizedValue="true" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Sepia">
             <BuilderRange
@@ -63,7 +75,10 @@
                 actionParam="'sepia'"
                 min="0"
                 max="100"
-                step="5" />
+                step="5"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Blur">
             <BuilderRange
@@ -71,7 +86,11 @@
                 actionParam="'blur'"
                 min="0"
                 max="2000"
-                step="100" />
+                step="100"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                displayNormalizedValue="true" />
         </BuilderRow>
     </t>
 </t>

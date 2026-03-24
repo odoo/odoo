@@ -3,7 +3,13 @@
 
 <t t-name="website.AvatarsOption">
     <BuilderRow label.translate="Size">
-        <BuilderRange styleAction="'--avatars-size'" min="2" max="6" step="0.1" unit="'rem'"/>
+        <BuilderRange
+            styleAction="'--avatars-size'"
+            min="2"
+            max="6"
+            step="0.1"
+            unit="'rem'"
+            withNumberInput="true" />
     </BuilderRow>
 
     <BuilderRow label.translate="Order">

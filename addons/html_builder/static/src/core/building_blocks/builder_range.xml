@@ -34,14 +34,14 @@
             value="this.displayValueNumber"
             classes="'o-hb-input-field-number justify-content-end'"
             inputClasses="'o-hb-input-number text-end'"
-            commit="this.commit"
-            preview="this.preview"
-            clampValue.bind="this.clampValue"
+            commit.bind="this.commitInput"
+            preview.bind="this.previewInput"
+            clampValue.bind="this.clampValueForInput"
             onKeydown.bind="this.onKeydownNumber"
             selectTextOnFocus="true"
             min="this.min"
             max="this.max"
-            step="this.props.step"
+            step="this.step"
         >
             <span class="o-hb-input-field-unit" t-out="this.props.unit"/>
         </BuilderNumberInputBase>

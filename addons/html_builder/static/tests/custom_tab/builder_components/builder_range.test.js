@@ -419,3 +419,44 @@ describe("unit & saveUnit", () => {
         expect(":iframe .test-options-target").toHaveInnerHTML("7000ms");
     });
 });
+
+test("should map range from 0 to 100 scale when 'displayNormalizedValue' is true", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value }) {
+                expect.step(`applied ${value}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-ratio-target",
+        template: xml`<BuilderRange action="'customAction'" min="-2" max="2" withNumberInput="true" displayNormalizedValue="true" step="0.1"/>`,
+    });
+    await setupHTMLBuilder(`<div class="test-ratio-target">-2</div>`);
+    await contains(":iframe .test-ratio-target").click();
+    expect(".options-container input[type='number']").toHaveProperty("value", 1);
+    // Arrow down at min (-2) stays at -2 (boundary check)
+    await contains(".options-container input[type='range']").focus();
+    await press("ArrowDown");
+    await advanceTime(750);
+    expect.verifySteps(["applied -2", "applied -2"]);
+    // Arrow up on slider: moves from 0 -> 2.5 (ratio), applies -1.9
+    // Ratioed step: (0.1 / 4) * 100 = 2.5 per arrow press
+    await press("ArrowUp");
+    await advanceTime(750);
+    expect.verifySteps(["applied -1.9", "applied -1.9"]);
+    expect(".options-container input[type='number']").toHaveProperty("value", 3);
+    // Arrow up on input: moves from 2.5 -> 5 (ratio), applies -1.8
+    await contains(".options-container input[type='number']").focus();
+    await press("ArrowUp");
+    await advanceTime(750);
+    // Since the values are not committed when pressing the up/down arrow keys,
+    // we expect the change to be applied only once which is preview operation.
+    expect.verifySteps(["applied -1.84"]);
+    expect(".options-container input[type='number']").toHaveProperty("value", 5);
+});

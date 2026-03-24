@@ -173,7 +173,13 @@
         </BuilderRow>
         <hr class="mx-3"/>
         <BuilderRow label.translate="Edge Spacing" applyTo="'.s_countdown_inline_wrapper'">
-            <BuilderRange styleAction="'padding'" min="0" max="200" step="1" displayRangeValue="true" unit="'px'"/>
+            <BuilderRange
+                styleAction="'padding'"
+                min="0"
+                max="200"
+                step="1"
+                unit="'px'"
+                withNumberInput="true" />
         </BuilderRow>
         <BuilderContext applyTo="'.s_countdown_inline_wrapper'">
             <BorderConfigurator label.translate="Border"/>

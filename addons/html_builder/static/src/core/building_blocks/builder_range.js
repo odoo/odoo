@@ -28,6 +28,7 @@ export class BuilderRange extends Component {
         saveUnit: { type: String, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
         withNumberInput: { type: Boolean, optional: true },
+        displayNormalizedValue: { type: Boolean, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,
@@ -38,12 +39,19 @@ export class BuilderRange extends Component {
         displayRangeValue: false,
         applyWithUnit: true,
         withNumberInput: false,
+        displayNormalizedValue: false,
     };
     static components = { BuilderComponent, BuilderNumberInputBase };
 
     setup() {
         if (this.props.saveUnit && !this.props.unit) {
             throw new Error("'unit' must be defined to use the 'saveUnit' props");
+        }
+
+        if (this.props.displayNormalizedValue && !this.props.withNumberInput) {
+            throw new Error(
+                "'withNumberInput' must be enabled to use the 'displayNormalizedValue' prop"
+            );
         }
 
         if (this.props.withNumberInput) {
@@ -71,13 +79,29 @@ export class BuilderRange extends Component {
         this.preview = (value) => {
             if (this.props.withNumberInput) {
                 // Syncronize the values of range and text inputs during preview
-                this.inputRefNumber.el.value = value;
-                this.inputRefRange.el.value = value;
+                this.inputRefNumber.el.value = this.convertToRatio(value);
+                this.inputRefRange.el.value = value || this.min;
                 this.state.value = this.parseDisplayValue(value);
             }
             return preview(value);
         };
         this.state = state;
+    }
+
+    convertToRatio(value) {
+        if (!this.props.displayNormalizedValue || !value) {
+            return value;
+        }
+        const ratioValue = ((parseFloat(value) - this.min) / (this.max - this.min)) * 99 + 1;
+        return Math.round(ratioValue);
+    }
+
+    convertToValue(ratio) {
+        if (!this.props.displayNormalizedValue || !ratio) {
+            return String(ratio);
+        }
+        const originalValue = ((parseFloat(ratio) - 1) / 99) * (this.max - this.min) + this.min;
+        return String(originalValue.toFixed(2));
     }
 
     onChangeRange(e) {
@@ -112,8 +136,28 @@ export class BuilderRange extends Component {
         this.debouncedCommitNumberValue();
     }
 
+    clampValueForInput(value) {
+        // When displayNormalizedValue is true, the input displays ratioed
+        // values. So we simply clamp to that range. When false, use the
+        // original clampValue.
+        if (this.props.displayNormalizedValue) {
+            return Math.min(100, Math.max(1, value));
+        }
+        return this.clampValue(value);
+    }
+
+    previewInput(ratio) {
+        this.preview(this.convertToValue(ratio));
+    }
+
+    commitInput(value) {
+        const originalValue = value ? this.convertToValue(value) : this.min.toString();
+        const committedValue = this.commit(originalValue);
+        return this.convertToRatio(committedValue);
+    }
+
     get inputValueRange() {
-        return this.state.value ? this.formatRawValue(this.state.value) : "0";
+        return this.formatRawValue(this.state.value || this.min);
     }
 
     get displayValueRange() {
@@ -127,7 +171,7 @@ export class BuilderRange extends Component {
     }
 
     get displayValueNumber() {
-        return this.formatRawValue(this.state.value).toString();
+        return this.formatRawValue(this.convertToRatio(this.state.value || this.min));
     }
 
     get className() {
@@ -145,5 +189,11 @@ export class BuilderRange extends Component {
 
     get textInputBaseProps() {
         return pick(this.props, ...Object.keys(textInputBasePassthroughProps));
+    }
+
+    get step() {
+        return this.props.displayNormalizedValue
+            ? Math.round((this.props.step / (this.max - this.min)) * 99)
+            : this.props.step;
     }
 }

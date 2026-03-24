@@ -9,8 +9,8 @@
             actionParam="'max-width'"
             min="8"
             max="100"
-            displayRangeValue="true"
-            unit="'%'"/>
+            unit="'%'"
+            withNumberInput="true" />
     </BuilderRow>
     <BuilderRow t-if="this.getItemValue('card_width') !== '100%'" label.translate="Alignment" level="1">
         <BuilderButtonGroup action="'setCardAlignment'">

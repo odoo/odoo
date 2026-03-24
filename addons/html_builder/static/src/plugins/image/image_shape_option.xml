@@ -78,8 +78,10 @@
                 min="-2"
                 max="2"
                 step="0.1"
-                displayRangeValue="true"
-                computedOutput="this.toRatio" />
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                displayNormalizedValue="true" />
         </BuilderRow>
 
         <BuilderRow label.translate="Stretch" level="1" t-if="this.state.togglableRatio" preview="false" tooltip.translate="Will remove the crop factor">

@@ -215,9 +215,13 @@
                                             </div>
                                         </BuilderRow>
                                         <BuilderRow label.translate="Saturation" level="1">
-                                            <BuilderRange action="'customizeGray'" actionParam="'gray-extra-saturation'"
+                                            <BuilderRange
+                                                action="'customizeGray'"
+                                                actionParam="'gray-extra-saturation'"
                                                 step="0.1"
-                                            />
+                                                unit="'%'"
+                                                applyWithUnit="false"
+                                                withNumberInput="true" />
                                         </BuilderRow>
                                     </t>
                                 </BuilderRow>
