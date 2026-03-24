@@ -108,6 +108,29 @@
                 </div>
             </t>
         </div>
+        <h5 id="seo_videos_check" class="mt-4 mb-2">
+            Videos Optimization
+        </h5>
+        <t t-if="!this.seoContext.videoDescriptionAttributes.length">
+            <p><i class="oi d-inline-flex rounded-circle me-2 p-1 bg-success-subtle text-success-emphasis" data-icon="check" role="img" aria-hidden="true"/>No warning on videos</p>
+        </t>
+        <div class="row">
+            <t t-foreach="this.seoContext.videoDescriptionAttributes" t-as="video" t-key="video.id">
+                <div class="col-lg-6 d-flex mb-3">
+                    <div class="me-3">
+                        <div t-if="video.preview_url" class="o_iframe_preview overflow-hidden border rounded">
+                            <iframe title="Video preview" t-att-src="video.preview_url" scrolling="no" inert="inert" loading="lazy"/>
+                        </div>
+                        <img t-else="" class="o-img-thumbnail border rounded object-fit-cover" alt="Video preview" t-att-src="video.thumbnail_url"/>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center flex-grow-1">
+                        <div class="input-group">
+                            <input aria-label="Video description" placeholder="Describe the video..." t-model.proxy="video.description" type="text" t-att-class="'form-control rounded ' + (video.description.trim().length ? 'is-valid' : 'is-invalid')" t-att-disabled="this.hasDelayedTranslation" t-on-change="() => video.updated = true"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
         <t t-if="this.props.isDefaultLang">
             <h5 id="seo_broken_links_check" class="mt-4 mb-2">
                 Broken Links
@@ -229,6 +252,17 @@
                 <span>Images Descriptions</span>
                 <span class="visually-hidden">All images are optimized</span>
             </div>
+            <div t-if="!this.seoContext.hasNoVideoWarning" class="alert alert-danger d-flex align-items-center gap-2 mb-0 py-1 px-2 small">
+                <i class="oi oi-sm" data-icon="warning" role="img" aria-hidden="true"/>
+                <span>Videos Descriptions</span>
+                <span class="visually-hidden">Some videos need a description</span>
+                <a href="#seo_videos_check" class="alert-link text-decoration-underline" t-on-click.prevent="() => this.scrollToCheck('seo_videos_check')">View</a>
+            </div>
+            <div t-else="" class="alert alert-success d-flex align-items-center gap-2 mb-0 py-1 px-2 small">
+                <i class="oi oi-sm" data-icon="check" role="img" aria-hidden="true"/>
+                <span>Videos Descriptions</span>
+                <span class="visually-hidden">All videos are optimized</span>
+            </div>
             <t t-if="this.seoContext.checkedLinks">
                 <div t-if="this.seoContext.brokenLinks.some(link => link.broken and !link.remove)" class="alert alert-danger d-flex align-items-center gap-2 mb-0 py-1 px-2 small">
                     <i class="oi oi-sm" data-icon="warning" role="img" aria-hidden="true"/>
@@ -335,7 +369,7 @@
         <div t-if="this.canEditSeo" class="row gy-4 mt-4 border-top">
             <div class="col-12">
                 <h2 class="mb-0">Content checks</h2>
-                <p class="mt-1 mb-0 text-muted">Describe your images and fix broken links to improve accessibility and SEO</p>
+                <p class="mt-1 mb-0 text-muted">Describe your images and videos, and fix broken links to improve accessibility and SEO</p>
             </div>
             <div class="col-12">
                 <SeoChecks isDefaultLang="this.isDefaultLang"/>

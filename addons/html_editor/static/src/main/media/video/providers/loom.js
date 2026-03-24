@@ -50,6 +50,25 @@ export class Loom extends AbstractThirdPartyVideo {
     }
 
     /**
+     * Returns the thumbnail url for a loom video via the oEmbed API.
+     *
+     * @param {string} videoId
+     * @return {Promise<string>} url
+     */
+    static async getThumbnailUrl(videoId) {
+        try {
+            const response = await fetch(this.getTitleApiUrl(videoId));
+            if (!response.ok) {
+                return "";
+            }
+            const data = await response.json();
+            return data.thumbnail_url || "";
+        } catch {
+            return "";
+        }
+    }
+
+    /**
      * Example urls are used to test that the urlMatcher regular expression
      * correctly identifies valid video urls and extracts the video ID.
      * Every urls in this object should be parsable by the urlMatcher.
