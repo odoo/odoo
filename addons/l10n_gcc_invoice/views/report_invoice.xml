@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="l10n_gcc_report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
-            <t t-set="o" position="after">
+            <xpath expr="//t[@t-set='layout_document_title']" position="before">
                 <t name="l10n_gcc_settings">
                     <t t-if="lang != 'ar_001'" t-set="lang_sec" t-value="o.env['res.lang']._get_code('ar_001')"/>
                     <t t-else="" t-set="lang_sec" t-value="o.env['res.lang']._get_code('en_US')"/>
@@ -13,7 +13,7 @@
                     <t t-set="invoice_gcc_title" t-value="o._l10n_gcc_get_invoice_title()"/>
                     <t t-set="invoice_gcc_title_sec" t-value="o_sec._l10n_gcc_get_invoice_title()"/>
                 </t>
-            </t>
+            </xpath>
             <!-- Arabic & English titles -->
             <t name="invoice_title" position="attributes">
                 <attribute name="t-if">not invoice_gcc_title</attribute>
