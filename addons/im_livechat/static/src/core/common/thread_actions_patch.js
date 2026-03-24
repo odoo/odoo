@@ -23,6 +23,12 @@ patch(ThreadAction.prototype, {
         }
         return super._condition(...arguments);
     },
+
+    _name({ action, channel }) {
+        if (action.id === "leave" && channel?.livechatShouldAskLeaveConfirmation) {
+            return _t("Close Conversation");
+        }
+    },
 });
 
 patch(threadActionsRegistry.get("notification-settings"), {
@@ -49,14 +55,5 @@ patch(threadActionsRegistry.get("call"), {
             return super.condition(...arguments) && !channel.livechat_end_dt;
         }
         return super.condition(...arguments);
-    },
-});
-
-patch(threadActionsRegistry.get("leave"), {
-    name({ channel }) {
-        if (channel?.livechatShouldAskLeaveConfirmation) {
-            return _t("Close Conversation");
-        }
-        return _t("Leave Channel");
     },
 });

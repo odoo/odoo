@@ -9,14 +9,6 @@ commandRegistry
         help: _t("Show a help message"),
         methodName: "execute_command_help",
     })
-    .add("leave", {
-        condition: ({ store }) => store.self_user && !store.self_user.share,
-        help: _t("Leave this channel"),
-        /** @param {import("models").DiscussChannel} channel */
-        async onExecute(channel) {
-            await channel.leaveChannel();
-        },
-    })
     .add("who", {
         condition: ({ channel, store }) =>
             store.self_user &&

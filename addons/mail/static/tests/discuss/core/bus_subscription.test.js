@@ -111,8 +111,8 @@ test("bus subscription is refreshed when channel is left", async () => {
     await contains(".o-mail-MessagingMenuItem");
     await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
     await click("[title='Channel Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button:text('Leave Conversation')");
+    await click(".o-dropdown-item:contains('Leave Conversation')");
+    await click(".o_dialog button:text('Leave Conversation')");
     await contains(".o-mail-MessagingMenuItem", { count: 0 });
     await expect.waitForSteps(["update_bus_subscription"]);
 });
