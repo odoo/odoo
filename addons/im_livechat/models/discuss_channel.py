@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
@@ -701,42 +701,24 @@ class DiscussChannel(models.Model):
             "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
         ) % json.dumps({"fileData": attachment_data})
 
-    def _get_channel_history(self):
-        """
-        Converting message body back to plaintext for correct data formatting in HTML field.
-        """
-        self.ensure_one()
-        parts = []
-        previous_message_author = None
-        message_domain = Domain("message_type", "!=", "notification")
+    def _prepare_channel_history_message_domain(self):
+        message_domain = super()._prepare_channel_history_message_domain()
+        if self.channel_type != "livechat":
+            return message_domain
         # sudo - chatbot.message: visitors can access messages on chats they have access to
         if first_chatbot_message := self.sudo().chatbot_message_ids.sorted("id")[:1]:
             message_domain &= Domain("id", ">=", first_chatbot_message.mail_message_id.id)
-        # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
-        filtered_messages = (
-            self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
-        ).filtered_domain(message_domain)
-        for message in filtered_messages.sorted("id"):
-            # sudo - res.partner: accessing livechat username or name is allowed to visitor
-            message_author = message.author_id.sudo() or message.author_guest_id
-            if previous_message_author != message_author:
-                if parts:
-                    parts.append(Markup("<br/>"))
-                parts.append(
-                    Markup("<strong>%s:</strong><br/>")
-                    % (
-                        (message_author.user_livechat_username if message_author._name == "res.partner" else None)
-                        or message_author.name
-                    ),
-                )
-            if not tools.is_html_empty(message.body):
-                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
-                previous_message_author = message_author
-            for attachment in message.attachment_ids:
-                previous_message_author = message_author
-                # sudo - ir.attachment: public user can read attachment metadata
-                parts.append(Markup("%s<br/>") % self._attachment_to_html(attachment.sudo()))
-        return Markup("").join(parts)
+        return message_domain
+
+    def _get_message_author_display_name(self, author):
+        name = super()._get_message_author_display_name(author)
+        if (
+            self.channel_type == "livechat"
+            and author._name == "res.partner"
+            and author.user_livechat_username
+        ):
+            return author.user_livechat_username
+        return name
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
         pass

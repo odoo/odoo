@@ -245,6 +245,12 @@ class CrmLead(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
+    origin_channel_id = fields.Many2one(
+        "discuss.channel",
+        "Channel from which the lead was created",
+        readonly=True,
+        index="btree_not_null",
+    )
 
     _check_probability = models.Constraint(
         'check(probability >= 0 and probability <= 100)',
@@ -730,6 +736,11 @@ class CrmLead(models.Model):
         for vals in vals_list:
             if vals.get('website'):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        origin_channel_ids = [vals["origin_channel_id"] for vals in vals_list if vals.get("origin_channel_id")]
+        if not self.env["discuss.channel"].browse(origin_channel_ids).has_access("read"):
+            raise AccessError(
+                self.env._("You cannot create leads linked to channels you don't have access to.")
+            )
         leads = super().create(vals_list)
 
         # handling a date_closed value if the lead is directly created in the won stage
@@ -760,6 +771,13 @@ class CrmLead(models.Model):
     def write(self, vals):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        if origin_channel_id := vals.get("origin_channel_id"):
+            if not self.env["discuss.channel"].browse(origin_channel_id).has_access("read"):
+                raise AccessError(
+                    self.env._(
+                        "You cannot update a lead and link it to a channel you don't have access to."
+                    )
+                )
 
         now = self.env.cr.now()
         stage_updated, stage_is_won = False, False
@@ -1028,6 +1046,9 @@ class CrmLead(models.Model):
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
+
+    def action_open_origin_channel(self):
+        return self.origin_channel_id.open_chat_window_action()
 
     def action_unarchive(self):
         """ When re-activating, force update probability for both leads and

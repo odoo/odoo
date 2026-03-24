@@ -1,4 +1,5 @@
 from odoo import _, api, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsers(models.Model):
@@ -15,3 +16,11 @@ class ResUsers(models.Model):
             leader_id = self.env['crm.team'].browse(team_id).user_id
             for user in self.filtered(lambda u: u == leader_id):
                 user.display_name += " --%s--" % _("(Team Leader)")
+
+    def _store_init_global_fields(self, res: Store.FieldList):
+        super()._store_init_global_fields(res)
+        res.attr("has_access_create_lead", self.has_group("sales_team.group_sale_salesman"))
+        res.attr(
+            "channel_types_with_create_lead",
+            sorted(self.env["discuss.channel"]._types_allowing_create_lead()),
+        )
