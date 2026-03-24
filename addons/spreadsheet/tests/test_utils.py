@@ -37,3 +37,7 @@ class TestSpreadsheetUtils(TransactionCase):
             extend_serialized_json('{}', [('key1', '1'), ('key2', '2')]),
             '{"key1":1,"key2":2}'
         )
+        self.assertEqual(
+            extend_serialized_json('\n{}\n', [('key1', '1'), ('key2', '2')]),
+            '{"key1":1,"key2":2}'
+        )
