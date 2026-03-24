@@ -405,6 +405,12 @@ export class ColorPlugin extends Plugin {
             if (mode === "color") {
                 element.style["background-color"] = "";
                 element.classList.add("text-gradient");
+            } else {
+                // When a gradient is applied as background-image, explicitly set
+                // background-color: transparent. This overrides o_cc(x) background,
+                // allowing gradient with transparency to show the content
+                // underneath.
+                element.style["background-color"] = "transparent";
             }
             this.applyColorStyle(
                 element,
