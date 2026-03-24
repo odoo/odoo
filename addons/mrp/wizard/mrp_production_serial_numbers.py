@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Command
 from odoo.exceptions import UserError
 
 
@@ -49,30 +50,24 @@ class MrpProductionSerials(models.TransientModel):
         action['res_id'] = self.id
         return action
 
+    def action_split_and_assign_serials(self):
+        self.ensure_one()
+        lots, new_lots = self._parse_serial_numbers()
+
+        split_amounts = {self.production_id: [1] * len(lots)}
+        mos = self.production_id._split_productions(amounts=split_amounts)
+        for mo, serial in zip(mos, lots):
+            mo.lot_producing_ids = [Command.link(serial.id)]
+        if new_lots and self.production_id.picking_type_id.auto_print_generated_mrp_lot:
+            print_action = self.production_id._autoprint_generated_lots(new_lots)
+            print_action['close_on_report_download'] = True
+            return print_action
+        return True
+
     def action_apply(self):
         self.ensure_one()
-        if not self.serial_numbers:
-            raise UserError(self.env._("There is no serial numbers to apply."))
-        lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
-        existing_lots = self.env['stock.lot'].search([
-            '|', ('company_id', '=', False), ('company_id', '=', self.production_id.company_id.id),
-            ('product_id', '=', self.production_id.product_id.id),
-            ('name', 'in', lots),
-        ])
-        existing_lot_names = existing_lots.mapped('name')
-        new_lot_vals = []
-        sequence = self.production_id.product_id.lot_sequence_id
-        for lot_name in sorted(lots):
-            if lot_name in existing_lot_names:
-                continue
-            if sequence and lot_name == sequence.get_next_char(sequence.number_next_actual):
-                sequence.sudo().number_next_actual += 1
-            new_lot_vals.append({
-                'name': lot_name,
-                'product_id': self.production_id.product_id.id
-            })
-        new_lots = self.env['stock.lot'].create(new_lot_vals)
-        self.production_id.lot_producing_ids = existing_lots + new_lots
+        lots, new_lots = self._parse_serial_numbers()
+        self.production_id.lot_producing_ids = lots
         if self.production_id.qty_producing != len(self.production_id.lot_producing_ids):
             self.production_id.qty_producing = len(self.production_id.lot_producing_ids)
         (self.workorder_id or self.production_id).set_qty_producing()
@@ -80,3 +75,31 @@ class MrpProductionSerials(models.TransientModel):
             print_action = self.production_id._autoprint_generated_lots(new_lots)
             print_action['close_on_report_download'] = True
             return print_action
+        return True
+
+    def _parse_serial_numbers(self):
+        self.ensure_one()
+        if not self.serial_numbers:
+            raise UserError(self.env._("There is no serial numbers to apply."))
+        lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
+        if not lots:
+            raise UserError(self.env._("No valid serial numbers provided."))
+        existing_lots = self.env['stock.lot'].search([
+            '|', ('company_id', '=', False), ('company_id', '=', self.production_id.company_id.id),
+            ('product_id', '=', self.production_id.product_id.id),
+            ('name', 'in', lots),
+        ])
+        existing_lot_names = existing_lots.mapped('name')
+        new_lots_vals = []
+        sequence = self.production_id.product_id.lot_sequence_id
+        for lot_name in sorted(lots):
+            if lot_name in existing_lot_names:
+                continue
+            if sequence and lot_name == sequence.get_next_char(sequence.number_next_actual):
+                sequence.sudo().number_next_actual += 1
+            new_lots_vals.append({
+                'name': lot_name,
+                'product_id': self.production_id.product_id.id,
+            })
+        new_lots = self.env['stock.lot'].create(new_lots_vals)
+        return existing_lots + new_lots, new_lots
