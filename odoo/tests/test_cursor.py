@@ -42,7 +42,6 @@ class TestCursor(Cursor):
         super().__init__(MockedPsycoConnection(cursor, readonly), cursor.dbname)
         self._closed = True  # consider closed until acquired
         self._cnx._obj = self._obj
-        self._now = datetime.now()
         # we use a lock to serialize concurrent requests
         self._lock = lock
         current_test = odoo.modules.module.current_test
@@ -71,6 +70,8 @@ class TestCursor(Cursor):
 
     def execute(self, *args, **kwargs) -> None:
         assert not self.closed, "Cannot use a closed cursor"
+        if self._now is None:
+            self._now = datetime.now()
         self._cnx._check_savepoint()
         return super().execute(*args, **kwargs)
 
@@ -90,6 +91,12 @@ class TestCursor(Cursor):
         """ Perform an SQL `COMMIT` """
         self.precommit.add(self.postcommit.clear)  # ignore post-commit hooks
         super().commit()
+
+    def rollback(self) -> None:
+        super().rollback()
+        # rollback again to release the savepoint that may be created during
+        # reset of the registry (after the rollback) which may perform queries
+        self._cnx.rollback()
 
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``datetime.now()``. """
@@ -127,7 +134,9 @@ class MockedPsycoConnection(_base_PsycoConnection):
 
     def commit(self):
         if self._savepoint is not None:
-            self._savepoint.close(rollback=False)
+            # readonly transaction must rollback the read only flag
+            # in any case, no changes have been made
+            self._savepoint.close(rollback=self.readonly)
             self._savepoint = None
 
     def rollback(self):
