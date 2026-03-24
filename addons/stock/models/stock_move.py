@@ -1536,6 +1536,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.ensure_one()
         move_line_vals, taken_quantity = self._update_reserved_quantity_vals(need, location_id, quant_ids, lot_id, package_id, owner_id, strict)
         if move_line_vals:
+            # CREATE
             self.env['stock.move.line'].create(move_line_vals)
         return taken_quantity
 
@@ -1754,6 +1755,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
+                    if len(move.lot_ids) > 0 and len(move.lot_ids) == len(move.move_line_ids):
+                        move = move.with_context(same_move_lots=True)
                     taken_quantity = move._update_reserved_quantity(need, move.location_id, package_id=forced_package_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue

@@ -830,6 +830,32 @@ class StockQuant(models.Model):
             res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
         return res.sorted(lambda q: not q.lot_id)
 
+    def _get_gather_domain_lots(self, product_id, location_id, lot_ids=[], owner_id=None, strict=False):
+        domain = [('product_id', '=', product_id.id)]
+        if not strict:
+            if lot_ids:
+                domain = expression.AND([['|', ('lot_id', 'in', list(lot_ids)), ('lot_id', '=', False)], domain])
+            if owner_id:
+                domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
+            domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
+        else:
+            domain = expression.AND([['|', ('lot_id', 'in', list(lot_ids)), ('lot_id', '=', False)] if lot_ids else [('lot_id', '=', False)], domain])
+            domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
+            domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+        if self.env.context.get('with_expiration'):
+            domain = expression.AND([['|', ('expiration_date', '>=', self.env.context['with_expiration']), ('expiration_date', '=', False)], domain])
+        return domain
+
+    def _gather_lots(self, product_id, location_id, lot_ids=[], owner_id=None, strict=False, qty=0):
+        removal_strategy = self._get_removal_strategy(product_id, location_id)
+        domain = self._get_gather_domain_lots(product_id, location_id, lot_ids, owner_id, strict)
+        domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
+
+        res = self.search(domain, order=order)
+        if removal_strategy == "closest":
+            res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
+        return res.sorted(lambda q: not q.lot_id)
+
     def _get_quants_cache_by_products_locations(self, product_ids, location_ids, extra_domain=False):
         res = defaultdict(lambda: self.env['stock.quant'])
         if product_ids and location_ids:
@@ -901,6 +927,22 @@ class StockQuant(models.Model):
                 return sum(availaible_quantities.values())
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
+
+    def _get_available_quantity_lots(self, product_id, location_id, lot_ids=None, owner_id=None, strict=False, allow_negative=False):
+        quants = self.sudo()._gather_lots(product_id, location_id, lot_ids=lot_ids, owner_id=owner_id, strict=strict)
+        quant_per_lot = {q.lot_id: q for q in quants}
+        untracked_qty = sum(quant.quantity - quant.reserved_quantity for quant in quant_per_lot.get(False, []))
+        available_quantities = {lot_id: 0.0 for lot_id in list(lot_ids)}
+        rounding = product_id.uom_id.rounding
+
+        for lot_id, q in quant_per_lot.items():
+            available_quantity = sum(q.mapped('quantity')) - sum(q.mapped('reserved_quantity')) + untracked_qty
+            if allow_negative:
+                available_quantities[lot_id] = available_quantity
+            else:
+                available_quantities[lot_id] = available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
+
+        return available_quantities
 
     def _get_reserve_quantity(self, product_id, location_id, quantity, product_packaging_id=None, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Get the quantity available to reserve for the set of quants
@@ -1157,6 +1199,74 @@ class StockQuant(models.Model):
         :return: available_quantity
         """
         self._update_available_quantity(product_id, location_id, reserved_quantity=quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
+
+    @api.model
+    def _update_available_quantity_lots(self, product_id, location_id, qty_per_lot=None, reserved_qty_per_lot=None, owner_id=None, in_date=None):
+        if not (qty_per_lot or reserved_qty_per_lot):
+            raise ValidationError(_('Quantity or Reserved Quantity should be set.'))
+        records = self.sudo()
+        lot_ids = set()
+        if qty_per_lot:
+            lot_ids.update(l.id for l in qty_per_lot if l)
+        if reserved_qty_per_lot:
+            lot_ids.update(l.id for l in reserved_qty_per_lot if l)
+        quants = records._gather_lots(product_id, location_id, lot_ids=lot_ids, owner_id=owner_id, strict=True)
+
+        quants = quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0 or q.lot_id)
+
+        if location_id.should_bypass_reservation():
+            incoming_dates = []
+        else:
+            incoming_dates = [quant.in_date for quant in quants if quant.in_date and
+                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
+        if in_date:
+            incoming_dates += [in_date]
+        # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
+        # consider only the oldest one as being relevant.
+        if incoming_dates:
+            in_date = min(incoming_dates)
+        else:
+            in_date = fields.Datetime.now()
+
+        quant_per_lot = {}
+        default_quant = None
+        for quant in quants:
+            if quant.lot_id:
+                quant_per_lot[quant.lot_id] = quant
+            else:
+                default_quant = quant
+
+        vals_to_create = []
+        for lot_id in self.env['stock.lot'].browse(lot_ids):
+            quant = quant_per_lot.get(lot_id, default_quant)
+            if quant:
+                vals = {'in_date': in_date}
+                if qty_per_lot and qty_per_lot.get(lot_id):
+                    vals['quantity'] = quant.quantity + qty_per_lot.get(lot_id)
+                if reserved_qty_per_lot and reserved_qty_per_lot.get(lot_id):
+                    vals['reserved_quantity'] = quant.reserved_quantity + reserved_qty_per_lot.get(lot_id)
+                quant.write(vals)
+            else:
+                vals = {
+                    'product_id': product_id.id,
+                    'location_id': location_id.id,
+                    'lot_id': lot_id and lot_id.id,
+                    'owner_id': owner_id and owner_id.id,
+                    'in_date': in_date,
+                }
+                if qty_per_lot and qty_per_lot.get(lot_id):
+                    vals['quantity'] = qty_per_lot.get(lot_id)
+                if reserved_qty_per_lot and reserved_qty_per_lot.get(lot_id):
+                    vals['reserved_quantity'] = reserved_qty_per_lot.get(lot_id)
+                vals_to_create.append(vals)
+        records.create(vals_to_create)
+
+        return records._get_available_quantity_lots(product_id, location_id, lot_ids=lot_ids, owner_id=owner_id, strict=True, allow_negative=True), in_date
+
+    @api.model
+    def _update_reserved_quantity_lots(self, product_id, location_id, qty_per_lot, owner_id=None, strict=True):
+
+        self._update_available_quantity_lots(product_id, location_id, reserved_qty_per_lot=qty_per_lot, owner_id=owner_id)
 
     @api.model
     def _unlink_zero_quants(self):
