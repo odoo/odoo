@@ -12,7 +12,7 @@ import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
-import { useSuggestion } from "@mail/core/common/suggestion_hook";
+import { prepareSuggestionListOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -481,82 +481,10 @@ export class Composer extends Component {
         if (!this.hasSuggestions) {
             return props;
         }
-        const suggestions = this.suggestion.state.items.suggestions;
-        switch (this.suggestion.state.items.type) {
-            case "Partner":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionPartner",
-                    options: suggestions.map((suggestion) => {
-                        if (suggestion.isSpecial) {
-                            return {
-                                ...suggestion,
-                                group: 1,
-                                optionTemplate: "mail.Composer.suggestionSpecial",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else if (suggestion.Model.getName() === "res.role") {
-                            return {
-                                label: suggestion.name,
-                                role: suggestion,
-                                thread: this.thread,
-                                optionTemplate: "mail.Composer.suggestionRole",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else {
-                            return {
-                                label: this.thread?.getPersonaName(suggestion) ?? suggestion.name,
-                                thread: this.thread,
-                                partner: suggestion,
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        }
-                    }),
-                };
-            case "discuss.channel":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannel",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.fullNameWithParent,
-                        channel: suggestion,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "ChannelCommand":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.name,
-                        help: suggestion.help,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "mail.canned.response":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => ({
-                        cannedResponse: suggestion,
-                        label: suggestion.substitution,
-                        source: suggestion.source,
-                        title: suggestion.substitution,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "emoji":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionEmoji",
-                    options: suggestions.map((suggestion) => ({
-                        emoji: suggestion,
-                        label: suggestion.codepoints,
-                    })),
-                };
-            default:
-                return props;
-        }
+        return {
+            ...props,
+            ...prepareSuggestionListOptions(this.suggestion.state.items, this.thread),
+        };
     }
 
     onDropFile(ev) {

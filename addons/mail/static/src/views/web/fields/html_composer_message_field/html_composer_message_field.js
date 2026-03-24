@@ -3,9 +3,9 @@ import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
-import { MailFullComposerSuggestionPlugin } from "./mail_full_composer_suggestion_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
+import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { markup } from "@odoo/owl";
 
@@ -41,9 +41,9 @@ export class HtmlComposerMessageField extends HtmlMailField {
     getConfig() {
         const config = super.getConfig(...arguments);
         config.Plugins = [
-            ...config.Plugins.filter((plugin) => !["video"].includes(plugin.id)),
+            ...config.Plugins.filter((plugin) => !["video", "mention"].includes(plugin.id)),
             DisableBannerCommandsPlugin,
-            MailFullComposerSuggestionPlugin,
+            MentionPlugin,
         ];
         if (this.props.record.data.composition_comment_option === "reply_all") {
             config.Plugins.push(ContentExpandablePlugin);
