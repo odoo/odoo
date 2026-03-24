@@ -730,7 +730,7 @@ export class DiscussChannel extends models.ServerModel {
             const otherPartners = ResPartner.browse(otherPartnerIds);
             let message = "You are alone in this channel.";
             if (otherPartners.length > 0) {
-                message = `Users in this channel: ${otherPartners
+                message = `Members of this conversation: ${otherPartners
                     .map((partner) => partner.name)
                     .join(", ")} and you`;
             }

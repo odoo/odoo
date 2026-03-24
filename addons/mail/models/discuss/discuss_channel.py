@@ -1740,7 +1740,7 @@ class DiscussChannel(models.Model):
                 for member in members
             }
             msg = _(
-                "Users in this channel: %(members)s.",
+                "Members of this conversation: %(members)s.",
                 members=member_names,
             )
         else:
