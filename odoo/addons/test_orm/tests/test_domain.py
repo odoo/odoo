@@ -417,6 +417,36 @@ class TestDomainOptimize(TransactionCase):
         self.assertEqual(Domain('a', 'in', Domain.TRUE).operator, 'in')
         self.assertIsInstance(Domain('a', 'any', [('x', '>', 1)]).value, list)
 
+    def test_condition_methods(self):
+        dom = Domain.TRUE
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 0)
+        self.assertFalse(dom.is_condition())
+
+        dom = Domain('a', '>=', 1)
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 1)
+        self.assertIs(conditions[0], dom)
+        self.assertTrue(dom.is_condition())
+        self.assertTrue(dom.is_condition('a', '>='))
+        self.assertTrue(dom.is_condition(operator=('>=', 'in')))
+        self.assertTrue(dom.is_condition(value=int))
+        self.assertTrue(dom.is_condition(value=(int, float)))
+        self.assertFalse(dom.is_condition('b', '>='))
+        self.assertFalse(dom.is_condition(operator='='))
+        self.assertFalse(dom.is_condition(value=str))
+
+        dom = dom & Domain('b', '=', 1)
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 2)
+        self.assertFalse(dom.is_condition())
+        self.assertTrue(all(c.is_condition() for c in dom.iter_conditions()))
+
+        dom = Domain.custom(to_sql=lambda table: SQL(''))
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 0)
+        self.assertFalse(dom.is_condition())
+
     def test_condition_optimize_optimal(self):
         model = self.env['test_orm.mixed']
         domain = self.number_domain

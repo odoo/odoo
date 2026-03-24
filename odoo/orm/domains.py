@@ -391,6 +391,17 @@ class Domain:
         """Return whether self is FALSE"""
         return False
 
+    def is_condition(self,
+        field_expr: str = '',
+        operator: str | tuple[str] = (),
+        value: type | tuple[type] = (),
+    ) -> bool:
+        """Return whether this domain is a simple condition, and whether it
+        matches the ``field_expr`` (if given), the ``operator`` (if given), and
+        the ``value`` type (if given).
+        """
+        return False
+
     def iter_conditions(self) -> Iterable[DomainCondition]:
         """Yield simple conditions of the domain"""
         yield from ()
@@ -905,6 +916,19 @@ class DomainCondition(Domain):
 
     def __hash__(self):
         return hash(self.field_expr) ^ hash(self.operator) ^ hash(self.value)
+
+    def is_condition(self,
+        field_expr: str = '',
+        operator: str | tuple[str] = (),
+        value: type | tuple[type] = (),
+    ) -> bool:
+        return (
+            not field_expr or self.field_expr == field_expr
+        ) and (
+            not operator or self.operator in ((operator,) if isinstance(operator, str) else operator)
+        ) and (
+            not value or isinstance(self.value, value)
+        )
 
     def iter_conditions(self):
         yield self
