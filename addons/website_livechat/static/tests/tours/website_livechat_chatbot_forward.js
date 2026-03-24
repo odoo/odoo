@@ -32,6 +32,21 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+            run: function () {
+                window.location.reload();
+            },
+            expectUnloadPage: true,
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+            run: "edit Hello, I accidentally refreshed!",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "press Enter",
+        },
+        {
+            trigger: messagesContain("Hello, I accidentally refreshed!"),
         },
     ],
 });

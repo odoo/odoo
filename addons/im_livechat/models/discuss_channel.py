@@ -536,7 +536,8 @@ class DiscussChannel(models.Model):
                 "scriptStep": current_step_sudo.id,
                 "message": step_message.mail_message_id.id,
                 "operatorFound": current_step_sudo.step_type == "forward_operator"
-                and bool(channel.livechat_agent_partner_ids),
+                # sudo: discuss.channel - visitors/guests can check if an operator exists
+                and bool(channel.sudo().livechat_agent_partner_ids),
             }
             store.add(current_step_sudo, "_store_script_step_fields")
             store.add(chatbot_script, "_store_script_fields")

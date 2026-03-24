@@ -49,7 +49,8 @@ class MailMessage(models.Model):
                         res.attr(
                             "operatorFound",
                             step.step_type == "forward_operator" and
-                            bool(channel.livechat_agent_partner_ids),
+                            # sudo: discuss.channel - visitors/guests can check if an operator exists
+                            bool(channel.sudo().livechat_agent_partner_ids),
                         )
                         if answer := chatbot_message.user_script_answer_id:
                             res.attr("selectedAnswer", {"id": answer.id, "label": answer.name})
