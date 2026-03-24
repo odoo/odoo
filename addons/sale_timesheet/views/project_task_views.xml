@@ -4,7 +4,8 @@
     <record id="project_project_view_form" model="ir.ui.view">
         <field name="name">project.project.form.inherit</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="inherit_id" ref="sale_project.view_edit_project_inherit_form"/>
+        <field name="priority">24</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_view_sos'][1]" position="attributes">
                 <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
@@ -12,6 +13,13 @@
             <xpath expr="//button[@name='action_view_sos'][2]" position="attributes">
                 <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
             </xpath>
+            <xpath expr="//setting[@id='allow_billable_container']" position="before">
+                <setting id="timesheet_settings" position="move"/>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']" position="attributes">
+                <attribute name="string">Time Billing</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group_time_managment']" position="replace"/>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id or is_template">
                     <field name="sale_line_employee_ids" mode="list,kanban" context="{'default_sale_line_id': sale_line_id}">
