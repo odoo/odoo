@@ -1475,3 +1475,59 @@ class TestHrAttendanceOvertime(HttpCase):
 
         self.assertEqual(overtime_attendance.worked_hours, 12.0)
         self.assertEqual(overtime_attendance.overtime_hours, 2.0)
+
+    def test_overtime_line_access_rules(self):
+        """Test ir.rules on hr.attendance.overtime.line per access level:
+        - own_reader (base user): can only read their own overtime lines.
+        - officer: can read overtime lines of managed employees and their own.
+        - admin (group_hr_attendance_user): can read all overtime lines.
+        """
+        officer_user = new_test_user(self.env, login='officer', groups='base.group_user,hr_attendance.group_hr_attendance_officer', company_id=self.company.id).with_company(self.company)
+        own_reader_user = new_test_user(self.env, login='own_reader', groups='hr_attendance.group_hr_attendance_own_reader', company_id=self.company.id).with_company(self.company)
+        officer_employee, own_reader_employee = self.env['hr.employee'].create([{
+            'name': 'Officer Employee',
+            'user_id': officer_user.id,
+            'company_id': self.company.id,
+            'tz': 'UTC',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'ruleset_id': self.ruleset.id,
+        }, {
+            'name': 'Own Reader Employee',
+            'user_id': own_reader_user.id,
+            'company_id': self.company.id,
+            'tz': 'UTC',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'ruleset_id': self.ruleset.id,
+        }])
+        self.other_employee.attendance_manager_id = officer_user.id
+        self.env['hr.attendance'].create([{
+            'employee_id': own_reader_employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0),
+        }, {
+            'employee_id': officer_employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0),
+        }, {
+            'employee_id': self.other_employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0),
+        }])
+        overtime_line = self.env['hr.attendance.overtime.line']
+        all_lines = overtime_line.search([('employee_id', 'in', (own_reader_employee | officer_employee | self.other_employee).ids)])
+        self.assertEqual(len(all_lines.employee_id), 3)
+
+        own_reader_lines = overtime_line.with_user(own_reader_user).search([])
+        self.assertEqual(own_reader_lines.employee_id, own_reader_employee)
+
+        officer_lines = overtime_line.with_user(officer_user).search([])
+        self.assertEqual(officer_lines.mapped('employee_id'), officer_employee | self.other_employee)
+
+        admin_lines = overtime_line.with_user(self.user).search([])
+        self.assertIn(own_reader_employee, admin_lines.employee_id)
+        self.assertIn(officer_employee, admin_lines.employee_id)
+        self.assertIn(self.other_employee, admin_lines.employee_id)
