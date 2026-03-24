@@ -34,6 +34,7 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA
         'views/res_company_views.xml',
         'views/res_config_settings_view.xml',
         'views/report_invoice.xml',
+        'views/report_templates.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
