@@ -93,7 +93,8 @@ class HrAttendance(models.Model):
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
         for attendance in self:
-            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours
+            calendar = attendance._get_employee_calendar()
+            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours if attendance.overtime_hours else calendar.hours_per_day
 
     def _compute_color(self):
         for attendance in self:

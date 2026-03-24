@@ -108,6 +108,17 @@ class TestHrAttendance(TransactionCase):
         with self.assertRaises(AssertionError):
             attendance_form.save()
 
+    def test_expected_hours_with_standard_calendar(self):
+        """Test that expected_hours equals calendar's hours_per_day when no overtime"""
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': datetime(2025, 1, 15, 10, 0),
+            'check_out': datetime(2025, 1, 15, 18, 0),
+        })
+        # Standard 40h/week calendar has 8 hours per day
+        self.assertEqual(attendance.expected_hours, 8)
+
     # @freeze_time("2024-02-1")
     # def test_change_in_out_mode_when_manual_modification(self):
     #     TODO naja: cron should work eventually when the adjustment feature is back
