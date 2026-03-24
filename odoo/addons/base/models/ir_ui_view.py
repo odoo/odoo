@@ -1126,10 +1126,19 @@ actual arch.
 
     @api.model
     @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
-    def _get_cached_template_info(self, id_or_xmlid, _view=None):
-        """ Return the ir.ui.view id from the xml id, use `_preload_views`.
+    def _get_cached_template_info(self, id_or_xmlid: int | str, *, _view: models.BaseModel | None = None):
+        """Return cached template data for ``id_or_xmlid``.
+
+        ``_view`` may be provided as a shortcut to avoid resolving
+        ``id_or_xmlid`` again. Passing an empty recordset means the template is
+        known to be missing and results in ``info['error']`` being a
+        :class:`odoo.exceptions.MissingError`.
+
+        ``_view`` is intentionally not part of the cache key: when provided and
+        correct, it is equivalent to the view resolved from ``id_or_xmlid`` and
+        does not change the result.
         """
-        view = None
+        view = self.browse()
         error = False
         if _view is not None:
             view = _view
@@ -1138,11 +1147,7 @@ actual arch.
             try:
                 view.key
             except MissingError:
-                view = None
-                error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
-            except UserError as e:
-                view = None
-                error = e
+                view = self.browse()
         else:
             preload = self.sudo()._preload_views([id_or_xmlid])
             if id_or_xmlid in preload:
@@ -1153,7 +1158,10 @@ actual arch.
                 error = SyntaxError('Error compiling template')
         info = {
             f: view[f] if view else None
-            for f in self._get_cached_template_prefetched_keys()}
+            for f in self._get_cached_template_prefetched_keys()
+        }
+        if not view and not error:
+            error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
         info['error'] = error
         return info
 
@@ -1225,16 +1233,11 @@ actual arch.
             self._get_cached_template_info(key, _view=view)
 
         # create data and errors
-        for view_id in ids:
-            if view_id not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(view_id, _view=False)
-                view_by_id[view_id] = MissingError(self.env._("Template does not exist or has been deleted: %s", view_id))
-        for xmlid in xmlids:
-            if xmlid not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(xmlid, _view=False)
-                view_by_id[xmlid] = MissingError(self.env._("Template not found: '%s'", xmlid))
+        for id_or_xmlid in ids_or_xmlids:
+            if id_or_xmlid not in view_by_id:
+                # push information in cache for missing records
+                info = self._get_cached_template_info(id_or_xmlid, _view=self.browse())
+                view_by_id[id_or_xmlid] = info['error']
         return view_by_id
 
     @tools.ormcache(cache='templates')

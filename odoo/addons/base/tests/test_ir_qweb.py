@@ -1601,7 +1601,7 @@ class TestQWebBasic(TransactionCase):
         try:
             self.env['ir.qweb']._render(-999)
         except MissingError as e:
-            self.assertIn('Template does not exist or has been deleted', str(e))
+            self.assertIn('Template not found', str(e))
 
         with self.assertRaises(MissingError):
             self.env['ir.qweb']._render('not.wrong_template_xmlid')
