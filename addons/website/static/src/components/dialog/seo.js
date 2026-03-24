@@ -10,6 +10,7 @@ import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
+import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 import { WebsiteDialog } from "./dialog";
 import {
     Component,
@@ -38,6 +39,7 @@ export const seoContext = proxy({
     metaImage: "",
     defaultTitle: "",
     updatedAlts: [],
+    updatedTitles: [],
     brokenLinks: [],
 });
 
@@ -48,6 +50,33 @@ const LINK_CHECK_BASE_OPTIONS = {
 };
 const LINK_CHECK_MANUAL_OPTIONS = { ...LINK_CHECK_BASE_OPTIONS, redirect: "manual" };
 const LINK_CHECK_NO_CORS_OPTIONS = { ...LINK_CHECK_BASE_OPTIONS, mode: "no-cors" };
+const VIDEO_THUMBNAIL_FALLBACK = "/website/static/src/img/snippets_thumbs/s_video.svg";
+// Platforms rendered as a scaled-down iframe preview instead of a thumbnail image.
+const IFRAME_PREVIEW_PLATFORMS = new Set(["facebook", "instagram", "twitch", "gDrive"]);
+
+/**
+ * Returns the video data (platform, thumbnail url, ...) that the provider
+ * handling `src` extracts from it, or null if no provider matches.
+ *
+ * @param {string} [src]
+ * @returns {Object|null}
+ */
+const getVideoData = (src) => {
+    if (!src) {
+        return null;
+    }
+    let url = src.trim();
+    if (url.startsWith("//")) {
+        url = `https:${url}`;
+    }
+    for (const platform of Object.values(PLATFORMS)) {
+        const urlMatch = platform.isValidVideoUrl(url);
+        if (urlMatch) {
+            return platform.getVideoUrlData(urlMatch);
+        }
+    }
+    return null;
+};
 
 const inspectLink = async (url, options) => {
     try {
@@ -802,15 +831,20 @@ export class SeoChecks extends Component {
         this.object = seoObject || mainObject;
         this.state = proxy({
             altAttributes: [],
+            titleAttributes: [],
             checkingLinks: false,
             checkedLinks: false,
             counterLinks: 0,
             totalLinks: 0,
         });
         this.imgUpdated = this.imgUpdated.bind(this);
+        this.videoUpdated = this.videoUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            const { altAttributes, titleAttributes } = await this.getMediaAttributes();
+            this.state.altAttributes = altAttributes;
+            this.state.titleAttributes = titleAttributes;
             this.seoContext.updatedAlts = [];
+            this.seoContext.updatedTitles = [];
             if (!this.props.isDefaultLang) {
                 this.hasDelayedTranslation = await fetchDelayedTranslations(path);
             }
@@ -827,17 +861,24 @@ export class SeoChecks extends Component {
         this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
     }
 
-    async getAltAttributes() {
+    videoUpdated(video) {
+        video.updated = true;
+        this.seoContext.updatedTitles = this.state.titleAttributes.filter((video) => video.updated);
+    }
+
+    async getMediaAttributes() {
         const uniqueRecords = new Set();
 
-        // Select all relevant <img> elements in the editable page.
+        // Select all relevant <img> and <iframe> elements in the editable page.
         const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+        const videoEls =
+            this.website.pageDocument.documentElement.querySelectorAll(".media_iframe_video");
 
-        imgEls.forEach((el) => {
+        const collectMetadata = (el) => {
             // Find the closest ancestor element containing Odoo metadata.
             const recordEl = el.closest("[data-oe-model][data-oe-field][data-oe-id]");
             if (!recordEl) {
-                return; // Skip images without a proper metadata wrapper.
+                return; // Skip media without a proper metadata wrapper.
             }
 
             const model = recordEl.dataset.oeModel;
@@ -845,14 +886,16 @@ export class SeoChecks extends Component {
             const field = recordEl.dataset.oeField;
             const type = recordEl.dataset.oeType;
 
-            // Only include images that belong to static content definitions.
+            // Only include media that belong to static content definitions.
             if ((model !== "ir.ui.view" || field !== "arch") && type !== "html") {
                 return;
             }
 
             // Build a unique signature string to avoid duplicates.
             uniqueRecords.add(`${model}||${id}||${field}||${type}`);
-        });
+        };
+        imgEls.forEach(collectMetadata);
+        videoEls.forEach(collectMetadata);
 
         // Transform the Set of unique strings back into structured objects.
         const models = Array.from(uniqueRecords).map((entry) => {
@@ -860,9 +903,32 @@ export class SeoChecks extends Component {
             return { model, id: parseInt(id), field, type };
         });
 
-        const results = await rpc("/website/get_alt_images", { models });
+        const results = await rpc("/website/get_media_elements", { models });
+        const parsed = JSON.parse(results);
+        const altAttributes = parsed.filter((el) => el.type === "img");
+        const titleAttributes = parsed.filter((el) => el.type === "video");
 
-        return JSON.parse(results);
+        // Resolve each video once: its provider tells us whether we can show a
+        // thumbnail, or have to fall back to a scaled-down iframe preview.
+        await Promise.allSettled(
+            titleAttributes.map(async (video) => {
+                // Kept if the provider has no thumbnail or fails to return one.
+                video.thumbnail_url = VIDEO_THUMBNAIL_FALLBACK;
+                const videoData = getVideoData(video.src);
+                if (!videoData) {
+                    return;
+                }
+                if (IFRAME_PREVIEW_PLATFORMS.has(videoData.platform)) {
+                    video.use_iframe_preview = true;
+                    return;
+                }
+                video.thumbnail_url = (await videoData.thumbnailUrl) || VIDEO_THUMBNAIL_FALLBACK;
+            })
+        );
+        return {
+            altAttributes,
+            titleAttributes,
+        };
     }
 
     async getBrokenLinks() {
@@ -1172,15 +1238,19 @@ export class OptimizeSEODialog extends Component {
         }
         if (!this.isDefaultLang) {
             const translationsByRecord = {};
-            for (const img of seoContext.updatedAlts || []) {
-                const key = `${img.res_model}::${img.res_id}::${img.field}`;
+            for (const media of [
+                ...(seoContext.updatedAlts || []),
+                ...(seoContext.updatedTitles || []),
+            ]) {
+                const key = `${media.res_model}::${media.res_id}::${media.field}`;
                 translationsByRecord[key] ??= {
-                    model: img.res_model,
-                    id: img.res_id,
-                    fieldName: img.field,
+                    model: media.res_model,
+                    id: media.res_id,
+                    fieldName: media.field,
                     translations: {},
                 };
-                translationsByRecord[key].translations[img.source_sha] = (img.alt || "").trim();
+                const text = media.type === "video" ? media.title : media.alt;
+                translationsByRecord[key].translations[media.source_sha] = (text || "").trim();
             }
             for (const record of Object.values(translationsByRecord)) {
                 rpcCalls.push(
@@ -1194,10 +1264,14 @@ export class OptimizeSEODialog extends Component {
                     })
                 );
             }
-        } else if (seoContext.updatedAlts?.length) {
+        } else if (seoContext.updatedAlts?.length || seoContext.updatedTitles?.length) {
+            const updatedMediaElements = [
+                ...(seoContext.updatedAlts || []),
+                ...(seoContext.updatedTitles || []),
+            ];
             rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
+                rpc("/website/update_media_elements", {
+                    elements: updatedMediaElements,
                 })
             );
         }

@@ -939,3 +939,20 @@ class TestUi(HttpCaseWithWebsiteUser):
             'header_over_the_content_bg_blur_option',
             login='admin',
         )
+
+    def test_seo_video_description_check(self):
+        website = self.env.ref('base.default_website')
+        homepage = website.with_context(website_id=website.id).viewref('website.homepage')
+        homepage.arch = """
+            <t t-name="website.homepage">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure">
+                        <div class="media_iframe_video" data-embed-url="https://www.youtube.com/embed/Dpq87YCHmJc">
+                            <div class="css_editable_mode_display"/>
+                            <div class="media_iframe_video_size"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        """
+        self.start_tour(website.get_client_action_url('/'), 'seo_video_description_check', login='admin')
