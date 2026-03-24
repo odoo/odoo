@@ -45,7 +45,7 @@ class StockWarehouse(models.Model):
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id
-            warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids
+            warehouse.manufacture_to_resupply = bool(manufacture_route.product_selectable or manufacture_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
 
     def _inverse_manufacture_to_resupply(self):
         for warehouse in self:
@@ -59,6 +59,7 @@ class StockWarehouse(models.Model):
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
                 manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
+                manufacture_route.product_selectable = False
 
     def _create_or_update_route(self):
         manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
