@@ -111,7 +111,7 @@ export class TranslateDialog extends Component {
         );
         let result = "";
         for (const child of fragment.children) {
-            this.props.sanitize(child, { IN_PLACE: true });
+            this.props.sanitize(child);
             result += child.outerHTML;
         }
         return markup(result);
@@ -179,7 +179,7 @@ export class TranslateDialog extends Component {
                 this.props.baseContainer,
                 this.props.document
             );
-            this.props.sanitize(fragment, { IN_PLACE: true });
+            this.props.sanitize(fragment);
             this.props.insert(fragment);
         } catch (e) {
             this.props.close();
