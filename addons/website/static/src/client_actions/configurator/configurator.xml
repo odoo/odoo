@@ -242,12 +242,26 @@
                 <div class="row g-0 h-100">
                     <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden">
                         <div class="flex-grow-1 overflow-auto pb-4">
-                            <div class="o_configurator_typing_text ps-3 ps-xl-5 pt-3 mb-4">
+                            <div class="o_configurator_typing_text ps-3 pt-3 mb-4">
                                 Set up your <b>style</b>
                             </div>
                             <div>
-                                <button t-on-click="() => this.setFont('')">font 1</button>
-                                <button t-on-click="() => this.setFont('')">font 2</button>
+                                <h3>Colors</h3>
+                                <button t-on-click="() => this.setPalette('Inter')">palette 1</button>
+                                <button t-on-click="() => this.setPalette('Poppins')">palette 2</button>
+                            </div>
+                            <div>
+                                <h3>Font</h3>
+                                <t t-foreach="this.state.fontNames || []" t-as="font" t-key="font">
+                                    <button
+                                        type="button"
+                                        t-att-class="'btn btn-outline-secondary' + (this.state.selectedFont === font ? ' active' : '')"
+                                        t-on-click="() => this.setFont(font)"
+                                    >
+                                        <h3 t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['headings'])">Heading</h3>
+                                        <p t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['family'])">This is a paragraph</p>
+                                    </button>
+                                </t>
                             </div>
                         </div>
                         <div class="d-flex gap-3 p-3 bg-white flex-shrink-0 o_setup_style_screen_buttons">

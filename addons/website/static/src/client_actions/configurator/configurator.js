@@ -873,6 +873,94 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         return "";
     }
 
+    cleanValue(value) {
+        return value.trim().replace(/^['"]|['"]$/g, "");
+    }
+    getFonts() {
+        const iframeDoc = this.previewIframeRef.el?.contentDocument;
+        const iframeRoot = iframeDoc?.documentElement;
+        if (!iframeRoot) {
+            return;
+        }
+        const style = getComputedStyle(iframeRoot);
+        const numberOfFonts = Number.parseInt(style.getPropertyValue("--number-of-fonts"), 10) || 0;
+        const fonts = {};
+        const fontUrls = [];
+
+        for (let i = 1; i <= numberOfFonts; i++) {
+            const fontName = this.cleanValue(style.getPropertyValue(`--font-number-${i}`));
+            if (!fontName) {
+                continue;
+            }
+            const fontFamily = style.getPropertyValue(`--font-family-number-${i}`).trim();
+            const fontUrl = this.cleanValue(style.getPropertyValue(`--font-url-number-${i}`));
+            if (fontFamily) {
+                fonts[fontName] = {
+                    family: fontFamily || `"${fontName}", "Odoo Unicode Support Noto", sans-serif`,
+                    headings: "",
+                };
+                if (fontUrl) {
+                    fontUrls.push(fontUrl);
+                }
+            }
+        }
+
+        const bodyFont = this.cleanValue(style.getPropertyValue("--font"));
+        const bodyAltRaw = style.getPropertyValue("--alternative-fonts");
+        const bodyAlts = [];
+        if (bodyAltRaw) {
+            for (const value of bodyAltRaw.replace(/[()]/g, "").split(",")) {
+                const fontName = this.cleanValue(value);
+                if (fontName) {
+                    bodyAlts.push(fontName);
+                }
+            }
+        }
+        const headingFont = this.cleanValue(style.getPropertyValue("--headings-font"));
+        const headingAltRaw = style.getPropertyValue("--alternative-headings-fonts");
+        const headingAlts = [];
+        if (headingAltRaw) {
+            for (const value of headingAltRaw.replace(/[()]/g, "").split(",")) {
+                const fontName = this.cleanValue(value);
+                if (fontName) {
+                    headingAlts.push(fontName);
+                }
+            }
+        }
+        const recommendedFontNames = [bodyFont, ...bodyAlts].filter(Boolean);
+        const recommendedHeadingsFontNames = [headingFont, ...headingAlts].filter(Boolean);
+        for (const i in recommendedFontNames) {
+            fonts[recommendedFontNames[i]]["headings"] = recommendedHeadingsFontNames[i];
+        }
+
+        const addFontLink = (targetDoc, href) => {
+            if (!targetDoc?.head) {
+                return;
+            }
+            if (targetDoc.head.querySelector(`link[href="${href}"]`)) {
+                return;
+            }
+            const link = targetDoc.createElement("link");
+            link.rel = "stylesheet";
+            link.href = href;
+            targetDoc.head.appendChild(link);
+        };
+
+        for (const fontUrl of new Set(fontUrls)) {
+            const href = `https://fonts.googleapis.com/css?family=${encodeURIComponent(
+                fontUrl
+            )}&display=swap`;
+            addFontLink(iframeDoc, href);
+            addFontLink(document, href);
+        }
+
+        this.state.fonts = fonts;
+        this.state.fontNames = recommendedFontNames;
+        if (!this.state.selectedFont || !fonts[this.state.selectedFont]) {
+            this.state.selectedFont = recommendedFontNames[0];
+        }
+    }
+
     setFont(font) {
         this.state.selectedFont = font;
         this.applyPreviewFont();
@@ -906,6 +994,8 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         if (iframeDoc) {
             this.deactivatePreviewInteractions(iframeDoc);
             this.applyPreviewFont(iframeDoc);
+            this.getFonts();
+            this.applyPreviewFont();
         }
         this.state.previewIsLoading = false;
     }
@@ -921,7 +1011,16 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
 
     applyPreviewFont(iframeDoc = this.previewIframeRef.el?.contentDocument) {
         if (iframeDoc?.body) {
-            iframeDoc.body.style.fontFamily = this.state.selectedFont || "";
+            const fontConfig = this.state.fonts?.[this.state.selectedFont];
+            if (!fontConfig) {
+                return;
+            }
+            iframeDoc.body.style.fontFamily = fontConfig.family || "";
+            for (const el of iframeDoc.querySelectorAll(
+                "h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4"
+            )) {
+                el.style.fontFamily = fontConfig.headings;
+            }
         }
     }
 
@@ -932,7 +1031,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         });
         return `/website/configurator/preview?${params.toString()}`;
     }
-
 }
 
 //------------------------------------------------------------------------------
