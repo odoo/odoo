@@ -157,7 +157,7 @@ class PaymentTransaction(models.Model):
             json=data,
             idempotency_key=payment_utils.generate_idempotency_key(self, scope="token_payment"),
         )
-        self._process("mercado_pago", response_content)
+        self._record(response_content)
 
     def _mercado_pago_convert_amount(self):
         """Convert the transaction amount according to Mercado Pago's currency requirements.

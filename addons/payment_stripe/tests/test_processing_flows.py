@@ -26,11 +26,11 @@ class TestProcessingFlows(StripeCommon, PaymentHttpCommon):
                 self._mock_setup_intent_request,
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_get_request(url, params={"reference": self.reference})
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_webhook_notification_triggers_processing(self):
@@ -39,22 +39,19 @@ class TestProcessingFlows(StripeCommon, PaymentHttpCommon):
         with (
             patch("odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(url, data=self.payment_data)
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_webhook_notification_triggers_signature_check(self):
         self._create_transaction("redirect")
         url = self._build_url(StripeController._webhook_url)
-        with (
-            patch(
-                "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
-            ) as signature_check_mock,
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
-        ):
+        with patch(
+            "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
+        ) as signature_check_mock:
             self._make_json_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 

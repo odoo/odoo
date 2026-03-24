@@ -38,7 +38,7 @@ class APSController(http.Controller):
             received_signature = data.get("signature")
             expected_signature = tx_sudo.provider_id._aps_calculate_signature(data, incoming=True)
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("aps", data)
+            tx_sudo._record(data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -57,5 +57,5 @@ class APSController(http.Controller):
             received_signature = data.get("signature")
             expected_signature = tx_sudo.provider_id._aps_calculate_signature(data, incoming=True)
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("aps", data)
+            tx_sudo._record(data)
         return ""  # Acknowledge the notification.

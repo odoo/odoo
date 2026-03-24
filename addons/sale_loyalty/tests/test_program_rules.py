@@ -528,8 +528,8 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         )
         # Our slow provider only gets around to confirming the transaction the next day
         with freeze_time(tomorrow):
-            tx._set_done()
-            tx._post_process()
+            self._update_transaction(tx, state="done")
+            self._run_post_processing(tx)
             self.assertAlmostEqual(
                 order.amount_total,
                 tx.amount,

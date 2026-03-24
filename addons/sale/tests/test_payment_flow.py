@@ -157,7 +157,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         tx = self._create_transaction(
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
-        tx._post_process()
+        self._run_post_processing(tx)
 
         self.assertEqual(self.sale_order.state, "sale")
 
@@ -179,7 +179,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"), self.mock_mail_gateway():
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertEqual(self.sale_order.state, "sale")
         self.assertTrue(tx.invoice_ids)
@@ -217,7 +217,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"), self.mock_mail_gateway():
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertEqual(self.sale_order.state, "sale")
         self.assertTrue(tx.invoice_ids)
@@ -258,7 +258,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"), self.mock_mail_gateway():
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertEqual(self.sale_order.state, "sale")
         self.assertTrue(tx.invoice_ids)
@@ -278,7 +278,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertEqual(self.sale_order.state, "sale")
         self.assertTrue(self.sale_order.locked)
@@ -296,7 +296,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertEqual(self.sale_order.state, "draft")
         self.assertFalse(tx.invoice_ids)
@@ -314,7 +314,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         tx = self._create_transaction(
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
-        tx._post_process()
+        self._run_post_processing(tx)
 
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
@@ -336,7 +336,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
                 return_value=self.env["account.move"],
             ) as create_invoices_mock,
         ):
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertTrue(create_invoices_mock.call_args.kwargs["final"])
 
@@ -352,7 +352,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             reference="partial_tx_done",
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            partial_tx_done._post_process()
+            self._run_post_processing(partial_tx_done)
         partial_tx_pending = self._create_transaction(
             flow="direct",
             amount=2,
@@ -392,7 +392,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         msg = "The payment shouldn't be reconciled yet."
         self.assertFalse(partial_tx_done.payment_id.is_reconciled, msg=msg)
 
-        partial_tx_done._post_process()
+        self._run_post_processing(partial_tx_done)
 
         msg = "The payment should now be reconciled."
         self.assertTrue(partial_tx_done.payment_id.is_reconciled, msg=msg)
@@ -417,7 +417,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             state="done",
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertTrue(self.sale_order.state == "sale")
 
@@ -437,7 +437,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         )
 
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            tx._post_process()
+            self._run_post_processing(tx)
 
         invoice = self.sale_order.invoice_ids
         self.assertTrue(len(invoice) == 1)
@@ -472,8 +472,8 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
             self.assertEqual(self.sale_order.state, "draft")
 
-            tx_pending._set_done()
-            tx_pending._post_process()
+            self._update_transaction(tx_pending, state="done")
+            self._run_post_processing(tx_pending)
 
             self.assertEqual(notification_mail_mock.call_count, 1)
             notification_mail_mock.assert_called_once_with(
@@ -488,7 +488,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
                 state="done",
                 reference="Test Transaction Draft 2",
             )
-            tx_done._post_process()
+            self._run_post_processing(tx_done)
 
             self.assertEqual(notification_mail_mock.call_count, 2)
             order_confirmation_mail_template_id = (
@@ -543,7 +543,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         tx = self._create_transaction(flow="redirect", sale_order_ids=[sale_order.id], state="done")
 
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            tx.with_user(portal_user).sudo()._post_process()
+            tx.with_user(portal_user).sudo().with_context(payment_safe_write=True)._post_process()
 
         # Verify invoice was created and sent successfully
         invoice = sale_order.invoice_ids[0]
@@ -558,7 +558,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.provider.support_refund = "full_only"
 
         tx = self._create_transaction("redirect", sale_order_ids=[self.sale_order.id], state="done")
-        tx._post_process()
+        self._run_post_processing(tx)
 
         with patch.object(
             self.env.registry["mail.thread"], "message_post", autospec=True
@@ -581,7 +581,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.sale_order.action_confirm()
         invoice = self.sale_order._create_invoices()
 
-        transaction._set_done()
+        self._update_transaction(transaction, state="done")
         transaction._invoice_sale_orders()
 
         self.assertEqual(

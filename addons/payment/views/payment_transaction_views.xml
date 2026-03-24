@@ -29,6 +29,18 @@
                                 invisible="refunds_count == 0">
                             <field name="refunds_count" widget="statinfo" string="Refunds"/>
                         </button>
+                        <button
+                            name="action_view_payment_data"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-refresh"
+                            invisible="payment_data_count == 0"
+                            groups="base.group_no_one"
+                        >
+                            <field
+                                string="Pending Updates" name="payment_data_count" widget="statinfo"
+                            />
+                        </button>
                     </div>
                     <group>
                         <group name="transaction_details">

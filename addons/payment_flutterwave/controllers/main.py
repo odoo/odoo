@@ -65,7 +65,7 @@ class FlutterwaveController(http.Controller):
                 received_signature = request.httprequest.headers.get("verif-hash")
                 expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
                 payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("flutterwave", payment_data)
+                tx_sudo._record(payment_data)
         return request.make_json_response("")
 
     @staticmethod
@@ -88,4 +88,4 @@ class FlutterwaveController(http.Controller):
         except ValidationError:
             _logger.error("Unable to verify the payment data")
         else:
-            tx_sudo._process("flutterwave", verified_data)
+            tx_sudo._record(verified_data)

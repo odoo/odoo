@@ -17,6 +17,7 @@ class TestAccountBankStatementLine(AccountPaymentCustomCommon):
             "amount": tx.amount,
         })
         absl._cron_confirm_wire_transfer_transactions()
+        self._run_processing()
         self.assertEqual(tx.state, "done")
 
     def test_non_matching_statement_line_does_not_confirm_wire_transfer_transaction(self):
@@ -29,4 +30,5 @@ class TestAccountBankStatementLine(AccountPaymentCustomCommon):
             "amount": tx.amount,
         })
         absl._cron_confirm_wire_transfer_transactions()
+        self._run_processing()  # Ensure the tx state is up-to-date
         self.assertEqual(tx.state, "pending")

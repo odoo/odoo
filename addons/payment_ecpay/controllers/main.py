@@ -44,7 +44,7 @@ class EcpayController(http.Controller):
                 received_signature = data.pop("CheckMacValue", None)
                 expected_signature = tx_sudo.provider_id._ecpay_calculate_signature(data)
                 payment_utils.verify_signature(received_signature, expected_signature)
-                tx_sudo._process("ecpay", data)
+                tx_sudo._record(data)
         return request.redirect("/payment/status")
 
     @http.route(
@@ -72,7 +72,7 @@ class EcpayController(http.Controller):
                 received_signature = data.pop("CheckMacValue", None)
                 expected_signature = tx_sudo.provider_id._ecpay_calculate_signature(data)
                 payment_utils.verify_signature(received_signature, expected_signature)
-                tx_sudo._process("ecpay", data)
+                tx_sudo._record(data)
         else:
             _logger.info(
                 "Received payment simulation notification from ECPay, skipping processing of the"

@@ -120,4 +120,5 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
             },
         ):
             self._make_http_post_request(url, data=self.payment_data)
+        self._run_processing()
         self.assertEqual(tx.state, "done")

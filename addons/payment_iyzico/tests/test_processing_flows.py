@@ -28,11 +28,11 @@ class TestProcessingFlows(IyzicoCommon, PaymentHttpCommon):
                 return_value=self.payment_data,
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_post_request(url, data=self.return_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_iyzico.controllers.main")
     def test_webhook_notification_triggers_processing(self):
@@ -46,8 +46,8 @@ class TestProcessingFlows(IyzicoCommon, PaymentHttpCommon):
                 return_value=self.payment_data,
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(url, data=self.webhook_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)

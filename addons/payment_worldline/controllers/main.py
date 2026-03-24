@@ -45,7 +45,14 @@ class WorldlineController(http.Controller):
             _logger.error("Unable to process the payment data")
         else:
             payment_data = checkout_session_data.get("createdPaymentOutput", {})
-            self.env["payment.transaction"].sudo()._process("worldline", payment_data)
+            tx_sudo = (
+                self
+                .env["payment.transaction"]
+                .sudo()
+                ._search_by_reference("worldline", payment_data)
+            )
+            if tx_sudo:
+                tx_sudo._record(payment_data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -70,5 +77,5 @@ class WorldlineController(http.Controller):
                 hmac.new(webhook_secret.encode(), request_data, hashlib.sha256).digest()
             )
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("worldline", data)
+            tx_sudo._record(data)
         return request.make_json_response("")  # Acknowledge the notification.

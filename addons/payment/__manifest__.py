@@ -9,15 +9,16 @@
     "data": [
         # Record data.
         "data/ir_actions_server_data.xml",
+        "data/ir_cron_data.xml",
         "data/payment_method_data.xml",
         "data/payment_provider_data.xml",
-        "data/payment_cron.xml",
         "data/portal_entry_data.xml",
         # QWeb templates.
         "views/express_checkout_templates.xml",
         "views/payment_form_templates.xml",
         "views/portal_templates.xml",
         # Model views.
+        "views/payment_data_views.xml",
         "views/payment_provider_views.xml",
         "views/payment_method_views.xml",  # Depends on `action_payment_provider`.
         "views/payment_transaction_views.xml",

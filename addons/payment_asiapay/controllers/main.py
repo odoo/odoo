@@ -41,5 +41,5 @@ class AsiaPayController(http.Controller):
                 data, incoming=True
             )
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("asiapay", data)
+            tx_sudo._record(data)
         return "OK"  # Acknowledge the notification.

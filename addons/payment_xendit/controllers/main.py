@@ -9,6 +9,7 @@ from odoo.tools import str2bool
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_xendit import const
 
 _logger = get_payment_logger(__name__)
 
@@ -48,7 +49,7 @@ class XenditController(http.Controller):
             received_token = request.httprequest.headers.get("x-callback-token")
             expected_token = tx_sudo.provider_id.xendit_webhook_token
             payment_utils.verify_signature(received_token, expected_token)
-            tx_sudo._process("xendit", data)
+            tx_sudo._record(data)
 
         return request.make_json_response(["accepted"], status=200)
 
@@ -70,5 +71,5 @@ class XenditController(http.Controller):
                 )
             )
             if tx_sudo and payment_utils.check_access_token(access_token, tx_ref, tx_sudo.amount):
-                tx_sudo._set_pending()
+                tx_sudo._record({"status": const.PAYMENT_STATUS_MAPPING["pending"]})
         return request.redirect("/payment/status")

@@ -24,11 +24,11 @@ class TestProcessingFlows(NuveiCommon):
                 "._nuvei_calculate_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_get_request(url, params=self.payment_data)
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_nuvei.controllers.main")
     def test_webhook_notification_triggers_processing(self):
@@ -43,11 +43,11 @@ class TestProcessingFlows(NuveiCommon):
                 "._nuvei_calculate_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_post_request(url, data=self.payment_data)
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_nuvei.controllers.main")
     def test_redirect_notification_triggers_signature_check(self):
@@ -59,7 +59,6 @@ class TestProcessingFlows(NuveiCommon):
                 "odoo.addons.payment_nuvei.models.payment_provider.PaymentProvider"
                 "._nuvei_calculate_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_http_get_request(url, params=self.payment_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)
@@ -74,7 +73,6 @@ class TestProcessingFlows(NuveiCommon):
                 "odoo.addons.payment_nuvei.models.payment_provider.PaymentProvider"
                 "._nuvei_calculate_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_http_post_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)

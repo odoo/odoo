@@ -31,9 +31,12 @@ class TossPaymentsController(http.Controller):
             try:
                 payment_data = tx_sudo._send_api_request("POST", "/v1/payments/confirm", json=data)
             except ValidationError as e:
-                tx_sudo._set_error(str(e))
+                tx_sudo.with_context(
+                    # API request failed; no concurrent write is possible
+                    payment_safe_write=True
+                )._set_error(str(e))
             else:
-                tx_sudo._process("toss_payments", payment_data)
+                tx_sudo._record(payment_data)
 
         return request.redirect("/payment/status")
 
@@ -57,7 +60,10 @@ class TossPaymentsController(http.Controller):
         ):
             return request.redirect("/payment/status")
 
-        tx_sudo._set_error(f"{data['message']} ({data['code']})")
+        tx_sudo.with_context(
+            # The webhook is not sent when the payment is failed; no concurrent write is possible
+            payment_safe_write=True
+        )._set_error(f"{data['message']} ({data['code']})")
 
         return request.redirect("/payment/status")
 
@@ -93,5 +99,5 @@ class TossPaymentsController(http.Controller):
                     received_signature = payment_data.get("secret")
                     expected_signature = tx_sudo.toss_payments_payment_secret or ""
                     payment_utils.verify_signature(received_signature, expected_signature)
-                tx_sudo._process("toss_payments", payment_data)
+                tx_sudo._record(payment_data)
         return request.make_json_response("")

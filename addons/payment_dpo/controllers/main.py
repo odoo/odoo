@@ -52,4 +52,4 @@ class DPOController(http.Controller):
             _logger.error("Unable to verify the payment data.")
         else:
             data.update(verified_data)
-            tx_sudo._process("dpo", data)
+            tx_sudo._record(data)

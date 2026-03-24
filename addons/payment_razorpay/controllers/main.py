@@ -46,7 +46,7 @@ class RazorpayController(http.Controller):
                 data, is_redirect=True
             )
             payment_utils.verify_signature(data.get("razorpay_signature"), expected_signature)
-            tx_sudo._process("razorpay", data)
+            tx_sudo._record(data)
         else:  # The customer cancelled the payment or the payment failed.
             pass  # Don't try to process this case because the payment id was not provided.
 
@@ -77,6 +77,6 @@ class RazorpayController(http.Controller):
                     request.httprequest.data, is_redirect=False
                 )
                 payment_utils.verify_signature(received_signature, expected_signature)
-                tx_sudo._process("razorpay", entity_data)
+                tx_sudo._record(entity_data)
 
         return request.make_json_response("")

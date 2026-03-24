@@ -88,17 +88,17 @@ class TestPaymentTransaction(EcpayCommon):
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' on successful payment."""
         tx = self._create_transaction("redirect")
-        tx._apply_updates(self.payment_result_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
         self.assertEqual(tx.state, "done")
 
     def test_apply_updates_sets_provider_reference(self):
         """Test that the provider reference is updated from the payment data."""
         tx = self._create_transaction("redirect")
-        tx._apply_updates(self.payment_result_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
         self.assertEqual(tx.provider_reference, self.payment_result_data["TradeNo"])
 
     def test_apply_updates_sets_payment_method(self):
         """Test that the payment method is updated from the payment data."""
         tx = self._create_transaction("redirect")
-        tx._apply_updates(self.payment_result_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
         self.assertEqual(tx.payment_method_id, self.env.ref("payment.payment_method_ipass_money"))

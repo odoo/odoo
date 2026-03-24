@@ -45,7 +45,7 @@ class NuveiController(http.Controller):
                     data, incoming=True
                 )
                 payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("nuvei", data)
+            tx_sudo._record(data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -64,6 +64,6 @@ class NuveiController(http.Controller):
             received_signature = data.get("advanceResponseChecksum")
             expected_signature = tx_sudo.provider_id._nuvei_calculate_signature(data, incoming=True)
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("nuvei", data)
+            tx_sudo._record(data)
 
         return "OK"  # Acknowledge the notification.

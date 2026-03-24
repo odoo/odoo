@@ -70,14 +70,14 @@ class TestPaymentTransaction(RedsysCommon):
     def test_apply_updates_sets_payment_method(self):
         """Test that the payment method is updated according to the brand."""
         tx = self._create_transaction("redirect")
-        tx._apply_updates(self.merchant_parameters)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.merchant_parameters)
         self.assertEqual(tx.payment_method_id, self.env.ref("payment.payment_method_visa"))
 
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction("redirect")
-        tx._apply_updates(self.merchant_parameters)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.merchant_parameters)
         self.assertEqual(tx.state, "done")
 
     def test_extract_token_values_maps_fields_correctly(self):

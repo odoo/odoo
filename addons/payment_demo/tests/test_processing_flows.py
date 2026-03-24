@@ -16,7 +16,7 @@ class TestProcessingFlows(PaymentDemoCommon, PaymentHttpCommon):
         self._create_transaction(flow="direct")
         url = self._build_url(PaymentDemoController._simulation_url)
         with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-        ) as process_mock:
+            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+        ) as record_mock:
             self.make_jsonrpc_request(url, params=self.payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)

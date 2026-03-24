@@ -150,7 +150,7 @@ class PaymentTransaction(models.Model):
 
         payload = self._mollie_prepare_payment_request_payload()
         payment_data = self._send_api_request("POST", "/payments", json=payload)
-        self._process("mollie", payment_data)
+        self._record(payment_data)
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

@@ -4995,7 +4995,7 @@ class BaseModel(metaclass=MetaModel):
         :param allow_referencing: Acquire a row lock which allows for other
             transactions to reference this record. Use only when modifying
             values that are not identifiers.
-        :raises: ``LockError`` when some records could not be locked
+        :raise LockError: when some records could not be locked
         """
         ids = {id_ for id_ in self._ids if id_}
         if not ids:

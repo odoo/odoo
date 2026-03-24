@@ -35,13 +35,6 @@ class AuthorizeController(http.Controller):
         if not tx_sudo:
             raise ValidationError(self.env._("Transaction not found."))
 
-        # Lock the transaction row to prevent concurrent updates (e.g., from cron jobs)
-        # This prevents sql concurrent updates, which stops ORM from automatically
-        # retrying the route and consuming the single-use OTS token a second time.
-        tx_sudo.env.cr.execute(
-            "SELECT 1 FROM payment_transaction WHERE id = %s FOR NO KEY UPDATE", [tx_sudo.id]
-        )
-
         # Send the payment request to Authorize.Net.
         response_content = tx_sudo._authorize_create_transaction_request(opaque_data)
 
@@ -51,7 +44,7 @@ class AuthorizeController(http.Controller):
             reference,
             pprint.pformat(response_content),
         )
-        tx_sudo._process("authorize", {"response": response_content})
+        tx_sudo._record({"response": response_content})
 
     @http.route(const.WEBHOOK_ROUTE, type="http", auth="public", methods=["POST"], csrf=False)
     def authorize_webhook(self):
@@ -93,5 +86,5 @@ class AuthorizeController(http.Controller):
                         "x_type": const.WEBHOOK_EVENT_TYPE_MAPPING[event_type],
                     }
                 }
-                tx_sudo._process("authorize", payment_data)
+                tx_sudo._record(payment_data)
         return request.make_json_response("")

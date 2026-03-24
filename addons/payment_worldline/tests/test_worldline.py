@@ -19,6 +19,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
         with patch("odoo.addons.payment.utils.verify_signature"):
             response = self._make_json_request(url, data=payload)
         self.assertEqual(response.json(), "", msg="The webhook should always respond ''.")
+        self._run_processing()
 
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_webhook_notification_confirms_transaction(self):

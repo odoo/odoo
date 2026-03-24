@@ -24,11 +24,11 @@ class TestProcessingFlows(XenditCommon, PaymentHttpCommon):
         with (
             patch("odoo.addons.payment.utils.verify_signature"),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(url, data=self.webhook_payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_xendit.controllers.main")
     def test_webhook_notification_triggers_signature_check(self):
@@ -56,10 +56,13 @@ class TestProcessingFlows(XenditCommon, PaymentHttpCommon):
             token = payment_utils.generate_access_token(tx.reference, tx.amount)
 
             self._make_http_get_request(build_return_url(success="true", access_token="coincoin"))
+            self._run_processing()
             self.assertEqual(tx.state, "draft", "Random GET requests shouldn't affect tx state")
 
             self._make_http_get_request(build_return_url(success="false", access_token=token))
+            self._run_processing()
             self.assertEqual(tx.state, "draft", "Failure returns shouldn't change tx state")
 
             self._make_http_get_request(build_return_url(success="true", access_token=token))
+            self._run_processing()
             self.assertEqual(tx.state, "pending", "Successful returns should set state to pending")

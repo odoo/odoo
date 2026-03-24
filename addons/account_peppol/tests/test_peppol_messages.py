@@ -859,7 +859,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'sale_order_ids': [Command.set(so.ids)],
         })
         with mock_send_document():
-            transaction.sudo()._post_process()
+            transaction.sudo().with_context(payment_safe_write=True)._post_process()
 
         self.assertRecordValues(partner, [{'peppol_verification_state': 'valid'}])
 

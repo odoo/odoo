@@ -32,7 +32,7 @@ class PaymobController(http.Controller):
             hmac_key = tx_sudo.provider_id.paymob_hmac_key
             expected_signature = PaymobController._compute_signature(data, hmac_key)
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("paymob", data)
+            tx_sudo._record(data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -56,7 +56,7 @@ class PaymobController(http.Controller):
             hmac_key = tx_sudo.provider_id.paymob_hmac_key
             expected_signature = PaymobController._compute_signature(data, hmac_key)
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("paymob", normalized_data)
+            tx_sudo._record(normalized_data)
         return ""  # Acknowledge the notification
 
     @staticmethod

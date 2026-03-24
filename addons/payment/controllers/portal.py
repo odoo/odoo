@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
+from odoo.addons.payment.controllers.payment_status import PaymentStatus
 from odoo.addons.portal.controllers import portal
 
 
@@ -312,7 +312,13 @@ class PaymentPortal(portal.CustomerPortal):
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
-        self._update_landing_route(tx_sudo, access_token)  # Add the required params to the route.
+        self._update_landing_route(
+            tx_sudo.with_context(
+                # The transaction has just been created; no concurrent write is possible
+                payment_safe_write=True
+            ),
+            access_token,
+        )  # Add the required params to the route
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
@@ -418,7 +424,7 @@ class PaymentPortal(portal.CustomerPortal):
             tx_sudo._charge_with_token()  # Token payments are charged immediately.
 
         # Monitor the transaction to make it available in the portal.
-        PaymentPostProcessing.monitor_transaction(tx_sudo)
+        PaymentStatus.monitor_transaction(tx_sudo)
 
         return tx_sudo
 

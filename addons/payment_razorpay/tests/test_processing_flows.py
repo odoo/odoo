@@ -24,11 +24,11 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
                 "._razorpay_calculate_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_post_request(url, data=self.redirect_payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_razorpay.controllers.main")
     def test_webhook_notification_triggers_processing(self):
@@ -43,11 +43,11 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
                 "._razorpay_calculate_signature"
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(url, data=self.webhook_payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_razorpay.controllers.main")
     def test_redirect_notification_triggers_signature_check(self):
@@ -59,7 +59,6 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
                 "odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider"
                 "._razorpay_calculate_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_http_post_request(url, data=self.redirect_payment_data)
             self.assertEqual(
@@ -76,7 +75,6 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
                 "odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider"
                 "._razorpay_calculate_signature"
             ),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self.opener.headers["X-Razorpay-Signature"] = self.webhook_payment_data_signature
             self._make_json_request(url, data=self.webhook_payment_data)

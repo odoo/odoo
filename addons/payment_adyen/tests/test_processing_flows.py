@@ -20,11 +20,11 @@ class TestProcessingFlows(AdyenCommon, PaymentHttpCommon):
             patch("odoo.addons.payment.utils.verify_signature"),
             patch("odoo.addons.payment_adyen.controllers.main.AdyenController._compute_signature"),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(url, data=self.webhook_notification_batch_data)
-            self.assertEqual(process_mock.call_count, 1)
+            self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_adyen.controllers.main")
     def test_webhook_notification_triggers_signature_check(self):
@@ -33,7 +33,6 @@ class TestProcessingFlows(AdyenCommon, PaymentHttpCommon):
         with (
             patch("odoo.addons.payment.utils.verify_signature") as signature_check_mock,
             patch("odoo.addons.payment_adyen.controllers.main.AdyenController._compute_signature"),
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             self._make_json_request(url, data=self.webhook_notification_batch_data)
             self.assertEqual(

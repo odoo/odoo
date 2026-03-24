@@ -145,7 +145,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction("redirect")
-        tx._apply_updates(self.webhook_payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.webhook_payment_data)
         self.assertEqual(tx.state, "done")
 
     @mute_logger("odoo.addons.payment_xendit.controllers.main")
@@ -163,6 +163,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             ) as tokenize_mock,
         ):
             tx._xendit_create_charge("dummytoken")
+            self._run_processing()
             self.assertEqual(tokenize_mock.call_count, 1)
 
     def test_extract_token_values_maps_fields_correctly(self):
