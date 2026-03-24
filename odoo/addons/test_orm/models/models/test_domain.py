@@ -1,29 +1,6 @@
 from odoo import api, fields, models
 
 
-class TestDomainBool(models.Model):
-    _name = 'test_domain.bool'
-    _description = 'Boolean Domain'
-
-    bool_true = fields.Boolean('b1', default=True)
-    bool_false = fields.Boolean('b2', default=False)
-    bool_undefined = fields.Boolean('b3')
-
-
-class TestDomainEmptyInt(models.Model):
-    _name = 'test_domain.empty_int'
-    _description = 'A model to test empty int'
-
-    number = fields.Integer('Number')
-
-
-class TestDomainEmptyChar(models.Model):
-    _name = 'test_domain.empty_char'
-    _description = 'A model to test emtpy char'
-
-    name = fields.Char('Name')
-
-
 class TestDomainIndexedTranslation(models.Model):
     _name = 'test_domain.indexed_translation'
     _description = 'A model to indexed translated fields'
@@ -58,18 +35,6 @@ class TestDomainAnyTag(models.Model):
 
     name = fields.Char()
     child_ids = fields.Many2many('test_domain.any.child')
-
-
-class TestDomainMixed(models.Model):
-    _name = 'test_domain.mixed'
-    _description = 'Test ORM Mixed'
-
-    number = fields.Float(digits=(10, 2), default=3.14)
-    number2 = fields.Float(digits='ORM Precision')
-    date = fields.Date()
-    moment = fields.Datetime()
-    comment1 = fields.Html(sanitize=False)
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
 
 
 class TestDomainModelActiveField(models.Model):

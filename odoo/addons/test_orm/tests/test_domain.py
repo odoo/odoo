@@ -25,7 +25,7 @@ class TestDomain(TransactionExpressionCase):
         # Existing rows/tuples will be undefined/empty
         self.env['ir.model.fields'].create({
             'name': 'x_bool_new_undefined',
-            'model_id': self.env.ref('test_orm.model_test_domain_bool').id,
+            'model_id': self.env.ref('test_orm.model_test_fields_misc').id,
             'field_description': 'A new boolean column',
             'ttype': 'boolean',
         })
@@ -33,9 +33,9 @@ class TestDomain(TransactionExpressionCase):
         self.env.ref('test_orm.bool_3').write({'x_bool_new_undefined': True})
         self.env.ref('test_orm.bool_4').write({'x_bool_new_undefined': False})
 
-        model = self.env['test_domain.bool']
+        model = self.env['test_fields.misc']
         all_bool = model.search([])
-        for f in ['bool_true', 'bool_false', 'bool_undefined', 'x_bool_new_undefined']:
+        for f in ['boolean_true', 'boolean_false', 'boolean', 'x_bool_new_undefined']:
             eq_1 = self._search(model, [(f, '=', False)])
             neq_1 = self._search(model, [(f, '!=', True)])
             self.assertEqual(eq_1, neq_1, '`= False` (%s) <> `!= True` (%s) ' % (len(eq_1), len(neq_1)))
@@ -48,108 +48,108 @@ class TestDomain(TransactionExpressionCase):
             self.assertEqual(neq_1 + neq_2, all_bool, 'not True + not False != all')
 
     def test_empty_int(self):
-        EmptyInt = self.env['test_domain.empty_int']
+        EmptyInt = self.env['test_fields.numeric']
         records = EmptyInt.create([
-            {'number': 42},     # stored as 42
-            {'number': 0},      # stored as 0
-            {'number': False},  # stored as 0
+            {'integer': 42},     # stored as 42
+            {'integer': 0},      # stored as 0
+            {'integer': False},  # stored as 0
             {},                 # stored as NULL
         ])
         # check read (NULL is returned as 0)
-        self.assertListEqual(records.mapped('number'), [42, 0, 0, 0])
+        self.assertListEqual(records.mapped('integer'), [42, 0, 0, 0])
 
         # check database value
         self.env.flush_all()
 
-        sql = SQL("SELECT number FROM test_domain_empty_int WHERE id IN %s ORDER BY id", records._ids)
+        sql = SQL("SELECT integer FROM test_fields_numeric WHERE id IN %s ORDER BY id", records._ids)
         rows = self.env.execute_query(sql)
         self.assertEqual([row[0] for row in rows], [42, 0, 0, None])
 
-        self.assertListEqual(self._search(EmptyInt, [('number', '=', 42)]).mapped('number'), [42])
-        self.assertListEqual(self._search(EmptyInt, [('number', '!=', 42)]).mapped('number'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '=', 42)]).mapped('integer'), [42])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '!=', 42)]).mapped('integer'), [0, 0, 0])
 
-        self.assertListEqual(self._search(EmptyInt, [('number', '=', 0)]).mapped('number'), [0, 0, 0])
-        self.assertListEqual(self._search(EmptyInt, [('number', '!=', 0)]).mapped('number'), [42])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '=', 0)]).mapped('integer'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '!=', 0)]).mapped('integer'), [42])
 
-        self.assertListEqual(self._search(EmptyInt, [('number', '=', False)]).mapped('number'), [0, 0, 0])
-        self.assertListEqual(self._search(EmptyInt, [('number', '!=', False)]).mapped('number'), [42])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '=', False)]).mapped('integer'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '!=', False)]).mapped('integer'), [42])
 
-        self.assertListEqual(self._search(EmptyInt, [('number', '<', 1)]).mapped('number'), [0, 0, 0])
-        self.assertListEqual(self._search(EmptyInt, [('number', '>', -1)]).mapped('number'), [42, 0, 0, 0])
-        self.assertListEqual(self._search(EmptyInt, [('number', '<=', 0)]).mapped('number'), [0, 0, 0])
-        self.assertListEqual(self._search(EmptyInt, [('number', '>=', 0)]).mapped('number'), [42, 0, 0, 0])
-        self.assertListEqual(self._search(EmptyInt, [('number', '>', 1)]).mapped('number'), [42])
-        self.assertListEqual(self._search(EmptyInt, [('number', '<', -1)]).mapped('number'), [])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '<', 1)]).mapped('integer'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '>', -1)]).mapped('integer'), [42, 0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '<=', 0)]).mapped('integer'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '>=', 0)]).mapped('integer'), [42, 0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '>', 1)]).mapped('integer'), [42])
+        self.assertListEqual(self._search(EmptyInt, [('integer', '<', -1)]).mapped('integer'), [])
 
-        # check ('number', 'in', subset) for every subset of {42, 0, False}
+        # check ('integer', 'in', subset) for every subset of {42, 0, False}
         values = [42, 0, False]
         for length in range(len(values) + 1):
             for subset in combinations(values, length):
                 self.assertEqual(
-                    self._search(EmptyInt, [('number', 'in', list(subset))]),
-                    records.filtered(lambda record: record.number in subset),
-                    f"Incorrect result for search([('number', 'in', {sorted(subset)})])",
+                    self._search(EmptyInt, [('integer', 'in', list(subset))]),
+                    records.filtered(lambda record: record.integer in subset),
+                    f"Incorrect result for search([('integer', 'in', {sorted(subset)})])",
                 )
                 self.assertEqual(
-                    self._search(EmptyInt, [('number', 'not in', list(subset))]),
-                    records.filtered(lambda record: record.number not in subset),
-                    f"Incorrect result for search([('number', 'not in', {sorted(subset)})])",
+                    self._search(EmptyInt, [('integer', 'not in', list(subset))]),
+                    records.filtered(lambda record: record.integer not in subset),
+                    f"Incorrect result for search([('integer', 'not in', {sorted(subset)})])",
                 )
 
     def test_empty_char(self):
-        EmptyChar = self.env['test_domain.empty_char']
+        EmptyChar = self.env['test_fields.textual']
         records = EmptyChar.create([
-            {'name': 'name'},
-            {'name': ''},      # stored as ''
-            {'name': False},   # stored as null (explicitly asked)
+            {'char': 'name'},
+            {'char': ''},      # stored as ''
+            {'char': False},   # stored as null (explicitly asked)
             {},                # stored as null
         ])
         # check read
-        self.assertListEqual(records.mapped('name'), ['name', '', False, False])
+        self.assertListEqual(records.mapped('char'), ['name', '', False, False])
 
         # check database value
         self.env.flush_all()
 
-        sql = SQL("SELECT name FROM test_domain_empty_char WHERE id IN %s ORDER BY id", records._ids)
+        sql = SQL("SELECT char FROM test_fields_textual WHERE id IN %s ORDER BY id", records._ids)
         rows = self.env.execute_query(sql)
         self.assertEqual([row[0] for row in rows], ['name', '', None, None])
 
-        self.assertListEqual(self._search(EmptyChar, [('name', '=', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', '!=', 'name')]).mapped('name'), ['', False, False])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', 'name')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', '=', 'name')]).mapped('char'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('char', '!=', 'name')]).mapped('char'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', 'ilike', 'name')]).mapped('char'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('char', 'not ilike', 'name')]).mapped('char'), ['', False, False])
 
-        self.assertListEqual(self._search(EmptyChar, [('name', '=', '')]).mapped('name'), ['', False, False])
-        self.assertListEqual(self._search(EmptyChar, [('name', '!=', '')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', '')]).mapped('name'), ['name', '', False, False])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', '')]).mapped('name'), [])
+        self.assertListEqual(self._search(EmptyChar, [('char', '=', '')]).mapped('char'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', '!=', '')]).mapped('char'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('char', 'ilike', '')]).mapped('char'), ['name', '', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', 'not ilike', '')]).mapped('char'), [])
 
-        self.assertListEqual(self._search(EmptyChar, [('name', '=', False)]).mapped('name'), ['', False, False])
-        self.assertListEqual(self._search(EmptyChar, [('name', '!=', False)]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', False)]).mapped('name'), ['name', '', False, False])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', False)]).mapped('name'), [])
+        self.assertListEqual(self._search(EmptyChar, [('char', '=', False)]).mapped('char'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', '!=', False)]).mapped('char'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, [('char', 'ilike', False)]).mapped('char'), ['name', '', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', 'not ilike', False)]).mapped('char'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
             for subset in combinations(values, length):
-                # check against a subset containg both values for empty strings
+                # check against a subset contains both values for empty strings
                 subset_check = set(subset)
                 if {False, ""} & subset_check:
                     subset_check |= {False, ""}
                 self.assertEqual(
-                    self._search(EmptyChar, [('name', 'in', list(subset))]),
-                    records.filtered(lambda record: record.name in subset_check),
-                    f"Incorrect result for search([('name', 'in', {list(subset)})])",
+                    self._search(EmptyChar, [('char', 'in', list(subset))]),
+                    records.filtered(lambda record: record.char in subset_check),
+                    f"Incorrect result for search([('char', 'in', {list(subset)})])",
                 )
                 self.assertEqual(
-                    self._search(EmptyChar, [('name', 'not in', list(subset))]),
-                    records.filtered(lambda record: record.name not in subset_check),
-                    f"Incorrect result for search([('name', 'not in', {list(subset)})])",
+                    self._search(EmptyChar, [('char', 'not in', list(subset))]),
+                    records.filtered(lambda record: record.char not in subset_check),
+                    f"Incorrect result for search([('char', 'not in', {list(subset)})])",
                 )
 
         # =like check
-        self.assertListEqual(self._search(EmptyChar, [('name', '=like', 'na%')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, ['!', ('name', '=like', 'na%')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('char', '=like', 'na%')]).mapped('char'), ['name'])
+        self.assertListEqual(self._search(EmptyChar, ['!', ('char', '=like', 'na%')]).mapped('char'), ['', False, False])
 
     def test_empty_translation(self):
         records_en = self.env['test_domain.indexed_translation'].with_context(lang='en_US').create([
@@ -341,43 +341,43 @@ class TestDomain(TransactionExpressionCase):
 class TestDomainComplement(TransactionExpressionCase):
 
     def test_inequalities_int(self):
-        Model = self.env['test_domain.empty_int']
+        Model = self.env['test_fields.numeric']
         Model.create([{}])
-        Model.create([{'number': n} for n in range(-5, 6)])
-        self._search(Model, [('number', '>', 2)])
-        self._search(Model, [('number', '>', -2)])
-        self._search(Model, [('number', '<', 1)])
-        self._search(Model, [('number', '<=', 1)])
+        Model.create([{'integer': n} for n in range(-5, 6)])
+        self._search(Model, [('integer', '>', 2)])
+        self._search(Model, [('integer', '>', -2)])
+        self._search(Model, [('integer', '<', 1)])
+        self._search(Model, [('integer', '<=', 1)])
 
     def test_inequalities_float(self):
-        Model = self.env['test_domain.mixed']
+        Model = self.env['test_fields.numeric']
         Model.create([{}])
-        Model.create([{'number2': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
-        self._search(Model, [('number2', '>', 2)])
-        self._search(Model, [('number2', '>', -2)])
-        self._search(Model, [('number2', '>', 3)])
-        self._search(Model, [('number2', '<', 1)])
-        self._search(Model, [('number2', '<=', 1)])
+        Model.create([{'float_4': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
+        self._search(Model, [('float_4', '>', 2)])
+        self._search(Model, [('float_4', '>', -2)])
+        self._search(Model, [('float_4', '>', 3)])
+        self._search(Model, [('float_4', '<', 1)])
+        self._search(Model, [('float_4', '<=', 1)])
 
     def test_inequalities_char(self):
-        Model = self.env['test_domain.empty_char']
+        Model = self.env['test_fields.textual']
         Model.create([{}])
-        Model.create([{'name': n} for n in (False, '', 'hello', 'world')])
-        self._search(Model, [('name', '>', 'a')])
-        self._search(Model, [('name', '>', 'z')])
-        self._search(Model, [('name', '<', 'k')])
-        self._search(Model, [('name', '<=', 'k')])
-        self._search(Model, [('name', '<', '')])
+        Model.create([{'char': n} for n in (False, '', 'hello', 'world')])
+        self._search(Model, [('char', '>', 'a')])
+        self._search(Model, [('char', '>', 'z')])
+        self._search(Model, [('char', '<', 'k')])
+        self._search(Model, [('char', '<=', 'k')])
+        self._search(Model, [('char', '<', '')])
 
     def test_inequalities_datetime(self):
-        Model = self.env['test_domain.mixed']
+        Model = self.env['test_fields.temporal']
         Model.create([{}])
-        Model.create([{'moment': datetime(2000, 5, n)} for n in range(5, 10)])
-        self._search(Model, [('moment', '>', datetime(2000, 5, 3))])
-        self._search(Model, [('moment', '>', datetime(2000, 5, 8))])
-        self._search(Model, [('moment', '>', datetime(2000, 5, 20))])
-        self._search(Model, [('moment', '<', datetime(2000, 5, 7))])
-        self._search(Model, [('moment', '<=', datetime(2000, 5, 7))])
+        Model.create([{'datetime': datetime(2000, 5, n)} for n in range(5, 10)])
+        self._search(Model, [('datetime', '>', datetime(2000, 5, 3))])
+        self._search(Model, [('datetime', '>', datetime(2000, 5, 8))])
+        self._search(Model, [('datetime', '>', datetime(2000, 5, 20))])
+        self._search(Model, [('datetime', '<', datetime(2000, 5, 7))])
+        self._search(Model, [('datetime', '<=', datetime(2000, 5, 7))])
 
     def test_inequalities_m2o(self):
         Model = self.env['test_domain.model_active_field']
@@ -397,10 +397,10 @@ class TestDomainComplement(TransactionExpressionCase):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDomainOptimize(TransactionCase):
-    number_domain = Domain('number', '>', 5)
+    number_domain = Domain('float_3', '>', 5)
 
     def test_bool_optimize(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.all']
         self.assertIs(Domain.TRUE.optimize(model), Domain.TRUE)
         self.assertIs(Domain.FALSE.optimize(model), Domain.FALSE)
 
@@ -418,12 +418,12 @@ class TestDomainOptimize(TransactionCase):
         self.assertIsInstance(Domain('a', 'any', [('x', '>', 1)]).value, list)
 
     def test_condition_optimize_optimal(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.numeric']
         domain = self.number_domain
         self.assertIs(domain.optimize(model), domain, "Domain is already optimized")
 
     def test_condition_optimize_invalid_field(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.all']
         domain = Domain("xxx_inexisting", "=", False)
         with self.assertRaises(ValueError):
             # fields must be validated
@@ -443,7 +443,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_traverse(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.relational']
         self.assertEqual(
             Domain('currency_id.id', '>', 5).optimize(model),
             Domain('currency_id', 'any', Domain('id', '>', 5)),
@@ -454,7 +454,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_in(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.all']
         domain = Domain('id', 'in', range(5)).optimize(model)
         self.assertIsInstance(domain.value, OrderedSet)
         domain = Domain('id', 'in', [9, 99]).optimize(model)
@@ -471,7 +471,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_any(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.relational']
 
         domain = Domain('currency_id', 'any!', model.currency_id._search([]))
         self.assertIs(domain.optimize(model), domain, "Idempotent with a Query value")
@@ -494,13 +494,13 @@ class TestDomainOptimize(TransactionCase):
         self.assertIs(domain.optimize(model), domain, "Idempotent")
 
     def test_condition_optimize_any_non_relational(self):
-        model = self.env['test_domain.mixed']
-        domain = Domain('number', 'any', Domain('id', '>', 0))
+        model = self.env['test_fields.numeric']
+        domain = Domain('float_3', 'any', Domain('id', '>', 0))
         with self.assertRaises(ValueError):
             domain.optimize(model)
 
     def test_condition_optimize_any_id(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.numeric']
         self.assertEqual(
             Domain('id', 'any', self.number_domain).optimize(model),
             self.number_domain,
@@ -586,7 +586,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_date(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.temporal']
         self.assertEqual(
             Domain('date', '=', date(2024, 1, 5)).optimize(model),
             Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
@@ -627,122 +627,122 @@ class TestDomainOptimize(TransactionCase):
             self.assertEqual(list(Domain('date', '=', 'today').optimize_full(model).value), [date(2024, 1, 5)])
 
     def test_condition_optimize_datetime(self):
-        model = self.env['test_domain.mixed'].with_context(tz='UTC')
+        model = self.env['test_fields.temporal'].with_context(tz='UTC')
         self.assertEqual(
-            Domain('moment', '=', date(2024, 1, 5)).optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 5, second=1))
-            & Domain('moment', '>=', datetime(2024, 1, 5)),
+            Domain('datetime', '=', date(2024, 1, 5)).optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 5, second=1))
+            & Domain('datetime', '>=', datetime(2024, 1, 5)),
         )
         self.assertEqual(
-            Domain('moment', '=', '2024-01-05').optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 5, second=1))
-            & Domain('moment', '>=', datetime(2024, 1, 5)),
+            Domain('datetime', '=', '2024-01-05').optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 5, second=1))
+            & Domain('datetime', '>=', datetime(2024, 1, 5)),
         )
         self.assertEqual(
-            Domain('moment', '=like', '2024%').optimize(model),
-            Domain('moment', '=like', '2024%'),
+            Domain('datetime', '=like', '2024%').optimize(model),
+            Domain('datetime', '=like', '2024%'),
         )
         self.assertEqual(
-            Domain('moment', '>', '2024-01-01 10:00:00').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 1, 10, second=1)),
+            Domain('datetime', '>', '2024-01-01 10:00:00').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 1, 1, 10, second=1)),
         )
         self.assertEqual(
-            Domain('moment', '>', '2024-01-01').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 2)),
+            Domain('datetime', '>', '2024-01-01').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 1, 2)),
         )
         self.assertEqual(
-            Domain('moment', '<', '2024-01-01').optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 1)),
+            Domain('datetime', '<', '2024-01-01').optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 1)),
         )
         self.assertEqual(
-            Domain('moment', '<=', '2024-01-01').optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 2)),
+            Domain('datetime', '<=', '2024-01-01').optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 2)),
         )
         self.assertEqual(
-            Domain('moment', '>', False).optimize(model),
+            Domain('datetime', '>', False).optimize(model),
             Domain.FALSE,
         )
         self.assertEqual(
-            Domain('moment', 'not in', ['2024-01-05', datetime(2023, 1, 1)]).optimize(model),
+            Domain('datetime', 'not in', ['2024-01-05', datetime(2023, 1, 1)]).optimize(model),
             (
-                Domain('moment', 'in', OrderedSet([False]))
-                | Domain('moment', '<', datetime(2024, 1, 5))
-                | Domain('moment', '>=', datetime(2024, 1, 5, second=1))
+                Domain('datetime', 'in', OrderedSet([False]))
+                | Domain('datetime', '<', datetime(2024, 1, 5))
+                | Domain('datetime', '>=', datetime(2024, 1, 5, second=1))
             ) & (
-                Domain('moment', 'in', OrderedSet([False]))
-                | Domain('moment', '<', datetime(2023, 1, 1))
-                | Domain('moment', '>=', datetime(2023, 1, 1, second=1))
+                Domain('datetime', 'in', OrderedSet([False]))
+                | Domain('datetime', '<', datetime(2023, 1, 1))
+                | Domain('datetime', '>=', datetime(2023, 1, 1, second=1))
             ),
         )
 
         with self.assertRaises(ValueError):
-            Domain('moment', '>', 'hello').optimize(model)
+            Domain('datetime', '>', 'hello').optimize(model)
 
         with freeze_time('2024-01-05 13:05:00'):
-            domain = Domain('moment', '>=', 'today')
+            domain = Domain('datetime', '>=', 'today')
             self.assertEqual(domain.optimize(model), domain)
-            self.assertEqual(domain.optimize_full(model), Domain('moment', '>=', datetime(2024, 1, 5)))
-            self.assertEqual(Domain('moment', '>=', '+12H').optimize_full(model), Domain('moment', '>=', datetime(2024, 1, 6, 1, 5)))
-            today_domain = Domain('moment', '=', 'today').optimize_full(model)
+            self.assertEqual(domain.optimize_full(model), Domain('datetime', '>=', datetime(2024, 1, 5)))
+            self.assertEqual(Domain('datetime', '>=', '+12H').optimize_full(model), Domain('datetime', '>=', datetime(2024, 1, 6, 1, 5)))
+            today_domain = Domain('datetime', '=', 'today').optimize_full(model)
             self.assertIn(datetime(2024, 1, 5), [v for cond in today_domain.iter_conditions() for v in ([cond.value] if isinstance(cond.value, datetime) else cond.value)])
 
     def test_condition_optimize_datetime_timezone(self):
-        model = self.env['test_domain.mixed'].with_context(tz='Europe/Brussels')
+        model = self.env['test_fields.temporal'].with_context(tz='Europe/Brussels')
         self.assertEqual(
-            Domain('moment', '>=', '2024-01-01 10:00:00').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 1, 10)),
+            Domain('datetime', '>=', '2024-01-01 10:00:00').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 1, 1, 10)),
             "Timezone should have no effect on datetime"
         )
         self.assertEqual(
-            Domain('moment', '>=', '2024-07-02').optimize(model),
-            Domain('moment', '>=', datetime(2024, 7, 1, 22)),
+            Domain('datetime', '>=', '2024-07-02').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 7, 1, 22)),
             "Date should consider timezone of the user"
         )
         self.assertEqual(
-            Domain('moment', '>=', '2024-01-02').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 1, 23)),
+            Domain('datetime', '>=', '2024-01-02').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 1, 1, 23)),
             "Date should consider timezone of the user"
         )
 
     def test_condition_optimize_datetime_millisecond(self):
-        model = self.env['test_domain.mixed'].with_context(tz='UTC')
+        model = self.env['test_fields.temporal'].with_context(tz='UTC')
         self.assertEqual(
-            Domain('moment', '=', '2024-01-05').optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 5, second=1))
-            & Domain('moment', '>=', datetime(2024, 1, 5)),
+            Domain('datetime', '=', '2024-01-05').optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 5, second=1))
+            & Domain('datetime', '>=', datetime(2024, 1, 5)),
         )
         self.assertEqual(
-            Domain('moment', '=', '2024-01-05 11:06:02.123').optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 5, 11, 6, 3))
-            & Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
+            Domain('datetime', '=', '2024-01-05 11:06:02.123').optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 5, 11, 6, 3))
+            & Domain('datetime', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
         self.assertEqual(
-            Domain('moment', '=', '2024-01-05 11:06:02').optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 5, 11, 6, 3))
-            & Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
+            Domain('datetime', '=', '2024-01-05 11:06:02').optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 5, 11, 6, 3))
+            & Domain('datetime', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
         self.assertEqual(
-            Domain('moment', '=', datetime(2024, 1, 5, 11, 6, 2)).optimize(model),
-            Domain('moment', '<', datetime(2024, 1, 5, 11, 6, 3))
-            & Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
+            Domain('datetime', '=', datetime(2024, 1, 5, 11, 6, 2)).optimize(model),
+            Domain('datetime', '<', datetime(2024, 1, 5, 11, 6, 3))
+            & Domain('datetime', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
         self.assertEqual(
-            Domain('moment', '>=', '2024-01-05 11:06:02.123').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
+            Domain('datetime', '>=', '2024-01-05 11:06:02.123').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
         self.assertEqual(
-            Domain('moment', '>=', '2024-01-05 11:06:02').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
+            Domain('datetime', '>=', '2024-01-05 11:06:02').optimize(model),
+            Domain('datetime', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
 
     def test_condition_optimize_maybe_eq(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.numeric']
         self.assertEqual(
-            Domain('number', '=?', 5).optimize(model),
-            Domain('number', '=', 5).optimize(model),
+            Domain('float_3', '=?', 5).optimize(model),
+            Domain('float_3', '=', 5).optimize(model),
         )
         self.assertEqual(
-            Domain('number', '=?', 0).optimize(model),
+            Domain('float_3', '=?', 0).optimize(model),
             Domain.TRUE,
         )
 
@@ -793,32 +793,32 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_nary_optimize_sort(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.all']
         self.assertEqual(
             Domain.AND([
-                Domain('number', '=', 5),
+                Domain('float_3', '=', 5),
                 Domain('date', 'like', "2024"),
                 Domain('date', '!=', False),
-                Domain('number', '<', 99),
-                Domain('comment1', 'like', 'ok'),
+                Domain('float_3', '<', 99),
+                Domain('html_sanitize_false', 'like', 'ok'),
             ]).optimize(model),
             Domain.AND([
-                Domain('comment1', 'like', 'ok'),
                 Domain('date', 'not in', OrderedSet([False])),
                 Domain('date', 'like', "2024"),
-                Domain('number', 'in', OrderedSet([5])),
-                Domain('number', '<', 99),
+                Domain('float_3', 'in', OrderedSet([5])),
+                Domain('float_3', '<', 99),
+                Domain('html_sanitize_false', 'like', 'ok'),
             ]),
             "Optimization sorts by field and operator",
         )
 
     def test_nary_optimize_in(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.all']
 
         def domain(op, values):
             if not values:
                 return Domain.FALSE if op == 'in' else Domain.TRUE
-            return Domain('number', op, values)
+            return Domain('float_3', op, values)
 
         set123 = OrderedSet([1, 2, 3])
         set345 = OrderedSet([3, 4, 5])
@@ -870,7 +870,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
         self.assertIsInstance(
-            (Domain('number', 'in', [1]) | Domain('number', 'in', [2])).optimize(model).value,
+            (Domain('float_3', 'in', [1]) | Domain('float_3', 'in', [2])).optimize(model).value,
             OrderedSet, "Check we can optimize something else than OrderedSet",
         )
 
@@ -952,7 +952,7 @@ class TestDomainOptimize(TransactionCase):
                 )
 
     def test_nary_optimize_same(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.numeric']
         self.assertEqual(
             (self.number_domain & self.number_domain).optimize(model),
             self.number_domain,
@@ -971,7 +971,7 @@ class TestDomainOptimize(TransactionCase):
 
     @users('admin')  # just so it's not SUPERUSER to be able to de-escalate su.
     def test_bypass_comodel_id_lookup(self):
-        model = self.env['test_domain.mixed']
+        model = self.env['test_fields.relational']
         base_domain = Domain('currency_id.id', '=', 2)
         self.assertEqual(  # without sudo
             list(base_domain.optimize_full(model)),
