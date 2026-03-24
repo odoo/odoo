@@ -477,8 +477,8 @@ describe("printOrderChanges", () => {
 
         const orderLines = store.currentOrder.lines;
         expect(orderLines[0].product_id.pos_categ_ids[0]).toBe(cat3);
-        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat1);
-        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat1);
         expect(orderLines[3].product_id.pos_categ_ids[0]).toBe(cat1);
         expect(orderLines[4].product_id.pos_categ_ids[0]).toBe(cat2);
         expect(orderLines[4].product_id.pos_categ_ids[1]).toBe(cat3);
@@ -502,8 +502,8 @@ describe("printOrderChanges", () => {
         const orderLines = this.getPrintedOrderLines();
         expect(orderLines.length).toBe(5);
         expect(orderLines[0]).toInclude(this.comboTemplate.name);
-        expect(orderLines[1]).toInclude(this.comboProduct1.name);
-        expect(orderLines[2]).toInclude(this.comboProduct2.name);
+        expect(orderLines[1]).toInclude(this.comboProduct2.name);
+        expect(orderLines[2]).toInclude(this.comboProduct1.name);
         expect(orderLines[3]).toInclude(this.testProduct1.name);
         expect(orderLines[4]).toInclude(this.testProduct2.name);
     });
