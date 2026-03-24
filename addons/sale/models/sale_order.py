@@ -615,6 +615,7 @@ class SaleOrder(models.Model):
                     quantity=1.0,
                     currency_id=currency,
                     sign=1,
+                    special_mode='total_excluded',
                     special_type='early_payment',
                     tax_ids=line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.amount_type != 'fixed'),
                 ))
@@ -624,6 +625,7 @@ class SaleOrder(models.Model):
                     quantity=1.0,
                     currency_id=currency,
                     sign=1,
+                    special_mode='total_excluded',
                     special_type='early_payment',
                 ))
         return epd_lines
