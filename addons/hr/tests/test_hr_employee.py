@@ -88,6 +88,19 @@ class TestHrEmployee(TestHrCommon):
         employee = employee_form.save()
         self.assertEqual(employee.tz, 'Europe/Brussels')
 
+    def test_compute_user_company_employee(self):
+        test_user = new_test_user(self.env, login='test_user', groups='base.group_user', name='testuser', email='test@user.com')
+        test_user.action_create_employee()
+        employee = test_user.employee_id
+        multiple_users = self.user_without_image + test_user
+
+        multiple_users.invalidate_recordset(['employee_id'])
+
+        multiple_users.with_user(test_user).employee_id  # trigger the compute in batch and in non-sudo
+
+        self.assertEqual(test_user.with_user(test_user).employee_id, employee)
+        self.assertEqual(test_user.with_user(test_user).sudo().employee_id, employee)
+
     def test_employee_timezone(self):
         self.res_users_hr_officer.tz = "Africa/Cairo"
         Employee = self.env['hr.employee'].with_user(self.res_users_hr_officer)
