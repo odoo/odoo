@@ -159,11 +159,11 @@ class TestImportFiles(TransactionCase):
         self.assertEqual(products.mapped('display_name'), ['[JUICE-1] Apple juice', '[JUICE-2] Ananas juice', '[JUICE-3] Orange juice (Orange)', '[JUICE-4] Orange juice (Red)', '[JUICE-5] Lemon juice (Orange)', '[JUICE-6] Lemon juice (Red)'])
 
         attributes = self.env['product.attribute'].search([('id', 'not in', attr_ids)])
-        self.assertEqual(attributes.mapped('name'), ['Color'])
+        self.assertEqual(attributes.mapped('name'), ['ColorTest'])
 
         values = self.env['product.attribute.value'].search([('id', 'not in', val_ids)])
         self.assertEqual(values.mapped('name'), ['Orange', 'Red'])
-        self.assertEqual(values.mapped('display_name'), ['Color: Orange', 'Color: Red'])
+        self.assertEqual(values.mapped('display_name'), ['ColorTest: Orange', 'ColorTest: Red'])
 
         if 'stock' in addons:
             self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
