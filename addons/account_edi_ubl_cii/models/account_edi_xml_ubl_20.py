@@ -4,7 +4,7 @@ from odoo import _, models, Command
 from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt, VAT_PREFIX_EXCEPTION_COUNTRIES
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
@@ -635,6 +635,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """ Generic helper to generate the Party node for a res.partner. """
         partner = vals['partner']
         commercial_partner = partner.commercial_partner_id
+        vat = commercial_partner.vat
+        country_code = commercial_partner.country_id.code
+        if country_code in VAT_PREFIX_EXCEPTION_COUNTRIES and not vat.upper().startswith(country_code):
+            vat = country_code + vat
         party_node = {
             'cbc:EndpointID': {
                 '_text': None,
@@ -649,7 +653,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyLegalEntity': {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cbc:CompanyID': {'_text': vat},
                 'cac:RegistrationAddress': self._get_address_node({**vals, 'partner': commercial_partner}),
             },
             'cac:Contact': {
@@ -662,15 +666,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if partner.vat and partner.vat != '/':
             party_node['cac:PartyTaxScheme'] = {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cbc:CompanyID': {'_text': vat},
                 'cac:RegistrationAddress': self._get_address_node({**vals, 'partner': commercial_partner}),
                 'cac:TaxScheme': {
                     'cbc:ID': {
                         '_text': (
                             'NOT_EU_VAT'
                             if commercial_partner.country_id
-                            and commercial_partner.vat
-                            and not commercial_partner.vat[:2].isalpha()
+                            and vat
+                            and not vat[:2].isalpha()
                             else 'VAT'
                         )
                     }

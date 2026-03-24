@@ -10,6 +10,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
     EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES,
+    VAT_PREFIX_EXCEPTION_COUNTRIES
 )
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
@@ -669,8 +670,8 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             else:
                 tax_scheme_id = 'VAT'
 
-            if country_code == 'HU' and not vat.upper().startswith('HU'):
-                vat = 'HU' + vat[:8]
+            if country_code in VAT_PREFIX_EXCEPTION_COUNTRIES and not vat.upper().startswith(country_code):
+                vat = country_code + vat
 
             nodes.append({
                 'cbc:CompanyID': {'_text': vat},
@@ -746,10 +747,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 },
             })
         elif commercial_partner.vat and commercial_partner.vat != '/':
+            vat = commercial_partner.vat
+            country_code = commercial_partner.country_id.code
+            if country_code in VAT_PREFIX_EXCEPTION_COUNTRIES and not vat.upper().startswith(country_code):
+                vat = country_code + vat
             nodes.append({
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
-                    '_text': commercial_partner.vat,
+                    '_text': vat,
                     'schemeID': None,
                 },
             })
