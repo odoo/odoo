@@ -695,6 +695,25 @@ class TestTraceability(TestMrpCommon):
         third_serials_wizard = Form.from_action(self.env, third_mo.action_generate_serial())
         self.assertEqual(third_serials_wizard.lot_name, 'TEST0000006')
 
+    def test_split_and_assign_serials(self):
+        """ Confirm a MO for 3 serial numbers. generate 3 serial number and split the mo"""
+        mo, _, _, _, _ = self.generate_mo(tracking_final='serial', qty_final=3)
+        mo.action_confirm()
+
+        wizard = self.env['mrp.production.serials'].with_context(active_id=mo.id).create({
+            'production_id': mo.id,
+            'serial_numbers': 'SN001\nSN002\nSN003',
+        })
+        wizard.action_split_and_assign_serials()
+
+        split_mos = self.env['mrp.production'].search([('production_group_id', '=', mo.production_group_id.id)])
+        self.assertEqual(len(split_mos), 3)
+
+        serials = ['SN001', 'SN002', 'SN003']
+        for smo in split_mos:
+            self.assertIn(smo.lot_producing_ids.name, serials)
+            self.assertNotEqual(smo.state, 'done')
+
     @freeze_time('2024-02-03')
     def test_interpolation_in_batch_serials(self):
         """
