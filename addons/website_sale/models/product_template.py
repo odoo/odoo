@@ -170,6 +170,11 @@ class ProductTemplate(models.Model):
     description = fields.Html(index="trigram")
     description_sale = fields.Text(index="trigram")
 
+    allow_out_of_stock_order = fields.Boolean(string="Sell when Out-of-Stock", default=True)
+    available_threshold = fields.Float(string="Show Threshold", default=5.0)
+    show_availability = fields.Boolean(string="Show availability Qty", default=False)
+    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
+
     # === INDEXES === #
 
     # We need gist indexes for similarity check in ecommerce fuzzy search.

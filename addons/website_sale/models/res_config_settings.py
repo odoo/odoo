@@ -73,6 +73,15 @@ class ResConfigSettings(models.TransientModel):
         required=True,
     )
     ecommerce_access = fields.Selection(related="website_id.ecommerce_access", readonly=False)
+    default_allow_out_of_stock_order = fields.Boolean(
+        string="Continue selling when out-of-stock", default=True, default_model="product.template"
+    )
+    default_available_threshold = fields.Float(
+        string="Show Threshold", default=5.0, default_model="product.template"
+    )
+    default_show_availability = fields.Boolean(
+        string="Show availability Qty", default=False, default_model="product.template"
+    )
 
     # === COMPUTE METHODS === #
 
