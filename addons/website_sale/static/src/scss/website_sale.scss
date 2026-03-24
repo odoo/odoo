@@ -158,11 +158,13 @@
 
         // Filmstrip design variations ->
         &.o_wsale_filmstrip_default {
+            --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-color: #{color-contrast($light)};
             --o-wsale-filmstrip-item-bg-hover: #{if(lightness($light) > .5, darken($light, 8%), lighten($light, 8%))};
         }
 
         &.o_wsale_filmstrip_bordered {
+            --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-border-width: #{$border-width};
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-bg: #{$gray-100};
