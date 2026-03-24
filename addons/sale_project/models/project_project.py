@@ -390,7 +390,7 @@ class ProjectProject(models.Model):
         project_sql = project_query.select(f'{self._table}.id ', f'{self._table}.sale_line_id')
 
         Task = self.env['project.task']
-        task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
+        task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False), ('active', '=', True)]
         if Task._name in domain_per_model:
             task_domain = expression.AND([
                 domain_per_model[Task._name],
