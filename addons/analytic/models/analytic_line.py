@@ -133,6 +133,15 @@ class AccountAnalyticLine(models.Model):
         return arch, view
 
     @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        account_id = self.env.context.get('default_auto_account_id')
+        account = self.env['account.analytic.account'].browse(account_id).exists()
+        if account:
+            defaults[account.plan_id._column_name()] = account.id
+        return defaults
+
+    @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
         if not self._context.get("studio") and self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
