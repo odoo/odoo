@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-24 23:37+0000\n"
+"POT-Creation-Date: 2026-03-20 18:36+0000\n"
+"PO-Revision-Date: 2026-03-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/account/"
 "sk/>\n"
@@ -29,9 +29,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -85,6 +85,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Obráťte sa, prosím, na svojho správcu."
 
 #. module: account
 #. odoo-python
@@ -3666,7 +3668,7 @@ msgstr "Odoo banka"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Nastavenia banky"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -4588,7 +4590,7 @@ msgstr "Štart prefixu kódu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
 msgid "Code Store"
-msgstr ""
+msgstr "Obchod s kódom"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7256,6 +7258,11 @@ msgstr "Výdavky"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
 msgid "Expired"
 msgstr "Ukončená platnosť"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+msgid "Export ZIP"
+msgstr "Exportovať ZIP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -11145,6 +11152,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
 msgid "Notes"
 msgstr "Poznámky"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Nothing to export."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -15443,6 +15456,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Bankový účet vašej spoločnosti nie je dôveryhodný. Požiadajte správcu alebo "
+"osobu s oprávnením na schvaľovanie, aby ho skontrolovala."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -15523,6 +15538,9 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Bankový účet spoločnosti (%(account_number)s) spojený s touto faktúrou nie "
+"je overený. Prejdite do nastavení banky, skontrolujte, či ide o váš účet, "
+"alebo opravte číslo, a kliknutím na tlačidlo „Poslať peniaze“ ho overte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -16157,6 +16175,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"Naplánovaná akcia „Automatické odosielanie faktúr“ bola archivovaná. "
+"Hromadné odosielanie faktúr nebude možné."
 
 #. module: account
 #. odoo-python
@@ -18464,6 +18484,7 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Nie je možné zmeniť výšku platby v prípade viacerých likvidných riadkov."
 
 #. module: account
 #. odoo-python
@@ -18743,7 +18764,7 @@ msgstr "Nemôžete pridať záznam do archivovaného denníka (%(journal)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "Nie je možné zaúčtovať záznam s archivovaným analytickým účtom: %s"
 
 #. module: account
 #. odoo-python
@@ -18852,6 +18873,7 @@ msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové párovania."
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Nie je možné zmeniť typ dokumentu, ktorý už má pridelené poradové číslo."
 
 #. module: account
 #. odoo-python
@@ -19169,6 +19191,12 @@ msgstr "zatvoriť"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "dátumy pre"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "documents"
+msgstr "Dokumenty"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

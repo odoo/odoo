@@ -1242,6 +1242,10 @@ class SaleOrderLine(models.Model):
                     },
                 }
 
+    @api.onchange('product_packaging_qty')
+    def _onchange_product_packaging_qty(self):
+        self.env.remove_to_compute(self._fields['product_packaging_id'], self)
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-24 23:32+0000\n"
+"PO-Revision-Date: 2026-03-21 09:21+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/pos_sale/"
 "pl/>\n"
@@ -21,15 +21,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
-msgstr "(z podatkiem)"
+msgstr "(z VAT)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
@@ -45,24 +45,26 @@ msgstr "Nowe zamowienie zostało utworzone."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Kwota do zapłaty w PoS"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Pozostała kwota do zapłaty w PoS, aby uniknąć podwójnej płatności lub "
+"podwójnego fakturowania."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Zapłać zaliczkę (stała cena)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Zastosuj zaliczkę (procent)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -88,7 +90,7 @@ msgstr "Wielkość zamówienia"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr "Czy chcesz załadować SN/Lots powiązane z zamówieniem sprzedaży?"
+msgstr "Czy chcesz załadować Partie/NS powiązane z zamówieniem sprzedaży?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -120,18 +122,20 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Zaliczka (ref: %(order_reference)s dnia \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Należność: %s"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Error amount too high"
-msgstr ""
+msgstr "Błąd: suma za wysoka"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
@@ -150,6 +154,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Wygląda na to, że w punkcie sprzedaży nie skonfigurowano produktu zaliczki. "
+"Możesz przejść do konfiguracji punktu sprzedaży, aby go wybrać."
 
 #. module: pos_sale
 #. odoo-python
@@ -209,7 +215,7 @@ msgstr "Zamówienie POS"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
 msgid "Paid"
-msgstr "Zapłacona"
+msgstr "Zapłacone"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
@@ -219,12 +225,12 @@ msgstr "Konfiguracja punktu sprzedaży"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Linie zamówień w punktach sprzedaży"
+msgstr "Pozycje zamówień w punkcie sprzedaży"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Zamówienia Punktu Sprzedaży"
+msgstr "Zamówienia z Punktu Sprzedaży"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -343,7 +349,7 @@ msgstr "Rozliczenie zamówienia"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr "Źródłowa linia zamówienia sprzedaży"
+msgstr "Źródłowa pozycja zamówienia sprzedaży"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -380,7 +386,7 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr "Przekaz"
+msgstr "Transfer"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -388,6 +394,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Przeniesiono<br/>\n"
+"                                ze Sprzedaży"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -395,6 +403,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                to POS"
 msgstr ""
+"Przeniesiono<br/>\n"
+"                            do PoS"
 
 #. module: pos_sale
 #. odoo-javascript

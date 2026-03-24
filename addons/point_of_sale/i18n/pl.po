@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-02-24 23:33+0000\n"
+"PO-Revision-Date: 2026-03-21 09:24+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/pl/>\n"
@@ -25,9 +25,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -691,7 +691,7 @@ msgstr "Wymagane działanie"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Action cancelled (%(ACTION)s)"
-msgstr ""
+msgstr "Działanie anulowane (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1671,7 +1671,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash drawer opened (%(ACTION)s)"
-msgstr ""
+msgstr "Otwarto szufladę kasową (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1911,7 +1911,7 @@ msgstr "Klasyczny skórzany pasek, must-have akcesorium w każdej szafie."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 msgid "Clear Cache"
-msgstr ""
+msgstr "Wyczyść pamięć podręczną"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2011,7 +2011,7 @@ msgstr "Sesja zamykająca"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing counted: %s \n"
-msgstr ""
+msgstr "Zamknięcie zliczone: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2023,13 +2023,13 @@ msgstr "Różnica przy zamknięciu w %(payment_method)s (%(session)s)"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference: %s \n"
-msgstr ""
+msgstr "Różnica przy zamknięciu: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing expected: %s \n"
-msgstr ""
+msgstr "Oczekiwane zamknięcie: %s \n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2828,7 +2828,7 @@ msgstr "Na miejscu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Dine In -> Take Out"
-msgstr ""
+msgstr "Na miejscu -> Na wynos"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4904,19 +4904,19 @@ msgstr "Gotówka na otwarcie"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash counted: %s \n"
-msgstr ""
+msgstr "Gotówka zliczona przy otwarciu: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash difference: %s \n"
-msgstr ""
+msgstr "Różnica gotówkowa na otwarcie: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash expected: %s \n"
-msgstr ""
+msgstr "Oczekiwana gotówka przy otwarciu: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7619,7 +7619,7 @@ msgstr "Na wynos"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Take Out -> Dine In"
-msgstr ""
+msgstr "Na wynos -> Na miejscu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8075,7 +8075,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The search on Order Number only supports up to 3 digits."
-msgstr ""
+msgstr "Wyszukiwanie według numeru zamówienia obsługuje maksymalnie 3 cyfry."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8364,6 +8364,9 @@ msgid ""
 "closing the session. You should rather refund the order or create a credit "
 "note."
 msgstr ""
+"Ta faktura jest powiązana z zamówieniem PoS, a zresetowanie jej do wersji "
+"roboczej uniemożliwia zamknięcie sesji. Należy raczej zwrócić koszty "
+"zamówienia lub utworzyć fakturę korygującą."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -9052,7 +9055,7 @@ msgstr "Uwaga, zapłacona kwota jest wyższa niż suma całkowita. (Różnica: %
 #. odoo-python
 #: code:addons/point_of_sale/models/account_move.py:0
 msgid "Warning: Invoice Reset Risk"
-msgstr ""
+msgstr "Ostrzeżenie: Ryzyko zresetowania faktury"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9386,12 +9389,16 @@ msgstr "Musisz najpierw usunąć produkt z kombinacji %s"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You must have 'Administration Settings' access to load clothes data."
 msgstr ""
+"Aby załadować dane dotyczące odzieży, musisz mieć dostęp do „Ustawień "
+"administracyjnych”."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You must have 'Administration Settings' access to load furniture data."
 msgstr ""
+"Aby załadować dane dotyczące mebli, musisz mieć dostęp do „Ustawień "
+"administracyjnych”."
 
 #. module: point_of_sale
 #. odoo-python
