@@ -796,6 +796,17 @@ export async function toInline($editable, options) {
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
 
+    // Ensure language direction is applied
+    if (editable.hasAttribute('dir')) {
+        const dir = editable.getAttribute('dir');
+        if (dir === 'ltr' || dir === 'rtl') {
+            Array.from(editable.children).forEach(child => {
+                child.style.setProperty('direction', dir);
+            });
+        }
+        editable.removeAttribute('dir');
+    }
+
     // Hide replaced cells on Outlook
     editable.querySelectorAll('.mso-hide').forEach(_hideForOutlook);
 
