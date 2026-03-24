@@ -69,7 +69,7 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
-            <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
+            <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report)"/>
 
             <div class="oe_structure"></div>
             <table class="o_has_total_table table o_main_table table-borderless">
@@ -114,10 +114,17 @@
                                     </span>
                                 </td>
                                 <td name="td_priceunit" class="text-end text-nowrap">
-                                    <span t-field="line.price_unit">3</span>
+                                    <span
+                                        t-if="line.discount &lt; 0"
+                                        t-out="(1 - line.discount / 100.0) * line.price_unit" t-options='{"widget": "float", "decimal_precision": "Product Price"}'
+                                    />
+                                    <span
+                                        t-else=""
+                                        t-field="line.price_unit"
+                                    />
                                 </td>
                                 <td t-if="display_discount" class="text-end">
-                                    <span t-field="line.discount">-</span>
+                                    <span t-if="line.discount > 0" t-field="line.discount">-</span>
                                 </td>
                                 <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>
                                 <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
