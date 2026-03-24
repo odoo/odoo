@@ -556,17 +556,17 @@ class ProductProduct(models.Model):
             domain = Domain(domain) & Domain('categ_id', 'child_of', self.env.context['search_default_categ_id'])
         return super()._search(domain, *args, **kwargs)
 
+    @api.model
+    def _get_display_name_with_context(self, name, code):
+        if self.env.context.get('display_default_code', True) and code:
+            if self.env.context.get('formatted_display_name'):
+                return f'{name}\t--{code}--'
+            return f'[{code}] {name}'
+        return name
+
     @api.depends('name', 'default_code', 'product_tmpl_id')
     @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'formatted_display_name', 'lang')
     def _compute_display_name(self):
-
-        def get_display_name(name, code):
-            if self.env.context.get('display_default_code', True) and code:
-                if self.env.context.get('formatted_display_name'):
-                    return f'{name}\t--{code}--'
-                return f'[{code}] {name}'
-            return name
-
         partner_id = self.env.context.get('partner_id')
         if partner_id:
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
@@ -611,13 +611,13 @@ class ProductProduct(models.Model):
                     seller_variant = s.product_name and (
                         variant and "%s (%s)" % (s.product_name, variant) or s.product_name
                         ) or False
-                    temp.append(get_display_name(seller_variant or name, s.product_code or product.default_code))
+                    temp.append(product._get_display_name_with_context(seller_variant or name, s.product_code or product.default_code))
 
                 # => Feature drop here, one record can only have one display_name now, instead separate with `,`
                 # Remove this comment
                 product.display_name = ", ".join(unique(temp))
             else:
-                product.display_name = get_display_name(name, product.default_code)
+                product.display_name = product._get_display_name_with_context(name, product.default_code)
 
     @api.model
     def _search_display_name(self, operator, value):
