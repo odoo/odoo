@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sa_edi_company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+</odoo>
