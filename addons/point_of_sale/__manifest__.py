@@ -115,7 +115,8 @@
             'point_of_sale/static/src/app/components/centered_icon/*',
             'point_of_sale/static/src/app/components/inputs/**/*',
             'point_of_sale/static/tests/generic_components/**/*',
-
+            # for lna.test.js
+            'point_of_sale/static/src/app/utils/init_lna.js',
         ],
 
         # PoS assets
