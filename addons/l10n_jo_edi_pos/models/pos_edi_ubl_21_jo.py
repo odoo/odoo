@@ -347,12 +347,13 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
     def _get_tax_category_node(self, vals):
         grouping_key = vals['grouping_key']
+        is_percentage_tax = grouping_key['amount_type'] in ('percent', 'division')
         return {
             'cbc:ID': {'_text': grouping_key['tax_category_code'], 'schemeAgencyID': 6, 'schemeID': 'UN/ECE 5305'},
-            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
+            'cbc:Percent': {'_text': grouping_key['amount']},
             'cac:TaxScheme': {
                 'cbc:ID': {
-                    '_text': 'VAT' if grouping_key['amount_type'] == 'percent' else 'OTH',
+                    '_text': 'VAT' if is_percentage_tax else 'OTH',
                     'schemeAgencyID': 6,
                     'schemeID': 'UN/ECE 5153',
                 },

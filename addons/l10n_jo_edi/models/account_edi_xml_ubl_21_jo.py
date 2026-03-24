@@ -344,7 +344,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return "O"
 
         def get_jo_tax_type(tax):
-            if tax.amount_type == 'percent':
+            if tax.amount_type in ('percent', 'division'):
                 return 'general'
             elif tax.amount_type == 'fixed':
                 return 'special'
