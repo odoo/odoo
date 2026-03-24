@@ -1375,56 +1375,85 @@ class Website(Home):
             return json.dumps([])
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
-    @http.route(['/website/get_alt_images'], type='jsonrpc', auth="user", website=True)
-    def get_alt_images(self, models):
+    @http.route(['/website/get_media_elements'], type='jsonrpc', auth="user", website=True)
+    def get_media_elements(self, models):
         result = []
         for model in models:
             record = request.env[model['model']].browse(model['id'])
-            model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
-            tree = html.fromstring(str(record[model['field']]))
+            field = 'arch_db' if model['field'] == 'arch' else model['field']
+            tree = html.fromstring(str(record[field]))
+            base = {
+                'updated': False,
+                'res_model': model['model'],
+                'res_id': model['id'],
+                'field': field,
+            }
             # Only process static img elements (with src) - skip dynamic
             # template images (t-att*)
-            for index, el in enumerate(tree.xpath('//img[@src]')):
+            for img_index, el in enumerate(tree.xpath('//img[@src]')):
                 role = el.get('role')
-                decorative = role == "presentation"
+                decorative = role == 'presentation'
                 alt = el.get('alt')
                 if not decorative or alt is None:
                     result.append({
-                        "src": el.get("src"),
-                        "alt": alt or "",
-                        "decorative": False,
-                        "updated": False,
-                        "res_model": model['model'],
-                        "res_id": model['id'],
-                        "id": f"{model['model']}-{model['id']}-{index}",
-                        "field": model.get('field'),
+                        **base,
+                        'type': 'img',
+                        'src': el.get('src'),
+                        'alt': alt or '',
+                        'decorative': False,
+                        'id': f"{model['model']}-{model['id']}-img-{img_index}",
                     })
+            for video_index, el in enumerate(tree.xpath('//div[contains(@class,"media_iframe_video")]')):
+                title = el.get('title')
+                src = el.get('data-embed-url') or el.get('data-src') or el.get('data-oe-expression')
+                result.append({
+                    **base,
+                    'type': 'video',
+                    'src': src,
+                    'title': title or '',
+                    'id': f"{model['model']}-{model['id']}-video-{video_index}",
+                })
         return json.dumps(result)
 
-    @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
-    def update_alt_images(self, imgs):
+    @http.route(['/website/update_media_elements'], type='jsonrpc', auth="user", website=True)
+    def update_media_elements(self, elements):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
-        for img in imgs:
-            record = request.env[img['res_model']].browse(img['res_id'])
+        # Group updates by (model, id, field)
+        updates_by_record = {}
+        for el in elements:
+            key = (el['res_model'], el['res_id'], el['field'])
+            updates_by_record.setdefault(key, []).append(el)
+
+        for (model, res_id, field), updates in updates_by_record.items():
+            record = request.env[model].browse(res_id)
             if not record.has_access('write'):
                 continue
-            img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
-            tree = html.fromstring(str(record[img['field']]))
+            field = 'arch_db' if field == 'arch' else field
+            tree = html.fromstring(str(record[field]))
             modified = False
-            for index, element in enumerate(tree.xpath('//img')):
-                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
-                if imgId == img['id']:
-                    if (img['decorative']):
-                        element.set('alt', '')
-                        element.set('role', 'presentation')
-                    else:
-                        element.set('alt', markup_escape(img['alt']))
-                        element.attrib.pop('role', None)
-                    modified = True
+            # Build a lookup dictionary for updates
+            update_map = {u['id']: u for u in updates}
+            for img_index, node in enumerate(tree.xpath('//img[@src]')):
+                update = update_map.get(f"{model}-{res_id}-img-{img_index}")
+                if not update:
+                    continue
+                if update['decorative']:
+                    node.set('alt', '')
+                    node.set('role', 'presentation')
+                else:
+                    node.set('alt', update['alt'])
+                    node.attrib.pop('role', None)
+                modified = True
+            for video_index, node in enumerate(tree.xpath('//div[contains(@class,"media_iframe_video")]')):
+                update = update_map.get(f"{model}-{res_id}-video-{video_index}")
+                if not update:
+                    continue
+                node.set('title', update.get('title', ''))
+                modified = True
+
             if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.write({field: html.tostring(tree, encoding='unicode', method='html')})
 
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
     def update_broken_links(self, links):
