@@ -1193,6 +1193,20 @@ class TestBatchPicking02(TransactionCase):
         self.assertEqual(batch.state, 'done')
         self.assertFalse(pickings[1].batch_id)
 
+    def test_batch_name_with_complex_prefix(self):
+        """Check that batch name is correctly generated with a complex prefix."""
+        # Fetch an existing sequence and update its prefix
+        sequence = self.env['ir.sequence'].search([('code', '=', 'picking.batch')], limit=1)
+        self.assertTrue(sequence, "Sequence with code 'picking.batch' should exist.")
+        sequence.prefix = 'BATCH/test/2026/'
+        # Create an empty batch with a picking type
+        batch = self.env['stock.picking.batch'].create({
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        # Assert the generated name starts with the complex prefix and contains the picking_type code
+        self.assertTrue(batch.name.startswith('BATCH/test/2026/'))
+        self.assertIn(self.picking_type_internal.sequence_code, batch.name)
 
 
 @tagged('post_install', '-at_install')
