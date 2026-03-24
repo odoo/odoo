@@ -338,7 +338,10 @@
                 }
 
                 height: var(--ConfiguratorPreview-height);
-                box-shadow: $box-shadow-sm;
+
+                img {
+                    box-shadow: $box-shadow-sm;
+                }
 
                 @include media-breakpoint-up(lg) {
                     &:hover {
@@ -352,7 +355,10 @@
 
                 &:hover {
                     border-color: map-get($theme-colors, primary)!important;
-                    box-shadow: $box-shadow;
+
+                    img {
+                        box-shadow: $box-shadow;
+                    }
 
                     .theme_preview_tip {
                         transform: translate3d(0,-120%,0);

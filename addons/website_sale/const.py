@@ -125,7 +125,7 @@ SHOP_PAGE_STYLE_MAPPING = {
         },
     },
     "chips_contained": {
-        "title": _lt("Chips Contained"),
+        "title": _lt("Minimal Cards"),
         "img_src": "/website_sale/static/src/img/configurator/shop/chips_contained.jpg",
         "views": {
             "enable": [
@@ -205,7 +205,7 @@ SHOP_PAGE_STYLE_MAPPING = {
         },
     },
     "cards": {
-        "title": _lt("Cards"),
+        "title": _lt("Visual Cards"),
         "img_src": "/website_sale/static/src/img/configurator/shop/cards.jpg",
         "views": {
             "enable": [
@@ -264,7 +264,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
         },
     },
     "large_grid": {
-        "title": _lt("Large Grid"),
+        "title": _lt("Showcase Grid"),
         "img_src": "/website_sale/static/src/img/configurator/product/large_grid.jpg",
         "views": {
             "enable": [
