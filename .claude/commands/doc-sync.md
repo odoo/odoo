@@ -1,0 +1,1 @@
+../../.claude-agents/core/commands/doc-sync.md

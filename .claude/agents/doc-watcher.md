@@ -1,0 +1,1 @@
+../../.claude-agents/core/agents/doc-watcher.md

@@ -1,0 +1,1 @@
+../../.claude-agents/odoo/agents/odoo-reviewer.md

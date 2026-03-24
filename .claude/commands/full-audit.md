@@ -1,0 +1,1 @@
+../../.claude-agents/core/commands/full-audit.md

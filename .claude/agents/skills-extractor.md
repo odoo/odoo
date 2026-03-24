@@ -1,0 +1,1 @@
+../../.claude-agents/core/agents/skills-extractor.md
