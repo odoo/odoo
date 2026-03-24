@@ -33,6 +33,9 @@ associated to every resource. It also manages the leaves of every resource.
         'web.assets_unit_tests': [
             'resource/static/tests/**/*',
         ],
+        'im_livechat.embed_assets_unit_tests_setup': [
+            "resource/static/tests/mock_server/**/*",
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
