@@ -161,7 +161,7 @@ export class DynamicSnippet extends Interaction {
     }
 
     render() {
-        if (!this.isConfigComplete()) {
+        if (this.el.querySelector(".s_dialog_preview")) {
             return;
         }
         if (this.data.length > 0 || this.withSample) {
