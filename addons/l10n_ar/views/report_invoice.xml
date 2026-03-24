@@ -75,7 +75,7 @@
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
       <!-- custom header and footer -->
-        <t t-set="o" position="after">
+        <t t-call="web.external_layout" position="before">
             <t t-set="custom_header" t-value="'l10n_ar.custom_header'"/>
             <t t-set="report_date" t-value="o.invoice_date"/>
             <t t-set="report_number" t-value="o.l10n_latam_document_number"/>

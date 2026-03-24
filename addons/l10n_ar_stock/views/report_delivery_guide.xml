@@ -23,6 +23,28 @@
                     <t t-set="report_name" t-value="stock_doc_type.report_name"/>
                 </t>
                 <t t-set="custom_header" t-value="'l10n_ar_stock.custom_header'"/>
+                <t t-set="custom_footer">
+                    <div class="row">
+                        <div name="footer_left_column" class="col-6 text-start">
+                            <div name="pager" t-if="report_type == 'pdf'">
+                                Page: <span class="page"/> / <span class="topage"/>
+                            </div>
+                            <div name="sequence_range" t-if="o.l10n_ar_cai_data">
+                                Sequence from <t t-out="o.l10n_ar_cai_data['sequence_number_start']"/> to <t t-out="o.l10n_ar_cai_data['sequence_number_end']"/>
+                            </div>
+                        </div>
+                        <div name="footer_right_column" class="col-6 text-end" t-if="o.l10n_ar_cai_data">
+                            <div name="cai_number">
+                                CAI: <t t-out="o.l10n_ar_cai_data['cai_authorization_code']"/>
+                            </div>
+                            <div name="cai_expiration_date">
+                                CAI Expiration Date: <t t-out="o.l10n_ar_cai_data['cai_expiration_date']" t-options='{"widget": "date"}'/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]" position="before">
                 <div id="informations">
                     <t><strong>Customer: </strong></t>
                     <span t-field="o.partner_id.commercial_partner_id.name"/>
@@ -44,26 +66,6 @@
                         <span t-else="" t-out="o.partner_id.vat"/>
                     </t>
                 </div>
-                <t t-set="custom_footer">
-                    <div class="row">
-                        <div name="footer_left_column" class="col-6 text-start">
-                            <div name="pager" t-if="report_type == 'pdf'">
-                                Page: <span class="page"/> / <span class="topage"/>
-                            </div>
-                            <div name="sequence_range" t-if="o.l10n_ar_cai_data">
-                                Sequence from <t t-out="o.l10n_ar_cai_data['sequence_number_start']"/> to <t t-out="o.l10n_ar_cai_data['sequence_number_end']"/>
-                            </div>
-                        </div>
-                        <div name="footer_right_column" class="col-6 text-end" t-if="o.l10n_ar_cai_data">
-                            <div name="cai_number">
-                                CAI: <t t-out="o.l10n_ar_cai_data['cai_authorization_code']"/>
-                            </div>
-                            <div name="cai_expiration_date">
-                                CAI Expiration Date: <t t-out="o.l10n_ar_cai_data['cai_expiration_date']" t-options='{"widget": "date"}'/>
-                            </div>
-                        </div>
-                    </div>
-                </t>
             </xpath>
             <xpath expr="//t[@t-set='address']" position="replace"/>
             <xpath expr="//t[@t-set='information_block']" position="replace"/>
