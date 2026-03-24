@@ -282,11 +282,11 @@ describe("setOrderPrices", () => {
         expect(parentLine.price_subtotal).toBe(0);
         expect(parentLine.price_subtotal_incl).toBe(0);
 
-        expect(comboLine1.price_subtotal).toBe(1500);
-        expect(comboLine1.price_subtotal_incl).toBe(1875);
+        expect(comboLine1.price_subtotal).toBe(200);
+        expect(comboLine1.price_subtotal_incl).toBe(250);
 
-        expect(comboLine2.price_subtotal).toBe(200);
-        expect(comboLine2.price_subtotal_incl).toBe(250);
+        expect(comboLine2.price_subtotal).toBe(1500);
+        expect(comboLine2.price_subtotal_incl).toBe(1875);
     });
 });
 
@@ -423,8 +423,8 @@ describe("getKioskPrintingCategoriesChanges", () => {
 
         const orderLines = store.currentOrder.lines;
         expect(orderLines[0].product_id.pos_categ_ids[0]).toBe(cat3);
-        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat1);
-        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat1);
         expect(orderLines[3].product_id.pos_categ_ids[0]).toBe(cat1);
         expect(orderLines[4].product_id.pos_categ_ids[0]).toBe(cat2);
         expect(orderLines[4].product_id.pos_categ_ids[1]).toBe(cat3);
@@ -449,8 +449,8 @@ describe("getKioskPrintingCategoriesChanges", () => {
         ]);
         expect(orderLines.length).toBe(5);
         expect(orderLines[0].product_id.id).toBe(this.comboTemplate.id);
-        expect(orderLines[1].product_id.id).toBe(this.comboProduct1.id);
-        expect(orderLines[2].product_id.id).toBe(this.comboProduct2.id);
+        expect(orderLines[1].product_id.id).toBe(this.comboProduct2.id);
+        expect(orderLines[2].product_id.id).toBe(this.comboProduct1.id);
 
         expect(orderLines[3].product_id.id).toBe(this.testProduct1.id);
         expect(orderLines[4].product_id.id).toBe(this.testProduct2.id);
