@@ -496,23 +496,27 @@ class HrLeave(models.Model):
 
     @api.depends('company_id', 'company_id.country_id')
     def _compute_work_entry_type_filter_domain(self):
-        for record in self:
-            country_id = record.company_id.country_id.id
-            has_system_types = False
-            if country_id:
-                has_system_types = self.env['hr.work.entry.type'].sudo().search_count([
-                    ('country_id', '=', country_id),
-                    ('create_uid', '=', 1)
-                ]) > 0
-            if not country_id:
-                domain = [('country_id', '=', False)]
-            elif has_system_types:
-                domain = [('country_id', '=', country_id)]
+        existing_system_types = dict(self.env['hr.work.entry.type']._read_group(
+            domain=[
+                ('country_id', 'in', [False] + self.company_id.country_id.ids),
+                ('create_uid', '=', 1),
+            ],
+            groupby=['country_id'],
+            aggregates=['id:count'],
+        ))
+        domain_per_leave = {}
+        for leave in self:
+            country = leave.company_id.country_id
+            if not country:
+                domain_per_leave[leave] = [('country_id', '=', False)]
+            elif existing_system_types.get(country):
+                domain_per_leave[leave] = [('country_id', '=', country.id)]
             else:
-                domain = ['|', ('country_id', '=', False), ('country_id', '=', country_id)]
+                domain_per_leave[leave] = [('country_id', 'in', [False, country.id])]
 
-        matching_types = self.env['hr.work.entry.type'].sudo().search(domain)
-        record.work_entry_type_filter_domain = matching_types.ids
+        matching_types = self.env['hr.work.entry.type'].sudo().search(Domain.OR(domain_per_leave.values()))
+        for leave in self:
+            leave.work_entry_type_filter_domain = matching_types.filtered_domain(domain_per_leave[leave]).ids
 
     @api.depends('employee_id')
     def _compute_department_id(self):
