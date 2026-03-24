@@ -375,11 +375,15 @@
             <t t-if="question.question_type == 'scale'" t-call="survey.question_scale"/>
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
             <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
+            <!-- Display the error message if the question is considered post submit (needs to be reviewed to get an answer) and
+            it's the post-submit flow or it's the pre-submit flow and the question was effectively skipped. -->
+            <t t-set="display_error_msg" t-value="is_post_submit_question and
+                (answer.survey_first_submitted or (answer_lines and all(answer_lines.mapped('skipped'))))"/>
             <div t-attf-class="o_survey_question_error alert alert-danger d-flex align-items-center justify-content-between border-0 overflow-hidden
-                #{'slide_in mt-2' if is_post_submit_question else 'm-0'}
+                #{'slide_in mt-2' if display_error_msg else 'm-0'}
                 #{'d-none' if answer.is_session_answer else ''}"
                 role="alert">
-                <span t-if="is_post_submit_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
+                <span t-if="display_error_msg" t-out="question.constr_error_msg or default_constr_error_msg"/>
             </div>
         </div>
     </template>
