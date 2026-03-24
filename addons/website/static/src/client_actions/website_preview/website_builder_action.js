@@ -54,8 +54,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     setup() {
-        this.target = null;
-        this.folded = [];
+        this.reloadContext = null;
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
@@ -214,11 +213,10 @@ export class WebsiteBuilderClientAction extends Component {
             overlayRef: this.overlayRef,
             iframeLoaded: iframeLoaded,
             isMobile: this.websiteContext.isMobile,
-            initialTab: this.initialTab,
+            initialTab: this.reloadContext?.initialTab,
             onlyCustomizeTab: this.translation,
             config: {
-                initialTarget: this.target,
-                initialFolded: this.folded,
+                reloadContext: this.reloadContext,
                 builderSidebar: {
                     withHiddenSidebar: async (cb) => {
                         try {
@@ -532,11 +530,9 @@ export class WebsiteBuilderClientAction extends Component {
         });
     }
 
-    async reloadEditor(param = {}) {
-        this.initialTab = param.initialTab;
-        this.target = param.target || null;
-        this.folded = param.folded || [];
-        await this.reloadIframe(this.state.isEditing, param.url);
+    async reloadEditor(url, reloadContext) {
+        this.reloadContext = reloadContext || null;
+        await this.reloadIframe(this.state.isEditing, url);
         // Disable the current instance of the builder and trigger a new
         // instance of it with `t-key`
         this.builderSidebarRef.el.firstElementChild.classList.add("o_builder_disabled");
@@ -544,9 +540,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async reloadIframeAndCloseEditor() {
-        delete this.initialTab;
-        this.target = null;
-        this.folded = [];
+        this.reloadContext = null;
         const isEditing = false;
         this.state.isEditing = isEditing;
         this.addSystrayItems();

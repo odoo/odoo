@@ -23,6 +23,7 @@ export const CARD_PARENT_HANDLERS =
     ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
 
 /**
+ * @typedef {((reload_context: Object, editingElement: HTMLElement) => reload_context)[]} reload_context_processors
  * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
  */
 
@@ -772,10 +773,8 @@ export function useOperationWithReload(callApply, reload) {
             if (!applyResults.includes(BuilderAction.cancelReload)) {
                 env.editor.shared.history.addStep();
                 await env.editor.shared.savePlugin.save();
-                const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
-                const folded = env.editor.shared.builderOptions.getFolded(editingElement);
                 const url = reload.getReloadUrl?.();
-                await env.editor.config.reloadEditor({ target, folded, url });
+                await env.editor.config.reloadEditor({ url, editingElement });
             }
         } finally {
             env.services.ui.unblock();

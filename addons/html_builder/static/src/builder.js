@@ -55,6 +55,7 @@ export class Builder extends Component {
         onlyCustomizeTab: { type: Boolean, optional: true },
     };
     static defaultProps = {
+        reloadEditor: () => {},
         config: {},
         themeTabDisplayName: _t("Theme"),
         initialTab: "blocks",
@@ -116,12 +117,11 @@ export class Builder extends Component {
                         this.props.config.onChange?.();
                     }
                 },
-                reloadEditor: async (param = {}) => {
-                    await this.props.reloadEditor?.({
-                        initialTab: this.state.activeTab,
-                        ...param,
-                    });
-                },
+                reloadEditor: ({ url, editingElement } = {}) =>
+                    this.props.reloadEditor(
+                        url,
+                        this.editor.processThrough("reload_context_processors", {}, editingElement)
+                    ),
                 closeEditor: async () => {
                     await this.props.closeEditor?.();
                 },
@@ -168,6 +168,10 @@ export class Builder extends Component {
                             this.setTab("blocks");
                         }
                     },
+                    reload_context_processors: (context) => ({
+                        ...context,
+                        initialTab: this.state.activeTab,
+                    }),
                     lower_panel_entries: withSequence(20, {
                         Component: InvisibleElementsPanel,
                         props: this.invisibleElementsPanelState,

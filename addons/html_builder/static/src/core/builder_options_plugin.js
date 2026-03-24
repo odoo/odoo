@@ -61,8 +61,6 @@ import { omit } from "@web/core/utils/objects";
  * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
- * @property { BuilderOptionsPlugin['getReloadSelector'] } getReloadSelector
- * @property { BuilderOptionsPlugin['getFolded'] } getFolded
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
  * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
@@ -142,8 +140,6 @@ export class BuilderOptionsPlugin extends Plugin {
         "getPageContainers",
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
-        "getReloadSelector",
-        "getFolded",
         "setNextTarget",
         "getBuilderOptionContext",
         "getBuilderOptions",
@@ -155,16 +151,18 @@ export class BuilderOptionsPlugin extends Plugin {
         on_undone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
         on_redone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
         clean_for_save_processors: this.cleanForSave.bind(this),
+        reload_context_processors: (context, el) => {
+            if (el) {
+                context.selector = this.getReloadSelector(el);
+                context.folded = this.lastContainers.map((c) => c.folded);
+            }
+        },
         on_editor_started_handlers: () => {
-            if (this.config.initialTarget) {
-                const el = this.editable.querySelector(this.config.initialTarget);
-                this.updateContainers(el);
-                for (
-                    let i = 0;
-                    i < this.lastContainers.length && i < this.config.initialFolded.length;
-                    i++
-                ) {
-                    this.lastContainers[i].folded &&= this.config.initialFolded[i];
+            if (this.config.reloadContext) {
+                const { selector, folded } = this.config.reloadContext;
+                this.updateContainers(this.editable.querySelector(selector));
+                for (let i = 0; i < this.lastContainers.length && i < folded.length; i++) {
+                    this.lastContainers[i].folded &&= folded[i];
                 }
             }
         },
@@ -276,10 +274,6 @@ export class BuilderOptionsPlugin extends Plugin {
             return "footer";
         }
         return null;
-    }
-
-    getFolded() {
-        return this.lastContainers.map((c) => c.folded);
     }
 
     updateContainers(target, { forceUpdate = false } = {}) {

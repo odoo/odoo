@@ -32,6 +32,7 @@ declare module "plugins" {
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style_overrides } from "@html_builder/core/core_builder_action_plugin";
     import { on_bg_color_updated_handlers } from "@html_builder/core/color_style_plugin";
+    import { reload_context_processors } from "@html_builder/core/utils";
 
     interface SharedMethods {
         // Main
@@ -114,6 +115,7 @@ declare module "plugins" {
         is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
 
         // Processors
+        reload_context_processors: reload_context_processors;
         snippet_preview_dialog_stylesheets_processors: snippet_preview_dialog_stylesheets_processors;
 
         // Providers
