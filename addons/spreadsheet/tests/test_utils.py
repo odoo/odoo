@@ -37,3 +37,46 @@ class TestSpreadsheetUtils(TransactionCase):
             extend_serialized_json('{}', [('key1', '1'), ('key2', '2')]),
             '{"key1":1,"key2":2}'
         )
+        self.assertEqual(
+            extend_serialized_json('\n{}\n', [('key1', '1'), ('key2', '2')]),
+            '{"key1":1,"key2":2}'
+        )
+
+    def test_date_to_spreadsheet_date_number(self):
+        d = datetime.date(1899, 12, 30)
+        self.assertEqual(date_to_spreadsheet_date_number(d), 0)
+
+        d = datetime.date(2023, 10, 1)
+        self.assertEqual(date_to_spreadsheet_date_number(d), 45200)
+
+    def test_datetime_to_spreadsheet_date_number(self):
+        test_tz_offset = 8 / 24  # Etc/GMT-8 is UTC+8
+        dt = datetime.datetime(1899, 12, 30, 0, 0, 0)
+        self.assertEqual(datetime_to_spreadsheet_date_number(dt, 'UTC'), 0)
+
+        dt = datetime.datetime(1899, 12, 30, 0, 0, 0)
+        self.assertEqual(datetime_to_spreadsheet_date_number(dt, 'Etc/GMT-8'), test_tz_offset)
+
+        dt = datetime.datetime(2023, 10, 1, 12, 0, 0)
+        self.assertEqual(datetime_to_spreadsheet_date_number(dt, 'UTC'), 45200.5)
+
+        dt = datetime.datetime(2023, 10, 1, 12, 0, 0)
+        self.assertEqual(datetime_to_spreadsheet_date_number(dt, 'Etc/GMT-8'), 45200.5 + test_tz_offset)
+
+    def test_index_to_column_letter(self):
+        self.assertEqual(index_to_column_letter(0), "A")
+        self.assertEqual(index_to_column_letter(25), "Z")
+        self.assertEqual(index_to_column_letter(26), "AA")
+        self.assertEqual(index_to_column_letter(27), "AB")
+        self.assertEqual(index_to_column_letter(701), "ZZ")
+        self.assertEqual(index_to_column_letter(702), "AAA")
+
+    def test_index_to_column_letter_negative(self):
+        with self.assertRaises(ValueError):
+            index_to_column_letter(-1)
+
+    def test_to_cell_reference(self):
+        self.assertEqual(to_cell_reference(0, 0), "A1")
+        self.assertEqual(to_cell_reference(0, 1), "A2")
+        self.assertEqual(to_cell_reference(1, 1), "B2")
+        self.assertEqual(to_cell_reference(26, 9), "AA10")
