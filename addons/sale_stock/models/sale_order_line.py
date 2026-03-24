@@ -21,9 +21,7 @@ class SaleOrderLine(models.Model):
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
-    customer_lead = fields.Integer(
-        compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
-        inverse='_inverse_customer_lead')
+    customer_lead = fields.Integer(store=True, readonly=False, inverse='_inverse_customer_lead')
 
     @api.depends('route_ids', 'order_id.warehouse_id', 'product_id')
     def _compute_warehouse_id(self):
@@ -253,12 +251,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.move_ids.filtered(lambda m: m.state != 'cancel'):
                 line.product_updatable = False
-
-    @api.depends('product_id', 'company_id')
-    def _compute_customer_lead(self):
-        super()._compute_customer_lead() # Reset customer_lead when the product is modified
-        for line in self:
-            line.customer_lead = line.product_id.with_company(line.company_id).sale_delay
 
     def _inverse_customer_lead(self):
         for line in self:

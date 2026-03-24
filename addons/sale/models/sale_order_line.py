@@ -974,11 +974,10 @@ class SaleOrderLine(models.Model):
                 line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
             )
 
-    # This computed default is necessary to have a clean computation inheritance
-    # (cf sale_stock) instead of simply removing the default and specifying
-    # the compute attribute & method in sale_stock.
+    @api.depends('product_id', 'company_id')
     def _compute_customer_lead(self):
-        self.customer_lead = 0.0
+        for line in self:
+            line.customer_lead = line.product_id.with_company(line.company_id).sale_delay
 
     @api.depends("is_expense", "product_id")
     def _compute_qty_delivered_method(self):

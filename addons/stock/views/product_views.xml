@@ -206,12 +206,6 @@
                     <attribute name="options">{'autosave': False}</attribute>
                     <attribute name="invisible">type != 'consu'</attribute>
                 </xpath>
-                <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
-                    <label for="sale_delay" invisible="not sale_ok"/>
-                    <div invisible="not sale_ok">
-                        <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
-                    </div>
-                </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <field name="has_available_route_ids" invisible="1"/>
                     <group string="Operations" name="operations" invisible="not (has_available_route_ids or route_from_categ_ids)">
