@@ -28,9 +28,9 @@ class TestPayrollFieldsAccess(TransactionCase):
         fields_readonly = []
         for f_name, field in employee_fields.items():
             v_field = version_fields[f_name]
-            if not (field.groups and field.groups != v_field):
+            if field.groups != v_field.groups:
                 fields_without_group.append(f_name)
-            elif not (field.related and field.related == f'version_id.{f_name}'):
+            elif field.related != f'version_id.{f_name}':
                 fields_without_related.append(f_name)
             elif field.readonly != v_field.readonly:
                 fields_readonly.append(f_name)
