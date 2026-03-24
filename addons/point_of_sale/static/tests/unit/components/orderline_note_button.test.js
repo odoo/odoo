@@ -26,13 +26,13 @@ test("orderline_note_button.js", async () => {
         });
     const line = await dialogActions(lineAction, productComboSteps);
     expect(order.lines[0].qty).toBe(1);
-    expect(order.lines[1].qty).toBe(1);
-    expect(order.lines[2].qty).toBe(2);
+    expect(order.lines[1].qty).toBe(2);
+    expect(order.lines[2].qty).toBe(1);
     const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
     orderSummary._setValue(4);
     expect(order.lines[0].qty).toBe(4);
-    expect(order.lines[1].qty).toBe(4);
-    expect(order.lines[2].qty).toBe(8);
+    expect(order.lines[1].qty).toBe(8);
+    expect(order.lines[2].qty).toBe(4);
     const comp = await mountWithCleanup(InternalNoteButton, { props: { label: "" } });
     await comp.setChanges(line, '[{"1":"Test","colorIndex":0}]');
     order.updateLastOrderChange();
@@ -42,11 +42,11 @@ test("orderline_note_button.js", async () => {
     await dialogActions(noteAction, productComboSteps);
     // Check quantity
     expect(order.lines[0].qty).toBe(4);
-    expect(order.lines[1].qty).toBe(4);
-    expect(order.lines[2].qty).toBe(8);
+    expect(order.lines[1].qty).toBe(8);
+    expect(order.lines[2].qty).toBe(4);
     expect(order.lines[3].qty).toBe(5);
-    expect(order.lines[4].qty).toBe(5);
-    expect(order.lines[5].qty).toBe(10);
+    expect(order.lines[4].qty).toBe(10);
+    expect(order.lines[5].qty).toBe(5);
 
     // Check notes (only on parent lines)
     expect(order.lines[0].note).toBe('[{"1":"Test","colorIndex":0}]');

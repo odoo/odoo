@@ -1097,6 +1097,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_07_product_combo(self):
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 4
         setup_product_combo_items(self)
+        self.desk_accessories_combo.sequence = 100
         combo_product_sofa = self.env["product.template"].create(
             {
                 "name": "Combo product Sofa",
@@ -1186,9 +1187,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         parent_line_id = self.env['pos.order.line'].search([('product_id.name', '=', 'Office Combo'), ('order_id', '=', order.id)])
         combo_line_ids = self.env['pos.order.line'].search([('product_id.name', '!=', 'Office Combo'), ('order_id', '=', order.id)])
         self.assertEqual(parent_line_id.combo_line_ids, combo_line_ids, "The combo parent should have 3 combo lines")
-        self.assertEqual(order.lines[1].price_unit, 10.33)
-        self.assertEqual(order.lines[2].price_unit, 18.67)
-        self.assertEqual(order.lines[3].price_unit, 30.00)
+        self.assertEqual(order.lines[1].price_unit, 18.67)
+        self.assertEqual(order.lines[2].price_unit, 30.00)
+        self.assertAlmostEqual(order.lines[3].price_unit, 10.33)
         # In the future we might want to test also if:
         #   - the combo lines are correctly stored in and restored from local storage
         #   - the combo lines are correctly shared between the pos configs ( in cross ordering )

@@ -96,5 +96,18 @@ export const computeComboItems = (
         });
     }
 
+    let sequenceCounter = 0;
+    const mapSequence = parentProduct.combo_ids.reduce((acc, combo) => {
+        combo.combo_item_ids.forEach((item) => {
+            acc[item.id] = sequenceCounter++;
+        });
+        return acc;
+    }, {});
+
+    comboItems.sort(
+        (a, b) =>
+            (mapSequence[a.combo_item_id.id] ?? Infinity) -
+            (mapSequence[b.combo_item_id.id] ?? Infinity)
+    );
     return comboItems;
 };
