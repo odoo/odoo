@@ -48,6 +48,10 @@ class TestSpreadsheetUtils(TransactionCase):
             extend_serialized_json('{}', [('key1', '1'), ('key2', '2')]),
             '{"key1":1,"key2":2}'
         )
+        self.assertEqual(
+            extend_serialized_json('\n{}\n', [('key1', '1'), ('key2', '2')]),
+            '{"key1":1,"key2":2}'
+        )
 
     def test_date_to_spreadsheet_date_number(self):
         d = datetime.date(1899, 12, 30)
