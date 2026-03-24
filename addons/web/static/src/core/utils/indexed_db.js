@@ -1,7 +1,7 @@
 import { Mutex } from "./concurrency";
 
-const VERSION_TABLE = "__DBVersion__";
-const VERSION_KEY = "__version__";
+export const VERSION_TABLE = "__DBVersion__";
+export const VERSION_KEY = "__version__";
 
 const BATCH_SIZE = 2000;
 

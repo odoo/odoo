@@ -5,6 +5,7 @@ import {
     expect,
     freezeTime,
     microTick,
+    mockDate,
     test,
     tick,
 } from "@odoo/hoot";
@@ -189,6 +190,7 @@ test("invalidate table", async () => {
 
     //invalidate the table
     rpcCache.invalidate("table");
+    await microTick();
 
     // `table` is empty
     expect(rpcCache.indexedDB.mockIndexedDB.table).toEqual({});
@@ -238,6 +240,7 @@ test("invalidate multiple tables", async () => {
 
     //invalidate the table
     rpcCache.invalidate(["table", "table2"]);
+    await microTick();
 
     // `table` is empty
     expect(rpcCache.indexedDB.mockIndexedDB.table).toEqual({});
@@ -1158,15 +1161,16 @@ test("RamCache: entry expired, fallback executed, cache refilled with new timest
 });
 
 test("DiskCache: entry expired, fallback executed, cache refilled with new timestamps and expires", async () => {
+    freezeTime();
+    mockDate("2020-01-01 00:00:00", 0);
+    const expectedTimestamp = 1577836800000;
+    const maxAge = 60 * 60 * 1000; // 60 minutes
+
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
-
-    freezeTime();
-    const maxAge = 60 * 60 * 1000; // 60 minutes
-    const timestamp = Date.now();
 
     // fill the cache
     expect(
@@ -1182,25 +1186,25 @@ test("DiskCache: entry expired, fallback executed, cache refilled with new times
     expect(rpcCache.indexedDB.mockIndexedDB.table.key.data.ciphertext).toBe(
         'encrypted data:{"test":123}'
     );
-    expect(rpcCache.indexedDB.mockIndexedDB.table.key.timestamp).toBe(timestamp);
-    expect(rpcCache.indexedDB.mockIndexedDB.table.key.expires).toBe(timestamp + maxAge);
+    expect(rpcCache.indexedDB.mockIndexedDB.table.key.timestamp).toBe(expectedTimestamp);
+    expect(rpcCache.indexedDB.mockIndexedDB.table.key.expires).toBe(expectedTimestamp + maxAge);
     expect(await promiseState(rpcCache.ramCache.ram.table.key.data)).toEqual({
         status: "fulfilled",
         value: { test: 123 },
     });
-    expect(rpcCache.ramCache.ram.table.key.timestamp).toBe(timestamp);
-    expect(rpcCache.ramCache.ram.table.key.expires).toBe(timestamp + maxAge);
+    expect(rpcCache.ramCache.ram.table.key.timestamp).toBe(expectedTimestamp);
+    expect(rpcCache.ramCache.ram.table.key.expires).toBe(expectedTimestamp + maxAge);
 
     await advanceTime(maxAge + 10); // Expire data
 
     const new_timestamp = Date.now();
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     const res = rpcCache.read(
         "table",
         "key",
         () => {
             expect.step("Fallback");
-            return def;
+            return promise;
         },
         {
             maxAge,
@@ -1214,10 +1218,13 @@ test("DiskCache: entry expired, fallback executed, cache refilled with new times
     );
     // Expired data ignored
     expect(await promiseState(res)).toEqual({ status: "pending" });
-    expect(await promiseState(rpcCache.ramCache.ram.table.key.data)).toEqual({ status: "pending" });
+    expect(await promiseState(rpcCache.ramCache.ram.table.key.data)).toEqual({
+        status: "pending",
+    });
 
     expect.verifySteps(["Fallback"]);
-    def.resolve({ test: 456 });
+    resolve({ test: 456 });
+    await microTick();
     await microTick();
     await microTick();
     // Disk and Ram entries updated with new value, timestamp, and expires

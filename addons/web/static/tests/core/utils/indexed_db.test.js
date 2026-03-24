@@ -1,4 +1,7 @@
-import { _OriginalIndexedDB as IndexedDB } from "@web/core/utils/indexed_db";
+import {
+    _OriginalIndexedDB as RealIndexedDB,
+    IndexedDB as MockedIndexedDB,
+} from "@web/core/utils/indexed_db";
 
 import { describe, expect, onError, test } from "@odoo/hoot";
 
@@ -6,492 +9,503 @@ describe.current.tags("headless");
 
 const CACHE_NAME = "unit_test_disk_cache";
 
-function deleteCacheDB() {
-    return new Promise((resolve) => {
-        const request = indexedDB.deleteDatabase(CACHE_NAME);
-        request.onerror = (error) => console.error(error);
-        request.onsuccess = resolve;
+for (const VERSION of ["REAL", "MOCK"]) {
+    const IDB = VERSION === "REAL" ? RealIndexedDB : MockedIndexedDB;
+
+    const deleteCacheDB = () => {
+        if (VERSION !== "MOCK") {
+            return new Promise((resolve) => {
+                const request = indexedDB.deleteDatabase(CACHE_NAME);
+                request.onerror = (error) => console.error(error);
+                request.onsuccess = resolve;
+            });
+        }
+    };
+
+    const ensureDbIsAbsent = async () => {
+        if (VERSION !== "MOCK") {
+            const databases = await window.indexedDB.databases();
+            expect(databases.filter((db) => db.name === CACHE_NAME).length).toBe(0, {
+                message: "DB is correctly cleaned",
+            });
+        }
+    };
+
+    const execute = (indexeddb, cb) => {
+        if (VERSION === "MOCK") {
+            return indexeddb.mutex.exec(() => cb(indexeddb));
+        }
+        return indexeddb.mutex.exec(() =>
+            indexeddb._execute((db) => {
+                if (db) {
+                    return cb(db);
+                }
+            })
+        );
+    };
+
+    test(`${VERSION} - one cache, read`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent(VERSION);
+    });
+
+    test(`${VERSION} - two caches, read`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
+        const indexedDB1 = new IDB(CACHE_NAME, 1);
+        await indexedDB1.write("mytable", "test", "value for 'test'");
+        expect(await indexedDB1.read("mytable", "test")).toBe("value for 'test'");
+
+        const indexedDB2 = new IDB(CACHE_NAME, 1);
+        expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
+
+        await indexedDB1.deleteDatabase();
+        await indexedDB2.deleteDatabase(); // deleting twice the same DB don't throw error !
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - two caches, read (2)`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
+        const indexedDB1 = new IDB(CACHE_NAME, 1);
+        const indexedDB2 = new IDB(CACHE_NAME, 1);
+
+        await indexedDB1.write("mytable", "test", "value for 'test'");
+        await indexedDB1.write("mytable1", "test", "value for 'test'");
+
+        expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
+
+        await indexedDB1.deleteDatabase();
+        await indexedDB2.deleteDatabase(); // deleting twice the same DB don't throw error !
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - multiread/multiwrite`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        expect(await indexedDB.read("mytable", ["test", "test2"])).toEqual([
+            { key: "test", value: undefined },
+            { key: "test2", value: undefined },
+        ]);
+
+        await indexedDB.write("mytable", [
+            { key: "test", value: "value for 'test'" },
+            { key: "test2", value: "value for 'test2'" },
+        ]);
+        expect(await indexedDB.read("mytable", ["test", "test2"])).toEqual([
+            { key: "test", value: "value for 'test'" },
+            { key: "test2", value: "value for 'test2'" },
+        ]);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - search`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        await indexedDB.write("mytable", [
+            { key: "key01", value: "Homer Simpson" },
+            { key: "key02", value: "Marge Simpson" },
+            { key: "key03", value: "Bart Simpson" },
+            { key: "key04", value: "Lisa Simpson" },
+            { key: "key05", value: "Maggie Simpson" },
+            { key: "key06", value: "Abraham Simpson" },
+            { key: "key07", value: "Mona Simpson" },
+            { key: "key08", value: "Patty Bouvier" },
+            { key: "key09", value: "Selma Bouvier" },
+            { key: "key10", value: "Santa's Little Helper" },
+            { key: "key11", value: "Herbert Powell Simpson" },
+            { key: "key12", value: "Amber Simpson" },
+        ]);
+
+        expect(await indexedDB.search("mytable", (value) => value.includes("imps"), 4)).toEqual([
+            {
+                key: "key01",
+                value: "Homer Simpson",
+            },
+            {
+                key: "key02",
+                value: "Marge Simpson",
+            },
+            {
+                key: "key03",
+                value: "Bart Simpson",
+            },
+            {
+                key: "key04",
+                value: "Lisa Simpson",
+            },
+        ]);
+        expect(await indexedDB.search("mytable", (value) => value.includes("imps"))).toEqual([
+            {
+                key: "key01",
+                value: "Homer Simpson",
+            },
+            {
+                key: "key02",
+                value: "Marge Simpson",
+            },
+            {
+                key: "key03",
+                value: "Bart Simpson",
+            },
+            {
+                key: "key04",
+                value: "Lisa Simpson",
+            },
+            {
+                key: "key05",
+                value: "Maggie Simpson",
+            },
+            {
+                key: "key06",
+                value: "Abraham Simpson",
+            },
+            {
+                key: "key07",
+                value: "Mona Simpson",
+            },
+            {
+                key: "key11",
+                value: "Herbert Powell Simpson",
+            },
+        ]);
+        expect(await indexedDB.search("mytable", (value) => value.includes("impz"))).toEqual([]);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - one cache, invalidate`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // populate the table
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+
+        await indexedDB.invalidate("mytable");
+        expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - one cache, invalidate multi-tables`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // populate the table
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        await indexedDB.write("mytable2", "test", "value for 'test'");
+        await indexedDB.write("mytable2", "test2", "value for 'test2'");
+        expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+        expect(await indexedDB.read("mytable2", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
+
+        await indexedDB.invalidate(["mytable", "mytable2"]);
+        expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
+        expect(await indexedDB.read("mytable2", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - invalidate multi-tables regex`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // populate the table
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        await indexedDB.write("mytable2", "test", "value for 'test'");
+        await indexedDB.write("mytable2", "test2", "value for 'test2'");
+        expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+        expect(await indexedDB.read("mytable2", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
+
+        await indexedDB.invalidate([/^mytable/]);
+        expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
+        expect(await indexedDB.read("mytable2", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - one cache, invalidate all tables`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // populate the table
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable2", "test2", "value for 'test2'");
+        expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
+
+        await indexedDB.invalidate();
+        expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - one table, call getAllKeys`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // empty table
+        expect(await indexedDB.getAllKeys("mytable")).toEqual([]);
+
+        // populate and call getAllKeys
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB.getAllKeys("mytable")).toEqual(["test", "test2"]);
+
+        // invalidate table and call getAllKeys
+        await indexedDB.invalidate("mytable");
+        expect(await indexedDB.getAllKeys("mytable")).toEqual([]);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - invalidate all tables, empty cache`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        //The indexedDB __DBVersion__ is not invalidated
+        const indexedDB = new IDB(CACHE_NAME, 1);
+        await execute(indexedDB, (db) => {
+            expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
+        });
+        expect(await indexedDB.read("__DBVersion__", "__version__")).toBe(1);
+        await indexedDB.invalidate();
+        await execute(indexedDB, (db) => {
+            expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
+        });
+        expect(await indexedDB.read("__DBVersion__", "__version__")).toBe(1);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - invalidate non existing table`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+        await execute(indexedDB, (db) => {
+            expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
+        });
+        await indexedDB.invalidate("nonExistingTable");
+        await execute(indexedDB, (db) => {
+            expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
+        });
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - invalidate non existing and existing table`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // populate the table
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+
+        await indexedDB.invalidate(["nonExistingTable", "mytable"]);
+        expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - two caches, invalidate`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
+        const indexedDB1 = new IDB(CACHE_NAME, 1);
+        const indexedDB2 = new IDB(CACHE_NAME, 1);
+
+        // populate the table
+        await indexedDB1.write("mytable", "test", "value for 'test'");
+        await indexedDB1.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB1.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB1.read("mytable", "test2")).toBe("value for 'test2'");
+        expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB2.read("mytable", "test2")).toBe("value for 'test2'");
+
+        await indexedDB1.invalidate("mytable");
+        expect(await indexedDB1.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB1.read("mytable", "test2")).toBe(undefined);
+        expect(await indexedDB2.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB2.read("mytable", "test2")).toBe(undefined);
+
+        await indexedDB1.deleteDatabase();
+        await indexedDB2.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - two caches, new DB version`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB1 = new IDB(CACHE_NAME, 1);
+        // populate the table
+        await indexedDB1.write("mytable", "test", "value for 'test'");
+        await indexedDB1.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB1.read("mytable", "test")).toBe("value for 'test'");
+        expect(await indexedDB1.read("mytable", "test2")).toBe("value for 'test2'");
+
+        // simulate a new page, with a new version number for the given databases
+        const indexedDB2 = new IDB(CACHE_NAME, 2);
+        // DB should not contain tables !
+        await execute(indexedDB2, (db) => {
+            expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
+        });
+        await execute(indexedDB2, (db) => {
+            expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
+        });
+        expect(await indexedDB2.read("mytable", "test")).toBe(undefined);
+        expect(await indexedDB2.read("mytable", "test2")).toBe(undefined);
+
+        await indexedDB1.deleteDatabase();
+        await indexedDB2.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - several tables`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        await indexedDB.write("table1", "test", "value for 'test'");
+        await indexedDB.write("table2", "test2", "value for 'test2'");
+        expect(await indexedDB.read("table1", "test")).toBe("value for 'test'");
+        expect(await indexedDB.read("table2", "test2")).toBe("value for 'test2'");
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - several caches, several tables`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB1 = new IDB(CACHE_NAME, 1);
+        await indexedDB1.write("table1", "test", "value for 'test'");
+        expect(await indexedDB1.read("table1", "test")).toBe("value for 'test'");
+
+        const indexedDB2 = new IDB(CACHE_NAME, 1);
+        await indexedDB2.write("table2", "test", "value for 'test'");
+        expect(await indexedDB2.read("table1", "test")).toBe("value for 'test'");
+        expect(await indexedDB2.read("table2", "test")).toBe("value for 'test'");
+
+        // check that second table has been correctly setup
+        const diskCache3 = new IDB(CACHE_NAME, 1);
+        expect(await diskCache3.read("table2", "test")).toBe("value for 'test'");
+
+        await indexedDB1.deleteDatabase();
+        await indexedDB2.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - getAllEntries`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // empty table
+        expect(await indexedDB.getAllEntries("mytable")).toEqual([]);
+
+        // populate and call getAllEntries
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB.getAllEntries("mytable")).toEqual([
+            { key: "test", value: "value for 'test'" },
+            { key: "test2", value: "value for 'test2'" },
+        ]);
+
+        // invalidate table and call getAllEntries
+        await indexedDB.invalidate("mytable");
+        expect(await indexedDB.getAllEntries("mytable")).toEqual([]);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
+    });
+
+    test(`${VERSION} - delete value`, async () => {
+        onError(() => deleteCacheDB());
+        await ensureDbIsAbsent();
+
+        const indexedDB = new IDB(CACHE_NAME, 1);
+
+        // populate and call getAllEntries
+        await indexedDB.write("mytable", "test", "value for 'test'");
+        await indexedDB.write("mytable", "test2", "value for 'test2'");
+        expect(await indexedDB.getAllEntries("mytable")).toEqual([
+            { key: "test", value: "value for 'test'" },
+            { key: "test2", value: "value for 'test2'" },
+        ]);
+
+        // delete one value and call getAllEntries
+        await indexedDB.delete("mytable", "test");
+        expect(await indexedDB.getAllEntries("mytable")).toEqual([
+            { key: "test2", value: "value for 'test2'" },
+        ]);
+
+        await indexedDB.deleteDatabase();
+        await ensureDbIsAbsent();
     });
 }
-
-async function ensureDbIsAbsent() {
-    const databases = await window.indexedDB.databases();
-    expect(databases.filter((db) => db.name === CACHE_NAME).length).toBe(0, {
-        message: "DB is correctly cleaned",
-    });
-}
-
-function execute(indexeddb, cb) {
-    return indexeddb.mutex.exec(() =>
-        indexeddb._execute((db) => {
-            if (db) {
-                return cb(db);
-            }
-        })
-    );
-}
-
-test("one cache, read", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
-
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("two caches, read", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
-    const indexedDB1 = new IndexedDB(CACHE_NAME, 1);
-    await indexedDB1.write("mytable", "test", "value for 'test'");
-    expect(await indexedDB1.read("mytable", "test")).toBe("value for 'test'");
-
-    const indexedDB2 = new IndexedDB(CACHE_NAME, 1);
-    expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
-
-    await indexedDB1.deleteDatabase();
-    await indexedDB2.deleteDatabase(); // deleting twice the same DB don't throw error !
-    await ensureDbIsAbsent();
-});
-
-test("two caches, read (2)", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
-    const indexedDB1 = new IndexedDB(CACHE_NAME, 1);
-    const indexedDB2 = new IndexedDB(CACHE_NAME, 1);
-
-    await indexedDB1.write("mytable", "test", "value for 'test'");
-    await indexedDB1.write("mytable1", "test", "value for 'test'");
-
-    expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
-
-    await indexedDB1.deleteDatabase();
-    await indexedDB2.deleteDatabase(); // deleting twice the same DB don't throw error !
-    await ensureDbIsAbsent();
-});
-
-test("multiread/multiwrite", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    expect(await indexedDB.read("mytable", ["test", "test2"])).toEqual([
-        { key: "test", value: undefined },
-        { key: "test2", value: undefined },
-    ]);
-
-    await indexedDB.write("mytable", [
-        { key: "test", value: "value for 'test'" },
-        { key: "test2", value: "value for 'test2'" },
-    ]);
-    expect(await indexedDB.read("mytable", ["test", "test2"])).toEqual([
-        { key: "test", value: "value for 'test'" },
-        { key: "test2", value: "value for 'test2'" },
-    ]);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("search", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    await indexedDB.write("mytable", [
-        { key: "key01", value: "Homer Simpson" },
-        { key: "key02", value: "Marge Simpson" },
-        { key: "key03", value: "Bart Simpson" },
-        { key: "key04", value: "Lisa Simpson" },
-        { key: "key05", value: "Maggie Simpson" },
-        { key: "key06", value: "Abraham Simpson" },
-        { key: "key07", value: "Mona Simpson" },
-        { key: "key08", value: "Patty Bouvier" },
-        { key: "key09", value: "Selma Bouvier" },
-        { key: "key10", value: "Santa's Little Helper" },
-        { key: "key11", value: "Herbert Powell Simpson" },
-        { key: "key12", value: "Amber Simpson" },
-    ]);
-
-    expect(await indexedDB.search("mytable", (value) => value.includes("imps"), 4)).toEqual([
-        {
-            key: "key01",
-            value: "Homer Simpson",
-        },
-        {
-            key: "key02",
-            value: "Marge Simpson",
-        },
-        {
-            key: "key03",
-            value: "Bart Simpson",
-        },
-        {
-            key: "key04",
-            value: "Lisa Simpson",
-        },
-    ]);
-    expect(await indexedDB.search("mytable", (value) => value.includes("imps"))).toEqual([
-        {
-            key: "key01",
-            value: "Homer Simpson",
-        },
-        {
-            key: "key02",
-            value: "Marge Simpson",
-        },
-        {
-            key: "key03",
-            value: "Bart Simpson",
-        },
-        {
-            key: "key04",
-            value: "Lisa Simpson",
-        },
-        {
-            key: "key05",
-            value: "Maggie Simpson",
-        },
-        {
-            key: "key06",
-            value: "Abraham Simpson",
-        },
-        {
-            key: "key07",
-            value: "Mona Simpson",
-        },
-        {
-            key: "key11",
-            value: "Herbert Powell Simpson",
-        },
-    ]);
-    expect(await indexedDB.search("mytable", (value) => value.includes("impz"))).toEqual([]);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("one cache, invalidate", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // populate the table
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
-
-    await indexedDB.invalidate("mytable");
-    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("one cache, invalidate multi-tables", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // populate the table
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    await indexedDB.write("mytable2", "test", "value for 'test'");
-    await indexedDB.write("mytable2", "test2", "value for 'test2'");
-    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
-    expect(await indexedDB.read("mytable2", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
-
-    await indexedDB.invalidate(["mytable", "mytable2"]);
-    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
-    expect(await indexedDB.read("mytable2", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("invalidate multi-tables regex", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // populate the table
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    await indexedDB.write("mytable2", "test", "value for 'test'");
-    await indexedDB.write("mytable2", "test2", "value for 'test2'");
-    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
-    expect(await indexedDB.read("mytable2", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
-
-    await indexedDB.invalidate([/^mytable/]);
-    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
-    expect(await indexedDB.read("mytable2", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("one cache, invalidate all tables", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // populate the table
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable2", "test2", "value for 'test2'");
-    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
-
-    await indexedDB.invalidate();
-    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("one table, call getAllKeys", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // empty table
-    expect(await indexedDB.getAllKeys("mytable")).toEqual([]);
-
-    // populate and call getAllKeys
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB.getAllKeys("mytable")).toEqual(["test", "test2"]);
-
-    // invalidate table and call getAllKeys
-    await indexedDB.invalidate("mytable");
-    expect(await indexedDB.getAllKeys("mytable")).toEqual([]);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("invalidate all tables, empty cache", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    //The indexedDB __DBVersion__ is not invalidated
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-    await execute(indexedDB, (db) => {
-        expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
-    });
-    expect(await indexedDB.read("__DBVersion__", "__version__")).toBe(1);
-    await indexedDB.invalidate();
-    await execute(indexedDB, (db) => {
-        expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
-    });
-    expect(await indexedDB.read("__DBVersion__", "__version__")).toBe(1);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("invalidate non existing table", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-    await execute(indexedDB, (db) => {
-        expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
-    });
-    await indexedDB.invalidate("nonExistingTable");
-    await execute(indexedDB, (db) => {
-        expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
-    });
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("invalidate non existing and existing table", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // populate the table
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
-
-    await indexedDB.invalidate(["nonExistingTable", "mytable"]);
-    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("two caches, invalidate", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
-    const indexedDB1 = new IndexedDB(CACHE_NAME, 1);
-    const indexedDB2 = new IndexedDB(CACHE_NAME, 1);
-
-    // populate the table
-    await indexedDB1.write("mytable", "test", "value for 'test'");
-    await indexedDB1.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB1.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB1.read("mytable", "test2")).toBe("value for 'test2'");
-    expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB2.read("mytable", "test2")).toBe("value for 'test2'");
-
-    await indexedDB1.invalidate("mytable");
-    expect(await indexedDB1.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB1.read("mytable", "test2")).toBe(undefined);
-    expect(await indexedDB2.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB2.read("mytable", "test2")).toBe(undefined);
-
-    await indexedDB1.deleteDatabase();
-    await indexedDB2.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("two caches, new DB version", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB1 = new IndexedDB(CACHE_NAME, 1);
-    // populate the table
-    await indexedDB1.write("mytable", "test", "value for 'test'");
-    await indexedDB1.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB1.read("mytable", "test")).toBe("value for 'test'");
-    expect(await indexedDB1.read("mytable", "test2")).toBe("value for 'test2'");
-
-    // simulate a new page, with a new version number for the given databases
-    const indexedDB2 = new IndexedDB(CACHE_NAME, 2);
-    // DB should not contain tables !
-    await execute(indexedDB2, (db) => {
-        expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
-    });
-    await execute(indexedDB2, (db) => {
-        expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
-    });
-    expect(await indexedDB2.read("mytable", "test")).toBe(undefined);
-    expect(await indexedDB2.read("mytable", "test2")).toBe(undefined);
-
-    await indexedDB1.deleteDatabase();
-    await indexedDB2.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("several tables", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    await indexedDB.write("table1", "test", "value for 'test'");
-    await indexedDB.write("table2", "test2", "value for 'test2'");
-    expect(await indexedDB.read("table1", "test")).toBe("value for 'test'");
-    expect(await indexedDB.read("table2", "test2")).toBe("value for 'test2'");
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("several caches, several tables", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB1 = new IndexedDB(CACHE_NAME, 1);
-    await indexedDB1.write("table1", "test", "value for 'test'");
-    expect(await indexedDB1.read("table1", "test")).toBe("value for 'test'");
-
-    const indexedDB2 = new IndexedDB(CACHE_NAME, 1);
-    await indexedDB2.write("table2", "test", "value for 'test'");
-    expect(await indexedDB2.read("table1", "test")).toBe("value for 'test'");
-    expect(await indexedDB2.read("table2", "test")).toBe("value for 'test'");
-
-    // check that second table has been correctly setup
-    const diskCache3 = new IndexedDB(CACHE_NAME, 1);
-    expect(await diskCache3.read("table2", "test")).toBe("value for 'test'");
-
-    await indexedDB1.deleteDatabase();
-    await indexedDB2.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("getAllEntries", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // empty table
-    expect(await indexedDB.getAllEntries("mytable")).toEqual([]);
-
-    // populate and call getAllEntries
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB.getAllEntries("mytable")).toEqual([
-        { key: "test", value: "value for 'test'" },
-        { key: "test2", value: "value for 'test2'" },
-    ]);
-
-    // invalidate table and call getAllEntries
-    await indexedDB.invalidate("mytable");
-    expect(await indexedDB.getAllEntries("mytable")).toEqual([]);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
-
-test("delete value", async () => {
-    onError(() => deleteCacheDB());
-    await ensureDbIsAbsent();
-
-    const indexedDB = new IndexedDB(CACHE_NAME, 1);
-
-    // populate and call getAllEntries
-    await indexedDB.write("mytable", "test", "value for 'test'");
-    await indexedDB.write("mytable", "test2", "value for 'test2'");
-    expect(await indexedDB.getAllEntries("mytable")).toEqual([
-        { key: "test", value: "value for 'test'" },
-        { key: "test2", value: "value for 'test2'" },
-    ]);
-
-    // delete one value and call getAllEntries
-    await indexedDB.delete("mytable", "test");
-    expect(await indexedDB.getAllEntries("mytable")).toEqual([
-        { key: "test2", value: "value for 'test2'" },
-    ]);
-
-    await indexedDB.deleteDatabase();
-    await ensureDbIsAbsent();
-});
