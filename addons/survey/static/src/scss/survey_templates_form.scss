@@ -62,6 +62,11 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
                     background-color: rgba($primary, 0.4);
                 }
             }
+
+            &:focus-within {
+                outline: 2px solid $primary;
+                outline-offset: -2px;
+            }
         }
 
         .o_survey_choice_img img {
