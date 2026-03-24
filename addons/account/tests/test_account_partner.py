@@ -163,3 +163,92 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.env.user.group_ids -= self.env.ref('account.group_validate_bank_account')
         with self.assertRaisesRegex(UserError, "You do not have the rights to trust"), self.cr.savepoint():
             account.write({'allow_out_payment': True})
+
+    def test_partner_creation_multicompany(self):
+        """ Test the creation of 'res.partner' records in a multi-company environment.
+            The test is focused on 3 company-dependent fields:
+            - Receivable account (property_account_receivable_id): mandatory with 'company_ids' props
+            - Payable account (property_account_payable_id): mandatory with 'company_ids' props
+            - Fiscal position (property_account_position_id): not mandatory with 'company_id' props
+
+            Here is the list of the tested cases:
+            1. The record (res.partner) doesn't belong to any company:
+               a) Fiscal position in the current company => OK
+               b) Fiscal position in a different company than the current one => ERROR
+            2. The record belongs to a different company than the current one:
+               a) Receivable/Payable account and fiscal position belong to the same company => OK
+               b) Receivable/Payable account (company_ids) belong to the current company => ERROR
+               c) Fiscal position (company_id) belongs to the current company => ERROR
+        """
+        company_b = self.setup_other_company(name='Company B')['company']
+
+        # props in current company (i.e. "company_1_data")
+        receivable_a = self.company_data['default_account_receivable']
+        payable_a = self.company_data['default_account_receivable']
+        fiscal_position_a = self.fiscal_pos_a
+
+        # props in "Company B"
+        fiscal_position_b = self.env['account.fiscal.position'].create({
+            'name': 'Fiscal postion B',
+            'company_id': company_b.id,
+        })
+        receivable_b = self.env['account.account'].create({
+            'name': 'Receivable Account B',
+            'code': '1234',
+            'account_type': 'asset_receivable',
+            'company_ids': [Command.set(company_b.ids)],
+        })
+        payable_b = self.env['account.account'].create({
+            'name': 'Payable Account B',
+            'code': '4321',
+            'account_type': 'liability_payable',
+            'company_ids': [Command.set(company_b.ids)],
+        })
+
+        ############################################
+        # The record doesn't belong to any company #
+        ############################################
+
+        # The co-record belongs to the current company => OK
+        self.env['res.partner'].create({
+            'name': 'Partner XYZ',
+            'property_account_position_id': fiscal_position_a.id,
+            'company_id': False,
+        })
+        # The co-record doesn't belong to the current company => ERROR
+        with self.assertRaises(UserError):
+            self.env['res.partner'].create({
+                'name': 'Partner XYZ',
+                'property_account_position_id': fiscal_position_b.id,
+                'company_id': False,
+            })
+
+        ##################################################################
+        # The record belongs to a different company than the current one #
+        ##################################################################
+
+        # All co-records belong to the same company than the record => OK
+        self.env['res.partner'].create({
+            'name': 'Partner XYZ',
+            'property_account_position_id': fiscal_position_b.id,
+            'property_account_receivable_id': receivable_b.id,
+            'property_account_payable_id': payable_b.id,
+            'company_id': company_b.id,
+        })
+        # Receivable and payable accounts belong to the current company => ERROR
+        with self.assertRaises(UserError):
+            self.env['res.partner'].create({
+                'name': 'Partner XYZ',
+                'property_account_receivable_id': receivable_a.id,
+                'property_account_payable_id': payable_a.id,
+                'company_id': company_b.id,
+            })
+        # Fiscal postion belongs to the current company => ERROR
+        with self.assertRaises(UserError):
+            self.env['res.partner'].create({
+                'name': 'Partner XYZ',
+                'property_account_position_id': fiscal_position_a.id,
+                'property_account_receivable_id': receivable_b.id,
+                'property_account_payable_id': payable_b.id,
+                'company_id': company_b.id,
+            })

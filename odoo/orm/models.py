@@ -4064,11 +4064,16 @@ class BaseModel(metaclass=MetaModel):
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
             #      `self.property_account_payable_id.company_id == self.env.company
-            company = self.env.company
+            if 'company_id' in record and record.company_id:
+                companies = record.company_id
+            elif 'company_ids' in record and record.company_ids:
+                companies = record.company_ids
+            else:
+                companies = self.env.company
             for name in property_fields:
                 corecords = record.sudo()[name]
                 if corecords:
-                    domain = corecords._check_company_domain(company)
+                    domain = corecords._check_company_domain(companies)
                     if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
                         inconsistencies.append((record, name, corecords))
 
