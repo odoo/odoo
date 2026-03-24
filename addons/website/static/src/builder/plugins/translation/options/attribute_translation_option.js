@@ -7,7 +7,7 @@ import { TRANSLATABLE_ATTRIBUTES } from "@website/builder/plugins/translation/op
 const VIDEO_DESCRIPTION_ATTRIBUTE = {
     attribute: "title",
     name: _t("Description"),
-    tooltip: _t("Helps screen readers and improves SEO by providing a relevant description."),
+    tooltip: _t("Describes the video for people using screen readers."),
     placeholder: _t("Describe the video"),
 };
 
