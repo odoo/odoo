@@ -646,22 +646,6 @@ test("post message on channel with 'Enter' keyboard shortcut", async () => {
     await contains(".o-mail-Message");
 });
 
-test("leave command on channel", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-NotificationItem.o-active:has(:text('general'))");
-    await insertText(".o-mail-Composer-input", "/leave");
-    await contains(".o-mail-Composer-suggestion strong", { count: 1 });
-    triggerHotkey("Enter");
-    await contains(".o-mail-Composer-input", { value: "/leave " });
-    triggerHotkey("Enter");
-    await click("button:text(Leave Conversation)");
-    await contains(".o-mail-NotificationItem:has(:text('general'))", { count: 0 });
-    await contains(".o-mail-DiscussContent:text('No conversation selected.')");
-});
-
 test("Can handle leave notification from unknown member", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
@@ -680,28 +664,6 @@ test("Can handle leave notification from unknown member", async () => {
     );
     await contains(".o-discuss-ChannelMember:text('Mitchell Admin')");
     await contains(".o-discuss-ChannelMember:text('Dobby')", { count: 0 });
-});
-
-test("leave command on chat", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Chuck Norris" });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-NotificationItem.o-active:has(:text('Chuck Norris'))");
-    await insertText(".o-mail-Composer-input", "/leave");
-    await contains(".o-mail-Composer-suggestion strong", { count: 1 });
-    triggerHotkey("Enter");
-    await contains(".o-mail-Composer-input", { value: "/leave " });
-    triggerHotkey("Enter");
-    await contains(".o-mail-NotificationItem:has(:text('Chuck Norris'))", { count: 0 });
-    await contains(".o-mail-DiscussContent:text('No conversation selected.')");
 });
 
 test("Can post suggestions", async () => {

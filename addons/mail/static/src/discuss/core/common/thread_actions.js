@@ -279,14 +279,9 @@ registerThreadAction("leave", {
      * @param {import("models").DiscussChannel} param0.channel
      * @param {import("models").Store} param0.store
      */
-    condition: ({ channel, owner, store }) =>
-        store.self_user &&
-        channel?.self_member_id &&
-        channel.allowedToLeaveChannelTypes.includes(channel.channel_type) &&
-        channel.group_ids.length === 0 &&
-        !owner.isDiscussContent,
+    condition: ({ channel, owner }) => channel?.isAllowedToLeave && !owner.isDiscussContent,
     icon: "logout",
-    name: _t("Leave Channel"),
+    name: _t("Leave Conversation"),
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel

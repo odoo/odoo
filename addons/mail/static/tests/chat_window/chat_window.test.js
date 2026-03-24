@@ -132,7 +132,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item:text('Add to Favorites')");
     await contains(".o-dropdown-item:text('Voice & Video Settings')");
     await contains(".o-dropdown-item:text('Hide Until New Message')");
-    await contains(".o-dropdown-item:text('Leave Channel')");
+    await contains(".o-dropdown-item:text('Leave Conversation')");
 });
 
 test("chat window: clicking chat correspondent avatars in start message opens avatar card", async () => {
@@ -1006,16 +1006,13 @@ test("Chat window should be closed when leaving the channel", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow-displayName:text('general')");
-    await insertText(".o-mail-Composer-input", "/leave");
-    await contains(".o-mail-NavigableList-active strong:text('leave')");
-    triggerHotkey("Enter");
-    await contains(".o-mail-Composer-input", { value: "/leave " });
-    triggerHotkey("Enter");
-    await click("button:text(Leave Conversation)");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Leave Conversation')");
+    await click(".o_dialog button:text('Leave Conversation')");
     await contains(".o-mail-ChatWindow-displayName:text('general')", { count: 0 });
 });
 
-test("Chat window should be closed when leaving a chat", async () => {
+test("Chat window should be closed when hiding a chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -1030,11 +1027,8 @@ test("Chat window should be closed when leaving a chat", async () => {
     await openMessagingMenu();
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow-displayName:text('Demo')");
-    await insertText(".o-mail-Composer-input", "/leave");
-    await contains(".o-mail-NavigableList-active strong:text('leave')");
-    triggerHotkey("Enter");
-    await contains(".o-mail-Composer-input", { value: "/leave " });
-    triggerHotkey("Enter");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-ChatWindow-displayName:text('Demo')", { count: 0 });
 });
 
