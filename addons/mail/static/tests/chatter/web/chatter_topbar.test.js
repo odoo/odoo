@@ -83,7 +83,9 @@ test("send message toggling", async () => {
     await contains(".o-mail-Composer", { count: 0 });
     await click("button:text('Send message')");
     await contains("button.active:text('Send message')");
-    await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains(
+        ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']"
+    );
     await click("button:text('Send message')");
     await contains("button:not(.active):text('Send message')");
     await contains(".o-mail-Composer", { count: 0 });
@@ -100,7 +102,9 @@ test("log note/send message switching", async () => {
     await click("button:text('Send message')");
     await contains("button.active:text('Send message')");
     await contains("button:not(.active):text('Log note')");
-    await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains(
+        ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']"
+    );
     await click("button:text('Log note')");
     await contains("button:not(.active):text('Send message')");
     await contains("button.active:text('Log note')");

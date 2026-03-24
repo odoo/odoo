@@ -153,7 +153,9 @@ test('"reply to" composer should send message if message replied to is not a not
     await contains(".o-mail-Message");
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
-    await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
+    await contains(
+        ".o-mail-Composer [placeholder='Send a message to all followers and selected contacts…']"
+    );
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer button[title='Send']", { count: 0 });

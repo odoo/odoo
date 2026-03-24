@@ -67,7 +67,9 @@ test("composer text input: basic rendering when posting a message", async () => 
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click("button:text('Send message')");
-    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains(
+        "textarea.o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']"
+    );
 });
 
 test("composer text input: basic rendering when logging note", async () => {
