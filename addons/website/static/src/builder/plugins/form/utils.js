@@ -95,7 +95,37 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
+<<<<<<< 7db74effd7ea4d4bfcad6fb369c86a26b003b618
     const params = { field: { ...field }, defaultName: field.string || _t("Field") };
+||||||| f28c9f8dc5639ff8606b139ca9d384f115b003d3
+    if (field.records && (field.type === "many2one" || field.type === "selection")) {
+        const hasDefault =
+            field.records[0]?.["display_name"] === "" ||
+            field.records.some((value) => value.selected);
+        if (!hasDefault) {
+            field.records.unshift({
+                id: "",
+                display_name: "",
+                selected: true,
+            });
+        }
+    }
+    const params = { field: { ...field }, defaultName: escape(field.string || _t("Field")) };
+=======
+    if (field.records && field.type === "many2one") {
+        const hasDefault =
+            field.records[0]?.["display_name"] === "" ||
+            field.records.some((value) => value.selected);
+        if (!hasDefault) {
+            field.records.unshift({
+                id: "",
+                display_name: "",
+                selected: true,
+            });
+        }
+    }
+    const params = { field: { ...field }, defaultName: escape(field.string || _t("Field")) };
+>>>>>>> 4e8b35c59f40495975f27a66ad5a43fddf23922d
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
     }
