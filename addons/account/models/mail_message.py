@@ -179,7 +179,7 @@ class MailMessage(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _except_audit_log(self):
-        if self.env.context.get('bypass_audit') is bypass_token:
+        if self.env.context.get('bypass_audit') is bypass_token or 'account' in self.pool.uninstalling_modules:
             return
         for message in self:
             if message.account_audit_log_move_id and not message.account_audit_log_move_id.posted_before:
