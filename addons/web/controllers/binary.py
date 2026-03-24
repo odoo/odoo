@@ -87,9 +87,9 @@ class Binary(Controller):
         assets_params = assets_params or {}
         assert isinstance(assets_params, dict)
         debug_assets = unique == 'debug'
+        stream = None
         if unique in ('any', '%'):
             unique = ANY_UNIQUE
-        attachment = None
         if unique != 'debug':
             url = env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
             assert not '%' in url
@@ -102,7 +102,9 @@ class Binary(Controller):
                 ('create_uid', '=', api.SUPERUSER_ID),
             ]
             attachment = env['ir.attachment'].sudo().search(domain, limit=1)
-        if not attachment:
+            if attachment:
+                stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+        if stream is None:
             # try to generate one
             if env.cr.readonly:
                 env.cr.rollback()  # reset state to detect newly generated assets
@@ -135,18 +137,20 @@ class Binary(Controller):
                     if not debug_assets and unique != ANY_UNIQUE \
                             and unique != bundle.get_version(extension if binary else asset_type):
                         return request.redirect(bundle.get_link(asset_type))
+                    attachment = None
                     if css and bundle.stylesheets:
-                        attachment = env['ir.attachment'].sudo().browse(bundle.css().id)
+                        attachment = bundle.css()
                     elif js and bundle.javascripts:
-                        attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
+                        attachment = bundle.js()
                     elif binary and bundle.binaries:
-                        attachment = env['ir.attachment'].sudo().browse(bundle.bin(extension).id)
+                        attachment = bundle.bin(extension)
+                    if attachment:
+                        stream = rw_env['ir.binary']._get_stream_from(attachment, 'raw', filename)
                 except ValueError as e:
                     _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
                     raise request.not_found() from e
-        if not attachment:
+        if stream is None:
             raise request.not_found()
-        stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
         send_file_kwargs = {'as_attachment': False, 'content_security_policy': None}
         if unique and unique != 'debug':
             send_file_kwargs['immutable'] = True
