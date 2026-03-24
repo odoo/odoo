@@ -33,6 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'sa_account_201018',
                 'account_cash_basis_base_account_id': 'sa_account_201030',
                 'account_stock_valuation_id': 'sa_account_131100',
+                'paperformat_id': 'l10n_sa.paperformat_l10n_sa_a4',
             },
         }
 
