@@ -885,6 +885,49 @@ test("display of (not) set in facets", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
 });
 
+test("relative date and datetime fields facets display", async () => {
+    serverState.debug = "1";
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
+    });
+    expect(getFacetTexts()).toEqual([]);
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    // Pick a datetime field and select relative range option
+    await toggleSearchBarMenu();
+    await openAddCustomFilterDialog();
+    await openModelFieldSelectorPopover();
+    await contains(".o_model_field_selector_popover_item_name:contains(create_date)").click();
+    await selectValue("relativeRange");
+
+    // First test -5 months labels
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit(-5, { instantly: true });
+    await contains(`${SELECTORS.valueEditor} select:last`).select('"month"');
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual(["Created on is in last 5 months"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["create_date", ">=", "today -5m"],
+        ["create_date", "<", "today"],
+    ]);
+
+    // Then test +6 weeks weeks labels
+    await contains(".o_searchview_facet_label").click();
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit(6, { instantly: true });
+    await contains(`${SELECTORS.valueEditor} select:last`).select('"week"');
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual(["Created on is in next 6 weeks"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["create_date", ">", "today +1d"],
+        ["create_date", "<=", "today +6w +1d"],
+    ]);
+});
+
 test("Add a custom filter: notification on invalid domain", async () => {
     serverState.debug = "1";
     mockService("notification", {

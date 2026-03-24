@@ -2087,8 +2087,31 @@ test("datetime domain in readonly mode (check localization)", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText(
-        `Datetime\nbetween\n11.03.2023 13:41:23\nand\n11.13.2023 11:45:11`
+        `Datetime\nbetween\nNov 3, 2023, 1:41 PM\nand\nNov 13, 2023, 11:45 AM`
     );
+});
+
+test("relative date domain in readonly mode", async () => {
+    await makeDomainSelector({
+        domain: `["&", ("create_date", ">", "today +1d"), ("create_date", "<=", "today +6d")]`,
+        readonly: true,
+    });
+    await makeDomainSelector({
+        domain: `["&", ("create_date", ">=", "today -5d"), ("create_date", "<", "today")]`,
+        readonly: true,
+    });
+    await makeDomainSelector({
+        domain: `["&", ("create_date", "<=", "today +6d"), ("create_date", ">", "today +1d")]`,
+        readonly: true,
+    });
+    await makeDomainSelector({
+        domain: `["&", ("create_date", "<", "today"), ("create_date", ">=", "today -5d")]`,
+        readonly: true,
+    });
+    expect(".o_tree_editor_condition:eq(0)").toHaveText("Created on\nis in\nnext\n5\ndays");
+    expect(".o_tree_editor_condition:eq(1)").toHaveText("Created on\nis in\nlast\n5\ndays");
+    expect(".o_tree_editor_condition:eq(2)").toHaveText("Created on\nis in\nnext\n5\ndays");
+    expect(".o_tree_editor_condition:eq(3)").toHaveText("Created on\nis in\nlast\n5\ndays");
 });
 
 test("date domain in readonly mode (check localization)", async () => {
