@@ -39,7 +39,10 @@ export class SurveyForm extends Interaction {
         ".o_survey_lang_selector": { "t-on-change": this.onLanguageChange },
         ".o_survey_form_choice_item": { "t-on-change": this.onChoiceItemChange },
         ".o_survey_matrix_btn": { "t-on-click": this.onMatrixButtonClick },
-        "input[type='radio']": { "t-on-click": this.onRadioChoiceClick },
+        "input[type='radio']": { 
+            "t-on-click": this.onRadioChoiceClick,
+            "t-on-keydown": this.onRadioKeyDown,
+        },
         "button[type='submit']": { "t-on-click": this.onSubmit },
         ".o_survey_choice_img img": { "t-on-click": this.onChoiceImageClick },
         ".o_survey_breadcrumb_container .breadcrumb-item a": {
@@ -317,9 +320,13 @@ export class SurveyForm extends Interaction {
             targetEl.classList.contains("o_survey_js_form_other_comment") ||
             targetEl.closest(".o_survey_question").querySelector(".o_survey_comment");
         if (!questionHasComment) {
-            await this.submitForm({
-                showNextPostSubmitPage: !!questionEl.dataset.isPostSubmitQuestion,
-            });
+            if (this.skipAutoSubmit) {
+                this.skipAutoSubmit = false;
+            } else {
+                await this.submitForm({
+                    showNextPostSubmitPage: !!questionEl.dataset.isPostSubmitQuestion,
+                });
+            }
         }
     }
 
@@ -399,6 +406,19 @@ export class SurveyForm extends Interaction {
                 )
                 ?.classList.remove("o_survey_form_choice_item_selected");
             targetEl.classList.add("o_survey_form_choice_item_selected");
+        }
+    }
+
+    /**
+     * Arrow keys natively select the input (browser behavior).
+     * But the "onChoiceItemChange" function then auto-submits the form for single question layout,
+     * which prevents the user to cycle through the options.
+     * 
+     * @param {Event} ev 
+     */
+    onRadioKeyDown(ev) {
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(ev.key)) {
+            this.skipAutoSubmit = true;
         }
     }
 
