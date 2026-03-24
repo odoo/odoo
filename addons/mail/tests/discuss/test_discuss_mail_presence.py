@@ -11,6 +11,7 @@ from itertools import product
 
 from odoo.tests import new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
@@ -80,15 +81,13 @@ class TestMailPresence(WebsocketCase, MailCommon):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
         session = self.authenticate(bob.login, bob.login)
         with self.assertBus(
-            [(bob, "presence")],
-            [
+            BusResult(
+                (bob, "presence"),
+                "mail.record/insert",
                 {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "res.partner": [{"id": bob.partner_id.id, "im_status": "offline"}],
-                    },
+                    "res.partner": [{"id": bob.partner_id.id, "im_status": "offline"}],
                 },
-            ],
+            ),
         ):
             self.make_jsonrpc_request(
                 "/mail/set_manual_im_status",

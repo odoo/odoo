@@ -4,6 +4,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
+from odoo.addons.bus.tests.common import BusResult
 from odoo.tests.common import JsonRpcException, new_test_user
 from odoo.tools.misc import mute_logger
 from odoo.addons.mail.tests.common import freeze_all_time, MailCommon
@@ -183,7 +184,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             "channel_id": discuss_channel.id,
         }
 
-        def get_forward_op_bus_params():
+        def notifications():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
             store = Store(bus_channel=discuss_channel).add(messages[1], "_store_message_fields")
@@ -273,133 +274,133 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             agent_history_id = discuss_channel.livechat_channel_member_history_ids.filtered(
                 lambda h: h.livechat_member_type == "agent"
             ).id
-            channels, message_items = (
-                [
-                    discuss_channel,  # discuss.channel/new_message (transfer)
-                    discuss_channel,  # mail.record/insert
-                    self.user_employee,  # discuss.channel/joined
-                    discuss_channel,  # discuss.channel/new_message (joined)
-                    discuss_channel,  # mail.record/insert
-                    discuss_channel,  # mail.record/insert"
-                    discuss_channel,  # mail.record/insert"
-                    discuss_channel,  # mail.record/insert"
-                    self.user_employee,  # mail.record/insert"
-                ],
-                [
+            return [
+                BusResult(
+                    discuss_channel,
+                    "discuss.channel/new_message",
+                    {"data": transfer_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    discuss_channel,
+                    "mail.record/insert",
                     {
-                        "type": "discuss.channel/new_message",
-                        "payload": {"data": transfer_message_data, "id": discuss_channel.id},
+                        "discuss.channel": [
+                            {
+                                "id": discuss_channel.id,
+                                "livechat_channel_member_history_ids": [
+                                    ["ADD", [agent_history_id]]
+                                ],
+                            },
+                        ],
+                        "im_livechat.channel.member.history": [
+                            {
+                                "channel_id": discuss_channel.id,
+                                "id": agent_history_id,
+                                "livechat_member_type": "agent",
+                                "partner_id": self.partner_employee.id,
+                                "member_id": member_emp.id,
+                            }
+                        ],
+                        "res.partner": [
+                            {
+                                "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
+                                "id": self.partner_employee.id,
+                                "name": "Ernest Employee",
+                                "user_livechat_username": False,
+                                "write_date": fields.Datetime.to_string(
+                                    self.partner_employee.write_date
+                                ),
+                            }
+                        ],
                     },
+                ),
+                BusResult(
+                    self.user_employee,
+                    "discuss.channel/joined",
                     {
-                        "type": "discuss.channel/joined",
-                        "payload": {
-                            "channel_id": discuss_channel.id,
-                            "invite_to_rtc_call": False,
-                            "data": channel_data_join,
-                            "invited_by_user_id": self.env.user.id,
-                        },
+                        "channel_id": discuss_channel.id,
+                        "invite_to_rtc_call": False,
+                        "data": channel_data_join,
+                        "invited_by_user_id": self.env.user.id,
                     },
+                ),
+                BusResult(
+                    discuss_channel,
+                    "discuss.channel/new_message",
+                    {"data": joined_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    discuss_channel,
+                    "mail.record/insert",
                     {
-                        "type": "discuss.channel/new_message",
-                        "payload": {"data": joined_message_data, "id": discuss_channel.id},
-                    },
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "member_count": 3}],
-                            "discuss.channel.member": [
-                                {
-                                    "channel_role": False,
-                                    "create_date": fields.Datetime.to_string(
-                                        member_emp.create_date
-                                    ),
-                                    "id": member_emp.id,
-                                    "livechat_member_type": "agent",
-                                    "last_seen_dt": fields.Datetime.to_string(
-                                        member_emp.last_seen_dt
-                                    ),
-                                    "partner_id": self.partner_employee.id,
-                                    "seen_message_id": False,
-                                    "channel_id": discuss_channel.id,
-                                }
-                            ],
-                            "res.country": [
-                                {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
-                            ],
-                            "res.partner": self._filter_partners_fields(
-                                {
-                                    "active": True,
-                                    "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
-                                    "country_id": self.env.ref("base.be").id,
-                                    "id": self.partner_employee.id,
-                                    "is_public": False,
-                                    "mention_token": self.partner_employee._get_mention_token(),
-                                    "name": "Ernest Employee",
-                                    "user_livechat_username": False,
-                                    "write_date": fields.Datetime.to_string(
-                                        self.partner_employee.write_date
-                                    ),
-                                }
+                        "discuss.channel": [{"id": discuss_channel.id, "member_count": 3}],
+                        "discuss.channel.member": [
+                            {
+                                "channel_role": False,
+                                "create_date": fields.Datetime.to_string(member_emp.create_date),
+                                "id": member_emp.id,
+                                "livechat_member_type": "agent",
+                                "last_seen_dt": fields.Datetime.to_string(member_emp.last_seen_dt),
+                                "partner_id": self.partner_employee.id,
+                                "seen_message_id": False,
+                                "channel_id": discuss_channel.id,
+                            }
+                        ],
+                        "res.country": [
+                            {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
+                        ],
+                        "res.partner": self._filter_partners_fields({
+                            "active": True,
+                            "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
+                            "country_id": self.env.ref("base.be").id,
+                            "id": self.partner_employee.id,
+                            "is_public": False,
+                            "mention_token": self.partner_employee._get_mention_token(),
+                            "name": "Ernest Employee",
+                            "user_livechat_username": False,
+                            "write_date": fields.Datetime.to_string(
+                                self.partner_employee.write_date
                             ),
-                        },
+                        }),
                     },
+                ),
+                BusResult(
+                    discuss_channel,
+                    "mail.record/insert",
                     {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [
-                                {
-                                    "id": discuss_channel.id,
-                                    "livechat_channel_member_history_ids": [
-                                        ["ADD", [agent_history_id]]
-                                    ],
-                                },
-                            ],
-                            "im_livechat.channel.member.history": [
-                                {
-                                    "channel_id": discuss_channel.id,
-                                    "id": agent_history_id,
-                                    "livechat_member_type": "agent",
-                                    "partner_id": self.partner_employee.id,
-                                    "member_id": member_emp.id,
-                                }
-                            ],
-                            "res.partner": [
-                                {
-                                    "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
-                                    "id": self.partner_employee.id,
-                                    "name": "Ernest Employee",
-                                    "user_livechat_username": False,
-                                    "write_date": fields.Datetime.to_string(
-                                        self.partner_employee.write_date
-                                    ),
-                                }
-                            ],
-                        },
+                        "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
+                        "discuss.channel.member": [{"_DELETE": True, "id": member_bot.id}],
                     },
+                ),
+                BusResult(
+                    discuss_channel,
+                    "mail.record/insert",
                     {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
-                            "discuss.channel.member": [{"_DELETE": True, "id": member_bot.id}],
-                        },
+                        "discuss.channel": [
+                            {
+                                "id": discuss_channel.id,
+                                "name": "OdooBot Ernest Employee",
+                            },
+                        ],
                     },
+                ),
+                BusResult(
+                    discuss_channel,
+                    "mail.record/insert",
                     {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [
-                                {
-                                    "id": discuss_channel.id,
-                                    "name": "OdooBot Ernest Employee",
-                                },
-                            ],
-                        },
+                        "ChatbotStep": [
+                            {
+                                "id": [self.step_forward_operator.id, False],
+                                "message": False,
+                                "operatorFound": True,
+                                "scriptStep": self.step_forward_operator.id,
+                            }
+                        ]
                     },
-                    {"type": "mail.record/insert", "payload": channel_data_emp},
-                ],
-            )
-
-            return (channels, message_items)
-        with self.assertBus(get_params=get_forward_op_bus_params):
+                ),
+                BusResult(self.user_employee, "mail.record/insert", channel_data_emp),
+            ]
+        with self.assertBus(notifications):
             discuss_channel._forward_human_operator(self.step_forward_operator, users=self.user_employee)
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
         self.assertEqual(discuss_channel.livechat_agent_partner_ids, self.partner_employee)

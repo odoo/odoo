@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests import tagged
 
@@ -45,10 +47,13 @@ class TestMailManagement(MailCommon, TestRecipients):
         })
 
     def test_mail_notify_cancel(self):
-        self._reset_bus()
-
-        self.test_record.with_user(self.user_employee).notify_cancel_by_type('email')
+        with self.assertBus(lambda: [
+            BusResult(
+                self.msg.author_id.user_ids,
+                "mail.record/insert",
+                Store().add(self.msg, "_store_notification_fields").get_result(),
+            ),
+        ]):
+            self.test_record.with_user(self.user_employee).notify_cancel_by_type('email')
         self.assertEqual((self.notif_p1 | self.notif_p2 | self.notif_p3).mapped('notification_status'),
                          ['canceled', 'canceled', 'sent'])
-
-        self.assertMessageBusNotifications(self.msg)

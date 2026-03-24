@@ -357,7 +357,9 @@ class MailActivity(models.Model):
         # update activity counter
         if original_user_todo_activity_count is not None:
             new_user_todo_activity_count = get_user_todo_activity_count(self)
-            for user in new_user_todo_activity_count.keys() | original_user_todo_activity_count.keys():
+            users = new_user_todo_activity_count.keys() | original_user_todo_activity_count.keys()
+            # sorting users by id to ensure deterministic order because keys views are set-like
+            for user in sorted(users, key=lambda user: user.id):
                 count_diff = new_user_todo_activity_count.get(user, 0) - original_user_todo_activity_count.get(user, 0)
                 if count_diff > 0:
                     user._bus_send("mail.activity/updated", {"activity_created": True, "count_diff": count_diff})

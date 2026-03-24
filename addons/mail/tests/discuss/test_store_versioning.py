@@ -7,6 +7,7 @@ from odoo.http import Controller
 from odoo.tests import new_test_user
 
 from odoo.addons.base.tests.common import HttpCase, TransactionCase
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import DiscussChannel
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.mail.tools.discuss import Store, mail_route, store_version
@@ -144,28 +145,29 @@ class TestStoreVersioning(HttpCase, MailCase):
             "current_xact_id": current_xact_id,
         }
         with self.assertBus(
-            [bob, general],
             [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+                BusResult(
+                    bob,
+                    "mail.record/insert",
+                    {
                         "res.users": [{"id": bob.id, "name": "bob (base.group_user)"}],
                         "__store_version__": {
                             "snapshot": expected_snapshot,
                             "written_fields_by_record": {},
                         },
                     },
-                },
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+                ),
+                BusResult(
+                    general,
+                    "mail.record/insert",
+                    {
                         "discuss.channel": [{"id": general.id, "name": "general"}],
                         "__store_version__": {
                             "snapshot": expected_snapshot,
                             "written_fields_by_record": {},
                         },
                     },
-                },
+                ),
             ],
             show_store_versioning=True,
         ):

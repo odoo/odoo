@@ -4,6 +4,7 @@ from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 from odoo import exceptions, tools
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
@@ -1173,14 +1174,15 @@ class TestDiscuss(MailCommon, TestRecipients):
             # mark all as read clear needactions
             msg1 = self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[employee_partner.id])
             with self.assertBus(
-                    [self.user_employee],
-                    message_items=[{
-                        'type': 'mail.message/mark_as_read',
-                        'payload': {
-                            'message_ids': [msg1.id],
-                            'needaction_inbox_counter': 0,
-                        },
-                    }]):
+                BusResult(
+                    self.user_employee,
+                    "mail.message/mark_as_read",
+                    {
+                        "message_ids": [msg1.id],
+                        "needaction_inbox_counter": 0,
+                    },
+                ),
+            ):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
@@ -1199,14 +1201,15 @@ class TestDiscuss(MailCommon, TestRecipients):
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
             with self.assertBus(
-                    [self.user_employee],
-                    message_items=[{
-                        'type': 'mail.message/mark_as_read',
-                        'payload': {
-                            'message_ids': [msg2.id],
-                            'needaction_inbox_counter': 0,
-                        },
-                    }]):
+                BusResult(
+                    self.user_employee,
+                    "mail.message/mark_as_read",
+                    {
+                        "message_ids": [msg2.id],
+                        "needaction_inbox_counter": 0,
+                    },
+                )
+            ):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")

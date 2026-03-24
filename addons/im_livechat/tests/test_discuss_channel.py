@@ -6,7 +6,9 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.tests import new_test_user, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.mail.tools.discuss import Store
 
 
 class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
@@ -81,11 +83,11 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
-            [(channel, "internal_users")],
             [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    {
                         "discuss.channel": [
                             {
                                 "id": channel.id,
@@ -93,7 +95,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                             }
                         ]
                     },
-                }
+                ),
             ],
         ):
             channel.description = "Description of the conversation"
@@ -123,11 +125,11 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
-            [(channel, "internal_users")],
             [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    {
                         "discuss.channel": [
                             {
                                 "id": channel.id,
@@ -138,7 +140,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                             }
                         ]
                     },
-                }
+                ),
             ],
         ):
             channel.livechat_note = "This is a note for the internal user."
@@ -151,8 +153,24 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         group = self.env.ref("im_livechat.im_livechat_group_user")
+
         with self.assertBus(
-            [(channel, "internal_users"), (group, "LOOKING_FOR_HELP")],
+            lambda: [
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    Store(bus_channel=channel, bus_subchannel="internal_users")
+                    .add(channel, ["livechat_status", "livechat_looking_for_help_since_dt"])
+                    .get_result(),
+                ),
+                BusResult(
+                    (group, "LOOKING_FOR_HELP"),
+                    "mail.record/insert",
+                    Store(bus_channel=group, bus_subchannel="LOOKING_FOR_HELP")
+                    .add(channel, "_store_channel_fields")
+                    .get_result(),
+                ),
+            ]
         ):
             channel.livechat_status = "need_help"
 

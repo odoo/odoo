@@ -22,8 +22,8 @@ from urllib.parse import urlparse, urlencode, parse_qsl
 from odoo import tools, fields
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
-from odoo.addons.bus.models.bus import BusBus, channel_with_db, json_dump
-from odoo.addons.bus.tests.common import BusCase
+from odoo.addons.bus.models.bus import BusBus
+from odoo.addons.bus.tests.common import BusCase, BusResult
 from odoo.addons.mail.models import mail_thread
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import MailMessage
@@ -1419,51 +1419,6 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             self.assertEqual(self._new_msgs, done_msgs, 'Mail: invalid message creation (%s) / expected (%s)' % (len(self._new_msgs), len(done_msgs)))
             self.assertEqual(self._new_notifs, done_notifs, 'Mail: invalid notification creation (%s) / expected (%s)' % (len(self._new_notifs), len(done_notifs)))
 
-    def _pop_store_version(self, data):
-        if not isinstance(data, dict):
-            return
-        data.pop("__store_version__", False)
-        for value in data.values():
-            self._pop_store_version(value)
-
-    @contextmanager
-    def assertBus(self, channels=None, message_items=None, get_params=None, show_store_versioning=False):
-        """Check content of bus notifications.
-        Params might not be determined in advance (newly created id, create_date, ...), in this case
-        the `get_params` function can be given to return the expected values, called after the
-        execution of the tested code.
-        """
-        def format_notif(notif):
-            if not notif.message:
-                return ""
-            return f"{tuple(json.loads(notif.channel))},  # {json.loads(notif.message).get('type')}"
-
-        def notif_to_string(notif):
-            notification_message = json.loads(notif.message)
-            if not show_store_versioning:
-                self._pop_store_version(notification_message)
-            return f"{format_notif(notif)}\n{json.dumps(notification_message)}"
-
-        self._reset_bus()
-        try:
-            with self.mock_bus():
-                yield
-        finally:
-            if get_params:
-                channels, message_items = get_params()
-            found_bus_notifs = self.assertBusNotifications(
-                channels,
-                message_items=message_items,
-                show_store_versioning=show_store_versioning,
-            )
-            new_lines = "\n\n"
-            self.assertEqual(
-                self._new_bus_notifs,
-                found_bus_notifs,
-                f"\n\nExpected:\n{new_lines[0].join(found_bus_notifs.mapped(format_notif))}"
-                f"\n\nResult:\n{new_lines.join(self._new_bus_notifs.mapped(notif_to_string))}",
-            )
-
     @contextmanager
     def assertMsgWithoutNotifications(self, mail_unlink_sent=False):
         try:
@@ -1679,7 +1634,14 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             # check bus notifications that should be sent (hint: message author, multiple notifications)
             bus_notifications = message.notification_ids._filtered_for_web_client().filtered(lambda n: n.notification_status == 'exception')
             if bus_notifications:
-                self.assertMessageBusNotifications(message, bus_notif_count)
+                expected = [
+                    BusResult(
+                        message.author_id.user_ids,
+                        "mail.record/insert",
+                        Store().add(message, "_store_notification_fields").get_result(),
+                    )
+                ] * bus_notif_count
+                self._assertBusNotifications(expected)
 
             # check emails that should be sent (hint: mail.mail per group, email par recipient)
             email_values = {
@@ -1734,96 +1696,6 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                 self.assertNoMail(partners, email_to=email_addrs, mail_message=message, author=message.author_id)
 
         return done_msgs, done_notifs
-
-    def assertMessageBusNotifications(self, message, count=1):
-        """Asserts that the expected notification updates have been sent on the
-        bus for the given message."""
-        self.assertBusNotifications([message.author_id.user_ids] * count, [{
-            "type": "mail.record/insert",
-            "payload": Store().add(message, "_store_notification_fields").get_result(),
-        }], check_unique=False)
-
-    def assertBusNotifications(self, channels, message_items=None, check_unique=True, show_store_versioning=False):
-        """ Check bus notifications content. Mandatory and basic check is about
-        channels being notified. Content check is optional.
-
-        EXPECTED
-        :param channels: list of expected bus channels, like [self.user_employee]
-        :param message_items: if given, list of expected message making a valid
-          pair (channel, message) to be found in bus.bus, like [
-            {'type': 'mail.message/notification_update',
-             'elements': {self.msg.id: {
-                'message_id': self.msg.id,
-                'message_type': 'sms',
-                'notifications': {...},
-                ...
-              }}
-            }, {...}]
-        """
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        channels_with_db = [json_dump(channel_with_db(self.cr.dbname, c)) for c in channels]
-        bus_notifs = self.env["bus.bus"].sudo().search([("channel", "in", channels_with_db)])
-        new_lines = "\n\n"
-
-        def notif_to_string(notif):
-            notification_message = json.loads(notif.message)
-            if not show_store_versioning:
-                self._pop_store_version(notification_message)
-            return f"{notif.channel}\n{json.dumps(notification_message)}"
-
-        self.assertEqual(
-            bus_notifs.mapped("channel"),
-            channels_with_db,
-            f"\n\nExpected:\n{new_lines[0].join(channels_with_db)}"
-            f"\n\nReturned:\n{new_lines.join([notif_to_string(notif) for notif in bus_notifs])}",
-        )
-        for expected in message_items or []:
-            for notification in bus_notifs:
-                notification_message = json.loads(notification.message)
-                if not show_store_versioning:
-                    self._pop_store_version(notification_message)
-                if json.loads(json_dump(expected)) == notification_message:
-                    break
-            else:
-                matching_notifs = [n for n in bus_notifs if json.loads(n.message).get("type") == expected.get("type")]
-                if len(matching_notifs) == 1:
-                    notification_message = json.loads(matching_notifs[0].message)
-                    if not show_store_versioning:
-                        self._pop_store_version(notification_message)
-                    self.assertEqual(expected, json.loads(matching_notifs[0].message))
-                if not matching_notifs:
-                    matching_notifs = bus_notifs
-                raise AssertionError(
-                    "No notification was found with the expected value.\n\n"
-                    f"Expected:\n{json_dump(expected)}\n\n"
-                    f"Returned:\n{new_lines.join([notif_to_string(notif) for notif in matching_notifs])}"
-                )
-        if check_unique:
-            self.assertEqual(len(bus_notifs), len(channels))
-        return bus_notifs
-
-    @contextmanager
-    def assertBusNotificationType(self, expected_pairs):
-        """Check bus notifications type.
-        :param expected_pairs: list of tuples containing the expected bus channel and bus
-        notification type"""
-        try:
-            with self.mock_bus():
-                yield
-        finally:
-            channels_with_db = [
-                json_dump(channel_with_db(self.cr.dbname, channel))
-                for channel, _ in expected_pairs
-            ]
-            bus_notifs = self.env["bus.bus"].sudo().search([("channel", "in", channels_with_db)])
-            notif_types = [
-                (json.loads(notif.message).get("type"), notif.channel) for notif in bus_notifs
-            ]
-            expected_notif_types = [
-                (notif_type, json_dump(channel_with_db(self.cr.dbname, channel)))
-                for channel, notif_type in expected_pairs
-            ]
-            self.assertEqual(notif_types, expected_notif_types)
 
     def assertNotified(self, message, recipients_info, is_complete=False):
         """ Lightweight check for notifications (mail.notification).
@@ -2127,6 +1999,7 @@ class MailCommon(MailCase):
                     self.env.registry[data["model"]], self.env.registry["rating.mixin"]
                 )
             ):
+                data.pop("rating_id", None)
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
         return list(threads_data)

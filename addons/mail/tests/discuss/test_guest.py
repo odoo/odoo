@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
 
 
@@ -16,28 +17,53 @@ class TestGuest(MailCase):
         channel_1._add_members(guests=guest)
         channel_2._add_members(guests=guest)
 
-        def get_guest_bus_params():
+        def notifications():
             guest_write_date = fields.Datetime.to_string(guest.write_date)
-            message = {
-                "type": "mail.record/insert",
-                "payload": {
-                    "mail.guest": [
-                        {
-                            "avatar_128_access_token": guest._get_avatar_128_access_token(),
-                            "id": guest.id,
-                            "name": "Guest Name Updated",
-                            "write_date": guest_write_date,
-                        },
-                    ],
-                },
-            }
+            return [
+                BusResult(
+                    channel_1,
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            {
+                                "avatar_128_access_token": guest._get_avatar_128_access_token(),
+                                "id": guest.id,
+                                "name": "Guest Name Updated",
+                                "write_date": guest_write_date,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
+                    channel_2,
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            {
+                                "avatar_128_access_token": guest._get_avatar_128_access_token(),
+                                "id": guest.id,
+                                "name": "Guest Name Updated",
+                                "write_date": guest_write_date,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
+                    guest,
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            {
+                                "avatar_128_access_token": guest._get_avatar_128_access_token(),
+                                "id": guest.id,
+                                "name": "Guest Name Updated",
+                                "write_date": guest_write_date,
+                            },
+                        ],
+                    },
+                ),
+            ]
 
-            return (
-                [channel_1, channel_2, guest],
-                [message, message, message],
-            )
-
-        self._reset_bus()
-        with self.assertBus(get_params=get_guest_bus_params):
+        with self.assertBus(notifications):
             guest._update_name("Guest Name Updated")
         self.assertEqual(guest.name, "Guest Name Updated")

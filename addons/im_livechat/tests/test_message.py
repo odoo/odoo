@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.exceptions import AccessError
 from odoo.tests.common import users
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
@@ -228,90 +229,85 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             )["channel_id"]
         )
 
-        def _get_feedback_bus():
+        def notifications():
             message = self.env["mail.message"].sudo().search([], order="id desc", limit=1)
-            return (
-                [
-                    self.env.user,  # unread counter/new message separator (not asserted below)
-                    channel,  # new_message
-                ],
-                [
+            return [
+                BusResult(self.env.user, "mail.record/insert"),
+                BusResult(
+                    channel,
+                    "discuss.channel/new_message",
                     {
-                        "type": "discuss.channel/new_message",
-                        "payload": {
-                            "data": {
-                                "mail.message": self._filter_messages_fields(
-                                    {
-                                        "attachment_ids": [],
-                                        "author_guest_id": False,
-                                        "author_id": self.env.user.partner_id.id,
-                                        "body": [
-                                            "markup",
-                                            '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>\nGood service</div>',
-                                        ],
-                                        "create_date": fields.Datetime.to_string(
-                                            message.create_date
-                                        ),
-                                        "date": fields.Datetime.to_string(message.date),
-                                        "default_subject": "Chell Gladys Ernest Employee",
-                                        "id": message.id,
-                                        "incoming_email_cc": False,
-                                        "incoming_email_to": False,
-                                        "message_link_preview_ids": [],
-                                        "message_type": "notification",
-                                        "model": "discuss.channel",
-                                        "parent_id": False,
-                                        "partner_ids": [],
-                                        "pinned_at": False,
-                                        "rating_id": False,
-                                        "reactions": [],
-                                        "record_name": "Chell Gladys Ernest Employee",
-                                        "res_id": channel.id,
-                                        "scheduledDatetime": False,
-                                        "subject": False,
-                                        "subtype_id": self.env.ref("mail.mt_comment").id,
-                                        "thread": {"id": channel.id, "model": "discuss.channel"},
-                                        "write_date": fields.Datetime.to_string(message.write_date),
-                                    },
-                                ),
-                                "mail.message.subtype": [
-                                    {"description": False, "id": self.env.ref("mail.mt_comment").id}
-                                ],
-                                "mail.thread": self._filter_threads_fields(
-                                    {
-                                        "display_name": "Chell Gladys Ernest Employee",
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
-                                    },
-                                ),
-                                "res.partner": self._filter_partners_fields(
-                                    {
-                                        "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
-                                        "id": self.env.user.partner_id.id,
-                                        "is_company": False,
-                                        "main_user_id": self.env.user.id,
-                                        "name": "Chell Gladys",
-                                        "user_livechat_username": False,
-                                        "write_date": fields.Datetime.to_string(
-                                            self.env.user.write_date
-                                        ),
-                                    },
-                                ),
-                                "res.users": self._filter_users_fields(
-                                    {
-                                        "id": self.env.user.id,
-                                        "partner_id": self.env.user.partner_id.id,
-                                        "share": True,
-                                    },
-                                ),
-                            },
-                            "id": channel.id,
+                        "data": {
+                            "mail.message": self._filter_messages_fields(
+                                {
+                                    "attachment_ids": [],
+                                    "author_guest_id": False,
+                                    "author_id": self.env.user.partner_id.id,
+                                    "body": [
+                                        "markup",
+                                        '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>\nGood service</div>',
+                                    ],
+                                    "create_date": fields.Datetime.to_string(message.create_date),
+                                    "date": fields.Datetime.to_string(message.date),
+                                    "default_subject": "Chell Gladys Ernest Employee",
+                                    "id": message.id,
+                                    "incoming_email_cc": False,
+                                    "incoming_email_to": False,
+                                    "message_link_preview_ids": [],
+                                    "message_type": "notification",
+                                    "model": "discuss.channel",
+                                    "parent_id": False,
+                                    "partner_ids": [],
+                                    "pinned_at": False,
+                                    "rating_id": False,
+                                    "reactions": [],
+                                    "record_name": "Chell Gladys Ernest Employee",
+                                    "res_id": channel.id,
+                                    "scheduledDatetime": False,
+                                    "subject": False,
+                                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                                    "thread": {"id": channel.id, "model": "discuss.channel"},
+                                    "write_date": fields.Datetime.to_string(message.write_date),
+                                },
+                            ),
+                            "mail.message.subtype": [
+                                {"description": False, "id": self.env.ref("mail.mt_comment").id},
+                            ],
+                            "mail.thread": self._filter_threads_fields(
+                                {
+                                    "display_name": "Chell Gladys Ernest Employee",
+                                    "id": channel.id,
+                                    "model": "discuss.channel",
+                                    "rating_id": False,
+                                },
+                            ),
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
+                                    "id": self.env.user.partner_id.id,
+                                    "is_company": False,
+                                    "main_user_id": self.env.user.id,
+                                    "name": "Chell Gladys",
+                                    "user_livechat_username": False,
+                                    "write_date": fields.Datetime.to_string(
+                                        self.env.user.write_date,
+                                    ),
+                                },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {
+                                    "id": self.env.user.id,
+                                    "partner_id": self.env.user.partner_id.id,
+                                    "share": True,
+                                },
+                            ),
                         },
+                        "id": channel.id,
                     },
-                ],
-            )
+                ),
+            ]
 
-        with self.assertBus(get_params=_get_feedback_bus):
+        with self.assertBus(notifications):
             self.make_jsonrpc_request(
                 "/im_livechat/feedback",
                 {

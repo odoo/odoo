@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import Form, users, warmup, tagged
@@ -1624,7 +1625,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             lambda f: f.partner_id == self.user_follower_emp_inbox.partner_id
         )
 
-        def get_bus_params():
+        def notifications():
             message = self.env["mail.message"].search([], order="id desc", limit=1)
             notif_1 = message.notification_ids.filtered(
                 lambda n: n.res_partner_id == self.user_emp_inbox.partner_id
@@ -1632,250 +1633,245 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             notif_2 = message.notification_ids.filtered(
                 lambda n: n.res_partner_id == self.user_follower_emp_inbox.partner_id
             )
-            return (
-                [self.user_emp_inbox, self.user_follower_emp_inbox],
-                [
+            return [
+                BusResult(
+                    self.user_emp_inbox,
+                    "mail.message/inbox",
                     {
-                        "type": "mail.message/inbox",
-                        "payload": {
-                            "message_id": message.id,
-                            "store_data": {
-                                "mail.followers": [
-                                    {
-                                        "id": follower_1.id,
-                                        "is_active": True,
-                                        "partner_id": self.user_emp_inbox.partner_id.id,
-                                    },
-                                ],
-                                "mail.message": self._filter_messages_fields(
-                                    {
-                                        "attachment_ids": [],
-                                        "author_guest_id": False,
-                                        "author_id": self.env.user.partner_id.id,
-                                        "body": [
-                                            "markup",
-                                            "<p>Test Post Performances with multiple inbox ping!</p>",
-                                        ],
-                                        "create_date": fields.Datetime.to_string(
-                                            message.create_date
-                                        ),
-                                        "date": fields.Datetime.to_string(message.date),
-                                        "default_subject": "Test",
-                                        "email_from": '"OdooBot" <odoobot@example.com>',
-                                        "id": message.id,
-                                        "incoming_email_cc": False,
-                                        "incoming_email_to": False,
-                                        "message_link_preview_ids": [],
-                                        "message_type": "comment",
-                                        "model": "mail.test.simple",
-                                        "needaction": True,
-                                        "notification_ids": [notif_1.id, notif_2.id],
-                                        "partner_ids": [],
-                                        "pinned_at": False,
-                                        "rating_id": False,
-                                        "reactions": [],
-                                        "record_name": "Test",
-                                        "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
-                                        "res_id": record.id,
-                                        "scheduledDatetime": False,
-                                        "is_bookmarked": False,
-                                        "subject": False,
-                                        "subtype_id": self.env.ref("mail.mt_comment").id,
-                                        "thread": {"id": record.id, "model": "mail.test.simple"},
-                                        "trackingValues": [],
-                                        "write_date": fields.Datetime.to_string(message.write_date),
-                                    },
-                                ),
-                                "mail.message.subtype": [
-                                    {
-                                        "description": False,
-                                        "id": self.env.ref("mail.mt_comment").id,
-                                    },
-                                ],
-                                "mail.notification": [
-                                    {
-                                        "mail_email_address": False,
-                                        "failure_type": False,
-                                        "id": notif_1.id,
-                                        "mail_message_id": message.id,
-                                        "notification_status": "sent",
-                                        "notification_type": "inbox",
-                                        "res_partner_id": self.user_emp_inbox.partner_id.id,
-                                    },
-                                    {
-                                        "mail_email_address": False,
-                                        "failure_type": False,
-                                        "id": notif_2.id,
-                                        "mail_message_id": message.id,
-                                        "notification_status": "sent",
-                                        "notification_type": "inbox",
-                                        "res_partner_id": self.user_follower_emp_inbox.partner_id.id,
-                                    },
-                                ],
-                                "mail.thread": self._filter_threads_fields(
-                                    {
-                                        "display_name": "Test",
-                                        "id": record.id,
-                                        "model": "mail.test.simple",
-                                        "module_icon": "/base/static/description/icon.png",
-                                        "selfFollower": follower_1.id,
-                                    },
-                                ),
-                                "res.partner": self._filter_partners_fields(
-                                    {
-                                        "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
-                                        "id": self.env.user.partner_id.id,
-                                        "is_company": False,
-                                        "main_user_id": self.env.user.id,
-                                        "name": "OdooBot",
-                                        "write_date": fields.Datetime.to_string(
-                                            self.env.user.partner_id.write_date
-                                        ),
-                                    },
-                                    {
-                                        "email": self.user_emp_inbox.partner_id.email,
-                                        "id": self.user_emp_inbox.partner_id.id,
-                                        "name": "Ignasse Inbox",
-                                    },
-                                    {
-                                        "email": self.user_follower_emp_inbox.partner_id.email,
-                                        "id": self.user_follower_emp_inbox.partner_id.id,
-                                        "name": "Isabelle Follower Inbox",
-                                    },
-                                ),
-                                "res.users": self._filter_users_fields(
-                                    {
-                                        "id": self.env.user.id,
-                                        "partner_id": self.env.user.partner_id.id,
-                                        "share": False,
-                                    },
-                                ),
-                            },
+                        "message_id": message.id,
+                        "store_data": {
+                            "mail.followers": [
+                                {
+                                    "id": follower_1.id,
+                                    "is_active": True,
+                                    "partner_id": self.user_emp_inbox.partner_id.id,
+                                },
+                            ],
+                            "mail.message": self._filter_messages_fields(
+                                {
+                                    "attachment_ids": [],
+                                    "author_guest_id": False,
+                                    "author_id": self.env.user.partner_id.id,
+                                    "body": [
+                                        "markup",
+                                        "<p>Test Post Performances with multiple inbox ping!</p>",
+                                    ],
+                                    "create_date": fields.Datetime.to_string(message.create_date),
+                                    "date": fields.Datetime.to_string(message.date),
+                                    "default_subject": "Test",
+                                    "email_from": '"OdooBot" <odoobot@example.com>',
+                                    "id": message.id,
+                                    "incoming_email_cc": False,
+                                    "incoming_email_to": False,
+                                    "message_link_preview_ids": [],
+                                    "message_type": "comment",
+                                    "model": "mail.test.simple",
+                                    "needaction": True,
+                                    "notification_ids": [notif_1.id, notif_2.id],
+                                    "partner_ids": [],
+                                    "pinned_at": False,
+                                    "rating_id": False,
+                                    "reactions": [],
+                                    "record_name": "Test",
+                                    "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
+                                    "res_id": record.id,
+                                    "scheduledDatetime": False,
+                                    "is_bookmarked": False,
+                                    "subject": False,
+                                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                                    "thread": {"id": record.id, "model": "mail.test.simple"},
+                                    "trackingValues": [],
+                                    "write_date": fields.Datetime.to_string(message.write_date),
+                                },
+                            ),
+                            "mail.message.subtype": [
+                                {
+                                    "description": False,
+                                    "id": self.env.ref("mail.mt_comment").id,
+                                },
+                            ],
+                            "mail.notification": [
+                                {
+                                    "mail_email_address": False,
+                                    "failure_type": False,
+                                    "id": notif_1.id,
+                                    "mail_message_id": message.id,
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "res_partner_id": self.user_emp_inbox.partner_id.id,
+                                },
+                                {
+                                    "mail_email_address": False,
+                                    "failure_type": False,
+                                    "id": notif_2.id,
+                                    "mail_message_id": message.id,
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "res_partner_id": self.user_follower_emp_inbox.partner_id.id,
+                                },
+                            ],
+                            "mail.thread": self._filter_threads_fields(
+                                {
+                                    "display_name": "Test",
+                                    "id": record.id,
+                                    "model": "mail.test.simple",
+                                    "module_icon": "/base/static/description/icon.png",
+                                    "selfFollower": follower_1.id,
+                                },
+                            ),
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
+                                    "id": self.env.user.partner_id.id,
+                                    "is_company": False,
+                                    "main_user_id": self.env.user.id,
+                                    "name": "OdooBot",
+                                    "write_date": fields.Datetime.to_string(
+                                        self.env.user.partner_id.write_date
+                                    ),
+                                },
+                                {
+                                    "email": self.user_emp_inbox.partner_id.email,
+                                    "id": self.user_emp_inbox.partner_id.id,
+                                    "name": "Ignasse Inbox",
+                                },
+                                {
+                                    "email": self.user_follower_emp_inbox.partner_id.email,
+                                    "id": self.user_follower_emp_inbox.partner_id.id,
+                                    "name": "Isabelle Follower Inbox",
+                                },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {
+                                    "id": self.env.user.id,
+                                    "partner_id": self.env.user.partner_id.id,
+                                    "share": False,
+                                },
+                            ),
                         },
                     },
+                ),
+                BusResult(
+                    self.user_follower_emp_inbox,
+                    "mail.message/inbox",
                     {
-                        "type": "mail.message/inbox",
-                        "payload": {
-                            "message_id": message.id,
-                            "store_data": {
-                                "mail.followers": [
-                                    {
-                                        "id": follower_2.id,
-                                        "is_active": True,
-                                        "partner_id": self.user_follower_emp_inbox.partner_id.id,
-                                    },
-                                ],
-                                "mail.message": self._filter_messages_fields(
-                                    {
-                                        "attachment_ids": [],
-                                        "author_guest_id": False,
-                                        "author_id": self.env.user.partner_id.id,
-                                        "body": [
-                                            "markup",
-                                            "<p>Test Post Performances with multiple inbox ping!</p>",
-                                        ],
-                                        "create_date": fields.Datetime.to_string(
-                                            message.create_date
-                                        ),
-                                        "date": fields.Datetime.to_string(message.date),
-                                        "default_subject": "Test",
-                                        "email_from": '"OdooBot" <odoobot@example.com>',
-                                        "id": message.id,
-                                        "incoming_email_cc": False,
-                                        "incoming_email_to": False,
-                                        "message_link_preview_ids": [],
-                                        "message_type": "comment",
-                                        "model": "mail.test.simple",
-                                        "needaction": True,
-                                        "notification_ids": [notif_1.id, notif_2.id],
-                                        "partner_ids": [],
-                                        "pinned_at": False,
-                                        "rating_id": False,
-                                        "reactions": [],
-                                        "record_name": "Test",
-                                        "res_id": record.id,
-                                        "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
-                                        "scheduledDatetime": False,
-                                        "is_bookmarked": False,
-                                        "subject": False,
-                                        "subtype_id": self.env.ref("mail.mt_comment").id,
-                                        "thread": {"id": record.id, "model": "mail.test.simple"},
-                                        "trackingValues": [],
-                                        "write_date": fields.Datetime.to_string(message.write_date),
-                                    },
-                                ),
-                                "mail.message.subtype": [
-                                    {
-                                        "description": False,
-                                        "id": self.env.ref("mail.mt_comment").id,
-                                    },
-                                ],
-                                "mail.notification": [
-                                    {
-                                        "mail_email_address": False,
-                                        "failure_type": False,
-                                        "id": notif_1.id,
-                                        "mail_message_id": message.id,
-                                        "notification_status": "sent",
-                                        "notification_type": "inbox",
-                                        "res_partner_id": self.user_emp_inbox.partner_id.id,
-                                    },
-                                    {
-                                        "mail_email_address": False,
-                                        "failure_type": False,
-                                        "id": notif_2.id,
-                                        "mail_message_id": message.id,
-                                        "notification_status": "sent",
-                                        "notification_type": "inbox",
-                                        "res_partner_id": self.user_follower_emp_inbox.partner_id.id,
-                                    },
-                                ],
-                                "mail.thread": self._filter_threads_fields(
-                                    {
-                                        "display_name": "Test",
-                                        "id": record.id,
-                                        "model": "mail.test.simple",
-                                        "module_icon": "/base/static/description/icon.png",
-                                        "selfFollower": follower_2.id,
-                                    },
-                                ),
-                                "res.partner": self._filter_partners_fields(
-                                    {
-                                        "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
-                                        "id": self.env.user.partner_id.id,
-                                        "is_company": False,
-                                        "main_user_id": self.env.user.id,
-                                        "name": "OdooBot",
-                                        "write_date": fields.Datetime.to_string(
-                                            self.env.user.partner_id.write_date
-                                        ),
-                                    },
-                                    {
-                                        "email": self.user_emp_inbox.partner_id.email,
-                                        "id": self.user_emp_inbox.partner_id.id,
-                                        "name": "Ignasse Inbox",
-                                    },
-                                    {
-                                        "email": self.user_follower_emp_inbox.partner_id.email,
-                                        "id": self.user_follower_emp_inbox.partner_id.id,
-                                        "name": "Isabelle Follower Inbox",
-                                    },
-                                ),
-                                "res.users": self._filter_users_fields(
-                                    {
-                                        "id": self.env.user.id,
-                                        "partner_id": self.env.user.partner_id.id,
-                                        "share": False,
-                                    },
-                                ),
-                            },
+                        "message_id": message.id,
+                        "store_data": {
+                            "mail.followers": [
+                                {
+                                    "id": follower_2.id,
+                                    "is_active": True,
+                                    "partner_id": self.user_follower_emp_inbox.partner_id.id,
+                                },
+                            ],
+                            "mail.message": self._filter_messages_fields(
+                                {
+                                    "attachment_ids": [],
+                                    "author_guest_id": False,
+                                    "author_id": self.env.user.partner_id.id,
+                                    "body": [
+                                        "markup",
+                                        "<p>Test Post Performances with multiple inbox ping!</p>",
+                                    ],
+                                    "create_date": fields.Datetime.to_string(message.create_date),
+                                    "date": fields.Datetime.to_string(message.date),
+                                    "default_subject": "Test",
+                                    "email_from": '"OdooBot" <odoobot@example.com>',
+                                    "id": message.id,
+                                    "incoming_email_cc": False,
+                                    "incoming_email_to": False,
+                                    "message_link_preview_ids": [],
+                                    "message_type": "comment",
+                                    "model": "mail.test.simple",
+                                    "needaction": True,
+                                    "notification_ids": [notif_1.id, notif_2.id],
+                                    "partner_ids": [],
+                                    "pinned_at": False,
+                                    "rating_id": False,
+                                    "reactions": [],
+                                    "record_name": "Test",
+                                    "res_id": record.id,
+                                    "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
+                                    "scheduledDatetime": False,
+                                    "is_bookmarked": False,
+                                    "subject": False,
+                                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                                    "thread": {"id": record.id, "model": "mail.test.simple"},
+                                    "trackingValues": [],
+                                    "write_date": fields.Datetime.to_string(message.write_date),
+                                },
+                            ),
+                            "mail.message.subtype": [
+                                {
+                                    "description": False,
+                                    "id": self.env.ref("mail.mt_comment").id,
+                                },
+                            ],
+                            "mail.notification": [
+                                {
+                                    "mail_email_address": False,
+                                    "failure_type": False,
+                                    "id": notif_1.id,
+                                    "mail_message_id": message.id,
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "res_partner_id": self.user_emp_inbox.partner_id.id,
+                                },
+                                {
+                                    "mail_email_address": False,
+                                    "failure_type": False,
+                                    "id": notif_2.id,
+                                    "mail_message_id": message.id,
+                                    "notification_status": "sent",
+                                    "notification_type": "inbox",
+                                    "res_partner_id": self.user_follower_emp_inbox.partner_id.id,
+                                },
+                            ],
+                            "mail.thread": self._filter_threads_fields(
+                                {
+                                    "display_name": "Test",
+                                    "id": record.id,
+                                    "model": "mail.test.simple",
+                                    "module_icon": "/base/static/description/icon.png",
+                                    "selfFollower": follower_2.id,
+                                },
+                            ),
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
+                                    "id": self.env.user.partner_id.id,
+                                    "is_company": False,
+                                    "main_user_id": self.env.user.id,
+                                    "name": "OdooBot",
+                                    "write_date": fields.Datetime.to_string(
+                                        self.env.user.partner_id.write_date
+                                    ),
+                                },
+                                {
+                                    "email": self.user_emp_inbox.partner_id.email,
+                                    "id": self.user_emp_inbox.partner_id.id,
+                                    "name": "Ignasse Inbox",
+                                },
+                                {
+                                    "email": self.user_follower_emp_inbox.partner_id.email,
+                                    "id": self.user_follower_emp_inbox.partner_id.id,
+                                    "name": "Isabelle Follower Inbox",
+                                },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {
+                                    "id": self.env.user.id,
+                                    "partner_id": self.env.user.partner_id.id,
+                                    "share": False,
+                                },
+                            ),
                         },
                     },
-                ],
-            )
+                ),
+            ]
 
         self.env.invalidate_all()
-        with self.assertBus(get_params=get_bus_params):
+        with self.assertBus(notifications):
             with self.assertQueryCount(21):
                 record.message_post(
                     body=Markup("<p>Test Post Performances with multiple inbox ping!</p>"),

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests import common
 from odoo.tests import HttpCase, new_test_user, tagged, users
 
@@ -57,10 +58,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
         self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
         with self.assertBus(
-            [recipient, self.env.user],
             [
-                {"type": "mail.message/delete", "payload": {"message_ids": [message.id]}},
-                {"type": "mail.message/delete", "payload": {"message_ids": [message.id]}},
+                BusResult(recipient, "mail.message/delete", {"message_ids": [message.id]}),
+                BusResult(self.env.user, "mail.message/delete", {"message_ids": [message.id]}),
             ],
         ):
             message.unlink()

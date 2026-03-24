@@ -2,6 +2,7 @@
 
 import json
 import struct
+from itertools import chain, zip_longest
 from threading import Event
 import unittest
 from unittest.mock import patch
@@ -17,8 +18,9 @@ except ImportError:
 from odoo.http import request
 from odoo.tests.common import HOST, release_test_lock, TEST_CURSOR_COOKIE_NAME, Like, _registry_test_lock
 from odoo.tests import HttpCase
+from odoo.tests.common import BaseCase
 from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
-from ..models.bus import dispatch, hashable, channel_with_db
+from ..models.bus import channel_with_db, dispatch, hashable, json_dump
 
 
 class WebsocketCase(HttpCase):
@@ -173,7 +175,142 @@ class WebsocketCase(HttpCase):
             self.assertEqual(payload[2:].decode(), expected_reason)
 
 
-class BusCase:
+class BusResult:
+    """Descriptor for an expected bus notification.
+    :param channel: the bus channel
+    :param str type: the notification type
+    :param payload: the notification payload
+    When a payload dict is provided, only the specified keys and values are
+    checked against the actual notification; extra keys in the actual payload
+    are ignored.
+    """
+
+    def __init__(self, channel, type=None, payload=None):
+        self.channel = channel
+        self.type = type
+        self.payload = payload
+        self.matched = False
+
+    def match(self, received, *, show_store_versioning):
+        if (
+            self._normalized_channel() == received._normalized_channel()
+            and (self.type is None or self.type == received.type)
+            and (
+                self.payload is None
+                or self._normalized_message(show_store_versioning=show_store_versioning)
+                == received._normalized_message(show_store_versioning=show_store_versioning)
+            )
+        ):
+            self.matched = True
+            received.matched = True
+            return True
+        return False
+
+    def format_log(self, idx, *, show_store_versioning):
+        payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
+        if not show_store_versioning:
+            BusResult._pop_store_version(payload)
+        return (
+            f"# {'✅ matched' if self.matched else '❌ missing'} #{idx}\n"
+            "(\n"
+            f"    {json_dump(self._normalized_channel())},\n"
+            f"    {json_dump(self.type)},\n"
+            f"    {json_dump(payload)},\n"
+            "),"
+        )
+
+    @staticmethod
+    def _pop_store_version(data):
+        if not isinstance(data, dict):
+            return
+        data.pop("__store_version__", False)
+        for value in data.values():
+            BusResult._pop_store_version(value)
+
+    def _normalized_channel(self):
+        if isinstance(self.channel, str):
+            return tuple(json.loads(self.channel))
+        return tuple(self.channel)
+
+    def _normalized_message(self, *, show_store_versioning):
+        message = {}
+        if self.type is not None:
+            message["type"] = self.type
+        if self.payload is not None:
+            message["payload"] = self.payload
+            if not show_store_versioning:
+                BusResult._pop_store_version(message["payload"])
+        return json.loads(json_dump(message)) if message else None
+
+
+class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.env["bus.bus"].sudo().search([]).unlink()
+
+    @contextlib.contextmanager
+    def assertBus(self, notifications, *, show_store_versioning=False):
+        """Check content of bus notifications.
+        `notifications` is a :class:`BusResult` instance or a list of them, e.g.:
+            BusResult(self.user_employee, "mail.record/insert", {...})
+            BusResult(self.user_employee)
+            BusResult(self.user_employee, "mail.message/inbox")
+            BusResult(self.user_employee, payload={"key": val})
+            BusResult(self.user_employee, "mail.record/insert", {"key": val})
+        A single :class:`BusResult` may be passed directly instead of a one-element list.
+        Notifications are matched in emitted order.
+        `notifications` may be either a :class:`BusResult`, a list of them,
+        or a callable evaluated after the tested code that returns one of
+        those forms.
+        """
+        self._reset_bus()
+        yield
+        self._assertBusNotifications(notifications, show_store_versioning=show_store_versioning)
+
+    def _assertBusNotifications(self, notifications, *, show_store_versioning=False):
+        """Assert bus notifications with coupled channel and message.
+
+        :param notifications: expected notifications as :class:`BusResult`, list,
+            or callable returning one of those forms.
+        Expected notifications must appear in order.
+        """
+        notifications = notifications() if callable(notifications) else notifications
+        if isinstance(notifications, BusResult):
+            notifications = [notifications]
+        notifications = notifications or []
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        expected_list = []
+        for notif in notifications:
+            if not isinstance(notif, BusResult):
+                msg = "Bus: expected notification items must be a BusResult instance."
+                raise TypeError(msg)
+            expected_list.append(
+                BusResult(
+                    json_dump(channel_with_db(self.cr.dbname, notif.channel)),
+                    notif.type,
+                    notif.payload,
+                ),
+            )
+        received_list = [
+            BusResult(notif.channel, **json.loads(notif.message))
+            for notif in self.env["bus.bus"].sudo().search([])
+        ]
+        for expected_notif, actual_notif in zip_longest(expected_list, received_list):
+            if expected_notif is not None and actual_notif is not None:
+                expected_notif.match(actual_notif, show_store_versioning=show_store_versioning)
+        if any(not notif.matched for notif in chain(expected_list, received_list)):
+
+            def format_notifications(title, notifications):
+                error_parts.append(title)
+                if notifications:
+                    for idx, notif in enumerate(notifications, 1):
+                        error_parts.append(
+                            notif.format_log(idx, show_store_versioning=show_store_versioning),
+                        )
+                else:
+                    error_parts.append("<no notifications>")
+
+            error_parts = ["Bus notifications."]
+            format_notifications("\nExpected notifications:", expected_list)
+            format_notifications("\nReceived notifications:", received_list)
+            raise AssertionError("\n".join(error_parts))

@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.tests import tagged, users
@@ -60,26 +62,38 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
             'failure_type': 'sms_credit',
         })
 
+    def _get_msg_notification_bus_params(self, msg, users=None):
+        """Helper to get bus parameters for message notification updates."""
+        if users is None:
+            users = self.env.user | msg.author_id.user_ids
+        return [
+            BusResult(
+                user,
+                "mail.record/insert",
+                Store().add(msg, "_store_notification_fields").get_result(),
+            )
+            for user in users
+        ]
+
 
 @tagged('sms_management')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSActions(TestSMSActionsCommon):
 
     def test_sms_notify_cancel(self):
-        self._reset_bus()
-
-        with self.with_user('employee'):
-            self.test_record.with_user(self.env.user).notify_cancel_by_type('sms')
-            self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
-
-        self.assertMessageBusNotifications(self.msg)
+        with self.assertBus(
+            notifications=lambda: self._get_msg_notification_bus_params(self.msg, self.msg.author_id.user_ids)
+        ):
+            with self.with_user('employee'):
+                self.test_record.with_user(self.env.user).notify_cancel_by_type('sms')
+                self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
 
     def test_sms_set_cancel(self):
-        self._reset_bus()
-        self.sms_p1.action_set_canceled()
+        with self.assertBus(
+            notifications=lambda: self._get_msg_notification_bus_params(self.msg)
+        ):
+            self.sms_p1.action_set_canceled()
         self.assertEqual(self.sms_p1.state, 'canceled')
-
-        self.assertMessageBusNotifications(self.msg)
         self.assertSMSNotification([
             {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'canceled', 'failure_type': 'sms_number_format'},
             {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'exception', 'failure_type': 'sms_credit'}
@@ -102,11 +116,12 @@ class TestSMSActions(TestSMSActionsCommon):
         self.assertEqual(self.sms_p2.state, 'canceled')
         self.assertEqual(self.env['bus.bus'].search([]), self.env['bus.bus'], 'SMS: no bus notifications unless asked')
 
-        (self.sms_p1 + self.sms_p2).action_set_error('sms_server')
+        with self.assertBus(
+            notifications=lambda: self._get_msg_notification_bus_params(self.msg)
+        ):
+            (self.sms_p1 + self.sms_p2).action_set_error('sms_server')
         self.assertEqual(self.sms_p1.state, 'error')
         self.assertEqual(self.sms_p2.state, 'error')
-
-        self.assertMessageBusNotifications(self.msg)
         self.assertSMSNotification([
             {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'exception', 'failure_type': 'sms_server'},
             {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'exception', 'failure_type': 'sms_server'}
@@ -114,12 +129,12 @@ class TestSMSActions(TestSMSActionsCommon):
 
     @users('admin')
     def test_sms_set_outgoing(self):
-        self._reset_bus()
-        (self.sms_p1 + self.sms_p2).with_user(self.env.user).action_set_outgoing()
+        with self.assertBus(
+            notifications=lambda: self._get_msg_notification_bus_params(self.msg)
+        ):
+            (self.sms_p1 + self.sms_p2).with_user(self.env.user).action_set_outgoing()
         self.assertEqual(self.sms_p1.state, 'outgoing')
         self.assertEqual(self.sms_p2.state, 'outgoing')
-
-        self.assertMessageBusNotifications(self.msg)
         self.assertSMSNotification([
             {'partner': self.partner_1, 'number': self.notif_p1.sms_number, 'state': 'ready'},
             {'partner': self.partner_2, 'number': self.notif_p2.sms_number, 'state': 'ready'}

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import HttpCase
 
@@ -13,31 +14,29 @@ class TestDiscussCategory(MailCommon, HttpCase):
         self.authenticate("admin", "admin")
         category_id = self.env["discuss.category"].create({"name": "Services"})
 
-        def get_assign_channel_category_bus():
-            return (
-                [self.channel],
-                [
+        def notifications():
+            return [
+                BusResult(
+                    self.channel,
+                    "mail.record/insert",
                     {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.category": [
-                                {
-                                    "id": category_id.id,
-                                    "name": category_id.name,
-                                    "sequence": category_id.sequence,
-                                    "bus_channel_access_token": category_id._get_bus_channel_access_token(),
-                                },
-                            ],
-                            "discuss.channel": [
-                                {
-                                    "id": self.channel.id,
-                                    "discuss_category_id": category_id.id,
-                                },
-                            ],
-                        },
+                        "discuss.category": [
+                            {
+                                "id": category_id.id,
+                                "name": category_id.name,
+                                "sequence": category_id.sequence,
+                                "bus_channel_access_token": category_id._get_bus_channel_access_token(),
+                            },
+                        ],
+                        "discuss.channel": [
+                            {
+                                "id": self.channel.id,
+                                "discuss_category_id": category_id.id,
+                            },
+                        ],
                     },
-                ],
-            )
+                ),
+            ]
 
-        with self.assertBus(get_params=get_assign_channel_category_bus):
+        with self.assertBus(notifications):
             category_id.channel_ids = [(4, self.channel.id)]

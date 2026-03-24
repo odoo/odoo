@@ -9,6 +9,7 @@ from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
 
 
@@ -279,28 +280,26 @@ class TestEventNotifications(CalendarMailCommon):
         })
         now = fields.Datetime.now()
 
-        def get_bus_params():
-            return (
-                [self.user],
-                [
-                    {
-                        "type": "calendar.alarm",
-                        "payload": [
-                            {
-                                "alarm_id": alarm.id,
-                                "event_id": self.event.id,
-                                "title": "Doom's day",
-                                "message": self.event.display_time,
-                                "timer": 20 * 60,
-                                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-                            },
-                        ],
-                    },
-                ],
-            )
+        def notifications():
+            return [
+                BusResult(
+                    self.user,
+                    "calendar.alarm",
+                    [
+                        {
+                            "alarm_id": alarm.id,
+                            "event_id": self.event.id,
+                            "title": "Doom's day",
+                            "message": self.event.display_time,
+                            "timer": 20 * 60,
+                            "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                        },
+                    ],
+                ),
+            ]
 
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus(get_params=get_bus_params):
+            with self.assertBus(notifications):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
@@ -589,28 +588,26 @@ class TestEventNotifications(CalendarMailCommon):
 
         now = fields.Datetime.now()
 
-        def get_bus_params():
-            return (
-                [self.user],
-                [
-                    {
-                        "type": "calendar.alarm",
-                        "payload": [
-                            {
-                                "alarm_id": alarm.id,
-                                "event_id": self.event.id,
-                                "title": "Doom's day",
-                                "message": self.event.display_time,
-                                "timer": 20 * 60,
-                                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-                            },
-                        ],
-                    },
-                ],
-            )
+        def notifications():
+            return [
+                BusResult(
+                    self.user,
+                    "calendar.alarm",
+                    [
+                        {
+                            "alarm_id": alarm.id,
+                            "event_id": self.event.id,
+                            "title": "Doom's day",
+                            "message": self.event.display_time,
+                            "timer": 20 * 60,
+                            "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                        },
+                    ],
+                ),
+            ]
 
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus(get_params=get_bus_params):
+            with self.assertBus(notifications):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
