@@ -122,7 +122,7 @@ class AccountInvoiceSend(models.TransientModel):
         super()._compute_attachments_not_supported()
         for wizard in self:
             if wizard.display_attachment_fields and wizard.checkbox_send_peppol:
-                xml_attachment_name = wizard.peppol_invoice_ids._get_peppol_document().attachment_id.name
+                xml_attachment_name = wizard.peppol_invoice_ids._get_peppol_document().sudo().attachment_id.name
                 _attachments_to_embed, attachments_not_supported = wizard._get_peppol_available_attachments(
                     wizard.peppol_invoice_ids,
                     wizard.attachment_ids.filtered(lambda attachment: attachment.name != xml_attachment_name),
@@ -206,7 +206,7 @@ class AccountInvoiceSend(models.TransientModel):
                         invoice.peppol_message_uuid = message['message_uuid']
                         invoice.peppol_move_state = 'processing'
 
-                        xml_attachment_name = invoice._get_peppol_document().attachment_id.name
+                        xml_attachment_name = invoice._get_peppol_document().sudo().attachment_id.name
                         attachments_linked, attachments_not_linked = self._get_peppol_available_attachments(
                             invoice,
                             self.attachment_ids.filtered(lambda attachment: attachment.name != xml_attachment_name),
