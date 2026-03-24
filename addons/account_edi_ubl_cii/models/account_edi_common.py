@@ -969,6 +969,33 @@ class AccountEdiCommon(models.AbstractModel):
             line_values['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
         return record._get_line_vals_list(charges_vals)
 
+    def _post_process_decoding(self, invoice):
+        """
+        Method to be called after the decoding of the document
+        """
+        try:
+            invoice._check_move_for_group_ungroup_lines_by_tax()
+        except UserError:
+            return
+
+        if invoice.env.context.get('ungroup_lines') or not invoice.partner_id:
+            return
+
+        # Group lines
+        if invoice.journal_id.type == 'sale':
+            move_types = invoice.get_sale_types(include_receipts=True)
+        else:
+            move_types = invoice.get_purchase_types(include_receipts=True)
+        last_bill_from_vendor = self.env['account.move'].search([
+            ('move_type', 'in', move_types),
+            ('partner_id', '=', invoice.partner_id.id),
+            ('state', '=', 'posted'),
+            ('id', '!=', invoice.id),
+            *self.env['account.move']._check_company_domain(invoice.company_id),
+        ], order='create_date desc', limit=1)
+        if last_bill_from_vendor and last_bill_from_vendor._has_lines_grouped():
+            invoice._group_lines_by_tax()
+
     def _get_document_allowance_charge_xpaths(self):
         # OVERRIDE
         pass

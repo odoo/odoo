@@ -4546,7 +4546,11 @@ class AccountMove(models.Model):
                 except (UserError, ValueError):
                     _logger.exception("Failed to link bill to purchase order")
 
-        self._post_process_link_to_purchase_order(self)
+        if res:
+            # get attachment used to decode
+            file_data = self.env['account.document.import.mixin']._get_attachment_to_decode(files_data)
+            if post_processor := file_data['decoder_info'].get('post_processor'):
+                post_processor(self)
 
         return res
 
@@ -4581,11 +4585,6 @@ class AccountMove(models.Model):
         """ Helper to get a reason why an invoice cannot be decoded if it has invoice lines. """
         if self.invoice_line_ids:
             return self.env._("The invoice already contains lines.")
-
-    @api.model
-    def _post_process_link_to_purchase_order(self, invoice):
-        # To be implemented in modules needing to process the invoice after it was linked (or not) to a PO
-        pass
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

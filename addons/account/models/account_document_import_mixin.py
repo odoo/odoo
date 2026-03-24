@@ -321,16 +321,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 file_data['decoder_info'] = self._get_edi_decoder(file_data, new=new)
 
         # Identify the attachment to decode.
-        sorted_files_data = sorted(
-            files_data,
-            key=lambda file_data: (
-                file_data['decoder_info'] is not None,
-                (file_data['decoder_info'] or {}).get('priority', 0),
-            ),
-            reverse=True,
-        )
-
-        file_data = sorted_files_data[0]
+        file_data = self._get_attachment_to_decode(files_data)
 
         if file_data['decoder_info'] is None or file_data['decoder_info'].get('priority', 0) == 0:
             _logger.info(
@@ -378,6 +369,17 @@ class AccountDocumentImportMixin(models.AbstractModel):
             - priority:    The priority of the decoder.
         """
         pass
+
+    def _get_attachment_to_decode(self, files_data):
+        sorted_files_data = sorted(
+            files_data,
+            key=lambda file_data: (
+                file_data['decoder_info'] is not None,
+                (file_data['decoder_info'] or {}).get('priority', 0),
+            ),
+            reverse=True,
+        )
+        return sorted_files_data[0]
 
     # --------------------------------------------------------------
     # Helpers to consistently attach/unattach attachments to records
