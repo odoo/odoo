@@ -268,3 +268,37 @@ test("Shouldn't reload(save, etc) when a reload is canceled", async () => {
     expect(".o_blockUI").toHaveCount(0);
     expect.verifySteps(["save"]);
 });
+
+test("UI is unblocked when getting an error on a reloadable operation", async () => {
+    expect.errors(1);
+    const { promise, resolve } = Promise.withResolvers();
+    addBuilderAction({
+        TestAction: class extends BuilderAction {
+            static id = "testAction";
+            setup() {
+                this.reload = {};
+            }
+            async apply({ editingElement }) {
+                await promise;
+                throw new Error("Apply failed!");
+            }
+        },
+    });
+
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'testAction'">Click</BuilderButton>`;
+        }
+    );
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `<div class="test-options-target">Target</div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container [data-action-id='testAction']").click();
+    expect(".o_blockUI").toHaveCount(1);
+    resolve();
+    await waitSidebarUpdated();
+    expect(".o_blockUI").toHaveCount(0);
+    expect.verifyErrors(["Apply failed!"]);
+});
