@@ -6,6 +6,7 @@ import { isEmail } from "@web/core/utils/strings";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { useService } from "@web/core/utils/hooks";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 import { rpc } from "@web/core/network/rpc";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
@@ -14,9 +15,14 @@ import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
 import { Component } from "@odoo/owl";
 
+/**
+ * @typedef {Object} Props
+ * @property {import("models").Thread} thread
+ * @extends {Component<Props, Env>}
+ */
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
-    static components = { AutoComplete, RecipientTag };
+    static components = { AutoComplete, RecipientTag, BadgeTag };
     static props = {
         thread: { type: Object },
     };
@@ -171,6 +177,31 @@ export class RecipientsInput extends Component {
                 },
             },
         ];
+    }
+
+    get otherFollowersCount() {
+        return this.props.thread.selfFollower
+            ? this.props.thread.followersCount - 1
+            : this.props.thread.followersCount;
+    }
+
+    get followersBadge() {
+        const text =
+            this.otherFollowersCount === 1
+                ? _t("1 Follower")
+                : _t("%(followersCount)s Followers", { followersCount: this.otherFollowersCount });
+        return {
+            color: 4,
+            text,
+            tooltip: this.props.thread.followers
+                .map(
+                    (f) =>
+                        `${this.props.thread.getPersonaName(f.partner_id) || _t("Unnamed")} ${
+                            f.partner_id.email ? "<" + f.partner_id.email + ">" : ""
+                        }`
+                )
+                .join("\n"),
+        };
     }
 
     /** @returns {Object} */
