@@ -358,20 +358,21 @@ export class CartService {
                 options,
                 ...additionalData,
                 save: async (mainProduct, optionalProducts, options) => {
-                    const product = this._serializeProduct(mainProduct);
-                    resolve(this._makeRequest({
-                        productTemplateId: product.product_template_id,
-                        productId: product.product_id,
-                        quantity: product.quantity,
-                        uom_id: product.uom_id,
-                        productCustomAttributeValues: product.product_custom_attribute_values,
-                        noVariantAttributeValues: product.no_variant_attribute_value_ids,
-                        linked_products: optionalProducts.map(this._serializeProduct),
-                        shouldRedirectToCart: options.goToCart,
-                        ...additionalData,
-                    }));
+                    resolve(
+                        this._saveConfiguredProduct(
+                            mainProduct,
+                            optionalProducts,
+                            options.goToCart,
+                            additionalData,
+                        )
+                    );
                 },
-                discard: () => resolve(0),
+                discard: async (mainProduct, optionalProducts) => {
+                    if(mainProduct) {
+                        this._saveConfiguredProduct(mainProduct, optionalProducts, false)
+                    }
+                    resolve(0);
+                }
             });
         });
     }
@@ -414,6 +415,31 @@ export class CartService {
             .flatMap(ptal => ptal.selected_attribute_value_ids);
 
         return serializedProduct;
+    }
+
+    /**
+     * Save the configured product and its optional products by sending
+     * the serialized data to the backend.
+     *
+     * @param {Object} mainProduct - The main configured product.
+     * @param {Array<Object>} optionalProducts - List of optional products.
+     * @param {boolean} goToCart - Whether to redirect to the cart after saving.
+     *
+     * @returns {Promise} - Promise resolving the server request.
+     */
+    _saveConfiguredProduct(mainProduct, optionalProducts, goToCart, additionalData = {}) {
+        const product = this._serializeProduct(mainProduct);
+        return this._makeRequest({
+            productTemplateId: product.product_template_id,
+            productId: product.product_id,
+            quantity: product.quantity,
+            uom_id: product.uom_id,
+            productCustomAttributeValues: product.product_custom_attribute_values,
+            noVariantAttributeValues: product.no_variant_attribute_value_ids,
+            linked_products: optionalProducts.map(this._serializeProduct),
+            shouldRedirectToCart: goToCart,
+            ...additionalData,
+        });
     }
 
     /**
