@@ -2,11 +2,16 @@ import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
+<<<<<<< 851fd3c20e4ffdf326bf3405403dfc144b2819cc:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js
 import { getLNATargetAddressSpace } from "../init_lna";
 
 const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
 const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
 const ERROR_CODE_PRINTER_NOT_REACHABLE = "PRINTER_NOT_REACHABLE";
+||||||| 33b78139e6b05aa5fc3cebc52834feac1b3f4e8d:addons/pos_epson_printer/static/src/app/utils/payment/epson_printer.js
+=======
+import { getLNATargetAddressSpace } from "@point_of_sale/app/utils/init_lna";
+>>>>>>> f4daa8d50cac9c2d64ee9c4afb9cb9e9bdf7374a:addons/pos_epson_printer/static/src/app/utils/payment/epson_printer.js
 
 function ePOSPrint(children) {
     let ePOSLayout = getTemplate("point_of_sale.ePOSLayout");
