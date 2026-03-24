@@ -112,6 +112,40 @@ If VSCode is started, it should appear in the Claude CLI output.
 
 See the script header for the full sandbox layout.
 
+#### Using OpenRouter
+
+To use [OpenRouter](https://openrouter.ai/) as a proxy for Claude API calls, set the
+`OPENROUTER_API_KEY` environment variable and pass the `--openrouter` flag.
+
+Add the following to your shell configuration (e.g. `~/.bashrc`, `~/.zshrc`, or `~/.config/fish/config.fish`):
+
+```sh
+export OPENROUTER_API_KEY="sk-or-xxx"
+```
+
+Reload your shell configuration (e.g. `source ~/.bashrc`, `source ~/.zshrc`, or `source ~/.config/fish/config.fish`).
+Then launch the sandboxed Claude with:
+
+```sh
+bwrap-claude.sh --openrouter
+```
+
+The following environment variables are passed to the sandbox with sensible defaults:
+
+| Variable                         | Default                     |
+| -------------------------------- | --------------------------- |
+| `ANTHROPIC_BASE_URL`             | `https://openrouter.ai/api` |
+| `ANTHROPIC_DEFAULT_HAIKU_MODEL`  | `z-ai/glm-4.7-flash`        |
+| `ANTHROPIC_DEFAULT_SONNET_MODEL` | `z-ai/glm-5-turbo`          |
+| `ANTHROPIC_DEFAULT_OPUS_MODEL`   | `z-ai/glm-5`                |
+
+Override any default by exporting the corresponding environment variable:
+
+```sh
+export ANTHROPIC_DEFAULT_OPUS_MODEL="minimax/minimax-m2.7"
+bwrap-claude.sh --openrouter
+```
+
 ### Example: Running Odoo tests
 
 Here is an example of prompt to run the CRM tests (Python and JavaScript tours):

@@ -21,7 +21,7 @@
 #   - Odoo filestore (~/.local/share/Odoo)
 #
 # USAGE
-#   bwrap-claude.sh [--add-dir <path> ...] [claude args...]
+#   bwrap-claude.sh [--add-dir <path> ...] [--openrouter] [claude args...]
 #
 # OPTIONS
 #   --add-dir <path>
@@ -29,6 +29,19 @@
 #       pre-configured Odoo directories. Also passed to Claude as --add-dir
 #       so its internal tool access matches the sandbox. All other arguments
 #       are forwarded to Claude.
+#
+#   --openrouter
+#       Configure Claude to use OpenRouter as a proxy for Anthropic API calls.
+#       Requires OPENROUTER_API_KEY to be set in the host environment.
+#       The following environment variables are passed to the sandbox:
+#         - ANTHROPIC_BASE_URL (default: https://openrouter.ai/api)
+#         - ANTHROPIC_AUTH_TOKEN (set to OPENROUTER_API_KEY)
+#         - ANTHROPIC_API_KEY (empty, required for OpenRouter)
+#         - ANTHROPIC_DEFAULT_HAIKU_MODEL (default: z-ai/glm-4.7-flash)
+#         - ANTHROPIC_DEFAULT_SONNET_MODEL (default: z-ai/glm-5-turbo)
+#         - ANTHROPIC_DEFAULT_OPUS_MODEL (default: z-ai/glm-5)
+#       All defaults can be overridden by setting the corresponding host
+#       environment variables.
 #
 # ENVIRONMENT
 #   ODOO_BASE     Path to the Odoo workspace (default: ~/src/odoo)
@@ -124,10 +137,14 @@ ODOO_BASE="${ODOO_BASE:-$HOME/src/odoo}"
 # Collect allowed dirs from args; intercept --add-dir from args for bwrap binding
 ALLOW_DIRS=("$ODOO_BASE")
 CLAUDE_ARGS=()
+USE_OPENROUTER=false
 while [[ $# -gt 0 ]]; do
   if [[ "$1" == "--add-dir" ]]; then
     shift
     ALLOW_DIRS+=("$(cd "$1" && pwd)")
+    shift
+  elif [[ "$1" == "--openrouter" ]]; then
+    USE_OPENROUTER=true
     shift
   else
     CLAUDE_ARGS+=("$1")
@@ -209,5 +226,25 @@ for d in "${ALLOW_DIRS[@]}"; do
 done
 CLAUDE_CMD+=( "${CLAUDE_ARGS[@]}" )
 
-echo "Running: bwrap ${BRAP[@]} -- $CLAUDE_BIN ${CLAUDE_CMD[@]}" >&2
-exec bwrap "${BRAP[@]}" -- "$CLAUDE_BIN" "${CLAUDE_CMD[@]}"
+# Build bwrap environment variable arguments
+BWRAP_ENV=()
+if [[ "$USE_OPENROUTER" == true ]]; then
+  # Validate required API key
+  if [[ -z "${OPENROUTER_API_KEY:-}" ]]; then
+    echo "Error: --openrouter requires OPENROUTER_API_KEY to be set" >&2
+    exit 1
+  fi
+  # Set environment variables for OpenRouter
+  BWRAP_ENV+=(
+    --setenv OPENROUTER_API_KEY "$OPENROUTER_API_KEY"
+    --setenv ANTHROPIC_BASE_URL "${ANTHROPIC_BASE_URL:-https://openrouter.ai/api}"
+    --setenv ANTHROPIC_AUTH_TOKEN "$OPENROUTER_API_KEY"
+    --setenv ANTHROPIC_API_KEY ""
+    --setenv ANTHROPIC_DEFAULT_HAIKU_MODEL "${ANTHROPIC_DEFAULT_HAIKU_MODEL:-z-ai/glm-4.7-flash}"
+    --setenv ANTHROPIC_DEFAULT_SONNET_MODEL "${ANTHROPIC_DEFAULT_SONNET_MODEL:-z-ai/glm-5-turbo}"
+    --setenv ANTHROPIC_DEFAULT_OPUS_MODEL "${ANTHROPIC_DEFAULT_OPUS_MODEL:-z-ai/glm-5}"
+  )
+fi
+
+echo "Running: bwrap ${BRAP[@]} ${BWRAP_ENV[@]} -- $CLAUDE_BIN ${CLAUDE_CMD[@]}" >&2
+exec bwrap "${BRAP[@]}" "${BWRAP_ENV[@]}" -- "$CLAUDE_BIN" "${CLAUDE_CMD[@]}"
