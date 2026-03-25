@@ -19,7 +19,7 @@
                 </div>
             </t>
             <t t-else="">
-                <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{this.getCanvasStyles()}}">
+                <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" dir="ltr" t-attf-style="{{this.getCanvasStyles()}}">
                       <t t-foreach="this.getFloorDecorElements()" t-as="element" t-key="element.uuid">
                          <t t-call="pos_restaurant.floor_screen_element"/>
                      </t>

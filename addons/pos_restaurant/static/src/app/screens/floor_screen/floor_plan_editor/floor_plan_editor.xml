@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.floor_plan_editor">
         <div t-custom-ref="container" class="o_fp_canvas w-100 h-100 overflow-auto position-relative" t-attf-style="{{this.getScrollContainerStyles()}}" t-on-click="this.onCanvasClick" >
-             <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{this.getCanvasStyles()}}">
+             <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" dir="ltr" t-attf-style="{{this.getCanvasStyles()}}">
                  <svg class="o_fp_snap_guides position-absolute w-100 h-100 top-0 start-0" t-custom-ref="snapGuides" />
                  <Handles floorElement="this.floorPlanStore.selectedElement" canvasRef="this.canvasRef" onStartResize="this.startResize" onStartMove="this.startDrag" onStartRotate="this.startRotate"
                           onEdit="this.onEdit" actions="this.handlesActions" actionMenuPosition="this.state.actionMenuPosition" />
