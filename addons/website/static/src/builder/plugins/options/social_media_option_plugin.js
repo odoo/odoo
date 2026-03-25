@@ -171,6 +171,10 @@ class SocialMediaOptionPlugin extends Plugin {
             ".s_social_media a > i",
             ".s_social_media .s_social_media_title",
         ],
+        auto_unfold_container_providers: {
+            selector: ".s_social_media > a > i",
+            target: ".s_social_media",
+        },
     };
 
     /** The social media's name for which there is an entry in the orm */

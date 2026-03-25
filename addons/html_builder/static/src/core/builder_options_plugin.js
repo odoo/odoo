@@ -67,6 +67,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  *
  * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} get_options_container_top_buttons
  *
+ * @typedef {({selector: CSSSelector, target: CSSSelector})[]} auto_unfold_container_providers
  * @typedef {{
  *     Component: Component;
  *     selector: CSSSelector;
@@ -416,6 +417,19 @@ export class BuilderOptionsPlugin extends Plugin {
         const lastContainerWithOptions = containers.findLast((c) => c.options.length);
         if (lastContainerWithOptions) {
             lastContainerWithOptions.folded = false;
+            // The following is used in case the options in the last container
+            // are not likely the ones the user wants. After we re-organize the
+            // options to avoid these cases, this will be removed
+            for (const { selector, target } of this.getResource(
+                "auto_unfold_container_providers"
+            )) {
+                if (lastContainerWithOptions.element.matches(selector)) {
+                    const ancestorContainer = containers.findLast((c) => c.element.matches(target));
+                    if (ancestorContainer) {
+                        ancestorContainer.folded = false;
+                    }
+                }
+            }
         }
         return containers;
     }
