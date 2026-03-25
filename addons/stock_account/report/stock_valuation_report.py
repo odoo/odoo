@@ -31,7 +31,7 @@ class StockValuationReport(models.AbstractModel):
         if isinstance(date, str):
             date = fields.Date.from_string(date)
 
-        if date == fields.Date.today():
+        if date == fields.Date.context_today(self):
             date = False
         if not date:
             inventory_data = company.stock_value()
