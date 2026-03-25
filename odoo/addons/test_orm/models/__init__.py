@@ -1,7 +1,6 @@
 from . import (
     test_access_rights,
     test_action_bindings,
-    test_config,
     test_convert,
     test_inherits,
     test_orm,
