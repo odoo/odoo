@@ -719,14 +719,24 @@ class AccountMoveLine(models.Model):
         order_string = self.env.cr.mogrify(sql_order).decode()
         from_clause, where_clause, where_clause_params = query.get_sql()
         sql = """
-            SELECT account_move_line.id, SUM(account_move_line.balance) OVER (
-                ORDER BY %(order_by)s
-                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-            )
-            FROM %(from)s
-            WHERE %(where)s
-        """ % {'from': from_clause, 'where': where_clause or 'TRUE', 'order_by': order_string}
-        self.env.cr.execute(sql, where_clause_params)
+            SELECT aml.id, aml.cumulated_balance
+            FROM (
+                SELECT
+                    account_move_line.id,
+                    SUM(account_move_line.balance) OVER (
+                        ORDER BY %(order_by)s
+                        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                    ) AS cumulated_balance
+                FROM %(from)s
+                WHERE %(where)s
+            ) aml
+            WHERE aml.id = ANY(%%s)
+        """ % {
+            'from': from_clause,
+            'where': where_clause or 'TRUE',
+            'order_by': order_string,
+        }
+        self.env.cr.execute(sql, where_clause_params + [self.ids])
         result = {r[0]: r[1] for r in self.env.cr.fetchall()}
         for record in self:
             record.cumulated_balance = result[record.id]
