@@ -21,7 +21,8 @@ registerWebsitePreviewTour(
         // a widgets_start_request is triggered.
         {
             content: "Hover an option which has a preview",
-            trigger: "[data-action-param='o_half_screen_height']",
+            trigger:
+                "[data-container-title='Countdown'] [data-action-param='o_half_screen_height']",
             run: "hover",
         },
         {
