@@ -5,7 +5,7 @@ import calendar
 from collections import Counter, defaultdict
 from collections.abc import Mapping
 from contextlib import ExitStack, contextmanager, nullcontext
-from datetime import date, timedelta
+from datetime import date, date as date_t, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
 from json import dumps
@@ -6113,12 +6113,15 @@ class AccountMove(models.Model):
     def get_currency_rate(self, company_id, to_currency_id, date):
         company = self.env['res.company'].browse(company_id)
         to_currency = self.env['res.currency'].browse(to_currency_id)
+        # _get_conversion_rate return the first rate before the given date,
+        # usually the rate for the previous day. Therefore, we need to give the next day.
+        next_day = (date_t.fromisoformat(date) + timedelta(days=1)).isoformat()
 
         return self.env['res.currency']._get_conversion_rate(
             from_currency=company.currency_id,
             to_currency=to_currency,
             company=company,
-            date=date,
+            date=next_day,
         )
 
     def refresh_invoice_currency_rate(self):
