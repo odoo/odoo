@@ -1634,7 +1634,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # modify ir.access to prevent access on record
         self.assertTrue(user0._is_internal())
-        access = self.env.ref('test_orm.access_test_orm_company_group_user')
+        access = self.env.ref('test_orm.access_test_orm_company')
         access.domain = f"[('id', '!=', {record.id})]"
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
@@ -2054,7 +2054,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         Discussion = self.env['test_orm.discussion']
 
         # modify ir.access to force reading field 'name'
-        access = self.env.ref('test_new_api.access_test_new_api_discussion_group_user')
+        access = self.env.ref('test_orm.access_discussion')
         access.domain = "[('name', '!=', 'Super Secret discussion')]"
 
         records = Discussion.with_user(self.user_demo).create([
