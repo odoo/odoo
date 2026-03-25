@@ -27,16 +27,18 @@ export class AddToCart extends Interaction {
         const productContainer = productEl ?? this._getProductContainer(button);
         const optionalParams = productContainer ? this._getOptionalParams(productContainer) : {};
 
+        const ptavIds = JSON.parse(button.dataset.ptavIds || '[]');
         const quantity = await this.waitFor(this.services['cart'].add({
             productTemplateId: parseInt(button.dataset.productTemplateId),
             productId: parseInt(button.dataset.productId),
             isCombo: button.dataset.productType === 'combo',
-            ptavs: JSON.parse(button.dataset.ptavIds || '[]'),
+            ptavs: ptavIds,
             ...productPageData,
             ...optionalParams,
         }, {
             isBuyNow: button.dataset.action === 'buy_now',
-            isConfigured: button.parentElement.id === 'add_to_cart_wrap',
+            isConfigured: button.parentElement.id === 'add_to_cart_wrap'
+                || (ptavIds.length > 0 && !!button.closest('[data-split-variants="1"]')),
             showQuantity: button.dataset.showQuantity === 'True',
         }));
 

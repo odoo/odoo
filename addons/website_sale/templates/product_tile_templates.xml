@@ -52,7 +52,7 @@
                 <!-- Price(s) -->
                 <t t-if="product_price" t-out="product_price"/>
                 <t t-else="">
-                    <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
+                    <t t-set="template_price_vals" t-value="variant_price_vals if variant_price_vals else get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
                         <t t-set="hide_price" t-value="(
                             not template_price_vals['price_reduce']
@@ -171,7 +171,7 @@
     <div class="o_wsale_product_info_attributes_wrapper">
         <!-- Variations/Attributes -->
         <t
-            t-if="product_ptavs_data"
+            t-if="product_ptavs_data and not show_combination_name"
             t-call="website_sale.product_variant_preview"
         />
 
@@ -248,6 +248,7 @@
                     t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                     t-att-data-product-type="product.type"
+                    t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                 >
                     <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>

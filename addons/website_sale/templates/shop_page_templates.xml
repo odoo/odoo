@@ -226,6 +226,7 @@
                     t-att-data-ppg="ppg"
                     t-att-data-ppr="ppr"
                     t-att-data-default-sort="website.shop_default_sort"
+                    t-att-data-split-variants="website.shop_split_variants and '1' or '0'"
                 >
                     <div class="row o_wsale_products_main_row flex-nowrap">
                         <aside
@@ -464,14 +465,18 @@
                                                 <t t-set="col_is_custom_portrait"
                                                    t-value="not col_is_stretched and (col_height &gt; td_product['x'])"/>
                                                 <t t-set="product" t-value="td_product['product']"/>
-                                                <t t-set="product_variant" t-value="product_variants[product]"/>
-                                                <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
+                                                <t t-set="product_variant" t-value="td_product.get('variant') or product_variants.get(product)"/>
+                                                <t t-set="template_price_vals" t-value="get_variant_prices(product_variant)"/>
+                                                <t t-set="product_href" t-value="
+                                                    product_variant.website_url if td_product.get('variant')
+                                                    else product._get_product_url(product_query_params, grouped_attributes_values)
+                                                "/>
                                                 <t
                                                     t-set="ribbon"
                                                     t-value="product._get_ribbon(
                                                         price_vals=template_price_vals,
                                                         auto_assign_ribbons=auto_assign_ribbons,
-                                                        variant=product_variants[product],
+                                                        variant=product_variant,
                                                     )"
                                                 />
                                                 <div
@@ -479,13 +484,16 @@
                                                     t-attf-style="--o-wsale-products-grid-product-col-height: {{col_height}};"
                                                     t-att-data-colspan="td_product['x'] != 1 and td_product['x']"
                                                     t-att-data-rowspan="td_product['y'] != 1 and td_product['y']"
+                                                    t-att-data-variant-id="td_product.get('variant') and td_product['variant'].id"
                                                     t-att-data-name="product_block_name"
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                         <t
                                                             t-call="website_sale.products_item"
                                                             design_field="website.shop_opt_products_design_classes"
-                                                            product_href="product._get_product_url(product_query_params, grouped_attributes_values)"
+                                                            product_href="product_href"
+                                                            variant_price_vals="template_price_vals"
+                                                            show_combination_name="bool(td_product.get('variant'))"
                                                         />
                                                     </div>
                                                 </div>
