@@ -153,7 +153,12 @@ class BiometricAttendanceSync(models.AbstractModel):
 
     @api.model
     def _has_attendance_on_date(self, employee, check_date):
-        """Check if employee has a real attendance record on a given date."""
+        """Check if employee has a real attendance record on a given date.
+
+        Uses UTC day boundaries (00:00–24:00 UTC) because absence records
+        are stored at UTC midnight (00:00 UTC) so the date in ``check_in``
+        always matches the calendar date.
+        """
         day_start = dt.combine(check_date, dt.min.time())
         day_end = dt.combine(check_date + timedelta(days=1), dt.min.time())
         return bool(self.env['hr.attendance'].search([
@@ -187,13 +192,14 @@ class BiometricAttendanceSync(models.AbstractModel):
 
     @api.model
     def _create_absence_record(self, employee, absence_date):
-        """Create a single absence hr.attendance record."""
-        sched_helper = self.env['biometric.schedule.helper']
-        emp_tz = sched_helper.get_employee_tz(employee)
+        """Create a single absence hr.attendance record.
 
-        # Create midnight in the employee's timezone, then convert to UTC
-        local_midnight = emp_tz.localize(dt.combine(absence_date, dt.min.time()))
-        utc_midnight = local_midnight.astimezone(pytz.utc).replace(tzinfo=None)
+        Uses **UTC midnight** (00:00 UTC) for both check_in and check_out so
+        that ``check_in.date()`` always returns the correct calendar date and
+        downstream logic (day naming, weekend detection, duplicate checks)
+        works consistently regardless of the employee's timezone.
+        """
+        utc_midnight = dt.combine(absence_date, dt.min.time())
 
         self.env['hr.attendance'].sudo().create({
             'employee_id': employee.id,
