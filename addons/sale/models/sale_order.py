@@ -187,11 +187,8 @@ class SaleOrder(models.Model):
         "otherwise the sales journal with the lowest sequence is used.",
     )
     document_tax_mode = fields.Selection(
-        selection=[
-            ('tax_excluded', "Tax Excl."),
-            ('tax_included', "Tax Incl."),
-        ],
-        compute='_compute_document_tax_mode',
+        selection=[("tax_excluded", "Tax Excl."), ("tax_included", "Tax Incl.")],
+        compute="_compute_document_tax_mode",
         precompute=True,
         store=True,
         readonly=False,
@@ -272,7 +269,8 @@ class SaleOrder(models.Model):
         check_company=True,  # Unrequired company
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="If you change the pricelist, only newly added lines will be affected.",
+        help="If you change the pricelist, the prices of all order lines will be updated"
+        " accordingly.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -480,9 +478,6 @@ class SaleOrder(models.Model):
     # Remaining ux fields (not computed, not stored)
 
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
-    show_update_pricelist = fields.Boolean(
-        string="Has Pricelist Changed", store=False
-    )  # True if the pricelist was changed
 
     analytic_account_id = fields.Many2one(
         string="Analytic Account", comodel_name="account.analytic.account"
@@ -1203,7 +1198,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.has_overages = any(line.qty_overage for line in order.order_line)
 
-    @api.depends('company_id')
+    @api.depends("company_id")
     def _compute_document_tax_mode(self):
         for order in self:
             if not order.document_tax_mode:
@@ -1275,7 +1270,6 @@ class SaleOrder(models.Model):
 
     @api.onchange("company_id")
     def _onchange_company_id_warning(self):
-        self.show_update_pricelist = True
         if self.env.context.get("sale_onchange_first_call"):
             return None
         if self.order_line and self.state == "draft":
@@ -1309,10 +1303,12 @@ class SaleOrder(models.Model):
             self._recompute_taxes()
 
     @api.onchange("pricelist_id")
-    def _onchange_pricelist_id_show_update_prices(self):
-        self.show_update_pricelist = bool(
-            self.order_line and self._origin.pricelist_id != self.pricelist_id
-        )
+    def _onchange_pricelist_id_recompute_prices(self):
+        # DO NOT ADD the `pricelist_id` as dependency to the order lines compute methods as it
+        # would trigger unwanted recomputations as the orm recomputes all depending fields regardless
+        # of whether the field was effectively modified.
+        if self.order_line:
+            self._recompute_prices()
 
     @api.onchange("prepayment_amount")
     def _onchange_prepayment_amount(self):
@@ -1755,20 +1751,6 @@ class SaleOrder(models.Model):
 
         lines_to_recompute.with_context(recompute_unit_price_on_tax_change=True)._compute_tax_ids()
 
-    def action_update_prices(self):
-        self.ensure_one()
-
-        self._recompute_prices()
-
-        if self.pricelist_id:
-            message = self.env._(
-                "Product prices have been recomputed according to pricelist %s.",
-                self.pricelist_id._get_html_link(),
-            )
-        else:
-            message = self.env._("Product prices have been recomputed.")
-        self.message_post(body=message)
-
     def _recompute_prices(self):
         lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(["pricelist_item_id"])
@@ -1778,7 +1760,6 @@ class SaleOrder(models.Model):
         # if pricelist rule is different than when the price was first computed.
         lines_to_recompute.discount = 0.0
         lines_to_recompute._compute_discount()
-        self.show_update_pricelist = False
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)

@@ -1378,5 +1378,5 @@ class TestSalePrices(SaleCommon):
             "currency_id": eur_curr.id,
         })
         order.pricelist_id = eur_pricelist
-        order.action_update_prices()
+        order._recompute_prices()
         self.assertAlmostEqual(order.amount_total, (100 + 50 + 10) * eur_curr.rate, 2)
