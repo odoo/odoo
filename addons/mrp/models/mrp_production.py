@@ -2599,7 +2599,8 @@ class MrpProduction(models.Model):
             if self.state == 'draft':
                 # Don't straight delete the moves/workorders to avoid to cancel the MO, those will
                 # be deleted once the BoM is assigned (and thus after new moves/WO were created).
-                moves_to_unlink = self.move_raw_ids
+                # except if the BoM has changed, in which case the moves will be removed in compute_move_raw_ids.
+                moves_to_unlink = self.move_raw_ids.filtered(lambda m: m.bom_line_id.bom_id == bom)
                 workorders_to_unlink = self.workorder_ids
             self.bom_id = bom
             moves_to_unlink.unlink()
