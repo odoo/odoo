@@ -1620,3 +1620,29 @@ clean-all: clean
 	@rm -rf mobile/kodoo-capacitor/android/build/
 	@rm -rf mobile/kodoo-capacitor/ios/App/App/public/
 	@echo "Deep clean complete. Reinstall dependencies with 'make deps-install' or 'make tui-install'."
+## dev-host-stop: encerra o processo nativo Odoo dev-host e remove o PID file
+dev-host-stop:
+	@if [ -f logs/odoo-dev-host.pid ]; then \
+		pid=$$(cat logs/odoo-dev-host.pid); \
+		if kill -0 "$$pid" 2>/dev/null; then \
+			kill "$$pid" && echo "dev-host (pid $$pid) encerrado."; \
+		else \
+			echo "dev-host: processo $$pid não estava rodando."; \
+		fi; \
+		rm -f logs/odoo-dev-host.pid; \
+	else \
+		echo "dev-host: nenhum PID file encontrado."; \
+	fi
+
+## dev-project-stop: encerra o processo nativo Odoo dev-project e remove o PID file
+dev-project-stop:
+	@if [ -f logs/odoo-dev-project.pid ]; then \
+		pid=$$(cat logs/odoo-dev-project.pid); \
+		if kill -0 "$$pid" 2>/dev/null; then \
+			kill "$$pid" && echo "dev-project (pid $$pid) encerrado."; \
+		else \
+			echo "dev-project: processo $$pid não estava rodando."; \
+		fi; \
+		rm -f logs/odoo-dev-project.pid; \
+	else \
+		echo "dev-project: nenhum PID file encontrado."; \

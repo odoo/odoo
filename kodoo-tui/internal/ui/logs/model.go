@@ -46,6 +46,7 @@ type Model struct {
 	stream    <-chan string
 	err       string
 	view      viewMode
+	tailLines int // respects TUI_LOG_LINES from config
 }
 
 var (
@@ -65,12 +66,22 @@ func New() Model {
 	filter.CharLimit = 120
 	filter.Blur()
 	return Model{
-		services: []string{"todos"},
-		viewport: viewport.New(40, 10),
-		filter:   filter,
-		follow:   true,
-		view:     incidentsView,
+		services:  []string{"todos"},
+		viewport:  viewport.New(40, 10),
+		filter:    filter,
+		follow:    true,
+		view:      incidentsView,
+		tailLines: 20, // default; override with SetTailLines(cfg.TUILogLines)
 	}
+}
+
+// SetTailLines configures how many historical lines are fetched when the
+// raw-log stream (re)starts. Respects TUI_LOG_LINES from the env file.
+func (m Model) SetTailLines(n int) Model {
+	if n > 0 {
+		m.tailLines = n
+	}
+	return m
 }
 
 func (m Model) Title() string {
@@ -80,16 +91,16 @@ func (m Model) Title() string {
 func (m Model) HelpLines() []string {
 	if m.view == incidentsView {
 		return []string{
-			"left/right switch between incidents and raw logs",
-			"enter on incidents is not required; logs are diagnostic first here",
+			"left/h · right/i  alternar entre Incidents e Raw Logs",
+			"incidentes são sempre o primeiro painel",
 		}
 	}
 	return []string{
-		"left/right switch between incidents and raw logs",
-		"↑/↓ choose service",
-		"/ search in visible logs",
-		"f toggle follow mode",
-		"c clear the current log buffer",
+		"left/h · right/i  alternar entre Incidents e Raw Logs",
+		"↑/↓  escolher serviço",
+		"/  buscar nos logs visíveis",
+		"f  toggle follow mode",
+		"c  limpar buffer de log",
 	}
 }
 
@@ -147,7 +158,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		switch msg.String() {
 		case "left", "h":
 			m.view = incidentsView
-		case "right", "raw", "i":
+		case "right", "i":
 			m.view = rawLogsView
 		}
 
@@ -200,16 +211,16 @@ func (m Model) View(width, height int) string {
 func (m Model) incidentsPane() string {
 	lines := []string{
 		selectedLogStyle.Render("Incidents"),
-		mutedStyle.Render("left/right to switch to Raw Logs"),
+		mutedStyle.Render("left/h · right/i to switch to Raw Logs"),
 	}
 	if len(m.snapshot.Incidents) == 0 {
-		lines = append(lines, "", okStyle.Render("No incidents detected in the latest snapshot."))
+		lines = append(lines, "", okStyle.Render("Nenhum incidente detectado no último snapshot."))
 		return strings.Join(lines, "\n")
 	}
 	for _, incident := range m.snapshot.Incidents {
 		lines = append(lines, "", fmt.Sprintf("%s %s", severityDot(incident.Severity), incident.Summary))
 		lines = append(lines, mutedStyle.Render(incident.Cause))
-		lines = append(lines, warnLineStyle.Render("next: "+incident.Suggestion))
+		lines = append(lines, warnLineStyle.Render("fix: "+incident.Suggestion))
 	}
 	return strings.Join(lines, "\n")
 }
@@ -217,7 +228,7 @@ func (m Model) incidentsPane() string {
 func (m Model) servicesView() string {
 	lines := []string{
 		selectedLogStyle.Render("Raw Logs"),
-		mutedStyle.Render("left/right to switch to Incidents"),
+		mutedStyle.Render("left/h to Incidents"),
 	}
 	for idx, service := range m.services {
 		style := lipgloss.NewStyle()
@@ -237,8 +248,7 @@ func (m Model) servicesView() string {
 func (m Model) logView() string {
 	meta := []string{
 		selectedLogStyle.Render("Compose Logs"),
-		fmt.Sprintf("service: %s", m.currentService()),
-		fmt.Sprintf("follow: %t", m.follow),
+		fmt.Sprintf("service: %s  |  follow: %t  |  tail: %d", m.currentService(), m.follow, m.tailLines),
 	}
 	if m.searching || m.filter.Value() != "" {
 		meta = append(meta, m.filter.View())
@@ -277,7 +287,6 @@ func (m Model) filteredLines() []string {
 	if query == "" {
 		return append([]string(nil), m.lines...)
 	}
-
 	filtered := make([]string, 0, len(m.lines))
 	for _, line := range m.lines {
 		if strings.Contains(strings.ToLower(line), query) {
@@ -299,9 +308,15 @@ func (m *Model) restartStream() tea.Cmd {
 	m.lines = nil
 	m.syncViewport()
 
+	tail := m.tailLines
+	if tail <= 0 {
+		tail = 20
+	}
+
 	return tea.Batch(
 		func() tea.Msg {
-			go docker.StreamLogs(ctx, m.currentService(), 20, ch)
+			// tail usa m.tailLines, não mais o literal 20.
+			go docker.StreamLogs(ctx, m.currentService(), tail, ch)
 			return nil
 		},
 		waitStreamCmd(ch),

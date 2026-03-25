@@ -33,12 +33,12 @@ func (m Model) Title() string {
 
 func (m Model) HelpLines() []string {
 	return []string{
-		"s start/stop contextual",
-		"w open Runtime",
-		"d open Databases",
-		"l open Logs",
-		"t run troubleshoot",
-		"c open Config",
+		"s  start/stop (docker) · reabre seleção (dev host/project)",
+		"w  abrir Runtime",
+		"d  abrir Databases",
+		"l  abrir Logs",
+		"t  run troubleshoot",
+		"c  abrir Config",
 	}
 }
 
@@ -55,35 +55,57 @@ func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
 	return m
 }
 
+// View renders the overview. Switches to a single-column layout for narrow
+// terminals (width < 110) to avoid panel overflow.
 func (m Model) View(width, height int) string {
 	if width <= 0 || height <= 0 {
 		return ""
 	}
 
-	header := panelStyle.Width(width - 2).Render(m.headerView())
-	bodyHeight := max(10, height-7)
-	leftWidth := max(28, width/3)
-	middleWidth := max(28, width/3)
-	rightWidth := max(28, width-leftWidth-middleWidth-6)
+	header := panelStyle.Width(width - 2).Render(m.headerView(width))
 
-	left := panelStyle.Width(leftWidth).Height(bodyHeight).Render(m.healthView())
+	if width < 110 {
+		// Narrow: stack vertically, equal thirds of remaining height.
+		bodyHeight := max(6, (height-8)/3)
+		left   := panelStyle.Width(width - 2).Height(bodyHeight).Render(m.healthView())
+		middle := panelStyle.Width(width - 2).Height(bodyHeight).Render(m.runtimeView())
+		right  := panelStyle.Width(width - 2).Height(bodyHeight).Render(m.incidentsView())
+		return lipgloss.JoinVertical(lipgloss.Left, header, left, middle, right)
+	}
+
+	// Wide: three columns side by side.
+	bodyHeight := max(10, height-7)
+	leftWidth   := max(28, width/3)
+	middleWidth := max(28, width/3)
+	rightWidth  := max(28, width-leftWidth-middleWidth-6)
+
+	left   := panelStyle.Width(leftWidth).Height(bodyHeight).Render(m.healthView())
 	middle := panelStyle.Width(middleWidth).Height(bodyHeight).Render(m.runtimeView())
-	right := panelStyle.Width(rightWidth).Height(bodyHeight).Render(m.incidentsView())
-	return lipgloss.JoinVertical(lipgloss.Left, header, lipgloss.JoinHorizontal(lipgloss.Top, left, middle, right))
+	right  := panelStyle.Width(rightWidth).Height(bodyHeight).Render(m.incidentsView())
+	return lipgloss.JoinVertical(lipgloss.Left, header,
+		lipgloss.JoinHorizontal(lipgloss.Top, left, middle, right))
 }
 
-func (m Model) headerView() string {
+// headerView renders one field per line so that narrow terminals don't wrap
+// the separator-joined summary into an unreadable mess.
+func (m Model) headerView(width int) string {
 	runtime := m.snapshot.Runtime
-	lines := []string{
-		titleStyle.Render("Operational Snapshot"),
-		fmt.Sprintf("mode: %s", runtime.Mode),
-		fmt.Sprintf("database: %s", fallback(runtime.ActiveDB, "not pinned")),
+	fields := []string{
+		fmt.Sprintf("mode: %s", fallback(runtime.Mode, "loading")),
+		fmt.Sprintf("db: %s", fallback(runtime.ActiveDB, "not pinned")),
 		fmt.Sprintf("local: %s", runtime.LocalURL),
 		fmt.Sprintf("public: %s", runtime.PublicURL),
 		fmt.Sprintf("config: %s", fallback(m.snapshot.Config.EnvPath, ".env")),
 		fmt.Sprintf("refresh: %s", runtime.LastRefresh.Format("15:04:05")),
 	}
-	return strings.Join(lines, "  |  ")
+
+	title := titleStyle.Render("Operational Snapshot")
+	if width < 110 {
+		// One field per line.
+		return title + "\n" + strings.Join(fields, "\n")
+	}
+	// Single wide line with separator.
+	return title + "  |  " + strings.Join(fields, "  |  ")
 }
 
 func (m Model) healthView() string {
@@ -105,19 +127,19 @@ func (m Model) runtimeView() string {
 	runtime := m.snapshot.Runtime
 	lines := []string{
 		titleStyle.Render("Runtime Summary"),
-		fmt.Sprintf("backend: %s", runtime.Backend),
-		fmt.Sprintf("runtime: %s", runtime.RuntimeProfile),
+		fmt.Sprintf("backend: %s", fallback(runtime.Backend, "idle")),
+		fmt.Sprintf("runtime: %s", fallback(runtime.RuntimeProfile, "unknown")),
 		fmt.Sprintf("db backend: %s", fallback(runtime.DBBackend, "n/a")),
 		fmt.Sprintf("config: %s", runtime.ConfigStatus),
 		fmt.Sprintf("pid: %s", runtime.LocalPIDStatus),
-		fmt.Sprintf("ports: %s", runtime.PortSummary),
+		fmt.Sprintf("ports: %s", fallback(runtime.PortSummary, "none")),
 		"",
 		titleStyle.Render("Smoke"),
 	}
 	for _, result := range m.snapshot.Smoke {
 		status := errStyle.Render("fail")
 		if result.OK {
-			status = okStyle.Render("ok")
+			status = okStyle.Render("ok  ")
 		}
 		lines = append(lines, fmt.Sprintf("%s %s (%s)", status, result.Name, result.Latency.Round(10_000_000)))
 		if !result.OK && result.Error != "" {
@@ -126,8 +148,8 @@ func (m Model) runtimeView() string {
 	}
 	if len(runtime.Warnings) > 0 {
 		lines = append(lines, "", titleStyle.Render("Warnings"))
-		for _, warning := range runtime.Warnings {
-			lines = append(lines, warnStyle.Render("• "+warning))
+		for _, w := range runtime.Warnings {
+			lines = append(lines, warnStyle.Render("• "+w))
 		}
 	}
 	return strings.Join(lines, "\n")
@@ -136,22 +158,22 @@ func (m Model) runtimeView() string {
 func (m Model) incidentsView() string {
 	lines := []string{
 		titleStyle.Render("Incidents / Next Step"),
-		m.snapshot.Runtime.LastIncident,
+		fallback(m.snapshot.Runtime.LastIncident, "sem incidentes"),
 		"",
-		"Suggested action:",
-		warnStyle.Render(m.snapshot.Runtime.SuggestedNextStep),
+		warnStyle.Render("→ " + fallback(m.snapshot.Runtime.SuggestedNextStep, "abra Logs ou Doctor")),
 	}
 	if len(m.snapshot.Incidents) == 0 {
-		lines = append(lines, "", okStyle.Render("No active incidents."))
+		lines = append(lines, "", okStyle.Render("Nenhum incidente ativo."))
 		return strings.Join(lines, "\n")
 	}
 	for idx, incident := range m.snapshot.Incidents {
 		if idx >= 4 {
+			lines = append(lines, mutedStyle.Render(fmt.Sprintf("+ %d more", len(m.snapshot.Incidents)-4)))
 			break
 		}
 		lines = append(lines, "", fmt.Sprintf("%s %s", severityDot(incident.Severity), incident.Summary))
 		lines = append(lines, mutedStyle.Render(incident.Cause))
-		lines = append(lines, warnStyle.Render("next: "+incident.Suggestion))
+		lines = append(lines, warnStyle.Render("fix: "+incident.Suggestion))
 	}
 	return strings.Join(lines, "\n")
 }
