@@ -81,20 +81,15 @@ patch(CustomerAddress.prototype, {
         }
     },
 
-    async _onChangeCountry(init = false) {
-        await super._onChangeCountry(init);
+    _getAddressFields() {
+        const addressFields = super._getAddressFields();
         const radio = this.el.querySelector('input[name="company_type"]:checked');
-
         if (!radio || !this.el.querySelector('input[name="l10n_my_edi_malaysian_tin"]')) {
-            return;
+            return addressFields;
         }
-
-        if (this._getSelectedCountryCode() === "MY") {
-            this._hideInput("l10n_my_edi_malaysian_tin");
-            this._showInput("vat");
-        } else {
-            this._showInput("l10n_my_edi_malaysian_tin");
-            this._hideInput("vat");
+        if (this._getSelectedCountryCode() !== "MY") {
+            addressFields.add("l10n_my_edi_malaysian_tin");
         }
+        return addressFields;
     },
 });

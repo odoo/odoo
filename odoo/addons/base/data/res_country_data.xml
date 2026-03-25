@@ -15,6 +15,7 @@
             <field name="currency_id" ref="AED" />
             <field eval="971" name="phone_code" />
             <field name="vat_label">TRN</field>
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="af" model="res.country">
             <field name="name">Afghanistan</field>
@@ -27,6 +28,7 @@
             <field name="code">ag</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1268" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ai" model="res.country">
             <field name="name">Anguilla</field>
@@ -51,9 +53,9 @@
         <record id="ao" model="res.country">
             <field name="name">Angola</field>
             <field name="code">ao</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="AOA" />
             <field eval="244" name="phone_code" />
+            <field name='zip_applicability'>not_applicable</field>
         </record>
         <record id="aq" model="res.country">
             <field name="name">Antarctica</field>
@@ -98,6 +100,7 @@
             <field name="code">aw</field>
             <field name="currency_id" ref="AWG" />
             <field eval="297" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ax" model="res.country">
             <field name="name">Åland Islands</field>
@@ -143,6 +146,7 @@
             <field name="code">bf</field>
             <field name="currency_id" ref="XOF" />
             <field eval="226" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="bg" model="res.country">
             <field name="name">Bulgaria</field>
@@ -163,13 +167,14 @@
             <field name="code">bi</field>
             <field name="currency_id" ref="BIF" />
             <field eval="257" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="bj" model="res.country">
             <field name="name">Benin</field>
             <field name="code">bj</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="XOF" />
             <field eval="229" name="phone_code" />
+            <field name='zip_applicability'>not_applicable</field>
         </record>
         <record id="bl" model="res.country">
             <field name="name">Saint Barthélémy</field>
@@ -214,6 +219,7 @@
             <field name="code">bs</field>
             <field name="currency_id" ref="BSD" />
             <field eval="1242" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="bt" model="res.country">
             <field name="name">Bhutan</field>
@@ -232,6 +238,7 @@
             <field name="code">bw</field>
             <field name="currency_id" ref="BWP" />
             <field eval="267" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="by" model="res.country">
             <field name="name">Belarus</field>
@@ -242,9 +249,9 @@
         <record id="bz" model="res.country">
             <field name="name">Belize</field>
             <field name="code">bz</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="BZD" />
             <field eval="501" name="phone_code" />
+            <field name='zip_applicability'>not_applicable</field>
         </record>
         <record id="ca" model="res.country">
             <field name="name">Canada</field>
@@ -266,18 +273,21 @@
             <field name="code">cf</field>
             <field name="currency_id" ref="XAF" />
             <field eval="236" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="cd" model="res.country">
             <field name="name">Congo (DRC)</field>
             <field name="code">cd</field>
             <field name="currency_id" ref="CDF" />
             <field eval="243" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="cg" model="res.country">
             <field name="name">Congo (Republic)</field>
             <field name="code">cg</field>
             <field name="currency_id" ref="XAF" />
             <field eval="242" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ch" model="res.country">
             <field name="name">Switzerland</field>
@@ -291,12 +301,14 @@
             <field name="code">ci</field>
             <field name="currency_id" ref="XOF" />
             <field eval="225" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ck" model="res.country">
             <field name="name">Cook Islands</field>
             <field name="code">ck</field>
             <field name="currency_id" ref="NZD" />
             <field eval="682" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="cl" model="res.country">
             <field name="name">Chile</field>
@@ -304,13 +316,14 @@
             <field name="currency_id" ref="CLP" />
             <field eval="56" name="phone_code" />
             <field name="vat_label">RUT</field>
-            <field name='zip_required'>0</field>
+            <field name='zip_applicability'>optional</field>
         </record>
         <record id="cm" model="res.country">
             <field name="name">Cameroon</field>
             <field name="code">cm</field>
             <field name="currency_id" ref="XAF" />
             <field eval="237" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="cn" model="res.country">
             <field name="name">China</field>
@@ -326,6 +339,7 @@
             <field name="currency_id" ref="COP" />
             <field eval="57" name="phone_code" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="cr" model="res.country">
             <field name="name">Costa Rica</field>
@@ -350,6 +364,7 @@
             <field name="code">cw</field>
             <field name="currency_id" ref="XCG" />
             <field eval="599" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="cx" model="res.country">
             <field name="name">Christmas Island</field>
@@ -384,6 +399,7 @@
             <field name="code">dj</field>
             <field name="currency_id" ref="DJF" />
             <field eval="253" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="dk" model="res.country">
             <field name="name">Denmark</field>
@@ -398,6 +414,7 @@
             <field name="code">dm</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1767" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="do" model="res.country">
             <field name="name">Dominican Republic</field>
@@ -419,8 +436,8 @@
             <field name="currency_id" ref="USD" />
             <field eval="593" name="phone_code" />
             <field name="vat_label">RUC</field>
-            <field name='zip_required'>0</field>
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(country_name)s'" />
+            <field name='zip_applicability'>optional</field>
         </record>
         <record id="ee" model="res.country">
             <field name="name">Estonia</field>
@@ -434,6 +451,8 @@
             <field name="code">eg</field>
             <field name="currency_id" ref="EGP" />
             <field eval="20" name="phone_code" />
+            <field name="zip_applicability">optional</field>
+
         </record>
         <record id="eh" model="res.country">
             <field name="name">Western Sahara</field>
@@ -446,6 +465,7 @@
             <field name="code">er</field>
             <field name="currency_id" ref="ERN" />
             <field eval="291" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="es" model="res.country">
             <field name="name">Spain</field>
@@ -474,6 +494,7 @@
             <field name="code">fj</field>
             <field name="currency_id" ref="FJD" />
             <field eval="679" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="fk" model="res.country">
             <field name="name">Falkland Islands</field>
@@ -506,12 +527,14 @@
             <field name="code">ga</field>
             <field name="currency_id" ref="XAF" />
             <field eval="241" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="gd" model="res.country">
             <field name="name">Grenada</field>
             <field name="code">gd</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1473" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ge" model="res.country">
             <field name="name">Georgia</field>
@@ -531,6 +554,7 @@
             <field name="code">gh</field>
             <field name="currency_id" ref="GHS" />
             <field eval="233" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="gi" model="res.country">
             <field name="name">Gibraltar</field>
@@ -555,12 +579,14 @@
             <field name="code">gm</field>
             <field name="currency_id" ref="GMD" />
             <field eval="220" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="gn" model="res.country">
             <field name="name">Guinea</field>
             <field name="code">gn</field>
             <field name="currency_id" ref="GNF" />
             <field eval="224" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="gp" model="res.country">
             <field name="name">Guadeloupe</field>
@@ -573,6 +599,7 @@
             <field name="code">gq</field>
             <field name="currency_id" ref="XAF" />
             <field eval="240" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="gr" model="res.country">
             <field name="name">Greece</field>
@@ -611,14 +638,15 @@
             <field name="code">gy</field>
             <field name="currency_id" ref="GYD" />
             <field eval="592" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="hk" model="res.country">
             <field name="name">Hong Kong</field>
             <field name="code">hk</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="HKD" />
             <field eval="852" name="phone_code" />
             <field name="vat_label">BRN</field>
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="hm" model="res.country">
             <field name="name">Heard Island and McDonald Islands</field>
@@ -665,10 +693,10 @@
         <record id="ie" model="res.country">
             <field name="name">Ireland</field>
             <field name="code">ie</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="EUR" />
             <field eval="353" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="il" model="res.country">
             <field name="name">Israel</field>
@@ -734,6 +762,7 @@
             <field name="code">jm</field>
             <field name="currency_id" ref="JMD" />
             <field eval="1876" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="jo" model="res.country">
             <field name="name">Jordan</field>
@@ -755,6 +784,7 @@
             <field name="code">ke</field>
             <field name="currency_id" ref="KES" />
             <field eval="254" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="kg" model="res.country">
             <field name="name">Kyrgyzstan</field>
@@ -775,24 +805,28 @@
             <field name="code">ki</field>
             <field name="currency_id" ref="AUD" />
             <field eval="686" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="km" model="res.country">
             <field name="name">Comoros</field>
             <field name="code">km</field>
             <field name="currency_id" ref="KMF" />
             <field eval="269" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="kn" model="res.country">
             <field name="name">Saint Kitts and Nevis</field>
             <field name="code">kn</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1869" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="kp" model="res.country">
             <field name="name">North Korea</field>
             <field name="code">kp</field>
             <field name="currency_id" ref="KPW" />
             <field eval="850" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="kr" model="res.country">
             <field name="name">South Korea</field>
@@ -838,6 +872,7 @@
             <field name="code">lc</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1758" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="li" model="res.country">
             <field name="name">Liechtenstein</field>
@@ -945,6 +980,7 @@
             <field name="code">ml</field>
             <field name="currency_id" ref="XOF" />
             <field eval="223" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="mm" model="res.country">
             <field name="name">Myanmar</field>
@@ -961,9 +997,9 @@
         <record id="mo" model="res.country">
             <field name="name">Macau</field>
             <field name="code">mo</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="MOP" />
             <field eval="853" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="mp" model="res.country">
             <field name="name">Northern Mariana Islands</field>
@@ -982,12 +1018,14 @@
             <field name="code">mr</field>
             <field name="currency_id" ref="MRU" />
             <field eval="222" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ms" model="res.country">
             <field name="name">Montserrat</field>
             <field name="code">ms</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1664" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="mt" model="res.country">
             <field name="name">Malta</field>
@@ -1002,6 +1040,7 @@
             <field name="currency_id" ref="MUR" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field eval="230" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="mv" model="res.country">
             <field name="name">Maldives</field>
@@ -1014,6 +1053,7 @@
             <field name="code">mw</field>
             <field name="currency_id" ref="MWK" />
             <field eval="265" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="mx" model="res.country">
             <field name="name">Mexico</field>
@@ -1043,6 +1083,7 @@
             <field name="code">na</field>
             <field name="currency_id" ref="NAD" />
             <field eval="264" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="nc" model="res.country">
             <field name="name">New Caledonia</field>
@@ -1100,12 +1141,14 @@
             <field name="code">nr</field>
             <field name="currency_id" ref="AUD" />
             <field eval="674" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="nu" model="res.country">
             <field name="name">Niue</field>
             <field name="code">nu</field>
             <field name="currency_id" ref="NZD" />
             <field eval="683" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="nz" model="res.country">
             <field name="name">New Zealand</field>
@@ -1128,14 +1171,15 @@
             <field eval="507" name="phone_code" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
             <field name="vat_label">RUC</field>
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="pe" model="res.country">
             <field name="name">Peru</field>
             <field name="code">pe</field>
-            <field name='zip_required'>0</field>
             <field name="currency_id" ref="PEN" />
             <field eval="51" name="phone_code" />
             <field name="vat_label">RUC</field>
+            <field name='zip_applicability'>optional</field>
         </record>
         <record id="pf" model="res.country">
             <field name="name">French Polynesia</field>
@@ -1221,6 +1265,7 @@
             <field name="currency_id" ref="QAR" />
             <field eval="974" name="phone_code" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="re" model="res.country">
             <field name="name">Réunion</field>
@@ -1252,24 +1297,28 @@
             <field name="code">rw</field>
             <field name="currency_id" ref="RWF" />
             <field eval="250" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sa" model="res.country">
             <field name="name">Saudi Arabia</field>
             <field name="code">sa</field>
             <field name="currency_id" ref="SAR" />
             <field eval="966" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="sb" model="res.country">
             <field name="name">Solomon Islands</field>
             <field name="code">sb</field>
             <field name="currency_id" ref="SBD" />
             <field eval="677" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sc" model="res.country">
             <field name="name">Seychelles</field>
             <field name="code">sc</field>
             <field name="currency_id" ref="SCR" />
             <field eval="248" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sd" model="res.country">
             <field name="name">Sudan</field>
@@ -1323,6 +1372,7 @@
             <field name="code">sl</field>
             <field name="currency_id" ref="SLE" />
             <field eval="232" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sm" model="res.country">
             <field name="name">San Marino</field>
@@ -1341,24 +1391,28 @@
             <field name="code">so</field>
             <field name="currency_id" ref="SOS" />
             <field eval="252" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sr" model="res.country">
             <field name="name">Suriname</field>
             <field name="code">sr</field>
             <field name="currency_id" ref="SRD" />
             <field eval="597" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ss" model="res.country">
             <field name="name">South Sudan</field>
             <field name="code">ss</field>
             <field name="currency_id" ref="SSP" />
             <field eval="211" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="st" model="res.country">
             <field name="name">São Tomé and Príncipe</field>
             <field name="code">st</field>
             <field name="currency_id" ref="STD" />
             <field eval="239" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sv" model="res.country">
             <field name="name">El Salvador</field>
@@ -1371,12 +1425,14 @@
             <field name="code">sx</field>
             <field name="currency_id" ref="XCG" />
             <field eval="1721" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sy" model="res.country">
             <field name="name">Syria</field>
             <field name="code">sy</field>
             <field name="currency_id" ref="SYP" />
             <field eval="963" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="sz" model="res.country">
             <field name="name">Eswatini</field>
@@ -1395,6 +1451,7 @@
             <field name="code">td</field>
             <field name="currency_id" ref="XAF" />
             <field eval="235" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="tf" model="res.country">
             <field name="name">French Southern Territories</field>
@@ -1407,6 +1464,7 @@
             <field name="code">tg</field>
             <field name="currency_id" ref="XOF" />
             <field eval="228" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="th" model="res.country">
             <field name="name">Thailand</field>
@@ -1428,6 +1486,7 @@
             <field name="code">tk</field>
             <field name="currency_id" ref="NZD" />
             <field eval="690" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="tm" model="res.country">
             <field name="name">Turkmenistan</field>
@@ -1448,12 +1507,14 @@
             <field name="code">to</field>
             <field name="currency_id" ref="TOP" />
             <field eval="676" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="tl" model="res.country">
             <field name="name">Timor-Leste</field>
             <field name="code">tl</field>
             <field name="currency_id" ref="USD" />
             <field eval="670" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="tr" model="res.country">
             <field name="name">Türkiye</field>
@@ -1467,12 +1528,14 @@
             <field name="code">tt</field>
             <field name="currency_id" ref="TTD" />
             <field eval="1868" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="tv" model="res.country">
             <field name="name">Tuvalu</field>
             <field name="code">tv</field>
             <field name="currency_id" ref="AUD" />
             <field eval="688" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="tw" model="res.country">
             <field name="name">Taiwan</field>
@@ -1485,6 +1548,7 @@
             <field name="code">tz</field>
             <field name="currency_id" ref="TZS" />
             <field eval="255" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="ua" model="res.country">
             <field name="name">Ukraine</field>
@@ -1498,6 +1562,7 @@
             <field name="currency_id" ref="UGX" />
             <field eval="256" name="phone_code" />
             <field name="vat_label">TIN</field>
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="uk" model="res.country">
             <field name="name">United Kingdom</field>
@@ -1547,6 +1612,7 @@
             <field name="code">vc</field>
             <field name="currency_id" ref="XCD" />
             <field eval="1784" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="ve" model="res.country">
             <field name="name">Venezuela</field>
@@ -1571,14 +1637,15 @@
             <field name="code">vn</field>
             <field name="currency_id" ref="VND" />
             <field eval="84" name="phone_code" />
-            <field name='zip_required'>0</field>
             <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s %(country_name)s'" name="address_format" />
+            <field name='zip_applicability'>optional</field>
         </record>
         <record id="vu" model="res.country">
             <field name="name">Vanuatu</field>
             <field name="code">vu</field>
             <field name="currency_id" ref="VUV" />
             <field eval="678" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="wf" model="res.country">
             <field name="name">Wallis and Futuna</field>
@@ -1597,6 +1664,7 @@
             <field name="code">ye</field>
             <field name="currency_id" ref="YER" />
             <field eval="967" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="yt" model="res.country">
             <field name="name">Mayotte</field>
@@ -1609,6 +1677,7 @@
             <field name="code">za</field>
             <field name="currency_id" ref="ZAR" />
             <field eval="27" name="phone_code" />
+            <field name="zip_applicability">optional</field>
         </record>
         <record id="zm" model="res.country">
             <field name="name">Zambia</field>
@@ -1622,6 +1691,7 @@
             <field name="code">zw</field>
             <field name="currency_id" ref="ZIG" />
             <field eval="263" name="phone_code" />
+            <field name="zip_applicability">not_applicable</field>
         </record>
         <record id="xi" model="res.country">
             <field name="name">Northern Ireland</field>

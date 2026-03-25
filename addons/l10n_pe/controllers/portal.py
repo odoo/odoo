@@ -27,7 +27,7 @@ class L10nPEPortalAccount(L10nLatamBasePortalAccount):
         )
 
     @route(
-        '/portal/city_infos/<model("res.city"):city>',
+        "/my/address/city_info/<model('res.city'):city>",
         type='jsonrpc',
         auth='public',
         methods=['POST'],

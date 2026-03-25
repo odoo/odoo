@@ -239,10 +239,6 @@ class PosController(PortalAccount):
         elif user_is_connected:
             return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
 
-        # Most of the time, the country of the customer will be the same as the order. We can prefill it by default with the country of the company.
-        if 'country' not in form_values:
-            form_values['country'] = pos_order_country
-
         # Prefill the customer extra values if there is any and an user is connected
         if partner:
             if additional_partner_fields:
@@ -256,7 +252,7 @@ class PosController(PortalAccount):
                 form_values['partner_address'] = partner.contact_address
 
         return request.render("point_of_sale.ticket_validation_screen", {
-            **self._prepare_address_form_values(partner, **kwargs),
+            **self._prepare_address_form_values(partner, pos_order=pos_order, **kwargs),
             'partner': partner,
             'address_url': f'/my/account?redirect=/pos/ticket/validate?access_token={access_token}',
             'user_is_connected': user_is_connected,
@@ -269,6 +265,13 @@ class PosController(PortalAccount):
             'invoice_sending_methods': {'email': _("by Email")},
             **form_values,
         })
+
+    def _get_default_country(self, pos_order=False, **kwargs):
+        if pos_order:
+            # Most of the time, the country of the customer will be the same as the order. We can
+            # prefill it by default with the country of the company.
+            return pos_order.company_id.account_fiscal_country_id
+        return super()._get_default_country(pos_order=pos_order, **kwargs)
 
     def _validate_extra_form_details(self, addtional_form_values, additional_required_fields):
         """ Ensure that all additional required fields have a value in the data. """

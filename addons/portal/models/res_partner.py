@@ -14,8 +14,8 @@ class ResPartner(models.Model):
         :rtype: set
         """
         return {
-            'name', 'phone', 'email', 'street', 'street2', 'city', 'state_id', 'country_id', 'zip',
-            'zipcode', 'vat', 'parent_name',
+            'name', 'phone', 'email', 'street', 'street2', 'city', 'city_id', 'state_id',
+            'country_id', 'zip', 'zipcode', 'vat', 'parent_name',
         }
 
     def _can_edit_country(self):
@@ -66,18 +66,6 @@ class ResPartner(models.Model):
         )
         return all(self.read(mandatory_billing_fields)[0].values())
 
-    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
-        """Return the set of mandatory billing field names.
-
-        :return: The set of mandatory billing field names.
-        :rtype: set
-        """
-        base_fields = {'name', 'email'}
-        if not self._needs_address(**kwargs):
-            return base_fields
-        base_fields.add('phone')  # not required for quick checkout (event)
-        return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
-
     def _check_delivery_address(self, **kwargs):
         """Check that all mandatory delivery fields are filled for the given partner.
 
@@ -91,16 +79,63 @@ class ResPartner(models.Model):
         )
         return all(self.read(mandatory_delivery_fields)[0].values())
 
+    # Bussiness Methods (Get address fields)
+
+    def _get_address_fields(self, country):
+        address_format_fields = (country and country.get_address_fields()) or [
+            "street",
+            "zip",
+            "city",
+        ]
+
+        if country.zip_applicability == "not_applicable":
+            address_format_fields.remove("zip")
+
+        # Maps `res.country` 'address_format' fields to `res.partner` fields that have to be set on
+        # the address page.
+        mapping = country._get_address_format_fields_mapping()
+
+        return [mapping.get(fname, fname) for fname in address_format_fields]
+
+    def _get_required_address_fields(
+            self, address_type, country, use_delivery_as_billing=False, **kwargs
+        ):
+        required_address_fields = set()
+        if address_type == "delivery" or use_delivery_as_billing:
+            required_address_fields |= self._get_mandatory_delivery_address_fields(
+                country, **kwargs
+            )
+        if address_type == "billing" or use_delivery_as_billing:
+            required_address_fields |= self._get_mandatory_billing_address_fields(
+                country, **kwargs
+            )
+
+        return required_address_fields
+
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        """Return the set of mandatory billing field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory billing field names.
+        :rtype: set
+        """
+        base_fields = {"name", "email"}
+        if not self._needs_address(**kwargs):
+            return base_fields
+        base_fields.add("phone")  # not required for quick checkout (event)
+        return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
+
     def _get_mandatory_delivery_address_fields(self, country_sudo, **kwargs):
         """Return the set of mandatory delivery field names.
 
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
         :return: The set of mandatory delivery field names.
         :rtype: set
         """
-        base_fields = {'name', 'email'}
+        base_fields = {"name", "email"}
         if not self._needs_address(**kwargs):
             return base_fields
-        base_fields.add('phone')  # not required for quick checkout (event)
+        base_fields.add("phone")  # not required for quick checkout (event)
         return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
 
     def _needs_address(self, **_kwargs):
@@ -114,9 +149,14 @@ class ResPartner(models.Model):
         :return: The set of common mandatory address field names.
         :rtype: set
         """
-        field_names = {'street', 'city', 'country_id'}
+        field_names = {
+            "street",
+            country_sudo._get_partner_city_field(),
+            "country_id",
+        }
         if country_sudo.state_required:
-            field_names.add('state_id')
-        if country_sudo.zip_required:
-            field_names.add('zip')
+            field_names.add("state_id")
+        if country_sudo.zip_applicability == "required":
+            field_names.add("zip")
+
         return field_names

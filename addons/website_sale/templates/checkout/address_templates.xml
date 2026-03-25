@@ -254,6 +254,7 @@
                         class="address_autoformat o_address_autocomplete"
                         t-att-data-company-country-code="res_company.country_id.code"
                         t-att-data-submit-url="'/shop/address/submit'"
+                        t-att-data-required-fields="','.join(required_fields)"
                     >
                         <t t-if="is_anonymous_cart">
                             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-1">

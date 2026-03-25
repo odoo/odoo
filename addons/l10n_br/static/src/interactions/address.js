@@ -3,6 +3,11 @@ import { CustomerAddress } from '@portal/interactions/address';
 
 patch(CustomerAddress.prototype, {
 
+    async willStart() {
+        await super.willStart();
+        this.setBrFieldsVisibility();
+    },
+
     _selectState(id) {
         this.addressForm.querySelector(
             `select[name="state_id"] > option[value="${id}"]`
@@ -13,9 +18,10 @@ patch(CustomerAddress.prototype, {
         await super.onChangeZip();
         if (this._getSelectedCountryCode() !== 'BR') return;
 
+        const cities = this.addressForm.city_id;
         const newZip = this.addressForm.zip.value.padEnd(5, '0');
 
-        for (const option of this.elementCities.options) {
+        for (const option of cities.options) {
             const ranges = option.dataset.l10n_br_zip_ranges;
             if (ranges) {
                 // Parse the l10n_br_zip_ranges field (e.g. "[01000-001 05999-999] [08000-000 08499-999]").
@@ -28,7 +34,7 @@ patch(CustomerAddress.prototype, {
 
                     // Rely on lexicographical order to figure out if the new zip is in this range.
                     if (newZip >= start && newZip <= end) {
-                        this.elementCities.dispatchEvent(
+                        cities.dispatchEvent(
                             new CustomEvent('select', { detail: { value: option.value } })
                         );
                         option.selected = 'selected';
@@ -44,10 +50,9 @@ patch(CustomerAddress.prototype, {
         await super.onChangeCity();
         if (this._getSelectedCountryCode() !== 'BR') return;
 
-        if (this.elementCities.value) {
-            this._selectState(
-                this.elementCities.selectedOptions[0].dataset.state_id
-            );
+        const cities = this.addressForm.city_id;
+        if (cities.options) {
+            this._selectState(cities.selectedOptions[0].dataset.state_id);
         }
     },
 
@@ -72,15 +77,18 @@ patch(CustomerAddress.prototype, {
     async onChangeState() {
         // For BR: don't want the standard behavior of reloading cities based on state
         if (this._getSelectedCountryCode() == 'BR') {
-            this.elementCities.value = '';
+            this.addressForm.city_id.value = "";
             return;
         }
         return await super.onChangeState();
     },
 
-    async _onChangeCountry(init=false) {
-        await this.waitFor(super._onChangeCountry(...arguments));
+    async onChangeCountry() {
+        await this.waitFor(super.onChangeCountry());
+        this.setBrFieldsVisibility();
+    },
 
+    setBrFieldsVisibility() {
         if (this._getSelectedCountryCode() === 'BR') {
             this._setVisibility('.o_standard_address', false); // hide
             this._setVisibility('.o_extended_address', true); // show

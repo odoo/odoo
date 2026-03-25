@@ -14,7 +14,14 @@ portal.
 This module contains most code coming from odoo v10 website_portal. Purpose
 of this module is to allow the display of a customer portal without having
 a dependency towards website editing and customization capabilities.""",
-    'depends': ['web', 'html_editor', 'http_routing', 'mail', 'auth_signup'],
+    'depends': [
+        'auth_signup',
+        'base_address_extended',
+        'html_editor',
+        'http_routing',
+        'mail',
+        'web',
+    ],
     'data': [
         'data/mail_templates.xml',
         'data/portal_entry_data.xml',
