@@ -1469,6 +1469,7 @@ class AccountMove(models.Model):
             domain = [
                 ('account_id', 'in', pay_term_lines.account_id.ids),
                 ('parent_state', '=', 'posted'),
+                *move._check_company_domain(move.company_id),
                 ('partner_id', '=', move.commercial_partner_id.id),
                 ('reconciled', '=', False),
                 ('balance', '<' if move.is_inbound() else '>', 0.0),
