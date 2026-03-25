@@ -13,6 +13,7 @@ from odoo.tools.safe_eval import (
     expr_eval,
     safe_checker,
     safe_eval,
+    safe_whitelist,
     UnsafeClassError,
     UnsafeFunctionError,
     UnsafeInstanceError,
@@ -219,6 +220,7 @@ class TestSafeEvalRuntime(TransactionCase):
         cls.unsafe_context = {'UnsafeClass': UnsafeClass}
 
     def test_transform_decorators(self):
+        safe_whitelist.add_function('odoo.addons.test_tools.tests.test_safe_eval.TestSafeEvalRuntime.test_transform_decorators.<locals>.*')
         steps = []
 
         def make_deco(x):

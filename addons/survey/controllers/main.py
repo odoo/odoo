@@ -14,6 +14,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
 from odoo.tools import format_date, format_datetime, is_html_empty
+from odoo.tools.safe_eval import safe_function
 
 from odoo.addons.base.models.ir_qweb import keep_query
 
@@ -267,8 +268,8 @@ class Survey(http.Controller):
                 'id': page.id,
                 'title': page.title,
             } for page in survey_sudo.page_ids],
-            'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
-            'format_date': lambda date: format_date(request.env, date)
+            'format_datetime': safe_function(lambda dt: format_datetime(request.env, dt, dt_format=False)),
+            'format_date': safe_function(lambda date: format_date(request.env, date)),
         }
         if answer_sudo.state == 'new':
             # Data for the language selector

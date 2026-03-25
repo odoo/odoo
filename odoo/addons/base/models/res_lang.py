@@ -9,6 +9,7 @@ from typing import Any, Literal
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.safe_eval import safe_instance
 
 _logger = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ class LangData(Mapping):
             raise AttributeError
 
 
+@safe_instance
 class LangDataDict(Mapping):
     """ A ``dict`` of :class:`LangData` objects indexed by some key, which returns
     a special dummy :class:`LangData` for missing keys.

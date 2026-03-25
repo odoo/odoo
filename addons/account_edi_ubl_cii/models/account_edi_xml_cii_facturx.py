@@ -1,5 +1,6 @@
 from odoo import _, models, Command
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
+from odoo.tools.safe_eval import safe_function
 from lxml import etree
 
 from datetime import datetime
@@ -127,11 +128,13 @@ class AccountEdiXmlCii(models.AbstractModel):
         customer = invoice.partner_id
         supplier = invoice.company_id.partner_id.commercial_partner_id
 
+        @safe_function
         def format_date(dt):
             # Format the date in the Factur-x standard.
             dt = dt or datetime.now()
             return dt.strftime(DEFAULT_FACTURX_DATE_FORMAT)
 
+        @safe_function
         def format_monetary(number, decimal_places=2):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)

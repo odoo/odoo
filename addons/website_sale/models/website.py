@@ -15,6 +15,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import BinaryBytes, file_open, ormcache
 from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
@@ -303,6 +304,7 @@ class Website(models.Model):
 
     # === SELECTION METHODS ===#
 
+    @safe_function
     @staticmethod
     def _get_product_sort_mapping():
         return [

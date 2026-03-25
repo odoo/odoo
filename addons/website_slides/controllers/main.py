@@ -18,6 +18,7 @@ from odoo.fields import Domain
 from odoo.http import request, Response
 from odoo.http.session import touch
 from odoo.tools import consteq, email_normalize_all
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -273,6 +274,7 @@ class WebsiteSlides(WebsiteProfile):
     # TAG UTILITIES
     # --------------------------------------------------
 
+    @safe_function
     def _slugify_tags(self, tag_ids, toggle_tag_id=None):
         """ Prepares a comma separated slugified tags for the sake of readable
         URLs.

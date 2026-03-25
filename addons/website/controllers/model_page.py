@@ -4,6 +4,7 @@ import werkzeug
 
 from odoo.fields import Domain
 from odoo.http import Controller, request, route
+from odoo.tools.safe_eval import safe_function
 
 
 class ModelPageController(Controller):
@@ -72,6 +73,7 @@ class ModelPageController(Controller):
         searches.setdefault("search", "")
         searches.setdefault("order", "create_date desc")
 
+        @safe_function
         def record_to_url(record):
             return "/model/%s/%s" % (page.name_slugified, request.env['ir.http']._slug(record))
 

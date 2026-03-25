@@ -22,6 +22,7 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
 from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, get_lang
 from odoo.tools.float_utils import float_repr, float_round
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.xml_utils import cleanup_xml_node
 
 CRC8_TABLE = [
@@ -340,6 +341,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _generate_xml(self, values):
         self.ensure_one()
 
+        @safe_function
         def format_float(value, precision_digits=2):
             rounded_value = float_round(value, precision_digits=precision_digits)
             return float_repr(rounded_value, precision_digits=precision_digits)
@@ -350,8 +352,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             **self._get_sender_values(),
             **(self._get_recipient_values(values['partner'], values["is_simplified"]) if values['partner'] and not self.is_cancel or not values['is_sale'] else {}),
             'datetime_now': datetime.now(tz=ZoneInfo('Europe/Madrid')),
-            'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
-            'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
+            'format_date': safe_function(lambda d: datetime.strftime(d, '%d-%m-%Y')),
+            'format_time': safe_function(lambda d: datetime.strftime(d, '%H:%M:%S')),
             'format_float': format_float,
         })
 

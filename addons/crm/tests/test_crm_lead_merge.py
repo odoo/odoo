@@ -6,6 +6,7 @@ from odoo.addons.crm.tests.common import TestLeadConvertMassCommon
 from odoo.fields import Datetime
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
+from odoo.tools.safe_eval import safe_function
 
 
 class TestLeadMergeCommon(TestLeadConvertMassCommon):
@@ -418,7 +419,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         # check the rendered template
         result = self.env['ir.qweb']._render(
             'crm.crm_lead_merge_summary',
-            {'opportunities': lead, 'is_html_empty': lambda x: True})
+            {'opportunities': lead, 'is_html_empty': safe_function(lambda x: True)})
         self.assertIn("o_tag_color_1", result)
         self.assertIn("Alice", result)
         self.assertIn("Bob", result)

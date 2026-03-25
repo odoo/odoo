@@ -3,8 +3,6 @@
 
 from markupsafe import Markup
 
-from odoo.tools.safe_eval import safe_whitelist
-
 from . import models
 from . import tools
 from . import wizard
@@ -28,7 +26,3 @@ def _mail_post_init(env):
         translate_env._("Welcome to the #General channel 🎉"),
         translate_env._("This is a space for the whole team to connect and share updates."),
     )
-
-
-safe_whitelist.add_function('odoo.addons.mail.models.mail_render_mixin.MailRenderMixin._render_eval_context.<locals>.*')
-safe_whitelist.add_function('odoo.addons.mail.tests.test_mail_render.TestMailRenderSecurity.test_security_function_call.<locals>.*')

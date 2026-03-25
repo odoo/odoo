@@ -9,6 +9,7 @@ from stdnum.pl.nip import compact
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero, float_repr, OrderedSet
+from odoo.tools.safe_eval import safe_function
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -131,6 +132,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
+        @safe_function
         def get_vat_country(vat):
             if not vat or vat[:2].isdecimal():
                 return False
@@ -145,12 +147,14 @@ class AccountMove(models.Model):
         def get_tag_names(line):
             return line.tax_tag_ids.with_context(lang='en_US').mapped(lambda x: re.sub(r'^[+-]', r'', x.name or ''))
 
+        @safe_function
         def get_amounts_from_tag(tax_tag_string):
             lines = self.line_ids.filtered(lambda line: line.tax_tag_ids & get_tags(tax_tag_string))
             if 'OSS' in tax_tag_string:
                 lines = lines.filtered(lambda line: line.tax_ids if 'Base' in tax_tag_string else not line.tax_ids)
             return -sum(lines.mapped('amount_currency'))
 
+        @safe_function
         def get_amounts_from_tag_in_PLN_currency(tax_group_id):
             conversion_line = self.invoice_line_ids.sorted(lambda line: abs(line.balance), reverse=True)[0] if self.invoice_line_ids else None
             conversion_rate = abs(conversion_line.balance / conversion_line.amount_currency) if self.currency_id != self.env.ref('base.PLN') and conversion_line else 1

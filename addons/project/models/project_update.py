@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import format_amount, formatLang
+from odoo.tools.safe_eval import safe_function
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -118,8 +119,8 @@ class ProjectUpdate(models.Model):
             'project': project,
             'show_activities': milestones['show_section'],
             'milestones': milestones,
-            'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
-            'format_monetary': lambda value: format_amount(self.env, value, project.currency_id, trailing_zeroes=False),
+            'format_lang': safe_function(lambda value, digits: formatLang(self.env, value, digits=digits)),
+            'format_monetary': safe_function(lambda value: format_amount(self.env, value, project.currency_id, trailing_zeroes=False)),
         }
 
     @api.model

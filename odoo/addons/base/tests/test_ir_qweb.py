@@ -13,6 +13,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.models.ir_qweb import QWebError
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.tools.safe_eval import safe_whitelist
 from odoo.exceptions import UserError, MissingError
 
 unsafe_eval = eval
@@ -731,6 +732,8 @@ class TestQWebNS(TransactionCase):
 @tagged('post_install', '-at_install')
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
+        safe_whitelist.add_function('odoo.addons.base.tests.test_ir_qweb.TestQWebBasic.test_compile_expr.<locals>.*')
+        safe_whitelist.add_function('odoo.addons.base.models.ir_qweb.test.<locals>.*')  # `__name__` is present in globals for Qweb compiled template
         tests = [
             #pylint: disable=C0326
             # source,                                   values,                         result

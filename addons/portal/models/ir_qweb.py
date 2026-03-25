@@ -15,7 +15,7 @@ class IrQweb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
         values.update(
             is_html_empty=is_html_empty,
-            frontend_languages=lazy(lambda: irQweb.env['res.lang']._get_frontend())
+            frontend_languages=lazy(irQweb.env['res.lang']._get_frontend),
         )
         for key in irQweb.env.context:
             if key not in values:

@@ -9,6 +9,7 @@ from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.exceptions import LockError, UserError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.sql import column_exists, create_column
 
 from odoo import _, api, Command, fields, models, modules
@@ -1943,6 +1944,7 @@ class AccountMove(models.Model):
         return {}
 
     def _l10n_it_edi_get_formatters(self):
+        @safe_function
         def format_alphanumeric(text, maxlen=None):
             if not text:
                 return False
@@ -1953,21 +1955,25 @@ class AccountMove(models.Model):
                 text = text[maxlen:]
             return text
 
+        @safe_function
         def format_date(dt):
             # Format the date in the italian standard.
             dt = dt or datetime.now()
             return dt.strftime('%Y-%m-%d')
 
+        @safe_function
         def format_monetary(number, currency):
             # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
             return float_repr(number, min(2, currency.decimal_places))
 
+        @safe_function
         def format_float(amount, precision):
             if amount is None or amount is False:
                 return None
             # Avoid things like -0.0, see: https://stackoverflow.com/a/11010869
             return '%.*f' % (precision, amount if not float_is_zero(amount, precision_digits=precision) else 0.0)
 
+        @safe_function
         def format_numbers(number):
             #format number to str with between 2 and 8 decimals (event if it's .00)
             number_splited = str(number).split('.')
@@ -1979,10 +1985,12 @@ class AccountMove(models.Model):
                 return "%.08f" % number
             return float_repr(number, max(2, len(cents)))
 
+        @safe_function
         def format_numbers_two(number):
             #format number to str with 2 (event if it's .00)
             return "%.02f" % number
 
+        @safe_function
         def format_phone(number):
             if not number:
                 return False
@@ -1991,6 +1999,7 @@ class AccountMove(models.Model):
                 return format_alphanumeric(number)
             return False
 
+        @safe_function
         def format_address(street, street2, maxlen=60):
             street, street2 = street or '', street2 or ''
             if street and len(street) >= maxlen:

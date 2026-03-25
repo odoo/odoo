@@ -7,6 +7,7 @@ from urllib.parse import urlsplit
 from odoo import models
 from odoo.http import request
 from odoo.tools import lazy
+from odoo.tools.safe_eval import safe_function
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
@@ -89,7 +90,9 @@ class IrQweb(models.AbstractModel):
 
         values.update(dict(
             website=current_website,
-            is_view_active=lazy(lambda: current_website.is_view_active),
+            is_view_active=lazy(
+                safe_function(lambda: current_website.is_view_active),
+            ),
             res_company=lazy(current_website.company_id.sudo),
             translatable=translatable,
             editable=editable,

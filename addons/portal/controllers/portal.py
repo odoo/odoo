@@ -19,6 +19,7 @@ from odoo.http import Controller, request, route
 from odoo.http.session import logout
 from odoo.http.stream import content_disposition
 from odoo.tools import clean_context, consteq, single_email_re, str2bool
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -1071,6 +1072,8 @@ class CustomerPortal(Controller):
             headers['Content-Disposition'] = content_disposition(filename, disposition_type='attachment' if download else 'inline')
         return headers
 
+
+@safe_function
 def get_error(e, path=''):
     """ Recursively dereferences `path` (a period-separated sequence of dict
     keys) in `e` (an error dict or value), returns the final resolution IIF it's

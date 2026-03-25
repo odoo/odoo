@@ -1034,19 +1034,19 @@ F = typing.TypeVar("F", bound=typing.Callable[..., typing.Any])
 
 
 def safe_class(cls: T) -> T:
-    safe_whitelist.add_class(cls)
+    safe_whitelist.add_class(safe_whitelist.get_full_path(cls))
     return cls
 
 
 def safe_instance(cls: T) -> T:
-    safe_whitelist.add_instance(cls)
+    safe_whitelist.add_instance(safe_whitelist.get_full_path(cls))
     return cls
 
 
 def safe_function(func: F) -> F:
     if func.__qualname__.endswith('<lambda>'):
         func.__qualname__ += f'.<{func.__code__.co_firstlineno}>'
-    safe_whitelist.add_function(func)
+    safe_whitelist.add_function(safe_whitelist.get_full_path(func))
     return func
 
 

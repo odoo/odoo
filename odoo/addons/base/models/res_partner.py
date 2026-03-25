@@ -14,6 +14,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
+from odoo.tools.safe_eval import safe_function
 
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
@@ -38,6 +39,9 @@ def _lang_get(self):
 
 # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
 _tzs = [(tz, tz) for tz in sorted(all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+
+
+@safe_function
 def _tz_get(self):
     return _tzs
 

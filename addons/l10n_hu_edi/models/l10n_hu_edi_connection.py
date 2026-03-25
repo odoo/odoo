@@ -15,6 +15,7 @@ import requests
 
 from odoo import _, release
 from odoo.tools import cleanup_xml_node
+from odoo.tools.safe_eval import safe_function
 
 
 _logger = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ XML_NAMESPACES = {
 }
 
 
+@safe_function
 def format_bool(value):
     return 'true' if value else 'false'
 

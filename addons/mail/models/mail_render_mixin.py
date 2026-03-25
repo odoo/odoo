@@ -17,6 +17,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.tools import urls
 from odoo.tools.mail import is_html_empty, prepend_html_content, html_normalize
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
+from odoo.tools.safe_eval import safe_function
 
 _logger = logging.getLogger(__name__)
 
@@ -323,10 +324,10 @@ class MailRenderMixin(models.AbstractModel):
         render_context = {
             'ctx': self.env.context,
             'format_addr': tools.formataddr,
-            'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
-            'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
-            'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
-            'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
+            'format_date': safe_function(lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code)),
+            'format_datetime': safe_function(lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code)),
+            'format_time': safe_function(lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code)),
+            'format_amount': safe_function(lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code)),
             'format_duration': tools.format_duration,
             'is_html_empty': is_html_empty,
             'slug': self.env['ir.http']._slug,

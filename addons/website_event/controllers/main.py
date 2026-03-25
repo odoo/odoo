@@ -11,6 +11,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.translate import LazyTranslate
 from odoo.exceptions import UserError, ValidationError
 
@@ -553,6 +554,7 @@ class WebsiteEventController(http.Controller):
             tags = self._event_search_tags_ids(searches['tags'])
         return tags
 
+    @safe_function
     def _slugify_tags(self, tag_ids, toggle_tag_id=None):
         """ Prepares a comma separated slugified tags for the sake of readable URLs.
 

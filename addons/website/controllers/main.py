@@ -29,6 +29,7 @@ from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import OrderedSet, escape_psql, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.json import scriptsafe as json
+from odoo.tools.safe_eval import safe_instance
 from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
@@ -49,6 +50,7 @@ MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 
 
+@safe_instance
 class QueryURL:
     def __init__(self, path='', path_args=None, **args):
         self.path = path

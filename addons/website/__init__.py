@@ -5,7 +5,6 @@ from . import models
 from . import wizard
 
 from odoo.http import request
-from odoo.tools.safe_eval import safe_whitelist
 
 
 def uninstall_hook(env):
@@ -28,8 +27,3 @@ def post_init_hook(env):
     if request:
         env = env(context=request.default_context())
         request.website_routing = env['website'].get_current_website().id
-
-
-safe_whitelist.add_instance('odoo.addons.website.controllers.main.QueryURL')
-safe_whitelist.add_function('odoo.addons.website.controllers.model_page.ModelPageController.generic_model.<locals>.*')
-safe_whitelist.add_function('odoo.addons.website.models.ir_qweb.IrQweb._prepare_frontend_environment.<locals>.*')

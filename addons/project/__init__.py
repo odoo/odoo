@@ -6,7 +6,6 @@ from . import models
 from . import report
 from . import wizard
 
-from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.sql import create_index, make_identifier
 
 
@@ -41,6 +40,3 @@ def _project_uninstall_hook(env):
     """Since the m2m table for the project share wizard's `partner_ids` field is not dropped at uninstall, it is
     necessary to ensure it is emptied, else re-installing the module will fail due to foreign keys constraints."""
     env['project.share.wizard'].search([("partner_ids", "!=", False)]).partner_ids = False
-
-
-safe_whitelist.add_function('odoo.addons.project.models.project_update.ProjectUpdate._get_template_values.<locals>.*')

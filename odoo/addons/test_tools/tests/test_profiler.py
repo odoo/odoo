@@ -9,6 +9,7 @@ from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user, 
 from odoo.tests.result import stats_logger
 from odoo.tools import profiler
 from odoo.tools.profiler import Profiler, ExecutionContext
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.speedscope import Speedscope
 
 
@@ -480,7 +481,9 @@ class TestProfiling(TransactionCase):
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [child_template.id])
 
-        values = {'add_one_query': lambda: self.env.cr.execute('SELECT id FROM ir_ui_view LIMIT 1') or 'query'}
+        values = {
+            'add_one_query': safe_function(lambda: self.env.cr.execute('SELECT id FROM ir_ui_view LIMIT 1')) or 'query'
+        }
         result = u"""
                     [0: <span class="myclass">a query</span> 3]
                     <b>query</b>

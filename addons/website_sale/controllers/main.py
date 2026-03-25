@@ -16,6 +16,7 @@ from odoo.http import request, route
 from odoo.http.stream import content_disposition
 from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.tools.safe_eval import safe_function
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.html_editor.tools import get_video_thumbnail
@@ -545,13 +546,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attributes": attributes,
             "keep": keep,
             "search_categories_ids": search_categories.ids,
-            "get_product_prices": lambda product: products_prices[product.id],
+            "get_product_prices": safe_function(lambda product: products_prices[product.id]),
             "float_round": float_round,
             "shop_path": SHOP_PATH,
             "product_query_params": product_query_params,
             "grouped_attributes_values": grouped_attributes_values,
             "previewed_attribute_values": lazy(
-                lambda: products._get_previewed_attribute_values(category, product_query_params)
+                safe_function(lambda: products._get_previewed_attribute_values(category, product_query_params)),
             ),
         }
         if filter_by_price_enabled:

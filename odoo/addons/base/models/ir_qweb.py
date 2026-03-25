@@ -403,6 +403,7 @@ from odoo.tools.profiler import ExecutionContext
 from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
+from odoo.tools.safe_eval import safe_function, safe_instance, safe_whitelist
 from odoo.exceptions import UserError, MissingError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
@@ -505,6 +506,7 @@ def indent_code(code, level):
     return textwrap.indent(textwrap.dedent(code).strip(), ' ' * 4 * level)
 
 
+@safe_function
 def keep_query(*keep_params, **additional_params):
     """
     Generate a query string keeping the current request querystring's parameters specified
@@ -533,6 +535,7 @@ def keep_query(*keep_params, **additional_params):
 ####################################
 
 
+@safe_instance
 class QWebError(Exception):
     def __init__(self, qweb: QWebErrorInfo):
         super().__init__('Error while rendering the template')
@@ -606,6 +609,7 @@ class QwebStackFrame(NamedTuple):
         return f'<QwebStackFrame {self.params!r}>'
 
 
+@safe_instance
 class QwebContent:
     """ QwebContent wraps a snippet to be used as a string value or a fragment.
         If the value is used with a string operation (from a qweb directive
@@ -661,6 +665,7 @@ class QwebContent:
         return Markup(self).__rmod__(other)
 
 
+@safe_instance
 class QwebJSON(json.JSON):
 
     def default(self, obj):
@@ -3058,6 +3063,9 @@ class IrQweb(models.AbstractModel):
                     if match := lazy_bundle_regex.search(fcontent):
                         bundles.add(match[2])
         return bundles
+
+
+safe_whitelist.add_function('odoo.addons.base.models.ir_qweb.generate_functions.<locals>.*')  # `__name__` is present in globals for Qweb compiled template
 
 
 def render(template_name, values, load, **options):

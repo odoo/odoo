@@ -15,6 +15,7 @@ from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
 from odoo.tools.translate import LazyTranslate
+from odoo.tools.safe_eval import safe_function
 
 _lt = LazyTranslate(__name__)
 
@@ -23,6 +24,7 @@ class WebsiteBlog(http.Controller):
     _blog_post_per_page = 12  # multiple of 2,3,4
     _post_comment_per_page = 10
 
+    @safe_function
     def tags_list(self, tag_ids, current_tag):
         tag_ids = list(tag_ids)  # required to avoid using the same list
         if current_tag in tag_ids:

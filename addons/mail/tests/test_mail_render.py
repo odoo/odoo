@@ -8,6 +8,7 @@ from odoo import Command
 from odoo.addons.mail.tests import common
 from odoo.exceptions import AccessError
 from odoo.tests import Form, tagged, users
+from odoo.tools.safe_eval import safe_function
 
 
 class TestMailRenderCommon(common.MailCommon):
@@ -643,6 +644,7 @@ class TestMailRenderSecurity(TestMailRenderCommon):
         partner = self.env[model].browse(res_ids)
         MailRenderMixin = self.env['mail.render.mixin']
 
+        @safe_function
         def cust_function():
             # Can not use "MagicMock" in a Jinja sand-boxed environment
             # so create our own function

@@ -34,7 +34,7 @@ from odoo.tools.barcode import (
 )
 from odoo.tools.misc import find_in_path
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
-from odoo.tools.safe_eval import safe_eval, time
+from odoo.tools.safe_eval import safe_eval, safe_function, time
 
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -775,7 +775,7 @@ class IrActionsReport(models.Model):
         view_obj = self.env['ir.ui.view'].with_context(inherit_branding=False)
         values.update(
             time=time,
-            context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
+            context_timestamp=safe_function(lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t)),
             user=user,
             res_company=self.env.company,
             web_base_url=self.env['ir.config_parameter'].sudo().get_str('web.base.url'),
