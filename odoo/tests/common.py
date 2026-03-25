@@ -1441,7 +1441,7 @@ class ChromeBrowser:
                 proc.wait()
         self._logger.warning(
             'Chrome headless failed to start:\n%s',
-            pathlib.Path(self.user_data_dir, "chrome_debug.log").read_text(encoding="utf-8"),
+            self.read_log().decode(),
         )
         self.stop()
 
@@ -1524,6 +1524,12 @@ class ChromeBrowser:
             except subprocess.TimeoutExpired:
                 self._logger.warning("Killing chrome headless with pid %s: still alive", proc.pid)
                 proc.kill()
+
+    def read_log(self) -> bytes:
+        try:
+            return pathlib.Path(self.user_data_dir, 'chrome_debug.log').read_bytes()
+        except FileNotFoundError:
+            return b''
 
     def _json_command(self, command, timeout=3):
         """Queries browser state using JSON
@@ -1903,7 +1909,7 @@ which leads to stray network requests and inconsistencies."""
         save_log = functools.partial(
             save_test_file,
             self.test_case._testMethodName,
-            pathlib.Path(self.user_data_dir, "chrome_debug.log").read_bytes(),
+            self.read_log(),
             prefix='chrome_log_',
             extension='txt',
             document_type="Chrome Log",
