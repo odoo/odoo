@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.l10n_ar.tests.common import TestArCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo import Command
 from datetime import datetime
 
@@ -435,3 +435,12 @@ class TestArWithholdingArRi(TestArCommon):
             # Receivable line:
             {'debit': 188865.27, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 188865.27, 'reconciled': True}
         ])
+
+    def test_payment_register_without_currency(self):
+        "check computation of amount and adjustment warning without currency"
+        moves = self.in_invoice_wht_5('2-1')
+        taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}]
+        wizard = Form(self.new_payment_register(moves, taxes))
+        wizard.currency_id = self.env['res.currency']
+        self.assertEqual(wizard.amount, 188865.27)
+        self.assertFalse(wizard.l10n_ar_adjustment_warning)
