@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 """
 safe_eval module - methods intended to provide more restricted alternatives to
                    evaluate simple and/or untrusted code.
@@ -26,8 +23,8 @@ import sys
 import types
 import typing
 import zoneinfo
-from collections import defaultdict, OrderedDict
-from enum import auto, IntEnum
+from collections import OrderedDict, defaultdict
+from enum import IntEnum, auto
 from json.encoder import c_make_encoder  # noqa: OLS02001
 from opcode import opmap, opname
 from types import (
@@ -169,6 +166,7 @@ class UnsafeFunctionError(UnsafeObjectError):
 # lp:703841), does import time.
 _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
+
 # Mock __import__ function, as called by cpython's import emulator `PyImport_Import` inside
 # timemodule.c, _datetimemodule.c and others.
 # This function does not actually need to do anything, its expected side-effect is to make the
@@ -176,6 +174,7 @@ _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if name not in sys.modules:
         raise ImportError(f'module {name} should be imported before calling safe_eval()')
+
 
 for module in _ALLOWED_MODULES:
     __import__(module)
@@ -205,6 +204,8 @@ def to_opcodes(opnames, _opmap=opmap):
     for x in opnames:
         if x in _opmap:
             yield _opmap[x]
+
+
 # opcodes which absolutely positively must not be usable in safe_eval,
 # explicitly subtracted from all sets of valid opcodes just in case
 _BLACKLIST = set(to_opcodes([
@@ -349,6 +350,7 @@ def assert_no_dunder_name(code_obj, expr):
         if "__" in name or name in _UNSAFE_ATTRIBUTES:
             raise NameError('Access to forbidden name %r (%r)' % (name, expr))
 
+
 def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """ Asserts that the provided code object validates against the bytecode
     and name constraints.
@@ -405,7 +407,7 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
 
     except (SyntaxError, TypeError, ValueError):
         raise
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         raise ValueError('%r while compiling\n%r' % (e, expr))
 
 
@@ -576,6 +578,7 @@ Pre-wrapped modules are provided as attributes of `odoo.tools.safe_eval`.
 """)
     return d
 
+
 class wrap_module:
     def __init__(self, module, attributes):
         """Helper for wrapping a package/module to expose selected attributes
@@ -598,8 +601,9 @@ class wrap_module:
     def __repr__(self):
         return self._repr
 
+
 # dateutil submodules are lazy so need to import them for them to "exist"
-import dateutil
+import dateutil  # noqa: E402
 mods = ['parser', 'relativedelta', 'rrule', 'tz']
 for mod in mods:
     __import__('dateutil.%s' % mod)

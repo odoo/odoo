@@ -5,14 +5,23 @@ comparisons, boolean logic, variables, and simple dict/list/tuple
 access are needed.
 """
 import ast
-import functools
 import operator
-import threading
-from collections.abc import Callable
 from types import NoneType
 from typing import Any
 
 from odoo.tools.misc import OrderedSet
+
+MAX_INT_POW_EXP = 1024
+
+
+def _safe_pow(a, b):
+    if isinstance(a, int) and isinstance(b, int) and b > MAX_INT_POW_EXP:
+        raise ValueError("Exponent too large")
+    res = pow(a, b)
+    if isinstance(res, complex):
+        raise TypeError(f"Complex numbers are not supported ({a!r} ** {b!r})")
+    return res
+
 
 _BIN_OPS = {
     ast.Add: operator.add,
@@ -20,7 +29,7 @@ _BIN_OPS = {
     ast.Mult: operator.mul,
     ast.Div: operator.truediv,
     ast.Mod: operator.mod,
-    ast.Pow: operator.pow,
+    ast.Pow: _safe_pow,
     ast.FloorDiv: operator.floordiv,
 }
 
@@ -47,6 +56,8 @@ _ALLOWED_CALLS = {
     'min': min,
     'max': max,
     'set': OrderedSet,
+    'int': int,
+    'round': round,
 }
 
 
@@ -64,148 +75,94 @@ def _get_func(ops_set, node):
 
 
 class _ExprEval(ast.NodeVisitor):
-    """Evaluate the supported AST nodes for `expr_eval` into an executable function."""
+    """Evaluate supported expressions for `expr_eval`."""
+    __slots__ = ("context",)
+
+    def __init__(self, context: dict[str, Any]):
+        self.context = context
 
     def visit_Expression(self, node):
         return self.visit(node.body)
 
     def visit_BoolOp(self, node):
-        values = tuple(self.visit(value) for value in node.values)
         test = _get_func(_BOOL_OP_SHORT_CIRCUIT_TEST, node.op)
-
-        def evaluate(context):
-            for value in values:
-                result = value(context)
-                if test(result):
-                    break
-            return result
-
-        return evaluate
+        for value in node.values:
+            result = self.visit(value)
+            if test(result):
+                return result
+        return result
 
     def visit_BinOp(self, node):
         op = _get_func(_BIN_OPS, node.op)
-        left = self.visit(node.left)
-        right = self.visit(node.right)
-        return lambda context: op(left(context), right(context))
+        return op(self.visit(node.left), self.visit(node.right))
 
     def visit_UnaryOp(self, node):
         op = _get_func(_UNARY_OPS, node.op)
-        operand = self.visit(node.operand)
-        return lambda context: op(operand(context))
+        return op(self.visit(node.operand))
 
     def visit_Dict(self, node):
-        keys = tuple(self.visit(key) for key in node.keys)
-        values = tuple(self.visit(value) for value in node.values)
-
-        def eval_dict(context):
-            return {
-                key(context): value(context)
-                for key, value in zip(keys, values)
-            }
-
-        return eval_dict
+        out = {}
+        for key_node, value_node in zip(node.keys, node.values):
+            if key_node is None:
+                raise SyntaxError("Dict unpacking is not supported")
+            out[self.visit(key_node)] = self.visit(value_node)
+        return out
 
     def visit_Set(self, node):
-        items = tuple(self.visit(item) for item in node.elts)
-        return lambda context: OrderedSet(item(context) for item in items)
+        return OrderedSet(self.visit(item) for item in node.elts)
 
     def visit_Compare(self, node):
-        left = self.visit(node.left)
-        ops = tuple(_get_func(_COMPARE_OPS, op_node) for op_node in node.ops)
-        comparators = tuple(self.visit(right_node) for right_node in node.comparators)
-
-        def eval_compare(context):
-            current = left(context)
-
-            for op, right in zip(ops, comparators):
-                next_value = right(context)
-                if not op(current, next_value):
-                    return False
-                current = next_value
-
-            return True
-
-        return eval_compare
+        current = self.visit(node.left)
+        for op_node, right_node in zip(node.ops, node.comparators):
+            op = _get_func(_COMPARE_OPS, op_node)
+            next_value = self.visit(right_node)
+            if not op(current, next_value):
+                return False
+            current = next_value
+        return True
 
     def visit_Call(self, node):
         if node.keywords:
             raise SyntaxError("Keyword arguments are not supported in function calls")
         if not isinstance(node.func, ast.Name) or node.func.id not in _ALLOWED_CALLS:
-            raise NameError("Only %s function calls are allowed" % ", ".join(_ALLOWED_CALLS.keys()))
+            raise NameError("Only %s function calls are allowed" % ", ".join(_ALLOWED_CALLS))
 
         func = _ALLOWED_CALLS[node.func.id]
-        args = tuple(self.visit(arg) for arg in node.args)
-
-        def eval_call(context):
-            return func(*(arg(context) for arg in args))
-
-        return eval_call
+        return func(*(self.visit(arg) for arg in node.args))
 
     def visit_Constant(self, node):
         value = node.value
         if isinstance(value, (NoneType, bytes, str, int, float, bool)):
-            return lambda context: value
+            return value
         raise TypeError(f"Unsupported constant: {type(value).__name__}")
 
     def visit_IfExp(self, node):
-        test = self.visit(node.test)
-        body = self.visit(node.body)
-        orelse = self.visit(node.orelse)
-
-        return lambda context: body(context) if test(context) else orelse(context)
+        return self.visit(node.body) if self.visit(node.test) else self.visit(node.orelse)
 
     def visit_Subscript(self, node):
-        value = self.visit(node.value)
-        slice_ = self.visit(node.slice)
-
-        return lambda context: value(context)[slice_(context)]
+        return self.visit(node.value)[self.visit(node.slice)]
 
     def visit_Name(self, node):
-        name = node.id
-
-        def eval_name(context):
-            try:
-                return context[name]
-            except KeyError as error:
-                raise NameError(name) from error
-
-        return eval_name
+        try:
+            return self.context[node.id]
+        except KeyError as error:
+            raise NameError(node.id) from error
 
     def visit_List(self, node):
-        items = tuple(self.visit(item) for item in node.elts)
-        return lambda context: [item(context) for item in items]
+        return [self.visit(item) for item in node.elts]
 
     def visit_Tuple(self, node):
-        items = tuple(self.visit(item) for item in node.elts)
-        return lambda context: tuple(item(context) for item in items)
+        return tuple(self.visit(item) for item in node.elts)
 
     def visit_Slice(self, node):
-        lower = self.visit(node.lower) if node.lower is not None else None
-        upper = self.visit(node.upper) if node.upper is not None else None
-        step = self.visit(node.step) if node.step is not None else None
-
-        return lambda context: slice(
-            lower(context) if lower is not None else None,
-            upper(context) if upper is not None else None,
-            step(context) if step is not None else None,
+        return slice(
+            self.visit(node.lower) if node.lower is not None else None,
+            self.visit(node.upper) if node.upper is not None else None,
+            self.visit(node.step) if node.step is not None else None,
         )
 
     def generic_visit(self, node):
         raise SyntaxError(f"Unsupported syntax: {type(node).__name__}")
-
-
-_expr_eval = _ExprEval()
-
-
-def _compile_expr_eval_func(expr: str) -> Callable[[dict[str, Any]], Any]:
-    return _expr_eval.visit(ast.parse(expr, mode="eval"))
-
-
-@functools.cache
-def _get_db_expr_compiler(dbname: str) -> Callable[[str], Callable[[dict[str, Any]], Any]]:
-    # Scope the cache per DB: workers are shared, and a global cache leaks whether
-    # another DB recently evaluated the same expression.
-    return functools.lru_cache(maxsize=2048)(_compile_expr_eval_func)
 
 
 def expr_eval(expr: str, context: dict[str, Any] | None = None) -> Any:
@@ -230,7 +187,4 @@ def expr_eval(expr: str, context: dict[str, Any] | None = None) -> Any:
     assert type(expr) is str, "Expression must be a string"
     if not (expr := expr.strip()):
         raise SyntaxError("Expression cannot be empty")
-    # cache per db to avoid leaking an oracle to read info across dbs
-    db_compiler = _get_db_expr_compiler(getattr(threading.current_thread(), 'dbname', ''))
-    compiled_func = db_compiler(expr)
-    return compiled_func(context or {})
+    return _ExprEval(context or {}).visit(ast.parse(expr, mode="eval"))
