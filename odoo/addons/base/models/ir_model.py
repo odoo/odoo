@@ -1097,9 +1097,10 @@ class IrModelFields(models.Model):
                     vals['model'] = model_from_id
 
         # for self._get_ids() in _update_selection()
+        # we need to invalidate the cache before and after creation of the field
         self.env.transaction.invalidate_ormcache('stable')
-
         res = super().create(vals_list)
+        self.env.transaction.invalidate_ormcache('stable')
         models = OrderedSet(res.mapped('model'))
 
         for vals in vals_list:
