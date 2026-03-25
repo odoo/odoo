@@ -700,6 +700,8 @@ export class PosOrder extends PosOrderAccounting {
             noteChange: data.noteChange,
             noteUpdate: data.noteUpdate,
             removedQuantity: data.removedQuantity,
+            internal_note: data.internal_note,
+            general_customer_note: data.general_customer_note,
         });
     }
 

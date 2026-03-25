@@ -168,6 +168,7 @@ patch(PosStore.prototype, {
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
+        const sourceLastPrint = sourceOrder.lastPrints.at(-1);
         // Sum the guest counts from both orders
         const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
         destOrder.setCustomerCount(totalGuests);
@@ -222,7 +223,40 @@ patch(PosStore.prototype, {
                 });
             }
         }
-
+        const destLastPrint = destOrder.lastPrints.at(-1);
+        const combinedPrint = {
+            addedQuantity: [
+                ...(destLastPrint?.addedQuantity || []),
+                ...(sourceLastPrint?.addedQuantity || []),
+            ],
+            removedQuantity: [
+                ...(destLastPrint?.removedQuantity || []),
+                ...(sourceLastPrint?.removedQuantity || []),
+            ],
+            noteUpdate: [
+                ...(destLastPrint?.noteUpdate || []),
+                ...(sourceLastPrint?.noteUpdate || []),
+            ],
+            noteChange: destLastPrint?.noteChange || sourceLastPrint?.noteChange || false,
+        };
+        if (destLastPrint?.internal_note || sourceLastPrint?.internal_note) {
+            combinedPrint.internal_note =
+                destLastPrint?.internal_note || sourceLastPrint?.internal_note;
+        }
+        if (destLastPrint?.general_customer_note || sourceLastPrint?.general_customer_note) {
+            combinedPrint.general_customer_note =
+                destLastPrint?.general_customer_note || sourceLastPrint?.general_customer_note;
+        }
+        if (
+            combinedPrint.addedQuantity.length ||
+            combinedPrint.removedQuantity.length ||
+            combinedPrint.noteUpdate.length ||
+            combinedPrint.noteChange ||
+            combinedPrint.internal_note ||
+            combinedPrint.general_customer_note
+        ) {
+            destOrder.pushLastPrints(combinedPrint);
+        }
         if (typeof destOrder.id === "number") {
             await this.syncAllOrders({ orders: [destOrder] });
         }
