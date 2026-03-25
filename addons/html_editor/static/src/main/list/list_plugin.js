@@ -191,6 +191,7 @@ export class ListPlugin extends Plugin {
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
+        before_insert_processors: this.handleInsert.bind(this),
         triple_click_overrides: this.handleTripleClick.bind(this),
 
         fully_selected_node_predicates: (node, selection, range) => {
@@ -1300,5 +1301,14 @@ export class ListPlugin extends Plugin {
                     description: command.title,
                 };
             });
+    }
+
+    handleInsert(container, block) {
+        if (!this.config.allowChecklist) {
+            for (const list of container.querySelectorAll(".o_checklist > li")) {
+                this.liToBlocks(list);
+            }
+        }
+        return container;
     }
 }
