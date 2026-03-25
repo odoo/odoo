@@ -80,21 +80,4 @@ patch(CustomerAddress.prototype, {
             this._showInput("l10n_my_edi_industrial_classification");
         }
     },
-
-    async _onChangeCountry(init = false) {
-        await super._onChangeCountry(init);
-        const radio = this.el.querySelector('input[name="company_type"]:checked');
-
-        if (!radio || !this.el.querySelector('input[name="l10n_my_edi_malaysian_tin"]')) {
-            return;
-        }
-
-        if (this._getSelectedCountryCode() === "MY") {
-            this._hideInput("l10n_my_edi_malaysian_tin");
-            this._showInput("vat");
-        } else {
-            this._showInput("l10n_my_edi_malaysian_tin");
-            this._hideInput("vat");
-        }
-    },
 });

@@ -11,10 +11,10 @@ export class PortalProfileEditor extends Interaction {
         ".o_file_upload": {
             "t-on-change": this.onFileChange,
         },
-        ".o_portal_profile_pic_edit": {
+        ".o_portal_edit": {
             "t-on-click.prevent": this.onEditProfile,
         },
-        ".o_portal_profile_pic_clear": {
+        ".o_portal_clear": {
             "t-on-click.prevent": this.onClearProfile,
         },
     };
@@ -23,8 +23,8 @@ export class PortalProfileEditor extends Interaction {
         this.notification = this.services.notification;
         this.fileInputEl = this.el.querySelector(".o_file_upload");
         this.profileEl = this.el.querySelector(".o_profile_picture");
-        this.editBtnEl = this.el.querySelector(".o_portal_profile_pic_edit");
-        this.clearBtnEl = this.el.querySelector(".o_portal_profile_pic_clear");
+        this.editBtnEl = this.el.querySelector(".o_portal_edit");
+        this.clearBtnEl = this.el.querySelector(".o_portal_clear");
     }
 
     onEditProfile() {

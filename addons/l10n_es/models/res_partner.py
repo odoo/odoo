@@ -58,21 +58,3 @@ class ResPartner(models.Model):
             country_code, _ = split_vat(partner.vat)
             if partner.commercial_partner_id == partner and (country_code == 'ES' or (not country_code and partner.country_code == 'ES')):
                 partner.is_company = not partner._l10n_es_freelancer()
-
-    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
-        """Require VAT/NIF for Spanish customers in billing addresses on Spanish e-commerce."""
-        field_names = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
-
-        if self.env.company.country_code == country_sudo.code == 'ES':
-            field_names.add('vat')
-
-        return field_names
-
-    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
-        """Require State for Spanish customers on Spanish e-commerce."""
-        field_names = super()._get_mandatory_address_fields(country_sudo, **kwargs)
-
-        if self.env.company.country_code == country_sudo.code == 'ES':
-            field_names.add('state_id')
-
-        return field_names

@@ -12,7 +12,7 @@
             />
             <section class="o_portal_addresses">
                 <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                    <h5 class="mb-0">Delivery address</h5>
+                    <h5 class="mb-0">Delivery addresses</h5>
                     <a
                         role="button"
                         t-att-href="new_address_url"
@@ -21,14 +21,14 @@
                         title="Add an address"
                         aria-label="Add an address"
                     >
-                        <i class="oi me-2" data-icon="add"/>Add Address
+                        <i class="oi me-1" data-icon="add"/>Add
                     </a>
                 </div>
                 <t t-call="portal.address_list" addresses="delivery_addresses"/>
                 <t t-set="address_type" t-valuef="billing"/>
                 <t t-set="new_address_url" t-valuef="{{address_url}}?address_type={{address_type}}"/>
                 <div class="d-flex justify-content-between align-items-start gap-3 mt-4 pt-2">
-                    <h5 class="mb-0">Billing address</h5>
+                    <h5 class="mb-0">Billing addresses</h5>
                     <a
                         role="button"
                         t-att-href="new_address_url"
@@ -37,7 +37,7 @@
                         title="Add an address"
                         aria-label="Add an address"
                     >
-                        <i class="oi me-2" data-icon="add"/>Add Address
+                        <i class="oi me-1" data-icon="add"/>Add
                     </a>
                 </div>
                 <div class="form-check form-switch mt-2">
@@ -97,10 +97,28 @@
             t-att-data-partner-id="contact.id"
         >
             <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-2">
-                <t
-                    t-out="contact"
-                    t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True, no_tag_br=True)"
-                />
+                <div class="d-inline-block flex-grow-1">
+                    <t
+                        t-out="contact"
+                        t-options="dict(
+                            widget='contact',
+                            fields=['name', 'address'],
+                            no_marker=True,
+                            no_tag_br=True,
+                        )"
+                    />
+                    <div
+                        t-if="contact.vat"
+                        t-attf-class="o_address_card_vat  mt-2 {{
+                            'd-none' if not (
+                                (use_delivery_as_billing or address_type == 'billing')
+                                and contact.type in ['contact', 'invoice']
+                            ) else ''
+                        }}"
+                    >
+                        <span t-field="contact.vat"/>
+                    </div>
+                </div>
                 <t t-set="badge_classes" t-value="'badge text-bg-info'"/>
                 <div class="d-flex flex-row-reverse flex-md-column justify-content-between align-items-end">
                     <span
@@ -156,7 +174,7 @@
 
     <template id="portal.address_form_fields" name="Address Details">
         <div id="div_name" class="col-lg-12 mb-2">
-            <label class="col-form-label" for="o_name">Your name</label>
+            <label class="col-form-label" for="o_name">Name</label>
             <input
                 id="o_name"
                 type="text"
@@ -175,68 +193,150 @@
                 id="o_email"
                 type="email"
                 name="email"
-                t-att-value="partner_sudo.email"
+                t-att-value="email"
                 class="form-control"
             />
         </div>
         <div id="div_phone" class="col-lg-6 mb-2">
-            <label class="col-form-label" for="o_phone">Phone</label>
+            <label
+                class="col-form-label"
+                for="o_phone"
+            >
+                Phone
+            </label>
             <input
                 id="o_phone"
                 type="tel"
                 name="phone"
-                t-att-value="partner_sudo.phone"
+                t-att-value="phone"
+                t-att-placeholder="phone_code"
                 class="form-control"
             />
         </div>
-        <t name="b2b_fields">
-            <div class="w-100"/>
-            <t t-if="is_used_as_billing">
-                <div id="company_name_div" class="col-lg-6 mb-2">
-                    <label
-                        class="col-form-label fw-normal label-optional"
-                        for="o_company_name"
-                    >
-                        Company Name
-                    </label>
-                    <input
-                        id="o_company_name"
-                        type="text"
-                        name="parent_name"
-                        t-att-value="current_partner.parent_name"
-                        t-att-readonly="'1' if not is_main_address else None"
-                        class="form-control"
-                    />
-                </div>
-                <div id="div_vat" class="col-lg-6 mb-2">
-                    <label class="col-form-label fw-normal label-optional" for="o_vat">
-                        <t t-out="vat_label"/>
-                    </label>
-                    <input
-                        name="vat"
-                        id="o_vat"
-                        type="text"
-                        class="form-control"
-                        t-att-value="current_partner.vat"
-                        t-att-readonly="'1' if (commercial_fields_warning or vat_warning) else None"
-                    />
-                    <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
-                        <small class="form-text text-muted" t-out="vat_warning"/>
-                    </div>
-                </div>
-                <div t-if="commercial_fields_warning" class="col-12 d-none d-lg-block mb-1">
-                    <small class="form-text text-muted">
-                        <t t-out="commercial_fields_warning"/>
-                        <t t-if="commercial_address_update_url">
-                            <br/>
-                            If you want to modify it, update
-                            <a t-att-href="commercial_address_update_url">your account details</a>.
-                        </t>
-                    </small>
-                </div>
-            </t>
+        <div class="w-100 mt-4"/>
+        <div id="div_country" class="mb-2 col-lg-6">
+            <label class="col-form-label" for="o_country_id">
+                Country
+            </label>
+            <t t-call="portal.address_warning_icon" warning="country_warning"/>
+            <select
+                id="o_country_id"
+                name="country_id"
+                t-att-class="'pe-none opacity-50 form-select' if country_warning else 'form-select'"
+            >
+                <option value="">Country...</option>
+                <option
+                    t-foreach="countries"
+                    t-as="c"
+                    t-att-value="c.id"
+                    t-att-selected="c.id == country.id"
+                    t-att-data-code="c.code"
+                    t-out="c.name"
+                />
+            </select>
+        </div>
+        <div
+            id="div_state"
+            class="col-lg-6 mb-2"
+            t-att-style="not states and 'display: none'"
+        >
+            <label class="col-form-label label-optional" for="o_state_id">
+                State / Province
+            </label>
+            <select
+                id="o_state_id"
+                name="state_id"
+                class="form-select o_handle"
+            >
+                <option value="">State / Province...</option>
+                <option
+                    t-foreach="states"
+                    t-as="s"
+                    t-att-value="s.id"
+                    t-att-selected="s.id == state.id"
+                    t-att-data-code="s.code"
+                    t-out="s.name"
+                />
+            </select>
+        </div>
+        <div class="w-100"/>
+        <t t-if="zip_before_city">
+            <div
+                id="div_zip"
+                class="col-md-4 mb-2"
+                t-att-style="country.zip_applicability == 'not_applicable' and 'display:none;'"
+            >
+                <label
+                    for="o_zip_before_city"
+                    class="col-form-label label-optional"
+                >
+                    Zip Code
+                </label>
+                <input
+                    id="o_zip_before_city"
+                    type="text"
+                    name="zip"
+                    class="form-control o_handle"
+                    t-att-value="partner_sudo.zip"
+                />
+            </div>
         </t>
-        <div id="div_street" class="col-lg-12 mb-2">
+        <div
+            id="div_city"
+            class="col-md-8 mb-2"
+            t-att-style="cities_data and 'display:none;'"
+        >
+            <label class="col-form-label" for="o_city">City</label>
+            <input
+                id="o_city"
+                type="text"
+                name="city"
+                class="form-control o_handle"
+                t-att-value="partner_sudo.city"
+            />
+        </div>
+        <div
+            id="div_city_id"
+            class="col-md-8 mb-2"
+            t-att-style="not cities_data and 'display:none;'"
+        >
+            <label class="col-form-label" for="city_id">City</label>
+            <select id="city_id" name="city_id" class="form-select o_handle">
+                <option value="">City...</option>
+                <option
+                    name="city_options"
+                    t-foreach="cities_data"
+                    t-as="c"
+                    t-att-value="c['id']"
+                    t-att-selected="c['id'] == city.id"
+                    t-att-data-state-id="c['state_id']"
+                    t-att-data-zipcode="c['zipcode']"
+                    t-out="c['name']"
+                />
+            </select>
+        </div>
+        <t t-if="not zip_before_city">
+            <div
+                id="div_zip"
+                class="col-md-4 mb-2"
+                t-att-style="country.zip_applicability == 'not_applicable' and 'display:none;'"
+            >
+                <label
+                    for="o_zip_after_city"
+                    class="col-form-label label-optional"
+                >
+                    Zip Code
+                </label>
+                <input
+                    id="o_zip_after_city"
+                    type="text"
+                    name="zip"
+                    class="form-control o_handle"
+                    t-att-value="partner_sudo.zip"
+                />
+            </div>
+        </t>
+        <div id="div_street" t-attf-class="col-lg-12 mb-2">
             <label class="col-form-label" for="o_street">
                 Street and Number
             </label>
@@ -244,12 +344,12 @@
                 name="street"
                 id="o_street"
                 type="text"
-                class="form-control"
+                class="form-control o_handle"
                 t-att-value="partner_sudo.street"
             />
         </div>
         <div id="div_street2" class="col-lg-12 mb-2">
-            <label class="col-form-label label-optional" for="o_street2">
+            <label t-attf-class="col-form-label label-optional" for="o_street2">
                 Apartment, suite, etc.
             </label>
             <input
@@ -260,111 +360,70 @@
                 t-att-value="partner_sudo.street2"
             />
         </div>
-        <div class="w-100"/>
-        <t t-if="zip_before_city">
-            <div id="div_zip" class="col-md-4 mb-2">
-                <label class="col-form-label" for="o_zip_before_city">
-                    Zip Code
-                </label>
-                <input
-                    id="o_zip_before_city"
-                    type="text"
-                    name="zip"
-                    class="form-control"
-                    t-att-value="partner_sudo.zip"
-                />
-            </div>
+        <div class="w-100 "/>
+        <t name="b2b_fields">
+            <div class="w-100 mt-4"/>
+            <t t-if="is_used_as_billing">
+                <div id="company_name_div" class="col-lg-6 mb-2">
+                    <label
+                        class="col-form-label fw-normal label-optional"
+                        for="o_company_name"
+                    >
+                        Company
+                    </label>
+                    <t
+                        t-if="not is_main_address"
+                        t-call="portal.address_warning_icon"
+                        warning="commercial_fields_warning"
+                    />
+                    <input
+                        id="o_company_name"
+                        type="text"
+                        name="parent_name"
+                        t-att-value="current_partner.parent_name"
+                        t-att-readonly="'1' if not is_main_address else None"
+                        class="form-control"
+                    />
+                </div>
+                <div id="div_vat" class="col-lg-6 mb-2">
+                    <label
+                        t-out="vat_label"
+                        for="o_vat"
+                        class="col-form-label fw-normal label-optional"
+                    />
+                    <t
+                        t-call="portal.address_warning_icon"
+                        warning="commercial_fields_warning or vat_warning"
+                    />
+                    <input
+                        type="text"
+                        id="o_vat"
+                        name="vat"
+                        t-att-value="current_partner.vat"
+                        t-att-readonly="'1' if (commercial_fields_warning or vat_warning) else None"
+                        class="form-control"
+                    />
+                </div>
+                <div t-if="commercial_address_update_url" class="col-12 d-none d-lg-block mb-1">
+                    <small class="form-text text-muted">
+                        If you want to modify it, update
+                        <a t-att-href="commercial_address_update_url">your account details</a>.
+                    </small>
+                </div>
+            </t>
         </t>
-        <div id="div_city" class="col-md-8 mb-2">
-            <label class="col-form-label" for="o_city">City</label>
-            <input
-                id="o_city"
-                type="text"
-                name="city"
-                class="form-control"
-                t-att-value="partner_sudo.city"
-            />
-        </div>
-        <t t-if="not zip_before_city">
-            <div id="div_zip" class="col-md-4 mb-2">
-                <label class="col-form-label" for="o_zip_after_city">
-                    Zip Code
-                </label>
-                <input
-                    id="o_zip_after_city"
-                    type="text"
-                    name="zip"
-                    class="form-control"
-                    t-att-value="partner_sudo.zip"
-                />
-            </div>
-        </t>
-        <div class="w-100"/>
-        <div id="div_country" class="col-lg-6 mb-2">
-            <label class="col-form-label" for="o_country_id">
-                Country
-            </label>
-            <select
-                id="o_country_id"
-                name="country_id"
-                t-att-class="'pe-none opacity-50 form-select' if not can_edit_country else 'form-select'"
-            >
-                <option value="">Country...</option>
-                <option
-                    t-foreach="countries"
-                    t-as="c"
-                    t-att-value="c.id"
-                    t-att-selected="c.id == (country.id if country else partner_sudo.country_id.id)"
-                    t-att-code="c.code"
-                    t-out="c.name"
-                />
-            </select>
-            <div t-if="not can_edit_country" class="col-12 d-none d-lg-block mb-1">
-                <small class="form-text text-muted">
-                    Changing country is not allowed once document(s) have
-                    been issued for your account. Please contact us directly for this
-                    operation.
-                </small>
-            </div>
-        </div>
-        <div
-            id="div_state"
-            class="col-lg-6 mb-2"
-            t-att-style="not country_states and 'display: none'"
-        >
-            <label class="col-form-label label-optional" for="o_state_id">
-                State / Province
-            </label>
-            <select
-                id="o_state_id"
-                name="state_id"
-                class="form-select"
-            >
-                <option value="">State / Province...</option>
-                <option
-                    t-foreach="country_states"
-                    t-as="s"
-                    t-att-value="s.id"
-                    t-att-selected="s.id == (int(state_id) if state_id else partner_sudo.state_id.id)"
-                    t-out="s.name"
-                />
-            </select>
-        </div>
-        <input
-            type="hidden"
-            name="csrf_token"
-            t-att-value="request.csrf_token()"
-        />
         <input type="hidden" name="address_type" t-att-value="address_type"/>
-        <input type="hidden" name="use_delivery_as_billing" t-att-value="use_delivery_as_billing"/>
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <input type="hidden" name="default_required_fields" t-att-value="','.join(required_fields)"/>
         <input type="hidden" name="parent_id" t-att-value="parent_id"/>
+        <input type="hidden" name="required_fields" value="name,email"/>
+        <input type="hidden" name="use_delivery_as_billing" t-att-value="use_delivery_as_billing"/>
         <t t-if="partner_id">
             <input type="hidden" name="partner_id" t-att-value="partner_id"/>
         </t>
         <t t-if="callback">
             <input type="hidden" name="callback" t-att-value="callback"/>
         </t>
-        <input type="hidden" name="required_fields" t-att-value="'name,email'"/>
     </template>
 
     <template id="portal.address_footer">
@@ -388,34 +447,45 @@
         </div>
     </template>
 
+    <template id="portal.address_warning_icon">
+        <i
+            t-if="warning"
+            class="oi text-warning"
+            data-icon="info"
+            data-bs-toggle="tooltip"
+            t-att-title="warning"
+        />
+    </template>
+
     <template id="portal.profile_picture_card" name="Profile picture card">
-        <div class="o_portal_profile_card">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <input type="file" class="o_file_upload d-none" accept="image/*"/>
-                        <span class="o_profile_picture d-flex justify-content-center w-75 mb-3 ratio ratio-1x1" t-att-data-user-id="request.env.user.id" t-field="request.env.user.avatar_512" t-options="{'widget': 'image', 'class': 'object-fit-cover'}"/>
-                    </div>
-                    <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-primary o_portal_profile_pic_edit oe_unremovable" aria-label="Edit">
-                            <i class="oi oi-filled" data-icon="edit" title="Edit"/>
-                        </button>
-                        <button class="btn btn-outline-secondary o_portal_profile_pic_clear oe_unremovable" aria-label="Clear">
-                            <i class="oi" data-icon="delete" title="Clear"/>
-                        </button>
-                    </div>
-                </div>
+        <div class="o_portal_profile_card card position-relative overflow-hidden mt-3">
+            <div class="ratio ratio-1x1">
+                <span class="o_profile_picture"
+                    t-att-data-user-id="request.env.user.id"
+                    t-field="request.env.user.avatar_512"
+                    t-options="{
+                        'widget': 'image',
+                        'class': 'w-100 h-100 object-fit-cover'
+                    }"/>
             </div>
+            <input type="file" class="o_file_upload d-none" accept="image/*"/>
+            <button class="btn position-absolute rounded-circle bottom-0 start-0 m-2 o_portal_edit oe_unremovable">
+                <i class="oi oi-filled" data-icon="edit"/>
+            </button>
+            <button class="btn position-absolute rounded-circle bottom-0 end-0 m-2 o_portal_clear oe_unremovable">
+                <i class="oi text-danger" data-icon="delete"/>
+            </button>
         </div>
     </template>
 
-    <template id="portal.portal_my_details" name="Contact Details">
+    <template id="portal.portal_my_details" name="Account Details">
         <t t-set="no_footer" t-value="1"/>
-        <t t-call="portal.portal_layout" additional_title.translate="Contact Details">
+        <t t-call="portal.portal_layout" additional_title.translate="Account Details">
             <div class="o_customer_address_fill">
                 <div class="row">
                     <div name="address_div" class="oe_clear_stucture col-12">
                         <div>
+                            <h3 class="mb-3">Account Details</h3>
                             <div id="errors"/> <!-- for js -->
                             <form
                                 action="/my/address/submit"

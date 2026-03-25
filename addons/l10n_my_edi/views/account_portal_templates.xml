@@ -1,6 +1,6 @@
 <odoo>
     <template id="portal_my_details_fields" inherit_id="account.portal_my_details">
-        <xpath expr="//t[@t-if='invoice_edi_formats']" position="after">
+        <div t-if="invoice_edi_formats" position="after">
             <t t-if="partner_sudo.country_id.code == 'MY'">
                 <div class="clearfix" />
                 <t t-if="len(l10n_my_identification_types) > 1">
@@ -36,6 +36,6 @@
                     </select>
                 </div>
             </t>
-        </xpath>
+        </div>
     </template>
 </odoo>

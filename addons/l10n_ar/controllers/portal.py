@@ -8,18 +8,22 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 class L10nARPortalAccount(CustomerPortal):
 
     def _is_argentinean_company(self):
-        return request.env.company.country_code == 'AR'
+        return request.env.company.account_fiscal_country_id.code == "AR"
 
     def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
         rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
         if self._is_argentinean_company() and rendering_values['is_used_as_billing']:
             can_edit_commercial_fields = rendering_values["can_edit_commercial_fields"]
             ArAfipResponsibilityType = request.env['l10n_ar.afip.responsibility.type']
+            default_afip_responsibility_type_id = (
+                rendering_values["current_partner"].l10n_ar_afip_responsibility_type_id
+                or ArAfipResponsibilityType
+            )
             rendering_values.update({
-                'responsibility': rendering_values['current_partner'].l10n_ar_afip_responsibility_type_id,
+                "responsibility": default_afip_responsibility_type_id,
                 'responsibility_types': (
                     ArAfipResponsibilityType.search([])
-                    if can_edit_commercial_fields else ArAfipResponsibilityType
+                    if can_edit_commercial_fields else default_afip_responsibility_type_id
                 ),
             })
         return rendering_values

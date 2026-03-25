@@ -11,6 +11,7 @@ export class AddressCard extends Interaction {
 
      setup() {
         this.billingContainer = this.el.querySelector('#billing_container');
+        this.vatDiv = this.el.querySelector(".o_address_card_vat");
         this.addBillingAddressBtn = this.el.querySelector('.o_add_billing_address_btn');
     }
 
@@ -39,7 +40,7 @@ export class AddressCard extends Interaction {
         const addDeliveryAddressButton = this.el.querySelector(
             '.o_address_card_add_new[data-address-type="delivery"]'
         );
-        if (addDeliveryAddressButton) {  // If `Add address` button for delivery.
+        if (addDeliveryAddressButton) {  // If `Add` button for delivery.
             // Update the `use_delivery_as_billing` query param for a new delivery address URL.
             const addDeliveryUrl = new URL(addDeliveryAddressButton.href);
             addDeliveryUrl.searchParams.set(
@@ -51,8 +52,10 @@ export class AddressCard extends Interaction {
         // Toggle the billing address row.
         if (useDeliveryAsBilling) {
             this.billingContainer.classList.add('d-none');  // Hide the billing address row.
+            this.vatDiv?.classList.remove("d-none");  // Show the VAT field in address cards.
         } else {
             this.billingContainer.classList.remove('d-none');  // Show the billing address row.
+            this.vatDiv?.classList.add("d-none");  // Hide the VAT field in address cards.
         }
         this.addBillingAddressBtn.classList.toggle('d-none', useDeliveryAsBilling);
     }

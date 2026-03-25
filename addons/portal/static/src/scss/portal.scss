@@ -317,6 +317,21 @@ img, .media_iframe_video, .o_image {
     }
 }
 
+.o_portal_profile_card {
+    .btn {
+        background-color: rgba(255, 255, 255, 0.5);
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+    }
+}
+
 .o_portal_address {
     span[itemprop="name"] {
         display: inline-block;
@@ -351,7 +366,7 @@ img, .media_iframe_video, .o_image {
         gap: map-get($spacers, 2);
     }
 
-    span[itemprop="streetAddress"] {
+    span[itemprop="streetAddress"], .o_address_card_vat {
         color: var(--#{$prefix}secondary-color);
     }
 }
