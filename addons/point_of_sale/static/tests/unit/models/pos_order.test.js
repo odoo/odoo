@@ -628,6 +628,8 @@ describe("print history", () => {
                 noteChange: [{ product_id: 1, note: "New note" }],
                 noteUpdate: [{ product_id: 1, note: "Updated note" }],
                 removedQuantity: [{ product_id: 1, quantity: -1 }],
+                internal_note: undefined,
+                general_customer_note: undefined,
             },
         ]);
     });
