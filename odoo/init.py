@@ -6,6 +6,13 @@
 import gc
 import sys
 from .release import MIN_PY_VERSION
+
+
+if sys.flags.optimize:
+    raise RuntimeError(
+        "Running odoo with Python optimization enabled (-O/-OO/PYTHONOPTIMIZE) is not supported"
+    )
+
 assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
 
 # ----------------------------------------------------------
