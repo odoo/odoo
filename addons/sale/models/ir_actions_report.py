@@ -10,7 +10,6 @@ class IrActionsReport(models.Model):
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # EXTENDS base
         collected_streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
-
         if (
             collected_streams
             and res_ids
@@ -28,7 +27,9 @@ class IrActionsReport(models.Model):
             reader_buffer = io.BytesIO(pdf_content)
             reader = OdooPdfFileReader(reader_buffer, strict=False)
             writer = OdooPdfFileWriter()
-            writer.clone_reader_document_root(reader)
+
+            for page in reader.pages:
+                writer.add_page(page)
 
             # Generate and attach EDI documents from each builder
             for builder in builders:

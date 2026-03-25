@@ -217,12 +217,12 @@ class IrActionsReport(models.Model):
             if node.get('data-oe-lang'):
                 IrQweb = IrQweb.with_context(lang=node.get('data-oe-lang'))
             body = IrQweb._render(layout.id, {
-                    'subst': False,
-                    'body': Markup(lxml.html.tostring(node, encoding='unicode')),
-                    'base_url': base_url,
-                    'report_xml_id': self.xml_id,
-                    'debug': self.env.context.get("debug"),
-                }, raise_if_not_found=False)
+                'subst': False,
+                'body': Markup(lxml.html.tostring(node, encoding='unicode')),
+                'base_url': base_url,
+                'report_xml_id': self.xml_id,
+                'debug': self.env.context.get("debug"),
+            }, raise_if_not_found=False)
             bodies.append(body)
             if node.get('data-oe-model') == report_model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -536,6 +536,29 @@ class IrActionsReport(models.Model):
                 pdf_content = pdf_document.read()
 
         return pdf_content
+
+    def _run_pdf_engine_without_processing(self,
+            engine_name,
+            bodies,
+            report_ref=False,
+            header=None,
+            footer=None,
+            landscape=False,
+            specific_paperformat_args=None,
+            set_viewport_size=False):
+        if engine_name == 'wkhtmltopdf':
+            content = self._run_wkhtmltopdf(
+                bodies,
+                report_ref=report_ref,
+                header=header,
+                footer=footer,
+                landscape=landscape,
+                specific_paperformat_args=specific_paperformat_args,
+                set_viewport_size=set_viewport_size
+            )
+            return content
+        else:
+            return super()._run_pdf_engine_without_processing(engine_name, bodies, report_ref, header, footer, landscape)
 
     def _run_pdf_engine(self, engine_name, html, report_ref=False, landscape=False, **kwargs):
         if engine_name == 'wkhtmltopdf':

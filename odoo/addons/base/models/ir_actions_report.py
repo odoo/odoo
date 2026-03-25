@@ -478,7 +478,7 @@ class IrActionsReport(models.Model):
         if is_pdf_engine_required:
             engine_name = report_sudo.report_type.rpartition('pdf-')[2]
             print("Report %s: calling PDF engine %s :: %s" % (report_sudo.report_name, engine_name, report_sudo.report_type))
-            if engine_name == 'pdf':
+            if engine_name == 'qweb-pdf':
                 engine_name = self.env.company.report_rendering_engine
             engine_status = self.get_pdf_engine_state(engine_name)
             if engine_status == 'install':
@@ -512,7 +512,7 @@ class IrActionsReport(models.Model):
                     report_sudo.name,
                 ))
 
-            print("dzzdz", pdf_content[:300].decode('utf-8', errors='replace'))
+            print(f"OO::{pdf_content[:400].decode('utf-8', errors='replace')}::OO")
             pdf_content_stream = io.BytesIO(pdf_content)
             # TODO DOODODODOD
             # Printing a PDF report without any records. The content could be returned directly.
@@ -783,6 +783,28 @@ class IrActionsReport(models.Model):
         if callable(pdf_rendering_method):
             return pdf_rendering_method(html, report_ref=report_ref, landscape=landscape, **kwargs)
         raise NotImplementedError(f"Unknown PDF engine: {engine_name}")
+
+    def _run_pdf_engine_without_processing(
+            self,
+            engine_name,
+            bodies,
+            report_ref=False,
+            header=None,
+            footer=None,
+            landscape=False,
+            specific_paperformat_args=None,
+            set_viewport_size=False):
+        pdf_rendering_method = getattr(self, engine_name, None)
+        if callable(pdf_rendering_method):
+            return pdf_rendering_method(bodies,
+                                        report_ref=report_ref,
+                                        landscape=landscape,
+                                        header=header,
+                                        footer=footer,
+                                        specific_paperformat_args=specific_paperformat_args,
+                                        set_viewport_size=set_viewport_size)
+        raise NotImplementedError(f"Unknown PDF engine: {engine_name}")
+
 
     @api.model
     def _render(self, report_ref, res_ids, data=None):

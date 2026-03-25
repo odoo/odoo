@@ -538,8 +538,6 @@ def _finalize_and_read(process, current_buffer):
     if process.returncode != 0:
         _logger.warning("Paper Muncher exited with code %d", process.returncode)
 
-    print(rendered_content[:200].decode('utf-8', errors='replace'))
-
     if not rendered_content.startswith(b'%PDF-'):
         raise RuntimeError("Paper Muncher did not return valid PDF content")
 

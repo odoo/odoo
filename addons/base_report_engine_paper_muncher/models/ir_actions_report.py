@@ -74,6 +74,31 @@ class IrActionsReport(models.Model):
 
         return output
 
+    def _run_pdf_engine_without_processing(
+            self,
+            engine_name,
+            bodies,
+            report_ref=False,
+            header=None,
+            footer=None,
+            landscape=False,
+            specific_paperformat_args=None,
+            set_viewport_size=False):
+        if engine_name == 'paper-muncher':
+            content = self._run_paper_muncher(
+                bodies,
+                report_ref=report_ref,
+                header=header,
+                footer=footer,
+                landscape=landscape,
+                specific_paperformat_args=specific_paperformat_args,
+                set_viewport_size=set_viewport_size
+            )
+            return content
+        else:
+            return super()._run_pdf_engine_without_processing(engine_name, bodies, report_ref, header, footer, landscape)
+
+
     def _run_pdf_engine(self, engine_name, html, report_ref=False, landscape=False, **kwargs):
         if engine_name == 'paper-muncher':
             report_sudo = self._get_report(report_ref)

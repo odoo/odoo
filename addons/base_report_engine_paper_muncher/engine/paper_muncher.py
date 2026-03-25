@@ -50,6 +50,11 @@ def run_paper_muncher(
     :raises RuntimeError: If Paper Muncher fails during any phase.
     """
 
+
+    if not isinstance(bodies, (list, tuple)):
+        bodies = list(bodies)
+
+
     if len(bodies) > 1:
         documents = make_multi_docs_html(bodies, header, footer)
     else:
