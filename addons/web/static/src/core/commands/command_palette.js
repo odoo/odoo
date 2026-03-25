@@ -7,16 +7,10 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { isMacOS, isMobileOS } from "@web/core/browser/feature_detection";
+import { isMacOS, hasTouch } from "@web/core/browser/feature_detection";
 import { highlightText } from "@web/core/utils/html";
 
-import {
-    Component,
-    onWillStart,
-    onWillDestroy,
-    EventBus,
-    markRaw,
-} from "@odoo/owl";
+import { Component, onWillStart, onWillDestroy, EventBus, markRaw } from "@odoo/owl";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
 const DEFAULT_EMPTY_MESSAGE = _t("No result found");
@@ -380,7 +374,7 @@ export class CommandPalette extends Component {
     get isMacOS() {
         return isMacOS();
     }
-    get isMobileOS() {
-        return isMobileOS();
+    get hasTouch() {
+        return hasTouch();
     }
 }

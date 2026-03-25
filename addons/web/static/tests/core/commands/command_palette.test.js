@@ -14,6 +14,7 @@ import {
 } from "@odoo/hoot-dom";
 import {
     contains,
+    getMockEnv,
     getService,
     mountWithCleanup,
     patchWithCleanup,
@@ -239,6 +240,7 @@ test("custom placeholder", async () => {
     expect(".o_command_palette_search input").toHaveAttribute("placeholder", "@ placeholder");
 });
 
+test.tags("desktop");
 test("add a footer", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const config = {
@@ -567,12 +569,20 @@ test("command palette keeps the same top position when its content changes", asy
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(4);
-    expect(".o_command_palette").toHaveRect({ top: 120 });
+    if (getMockEnv().isSmall) {
+        expect(".o_command_palette").toHaveRect({ top: 0 });
+    } else {
+        expect(".o_command_palette").toHaveRect({ top: 120 });
+    }
     await click(".o_command_palette_search input");
     await edit("z");
     await runAllTimers();
     expect(".o_command").toHaveCount(0);
-    expect(".o_command_palette").toHaveRect({ top: 120 });
+    if (getMockEnv().isSmall) {
+        expect(".o_command_palette").toHaveRect({ top: 0 });
+    } else {
+        expect(".o_command_palette").toHaveRect({ top: 120 });
+    }
 });
 
 test("open the command palette with a namespace already in the searchbar", async () => {
@@ -886,8 +896,8 @@ test("click on command", async () => {
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(2);
     expect(queryAllTexts(".o_command")).toEqual(["Command1", "Command2"]);
-    expect(".o_command.focused").toHaveText(commands[0].name);
-    await contains(".o_command.focused").click();
+    expect(".o_command:first").toHaveText(commands[0].name);
+    await contains(".o_command:first").click();
     expect.verifySteps(["C1"]);
 });
 
@@ -922,7 +932,7 @@ test("press enter on command", async () => {
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(2);
     expect(queryAllTexts(".o_command")).toEqual(["Command1", "Command2"]);
-    expect(".o_command.focused").toHaveText(commands[0].name);
+    expect(".o_command:first").toHaveText(commands[0].name);
     await press("arrowdown");
     await animationFrame();
     await press("enter");
@@ -931,6 +941,7 @@ test("press enter on command", async () => {
     expect.verifySteps(["C2"]);
 });
 
+test.tags("desktop");
 test("keyboard navigation scroll", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const commands = [
@@ -1119,7 +1130,7 @@ test("multi level command", async () => {
     await runAllTimers();
     expect(".o_command").toHaveCount(1);
     expect(queryAllTexts(".o_command")).toEqual(["Command1"]);
-    expect(".o_command.focused").toHaveText(commands[0].name);
+    expect(".o_command:first").toHaveText(commands[0].name);
     await press("enter");
     await animationFrame();
     expect(".o_command").toHaveCount(1);
@@ -1152,6 +1163,7 @@ test("command palette dialog can be rendered and closed on outside click", async
     expect(".o_command_palette").toHaveCount(0);
 });
 
+test.tags("desktop");
 test("navigate in the command palette with the arrows", async () => {
     expect.assertions(6);
 
