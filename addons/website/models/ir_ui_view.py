@@ -38,6 +38,10 @@ class IrUiView(models.Model):
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
 
+    @api.depends_context('website_id')
+    def _compute_arch(self):
+        super()._compute_arch()
+
     @api.depends('visibility_password')
     def _get_pwd(self):
         for r in self:
