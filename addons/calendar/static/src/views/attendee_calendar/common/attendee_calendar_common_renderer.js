@@ -45,6 +45,30 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
 
     /**
      * @override
+     * In the calendar.event calendar view, when using a single click, we want to create
+     * a meeting at the time of the click target, rounded down to closest half hour.
+     *
+     * By default, the fullcalendar parameter that defines this precision is snapDuration
+     * and is 15 min. We cannot modify it directly, as it also defines the time precision
+     * of meeting drag and drop, as well as the one of meeting creation between two targets
+     * (on click then on release), both of which we want to keep at 15 minutes.
+     */
+    fcEventToRecord(event) {
+        const res = super.fcEventToRecord(...arguments);
+        const { id, allDay, end } = event;
+
+        if (!id && !allDay && !end && ["day", "week"].includes(this.props.model.scale)) {
+            if (res.start?.minute === 15 || res.start?.minute === 45) {
+                res.start = res.start.set({
+                    minute: res.start.minute - 15
+                });
+            }
+        }
+        return res;
+    }
+
+    /**
+     * @override
      */
     onEventDidMount({ el, event }) {
         super.onEventDidMount(...arguments);
