@@ -566,7 +566,6 @@ class DiscussChannelMember(models.Model):
             domain &= Domain('id', 'in', member_ids)
         return domain
 
-    @Store.with_versioning
     def _rtc_invite_members(self, member_ids=None):
         """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited,
             if member_ids is set, only the specified ids will be invited.
@@ -650,7 +649,6 @@ class DiscussChannelMember(models.Model):
         self._set_last_seen_message(last_message)
         self._set_new_message_separator(last_message.id + 1)
 
-    @Store.with_versioning
     def _set_last_seen_message(self, message, notify=True):
         """
         Set the last seen message of the current member.
@@ -673,7 +671,6 @@ class DiscussChannelMember(models.Model):
         for bus_channel in bus_channels:
             Store.to(bus_channel).add(self, "_store_seen_fields")
 
-    @Store.with_versioning
     def _set_new_message_separator(self, message_id):
         """
         :param message_id: id of the message above which the new message

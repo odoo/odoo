@@ -282,7 +282,7 @@ class ResPartner(models.Model):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also (internal) users, and then extend the research to all partners.
         """
-        store = Store.default(self).add(
+        store = Store.current.add(
             self._search_mention_suggestions(self._get_mention_suggestions_domain(search), limit),
             lambda res: (
                 res.from_method("_store_partner_fields"),

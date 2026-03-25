@@ -41,7 +41,7 @@ class ResPartner(models.Model):
           the channel allows invites by email.
 
         """
-        store = Store.default(self)
+        store = Store.current
         channel_invites = self._search_for_channel_invite(search_term, channel_id, limit)
         selectable_email = None
         email_already_sent = None
@@ -99,7 +99,7 @@ class ResPartner(models.Model):
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
         selectable_partners = self.env["res.partner"].browse(query)
-        Store.default(self).add(
+        Store.current.add(
             selectable_partners,
             "_store_channel_invite_fields",
             fields_params={"channel": channel},
@@ -141,7 +141,7 @@ class ResPartner(models.Model):
             ("partner_id", "in", partners.ids)
         ]
         members = self.env["discuss.channel.member"].search(members_domain)
-        store = Store.default(self)
+        store = Store.current
         store.add(members, "_store_identifying_fields")
         store.add(
             partners,

@@ -59,7 +59,6 @@ class MailPoll(models.Model):
             Store.to(thread_target[0], bus_subchannel=thread_target[1]).add(poll, "_store_poll_fields")
 
     @api.model
-    @Store.with_versioning
     def _end_expired_polls(self):
         self.env["mail.poll"].search_fetch(
             [("poll_end_dt", "<=", "now"), ("end_message_id", "=", None)],

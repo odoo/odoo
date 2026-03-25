@@ -32,7 +32,7 @@ class PortalWebClientController(WebclientController):
     @classmethod
     def _process_request_for_all(self, name, params):
         super()._process_request_for_all(name, params)
-        store = Store.default(request)
+        store = Store.current
         if name == "/mail/chatter_fetch":
             # Only search into website_message_ids, so apply the same domain to perform only one search
             # extract domain from the 'website_message_ids' field

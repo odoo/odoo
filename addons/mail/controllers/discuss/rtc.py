@@ -73,7 +73,7 @@ class RtcController(Controller):
         member = channel._find_or_create_member_for_self()
         if not member:
             raise NotFound()
-        store = Store.default(self)
+        store = Store.current
         # sudo: discuss.channel.rtc.session - member of current user can join call
         member.sudo()._rtc_join_call(store, check_rtc_session_ids=check_rtc_session_ids, camera=camera)
         return store
@@ -139,7 +139,7 @@ class RtcController(Controller):
             ]
             channel_member_sudo.channel_id.rtc_session_ids.filtered_domain(domain).write({})  # update write_date
         rtc_updates = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)
-        return Store.default(self).add(
+        return Store.current.add(
             member.channel_id,
             "_store_rtc_update_fields",
             fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},

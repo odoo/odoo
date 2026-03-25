@@ -9,7 +9,7 @@ class WebClient(WebclientController):
     def _process_request_for_all(self, name, params):
         if name == "init_livechat" and (channel := self._link_visitor_to_livechat(params)):
             channel.is_pending_chat_request = False
-            Store.default(request).add(channel, "_store_open_chat_window_fields")
+            Store.current.add(channel, "_store_open_chat_window_fields")
         super()._process_request_for_all(name, params)
 
     @classmethod

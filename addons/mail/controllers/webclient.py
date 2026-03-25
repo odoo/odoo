@@ -16,7 +16,7 @@ class WebclientController(ThreadController):
         This is similar to /mail/data except this method can have side effects.
         """
         self._process_request(fetch_params, context=context)
-        return Store.default(self)
+        return Store.current
 
     @mail_route("/mail/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     def mail_data(self, fetch_params, context=None):
@@ -24,7 +24,7 @@ class WebclientController(ThreadController):
         This is similar to /mail/action except this method should be read-only.
         """
         self._process_request(fetch_params, context=context)
-        return Store.default(self)
+        return Store.current
 
     @classmethod
     def _process_request(self, fetch_params, context):
@@ -43,7 +43,7 @@ class WebclientController(ThreadController):
                 if isinstance(fetch_param, str)
                 else (fetch_param + [None, None])[:3]
             )
-            store = Store.default(request)
+            store = Store.current
             store.data_id = data_id
             self._process_request_for_all(name, params)
             if not request.env.user._is_public():
@@ -62,12 +62,11 @@ class WebclientController(ThreadController):
 
     @classmethod
     def _process_request_for_all(self, name, params):
-        store = Store.default(request.env)
         if name == "init_messaging":
             if request.env.user._is_internal():
                 # sudo: bus.bus: reading non-sensitive last id
                 bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-                store.add_global_values(
+                Store.current.add_global_values(
                     lambda res: self._store_init_messaging_global_fields(res, bus_last_id),
                 )
         if name == "mail.thread":
@@ -79,9 +78,9 @@ class WebclientController(ThreadController):
             )
             if not thread:
                 thread = request.env[params["thread_model"]].browse(params["thread_id"])
-                store.add(thread, {"hasReadAccess": False, "hasWriteAccess": False}, as_thread=True)
+                Store.current.add(thread, {"hasReadAccess": False, "hasWriteAccess": False}, as_thread=True)
             else:
-                store.add(
+                Store.current.add(
                     thread,
                     "_store_thread_fields",
                     fields_params={"request_list": params["request_list"]},
@@ -89,17 +88,17 @@ class WebclientController(ThreadController):
                 )
         if name == "res.partner":
             partner = request.env["res.partner"].search_fetch([("id", "=", params["id"])])
-            store.add(partner, "_store_partner_fields")
+            Store.current.add(partner, "_store_partner_fields")
         if name == "res.users":
             user = request.env["res.users"].search_fetch([("id", "=", params["id"])])
-            store.add(user, "_store_user_fields")
+            Store.current.add(user, "_store_user_fields")
         if name == "/mail/poll_option/votes":
             option_id = params.get("poll_option_id")
             # sudo - mail.poll.option: validated by "_get_thread_with_access" afterwards.
             if opt_sudo := request.env["mail.poll.option"].sudo().search([("id", "=", option_id)]):
                 message = opt_sudo.poll_id.start_message_id
                 if self._get_thread_with_access(message.model, message.res_id, mode="read"):
-                    store.add(opt_sudo.vote_ids, "_store_vote_fields")
+                    Store.current.add(opt_sudo.vote_ids, "_store_vote_fields")
 
     @classmethod
     def _process_request_for_logged_in_user(self, name, params):
@@ -129,7 +128,7 @@ class WebclientController(ThreadController):
             # and solves it by removing useless notifications
             if lost:
                 lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
-            Store.default(request).add(valid.mail_message_id, "_store_notification_fields")
+            Store.current.add(valid.mail_message_id, "_store_notification_fields")
         if name == "/mail/thread/messages":
             if thread := self._get_thread_with_access(
                 params["thread_model"],
@@ -145,7 +144,7 @@ class WebclientController(ThreadController):
 
     @classmethod
     def _process_request_for_internal_user(self, name, params):
-        store = Store.default(request)
+        store = Store.current
         if name == "systray_get_activities":
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
@@ -212,7 +211,7 @@ class WebclientController(ThreadController):
         messages = fetch_res.pop("messages")
         if add_to_store:
             request.update_context(messages=request.env.context["messages"] | messages)
-        Store.default(request).resolve_data_request(
+        Store.current.resolve_data_request(
             lambda res: (
                 [res.attr(k, v) for k, v in fetch_res.items()],
                 res.many("messages", [], value=messages),

@@ -72,7 +72,7 @@ class AttachmentController(ThreadController):
             # sudo: ir.attachment - posting a new attachment on an accessible thread
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
-            store = Store.default(self).add(
+            store = Store.current.add(
                 attachment,
                 lambda res: (
                     res.from_method("_store_attachment_fields"),

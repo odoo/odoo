@@ -19,7 +19,7 @@ class TestStoreVersioning(HttpCase, MailCase):
         class StoreVersionController(Controller):
             @mail_route("/store/version/write_fields", type="jsonrpc")
             def write_fields(self, fields_to_write_by_id):
-                store = Store.default(self)
+                store = Store.current
                 for key, values in fields_to_write_by_id.items():
                     model_name, record_id = key.split(":")
                     record = self.env[model_name].browse(int(record_id))
@@ -29,7 +29,7 @@ class TestStoreVersioning(HttpCase, MailCase):
 
             @mail_route("/store/version/read_fields", type="jsonrpc")
             def read_fields(self, fields_to_read_by_id):
-                store = Store.default(self)
+                store = Store.current
                 for key, fnames in fields_to_read_by_id.items():
                     model_name, record_id = key.split(":")
                     store.add(self.env[model_name].browse(int(record_id)), fnames)

@@ -634,6 +634,7 @@ class DiscussChannel(models.Model):
             )
         member.unlink()
 
+    @Store.with_versioning
     def add_members(
         self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True
     ):
@@ -645,7 +646,6 @@ class DiscussChannel(models.Model):
             post_joined_message=post_joined_message,
         )
 
-    @Store.with_versioning
     def _add_members(
         self,
         *,
@@ -973,19 +973,20 @@ class DiscussChannel(models.Model):
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
 
-    @Store.with_versioning
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        store = Store.to(self).add(message, "_store_message_fields")
-        if message.channel_id.parent_channel_id:
-            store.add(message.channel_id, ["message_count"])
-        payload = {"data": store, "id": self.id}
+        payload = {"id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
         if kwargs.get("silent"):
             payload["silent"] = True
-        self._bus_send("discuss.channel/new_message", payload)
+        store = Store.to(
+            self,
+            notification_type="discuss.channel/new_message",
+            payload_fn=lambda store_data: {**payload, "data": store_data},
+        )
+        store.add(message, "_store_message_fields")
         return rdata
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False, force_record_name=False):
@@ -1158,7 +1159,7 @@ class DiscussChannel(models.Model):
             :param users : the users to notify
         """
         for user in users:
-            Store.to(user, env=self.env).add(
+            Store.to(user).add(
                 self.with_user(user).with_context(allowed_company_ids=[]),
                 "_store_channel_fields",
             )
@@ -1467,7 +1468,7 @@ class DiscussChannel(models.Model):
     @Store.with_versioning
     def open_chat_window_action(self):
         """Return an action the web client can use to open this channel."""
-        return Store.default(self).add(self, "_store_open_chat_window_fields").get_client_action()
+        return Store.current.add(self, "_store_open_chat_window_fields").get_client_action()
 
     @api.model
     def _create_channel(self, name, group_id, is_readonly=False):
@@ -1569,7 +1570,7 @@ class DiscussChannel(models.Model):
         """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        return Store.default(self).add(
+        return Store.current.add(
             self.search([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
             lambda res: (
                 res.extend(["name", "channel_type"]),

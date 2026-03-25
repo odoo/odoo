@@ -86,7 +86,7 @@ class LivechatController(http.Controller):
         channel = request.env["discuss.channel"]
         country = request.env["res.country"]
         guest = request.env["mail.guest"]
-        store = Store.default(self)
+        store = Store.current
         livechat_channel = (
             request.env["im_livechat.channel"]
             .with_context(lang=False)

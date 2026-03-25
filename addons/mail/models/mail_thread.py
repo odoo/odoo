@@ -3384,7 +3384,6 @@ class MailThread(models.AbstractModel):
 
         return recipients_data
 
-    @Store.with_versioning
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Notify recipients inbox of a message. It is done in two main steps
 
@@ -4932,7 +4931,7 @@ class MailThread(models.AbstractModel):
     @api.readonly
     @Store.with_versioning
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
-        return Store.default(self).add(
+        return Store.current.add(
             self,
             "_store_message_followers_fields",
             fields_params={"after": after, "limit": limit, "filter_recipients": filter_recipients},
@@ -5011,7 +5010,6 @@ class MailThread(models.AbstractModel):
         msg_not_comment.sudo().write(msg_vals)
         return True
 
-    @Store.with_versioning
     def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None,
                                 strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
@@ -5094,7 +5092,7 @@ class MailThread(models.AbstractModel):
             self.env["mail.message.translation"].sudo().search(
                 [("message_id", "=", message.id)],
             ).unlink()
-        Store.to(message, env=self.env).add(
+        Store.to(message).add(
             message,
             lambda res: (
                 res.many("attachment_ids", "_store_attachment_fields", sort="id"),

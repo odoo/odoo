@@ -16,7 +16,7 @@ class DiscussChannelWebclientController(WebclientController):
     def _add_has_unpinned_channels_to_store(self):
         # sudo: discuss.channel.member: sudo for performance. Checking existence of unpinned
         # channels is acceptable, even if the channel is no longer accessible to the user.
-        Store.default(request).add_global_values(
+        Store.current.add_global_values(
             has_unpinned_channels=request.env["discuss.channel.member"]
             .sudo()
             .search_count(
@@ -39,7 +39,7 @@ class DiscussChannelWebclientController(WebclientController):
             channels=request.env["discuss.channel"], add_channels_last_message=False
         )
         super()._process_request_loop(fetch_params)
-        store = Store.default(request)
+        store = Store.current
         channels = request.env.context["channels"]
         if channels:
             store.add(channels, "_store_channel_fields")
@@ -106,7 +106,7 @@ class DiscussChannelWebclientController(WebclientController):
                 params.get("name", ""),
             )
         if resolve_channel:
-            Store.default(request).resolve_data_request(
+            Store.current.resolve_data_request(
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
 
@@ -142,7 +142,7 @@ class ChannelController(http.Controller):
             limit=100,
         )
         return (
-            Store.default(self)
+            Store.current
             .add(channel, ["member_count"])
             .add(unknown_members, "_store_member_fields")
         )
@@ -214,7 +214,7 @@ class ChannelController(http.Controller):
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
         return {
             "count": len(attachments),
-            "store_data": Store.default(self).add(attachments, "_store_attachment_fields"),
+            "store_data": Store.current.add(attachments, "_store_attachment_fields"),
         }
 
     @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
@@ -230,7 +230,7 @@ class ChannelController(http.Controller):
             )
         sub_channel = channel._create_sub_channel(from_message_id, name)
         return {
-            "store_data": Store.default(self).add(sub_channel, "_store_channel_fields"),
+            "store_data": Store.current.add(sub_channel, "_store_channel_fields"),
             "sub_channel": sub_channel.id,
         }
 
@@ -245,7 +245,7 @@ class ChannelController(http.Controller):
         if search_term:
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
-        store = Store.default(self)
+        store = Store.current
         store.add(sub_channels, "_store_channel_fields")
         store.add(sub_channels._get_last_messages(), "_store_message_fields")
         if sub_channels:

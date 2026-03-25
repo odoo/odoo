@@ -34,6 +34,7 @@ class DiscussChannelMember(models.Model):
     )
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
         members = super().create(vals_list)
         guest = self.env["mail.guest"]._get_guest_from_context()
@@ -52,10 +53,9 @@ class DiscussChannelMember(models.Model):
                 member.sudo().livechat_member_type = "visitor"
                 continue
             member.sudo().livechat_member_type = "agent"
-        stores = Store.Stores()
         for history in members.livechat_member_history_ids:
             # sudo - visitor can access the channel member history of an accessible channel
-            stores[history.channel_id].add(
+            Store.to(history.channel_id).add(
                 history.channel_id,
                 lambda res, history=history: res.many(
                     "livechat_channel_member_history_ids",
@@ -65,7 +65,6 @@ class DiscussChannelMember(models.Model):
                     sudo=True,
                 ),
             )
-        stores.bus_send()
         return members
 
     @api.depends("livechat_member_history_ids.livechat_member_type")

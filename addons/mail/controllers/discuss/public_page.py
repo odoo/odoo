@@ -47,7 +47,7 @@ class PublicPageController(http.Controller):
         # sudo: discuss.channel - channel access is validated with invitation_token
         if not channel or not channel.sudo().uuid or not consteq(channel.sudo().uuid, invitation_token):
             raise NotFound()
-        Store.default(self).add_global_values(isChannelTokenSecret=True)
+        Store.current.add_global_values(isChannelTokenSecret=True)
         return self._response_discuss_channel_invitation(channel, guest_email)
 
     @mail_route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
@@ -80,7 +80,7 @@ class PublicPageController(http.Controller):
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
                 channel_sudo = channel_sudo.search([("uuid", "=", create_token)])
-        Store.default(self).add_global_values(isChannelTokenSecret=False)
+        Store.current.add_global_values(isChannelTokenSecret=False)
         return self._response_discuss_channel_invitation(channel_sudo.sudo(False))
 
     def _response_discuss_channel_invitation(self, channel, guest_email=None):
@@ -102,14 +102,14 @@ class PublicPageController(http.Controller):
             # sudo - mail.guest: writing email address of self guest is allowed
             guest.sudo().email = guest_email
         if guest and not guest_already_known:
-            Store.default(self).add_global_values(is_welcome_page_displayed=True)
+            Store.current.add_global_values(is_welcome_page_displayed=True)
             channel = channel.with_context(guest=guest)
         if self.env.user._is_internal():
             return request.redirect(f"/odoo/action-mail.action_discuss?active_id={channel.id}")
         return self._response_discuss_public_template(channel)
 
     def _response_discuss_public_template(self, channel):
-        store = Store.default(self)
+        store = Store.current
         store.add_global_values(
             companyName=request.env.company.name,
             inPublicPage=True,

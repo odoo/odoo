@@ -31,7 +31,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         """
         action = super()._action_next_screen()
         return (
-            Store.default(self)
+            Store.current
             .delete(self.partner_ids | self.dst_partner_id, as_thread=True)
             .get_client_action(next_action=action)
         )

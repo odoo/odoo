@@ -712,7 +712,7 @@ class MailActivity(models.Model):
     @api.readonly
     @Store.with_versioning
     def activity_format(self):
-        return Store.default(self).add(self, "_store_activity_fields")
+        return Store.current.add(self, "_store_activity_fields")
 
     def _store_activity_fields(self, res: Store.FieldList):
         res.attr("activity_category")

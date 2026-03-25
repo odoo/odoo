@@ -105,7 +105,7 @@ class MailPresence(models.Model):
             persona = presence.guest_id or presence.user_id
             target = bus_target or (persona, "presence")
             bus_channel, bus_subchannel = target if isinstance(target, tuple) else (target, None)
-            Store.to(bus_channel, bus_subchannel=bus_subchannel, env=self.env).add(
+            Store.to(bus_channel, bus_subchannel=bus_subchannel).add(
                 presence.guest_id or presence.user_id.partner_id,
                 {"im_status": im_status or persona.im_status},
             )

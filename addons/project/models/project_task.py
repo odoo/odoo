@@ -2154,7 +2154,7 @@ class ProjectTask(models.Model):
             Domain(self.env["res.partner"]._get_mention_suggestions_domain(search))
             & Domain("id", "in", followers.partner_id.ids)
         )
-        return Store.default(self).add(
+        return Store.current.add(
             self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit),
             lambda res: (
                 res.extend(["email", "name"]),

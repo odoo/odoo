@@ -25,4 +25,4 @@ class SearchController(http.Controller):
             query = channels._search(Domain('id', 'not in', channels.ids) & domain, limit=remaining_limit)
             channels |= channels.browse(query)
         request.env["res.partner"]._search_for_channel_invite(search_term=term, limit=limit)
-        return Store.default(self).add(channels, "_store_channel_fields")
+        return Store.current.add(channels, "_store_channel_fields")

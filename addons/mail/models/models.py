@@ -8,6 +8,7 @@ from lxml.builder import E
 from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.fields import Domain
 from odoo.tools import parse_contact_from_email, OrderedSet
@@ -25,10 +26,10 @@ class Base(models.AbstractModel):
     # ------------------------------------------------------------
 
     def _flush(self):
-        if mail_store := self.env.context.get("mail_store"):
+        if store_version := Store._version_ctx.get(None):
             for field in self._fields.values():
                 if ids := self.env._field_dirty.get(field):
-                    mail_store.mark_field_as_written(field.model_name, ids, field.name)
+                    store_version.mark_field_as_written(field.model_name, ids, field.name)
         return super()._flush()
 
     def with_user(self, user):

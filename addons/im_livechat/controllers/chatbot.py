@@ -16,7 +16,7 @@ class LivechatChatbotScriptController(http.Controller):
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
         return {
             "message_id": message.id,
-            "store_data": Store.default(self).add(message, "_store_message_fields"),
+            "store_data": Store.current.add(message, "_store_message_fields"),
         }
 
     @mail_route("/chatbot/answer/save", type="jsonrpc", auth="public")
@@ -142,7 +142,7 @@ class LivechatChatbotScriptController(http.Controller):
             elif step_type == "question_phone":
                 result = chatbot._validate_phone(last_user_message.body, discuss_channel)
             if posted_message := result.pop("posted_message"):
-                result["data"] = Store.default(self).add(
+                result["data"] = Store.current.add(
                     discuss_channel,
                     lambda res: res.many(
                         "messages",

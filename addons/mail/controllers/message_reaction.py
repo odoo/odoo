@@ -23,7 +23,7 @@ class MessageReactionController(ThreadController):
             raise NotFound()
         # sudo: mail.message - access mail.message.reaction through an accessible message is allowed
         message.sudo()._message_reaction(content, action, partner, guest)
-        return Store.default(self)
+        return Store.current
 
     def _get_reaction_author(self, message, **kwargs):
         user, guest = request.env["res.users"]._get_current_persona()

@@ -40,7 +40,7 @@ class DiscussChannel(models.Model):
     @Store.with_versioning
     def _some_private_method(self):
         Store.to(some_channel).add(record, "_store_fields")  # Automatically send at the end of the top-level decorated function.
-        Store.default(self).add(record, "_store_fields")  # Request store.
+        Store.current.add(record, "_store_fields")  # Request store.
 
 
 record = some_channel = None

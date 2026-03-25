@@ -924,7 +924,7 @@ class MailMessage(models.Model):
         if not notifications:
             return
         notifications.write({"is_read": False, "read_date": False})
-        store = Store.default(self).add(notifications.mail_message_id, "_store_message_fields")
+        store = Store.current.add(notifications.mail_message_id, "_store_message_fields")
         self.env.user._bus_send(
             "mail.message/mark_as_unread",
             {"message_ids": notifications.mail_message_id.ids, "store_data": store},
@@ -1039,7 +1039,7 @@ class MailMessage(models.Model):
         if action == "remove" and reaction:
             reaction.unlink()
         # fill the store to use for non logged in portal users in mail_message_reaction()
-        Store.default(self).add(self, "_store_reaction_group_fields", fields_params={"content": content})
+        Store.current.add(self, "_store_reaction_group_fields", fields_params={"content": content})
         # send the reaction group to bus for logged in users
         self._bus_send_reaction_group(content)
 
@@ -1341,7 +1341,6 @@ class MailMessage(models.Model):
             as_thread=True,
         )
 
-    @Store.with_versioning
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web
         client. Purpose is to send the updated status per author."""

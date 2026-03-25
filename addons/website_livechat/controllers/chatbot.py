@@ -14,7 +14,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         """ Custom route allowing to test a chatbot script.
         As we don't have a im_livechat.channel linked to it, we pre-emptively create a discuss.channel
         that will hold the conversation between the bot and the user testing the script. """
-        store = Store.default(self)
+        store = Store.current
         channels = request.env["discuss.channel"].search([
             ["is_member", "=", True],
             ["livechat_end_dt", "=", False],

@@ -121,7 +121,7 @@ class ThreadController(http.Controller):
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
         subtypes = record._mail_get_message_subtypes()
-        store = Store.default(self).add(subtypes, ["name"]).add(follower, ["subtype_ids"])
+        store = Store.current.add(subtypes, ["name"]).add(follower, ["subtype_ids"])
         return {
             "store_data": store,
             "subtype_ids": subtypes.sorted(
@@ -186,7 +186,7 @@ class ThreadController(http.Controller):
 
     @mail_route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
     def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
-        store = Store.default(self)
+        store = Store.current
         request.update_context(message_post_store=store)
         if context:
             request.update_context(**context)
@@ -228,7 +228,7 @@ class ThreadController(http.Controller):
             message,
             **self._prepare_message_data(update_data, thread=thread, from_create=False, **kwargs),
         )
-        return Store.default(self).add(message, "_store_message_fields")
+        return Store.current.add(message, "_store_message_fields")
 
     # side check for access
     # ------------------------------------------------------------
@@ -241,13 +241,13 @@ class ThreadController(http.Controller):
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
-        return Store.default(self).add(thread, self._store_thread_follow_fields, as_thread=True)
+        return Store.current.add(thread, self._store_thread_follow_fields, as_thread=True)
 
     @mail_route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)
-        return Store.default(self).add(thread, self._store_thread_follow_fields, as_thread=True)
+        return Store.current.add(thread, self._store_thread_follow_fields, as_thread=True)
 
     @classmethod
     def _store_thread_follow_fields(cls, res: Store.FieldList):

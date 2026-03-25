@@ -25,7 +25,7 @@ class MailboxController(WebclientController):
             bookmark_messages |= messages_su
         if bookmark_messages:
             bus_store = Store.to(request.env.user)
-            for cur_store in [Store.default(request), bus_store]:
+            for cur_store in [Store.current, bus_store]:
                 cur_store.add(bookmark_messages, ["is_bookmarked"])
                 cur_store.add_global_values(request.env.user._store_bookmark_box_global_fields)
         message_fetch_domain = None

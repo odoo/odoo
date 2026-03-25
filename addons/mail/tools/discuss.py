@@ -3,6 +3,7 @@
 import base64
 import math
 import os
+from contextvars import ContextVar
 from collections import UserList, defaultdict
 from datetime import date, datetime
 from functools import partial, wraps
@@ -14,7 +15,7 @@ import odoo
 from odoo import _, models
 from odoo.exceptions import MissingError
 from odoo.http import Response, request, route
-from odoo.tools import OrderedSet, groupby
+from odoo.tools import classproperty, OrderedSet, groupby
 
 from odoo.addons.bus.websocket import wsrequest
 
@@ -70,6 +71,7 @@ class StoreVersionInternal:
     """
     def __init__(self):
         self.stores = Store.Stores()
+        self._is_sending_notifications = False
         self._pending_bus_sends = []
         self._snapshot_data = None
         # Maps model names to record IDs to the set of updated field names.
@@ -78,22 +80,26 @@ class StoreVersionInternal:
     def complete(self, env, returned_value):
         """Send accumulated stores and pending notifications with versions, then return
         the versioned response."""
-        for target, n_type, msg in self._pending_bus_sends:
-            env["bus.bus"].with_context(mail_store=None)._sendone(
-                target,
-                n_type,
-                self._resolve_stores_with_version(env, msg),
-            )
-        self._pending_bus_sends.clear()
-        for store in self.stores.values():
-            if getattr(store, "auto_bus_send", False) and (
-                res := self._resolve_stores_with_version(env, store)
-            ):
-                store.target.channel.with_context(mail_store=None)._bus_send(
-                    "mail.record/insert",
-                    res,
-                    subchannel=store.target.subchannel,
+        self._is_sending_notifications = True
+        try:
+            for target, n_type, msg in self._pending_bus_sends:
+                env["bus.bus"]._sendone(
+                    target,
+                    n_type,
+                    self._resolve_stores_with_version(env, msg),
                 )
+            self._pending_bus_sends.clear()
+            for store in self.stores.values():
+                if getattr(store, "auto_bus_send", False) and (
+                    res := self._resolve_stores_with_version(env, store)
+                ):
+                    store.target.channel._bus_send(
+                        store.notification_type or "mail.record/insert",
+                        store.payload_fn(res) if store.payload_fn else res,
+                        subchannel=store.target.subchannel,
+                    )
+        finally:
+            self._is_sending_notifications = False
         return self._resolve_stores_with_version(env, returned_value)
 
     def enqueue_bus_notification(self, bus_channel, notification_type, payload):
@@ -250,83 +256,89 @@ def store_enqueue(func):
     return store_enqueue__wrapper
 
 
+_store_ctx = ContextVar('store_version_context')
+
+
+"""
+When do we need to setup bus hooks? When calling Store.to().
+What about _sendone()? => give up, always use Store.to()
+
+
+How to format specific calls like
+
+user._bus_send("some_custom_notif", custom_payload)
+
+Store.to(user, notification_type="discuss.channel/new_message", payload_fn=lambda store_data: {})
+
+"""
+
+
 class Store:
     """Helper to build a dict of data for sending to web client.
     It supports merging of data from multiple sources, either through list extend or dict update.
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
+    _version_ctx = _store_ctx
 
-    @staticmethod
-    def default(target):
-        """Return the single Store instance linked to the current `Store.with_versioning` scope.
+    @classmethod
+    def _ensure_version_ctx(cls) -> StoreVersionInternal:
+        if manager := cls._version_ctx.get(None):
+            return manager
+        manager = StoreVersionInternal()
+        cls._version_ctx.set(manager)
+        return manager
 
-        Note: This must be called within a `Store.with_versioning` decorated  method or a `mail_route`.
+    @classproperty
+    def current(cls) -> "Store":
+        """Return the single, versioned, Store instance linked to the current execution context."""
+        return cls._ensure_version_ctx().stores[None, None]
+
+    @classmethod
+    def to(
+        cls,
+        bus_channel,
+        /,
+        *,
+        bus_subchannel=None,
+        auto_bus_send=True,
+        notification_type=None,
+        payload_fn=None,
+    ) -> "Store":
+        """Return a versioned Store instance for a specific recipient. Data is automatically sent
+        to that channel via the bus at the end of the transaction.
         """
-        env = target.env if hasattr(target, 'env') else target
-        if not env.context.get("mail_store"):
-            err_msg = _(
-                "`Store.default` should only be used within `mail_route` or `Store.with_versioning` context.",
-            )
-            raise RuntimeError(err_msg)
-        return env.context["mail_store"].stores[None, None]
-
-    @staticmethod
-    def to(bus_channel, /, *, bus_subchannel=None, auto_bus_send=True, env=None) -> "Store":
-        """Return a Store instance for a specific recipient. Data is automatically sent
-        to that channel via the bus at the end of the process. Note that data for the same target
-        is grouped into one store, and the result is versioned.
-
-        Note: This must be called within a `Store.with_versioning` decorated  method or a `mail_route`.
-
-        :param env: Environment for `Store.with_versioning`. Normally inferred from `bus_channel`;
-        only pass explicitly if `bus_channel` comes from an environment outside of the
-        `Store.with_versioning` scope.
-
-        """
-        effective_env = env or bus_channel.env
-        if not effective_env.context.get("mail_store"):
-            err_msg = _(
-                "`Store.to` should only be used within `mail_route` or `Store.with_versioning` context.",
-            )
-            raise RuntimeError(err_msg)
-        store = effective_env.context["mail_store"].stores[bus_channel, bus_subchannel]
+        manager = cls._ensure_version_ctx()
+        # manager._ensure_send_notifications_hook()
+        store = manager.stores[bus_channel, bus_subchannel]
         store.auto_bus_send = auto_bus_send
         return store
 
     @staticmethod
     def with_versioning(func):
         """Decorator to give this method access to a versioned store. Inside the method,
-        one can safely call `Store.default()` or `Store.to()` to get a store instance.
+        one can safely call `Store.current` or `Store.to()` to get a store instance.
         Updates are grouped, versioned, and optionally sent on the bus.
         """
         @wraps(func)
         def with_versioning__wrapper(self, *args, **kwargs):
-            manager = self.env.context.get("mail_store")
-            if manager:
-                # An outer call is already handling versioning and bus sends.
+            if Store._version_ctx.get(None):
+                # An outer call is already handling versioning.
                 return func(self, *args, **kwargs)
-            req = request or wsrequest
-            manager = StoreVersionInternal()
-            if isinstance(self, models.BaseModel):
-                self = self.with_context(mail_store=manager)
-            else:
-                req.update_context(mail_store=manager)
+            manager = Store._ensure_version_ctx()
             response = func(self, *args, **kwargs)
-            versioned_response = manager.complete(self.env, response)
-            if not isinstance(self, models.BaseModel):
-                # Clean context to prevent side effects based on the presence of `mail_store`.
-                req.update_context(mail_store=None)
-            return versioned_response
+            return manager.complete(self.env, response)
 
         return with_versioning__wrapper
 
-    def __init__(self, bus_channel=None, bus_subchannel=None):
+    def __init__(self, bus_channel=None, bus_subchannel=None, *, notification_type=None, payload_fn=None):
         self.add_depth = 0
         self.already_done = set()
         self.data = {}
         self.data_id = None
         self.is_executing_operation_queue = False
         self.operation_queue = []
+        self.payload_fn = payload_fn
+        self.notification_type = notification_type
         self.target = Store.Target(bus_channel, bus_subchannel)
 
     @store_enqueue
@@ -473,16 +485,6 @@ class Store:
             else:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
-
-    def bus_send(self, notification_type="mail.record/insert", /):
-        assert self.target.channel is not None, (
-            "Missing `bus_channel`. Pass it to the `Store` constructor to use `bus_send`."
-        )
-        assert not getattr(self, "auto_bus_send", False), (
-            "Store was marked to be sent automatically at the end of the request thus, `bus_send` should not be used."
-        )
-        if res := self.get_result():
-            self.target.channel._bus_send(notification_type, res, subchannel=self.target.subchannel)
 
     @store_enqueue
     def resolve_data_request(self, values=None, *, data_id=None):

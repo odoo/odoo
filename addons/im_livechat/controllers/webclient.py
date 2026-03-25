@@ -19,7 +19,7 @@ class WebClient(WebclientController):
     @classmethod
     def _process_request_for_internal_user(cls, name, params):
         super()._process_request_for_internal_user(name, params)
-        store = Store.default(request)
+        store = Store.current
         if name == "im_livechat.channel":
             store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
         if name == "/im_livechat/looking_for_help":
@@ -46,7 +46,7 @@ class WebClient(WebclientController):
     def _process_request_for_all(cls, name, params):
         super()._process_request_for_all(name, params)
         if name == "init_livechat":
-            Store.default(request).add_global_values(lambda res: cls._store_init_livechat_fields(res, params))
+            Store.current.add_global_values(lambda res: cls._store_init_livechat_fields(res, params))
 
     @classmethod
     def _store_init_livechat_fields(cls, res: Store.FieldList, params):
