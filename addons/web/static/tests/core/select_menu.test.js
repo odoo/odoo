@@ -1415,3 +1415,48 @@ test("prevent glitch on open or focusout", async () => {
     expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
     expect(searchInput.placeholder).toBe("searchPlaceholder");
 });
+
+test.tags("desktop");
+test("Input blur only clears value when focus leaves SelectMenu", async () => {
+    expect.assertions(3);
+
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                choices="this.choices"
+                value="this.state.value"
+                onSelect.bind="this.onSelect"
+            />
+        `;
+
+        setup() {
+            this.state = useState({ value: "hello" });
+            this.choices = [
+                { label: "Hello", value: "hello" },
+                { label: "World", value: "world" },
+            ];
+        }
+
+        onSelect(value) {
+            expect.step("Cleared");
+            this.state.value = value;
+        }
+    }
+
+    await mountSingleApp(Parent);
+
+    await click(".o_select_menu_toggler");
+    await animationFrame();
+    await press("Backspace");
+    await animationFrame();
+    expect(".o_select_menu_toggler").toHaveValue("");
+
+    await click(".o_select_menu_item");
+    await animationFrame();
+    expect(".o_select_menu_toggler").toHaveValue("Hello");
+
+    // Ensure no unintended clear is triggered when interacting inside the dropdown
+    expect.verifySteps([]);
+});

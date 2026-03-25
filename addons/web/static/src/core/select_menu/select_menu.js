@@ -285,6 +285,10 @@ export class SelectMenu extends Component {
         if (this.displayInputInToggler) {
             this.state.isFocused = false;
         }
+        const nextFocus = ev.relatedTarget;
+        if (this.menuRef.el?.contains(nextFocus)) {
+            return;
+        }
         if (ev.target.value === "" && this.canDeselect && !this.props.multiSelect) {
             this.onInputClear();
         }
