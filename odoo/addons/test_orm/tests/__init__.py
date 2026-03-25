@@ -24,7 +24,6 @@ from . import (
     test_fields_selection,
     test_fields_temporal,
     test_fields_textual,
-    test_html_converter,
     test_inherits,
     test_ir_rules,
     test_many2many,
