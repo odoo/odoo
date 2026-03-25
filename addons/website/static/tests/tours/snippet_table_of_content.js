@@ -12,14 +12,14 @@ const scrollToHeading = function (position) {
         content: `Scroll to h2 number ${position}`,
         trigger: `:iframe .s_table_of_content h2:eq(${position})`,
         run: function () {
-            this.anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+            this.anchor.scrollIntoView(true);
         },
     };
 };
 const checkTOCNavBar = function (tocPosition, activeHeaderPosition) {
     return {
         content: `Check that the header ${activeHeaderPosition} is active for TOC ${tocPosition}`,
-        trigger: `:iframe .s_table_of_content:eq(${tocPosition}) .table_of_content_link:eq(${activeHeaderPosition}).active `,
+        trigger: `:iframe .s_table_of_content:eq(${tocPosition}) .table_of_content_link.table_of_content_link_depth_0:eq(${activeHeaderPosition}).active `,
     };
 };
 
@@ -31,6 +31,13 @@ registerWebsitePreviewTour(
     },
     () => [
         ...insertSnippet({ id: "s_table_of_content", name: "Table of Content", groupName: "Text" }),
+        // Add a banner snippet at the end of the page to avoid an edge case
+        // with the table of content: When the table of content is the last
+        // snippet, scrolling to the last h2 title would scroll to the end of
+        // the page. Therefore, the last title of the table of content will be
+        // activated, instead of the h2 we scrolled to. The extra banner ensures
+        // correct activation behavior.
+        ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
         {
             content: "Drag the Text snippet group and drop it.",
             trigger:
@@ -64,7 +71,7 @@ registerWebsitePreviewTour(
         scrollToHeading(2),
         checkTOCNavBar(1, 0),
         scrollToHeading(3),
-        checkTOCNavBar(1, 0),
+        checkTOCNavBar(1, 1),
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Click on the first TOC's title",
