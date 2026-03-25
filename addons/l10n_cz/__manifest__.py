@@ -18,11 +18,7 @@ Tento modul definuje:
 
 - Základní fiskální pozice pro českou legislativu
     """,
-    'depends': [
-        'account',
-        'account_edi_ubl_cii',
-        'base_address_extended',
-    ],
+    'depends': ['account', 'account_edi_ubl_cii'],
     'auto_install': ['account'],
     'data': [
         'views/res_partner_views.xml',

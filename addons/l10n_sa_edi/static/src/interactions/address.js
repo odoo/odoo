@@ -18,7 +18,6 @@ patch(CustomerAddress.prototype, {
                 this.addressForm.l10n_sa_edi_additional_identification_scheme;
             this.l10n_sa_edi_additional_identification_number =
                 this.addressForm.l10n_sa_edi_additional_identification_number;
-            this._onChangeCountry();
             this._onChangeL10nSaScheme();
         }
     },
@@ -29,25 +28,6 @@ patch(CustomerAddress.prototype, {
 
     async _setEditable(name) {
         this.addressForm[name].readOnly = false;
-    },
-
-    async _onChangeCountry(init = false) {
-        await this.waitFor(super._onChangeCountry(...arguments));
-        if (!this.isSaCompany) {
-            return;
-        }
-
-        if (this._getSelectedCountryCode() === "SA") {
-            this._showInput("l10n_sa_edi_building_number");
-            this._showInput("l10n_sa_edi_plot_identification");
-            this._showInput("l10n_sa_edi_additional_identification_scheme");
-            this._showInput("l10n_sa_edi_additional_identification_number");
-        } else {
-            this._hideInput("l10n_sa_edi_building_number");
-            this._hideInput("l10n_sa_edi_plot_identification");
-            this._hideInput("l10n_sa_edi_additional_identification_scheme");
-            this._hideInput("l10n_sa_edi_additional_identification_number");
-        }
     },
 
     async _onChangeL10nSaScheme() {

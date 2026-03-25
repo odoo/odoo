@@ -119,3 +119,12 @@ class ResPartner(models.Model):
             'res_model': 'res.partner',
             'views': [(self.env.ref('point_of_sale.view_partner_form_pos_ui').id, 'form')],
         }
+
+    def _get_current_partner(self, *, pos_order=False, **kwargs):
+        """Override `portal` to get current partner from pos_order if user is not signed up."""
+        if pos_order:
+            return (
+                (not pos_order.partner_id.is_public and pos_order.partner_id)
+                or self.env["res.partner"]  # Avoid returning public user's partner
+            )
+        return super()._get_current_partner(pos_order=pos_order, **kwargs)

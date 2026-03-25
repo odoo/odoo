@@ -81,8 +81,8 @@ patch(CustomerAddress.prototype, {
         }
     },
 
-    async _onChangeCountry(init = false) {
-        await super._onChangeCountry(init);
+    async onChangeCountry() {
+        await super.onChangeCountry();
         const radio = this.el.querySelector('input[name="company_type"]:checked');
 
         if (!radio || !this.el.querySelector('input[name="l10n_my_edi_malaysian_tin"]')) {

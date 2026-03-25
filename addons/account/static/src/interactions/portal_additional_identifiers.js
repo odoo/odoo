@@ -196,14 +196,12 @@ registry
     .add('account.portal_additional_identifiers', PortalAdditionalIdentifiers);
 
 patch(CustomerAddress.prototype, {
-    async _onChangeCountry(init = false) {
-        const data = await super._onChangeCountry(init);
-        if (!init) {
-            const container = this.el.querySelector('.o_additional_identifiers_portal');
-            container?.dispatchEvent(new CustomEvent(COUNTRY_CHANGED_EVENT, {
-                detail: { metadata: data?.additional_identifiers_metadata || {} },
-            }));
-        }
+    async onChangeCountry() {
+        const data = await super.onChangeCountry();
+        const container = this.el.querySelector('.o_additional_identifiers_portal');
+        container?.dispatchEvent(new CustomEvent(COUNTRY_CHANGED_EVENT, {
+            detail: { metadata: data?.additional_identifiers_metadata || {} },
+        }));
         return data;
     },
 });

@@ -14,10 +14,7 @@ la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes
 taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
-    'depends': [
-        'base_address_extended',
-        'account',
-    ],
+    'depends': ['account'],
     'auto_install': ['account'],
     'data': [
         'data/res.city.csv'
