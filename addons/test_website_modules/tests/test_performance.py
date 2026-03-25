@@ -318,7 +318,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'product_attribute': 1,
             'ir_attachment': 4,
             'product_image': 3,
-            'product_template_attribute_value': 1,
             'ir_ui_view': 2,
             'website_menu': 1,
             'website_page': 1,
@@ -338,10 +337,10 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['product_ribbon'] += 1
             queries['res_company'] += 1
         else:
-            queries['product_template_attribute_value'] += 3
+            queries['product_template_attribute_value'] = 3
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
-            queries['uom_uom'] = 1
+            queries['uom_uom'] = 2
 
         # To add queries count you must ask the permission to al
         return queries
@@ -362,7 +361,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['account_account_tag'] = 1
             queries['ir_attachment'] += -1
             queries['product_ribbon'] += -1
-            queries['product_template_attribute_value'] += 2
+            queries['product_template_attribute_value'] = 2
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
 
@@ -386,10 +385,10 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         queries['account_account_tag'] = 2
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
-            queries['uom_uom'] += 2
+            queries['uom_uom'] += 1
 
         if self._has_demo_data():
             queries['ir_attachment'] += -1
-            queries['product_template_attribute_value'] += 2
+            queries['product_template_attribute_value'] = 2
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)

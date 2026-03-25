@@ -48,14 +48,17 @@ class TableCompute:
                 self.table[posy + y].setdefault(x, None)
         return res
 
-    def process(self, products, ppg=20, ppr=4):
-        # Compute products positions on the grid
+    def process_items(self, items, ppg=20, ppr=4):
+        """Place item dicts on a grid and return formatted rows.
+
+        Each *item* must contain ``'x'`` and ``'y'`` keys for sizing,
+        every other key is preserved in the output.
+        """
         minpos = 0
         maxy = 0
-        x = 0
-        for index, p in enumerate(products):
-            x = min(max(p.website_size_x, 1), ppr)
-            y = min(max(p.website_size_y, 1), ppr)
+        for index, item in enumerate(items):
+            x = min(max(item["x"], 1), ppr)
+            y = min(max(item["y"], 1), ppr)
             if index >= ppg:
                 x = y = 1
 
@@ -76,12 +79,7 @@ class TableCompute:
             for y2 in range(y):
                 for x2 in range(x):
                     self.table[(pos // ppr) + y2][(pos % ppr) + x2] = False
-            self.table[pos // ppr][pos % ppr] = {
-                "product": p,
-                "x": x,
-                "y": y,
-                "ribbon": p.sudo().website_ribbon_id,
-            }
+            self.table[pos // ppr][pos % ppr] = {**item, "x": x, "y": y}
             if index <= ppg:
                 maxy = max(maxy, y + (pos // ppr))
 
@@ -143,6 +141,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order = post.get("order") or self.env.website.shop_default_sort
         return "is_published desc, %s, id desc" % order
 
+    def _get_variant_search_order(self, post):
+        return self._get_search_order(post).replace("list_price", "lst_price")
+
     def _add_search_subdomains_hook(self, _search):
         return []
 
@@ -183,6 +184,64 @@ class WebsiteSale(payment_portal.PaymentPortal):
             )
 
         return Domain.AND(domains)
+
+    def _get_variant_shop_domain(
+        self,
+        search_product,
+        attribute_value_dict,
+        *,
+        tags=None,
+        min_price=0.0,
+        max_price=0.0,
+        conversion_rate=1.0,
+        search=None,
+        fuzzy_search_term=None,
+        filter_by_tags_enabled=False,
+        filter_by_price_enabled=False,
+    ):
+        """Build the variant-level domain used in split-variants mode.
+
+        Variants are scoped to the templates matched by ``search_product``,
+        then narrowed by the variant-level filters (attribute values, price
+        and search).
+        """
+        domain = [("product_tmpl_id", "in", search_product.ids)]
+        if attribute_value_dict:
+            variant_attributes = (
+                self
+                .env["product.attribute"]
+                .browse(list(attribute_value_dict))
+                .filtered(lambda pa: pa.create_variant != "no_variant")
+            )
+            domain += [
+                (
+                    "product_template_attribute_value_ids.product_attribute_value_id",
+                    "in",
+                    list(attribute_value_dict[attribute.id]),
+                )
+                for attribute in variant_attributes
+            ]
+        if filter_by_tags_enabled and tags:
+            domain.append(("all_product_tag_ids", "in", list(tags)))
+        if filter_by_price_enabled:
+            if min_price:
+                domain.append(("lst_price", ">=", min_price / conversion_rate))
+            if max_price:
+                domain.append(("lst_price", "<=", max_price / conversion_rate))
+        if search_term := (fuzzy_search_term or search):
+            search_fields = (
+                "product_tmpl_id.name",
+                "default_code",
+                "product_template_attribute_value_ids.name",
+                "product_tmpl_id.description_sale",
+                "product_tmpl_id.description_ecommerce",
+                "product_tmpl_id.product_tag_ids.name",
+            )
+            domain.extend(
+                Domain.OR([Domain(field, "ilike", term) for field in search_fields])
+                for term in search_term.split()
+            )
+        return domain
 
     def sitemap_shop(env, _rule, qs):  # noqa: N805
         if env.website and env.website.ecommerce_access == "logged_in" and not qs:
@@ -456,7 +515,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute_value_dict,
             tags=tags if filter_by_tags_enabled else None,
         )
-        shop_query = request.env["product.template"]._search(shop_domain)
+        shop_query = self.env["product.template"]._search(shop_domain)
 
         filters_domain = self._get_shop_domain(search_term, category, attribute_value_dict={})
         filters_query = request.env["product.template"]._search(filters_domain)
@@ -466,12 +525,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # TODO Find an alternative way to obtain the domain through the search metadata.
             # This is ~4 times more efficient than a search for the cheapest and most expensive
             # products
-            sql = shop_query.select(
-                SQL(
-                    "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",  # noqa: E501
-                    conversion_rate=conversion_rate,
-                )
+            price_column = SQL.identifier(website._get_price_field_name(as_column=True))
+            price_sql = SQL(
+                "COALESCE(MIN(%(col)s), 0) * %(rate)s, COALESCE(MAX(%(col)s), 0) * %(rate)s",
+                col=price_column,
+                rate=conversion_rate,
             )
+            if website.shop_display_variants:
+                price_query = self.env["product.product"]._search([
+                    ("product_tmpl_id", "in", shop_query)
+                ])
+            else:
+                price_query = shop_query
+            sql = price_query.select(price_sql)
             available_min_price, available_max_price = self.env.execute_query(sql)[0]
 
             if tax_display == "tax_included" and sale_tax:
@@ -499,14 +565,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         max_price if max_price >= available_min_price else available_max_price
                     )
                     post["max_price"] = max_price
-        if filter_by_price_enabled and (min_price or max_price):
-            price_domain = Domain.AND([
-                Domain("list_price", ">=", (min_price or available_min_price) / conversion_rate),
-                Domain("list_price", "<=", (max_price or available_max_price) / conversion_rate),
-            ])
-            filters_query = request.env["product.template"]._search(
-                Domain.AND([filters_domain, price_domain])
-            )
+                price_field = website._get_price_field_name()
+                price_domain = Domain.AND([
+                    Domain(price_field, ">=", (min_price or available_min_price) / conversion_rate),
+                    Domain(price_field, "<=", (max_price or available_max_price) / conversion_rate),
+                ])
+                filters_query = request.env["product.template"]._search(
+                    Domain.AND([filters_domain, price_domain])
+                )
 
         # Dynamic ribbon filters ("On sale" / "In stock")
         on_sale_active = on_sale == "1"
@@ -598,22 +664,72 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # products for current pager
 
-        pager = website.pager(
-            url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post
-        )
-        offset = pager["offset"]
-        products = search_product[offset : offset + ppg].with_prefetch()
-        products.fetch()
-
-        # map each product to its variant, and prefetch the variants
         Product = self.env["product.product"]
-        product_variant_ids = [product._get_first_possible_variant_id() for product in products]
-        variants = Product.sudo().browse(vid for vid in product_variant_ids if vid)
-        variants.fetch()
-        variant_by_id = {v.id: v for v in variants}
-        product_variants = dict(
-            zip(products, (variant_by_id.get(vid, Product) for vid in product_variant_ids))
+        # Split mode paginates variants (one card per variant)
+        # default mode paginates templates (one card per template,
+        # backed by its first-by-sequence variant).
+        if website.shop_display_variants:
+            variant_domain = self._get_variant_shop_domain(
+                search_product,
+                attribute_value_dict,
+                tags=tags,
+                min_price=min_price,
+                max_price=max_price,
+                conversion_rate=conversion_rate,
+                search=search,
+                fuzzy_search_term=fuzzy_search_term,
+                filter_by_tags_enabled=filter_by_tags_enabled,
+                filter_by_price_enabled=filter_by_price_enabled,
+            )
+            search_count = Product.search_count(variant_domain)
+        else:
+            search_count = product_count
+
+        pager = website.pager(
+            url=url, total=search_count, page=page, step=ppg, scope=5, url_args=post
         )
+
+        if website.shop_display_variants:
+            page_variants = Product.search_fetch(
+                variant_domain,
+                order=self._get_variant_search_order(post),
+                limit=ppg,
+                offset=pager["offset"],
+            )
+            products = page_variants.product_tmpl_id.with_prefetch()
+            displayed_variants = page_variants
+            # Each card represents a variant, its size is set on the variant itself.
+            display_entries = [
+                (variant, variant.product_tmpl_id, variant) for variant in page_variants
+            ]
+        else:
+            offset = pager["offset"]
+            products = search_product[offset : offset + ppg].with_prefetch()
+            # Map each template to the variant that represents it on the shop.
+            product_variants = products._get_first_shop_variant_mapping()
+            for product, variant in product_variants.items():
+                if not variant:
+                    first_variant_id = product._get_first_possible_variant_id()
+                    product_variants[product] = (
+                        Product.sudo().browse(first_variant_id) if first_variant_id else Product
+                    )
+            displayed_variants = Product.union(product_variants.values())
+            # Each card represents a template, its size is set on the template itself.
+            display_entries = [
+                (product, product, product_variants[product]) for product in products
+            ]
+        products.fetch()
+        items = [
+            {
+                "product": product,
+                "variant": variant,
+                "x": size_source.website_size_x,
+                "y": size_source.website_size_y,
+            }
+            for size_source, product, variant in display_entries
+        ]
+
+        bins = TableCompute().process_items(items, ppg, ppr)
 
         ProductAttribute = self.env["product.attribute"]
         ProductAttributeValue = self.env["product.attribute.value"]
@@ -631,14 +747,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         pavs_per_attribute.update({attribute: pavs.sorted() for attribute, pavs in grouped_pavs})
         # Return attributes as recordset of `product.attribute`
         attributes = ProductAttribute.union(pavs_per_attribute.keys())
-        products_prices = products._get_sales_prices(
-            # Make sure latest context is applied (see update_context calls in overrides)
-            request.pricelist.with_context(self.env.context),
-            request.fiscal_position.with_context(self.env.context),
-            website.with_context(self.env.context),
-        )
-        product_query_params = self._get_product_query_params(**post)
 
+        # Make sure latest context is applied (see update_context calls in overrides)
+        pricelist = request.pricelist.with_context(self.env.context)
+        fiscal_position = request.fiscal_position.with_context(self.env.context)
+        contextual_website = website.with_context(self.env.context)
+
+        # Both modes price a variant, not the template: the card's variant in
+        # split mode, else the first-by-sequence one. products_prices is a
+        # template-level lazy fallback (GA4 tracking, no-variant templates).
+        variant_prices = self.env["product.template"]._get_sales_prices(
+            pricelist, fiscal_position, contextual_website, products=displayed_variants
+        )
+        products_prices = lazy(
+            lambda: products._get_sales_prices(pricelist, fiscal_position, contextual_website)
+        )
+
+        product_query_params = self._get_product_query_params(**post)
         values = {
             "auto_assign_ribbons": auto_assign_ribbons,
             "show_on_sale_filter": show_on_sale_filter,
@@ -653,10 +778,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attrib_set": attribute_value_ids,
             "pager": pager,
             "products": products,
-            "product_variants": product_variants,
             "search_product": search_product,
-            "search_count": product_count,  # common for all searchbox
-            "bins": TableCompute().process(products, ppg, ppr),
+            "search_count": search_count,
+            "bins": bins,
+            "get_shop_prices": lambda variant, product: (
+                variant_prices.get(variant.id) or products_prices[product.id]
+            ),
             "ppg": ppg,
             "ppr": ppr,
             "gap": gap,
@@ -665,7 +792,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attributes": attributes,
             "keep": keep,
             "search_categories_ids": search_categories.ids,
-            "get_product_prices": lambda product: products_prices[product.id],
             "float_round": float_round,
             "shop_path": SHOP_PATH,
             "product_query_params": product_query_params,
@@ -1048,8 +1174,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 combination.ids, website.id
             )
         else:
-            combination_info = product._get_combination_info()
             attribute_value_images = product._get_dynamic_attribute_images([], website.id)
+            # First variant by website_sequence, keeping no_variant defaults.
+            first_variant = product._get_first_shop_variant_mapping()[product]
+            combination = product._get_first_possible_combination(
+                necessary_values=first_variant.product_template_attribute_value_ids
+            )
+            combination_info = product._get_combination_info(combination=combination)
 
         # Needed to trigger the recently viewed product rpc
         view_track = website.viewref("website_sale.product").track
@@ -1941,22 +2072,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise NotFound
 
         model = options.get("model", "product.template")
-
-        product = self.env[model].browse(product_id)
-        if "sequence" in options:
-            sequence = options["sequence"]
+        record = self.env[model].browse(product_id)
+        if sequence := options.get("sequence"):
             if sequence == "top":
-                product.set_sequence_top()
+                record.set_sequence_top()
             elif sequence == "bottom":
-                product.set_sequence_bottom()
+                record.set_sequence_bottom()
             elif sequence == "up":
-                product.set_sequence_up()
+                record.set_sequence_up()
             elif sequence == "down":
-                product.set_sequence_down()
+                record.set_sequence_down()
         if {"x", "y"} <= options.keys():
-            product.write({"website_size_x": options["x"], "website_size_y": options["y"]})
+            record.write({"website_size_x": options["x"], "website_size_y": options["y"]})
         if {"tag_field", "tag_ids"} <= options.keys():
-            product.write({options["tag_field"]: options["tag_ids"] or False})
+            record.write({options["tag_field"]: options["tag_ids"] or False})
 
     @route(["/shop/config/attribute"], type="jsonrpc", auth="user")
     def change_attribute_config(self, attribute_id, **options):
@@ -1981,6 +2110,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "shop_default_sort",
             "shop_gap",
             "shop_opt_products_design_classes",
+            "shop_display_variants",
             "product_page_container",
             "product_page_image_layout",
             "product_page_image_width",

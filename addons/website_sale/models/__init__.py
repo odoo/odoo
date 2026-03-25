@@ -2,6 +2,8 @@
 
 from . import website_checkout_alert_mixin  # isort: split
 
+from . import website_sequence_mixin  # isort: split
+
 from . import (
     account_move,
     crm_team,

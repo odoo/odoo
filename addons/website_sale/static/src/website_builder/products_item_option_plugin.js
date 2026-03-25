@@ -83,6 +83,16 @@ export class SetItemSizeAction extends BuilderAction {
         const x = j + 1;
         const y = i + 1;
 
+        const variantId = parseInt(editingElement.dataset.variantId);
+        if (variantId) {
+            return rpc("/shop/config/product", {
+                model: "product.product",
+                product_id: variantId,
+                x: x,
+                y: y,
+            });
+        }
+
         this.productItemPlugin.setProductTemplateID(
             parseInt(
                 editingElement
@@ -105,6 +115,15 @@ export class ChangeSequenceAction extends BuilderAction {
         this.reload = {};
     }
     apply({ editingElement, value }) {
+        const variantId = parseInt(editingElement.dataset.variantId);
+        if (variantId) {
+            return rpc("/shop/config/product", {
+                model: "product.product",
+                product_id: variantId,
+                sequence: value,
+            });
+        }
+
         this.productItemPlugin.setProductTemplateID(
             parseInt(
                 editingElement

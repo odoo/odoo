@@ -13,17 +13,28 @@ export class ProductsListPageOptionPlugin extends Plugin {
             SetPpgAction,
             SetPprAction,
             SetDefaultSortAction,
+            SetDisplayVariantsAction,
         },
     };
 }
 export class SetShopContainerAction extends PreviewableWebsiteConfigAction {
     static id = "setShopContainer";
 
-    async apply({ editingElement: productDetailMainEl, isPreviewing, params, value }) {
-        await super.apply({ editingElement: productDetailMainEl, isPreviewing, params, value });
+    async apply({
+        editingElement: productDetailMainEl,
+        isPreviewing,
+        params,
+        value,
+    }) {
+        await super.apply({
+            editingElement: productDetailMainEl,
+            isPreviewing,
+            params,
+            value,
+        });
 
         if (!isPreviewing) {
-            await rpc("/shop/config/website", { 'shop_page_container': value });
+            await rpc("/shop/config/website", { shop_page_container: value });
         }
     }
 }
@@ -68,6 +79,20 @@ export class SetDefaultSortAction extends BuilderAction {
     }
     apply({ value }) {
         return rpc("/shop/config/website", { shop_default_sort: value });
+    }
+}
+
+export class SetDisplayVariantsAction extends BuilderAction {
+    static id = "setDisplayVariants";
+    setup() {
+        this.reload = {};
+    }
+    isApplied({ editingElement }) {
+        return "displayVariants" in editingElement.dataset;
+    }
+    apply({ editingElement }) {
+        const newValue = !this.isApplied({ editingElement });
+        return rpc("/shop/config/website", { shop_display_variants: newValue });
     }
 }
 

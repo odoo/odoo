@@ -20,6 +20,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
         'loadInfo',
         'getCount',
         'isVariantMode',
+        'getVariantId',
     ];
     count = proxy({ value: 0 });
 
@@ -239,11 +240,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
                 .querySelector('[data-oe-model="product.template"]')
                 .getAttribute("data-oe-id")
         );
-        const productVariantID = parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.product"]')
-                .getAttribute("data-oe-id")
-        );
+        const productVariantID = this.getVariantId(editingElement);
         const ribbons = editingElement.ownerDocument.querySelectorAll(
             `[data-ribbon-id="${ribbonId}"], [data-template-ribbon-id="${ribbonId}"]`
         );
@@ -261,12 +258,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
                 const productArticle = ribbonElement.closest('article.oe_product_cart');
                 const templateElement = productArticle?.querySelector('[data-oe-model="product.template"]');
                 templateId = templateElement ? parseInt(templateElement.getAttribute('data-oe-id')) : null;
-                const variantElement = productArticle?.querySelector(
-                    '[data-oe-model="product.product"]'
-                );
-                variantId = variantElement
-                    ? parseInt(variantElement.getAttribute("data-oe-id"))
-                    : null;
+                variantId = this.getVariantId(ribbonElement.closest(".oe_product")) || null;
             }
             if (templateId && !isNaN(templateId)) {
                 this.addProductTemplatesRibbons({
@@ -343,10 +335,26 @@ export class ProductsRibbonOptionPlugin extends Plugin {
     isVariantMode(editingElement) {
         const productTemplate = editingElement.querySelector('[data-oe-model="product.template"]');
         const templateId = productTemplate ? parseInt(productTemplate.dataset.oeId) : null;
+        // The ribbon is assigned to a variant rather than a template when the
+        // card is a split-variants shop card (its .oe_product cell carries a
+        // data-variant-id), when the product page shows a variant selector, or
+        // when there is no template element to assign to.
         return (
+            !!editingElement.dataset.variantId ||
             (editingElement.closest("#product_detail") &&
                 editingElement.querySelector(".variant_attribute")) ||
             !templateId
+        );
+    }
+
+    getVariantId(editingElement) {
+        // The variant id is exposed differently per layout: product-page and
+        // variant-image cards render it as a product.product t-field, while
+        // split-variants shop cards store it in data-variant-id on the
+        // .oe_product cell. Read whichever the current card provides.
+        const variantEl = editingElement?.querySelector('[data-oe-model="product.product"]');
+        return parseInt(
+            variantEl ? variantEl.getAttribute("data-oe-id") : editingElement?.dataset.variantId
         );
     }
 }
@@ -371,11 +379,7 @@ export class SetRibbonAction extends BuilderAction {
     apply({ isPreviewing, editingElement, value }) {
         const variantMode = this.ribbonOptions.isVariantMode(editingElement);
         if (variantMode) {
-            const productVariantID = parseInt(
-                editingElement
-                    .querySelector('[data-oe-model="product.product"]')
-                    .getAttribute("data-oe-id")
-            );
+            const productVariantID = this.ribbonOptions.getVariantId(editingElement);
             this.ribbonOptions.addProductVariantsRibbons({
                 recordId: productVariantID,
                 ribbonId: value,
@@ -418,11 +422,7 @@ export class CreateRibbonAction extends BuilderAction {
         const variantMode = this.ribbonOptions.isVariantMode(editingElement);
         const ribbonId = Date.now();
         if (variantMode) {
-            const productVariantId = parseInt(
-                editingElement
-                    .querySelector('[data-oe-model="product.product"]')
-                    .getAttribute("data-oe-id")
-            );
+            const productVariantId = this.ribbonOptions.getVariantId(editingElement);
             this.ribbonOptions.addProductVariantsRibbons({
                 recordId: productVariantId,
                 ribbonId: ribbonId,
