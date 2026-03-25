@@ -131,7 +131,7 @@
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
 
-        <t t-set="o" position="after">
+        <t t-call="web.external_layout" position="before">
             <t t-set="custom_header" t-value="'l10n_cl.custom_header'"/>
         </t>
 
