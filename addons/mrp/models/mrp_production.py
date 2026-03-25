@@ -1028,7 +1028,9 @@ class MrpProduction(models.Model):
                 if production.state in ('cancel', 'done'):
                     continue
                 if picking_type != production.picking_type_id:
+                    prev_production_name = production.name
                     production.name = picking_type.sequence_id.next_by_id()
+                    production.move_raw_ids.reference_ids.filtered(lambda r: r.name == prev_production_name).name = production.name
                     moves_to_reassign |= production.move_raw_ids
 
         res = super(MrpProduction, self).write(vals)
