@@ -12,7 +12,8 @@ class HrEmployee(models.Model):
         related="current_version_id.struct_id",
         string='Salary Structure',
         store=True,
-        readonly=False
+        readonly=False,
+        groups='hr.group_hr_user',
     )
     def _compute_payslip_count(self):
         for employee in self:

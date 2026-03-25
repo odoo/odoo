@@ -9,6 +9,7 @@ class HrEmployee(models.Model):
     main_calendar_id = fields.Many2one(
         'resource.calendar',
         string='Main Work Schedule',
+        groups='hr.group_hr_user',
         domain="[('is_temp_schedule', '=', False)]",
         help='The main work schedule for the employee, used for attendance analysis',
     )
@@ -16,6 +17,7 @@ class HrEmployee(models.Model):
     temp_calendar_id = fields.Many2one(
         'resource.calendar',
         string='Temporary Work Schedule',
+        groups='hr.group_hr_user',
         domain="[('is_temp_schedule', '=', True)]",
         help='The temporary work schedule for the employee, used for attendance analysis',
     )

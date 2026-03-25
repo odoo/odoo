@@ -28,6 +28,7 @@ class HrEmployee(models.Model):
 
     biometric_user_id = fields.Integer(
         string='Biometric User ID',
+        groups='hr.group_hr_user',
         help='ID from ZKTeco device. Must match the user ID on the '
              'biometric device for attendance to be linked.',
         copy=False,
@@ -36,6 +37,7 @@ class HrEmployee(models.Model):
     device_id = fields.Many2one(
         'biometric.device.details',
         string='Biometric Device',
+        groups='hr.group_hr_user',
         copy=False,
         readonly=True,
         help='The biometric device this employee is registered on',

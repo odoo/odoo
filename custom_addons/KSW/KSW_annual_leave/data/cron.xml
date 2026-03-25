@@ -2,14 +2,14 @@
 <odoo noupdate="1">
 
     <record id="cron_refresh_annual_leave" model="ir.cron">
-        <field name="name">Refresh Annual Leave Dashboard</field>
+        <field name="name">Refresh Annual Leave Accrued Totals (Daily 3 AM GMT+3)</field>
         <field name="model_id" ref="model_ksw_annual_leave"/>
         <field name="state">code</field>
         <field name="code">model._cron_refresh()</field>
         <field name="active" eval="True"/>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
+        <field name="nextcall">2026-03-20 00:00:00</field>
     </record>
 
 </odoo>
