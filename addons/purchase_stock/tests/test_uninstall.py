@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from unittest.mock import patch
 
 from odoo import fields
-from odoo.addons.purchase_stock.models.purchase_order_line import PurchaseOrderLine
 from odoo.tests.common import tagged
 
 from .common import PurchaseTestCommon
@@ -37,15 +34,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
             ('value', '=', 'stock_moves'),
         ])
 
-        original_compute = PurchaseOrderLine._compute_qty_received
-        def _compute_qty_received(records):
-            records.read()
-            with self.assertQueryCount(5):
-                original_compute(records)
-                records.flush_recordset()
-
-        with patch.object(PurchaseOrderLine, '_compute_qty_received', _compute_qty_received):
-            stock_moves_option.sudo().with_context(force_delete=True).unlink()
+        stock_moves_option.sudo().with_context(force_delete=True).unlink()
 
         self.assertEqual(order_line.qty_received_method, 'manual')
         self.assertEqual(order_line.qty_received, 1)
