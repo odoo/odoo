@@ -793,14 +793,21 @@ class AccountMoveLine(models.Model):
         # get the where clause
         query = self._search(self.env.context.get('domain_cumulated_balance') or [], bypass_access=True)
         sql_order = self._order_to_sql(query.table, self.env.context.get('order_cumulated_balance'), reverse=True)
-        result = dict(self.env.execute_query(query.select(
+        subquery = query.subselect(
             query.table.id,
             SQL(
                 "SUM(%s) OVER (ORDER BY %s ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
                 query.table.balance,
                 sql_order,
             ),
-        )))
+        )
+        result = dict(self.env.execute_query(
+            SQL(
+                "SELECT * FROM (%(subquery)s) AS aml WHERE id = ANY(%(ids)s)",
+                subquery=subquery,
+                ids=self.ids,
+            ),
+        ))
         for record in self:
             record.cumulated_balance = result[record.id]
 
