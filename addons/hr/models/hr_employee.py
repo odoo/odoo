@@ -747,6 +747,9 @@ class HrEmployee(models.Model):
         # (could be a CASE WHEN with the version_id from the content for the current user)
         return table.current_version_id
 
+    def _get_age(self, date=fields.Date.today()):
+        return relativedelta(date, self.birthday).years
+
     def _get_version(self, date=fields.Date.today()):
         """
         Return the version that should be used for the given date.
