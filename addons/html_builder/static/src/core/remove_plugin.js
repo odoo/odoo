@@ -103,6 +103,9 @@ export class RemovePlugin extends Plugin {
      *   of the remaining element should be activated.
      */
     removeElement(toRemoveEl, updateContainers = true) {
+        if (!toRemoveEl.isConnected) {
+            return;
+        }
         // Get the elements having options containers.
         const optionTargetEls = this.getOptionsContainersElements().filter((targetEl) =>
             targetEl.contains(toRemoveEl)
