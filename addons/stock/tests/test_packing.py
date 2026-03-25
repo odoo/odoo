@@ -2069,6 +2069,16 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(delivery.shipping_weight, 31)
         self.assertEqual(delivery2.shipping_weight, 17)
 
+        # Changing the package type should update the weight
+        delivery2.move_line_ids.result_package_id.package_type_id = self.pack_type_pallet
+        self.assertEqual(delivery2.shipping_weight, 22)
+        # Weight should also update when doing pack-ception shenanigans
+        delivery2.action_put_in_pack()
+        delivery2.move_line_ids.result_package_id.outermost_package_id.package_type_id = self.pack_type_pallet
+        self.assertEqual(delivery2.shipping_weight, 32)
+        delivery2.move_line_ids.result_package_id.outermost_package_id.package_type_id = self.pack_type_box
+        self.assertEqual(delivery2.shipping_weight, 27)
+
     def test_package_removal(self):
         """ Checks that the button 'Remove' in the package view in pickings behaves as expected:
             - Only removes related move/move lines from the picking if it was only added through an entire pack
