@@ -3078,7 +3078,16 @@ class BaseModel(metaclass=MetaModel):
         # possibly raise exception for the records that could not be read
         if not env.su and fetched != self:
             forbidden = (self - fetched).exists()
-            if forbidden:
+            if not forbidden:
+                return
+            # Given that we have a cache of read permissions, the record may be
+            # inaccessible from the query, however it was marked as accessible.
+            # In such a case, read the fields in sudo.
+            if forbidden.has_access('read'):
+                self.sudo().fetch(field_names)
+            else:
+                # avoid cache pollution
+                forbidden.invalidate_recordset([f.name for f in fields_to_fetch])
                 raise env['ir.rule']._make_access_error('read', forbidden)
 
     def _determine_fields_to_fetch(
