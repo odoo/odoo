@@ -141,9 +141,9 @@ func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) 
 	snapshot.Logs = logLines
 	snapshot.ServiceNames = services
 	snapshot.Smoke = smoke
-	snapshot.Databases = loadDatabases(ctx, repoDir, localDBOK, dockerDBHostPortOK, dockerDBRunning)
 	snapshot.Runtime = buildRuntimeState(cfg, containers, smoke, snapshot.Config, devHostPID, devProjectPID, activeDB)
-	snapshot.Services = buildServices(containers, localDBOK, dockerDBHostPortOK, dockerDBRunning, cfg, devHostPID, devProjectPID)
+	snapshot.Databases = loadDatabases(ctx, repoDir, snapshot.Runtime.Mode, localDBOK, dockerDBHostPortOK, dockerDBRunning)
+	snapshot.Services = buildServices(containers, snapshot.Runtime.Mode, localDBOK, dockerDBHostPortOK, dockerDBRunning, cfg, devHostPID, devProjectPID)
 	snapshot.Incidents = detectIncidents(cfg, snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning, devHostPID, devProjectPID)
 
 	if len(snapshot.Incidents) > 0 {
@@ -189,10 +189,10 @@ func buildRuntimeState(cfg *envconfig.Config, containers []docker.Container, smo
 	}
 }
 
-func buildServices(containers []docker.Container, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, cfg *envconfig.Config, devHostPID, devProjectPID pidStatus) []ServiceHealth {
+func buildServices(containers []docker.Container, mode string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, cfg *envconfig.Config, devHostPID, devProjectPID pidStatus) []ServiceHealth {
 	services := []ServiceHealth{
 		serviceFromPort("db-local", localDBOK, "postgres local", "127.0.0.1 reachability"),
-		serviceFromDockerDB(dockerDBRunning, dockerDBHostPortOK, cfg.DockerDBBindHost, cfg.DockerDBHostPort),
+		serviceFromDockerDB(mode, dockerDBRunning, dockerDBHostPortOK, cfg.DockerDBBindHost, cfg.DockerDBHostPort),
 	}
 
 	for _, name := range []string{"kodoo-odoo", "kodoo-nginx", "kodoo-cloudflared", "kodoo-ollama"} {
@@ -203,7 +203,7 @@ func buildServices(containers []docker.Container, localDBOK, dockerDBHostPortOK,
 	return services
 }
 
-func loadDatabases(ctx context.Context, repoDir string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool) []DatabaseInfo {
+func loadDatabases(ctx context.Context, repoDir, mode string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool) []DatabaseInfo {
 	var rows []DatabaseInfo
 	for _, backend := range []string{"docker", "local"} {
 		records, err := database.List(ctx, repoDir, backend)
@@ -225,11 +225,11 @@ func loadDatabases(ctx context.Context, repoDir string, localDBOK, dockerDBHostP
 				Tags:            record.Tags,
 				CompatibleModes: compatibleModes(record.Backend),
 				ActionTarget:    preferredDBAction(record.Backend),
-				Connectivity:    connectivityLabel(record.Backend, localDBOK, dockerDBHostPortOK, dockerDBRunning),
+				Connectivity:    connectivityLabel(record.Backend, mode, localDBOK, dockerDBHostPortOK, dockerDBRunning),
 			}
 			if info.Connectivity == "container-only" {
 				info.Alert = "Docker DB is reachable through the container, but the host bind port is closed."
-			} else if info.Connectivity != "ok" {
+			} else if info.Connectivity != "ok" && info.Connectivity != "internal-only" {
 				info.Alert = fmt.Sprintf("%s backend is not reachable", record.Backend)
 			}
 			rows = append(rows, info)
@@ -450,7 +450,7 @@ func serviceFromPort(name string, ok bool, status, detail string) ServiceHealth 
 	return ServiceHealth{Name: name, Status: "unreachable", Detail: detail, Level: SeverityCritical}
 }
 
-func serviceFromDockerDB(running, hostPortOK bool, host string, port int) ServiceHealth {
+func serviceFromDockerDB(mode string, running, hostPortOK bool, host string, port int) ServiceHealth {
 	switch {
 	case running && hostPortOK:
 		return ServiceHealth{
@@ -460,11 +460,19 @@ func serviceFromDockerDB(running, hostPortOK bool, host string, port int) Servic
 			Level:  SeverityInfo,
 		}
 	case running:
+		level := SeverityInfo
+		status := "container running (internal-only)"
+		detail := "reachable from containers and docker exec; host bind is not required in this mode"
+		if mode == "Dev Project" {
+			level = SeverityWarning
+			status = "container running (no host bind)"
+			detail = fmt.Sprintf("docker exec/db-manager works; host bind %s:%d is closed", host, port)
+		}
 		return ServiceHealth{
 			Name:   "db-docker",
-			Status: "container running (no host bind)",
-			Detail: fmt.Sprintf("docker exec/db-manager works; host bind %s:%d is closed", host, port),
-			Level:  SeverityWarning,
+			Status: status,
+			Detail: detail,
+			Level:  level,
 		}
 	default:
 		return ServiceHealth{
@@ -529,7 +537,7 @@ func preferredDBAction(backend string) string {
 	return "dev"
 }
 
-func connectivityLabel(backend string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool) string {
+func connectivityLabel(backend, mode string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool) string {
 	switch backend {
 	case "local":
 		if localDBOK {
@@ -540,6 +548,9 @@ func connectivityLabel(backend string, localDBOK, dockerDBHostPortOK, dockerDBRu
 			return "ok"
 		}
 		if dockerDBRunning {
+			if mode != "Dev Project" {
+				return "internal-only"
+			}
 			return "container-only"
 		}
 	}

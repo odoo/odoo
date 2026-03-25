@@ -229,7 +229,7 @@ func databaseActionHint(backend string) string {
 
 func connectivityStyle(status string) lipgloss.Style {
 	switch status {
-	case "ok":
+	case "ok", "internal-only":
 		return okStyle
 	case "error", "unreachable":
 		return errStyle
