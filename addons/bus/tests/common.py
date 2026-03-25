@@ -190,9 +190,13 @@ class BusResult:
         self.type = type
         self.payload = payload
         self.matched = False
+        self.misordered_matched = False
+        self.wrong_order_expected_idx = None
+        self.wrong_order_received_idx = None
 
-    def match(self, received, *, show_store_versioning):
-        if (
+    def _check_match(self, received, *, show_store_versioning):
+        """Return whether notifications match without mutating state."""
+        return (
             self._normalized_channel() == received._normalized_channel()
             and (self.type is None or self.type == received.type)
             and (
@@ -200,18 +204,41 @@ class BusResult:
                 or self._normalized_message(show_store_versioning=show_store_versioning)
                 == received._normalized_message(show_store_versioning=show_store_versioning)
             )
-        ):
+        )
+
+    def match(self, received, *, show_store_versioning):
+        if self._check_match(received, show_store_versioning=show_store_versioning):
             self.matched = True
             received.matched = True
             return True
         return False
 
+    def misordered_match_idx(self, notifications, *, show_store_versioning):
+        with contextlib.suppress(StopIteration):
+            res = next(
+                idx
+                for idx, notification in enumerate(notifications, 1)
+                if (not notification.matched and not notification.misordered_matched)
+                and self._check_match(notification, show_store_versioning=show_store_versioning)
+            )
+            notifications[res - 1].misordered_matched = True
+            return res
+        return None
+
     def format_log(self, idx, *, show_store_versioning):
         payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
         if not show_store_versioning:
             BusResult._pop_store_version(payload)
+        if self.wrong_order_received_idx is not None:
+            status = f"⚠️ wrong order: expected #{idx} -> received #{self.wrong_order_received_idx}"
+        elif self.wrong_order_expected_idx is not None:
+            status = f"⚠️ wrong order: received #{idx} -> expected #{self.wrong_order_expected_idx}"
+        elif self.matched:
+            status = f"✅ matched #{idx}"
+        else:
+            status = f"❌ missing #{idx}"
         return (
-            f"# {'✅ matched' if self.matched else '❌ missing'} #{idx}\n"
+            f"# {status}\n"
             "(\n"
             f"    {json_dump(self._normalized_channel())},\n"
             f"    {json_dump(self.type)},\n"
@@ -298,6 +325,16 @@ class BusCase(BaseCase):
         for expected_notif, actual_notif in zip_longest(expected_list, received_list):
             if expected_notif is not None and actual_notif is not None:
                 expected_notif.match(actual_notif, show_store_versioning=show_store_versioning)
+        for expected in (e for e in expected_list if not e.matched):
+            expected.wrong_order_received_idx = expected.misordered_match_idx(
+                received_list,
+                show_store_versioning=show_store_versioning,
+            )
+        for received in (e for e in received_list if not e.matched):
+            received.wrong_order_expected_idx = received.misordered_match_idx(
+                expected_list,
+                show_store_versioning=show_store_versioning,
+            )
         if any(not notif.matched for notif in chain(expected_list, received_list)):
 
             def format_notifications(title, notifications):
