@@ -577,8 +577,10 @@ export class Many2XAutocomplete extends Component {
                 },
             ];
         }
-
-        const title = _t("Search: %s", fieldString);
+        let title = _t("Search");
+        if (fieldString && fieldString.trim()) {
+            title = _t("Search: %s", fieldString);
+        }
         this.selectCreate({
             domain,
             context,
