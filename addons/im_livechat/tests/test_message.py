@@ -76,7 +76,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         store = Store().add(chatbot_message, "_store_message_fields")
         self.assertEqual(
             store.get_result()["mail.message"],
-            [
+            self._filter_messages_fields(
                 {
                     "attachment_ids": [],
                     "author_guest_id": False,
@@ -117,7 +117,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     "trackingValues": [],
                     "write_date": fields.Datetime.to_string(chatbot_message.write_date),
                 }
-            ],
+            ),
         )
 
     @users('emp')
