@@ -2500,22 +2500,3 @@ class OnchangePartialView(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company', default=lambda r: r.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-
-
-class BinaryTest(models.Model):
-    _name = _description = "binary.test"
-
-    img = fields.Image()
-    bin1 = fields.Binary()
-
-
-class CalendarTest(models.Model):
-    _name = _description = "calendar.test"
-
-    date_start = fields.Date(compute="_compute_date")
-    date_end = fields.Date(compute="_compute_date")
-    x_date_start = fields.Date()
-    x_date_end = fields.Date()
-
-    def _compute_date(self):
-        self.date_start = self.date_end = fields.Date.today()
