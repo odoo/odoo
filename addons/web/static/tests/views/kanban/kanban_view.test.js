@@ -5242,7 +5242,7 @@ test("edit the kanban color with translated colors resulting in the same terms",
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
-test("colorpicker doesn't appear when missing access rights", async () => {
+test("dropdown menu doesn't appear when missing access rights", async () => {
     await mountView({
         type: "kanban",
         resModel: "category",
@@ -5259,8 +5259,9 @@ test("colorpicker doesn't appear when missing access rights", async () => {
             </kanban>`,
     });
 
-    await toggleKanbanRecordDropdown(0);
-    expect(".o_kanban_colorpicker").toHaveCount(0);
+    // When the Kanban record is read-only (e.g., edit='0'), the dropdown menu and its toggle
+    // are not rendered to prevent displaying empty dropdowns
+    expect(`.o_kanban_record:eq(0) .o_dropdown_kanban .dropdown-toggle`).toHaveCount(0);
 });
 
 test("load more records in column", async () => {
