@@ -79,7 +79,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             audit_trail.res_id = 0
 
-    def test_cant_unlink_tracking_value(self):
+    def test_cant_update_tracking_value(self):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.precommit.run()
@@ -95,8 +95,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 ],
             }
         )
-        with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
-            audit_trail.unlink()
+        with self.assertRaisesRegex(UserError, "Messages with tracking values cannot be modified"):
+            self.move._message_update_content(audit_trail, body="")
 
     def test_content(self):
         with self.mock_mail_gateway(), self.mock_mail_app():
