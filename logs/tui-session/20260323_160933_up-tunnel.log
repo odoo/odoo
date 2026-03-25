@@ -1,0 +1,51 @@
+title: up-tunnel
+started: 2026-03-23T16:09:33-04:00
+finished: 2026-03-23T16:09:35-04:00
+status: failed with code 2
+description: Start the public Cloudflare-published stack.
+
+make[1]: Entrando no diretório '/home/green/odoo'
+
+make[2]: Entrando no diretório '/home/green/odoo'
+
+make[2]: Saindo do diretório '/home/green/odoo'
+
+make[2]: Entrando no diretório '/home/green/odoo'
+
+[render-prod-config] wrote deploy/odoo/kodoo.prod.local.conf
+Generated deploy/odoo/kodoo.prod.local.conf from .env (chmod 644).
+make[2]: Saindo do diretório '/home/green/odoo'
+
+make[2]: Entrando no diretório '/home/green/odoo'
+
+Checking port 8069...
+  Port 8069 already free.
+make[2]: Saindo do diretório '/home/green/odoo'
+
+ Container kodoo-ollama  Running
+ Container kodoo-db  Running
+ Container kodoo-odoo  Running
+ Container kodoo-nginx  Running
+ Container kodoo-db  Waiting
+ Container kodoo-db  Healthy
+ Container kodoo-cloudflared  Starting
+ Container kodoo-cloudflared  Started
+make[2]: Entrando no diretório '/home/green/odoo'
+
+time="2026-03-23T16:09:34-04:00" level=warning msg="Found orphan containers ([kodoo-cloudflared]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container kodoo-ollama  Running
+Pulling qwen3.5:0.8b
+[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠙ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠸ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠼ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠴ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠧ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠇ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K[?25h[?2026l
+Error: pull model manifest: 412: 
+The model you are attempting to pull requires a newer version of Ollama.
+
+Please download the latest version at:
+
+	https://ollama.com/download
+
+make[2]: Saindo do diretório '/home/green/odoo'
+
+make[1]: Saindo do diretório '/home/green/odoo'
+
+make[2]: *** [Makefile:1500: ollama-pull] Error 1
+make[1]: *** [Makefile:1538: up-tunnel] Error 2
