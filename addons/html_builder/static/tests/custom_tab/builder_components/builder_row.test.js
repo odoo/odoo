@@ -406,4 +406,23 @@ describe("HTML builder tests", () => {
         await contains(":iframe .test-options-target").hover();
         expect(".o-tooltip").toHaveCount(0);
     });
+    test("show row label before tooltip when label is truncated", async () => {
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderRow label="'Supercalifragilisticexpalidocious'" tooltip="'my tooltip'">Palais chatouille</BuilderRow>`;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await hover("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
+        await advanceTime(OPEN_DELAY);
+        await waitFor(".o-tooltip");
+        const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
+        expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.
+        expect(".o-tooltip").toHaveText("Supercalifragilisticexpalidocious : my tooltip");
+
+        await contains(":iframe .test-options-target").hover();
+        expect(".o-tooltip").toHaveCount(0);
+    });
 });
