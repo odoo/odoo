@@ -466,6 +466,9 @@ export function toLocaleDateTimeString(
     if (!options.showSeconds) {
         delete format.second;
     }
+    if (options.showWeekday) {
+        format.weekday = "short";
+    }
     if (options.showDate === false) {
         delete format.day;
         delete format.month;
