@@ -621,7 +621,7 @@ Versions:
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
-                if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
+                if leave.employee_id.sudo().is_fully_flexible or (leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from):
                     # Only subtract public holidays if the leave type does NOT include public holidays in duration.
                     # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                     # the leave should count the full day even if it falls on a public holiday.
@@ -637,13 +637,27 @@ Versions:
                         public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
                         leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
                         real_leave_intervals = leave_intervals - public_holidays_intervals
-                        hours = 0
-                        for start, stop, meta in real_leave_intervals:
-                            hours += (stop - start).total_seconds() / 3600
+                        hours = sum(
+                            (stop - start).total_seconds() / 3600
+                            for start, stop, meta in real_leave_intervals
+                        )
                     else:
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    if not leave.request_unit_hours and not public_holidays:
-                        days = 1 if not leave.request_unit_half or leave.request_date_from_period != leave.request_date_to_period else 0.5
+                    if not leave.request_unit_hours:
+                        total_days = (leave.request_date_to - leave.request_date_from).days + 1
+                        if public_holidays:
+                            ph_days = set()
+                            for ph in public_holidays:
+                                ph_start = max(ph.date_from, leave.date_from).date()
+                                ph_end = min(ph.date_to, leave.date_to).date()
+                                ph_days.update(ph_start + timedelta(days=i) for i in range((ph_end - ph_start).days + 1))
+                            total_days -= len(ph_days)
+                        if leave.request_unit_half:
+                            if leave.request_date_from_period == 'pm':
+                                total_days -= 0.5
+                            if leave.request_date_to_period == 'am':
+                                total_days -= 0.5
+                        days = max(0, total_days)
                     else:
                         days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
