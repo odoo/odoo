@@ -15,6 +15,7 @@ spreadsheet.registries.topbarMenuRegistry.addChild("download_public_excel", ["fi
     isReadonlyAllowed: true,
     icon: "o-spreadsheet-Icon.DOWNLOAD",
     isVisible: (env) => env.canDownloadExcel?.(),
+    isEnabledOnLockedSheet: true,
 });
 
 export class PublicReadonlySpreadsheet extends Component {
