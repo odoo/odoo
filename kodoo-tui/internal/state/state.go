@@ -131,19 +131,20 @@ func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) 
 	smoke := health.SmokeAll(cfg)
 
 	localDBOK := portReachable(cfg.PGLocalHost, cfg.PGLocalPort)
-	dockerDBOK := portReachable(cfg.DockerDBBindHost, cfg.DockerDBHostPort)
+	dockerDBHostPortOK := portReachable(cfg.DockerDBBindHost, cfg.DockerDBHostPort)
 	devHostPID := readPIDStatus(filepath.Join(repoDir, "logs", "odoo-dev-host.pid"))
 	devProjectPID := readPIDStatus(filepath.Join(repoDir, "logs", "odoo-dev-project.pid"))
+	dockerDBRunning := containerRunning(containers, "kodoo-db")
 
 	snapshot.Containers = containers
 	snapshot.Stats = stats
 	snapshot.Logs = logLines
 	snapshot.ServiceNames = services
 	snapshot.Smoke = smoke
-	snapshot.Databases = loadDatabases(ctx, repoDir, localDBOK, dockerDBOK)
+	snapshot.Databases = loadDatabases(ctx, repoDir, localDBOK, dockerDBHostPortOK, dockerDBRunning)
 	snapshot.Runtime = buildRuntimeState(cfg, containers, smoke, snapshot.Config, devHostPID, devProjectPID, activeDB)
-	snapshot.Services = buildServices(containers, localDBOK, dockerDBOK, devHostPID, devProjectPID)
-	snapshot.Incidents = detectIncidents(cfg, snapshot, localDBOK, dockerDBOK, devHostPID, devProjectPID)
+	snapshot.Services = buildServices(containers, localDBOK, dockerDBHostPortOK, dockerDBRunning, cfg, devHostPID, devProjectPID)
+	snapshot.Incidents = detectIncidents(cfg, snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning, devHostPID, devProjectPID)
 
 	if len(snapshot.Incidents) > 0 {
 		snapshot.Runtime.LastIncident = snapshot.Incidents[0].Summary
@@ -188,10 +189,10 @@ func buildRuntimeState(cfg *envconfig.Config, containers []docker.Container, smo
 	}
 }
 
-func buildServices(containers []docker.Container, localDBOK, dockerDBOK bool, devHostPID, devProjectPID pidStatus) []ServiceHealth {
+func buildServices(containers []docker.Container, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, cfg *envconfig.Config, devHostPID, devProjectPID pidStatus) []ServiceHealth {
 	services := []ServiceHealth{
 		serviceFromPort("db-local", localDBOK, "postgres local", "127.0.0.1 reachability"),
-		serviceFromPort("db-docker", dockerDBOK, "postgres docker", "docker postgres bind port"),
+		serviceFromDockerDB(dockerDBRunning, dockerDBHostPortOK, cfg.DockerDBBindHost, cfg.DockerDBHostPort),
 	}
 
 	for _, name := range []string{"kodoo-odoo", "kodoo-nginx", "kodoo-cloudflared", "kodoo-ollama"} {
@@ -202,7 +203,7 @@ func buildServices(containers []docker.Container, localDBOK, dockerDBOK bool, de
 	return services
 }
 
-func loadDatabases(ctx context.Context, repoDir string, localDBOK, dockerDBOK bool) []DatabaseInfo {
+func loadDatabases(ctx context.Context, repoDir string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool) []DatabaseInfo {
 	var rows []DatabaseInfo
 	for _, backend := range []string{"docker", "local"} {
 		records, err := database.List(ctx, repoDir, backend)
@@ -224,9 +225,11 @@ func loadDatabases(ctx context.Context, repoDir string, localDBOK, dockerDBOK bo
 				Tags:            record.Tags,
 				CompatibleModes: compatibleModes(record.Backend),
 				ActionTarget:    preferredDBAction(record.Backend),
-				Connectivity:    connectivityLabel(record.Backend, localDBOK, dockerDBOK),
+				Connectivity:    connectivityLabel(record.Backend, localDBOK, dockerDBHostPortOK, dockerDBRunning),
 			}
-			if info.Connectivity != "ok" {
+			if info.Connectivity == "container-only" {
+				info.Alert = "Docker DB is reachable through the container, but the host bind port is closed."
+			} else if info.Connectivity != "ok" {
 				info.Alert = fmt.Sprintf("%s backend is not reachable", record.Backend)
 			}
 			rows = append(rows, info)
@@ -241,7 +244,7 @@ func loadDatabases(ctx context.Context, repoDir string, localDBOK, dockerDBOK bo
 	return rows
 }
 
-func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, dockerDBOK bool, devHostPID, devProjectPID pidStatus) []Incident {
+func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, devHostPID, devProjectPID pidStatus) []Incident {
 	var incidents []Incident
 	if !cfg.Exists {
 		incidents = append(incidents, Incident{
@@ -283,12 +286,19 @@ func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, docker
 			Suggestion: "Abra Databases ou valide o PostgreSQL local antes de usar Dev Host.",
 		})
 	}
-	if !dockerDBOK {
+	if !dockerDBRunning {
 		incidents = append(incidents, Incident{
 			Severity:   SeverityWarning,
-			Summary:    "Docker DB não responde",
-			Cause:      fmt.Sprintf("A porta %s:%d não aceitou conexão.", cfg.DockerDBBindHost, cfg.DockerDBHostPort),
+			Summary:    "Docker DB não está em execução",
+			Cause:      "O container kodoo-db não está ativo, então o backend Docker não pode ser usado.",
 			Suggestion: "Use Runtime para subir o stack estável ou valide o serviço db.",
+		})
+	} else if !dockerDBHostPortOK && snapshot.Runtime.Mode == "Dev Project" {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityWarning,
+			Summary:    "Docker DB sem bind no host",
+			Cause:      fmt.Sprintf("O container db está ativo, mas a porta %s:%d não aceitou conexão.", cfg.DockerDBBindHost, cfg.DockerDBHostPort),
+			Suggestion: "Reabra o modo Dev Project ou valide o override deploy/dev-project/docker-compose.db-only.yml.",
 		})
 	}
 	if devHostPID.Exists && !devHostPID.Running {
@@ -440,6 +450,32 @@ func serviceFromPort(name string, ok bool, status, detail string) ServiceHealth 
 	return ServiceHealth{Name: name, Status: "unreachable", Detail: detail, Level: SeverityCritical}
 }
 
+func serviceFromDockerDB(running, hostPortOK bool, host string, port int) ServiceHealth {
+	switch {
+	case running && hostPortOK:
+		return ServiceHealth{
+			Name:   "db-docker",
+			Status: "postgres docker",
+			Detail: fmt.Sprintf("host bind reachable at %s:%d", host, port),
+			Level:  SeverityInfo,
+		}
+	case running:
+		return ServiceHealth{
+			Name:   "db-docker",
+			Status: "container running (no host bind)",
+			Detail: fmt.Sprintf("docker exec/db-manager works; host bind %s:%d is closed", host, port),
+			Level:  SeverityWarning,
+		}
+	default:
+		return ServiceHealth{
+			Name:   "db-docker",
+			Status: "not running",
+			Detail: "kodoo-db container is stopped",
+			Level:  SeverityCritical,
+		}
+	}
+}
+
 func serviceFromPID(name string, pid pidStatus) ServiceHealth {
 	switch {
 	case pid.Running:
@@ -493,15 +529,18 @@ func preferredDBAction(backend string) string {
 	return "dev"
 }
 
-func connectivityLabel(backend string, localDBOK, dockerDBOK bool) string {
+func connectivityLabel(backend string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool) string {
 	switch backend {
 	case "local":
 		if localDBOK {
 			return "ok"
 		}
 	case "docker":
-		if dockerDBOK {
+		if dockerDBHostPortOK {
 			return "ok"
+		}
+		if dockerDBRunning {
+			return "container-only"
 		}
 	}
 	return "unreachable"

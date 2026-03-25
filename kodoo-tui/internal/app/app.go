@@ -129,7 +129,7 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 		runtime:   runtime.New(),
 		databases: databases.New(),
 		doctor:    doctor.New(),
-		logs:      logs.New(),
+		logs:      logs.New().SetTailLines(cfg.TUILogLines),
 		config:    config.New(cfg),
 		overlay: overlayState{
 			viewport: viewport.New(60, 10),
@@ -568,7 +568,7 @@ func (m Model) reloadConfig() (Model, tea.Cmd) {
 	}
 
 	m.cfg = cfg
-	m.logs = logs.New().SetSnapshot(m.snapshot)
+	m.logs = logs.New().SetTailLines(cfg.TUILogLines).SetSnapshot(m.snapshot)
 	m.dashboard = m.dashboard.SetConfig(cfg)
 	m.config = m.config.SetConfig(cfg)
 	m.palette = m.buildPalette()

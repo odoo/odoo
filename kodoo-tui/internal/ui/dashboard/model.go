@@ -85,22 +85,28 @@ func (m Model) View(width, height int) string {
 		return ""
 	}
 
-	header := panelStyle.Width(width - 2).Render(m.headerView())
+	header := panelStyle.Width(width - 2).Render(m.headerView(width))
+	if width < 110 {
+		bodyHeight := max(6, (height-8)/3)
+		left := panelStyle.Width(width - 2).Height(bodyHeight).Render(m.healthView())
+		middle := panelStyle.Width(width - 2).Height(bodyHeight).Render(m.tenantsView())
+		right := panelStyle.Width(width - 2).Height(bodyHeight).Render(m.securityAndResourcesView())
+		return lipgloss.JoinVertical(lipgloss.Left, header, left, middle, right)
+	}
+
 	bodyHeight := max(10, height-7)
 	leftWidth := max(34, width/3)
 	middleWidth := max(34, width/3)
 	rightWidth := max(30, width-leftWidth-middleWidth-6)
-
 	left := panelStyle.Width(leftWidth).Height(bodyHeight).Render(m.healthView())
 	middle := panelStyle.Width(middleWidth).Height(bodyHeight).Render(m.tenantsView())
 	right := panelStyle.Width(rightWidth).Height(bodyHeight).Render(m.securityAndResourcesView())
 	return lipgloss.JoinVertical(lipgloss.Left, header, lipgloss.JoinHorizontal(lipgloss.Top, left, middle, right))
 }
 
-func (m Model) headerView() string {
+func (m Model) headerView(width int) string {
 	runtime := m.snapshot.Runtime
-	lines := []string{
-		titleStyle.Render("Operational Dashboard"),
+	fields := []string{
 		fmt.Sprintf("mode: %s", fallback(runtime.Mode, "loading")),
 		fmt.Sprintf("runtime: %s", fallback(runtime.RuntimeProfile, "unknown")),
 		fmt.Sprintf("active db: %s", fallback(runtime.ActiveDB, fallback(m.cfg.ProdDBName, "not pinned"))),
@@ -108,7 +114,11 @@ func (m Model) headerView() string {
 		fmt.Sprintf("public: %s", runtime.PublicURL),
 		fmt.Sprintf("refresh: %s", runtime.LastRefresh.Format("15:04:05")),
 	}
-	return strings.Join(lines, "  |  ")
+	title := titleStyle.Render("Operational Dashboard")
+	if width < 110 {
+		return title + "\n" + strings.Join(fields, "\n")
+	}
+	return title + "  |  " + strings.Join(fields, "  |  ")
 }
 
 func (m Model) healthView() string {

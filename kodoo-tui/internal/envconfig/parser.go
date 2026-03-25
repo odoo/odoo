@@ -308,7 +308,7 @@ func (c *Config) Save() error {
 					if entry, ok := c.Values[key]; ok && entry.Source == "env.make" {
 						// Preserve the operator and spacing as much as possible
 						operator := matches[2]
-						lines = append(lines, fmt.Sprintf("%s %s %s", key, operator, entry.Value))
+						lines = append(lines, fmt.Sprintf("%s%s%s", key, operator, entry.Value))
 						foundKeys[key] = true
 						continue
 					}
@@ -327,7 +327,7 @@ func (c *Config) Save() error {
 			if !hasNew && len(lines) > 0 && lines[len(lines)-1] != "" {
 				lines = append(lines, "")
 			}
-			lines = append(lines, fmt.Sprintf("%s = %s", entry.Key, entry.Value))
+			lines = append(lines, fmt.Sprintf("%s=%s", entry.Key, entry.Value))
 			foundKeys[entry.Key] = true
 			hasNew = true
 		}

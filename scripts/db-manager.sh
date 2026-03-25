@@ -4,16 +4,38 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
+load_env_file() {
+    local path="$1"
+    local raw line key value
+    while IFS= read -r raw || [ -n "$raw" ]; do
+        line="${raw#"${raw%%[![:space:]]*}"}"
+        line="${line%"${line##*[![:space:]]}"}"
+        [ -n "$line" ] || continue
+        [[ "${line:0:1}" == "#" ]] && continue
+        if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)[[:space:]]*(\?=|:=|=)[[:space:]]*(.*)$ ]]; then
+            key="${BASH_REMATCH[1]}"
+            value="${BASH_REMATCH[3]}"
+            value="${value#"${value%%[![:space:]]*}"}"
+            value="${value%"${value##*[![:space:]]}"}"
+            if [ "${#value}" -ge 2 ]; then
+                case "$value" in
+                    \"*\"|\'*\')
+                        if [ "${value:0:1}" = "${value: -1}" ]; then
+                            value="${value:1:${#value}-2}"
+                        fi
+                        ;;
+                esac
+            fi
+            printf -v "$key" '%s' "$value"
+            export "$key"
+        fi
+    done < "$path"
+}
+
 if [ -f .env ]; then
-    set -a
-    # shellcheck disable=SC1091
-    . ./.env
-    set +a
+    load_env_file ./.env
 elif [ -f .env.make ]; then
-    set -a
-    # shellcheck disable=SC1091
-    . ./.env.make
-    set +a
+    load_env_file ./.env.make
 fi
 
 DB_USER="${PROD_DB_USER:-${PG_LOCAL_USER:-kodoo}}"
@@ -38,11 +60,9 @@ detect_backend() {
             return 1
             ;;
     esac
-    if docker inspect kodoo-db >/dev/null 2>&1; then
-        if [ "$(docker inspect -f '{{.State.Running}}' kodoo-db 2>/dev/null)" = "true" ]; then
-            echo "docker"
-            return 0
-        fi
+    if [ "$(docker inspect -f '{{.State.Running}}' kodoo-db 2>/dev/null || true)" = "true" ]; then
+        echo "docker"
+        return 0
     fi
     if command -v psql >/dev/null 2>&1; then
         echo "local"
