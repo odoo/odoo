@@ -10,7 +10,7 @@
 This module gives you a quick view of your contacts directory, accessible from your home page.
 You can track your vendors, customers and other contacts.
 """,
-    'depends': ['base', 'mail', 'web_hierarchy'],
+    'depends': ['base_address_extended', 'mail', 'web_hierarchy'],
     'data': [
         'views/contact_views.xml',
     ],

@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Add a billing address",
-            trigger: '#billing_address_list a[href^="/shop/address?address_type=billing"]:contains("Add address")',
+            trigger: '#billing_address_list a[href^="/shop/address?address_type=billing"]:contains("Add")',
             run: "click",
             expectUnloadPage: true,
         },
@@ -220,7 +220,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         ...tourUtils.login({ login: 'abc@odoo.com', password: '1admin@admin' }),
         {
             content: "Add new delivery address",
-            trigger: '#delivery_address_list a[href^="/shop/address"]:contains("Add address")',
+            trigger: '#delivery_address_list a[href^="/shop/address"]:contains("Add")',
             run: "click",
             expectUnloadPage: true,
         },

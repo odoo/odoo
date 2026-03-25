@@ -3,14 +3,20 @@
 
     <template id="address_form_fields" inherit_id="portal.address_form_fields">
         <div id="div_vat" position="before">
-            <div t-if="is_used_as_billing and res_company.country_id.code == 'AR'" class="col-xl-6 mb-3">
+            <div
+                t-if="is_used_as_billing and res_company.account_fiscal_country_id.code == 'AR'"
+                class="col-lg-6 mb-3"
+            >
                 <label class="col-form-label" for="l10n_ar_afip_responsibility_type_id">
                     ARCA Responsibility
                 </label>
+                <t t-call="portal.address_warning_icon" warning="commercial_fields_warning"/>
                 <select
-                    t-if="can_edit_commercial_fields"
                     name="l10n_ar_afip_responsibility_type_id"
-                    class="form-select"
+                    t-att-class="(
+                        'pe-none opacity-50 form-select'
+                        if not can_edit_commercial_fields else 'form-select'
+                    )"
                 >
                     <option value="">ARCA Responsibility...</option>
                     <option
@@ -21,22 +27,6 @@
                         t-out="resp_type.name"
                     />
                 </select>
-                <p
-                    t-else=""
-                    class="form-control"
-                    t-out="responsibility.name"
-                    readonly="1"
-                    title="Changing ARCA Responsibility type is not allowed once document(s) have
-                        been issued for your account. Please contact us directly for this
-                        operation."
-                />
-                <input
-                    t-if="not can_edit_commercial_fields"
-                    type="hidden"
-                    readonly="1"
-                    name="l10n_ar_afip_responsibility_type_id"
-                    t-att-value="responsibility.id"
-                />
             </div>
         </div>
     </template>

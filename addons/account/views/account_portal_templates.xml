@@ -305,47 +305,41 @@
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <div name="address_details" position="inside">
             <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_formats">
-                <div class="col-12 d-none d-xl-block">
+                <div class="mt-4 col-12 d-none d-lg-block">
                     <small class="form-text text-muted">
                         You can choose how you want us to send your invoices, and with which electronic format.
                     </small>
                 </div>
             </t>
-            <div t-if="len(invoice_sending_methods) > 1" class="row m-0 p-0">
-                <div class="col-xl-6">
-                    <label class="col-form-label label-optional" for="invoice_sending_method">
-                        Receive invoices
-                    </label>
-                    <select name="invoice_sending_method" class="form-select">
-                        <option
-                            t-foreach="invoice_sending_methods"
-                            t-as="method"
-                            t-att-value="method"
-                            t-att-selected="partner_sudo.invoice_sending_method == method"
-                            t-out="method_value"
-                        />
-                    </select>
-                </div>
+            <div t-if="len(invoice_sending_methods) > 1" class="col-lg-6">
+                <label class="col-form-label label-optional" for="invoice_sending_method">
+                    Receive invoices
+                </label>
+                <select name="invoice_sending_method" class="form-select">
+                    <option
+                        t-foreach="invoice_sending_methods"
+                        t-as="method"
+                        t-att-value="method"
+                        t-att-selected="partner_sudo.invoice_sending_method == method"
+                        t-out="method_value"
+                    />
+                </select>
             </div>
-            <t t-if="invoice_edi_formats">
-                <div class="row m-0 mb-3 p-0">
-                    <div class="col-xl-6">
-                        <label class="col-form-label label-optional" for="invoice_edi_format">
-                            Electronic format
-                        </label>
-                        <select name="invoice_edi_format" class="form-select">
-                            <option value=""/>
-                            <option
-                                t-foreach="invoice_edi_formats"
-                                t-as="format"
-                                t-att-value="format"
-                                t-att-selected="partner_sudo.invoice_edi_format == format"
-                                t-out="format_value"
-                            />
-                        </select>
-                    </div>
-                </div>
-            </t>
+            <div t-if="invoice_edi_formats" class="col-lg-6">
+                <label class="col-form-label label-optional" for="invoice_edi_format">
+                    Electronic format
+                </label>
+                <select name="invoice_edi_format" class="form-select">
+                    <option value=""/>
+                    <option
+                        t-foreach="invoice_edi_formats"
+                        t-as="format"
+                        t-att-value="format"
+                        t-att-selected="partner_sudo.invoice_edi_format == format"
+                        t-out="format_value"
+                    />
+                </select>
+            </div>
         </div>
     </template>
 </odoo>
