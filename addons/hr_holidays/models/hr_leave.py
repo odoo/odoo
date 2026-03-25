@@ -942,8 +942,108 @@ class HrLeave(models.Model):
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
                 result[leave.id] = (0, 0)
                 continue
+<<<<<<< 46f1a9132353a9c304257678f43c9adc0e547e1b
             is_calendar_days = False
             if not leave.employee_id:
+||||||| 6f1f28e19d568ad555a157cfc39d9503387b2a65
+            hours, days = (0, 0)
+            if leave.employee_id:
+                if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
+                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    days = 1
+                # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
+                # sudo as is_flexible is on version model and employee does not have access to it.
+                elif leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
+                    # Only subtract public holidays if the leave type does NOT include public holidays in duration.
+                    # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
+                    # the leave should count the full day even if it falls on a public holiday.
+                    resource_calendar_leaves = self.env['resource.calendar.leaves']
+                    public_holidays = resource_calendar_leaves.search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', leave.date_to),
+                        ('date_to', '>', leave.date_from),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ]) if not leave.work_entry_type_id.include_public_holidays_in_duration else resource_calendar_leaves
+                    if public_holidays:
+                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                        real_leave_intervals = leave_intervals - public_holidays_intervals
+                        hours = 0
+                        for start, stop, meta in real_leave_intervals:
+                            hours += (stop - start).total_seconds() / 3600
+                    else:
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    if leave.work_entry_type_request_unit != 'hour' and not public_holidays:
+                        days = 1 if leave.work_entry_type_request_unit != 'half_day' or leave.request_date_from_period != leave.request_date_to_period else 0.5
+                    else:
+                        days = hours / 24
+                elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
+                    # list of tuples (day, hours)
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    days = len(work_time_per_day_list)
+                    hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                else:
+                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    hours, days = work_days_data['hours'], work_days_data['days']
+            else:
+=======
+            hours, days = (0, 0)
+            if leave.employee_id:
+                if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
+                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    days = 1
+                # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
+                # sudo as is_flexible is on version model and employee does not have access to it.
+                elif leave.employee_id.sudo().is_fully_flexible or (leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from):
+                    # Only subtract public holidays if the leave type does NOT include public holidays in duration.
+                    # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
+                    # the leave should count the full day even if it falls on a public holiday.
+                    resource_calendar_leaves = self.env['resource.calendar.leaves']
+                    public_holidays = resource_calendar_leaves.search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', leave.date_to),
+                        ('date_to', '>', leave.date_from),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ]) if not leave.work_entry_type_id.include_public_holidays_in_duration else resource_calendar_leaves
+                    if public_holidays:
+                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                        real_leave_intervals = leave_intervals - public_holidays_intervals
+                        hours = sum(
+                            (stop - start).total_seconds() / 3600
+                            for start, stop, meta in real_leave_intervals
+                        )
+                    else:
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    if leave.work_entry_type_request_unit != 'hour':
+                        total_days = (leave.request_date_to - leave.request_date_from).days + 1
+                        if public_holidays:
+                            ph_days = set()
+                            for ph in public_holidays:
+                                ph_start = max(ph.date_from, leave.date_from).date()
+                                ph_end = min(ph.date_to, leave.date_to).date()
+                                ph_days.update(ph_start + timedelta(days=i) for i in range((ph_end - ph_start).days + 1))
+                            total_days -= len(ph_days)
+                        if leave.work_entry_type_request_unit == 'half_day':
+                            if leave.request_date_from_period == 'pm':
+                                total_days -= 0.5
+                            if leave.request_date_to_period == 'am':
+                                total_days -= 0.5
+                        days = max(0, total_days)
+                    else:
+                        days = hours / 24
+                elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
+                    # list of tuples (day, hours)
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    days = len(work_time_per_day_list)
+                    hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                else:
+                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    hours, days = work_days_data['hours'], work_days_data['days']
+            else:
+>>>>>>> c38ade1be023c487e1498b622c2b605e5ce70439
                 today_hours = calendar.get_work_hours_count(
                     datetime.combine(leave.date_from.date(), time.min),
                     datetime.combine(leave.date_from.date(), time.max),
