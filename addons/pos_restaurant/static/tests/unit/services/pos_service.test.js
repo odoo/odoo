@@ -427,6 +427,42 @@ describe("restaurant pos_store.js", () => {
         const line2 = await store.addLineToOrder({ product_tmpl_id: product2, qty: 2 }, order2);
         line2.course_id = course2;
         course2.line_ids = [line2];
+        order1.last_order_preparation_change.lines[line1.preparationKey] = {
+            uuid: line1.uuid,
+            product_id: product1.id,
+            name: "Starter 1",
+            quantity: 1,
+        };
+        order2.last_order_preparation_change.lines[line2.preparationKey] = {
+            uuid: line2.uuid,
+            product_id: product2.id,
+            name: "Starter 2",
+            quantity: 2,
+        };
+        const table1InternalNote = '[{"text":"Table 1 kitchen note","colorIndex":0}]';
+        const table2InternalNote = '[{"text":"Table 2 kitchen note","colorIndex":0}]';
+        order1.pushLastPrints({
+            new: [{ product_id: 99, name: "Drink 1", quantity: 1 }],
+            cancelled: [],
+            noteUpdate: [],
+        });
+        order1.pushLastPrints({
+            new: [],
+            cancelled: [{ product_id: product1.id, name: "Starter 1", quantity: 1 }],
+            noteUpdate: [],
+            internal_note: table1InternalNote,
+        });
+        order2.pushLastPrints({
+            new: [{ product_id: 100, name: "Drink 2", quantity: 1 }],
+            cancelled: [],
+            noteUpdate: [],
+        });
+        order2.pushLastPrints({
+            new: [{ product_id: product2.id, name: "Starter 2", quantity: 2 }],
+            cancelled: [],
+            noteUpdate: [],
+            internal_note: table2InternalNote,
+        });
         await store.mergeOrders(order1, order2);
         expect(order2.lines.length).toBe(2);
         expect(order1.lines.length).toBe(0);
@@ -434,6 +470,13 @@ describe("restaurant pos_store.js", () => {
         expect(order2.table_id.id).toBe(table2.id);
         expect(order2.course_ids.length).toBe(1);
         expect(line2.course_id.id).toBe(course2.id);
+        const lastPrint = order2.lastPrints.at(-1);
+        expect(lastPrint).not.toBe(undefined);
+        expect(lastPrint.new.length).toBe(1);
+        expect(lastPrint.new[0].product_id).toBe(product2.id);
+        expect(lastPrint.cancelled.length).toBe(1);
+        expect(lastPrint.cancelled[0].product_id).toBe(product1.id);
+        expect(lastPrint.internal_note).toBe(table2InternalNote);
     });
 
     test("mergeOrders sums guest counts", async () => {
