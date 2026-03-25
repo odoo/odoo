@@ -3,11 +3,29 @@
 
 from datetime import timedelta
 
+<<<<<<< f7c309cdac754ead9e00b3443a2fe764efec819c
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon, TestBomPriceOperationCommon
 from odoo.tests import Form
+||||||| 609fc42e1222d225ef7040c64080882b65d6d5ef
+from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
+from odoo.tests import Form, tagged
+=======
+from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
+
+from odoo import fields, Command
+from odoo.exceptions import UserError
+from odoo.tests import Form, tagged
+>>>>>>> b352d2010bfe2a28de29621be53e704cb73b20e0
 from odoo.tests.common import new_test_user
+<<<<<<< f7c309cdac754ead9e00b3443a2fe764efec819c
 from odoo.tools import float_compare, float_round
 from odoo import fields
+||||||| 609fc42e1222d225ef7040c64080882b65d6d5ef
+from odoo import fields, Command
+=======
+>>>>>>> b352d2010bfe2a28de29621be53e704cb73b20e0
 
 
 class TestMrpAccount(TestBomPriceCommon):
@@ -97,6 +115,150 @@ class TestMrpAccount(TestBomPriceCommon):
                 # Unbuild move value is derived from MO_2, as precised on the unbuild form
                 {'remaining_qty': 0.0, 'value': 718.75, 'quantity': 1.0},
             ],
+<<<<<<< f7c309cdac754ead9e00b3443a2fe764efec819c
+||||||| 609fc42e1222d225ef7040c64080882b65d6d5ef
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 1.0,
+                })],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = final_product
+        production_form.bom_id = self.bom_1
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        workorder = production.workorder_ids
+        workorder.duration = 30.2
+        workorder.time_ids.write({'duration': 30.2})  # Ensure that the duration is correct
+        production.all_move_raw_ids.filtered(lambda m: m.product_id == self.product_2)[0].write({
+            'quantity': 1.0,
+        })
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
+            0.01, 0.01
+        ])
+
+
+@tagged("post_install", "-at_install")
+class TestMrpAccountMove(TestAccountMoveStockCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.production_account = cls.env['account.account'].create({
+            'name': 'Cost of Production',
+            'code': 'ProductionCost',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        cls.auto_categ.property_stock_account_production_cost_id = cls.production_account
+        cls.product_B = cls.env["product.product"].create(
+            {
+                "name": "Product B",
+                "is_storable": True,
+                "default_code": "prda",
+                "categ_id": cls.auto_categ.id,
+                "taxes_id": [(5, 0, 0)],
+                "supplier_taxes_id": [(5, 0, 0)],
+                "lst_price": 100.0,
+                "standard_price": 10.0,
+                "property_account_income_id": cls.company_data["default_account_revenue"].id,
+                "property_account_expense_id": cls.company_data["default_account_expense"].id,
+            }
+=======
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 1.0,
+                })],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = final_product
+        production_form.bom_id = self.bom_1
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        workorder = production.workorder_ids
+        workorder.duration = 30.2
+        workorder.time_ids.write({'duration': 30.2})  # Ensure that the duration is correct
+        production.all_move_raw_ids.filtered(lambda m: m.product_id == self.product_2)[0].write({
+            'quantity': 1.0,
+        })
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
+            0.01, 0.01
+        ])
+
+    def test_lot_valuation_remove_lot_from_MO(self):
+        self.product_table_leg.write({'lot_valuated': True})
+        leg_lot = self.env['stock.lot'].create({
+            'name': 'leg lot',
+            'product_id': self.product_table_leg.id,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_table_leg.id,
+            'product_qty': 1,
+            'move_raw_ids': [
+                Command.create({
+                    'product_id': self.product_bolt.id,
+                    'product_uom_qty': 1,
+                })
+            ],
+            'lot_producing_id': leg_lot.id,
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        with self.assertRaises(UserError, msg='Product Table Leg is valuated by lot: an explicit Lot/Serial number is required.'):
+            mo.lot_producing_id = False
+        self.assertEqual(mo.lot_producing_id, leg_lot)
+        self.assertEqual(mo.move_finished_ids.lot_ids, leg_lot)
+
+
+@tagged("post_install", "-at_install")
+class TestMrpAccountMove(TestAccountMoveStockCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.production_account = cls.env['account.account'].create({
+            'name': 'Cost of Production',
+            'code': 'ProductionCost',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        cls.auto_categ.property_stock_account_production_cost_id = cls.production_account
+        cls.product_B = cls.env["product.product"].create(
+            {
+                "name": "Product B",
+                "is_storable": True,
+                "default_code": "prda",
+                "categ_id": cls.auto_categ.id,
+                "taxes_id": [(5, 0, 0)],
+                "supplier_taxes_id": [(5, 0, 0)],
+                "lst_price": 100.0,
+                "standard_price": 10.0,
+                "property_account_income_id": cls.company_data["default_account_revenue"].id,
+                "property_account_expense_id": cls.company_data["default_account_expense"].id,
+            }
+>>>>>>> b352d2010bfe2a28de29621be53e704cb73b20e0
         )
         self._make_out_move(self.dining_table, 1)
         self.assertRecordValues(
