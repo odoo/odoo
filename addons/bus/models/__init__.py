@@ -6,6 +6,7 @@ from . import bus_presence
 from . import ir_attachment
 from . import ir_http
 from . import ir_model
+from . import ir_qweb
 from . import ir_websocket
 from . import res_groups
 from . import res_users
