@@ -450,8 +450,10 @@
                         <field name="transaction_count" widget="statinfo" string="Payments"/>
                     </button>
                 </div>
-                <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
-                    invisible="not locked">
+                <div 
+                    class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
+                    invisible="not locked"
+                >
                     <i class="fa fa-lock"/>
                     Locked
                 </div>
@@ -496,7 +498,6 @@
                             nolabel="1"
                             invisible="state in ['draft', 'sent']"
                             readonly="state in ['cancel', 'sale']"/>
-                        <field name="show_update_pricelist" invisible="1"/>
                         <label for="pricelist_id"
                                groups="product.group_product_pricelist"
                                invisible="not has_active_pricelist"/>
@@ -507,12 +508,6 @@
                                 name="pricelist_id"
                                 options="{'no_open': True, 'no_create': True}"
                                 readonly="state in ['cancel', 'sale']"/>
-                            <button name="action_update_prices" type="object"
-                                string="Update Prices"
-                                help="Recompute all prices based on this pricelist"
-                                class="btn-link mb-1 px-0" icon="fa-refresh"
-                                confirm="This will update the unit price of all products based on the new pricelist."
-                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"/>
                         </div>
                         <field name="currency_id" invisible="1"/>
                         <field

@@ -482,7 +482,7 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(so.amount_total, event_ticket.price)
 
         so.pricelist_id = pricelist_VEF
-        so.action_update_prices()
+        so._recompute_prices()
 
         # Asserting using a fixed value to make sure the conversion is correctly applied
         # with a value other than 1.0 for the conversion rate between USD and VEF.

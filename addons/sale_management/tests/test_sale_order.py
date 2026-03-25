@@ -499,7 +499,6 @@ class TestSaleOrder(SaleManagementCommon):
         with Form(self.env["sale.order"]) as sale_order_form:
             self.assertTrue(sale_order_form.sale_order_template_id)
             self.assertTrue(sale_order_form.order_line)
-            self.assertFalse(sale_order_form.show_update_pricelist)
             sale_order_form.partner_id = self.partner
 
     def test_optional_section_discount_line_not_editable_on_portal(self):
