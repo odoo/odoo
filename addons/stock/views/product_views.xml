@@ -263,9 +263,13 @@
                 <xpath expr="//kanban" position="inside">
                     <field name="show_on_hand_qty_status_button" groups="stock.group_stock_user"/>
                 </xpath>
-                <xpath expr="//span[@name='on_hand_qty_kanban']" position="replace">
-                    <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
-                        On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
+                <xpath expr="//div[@name='on_hand_qty_kanban']" position="replace">
+                    <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value" class="d-flex gap-1 align-items-baseline">
+                        <strong>
+                            <field name="qty_available" digits="[16, 0]"/> 
+                        </strong>
+                        <field name="uom_id" groups="uom.group_uom"/> 
+                        <span class="text-muted">On Hand</span>
                     </div>
                 </xpath>
             </field>
