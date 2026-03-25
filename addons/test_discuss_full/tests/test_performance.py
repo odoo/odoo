@@ -51,15 +51,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
     #   1: search bus_bus (_bus_last_id)
-    #   1: search_fetch discuss_channel_member (_store_init_messaging_global_fields)
+    #   2: search_fetch discuss_channel_member (_store_init_messaging_global_fields)
     #   1: _compute_message_unread (_init_messaging_global_fields discuss)
     #   2: _init_messaging (mail)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (bookmark counter)
-    #   23: _process_request_for_all (discuss):
+    #   26: _process_request_for_all (discuss):
     #       - search_fetch discuss_channel (channels_domain)
+    #       2: check permissions
     #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
-    #       21: store add channel:
+    #       22: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
@@ -84,7 +85,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 31
+    #           - select the current db snapshot
+    _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users

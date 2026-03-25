@@ -61,6 +61,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - read group rating_rating (_rating_get_stats_per_record for product.template)
         #           - compute message_needaction for slide.channel
         #           - compute message_needaction for product.template
+        #       - select current db snapshot
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
         )
@@ -75,5 +76,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(40):
+        with self.assertQueryCount(41):
             self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
