@@ -8,6 +8,7 @@ class FooterCopyrightOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [FooterCopyrightOption],
+        auto_unfold_container_providers: { selector: ".o_footer_copyright", target: "footer" },
     };
 }
 

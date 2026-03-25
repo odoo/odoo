@@ -128,6 +128,7 @@ class FooterOptionPlugin extends Plugin {
         builder_actions: {
             WebsiteConfigFooterAction,
         },
+        auto_unfold_container_providers: { selector: "#footer > section", target: "footer" },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
         unremovable_node_predicates: (node) => node.id === "o_footer_scrolltop",
         footer_templates_providers: [
