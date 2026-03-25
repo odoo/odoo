@@ -82,8 +82,13 @@ export class BlockTab extends Component {
                                 // Add the dropzones corresponding to the snippet
                                 // and make them invisible.
                                 const selectors = this.shared.dropzone.getSelectors(snippetEl);
-                                const dropzoneEls =
-                                    this.shared.dropzone.activateDropzones(selectors);
+                                let dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
+
+                                dropzoneEls = dropzoneEls.filter(
+                                    (dropzoneEl) =>
+                                        !dropzoneEl.closest("[data-snippet]:not(:has(> .modal))")
+                                );
+
                                 this.editable
                                     .querySelectorAll(".oe_drop_zone")
                                     .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
