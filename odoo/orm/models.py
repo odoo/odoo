@@ -3384,7 +3384,8 @@ class BaseModel(metaclass=MetaModel):
         if self.env.su:
             return True
 
-        if not any(self._ids):  # new ids or empty
+        origin = self._origin
+        if not origin:  # only new ids or empty
             return (
                 self.env['ir.model.access'].check(self._name, operation, raise_exception=False)
                 or not self._access_domain(operation).is_false()  # check for overrides
@@ -3396,15 +3397,16 @@ class BaseModel(metaclass=MetaModel):
                 return True
             if domain.is_false():
                 return False
-            return self == self.sudo().with_context(active_test=False).filtered_domain(domain)
+            return origin == origin.sudo().with_context(active_test=False).filtered_domain(domain)
 
         # check the cache
         access = self.env._access_cache[self._name]
-        if all(map(access.get, self._ids)):
+        ids = origin._ids
+        if all(map(access.get, ids)):
             return True
         domain = self._access_domain(operation)
-        self.__check_access_fill_cache(access, domain)
-        return all(map(access.__getitem__, self._ids))
+        origin.__check_access_fill_cache(access, domain)
+        return all(map(access.__getitem__, ids))
 
     @typing.final
     def _filtered_access(self, operation: str) -> typing.Self:
@@ -3417,13 +3419,17 @@ class BaseModel(metaclass=MetaModel):
         if self.env.su or not self:  # su or empty
             return self
 
-        if not any(self._ids):  # new ids
+        origin = self._origin
+        if not origin:  # only new ids
             if (
                 self.env['ir.model.access'].check(self._name, operation, raise_exception=False)
                 or not self._access_domain(operation).is_false()  # check for overrides
             ):
                 return self
             return self.browse()
+        if origin is not self:  # we have some new ids
+            accessible_ids = {False, *origin._filtered_access(operation)._ids}
+            return self.filtered(lambda rec: rec._origin.id in accessible_ids)
 
         if operation != 'read':
             domain = self._access_domain(operation)
@@ -3480,7 +3486,7 @@ class BaseModel(metaclass=MetaModel):
             for id_ in records._ids:
                 access[id_] = id_ in accessible_ids
 
-    @deprecated("Use Model._access_domain instead")
+    @deprecated("Since 20.0, use Model._access_domain instead")
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
         """ Return ``None`` if the current user has permission to perform
         ``operation`` on the records ``self``. Otherwise, return a pair
@@ -3496,12 +3502,11 @@ class BaseModel(metaclass=MetaModel):
         if domain.is_false() and not self.env['ir.model.access'].check(self._name, operation, raise_exception=False):
             return self, functools.partial(self._make_access_error_message, operation, domain)
 
-        # we only check access rules on real records, which should not be mixed
-        # with new records
+        origin = self._origin
         if (
-            any(self._ids)
+            origin
             and domain
-            and (forbidden := self - self.with_context(active_test=False).sudo().filtered_domain(domain))
+            and (forbidden := origin - origin.with_context(active_test=False).sudo().filtered_domain(domain))
         ):
             return forbidden, functools.partial(forbidden._make_access_error_message, operation, domain)
 

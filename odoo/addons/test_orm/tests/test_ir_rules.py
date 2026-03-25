@@ -45,6 +45,16 @@ class TestRules(TransactionCase):
         with self.assertRaises(AccessError):
             self.assertEqual(forbidden.val, -1)
 
+        # a new id without origin is always accessible
+        # with origin, only if the origin is accessible
+        self.assertEqual(allowed.new().val, 0)
+        allowed.invalidate_model(['val'])
+        self.assertEqual(allowed.new(origin=allowed).val, 1)
+        # but with origin should blow up too
+        allowed.invalidate_model(['val'])
+        with self.assertRaises(AccessError):
+            self.assertEqual(allowed.new(origin=forbidden).val, -1)
+
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_group_rule(self):
         env = self.env(user=self.env.ref('base.public_user'))
