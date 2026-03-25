@@ -2755,6 +2755,30 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(debit_line.account_id, accounts_data['stock_valuation'])
         self.assertEqual(credit_line.account_id, accounts_data['stock_valuation'])
 
+    def test_valuation_at_date_robustness(self):
+        """ Ensure that when we delete all the product.value for an item. The inventory at date for average cost
+        method replay the valuation from the beginning of time and not from the last product.value. This is to avoid
+        having an incorrect inventory at date when we delete some product.value in the past.
+        """
+        product_1 = self.product_avco
+        product_2 = self.product_avco.copy()
+        self.env['product.value'].search([('product_id', 'in', (product_1.id, product_2.id))]).unlink()
+
+        with freeze_time(Datetime.now() - timedelta(days=5)):
+            self._make_in_move(product_1, 10, unit_cost=10)
+            self._make_in_move(product_2, 10, unit_cost=10)
+
+        with freeze_time(Datetime.now() - timedelta(days=4)):
+            product_1.standard_price = 20
+
+        with freeze_time(Datetime.now() - timedelta(days=3)):
+            self._make_in_move(product_1, 10, unit_cost=20)
+            self._make_in_move(product_2, 10, unit_cost=20)
+
+        valuation_date = Datetime.now() - timedelta(days=2)
+        # Check both value in the same assert since it should be computed together.
+        self.assertEqual((product_1 | product_2).with_context(to_date=valuation_date).mapped('total_value'), [400, 300])
+
     def test_valuation_rounding_method(self):
         uom_g = self.env.ref('uom.product_uom_gram')
         uom_kg = self.env.ref('uom.product_uom_kgm')
