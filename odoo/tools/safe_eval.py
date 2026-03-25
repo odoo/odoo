@@ -955,17 +955,20 @@ class _SafeWhitelist:
         self._functions = list()
 
     def add_class(self, qualname: str) -> None:
-        self._classes.append(qualname)
+        if qualname not in self._classes:
+            self._classes.append(qualname)
+            vars(self).pop('_re_class', None)
         self.add_instance(qualname)
-        vars(self).pop('_re_class', None)
 
     def add_instance(self, qualname: str) -> None:
-        self._instances.append(qualname)
-        vars(self).pop('_re_instance', None)
+        if qualname not in self._instances:
+            self._instances.append(qualname)
+            vars(self).pop('_re_instance', None)
 
     def add_function(self, qualname: str) -> None:
-        self._functions.append(qualname)
-        vars(self).pop('_re_function', None)
+        if qualname not in self._functions:
+            self._functions.append(qualname)
+            vars(self).pop('_re_function', None)
 
     _re_class = functools.cached_property(lambda self: self._re_compile(self._classes))
     _re_instance = functools.cached_property(lambda self: self._re_compile(self._instances))
@@ -1024,6 +1027,27 @@ safe_transformer = _SafeTransformer()
 safe_transform = safe_transformer.visit
 safe_checker = _SafeChecker()
 safe_whitelist = _SafeWhitelist()
+
+
+T = typing.TypeVar("T", bound=type)
+F = typing.TypeVar("F", bound=typing.Callable[..., typing.Any])
+
+
+def safe_class(cls: T) -> T:
+    safe_whitelist.add_class(cls)
+    return cls
+
+
+def safe_instance(cls: T) -> T:
+    safe_whitelist.add_instance(cls)
+    return cls
+
+
+def safe_function(func: F) -> F:
+    if func.__qualname__.endswith('<lambda>'):
+        func.__qualname__ += f'.<{func.__code__.co_firstlineno}>'
+    safe_whitelist.add_function(func)
+    return func
 
 
 def safe_call(callee, /, *args, **kwargs):
