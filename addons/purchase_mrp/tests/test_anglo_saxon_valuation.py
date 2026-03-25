@@ -508,23 +508,42 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         receipts = purchase_orders.picking_ids
         receipts[2].button_validate()
 
+        self.assertEqual(sum(purchase_orders[0].order_line.move_ids.mapped('cost_share')), 100.0)
+        moves = purchase_orders.order_line.move_ids.sorted(lambda m: (m.picking_id.id, m.cost_share))
+        cost_share_values = moves.mapped('cost_share')
+        expected_cost_share = [
+            0.0, 3.3333333333333, 3.3333333333333, 3.3333333333333, 10.0, 10.0, 10.0, 15.0, 15.0, 15.0, 15.0,  # receipt 1
+            0.0, 3.3333333333333, 3.3333333333333, 3.3333333333333, 10.0, 10.0, 10.0, 15.0, 15.0, 15.0, 15.0,  # receipt 2
+            3.3333333333333,  # receipt 2 backorder
+        ]
+        for actual, expected in zip(cost_share_values, expected_cost_share):
+            self.assertAlmostEqual(actual, expected)
+
         expected_values = [
-            {'product_id': component01.id, 'cost_share': 3.33, 'value': 33.3},
-            {'product_id': component02.id, 'cost_share': 3.33, 'value': 33.3},
-            {'product_id': component02.id, 'cost_share': 10.0, 'value': 100.0},
-            {'product_id': component02.id, 'cost_share': 15.0, 'value': 150.0},
-            {'product_id': component03.id, 'cost_share': 3.34, 'value': 33.4},
-            {'product_id': component03.id, 'cost_share': 15.0, 'value': 150.0},
-            {'product_id': component04.id, 'cost_share': 10.0, 'value': 100.0},
-            {'product_id': component04.id, 'cost_share': 15.0, 'value': 150.0},
-            {'product_id': component05.id, 'cost_share': 0.0, 'value': 0.0},
-            {'product_id': component05.id, 'cost_share': 10.0, 'value': 100.0},
-            {'product_id': component05.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component01.id, 'value': 33.33},
+            {'product_id': component02.id, 'value': 33.33},
+            {'product_id': component02.id, 'value': 100.0},
+            {'product_id': component02.id, 'value': 150.0},
+            {'product_id': component03.id, 'value': 33.33},
+            {'product_id': component03.id, 'value': 150.0},
+            {'product_id': component04.id, 'value': 100.0},
+            {'product_id': component04.id, 'value': 150.0},
+            {'product_id': component05.id, 'value': 0.0},
+            {'product_id': component05.id, 'value': 100.0},
+            {'product_id': component05.id, 'value': 150.0},
+            {'product_id': component01.id, 'value': 50.0},
+            {'product_id': component02.id, 'value': 100.0},
+            {'product_id': component02.id, 'value': 300.0},
+            {'product_id': component02.id, 'value': 450.0},
+            {'product_id': component03.id, 'value': 100.0},
+            {'product_id': component03.id, 'value': 450.0},
+            {'product_id': component04.id, 'value': 300.0},
+            {'product_id': component04.id, 'value': 450.0},
+            {'product_id': component05.id, 'value': 0.0},
+            {'product_id': component05.id, 'value': 300.0},
+            {'product_id': component05.id, 'value': 450.0},
+            {'product_id': component01.id, 'value': 50.0}
         ]
-        expected_values += [
-            {**item, 'value': item['value'] * (1.5 if item['product_id'] == component01.id else 3)} for item in expected_values
-        ]
-        expected_values.append({'product_id': component01.id, 'cost_share': 3.33, 'value': 49.95})
 
         self.assertRecordValues(receipts.move_ids.sorted(lambda m: (m.picking_id, m.product_id.id, m.cost_share)), expected_values)
 
