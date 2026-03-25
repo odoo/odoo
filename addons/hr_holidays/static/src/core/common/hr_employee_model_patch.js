@@ -3,9 +3,8 @@ import { HrEmployee } from "@hr/core/common/hr_employee_model";
 import { fields } from "@mail/model/misc";
 
 import { _t } from "@web/core/l10n/translation";
+import { toLocaleDateString } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
-
-const { DateTime } = luxon;
 
 /** @type {import("models").HrEmployee} */
 const hrEmployeePatch = {
@@ -18,11 +17,7 @@ const hrEmployeePatch = {
         if (!this.leave_date_to) {
             return "";
         }
-        const foptions = { ...DateTime.DATE_MED };
-        if (DateTime.now().hasSame(this.leave_date_to, "year")) {
-            foptions.year = undefined;
-        }
-        const fdate = this.leave_date_to.toLocaleString(foptions);
+        const fdate = toLocaleDateString(this.leave_date_to);
         return _t("Back on %(date)s", { date: fdate });
     },
 };
