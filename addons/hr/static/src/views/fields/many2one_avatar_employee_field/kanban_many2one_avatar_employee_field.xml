@@ -4,7 +4,7 @@
     <t t-name="hr.KanbanMany2OneAvatarEmployeeField">
         <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
-                <Avatar cssClass="'o_m2o_avatar'" resModel="this.relation" resId="this.value.id" noSpacing="true" displayName="this.displayName" uniqueId="this.uniqueId"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="this.relation" resId="this.value.id" noSpacing="false" displayName="this.displayName" uniqueId="this.uniqueId"/>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
