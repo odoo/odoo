@@ -101,7 +101,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         value_by_account: dict = defaultdict(float)
         if not accounts_by_product:
-            accounts_by_product = self._get_accounts_by_product()
+            accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product()
         for product, accounts in accounts_by_product.items():
             account = accounts['valuation']
             product_value = product.with_context(to_date=at_date).total_value
