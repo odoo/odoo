@@ -104,7 +104,8 @@ export class Orderline extends Component {
         }`;
         return {
             name: line.orderDisplayProductName.name,
-            attributeString: mode === "display" && attributeStr && `- ${attributeStr}`,
+            attributeString:
+                ["display", "split"].includes(mode) && attributeStr && `- ${attributeStr}`,
             internalNote: mode === "display" && line.note && JSON.parse(this.line.note || "[]"),
             isDisplay: mode === "display",
             discount: discount && discount !== "0" && !line.combo_parent_id && discount,
