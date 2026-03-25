@@ -121,7 +121,8 @@ export class Orderline extends Component {
         }`;
         return {
             name: mode === "receipt" ? line.full_product_name : line.orderDisplayProductName.name,
-            attributeString: mode === "display" && attributeStr && `- ${attributeStr}`,
+            attributeString:
+                ["display", "split"].includes(mode) && attributeStr && `- ${attributeStr}`,
             internalNote: mode === "display" && line.note && JSON.parse(this.line.note || "[]"),
             isReceipt: mode === "receipt",
             isDisplay: mode === "display",
