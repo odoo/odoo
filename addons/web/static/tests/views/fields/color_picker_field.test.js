@@ -46,13 +46,12 @@ defineModels([Partner, User]);
 
 test("No chosen color is a red line with a white background (color 0)", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
-
     expect(".o_field_color_picker button.o_colorlist_item_color_0").toHaveCount(1);
     await contains(".o_field_color_picker button").click();
-    expect(".o_field_color_picker button.o_colorlist_item_color_0").toHaveCount(1);
-    await contains(".o_field_color_picker .o_colorlist_item_color_3").click();
+    expect(".o_colorlist button.o_colorlist_item_color_0").toHaveCount(1);
+    await contains(".o_colorlist .o_colorlist_item_color_3").click();
     await contains(".o_field_color_picker button").click();
-    expect(".o_field_color_picker button.o_colorlist_item_color_0").toHaveCount(1);
+    expect(".o_colorlist button.o_colorlist_item_color_0").toHaveCount(1);
 });
 
 test("closes when color selected or outside click", async () => {
@@ -69,8 +68,8 @@ test("closes when color selected or outside click", async () => {
         </form>`,
     });
     await contains(".o_field_color_picker button").click();
-    expect(queryAll(".o_field_color_picker button").length).toBeGreaterThan(1);
-    await contains(".o_field_color_picker .o_colorlist_item_color_3").click();
+    expect(queryAll(".o_colorlist button").length).toBeGreaterThan(1);
+    await contains(".o_colorlist .o_colorlist_item_color_3").click();
     expect(".o_field_color_picker button").toHaveCount(1);
     await contains(".o_field_color_picker button").click();
     await contains(".o_field_widget[name='name'] input").click();
@@ -87,7 +86,8 @@ test("color picker on list view", async () => {
     });
 
     await contains(".o_field_color_picker button").click();
-    expect.verifySteps(["record selected to open"]);
+    expect.verifySteps([]);
+    expect(".o_colorlist button").toHaveCount(12);
 });
 
 test("color picker in editable list view", async () => {
@@ -103,18 +103,14 @@ test("color picker in editable list view", async () => {
                 <field name="display_name" />
             </list>`,
     });
-
     expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(1);
     await contains(".o_data_row:nth-child(1) .o_field_color_picker button").click();
-    expect(".o_data_row:nth-child(1).o_selected_row").toHaveCount(1);
-    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(12);
+    expect(".o_data_row:nth-child(1).o_selected_row").toHaveCount(0);
+    expect(".o_colorlist button").toHaveCount(12);
     await contains(
-        ".o_data_row:nth-child(1) .o_field_color_picker .o_colorlist_item_color_6"
+        ".o_colorlist .o_colorlist_item_color_6"
     ).click();
-    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(12);
-    await contains(".o_data_row:nth-child(2) .o_data_cell").click();
-    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(1);
-    expect(".o_data_row:nth-child(2) .o_field_color_picker button").toHaveCount(12);
+    expect(".o_colorlist").toHaveCount(0);
 });
 
 test("column widths: dont overflow color picker in list", async () => {
@@ -145,4 +141,24 @@ test("column widths: dont overflow color picker in list", async () => {
     expect(parseFloat(date_column_width)).toBeLessThan(parseFloat(int_field_column_width), {
         message: "colorpicker should display properly (Horizontly)",
     });
+});
+
+test.tags("mobile");
+test("ColorPicker opens a BottomSheet on mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+        <form>
+            <group>
+                <field name="int_field" widget="color_picker"/>
+                <field name="name"/>
+            </group>
+        </form>`,
+    });
+    await contains(".o_field_color_picker button").click();
+    expect(".o_bottom_sheet").toHaveCount(1);
+    await contains(".o_colorlist .o_colorlist_item_color_3").click();
+    expect(".o_bottom_sheet").toHaveCount(0);
 });

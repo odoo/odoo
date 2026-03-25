@@ -25,58 +25,41 @@ class Parent extends Component {
     }
 }
 
-test("basic rendering with forceExpanded props", async () => {
+test("basic rendering", async () => {
     await mountWithCleanup(Parent, {
         props: {
-            colors: [0, 9],
-            forceExpanded: true,
+            onColorSelected:(color) => expect.step(`color ${color} selected`),
         },
     });
 
-    expect(".o_colorlist").toHaveCount(1);
-    expect(".o_colorlist button").toHaveCount(2);
-    expect(".o_colorlist button:eq(1)").toHaveAttribute("title", "Raspberry");
-    expect(".o_colorlist button:eq(1)").toHaveClass("o_colorlist_item_color_9");
+    expect(".o_colorlist button").toHaveCount(12);
+    expect(".o_colorlist button:eq(0)").toHaveAttribute("title", "No color");
+    expect(".o_colorlist button:eq(0)").toHaveClass("o_colorlist_item_color_0");
+    await contains(".o_colorlist button:eq(9)").click();
+    expect.verifySteps(["color 9 selected"]);
 });
 
-test("color click does not open the list if canToggle props is not given", async () => {
-    const selectedColorId = 0;
+test("use 'disableTransparent' props to hide the transparent option", async () => {
     await mountWithCleanup(Parent, {
         props: {
-            colors: [4, 5, 6],
-            selectedColor: selectedColorId,
-            onColorSelected: (colorId) => expect.step("color #" + colorId + " is selected"),
+            disableTransparent: true,
+            onColorSelected:(color) => expect.step(`color ${color} selected`),
         },
     });
-    expect(".o_colorlist").toHaveCount(1);
-    expect("button.o_colorlist_toggler").toHaveCount(1);
 
-    await contains(".o_colorlist").click();
-    expect("button.o_colorlist_toggler").toHaveCount(1);
+    expect(".o_colorlist button").toHaveCount(11);
+    expect(".o_colorlist button:eq(0)").toHaveAttribute("title", "Red");
+    expect(".o_colorlist button:eq(0)").toHaveClass("o_colorlist_item_color_1");
+    await contains(".o_colorlist button:eq(9)").click();
+    expect.verifySteps(["color 10 selected"]);
 });
 
-test("open the list of colors if canToggle props is given", async function () {
-    const selectedColorId = 0;
+test("use 'selectedColor' props to highlight the selected color", async () => {
     await mountWithCleanup(Parent, {
         props: {
-            canToggle: true,
-            colors: [4, 5, 6],
-            selectedColor: selectedColorId,
-            onColorSelected: (colorId) => expect.step("color #" + colorId + " is selected"),
+            selectedColor: 3,
         },
     });
-    expect(".o_colorlist").toHaveCount(1);
-    expect(".o_colorlist button").toHaveClass("o_colorlist_item_color_" + selectedColorId);
 
-    await contains(".o_colorlist button").click();
-    expect("button.o_colorlist_toggler").toHaveCount(0);
-    expect(".o_colorlist button").toHaveCount(3);
-
-    await contains(".outsideDiv").click();
-    expect(".o_colorlist button").toHaveCount(1);
-    expect("button.o_colorlist_toggler").toHaveCount(1);
-
-    await contains(".o_colorlist_toggler").click();
-    await contains(".o_colorlist button:eq(2)").click();
-    expect.verifySteps(["color #6 is selected"]);
+    expect(".o_colorlist button.o_colorlist_item_color_3.active").toHaveCount(1);
 });

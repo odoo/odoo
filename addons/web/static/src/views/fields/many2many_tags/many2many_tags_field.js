@@ -1,5 +1,6 @@
 import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { Domain } from "@web/core/domain";
@@ -29,7 +30,6 @@ class Many2ManyTagsFieldColorListPopover extends Component {
         ColorList,
     };
     static props = {
-        colors: Array,
         tag: Object,
         switchTagColor: Function,
         onTagVisibilityChange: Function,
@@ -74,13 +74,13 @@ export class Many2ManyTagsField extends Component {
         context: {},
     };
 
-    static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
     setup() {
         this.state = useState({ expanded: false });
         this.orm = useService("orm");
         this.previousColorsMap = {};
-        this.popover = usePopover(this.constructor.components.Popover);
+        this.popover = usePopover(this.constructor.components.Popover, {
+            useBottomSheet: this.isBottomSheet,
+        });
         this.dialog = useService("dialog");
         this.dialogClose = [];
         useTagNavigation("many2ManyTagsField", {
@@ -144,6 +144,10 @@ export class Many2ManyTagsField extends Component {
         }
     }
 
+    get isBottomSheet() {
+        return this.env.isSmall && hasTouch();
+    }
+
     get relation() {
         return this.props.record.fields[this.props.name].relation;
     }
@@ -190,7 +194,6 @@ export class Many2ManyTagsField extends Component {
             this.popover.close();
         } else {
             this.popover.open(ev.currentTarget, {
-                colors: this.constructor.RECORD_COLORS,
                 tag: {
                     id: record.id,
                     colorIndex: record.data[this.props.colorField],

@@ -39,7 +39,7 @@
 
     <t t-name="web.Many2ManyTagsFieldColorListPopover">
         <div class="o_tag_popover m-2">
-            <ColorList colors="this.props.colors" forceExpanded="true" selectedColor="this.props.tag.colorIndex" onColorSelected="(id) => this.props.switchTagColor(id, this.props.tag)"/>
+            <ColorList disableTransparent="true" selectedColor="this.props.tag.colorIndex" onColorSelected="(id) => this.props.switchTagColor(id, this.props.tag)"/>
             <CheckBox className="'pt-2'" value="this.props.tag.colorIndex === 0" onChange.alike="(isChecked) => this.props.onTagVisibilityChange(isChecked, this.props.tag)">Hide in Kanban</CheckBox>
         </div>
     </t>

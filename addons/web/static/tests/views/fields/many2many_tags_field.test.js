@@ -200,7 +200,7 @@ test("Many2ManyTagsField with and without color on mobile", async () => {
     expect(".o_colorlist").toHaveCount(0);
     await contains("[name=partner_ids] .o_tag").click();
     expect(".o_colorlist").toHaveCount(1);
-    await contains(getFixture()).click();
+    await click(".o_bottom_sheet_backdrop");
 
     // Add a tag to second field
     expect("[name=timmy] .o_tag").toHaveCount(0);
@@ -817,6 +817,7 @@ test("Many2ManyTagsField: tags data-tooltip attribute", async () => {
     expect(".o_field_many2many_tags .o_tag.badge").toHaveAttribute("data-tooltip", "second record");
 });
 
+test.tags("desktop");
 test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
     Partner._records[0].timmy = [12, 14];
     PartnerType._records[0].color = 0;
@@ -848,6 +849,32 @@ test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
 
     await contains(getFixture()).click();
     expect(".o_colorpicker").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("Many2ManyTagsField: toggle colorpicker with multiple tags on mobile", async () => {
+    Partner._records[0].timmy = [12, 14];
+    PartnerType._records[0].color = 0;
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                </form>`,
+        resId: 1,
+    });
+
+    expect(".o_colorlist").toHaveCount(0);
+    // click on the badge to open colorpicker
+    await contains(".o_field_many2many_tags .badge").click();
+    expect(".o_colorlist").toHaveCount(1);
+    await contains(".o_bottom_sheet_backdrop").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
+    expect(".o_colorlist").toHaveCount(1);
+    await contains(".o_bottom_sheet_backdrop").click();
+    expect(".o_colorlist").toHaveCount(0);
 });
 
 test("Many2ManyTagsField: toggle colorpicker multiple times", async () => {

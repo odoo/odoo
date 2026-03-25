@@ -9034,9 +9034,9 @@ test(`form group with newline tag inside`, async () => {
     expect(`.main_inner_group .o_cell`).toHaveCount(6);
     expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_label`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_input`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_label`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_input`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
 
