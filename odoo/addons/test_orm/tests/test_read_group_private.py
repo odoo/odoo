@@ -1260,7 +1260,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         self.assertTrue(field_info['bar_base_ids']['groupable'])
 
         # With access domain on the comodel of the many2many
-        access = self.env.ref('test_read_group.access_test_read_group_related_base_group_user')
+        access = self.env.ref('test_orm.access_test_read_group_related_base')
         access.domain = "[('id', '=', 161)]"
 
         # warmup
