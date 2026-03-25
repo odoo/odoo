@@ -19,7 +19,7 @@
                 <i t-if="this.props.icon" class="text-muted fa-fw" t-att-class="this.props.icon"/>
                 <p t-if="this.props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-out="this.props.title"/>
                 <t t-slot="header-extra"/>
-                <button t-if="this.props.close and !this.env.inChatWindow" class="btn p-1 opacity-75 opacity-100-hover ms-auto" title="Close panel" t-on-click.stop="this.props.close">
+                <button t-if="this.props.close and this.env.inMeetingView" class="btn p-1 opacity-75 opacity-100-hover ms-auto" title="Close panel" t-on-click.stop="this.props.close">
                     <i class="oi oi-close fa-fw"/>
                 </button>
             </div>
