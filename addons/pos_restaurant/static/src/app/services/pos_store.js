@@ -160,6 +160,8 @@ patch(PosStore.prototype, {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
 
+        const sourceLastPrint = sourceOrder.lastPrints.at(-1);
+
         // Sum the guest counts from both orders
         const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
         destOrder.setCustomerCount(totalGuests);
@@ -234,7 +236,32 @@ patch(PosStore.prototype, {
                 });
             }
         }
-
+        const destLastPrint = destOrder.lastPrints.at(-1);
+        const combinedPrint = {
+            new: [...(destLastPrint?.new || []), ...(sourceLastPrint?.new || [])],
+            cancelled: [...(destLastPrint?.cancelled || []), ...(sourceLastPrint?.cancelled || [])],
+            noteUpdate: [
+                ...(destLastPrint?.noteUpdate || []),
+                ...(sourceLastPrint?.noteUpdate || []),
+            ],
+        };
+        if (destLastPrint?.internal_note || sourceLastPrint?.internal_note) {
+            combinedPrint.internal_note =
+                destLastPrint?.internal_note || sourceLastPrint?.internal_note;
+        }
+        if (destLastPrint?.general_customer_note || sourceLastPrint?.general_customer_note) {
+            combinedPrint.general_customer_note =
+                destLastPrint?.general_customer_note || sourceLastPrint?.general_customer_note;
+        }
+        if (
+            combinedPrint.new.length ||
+            combinedPrint.cancelled.length ||
+            combinedPrint.noteUpdate.length ||
+            combinedPrint.internal_note ||
+            combinedPrint.general_customer_note
+        ) {
+            destOrder.pushLastPrints(combinedPrint);
+        }
         if (typeof destOrder.id === "number") {
             await this.syncAllOrders({ orders: [destOrder] });
         }
