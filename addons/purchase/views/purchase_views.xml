@@ -54,7 +54,7 @@
             Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_purchasable_inherit')}),
             Command.create({'view_mode': 'form'}),
             Command.create({'view_mode': 'activity'})]"/>
-        <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
+        <field name="context">{"search_default_filter_to_purchase": 1, "purchase_product_template": 1, "show_lst_price": False, "show_standard_price": True}</field>
         <field name="search_view_id" ref="product.product_template_search_view"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

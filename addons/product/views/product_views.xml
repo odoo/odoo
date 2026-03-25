@@ -620,23 +620,45 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <kanban sample="1" default_order="is_favorite desc, default_code, name, id">
+                    <field name="currency_id"/>
+                    <field name="cost_currency_id"/>
                     <field name="activity_state"/>
                     <field name="color"/>
+                    <field name="is_storable" invisible="1"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="card" class="row g-0">
                             <main class="col-10 pe-2">
                                 <div class="d-flex mb-1 h5">
-                                    <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                    <field name="name"/>
+                                    <div class="d-flex gap-1 mb-0 h5">
+                                        <field name="name"/>
+                                        <div class="o_kanban_hover">
+                                            <field name="is_favorite" widget="boolean_favorite" nolabel="1" class="me-1" invisible="not is_favorite"/>
+                                            <field name="is_favorite" widget="boolean_favorite" nolabel="1" class="me-1 opacity-100-hover opacity-0" invisible="is_favorite"/>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span t-if="record.default_code.value">
-                                    [<field name="default_code"/>]
-                                </span>
+                                <div class="d-flex gap-2 align-items-start">
+                                    <div class="d-flex flex-column">
+                                        <strong invisible="not context.get('show_lst_price', True)">
+                                            <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        </strong>
+                                        <strong invisible="not context.get('show_standard_price', False)">
+                                            <field name="standard_price" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
+                                        </strong>
+                                    </div>
+                                    <span t-if="record.default_code.value" class="text-muted">
+                                        <field name="default_code"/>
+                                    </span>
+                                </div>
+                                <div name="on_hand_qty_kanban" t-if="record.is_storable.raw_value" class="d-flex gap-1 align-items-baseline">
+                                    <strong>
+                                        <field name="qty_available" digits="[16, 0]"/> 
+                                    </strong>
+                                    <field name="uom_id" groups="uom.group_uom"/> 
+                                    <span class="text-muted">On Hand</span>
+                                </div>
                                 <field name="product_template_variant_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <span>
-                                    Price: <field name="lst_price"></field>
-                                </span>
                             </main>
                             <aside class="col-2">
                                 <field name="image_128" widget="image" options="{'img_class': 'o_image_64_contain mw-100'}" alt="Product"/>
