@@ -3,6 +3,7 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
+import { negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
@@ -257,5 +258,32 @@ registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", 
             ProductScreen.clickDisplayedProduct("Product A"),
             PosLoyalty.enterCode("563412"),
             PosLoyalty.hasRewardLine("10% on your order", "-1.50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_reward_line_free_product", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            PosLoyalty.hasRewardLine("Free Product - Product A", "-10.00", "1.00"),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            PosLoyalty.hasRewardLine("Free Product - Product B").map(negateStep),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            PosLoyalty.hasRewardLine("Free Product - Product B", "-5.00", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product - Product A", "-10.00", "1.00"),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            PosLoyalty.hasRewardLine("Free Product - Product B", "-5.00", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product - Product A", "-10.00", "1.00"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            PosLoyalty.hasRewardLine("Free Product - Product B", "-5.00", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product - Product A", "-20.00", "2.00"),
         ].flat(),
 });
