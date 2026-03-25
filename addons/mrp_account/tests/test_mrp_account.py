@@ -6,9 +6,11 @@ from datetime import timedelta
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
+
+from odoo import fields, Command
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
-from odoo import fields, Command
 
 
 class TestMrpAccount(TestMrpCommon, MailCase):
@@ -380,6 +382,30 @@ class TestMrpAccount(TestMrpCommon, MailCase):
         self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
             0.01, 0.01
         ])
+
+    def test_lot_valuation_remove_lot_from_MO(self):
+        self.product_table_leg.write({'lot_valuated': True})
+        leg_lot = self.env['stock.lot'].create({
+            'name': 'leg lot',
+            'product_id': self.product_table_leg.id,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_table_leg.id,
+            'product_qty': 1,
+            'move_raw_ids': [
+                Command.create({
+                    'product_id': self.product_bolt.id,
+                    'product_uom_qty': 1,
+                })
+            ],
+            'lot_producing_id': leg_lot.id,
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        with self.assertRaises(UserError, msg='Product Table Leg is valuated by lot: an explicit Lot/Serial number is required.'):
+            mo.lot_producing_id = False
+        self.assertEqual(mo.lot_producing_id, leg_lot)
+        self.assertEqual(mo.move_finished_ids.lot_ids, leg_lot)
 
     def test_parent_after_child_done(self):
         """
