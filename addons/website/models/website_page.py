@@ -61,7 +61,7 @@ class WebsitePage(models.Model):
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
-    arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
+    arch = fields.Text(related='view_id.arch', readonly=False)
 
     @api.depends('view_id.name')
     def _compute_name(self):
@@ -385,7 +385,7 @@ class WebsitePage(models.Model):
         the cache serves the correct version of a page based on specific
         parameters like user language or currency.
         """
-        return (self.env.context.get('website_id'), request.lang.code, request.httprequest.path, request.session.debug)
+        return (self.env.context.get('website_id'), self.env.context.get('lang'), request.httprequest.path, request.session.debug)
 
     def _get_response(self, request):
         """ Returns the response corresponding to the request.
