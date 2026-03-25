@@ -1007,6 +1007,7 @@ class HrLeave(models.Model):
                             days += len(weekend_dates)
                             hours += len(weekend_dates) * calendar.hours_per_day
 
+<<<<<<< ba43450682ef387ca9cee932d1643c6c4c883b32
             # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
             # sudo as is_flexible is on version model and employee does not have access to it.
             elif calendar._is_flexible() and leave.request_date_to == leave.request_date_from:
@@ -1020,6 +1021,70 @@ class HrLeave(models.Model):
                 hours = leave._subtract_public_holidays(filtered_public_holidays)
                 if leave.work_entry_type_request_unit != 'hour' and not public_holidays:
                     days = 1 if leave.work_entry_type_request_unit != 'half_day' or leave.request_date_from_period != leave.request_date_to_period else 0.5
+||||||| 6f59f6a7df58bc2cb216f436e37401ed9facb8d7
+                result[leave.id] = (days, hours)
+                continue
+            hours, days = (0, 0)
+            if leave.employee_id:
+                # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
+                # sudo as is_flexible is on version model and employee does not have access to it.
+                if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
+                    # Only subtract public holidays if the leave type does NOT include public holidays in duration.
+                    # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
+                    # the leave should count the full day even if it falls on a public holiday.
+                    filtered_public_holidays = public_holidays.filtered(lambda h:
+                        (h.calendar_id == calendar or not h.calendar_id) and
+                        h.company_id == leave.company_id
+                    ) if not leave.work_entry_type_id.include_public_holidays_in_duration else self.env['resource.calendar.leaves']
+                    hours = leave._subtract_public_holidays(filtered_public_holidays)
+                    if leave.work_entry_type_request_unit != 'hour' and not public_holidays:
+                        days = 1 if leave.work_entry_type_request_unit != 'half_day' or leave.request_date_from_period != leave.request_date_to_period else 0.5
+                    else:
+                        days = hours / 24
+                elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
+                    # list of tuples (day, hours)
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    days = len(work_time_per_day_list)
+                    hours = sum(map(lambda t: t[1], work_time_per_day_list))
+=======
+                result[leave.id] = (days, hours)
+                continue
+            hours, days = (0, 0)
+            if leave.employee_id:
+                # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
+                # sudo as is_flexible is on version model and employee does not have access to it.
+                if leave.employee_id.sudo().is_fully_flexible or (leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from):
+                    # Only subtract public holidays if the leave type does NOT include public holidays in duration.
+                    # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
+                    # the leave should count the full day even if it falls on a public holiday.
+                    filtered_public_holidays = public_holidays.filtered(lambda h:
+                        (h.calendar_id == calendar or not h.calendar_id) and
+                        h.company_id == leave.company_id
+                    ) if not leave.work_entry_type_id.include_public_holidays_in_duration else self.env['resource.calendar.leaves']
+                    hours = leave._subtract_public_holidays(filtered_public_holidays)
+                    if leave.work_entry_type_request_unit != 'hour':
+                        total_days = (leave.request_date_to - leave.request_date_from).days + 1
+                        if filtered_public_holidays:
+                            ph_days = set()
+                            for ph in filtered_public_holidays:
+                                ph_start = max(ph.date_from, leave.date_from).date()
+                                ph_end = min(ph.date_to, leave.date_to).date()
+                                ph_days.update(ph_start + timedelta(days=i) for i in range((ph_end - ph_start).days + 1))
+                            total_days -= len(ph_days)
+                        if leave.work_entry_type_request_unit == 'half_day':
+                            if leave.request_date_from_period == 'pm':
+                                total_days -= 0.5
+                            if leave.request_date_to_period == 'am':
+                                total_days -= 0.5
+                        days = max(0, total_days)
+                    else:
+                        days = hours / 24
+                elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
+                    # list of tuples (day, hours)
+                    work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                    days = len(work_time_per_day_list)
+                    hours = sum(map(lambda t: t[1], work_time_per_day_list))
+>>>>>>> a2a7a0ba8c229d56972b63214100108162ae7134
                 else:
                     days = hours / 24
             elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
