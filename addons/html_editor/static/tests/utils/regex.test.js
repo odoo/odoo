@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { URL_REGEX } from "@html_editor/utils/regex";
+import { PHONE_REGEX } from "../../src/main/link/utils";
 
 function testUrlRegex(content, { expectedUrl, insideText } = {}) {
     const message = expectedUrl
@@ -26,6 +27,16 @@ function testNotUrlRegex(content, { insideText } = {}) {
         }
         expect(content).not.toMatch(URL_REGEX);
     });
+}
+
+function testPhoneRegex(value, isPhoneRegex = true) {
+    test(`Should ${isPhoneRegex ? "" : "NOT "}be a phone link: ${value}`, () => {
+        if(isPhoneRegex) {
+            expect(value).toMatch(PHONE_REGEX);
+        } else {
+            expect(value).not.toMatch(PHONE_REGEX);
+        }
+    })
 }
 
 testUrlRegex("google.com");
@@ -154,3 +165,20 @@ testUrlRegex("http://abc.abc.abc", { insideText: true });
 testUrlRegex("https://abc.abc.abc", { insideText: true });
 testUrlRegex("1234-abc.runbot007.odoo.com/web#id=3&menu_id=221", { insideText: true });
 testUrlRegex("https://1234-abc.runbot007.odoo.com/web#id=3&menu_id=221", { insideText: true });
+
+//Phone links
+testPhoneRegex("+32 470 12 34 56")
+testPhoneRegex("+ 32 470 12 34 56")
+testPhoneRegex("+14155552671")
+testPhoneRegex("0470 12 34 56")
+testPhoneRegex("(415) 555-2671")
+testPhoneRegex("0470-12-34-56")
+testPhoneRegex("415.555.2671")
+testPhoneRegex("4155552671")
+testPhoneRegex("tel:+32 (0)2 123 45 67")
+testPhoneRegex("tel://+1-415-555-2671")
+testPhoneRegex("/3-14", false)
+testPhoneRegex("/1234567", false)
+testPhoneRegex("...", false)
+testPhoneRegex("( )", false)
+testPhoneRegex("-67", false)
