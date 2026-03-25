@@ -60,6 +60,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
         # Without location choices, since we need preset to do so.
         self.start_tour(self_route, "self_kiosk_each_table_takeaway_in")
+        self.assertEqual("Table tracker 3", self.pos_config.session_ids.order_ids[0].floating_order_name)
         self.pos_config.write({
             'self_ordering_service_mode': 'counter',
         })
