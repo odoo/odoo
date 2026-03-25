@@ -214,7 +214,8 @@
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
             <div class="container-fluid px-3 px-xl-5">
-                <div class="o_configurator_typing_text mt-4 mb-lg-4">Choose your favorite <b>style</b>
+                <div class="o_configurator_typing_text pt-3 mb-4">
+                    Choose your favorite <b>style</b>
                 </div>
                 <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-2 g-2 g-sm-3 g-lg-4">
                     <t t-foreach="this.state.themes" t-as="theme" t-key="theme.name">
@@ -241,35 +242,75 @@
             <div class="container-fluid p-0 h-100">
                 <div class="row g-0 h-100">
                     <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden">
-                        <div class="flex-grow-1 overflow-auto pb-4">
-                            <div class="o_configurator_typing_text ps-3 pt-3 mb-4">
-                                Set up your <b>style</b>
+                        <div class="flex-grow-1 overflow-auto pb-4 px-3">
+                            <div class="o_configurator_typing_text pt-3 mb-4">
+                                <b>Style</b>
                             </div>
-                            <div>
-                                <h3>Colors</h3>
-                                <button t-on-click="() => this.setPalette('Inter')">palette 1</button>
-                                <button t-on-click="() => this.setPalette('Poppins')">palette 2</button>
+                            <div class="mb-5">
+                                <h3><b>Colors</b></h3>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <button class="w-100 text-start p-1" t-on-click="() => this.setPalette('Inter')">palette 1</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="w-100 text-start p-1" t-on-click="() => this.setPalette('Poppins')">palette 2</button>
+                                    </div>
+                                    <a href="#" class="text-center"><b>Show More</b></a>
+                                </div>
                             </div>
-                            <div>
-                                <h3>Font</h3>
-                                <t t-foreach="this.state.fontNames || []" t-as="font" t-key="font">
-                                    <button
-                                        type="button"
-                                        t-att-class="'btn btn-outline-secondary' + (this.state.selectedFont === font ? ' active' : '')"
-                                        t-on-click="() => this.setFont(font)"
-                                    >
-                                        <h3 t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['headings'])">Heading</h3>
-                                        <p t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['family'])">This is a paragraph</p>
+                            <div class="mb-5">
+                                <h3><b>Font</b></h3>
+                                <div class="row g-3">
+                                    <t t-foreach="this.state.fontNames || []" t-as="font" t-key="font">
+                                        <div class="col-6">
+                                            <button
+                                                type="button"
+                                                class="w-100 h-100 text-start p-3"
+                                                t-att-class="'btn btn-outline-secondary' + (this.state.selectedFont === font ? ' active' : '')"
+                                                t-on-click="() => this.setFont(font)"
+                                            >
+                                                <h4 class="mb-1" t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['headings'])">
+                                                    Heading
+                                                </h4>
+                                                <p class="m-0 text-muted small" t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['family'])">
+                                                    This is a paragraph
+                                                </p>
+                                            </button>
+                                        </div>
+                                    </t>
+                                    <a href="#" class="text-center"><b>Show More</b></a>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h3 class="mb-1 d-flex align-items-center g-1">
+                                    <b>Customize your content</b>
+                                    <img src="/ai/static/description/icon.png" alt="AI" class="o_setup_style_screen_ai_logo ms-1"/>
+                                </h3>
+                                <p class="text-muted small">Describe your website, our AI handles the rest</p>
+                                <div class="position-relative">
+                                    <textarea class="form-control" id="describeYourWebsiteTextarea" rows="5"></textarea>
+                                    <button class="btn btn-info d-flex align-items-center justify-content-center ms-auto mt-1 fa fa-send o_setup_style_screen_ai_btn">
                                     </button>
-                                </t>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="mb-2">Tone of voice</h4>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-outline-secondary">Professional</button>
+                                    <button type="button" class="btn btn-outline-secondary">Friendly</button>
+                                    <button type="button" class="btn btn-outline-secondary active">Inspirational</button>
+                                    <button type="button" class="btn btn-outline-secondary">Educational</button>
+                                    <button type="button" class="btn btn-outline-secondary">Playful</button>
+                                    <button type="button" class="btn btn-outline-secondary">Luxury</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="d-flex gap-3 p-3 bg-white flex-shrink-0 o_setup_style_screen_buttons">
-                            <button type="button" class="btn btn-light btn-lg flex-fill" t-on-click="this.changeTheme">
+                        <div class="d-flex p-3 bg-white o_setup_style_screen_buttons">
+                            <button type="button" class="btn btn-secondary btn-lg" t-on-click="this.changeTheme">
                                 <i class="oi oi-chevron-left" role="img"/>
                                 Change Theme
                             </button>
-                            <button type="button" class="btn btn-primary btn-lg flex-fill" t-on-click="this.startBuilding">
+                            <button type="button" class="btn btn-primary btn-lg ms-auto" t-on-click="this.startBuilding">
                                 Start Building
                             </button>
                         </div>

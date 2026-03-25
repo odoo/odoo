@@ -116,7 +116,7 @@ const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
  */
 async function getRecommendedThemes(orm, state, resultNbrMax = MAX_NBR_DISPLAY_MAIN_THEMES) {
     return orm.call("website", "configurator_recommended_themes", [], {
-        industry_id: state.selectedIndustry.id,
+        industry_id: state.selectedIndustry?.id || 0,
         result_nbr_max: resultNbrMax,
     });
 }
