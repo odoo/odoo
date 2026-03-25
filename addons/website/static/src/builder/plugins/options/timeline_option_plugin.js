@@ -21,6 +21,7 @@ export class TimelineOptionPlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         is_movable_selectors: { selector: ".s_timeline_row", direction: "vertical" },
+        auto_unfold_container_providers: { selector: ".s_timeline_row", target: ".s_timeline" },
     };
 
     setup() {

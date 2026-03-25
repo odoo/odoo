@@ -222,7 +222,6 @@ registerWebsitePreviewTour(
                 ":has(a:eq(8)[href='https://whatever.it/1EdSw9X']:has(i.fa-heart))" +
                 ":has(a:eq(9)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
         },
-        ...unfoldOptionsGroup("Social Media"),
         // Create a social network but replace its icon by an image before setting
         // the link (`replaceIcon` parameter set to `true`).
         ...addNewSocialNetwork(10, 10, "https://google.com", true),

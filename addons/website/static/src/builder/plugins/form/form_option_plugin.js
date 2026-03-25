@@ -104,6 +104,10 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
         ],
+        auto_unfold_container_providers: [
+            { selector: ".s_website_form_submit", target: ".s_website_form" },
+            { selector: ".s_website_form_send", target: ".s_website_form_submit" },
+        ],
         clone_disabled_reason_providers: (el) => {
             if (
                 el.classList.contains("s_website_form_field") &&

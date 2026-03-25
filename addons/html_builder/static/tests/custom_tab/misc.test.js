@@ -243,6 +243,41 @@ test("last container with options is unfolded regardless of containers without o
     expect(".options-container-header i.fa-caret-down").toHaveCount(1);
 });
 
+test("unfold parent of last container if there is a match in `auto_unfold_container_providers`", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderRow label="'Row 1'">A</BuilderRow>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-child";
+            static template = xml`<BuilderRow label="'Row 2'">B</BuilderRow>`;
+        }
+    );
+    addBuilderPlugin(
+        class extends Plugin {
+            static id = "testAutoUnfoldParent";
+            resources = {
+                auto_unfold_container_providers: {
+                    selector: ".test-options-child",
+                    target: ".test-options-target",
+                },
+            };
+        }
+    );
+    await setupHTMLBuilder(
+        `<section class="test-options-target" data-name="Target">
+            <div class="test-options-child" data-name="Child">
+                Text
+            </div>
+        </section>`
+    );
+    await contains(":iframe .test-options-child").click();
+    expect(".options-container-header i.fa-caret-down").toHaveCount(2);
+});
+
 test("options restricted to groups excluding current user do not make an empty folded group appear", async () => {
     onRpc("res.users", "has_group", ({ args: [_, group] }) => {
         if (group === "another_group") {
