@@ -6119,15 +6119,18 @@ class AccountMove(models.Model):
                     }))
                 move.write({'line_ids': line_ids_commands})
 
-    def get_currency_rate(self, company_id, to_currency_id, date):
+    def get_currency_rate(self, company_id, to_currency_id, requested_date):
         company = self.env['res.company'].browse(company_id)
         to_currency = self.env['res.currency'].browse(to_currency_id)
+        # _get_conversion_rate return the first rate before the given date,
+        # usually the rate for the previous day. Therefore, we need to give the next day.
+        next_day = (date.fromisoformat(requested_date) + timedelta(days=1)).isoformat()
 
         return self.env['res.currency']._get_conversion_rate(
             from_currency=company.currency_id,
             to_currency=to_currency,
             company=company,
-            date=date,
+            date=next_day,
         )
 
     def refresh_invoice_currency_rate(self):
