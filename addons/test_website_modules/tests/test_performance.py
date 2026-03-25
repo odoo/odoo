@@ -97,9 +97,9 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'list_price': 100,
             'sale_ok': True,
             'website_published': True,
-            'website_sequence': 1,
             'public_categ_ids': [Command.link(cats[2].id)],
         })
+        cls.productA.product_tmpl_id.website_sequence = 1
 
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
@@ -107,8 +107,8 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'sale_ok': True,
             'website_published': True,
             'image_1920': red_image,
-            'website_sequence': -10,
         })
+        cls.productB.product_tmpl_id.website_sequence = -10
 
         cls.templateC = cls.env['product.template'].create({
             'name': 'Test Remove Image',
@@ -321,8 +321,8 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'product_ribbon': 1,
             'product_attribute_value': 3,
             'product_attribute': 1,
-            'ir_attachment': 2,
-            'product_image': 2,
+            'ir_attachment': 5,
+            'product_image': 3,
             'ir_ui_view': 2,
             'website_menu': 1,
             'website_page': 1,
@@ -337,12 +337,14 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['account_tax_repartition_line'] = 2
 
         if self._has_demo_data():
-            queries['product_product'] += 2
+            queries['product_product'] += 1
             queries['product_ribbon'] += 1
             queries['res_company'] += 1
+        else:
+            queries['product_template_attribute_value'] = 1
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
-            queries['uom_uom'] = 1
+            queries['uom_uom'] = 2
 
         # To add queries count you must ask the permission to al
         return queries
@@ -362,7 +364,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['account_tax'] += 1
             queries['account_account_tag'] = 1
             queries['product_ribbon'] += -1
-            queries['product_template_attribute_value'] = 2
+            queries['product_template_attribute_value'] = 3
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
 
@@ -389,7 +391,7 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
             queries['uom_uom'] += 1
 
         if self._has_demo_data():
-            queries['ir_attachment'] += -1
-            queries['product_template_attribute_value'] = 2
+            queries['product_ribbon'] += -1
+            queries['product_template_attribute_value'] = 3
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)

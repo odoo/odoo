@@ -168,7 +168,7 @@ export function assertCartContains({
 export function assertProductPrice(attribute, value, productName) {
     return {
         content: `The ${attribute} of the ${productName} is ${value}`,
-        trigger: `div:contains("${productName}") [data-oe-expression="template_price_vals['${attribute}']"] .oe_currency_value:contains("${value}")`,
+        trigger: `div:contains("${productName}") [data-oe-expression="shop_price_vals['${attribute}']"] .oe_currency_value:contains("${value}")`,
     };
 }
 

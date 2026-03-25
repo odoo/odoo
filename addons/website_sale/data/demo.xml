@@ -83,7 +83,6 @@
 
         <record id="product.product_product_4" model="product.product">
             <field name="is_published" eval="True"/>
-            <field name="website_sequence">9950</field>
             <field name="website_description" type="html">
                 <section class="s_text_image pt80 pb80 o_colored_level o_cc o_cc1" data-snippet="s_text_image" data-name="Text - Image">
                     <div class="container">
@@ -446,6 +445,7 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
         </record>
         <record id="product.product_product_4_product_template" model="product.template">
+            <field name="website_sequence">9950</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
         </record>
         <record id="product.product_product_5_product_template" model="product.template">
