@@ -819,6 +819,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     async chooseTheme(themeName) {
         this.state.previewIsLoading = true;
         this.state.selectedTheme = themeName;
+        this.state.recommendedPalettes = undefined;
         this.props.navigate(ROUTES.setupStyleScreen);
     }
 
@@ -850,6 +851,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     static template = "website.Configurator.SetupStyleScreen";
     setup() {
         super.setup();
+        this.orm = useService("orm");
         this.state = useStore();
         this.previewDevice = useState({ value: "desktop" });
         this.previewIframeRef = useRef("previewIframe");
@@ -865,12 +867,44 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.props.navigate(ROUTES.themeSelectionScreen);
     }
 
-    async getPalettes() {
-        return "";
+    getPalettes() {
+        const iframeDoc = this.previewIframeRef.el?.contentDocument;
+        const iframeRoot = iframeDoc?.documentElement;
+        if (!iframeRoot) {
+            return;
+        }
+        const style = getComputedStyle(iframeRoot);
+        const mainPalette = this.cleanValue(style.getPropertyValue("--color-palettes-name"));
+        const options = style
+            .getPropertyValue("--options-color-palettes-name")
+            .replace(/[()]/g, "")
+            .split(",")
+            .map((value) => this.cleanValue(value))
+            .filter(Boolean);
+        this.state.recommendedPalettes = options.length ? options : [mainPalette].filter(Boolean);
+        if (
+            !this.state.selectedPalette ||
+            !this.state.recommendedPalettes.includes(this.state.selectedPalette)
+        ) {
+            this.state.selectedPalette =
+                mainPalette && this.state.recommendedPalettes.includes(mainPalette)
+                    ? mainPalette
+                    : this.state.recommendedPalettes[0];
+        }
     }
 
-    setPalette(p) {
-        return "";
+    async setPalette(palette) {
+        this.state.selectedPalette = palette;
+        this.state.previewIsLoading = true;
+        await this.orm.silent.call("website.assets", "make_scss_customization", [
+            "/website/static/src/scss/options/user_values.scss",
+            { "color-palettes-name": `'${palette}'` },
+        ]);
+        await rpc("/website/theme_customize_bundle_reload");
+        const iframe = this.previewIframeRef.el;
+        if (iframe) {
+            iframe.src = `${this.previewUrl}&palette_ts=${Date.now()}`;
+        }
     }
 
     cleanValue(value) {
@@ -993,9 +1027,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         const iframeDoc = this.previewIframeRef.el?.contentDocument;
         if (iframeDoc) {
             this.deactivatePreviewInteractions(iframeDoc);
-            this.applyPreviewFont(iframeDoc);
             this.getFonts();
             this.applyPreviewFont();
+            if (!this.state.recommendedPalettes?.length) {
+                this.getPalettes();
+            }
         }
         this.state.previewIsLoading = false;
     }
@@ -1299,7 +1335,13 @@ export class Configurator extends Component {
         const palettes = {};
         const style = window.getComputedStyle(document.documentElement);
 
-        PALETTE_NAMES.forEach((paletteName) => {
+        const paletteNames = getCSSVariableValue("palette-names", style)
+            .replace(/[()]/g, "")
+            .split(/[,\s]+/)
+            .map((name) => name.trim().replace(/^['"]|['"]$/g, ""))
+            .filter(Boolean);
+        const allPaletteNames = paletteNames.length ? paletteNames : PALETTE_NAMES;
+        allPaletteNames.forEach((paletteName) => {
             const palette = {
                 name: paletteName,
             };

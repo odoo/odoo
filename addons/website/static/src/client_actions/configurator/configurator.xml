@@ -249,14 +249,26 @@
                             <div class="mb-5">
                                 <h3><b>Colors</b></h3>
                                 <div class="row g-3">
-                                    <div class="col-6">
-                                        <button class="w-100 text-start p-1" t-on-click="() => this.setPalette('Inter')">palette 1</button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button class="w-100 text-start p-1" t-on-click="() => this.setPalette('Poppins')">palette 2</button>
-                                    </div>
+                                    <t t-foreach="this.state.recommendedPalettes || []" t-as="palette" t-key="palette">
+                                        <div class="col-6">
+                                            <button
+                                                type="button"
+                                                t-att-class="'w-100 text-start p-1' + (this.state.selectedPalette === palette ? ' active' : '')"
+                                                t-on-click="() => this.setPalette(palette)"
+                                            >
+                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color1) || 'transparent')"></div>
+                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color2) || 'transparent')"></div>
+                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color3) || 'transparent')"></div>
+                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color4) || 'transparent')"></div>
+                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color5) || 'transparent')"></div>
+                                            </button>
+                                        </div>
+                                    </t>
                                     <a href="#" class="text-center"><b>Show More</b></a>
                                 </div>
+                            </div>
+                            <div>
+                                <h3>Colors</h3>   
                             </div>
                             <div class="mb-5">
                                 <h3><b>Font</b></h3>
