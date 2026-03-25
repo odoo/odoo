@@ -10,10 +10,22 @@
         <input
             type="text"
             t-attf-class="o_input {{inputClass}}"
+<<<<<<< 21111091eb85b9af76156a46ee0a0240ddd05bed
             t-custom-ref="inputRef"
             t-on-input="this.handleInputDebounced"
             t-on-focus="this.onInputFocus"
             t-on-blur="this.onInputBlur"
+||||||| 0d31c30463c598ee1ce8003dc9e89d2c981174be
+            t-ref="inputRef"
+            t-on-input="debouncedOnInput"
+            t-on-focus="onInputFocus"
+            t-on-blur="onInputBlur"
+=======
+            t-ref="inputRef"
+            t-on-input="onSearchInput"
+            t-on-focus="onInputFocus"
+            t-on-blur="onInputBlur"
+>>>>>>> ab8c9526eb3e8af3f09d8324934a5da65144c128
             t-att-placeholder="this.placeholderValue"
             t-att-value="this.displayValue"
             t-att-id="this.props.id"

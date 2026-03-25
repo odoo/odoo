@@ -140,13 +140,19 @@ export class SelectMenu extends Component {
         this.menuRef = useChildRef();
         this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
-        this.debouncedOnInput = useDebounced((ev) => {
+        this.debouncedOnInput = useDebounced((searchString) => {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
+<<<<<<< 21111091eb85b9af76156a46ee0a0240ddd05bed
             const searchString = ev.target.value;
             this.state.searchValue = searchString;
             delete this.pendingValue;
+||||||| 0d31c30463c598ee1ce8003dc9e89d2c981174be
+            const searchString = ev.target.value;
+            this.state.searchValue = searchString;
+=======
+>>>>>>> ab8c9526eb3e8af3f09d8324934a5da65144c128
             this.onInput(searchString);
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
@@ -294,8 +300,12 @@ export class SelectMenu extends Component {
         if (this.displayInputInToggler) {
             this.state.isFocused = false;
         }
-        if (ev.target.value === "" && this.canDeselect && !this.props.multiSelect) {
-            this.onInputClear();
+        if (ev.target.value === "" && !this.props.multiSelect) {
+            if (this.canDeselect) {
+                this.onInputClear();
+            } else {
+                this.state.searchValue = null;
+            }
         }
     }
 
@@ -303,6 +313,11 @@ export class SelectMenu extends Component {
         if (!ev.target.classList.contains("o_select_menu_toggler")) {
             ev.stopPropagation();
         }
+    }
+
+    onSearchInput(ev) {
+        this.state.searchValue = ev.target.value;
+        this.debouncedOnInput(this.state.searchValue);
     }
 
     onInputClear() {
