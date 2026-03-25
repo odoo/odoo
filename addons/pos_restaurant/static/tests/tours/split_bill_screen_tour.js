@@ -9,6 +9,7 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/utils/split_bill_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
@@ -89,14 +90,22 @@ registry.category("web_tour.tours").add("SplitBillScreenTourPay", {
             FloorScreen.clickTable("4"),
             ProductScreen.addOrderline("Water"),
             ProductScreen.addOrderline("Minute Maid"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductConfiguratorPopup.pickRadio("Normal"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductConfiguratorPopup.pickRadio("Zero"),
+            Dialog.confirm(),
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickOrderline("Water"),
+            Order.hasLine({ productName: "Coca-Cola", attributeLine: "Zero", run: "click" }),
             SplitBillScreen.clickButton("Pay"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.clickNextOrder(),
             SplitBillScreen.clickOrderline("Minute Maid"),
             SplitBillScreen.clickOrderline("Minute Maid"),
+            Order.hasLine({ productName: "Coca-Cola", attributeLine: "Normal" }),
             SplitBillScreen.clickButton("Pay"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
