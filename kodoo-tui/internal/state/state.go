@@ -58,6 +58,8 @@ type ConfigState struct {
 	UsesLegacyFile bool
 	GeneratedFiles map[string]bool
 	MissingKeys    []string
+	ProdListDB     bool
+	ProdDBFilter   string
 }
 
 type RuntimeState struct {
@@ -113,7 +115,9 @@ func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) 
 				"deploy/odoo/kodoo.dev-host.local.conf":    fileExists(filepath.Join(repoDir, "deploy/odoo/kodoo.dev-host.local.conf")),
 				"deploy/odoo/kodoo.dev-project.local.conf": fileExists(filepath.Join(repoDir, "deploy/odoo/kodoo.dev-project.local.conf")),
 			},
-			MissingKeys: missingConfigKeys(cfg),
+			MissingKeys:  missingConfigKeys(cfg),
+			ProdListDB:   cfg.ProdListDB,
+			ProdDBFilter: cfg.ProdDBFilter,
 		},
 	}
 
@@ -309,6 +313,22 @@ func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, docker
 			Summary:    "Tunnel sem token",
 			Cause:      "CLOUDFLARED_TOKEN está vazio.",
 			Suggestion: "Preencha o token antes de usar Stable Tunnel.",
+		})
+	}
+	if cfg.ProdListDB && !tenantSafeDBFilter(cfg.ProdDBFilter) {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityWarning,
+			Summary:    "DB manager exposto com filtro amplo",
+			Cause:      fmt.Sprintf("list_db está ativo e PROD_DBFILTER=%q não limita o tenant pelo host.", cfg.ProdDBFilter),
+			Suggestion: "Use PROD_DBFILTER=^%d$ para rotear subdomínio -> banco e evitar exposição cruzada.",
+		})
+	}
+	if cfg.LocalBindHost == "0.0.0.0" {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityInfo,
+			Summary:    "Bind LAN ativo",
+			Cause:      fmt.Sprintf("O stack local/tunnel está publicado em %s:%d para a rede local.", cfg.LocalBindHost, cfg.LocalHTTPPort),
+			Suggestion: "Garanta firewall/rede confiável antes de usar esse host fora da máquina local.",
 		})
 	}
 	for _, check := range snapshot.Smoke {
@@ -572,4 +592,12 @@ func severityWeight(severity Severity) int {
 	default:
 		return 2
 	}
+}
+
+func tenantSafeDBFilter(filter string) bool {
+	filter = strings.TrimSpace(filter)
+	if filter == "" {
+		return false
+	}
+	return strings.Contains(filter, "%d")
 }

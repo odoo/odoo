@@ -2,435 +2,340 @@ package dashboard
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"sort"
 	"strings"
-	"time"
 
-	"github.com/charmbracelet/bubbles/progress"
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
 	"github.com/kodoo/kodoo-tui/internal/docker"
 	"github.com/kodoo/kodoo-tui/internal/envconfig"
 	"github.com/kodoo/kodoo-tui/internal/event"
+	"github.com/kodoo/kodoo-tui/internal/state"
 )
 
 var (
-	serviceTitleStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
-	okStyle           = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
-	warnStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
-	errStyle          = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
-	mutedStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
-	boxStyle          = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
+	titleStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
+	panelStyle    = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
+	mutedStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
+	okStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
+	warnStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
+	errStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
+	neutralStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("81"))
+	selectedStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
 )
 
-type tickMsg time.Time
-
-type refreshMsg struct {
-	containers []docker.Container
-	stats      []docker.Stat
-	logs       []string
-	mode       string
-	err        error
-}
-
-// Model renders the main dashboard tab.
 type Model struct {
-	cfg         *envconfig.Config
-	width       int
-	height      int
-	containers  []docker.Container
-	stats       []docker.Stat
-	logs        []string
-	events      viewport.Model
-	lastUpdated time.Time
-	mode        string
-	err         string
+	cfg      *envconfig.Config
+	snapshot state.Snapshot
 }
 
-// New builds the dashboard tab model.
 func New(cfg *envconfig.Config) Model {
-	vp := viewport.New(20, 10)
-	return Model{
-		cfg:    cfg,
-		events: vp,
-		mode:   detectMode(nil),
-	}
+	return Model{cfg: cfg}
 }
 
-// Title returns the visible tab name.
 func (m Model) Title() string {
 	return "Dashboard"
 }
 
-// HelpLines returns the dashboard help text.
 func (m Model) HelpLines() []string {
 	return []string{
-		"u  start the stable public-sector Docker stack",
-		"b  start the stable plain Odoo Docker stack",
-		"d  stop the active Docker stack",
-		"r  run make refresh-safe",
-		"s  run make smoke",
-		"l  open the launchpad",
+		"s start/stop contextual",
+		"w open Runtime",
+		"d open Databases",
+		"l open Logs",
+		"t run troubleshoot",
+		"c open Config",
 	}
 }
 
-// SetConfig updates the live config pointer after reloads.
+func (m Model) Init() tea.Cmd {
+	return nil
+}
+
+func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "t":
+			return m, requestCmd(event.RequestMakeTargetMsg{
+				Target:      "troubleshoot",
+				Description: "Run the detailed diagnostics target.",
+				RelevantKeys: []string{
+					"DOMAIN",
+				},
+			})
+		}
+	}
+	return m, nil
+}
+
 func (m Model) SetConfig(cfg *envconfig.Config) Model {
 	m.cfg = cfg
 	return m
 }
 
-// Mode returns the currently inferred runtime mode.
-func (m Model) Mode() string {
-	if m.mode == "" {
-		return detectMode(m.containers)
-	}
-	return m.mode
+func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
+	m.snapshot = snapshot
+	return m
 }
 
-// Init starts the periodic refresh loop.
-func (m Model) Init() tea.Cmd {
-	return tea.Batch(refreshCmd(m.cfg), tickCmd(m.cfg.RefreshInterval()))
-}
-
-// Update handles Bubble Tea messages for the dashboard.
-func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		m.width = msg.Width
-		m.height = msg.Height
-		m.syncViewport()
-	case tickMsg:
-		return m, tea.Batch(refreshCmd(m.cfg), tickCmd(m.cfg.RefreshInterval()))
-	case refreshMsg:
-		if msg.err != nil {
-			m.err = msg.err.Error()
-		} else {
-			m.err = ""
-		}
-		m.containers = msg.containers
-		m.stats = msg.stats
-		m.logs = msg.logs
-		m.mode = msg.mode
-		m.lastUpdated = time.Now()
-		m.syncViewport()
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "u":
-			return m, requestCmd(event.RequestMakeTargetMsg{
-				Target:      "up",
-				Description: "Start the stable Docker stack with the public-sector runtime.",
-				RelevantKeys: []string{
-					"DOMAIN", "LOCAL_HTTP_PORT", "OLLAMA_MODEL",
-				},
-			})
-		case "b":
-			return m, requestCmd(event.RequestMakeTargetMsg{
-				Target:      "up-base",
-				Description: "Start the stable Docker stack with the plain Odoo runtime.",
-				RelevantKeys: []string{
-					"DOMAIN", "LOCAL_HTTP_PORT", "OLLAMA_MODEL",
-				},
-			})
-		case "d":
-			return m, requestCmd(event.RequestMakeTargetMsg{
-				Target:            "down",
-				Description:       "Stop the current Docker stack.",
-				RequireTypedCheck: true,
-				ConfirmWord:       "sim",
-				RelevantKeys:      []string{"DOMAIN"},
-			})
-		case "r":
-			return m, requestCmd(event.RequestMakeTargetMsg{
-				Target:      "refresh-safe",
-				Description: "Regenerate configs and restart only the stable Odoo service.",
-				RelevantKeys: []string{
-					"DOMAIN", "PROD_DB_NAME", "PROD_DB_USER",
-				},
-			})
-		case "s":
-			return m, requestCmd(event.RequestMakeTargetMsg{
-				Target:      "smoke",
-				Description: "Run the smoke checks defined by the Makefile.",
-				RelevantKeys: []string{
-					"DOMAIN", "LOCAL_HTTP_PORT", "SMOKE_PUBLIC",
-				},
-			})
-		}
-	}
-
-	return m, nil
-}
-
-// View renders the dashboard tab.
 func (m Model) View(width, height int) string {
 	if width <= 0 || height <= 0 {
 		return ""
 	}
 
-	colWidth := max(24, (width-4)/3)
-	left := boxStyle.Width(colWidth).Height(max(8, height-4)).Render(m.servicesView())
-	middle := boxStyle.Width(colWidth).Height(max(8, height-4)).Render(m.resourcesView(colWidth - 4))
-	right := boxStyle.Width(width - (colWidth * 2) - 8).Height(max(8, height-4)).Render(m.eventsView())
+	header := panelStyle.Width(width - 2).Render(m.headerView())
+	bodyHeight := max(10, height-7)
+	leftWidth := max(34, width/3)
+	middleWidth := max(34, width/3)
+	rightWidth := max(30, width-leftWidth-middleWidth-6)
 
-	return lipgloss.JoinHorizontal(lipgloss.Top, left, middle, right)
+	left := panelStyle.Width(leftWidth).Height(bodyHeight).Render(m.healthView())
+	middle := panelStyle.Width(middleWidth).Height(bodyHeight).Render(m.tenantsView())
+	right := panelStyle.Width(rightWidth).Height(bodyHeight).Render(m.securityAndResourcesView())
+	return lipgloss.JoinVertical(lipgloss.Left, header, lipgloss.JoinHorizontal(lipgloss.Top, left, middle, right))
 }
 
-func (m Model) servicesView() string {
-	lines := []string{serviceTitleStyle.Render("Services")}
-	if !m.cfg.Exists {
-		lines = append(lines, warnStyle.Render(".env missing. Run make env-init"))
-	}
-	if m.err != "" {
-		lines = append(lines, errStyle.Render(m.err))
-	}
-	if len(m.containers) == 0 {
-		lines = append(lines, mutedStyle.Render("No containers detected in Docker."))
-		return strings.Join(lines, "\n")
-	}
-
-	sort.Slice(m.containers, func(i, j int) bool {
-		return m.containers[i].Name < m.containers[j].Name
-	})
-
-	for _, container := range m.containers {
-		color := lipgloss.Color("42")
-		status := strings.ToLower(container.Status)
-		switch {
-		case strings.Contains(status, "restarting"):
-			color = lipgloss.Color("214")
-		case strings.Contains(status, "exited") || strings.Contains(status, "dead"):
-			color = lipgloss.Color("196")
-		}
-		dot := lipgloss.NewStyle().Foreground(color).Render("●")
-		lines = append(lines, fmt.Sprintf("%s %s", dot, container.Name))
-		lines = append(lines, mutedStyle.Render("  "+container.Status))
-		lines = append(lines, mutedStyle.Render("  image: "+container.Image))
-		if strings.TrimSpace(container.Ports) != "" {
-			lines = append(lines, mutedStyle.Render("  ports: "+container.Ports))
-		}
-	}
-	return strings.Join(lines, "\n")
-}
-
-func (m Model) resourcesView(contentWidth int) string {
+func (m Model) headerView() string {
+	runtime := m.snapshot.Runtime
 	lines := []string{
-		serviceTitleStyle.Render("Resources"),
-		fmt.Sprintf("Mode: %s", okStyle.Render(m.Mode())),
-		fmt.Sprintf("Runtime: %s", runtimeProfile(m.containers)),
-		fmt.Sprintf("Ports: %s", mutedStyle.Render(m.portSummary())),
+		titleStyle.Render("Operational Dashboard"),
+		fmt.Sprintf("mode: %s", fallback(runtime.Mode, "loading")),
+		fmt.Sprintf("runtime: %s", fallback(runtime.RuntimeProfile, "unknown")),
+		fmt.Sprintf("active db: %s", fallback(runtime.ActiveDB, fallback(m.cfg.ProdDBName, "not pinned"))),
+		fmt.Sprintf("local: %s", runtime.LocalURL),
+		fmt.Sprintf("public: %s", runtime.PublicURL),
+		fmt.Sprintf("refresh: %s", runtime.LastRefresh.Format("15:04:05")),
+	}
+	return strings.Join(lines, "  |  ")
+}
+
+func (m Model) healthView() string {
+	lines := []string{
+		titleStyle.Render("Health / Status"),
+		fmt.Sprintf("config: %s", m.snapshot.Runtime.ConfigStatus),
+		fmt.Sprintf("ports: %s", fallback(m.snapshot.Runtime.PortSummary, "no published ports")),
 		"",
+		titleStyle.Render("Services"),
 	}
-	if len(m.stats) == 0 {
-		lines = append(lines, mutedStyle.Render("No docker stats available."))
-		return strings.Join(lines, "\n")
-	}
-
-	for _, stat := range m.stats {
-		barWidth := max(10, contentWidth-18)
-		bar := progress.New(progress.WithWidth(barWidth))
-		cpuView := bar.ViewAs(clamp(stat.CPUPercent / 100))
-		memView := bar.ViewAs(clamp(stat.MemPercent / 100))
-		lines = append(lines, fmt.Sprintf("%s", lipgloss.NewStyle().Bold(true).Render(stat.Name)))
-		lines = append(lines, fmt.Sprintf("CPU %5.1f%% %s", stat.CPUPercent, cpuView))
-		lines = append(lines, fmt.Sprintf("MEM %5.1f%% %s", stat.MemPercent, memView))
-		if stat.MemUsage != "" {
-			lines = append(lines, mutedStyle.Render("  "+stat.MemUsage))
+	for _, service := range m.snapshot.Services {
+		lines = append(lines, fmt.Sprintf("%s %s", severityDot(service.Level), service.Name))
+		lines = append(lines, mutedStyle.Render("  "+service.Status))
+		if detail := strings.TrimSpace(service.Detail); detail != "" {
+			lines = append(lines, mutedStyle.Render("  "+detail))
 		}
-		lines = append(lines, "")
 	}
 
-	if !m.lastUpdated.IsZero() {
-		lines = append(lines, mutedStyle.Render("Updated "+m.lastUpdated.Format("15:04:05")))
+	lines = append(lines, "", titleStyle.Render("Smoke"))
+	if len(m.snapshot.Smoke) == 0 {
+		lines = append(lines, mutedStyle.Render("No smoke probes available."))
+	} else {
+		for _, result := range m.snapshot.Smoke {
+			status := errStyle.Render("fail")
+			if result.OK {
+				status = okStyle.Render("ok")
+			}
+			lines = append(lines, fmt.Sprintf("%s %s (%s)", status, result.Name, result.Latency.Round(10_000_000)))
+			if !result.OK && result.Error != "" {
+				lines = append(lines, mutedStyle.Render("  "+result.Error))
+			}
+		}
 	}
 	return strings.Join(lines, "\n")
 }
 
-func (m Model) eventsView() string {
-	header := serviceTitleStyle.Render("Recent Events")
-	if len(m.logs) == 0 {
-		return header + "\n" + mutedStyle.Render("No compose logs available.")
+func (m Model) tenantsView() string {
+	rootDB := fallback(m.cfg.ProdDBName, "kodoo")
+	adminHost := fallback(m.cfg.Domain, "kodoo.online")
+	filter := fallback(m.snapshot.Config.ProdDBFilter, fallback(m.cfg.ProdDBFilter, "^%d$"))
+	tenants := tenantDatabases(m.snapshot.Databases, rootDB)
+
+	lines := []string{
+		titleStyle.Render("Tenant Routing"),
+		fmt.Sprintf("db manager: %s", enabledLabel(m.snapshot.Config.ProdListDB)),
+		fmt.Sprintf("dbfilter: %s", filter),
+		fmt.Sprintf("admin host: %s -> %s", adminHost, rootDB),
 	}
-	return header + "\n" + m.events.View()
-}
-
-func (m *Model) syncViewport() {
-	width := max(16, m.rightColumnWidth()-4)
-	height := max(6, m.height-9)
-	m.events.Width = width
-	m.events.Height = height
-
-	lines := make([]string, 0, len(m.logs))
-	for _, line := range m.logs {
-		lines = append(lines, colorizeLogLine(line))
+	if len(tenants) > 0 {
+		lines = append(lines, fmt.Sprintf("tenant example: %s -> %s", tenantHost(tenants[0], adminHost), tenants[0]))
+		lines = append(lines, fmt.Sprintf("client dbs: %d", len(tenants)))
+	} else {
+		lines = append(lines, "tenant example: create a new client DB and use <db>."+adminHost)
+		lines = append(lines, "client dbs: 0")
 	}
-	m.events.SetContent(strings.Join(lines, "\n"))
-	m.events.GotoBottom()
-}
 
-func (m Model) rightColumnWidth() int {
-	if m.width <= 0 {
-		return 24
-	}
-	colWidth := max(24, (m.width-4)/3)
-	return m.width - (colWidth * 2) - 8
-}
-
-func (m Model) portSummary() string {
-	parts := make([]string, 0, len(m.containers))
-	for _, container := range m.containers {
-		if strings.TrimSpace(container.Ports) == "" {
-			continue
+	lines = append(lines, "", titleStyle.Render("Client Databases"))
+	if len(tenants) == 0 {
+		lines = append(lines, mutedStyle.Render("No client-specific databases detected yet."))
+		lines = append(lines, mutedStyle.Render("Use /web/database/manager to create one DB per customer."))
+	} else {
+		limit := min(6, len(tenants))
+		for idx := 0; idx < limit; idx++ {
+			name := tenants[idx]
+			lines = append(lines, selectedStyle.Render(name))
+			lines = append(lines, mutedStyle.Render("  host: "+tenantHost(name, adminHost)))
 		}
-		parts = append(parts, fmt.Sprintf("%s: %s", container.Name, container.Ports))
-	}
-	if len(parts) == 0 {
-		return "no published ports"
-	}
-	return strings.Join(parts, " | ")
-}
-
-func refreshCmd(cfg *envconfig.Config) tea.Cmd {
-	return func() tea.Msg {
-		containers, err := docker.ListContainers()
-		if err != nil {
-			return refreshMsg{err: err}
-		}
-		stats, _ := docker.Stats()
-		logs, _ := docker.TailLogs(cfg.TUILogLines, "todos")
-		return refreshMsg{
-			containers: containers,
-			stats:      stats,
-			logs:       logs,
-			mode:       detectMode(containers),
+		if len(tenants) > limit {
+			lines = append(lines, mutedStyle.Render(fmt.Sprintf("+ %d more client DBs", len(tenants)-limit)))
 		}
 	}
+
+	lines = append(lines, "", titleStyle.Render("Operator Flow"))
+	lines = append(lines, "1. Create one DB per customer in the native manager.")
+	lines = append(lines, "2. Install only the addons required for that tenant.")
+	lines = append(lines, "3. Publish the tenant at <db>."+adminHost+".")
+	lines = append(lines, "4. In Cloudflare, map *."+adminHost+" -> http://nginx:80.")
+	return strings.Join(lines, "\n")
 }
 
-func tickCmd(interval time.Duration) tea.Cmd {
-	return tea.Tick(interval, func(t time.Time) tea.Msg {
-		return tickMsg(t)
+func (m Model) securityAndResourcesView() string {
+	lines := []string{
+		titleStyle.Render("Security / Resources"),
+		fmt.Sprintf("token: %s", presenceLabel(strings.TrimSpace(m.cfg.CloudflaredToken) != "")),
+		fmt.Sprintf("lan bind: %s", fallback(m.cfg.LocalBindHost, "127.0.0.1")),
+		fmt.Sprintf("dbfilter posture: %s", dbFilterPosture(fallback(m.cfg.ProdDBFilter, m.snapshot.Config.ProdDBFilter))),
+		fmt.Sprintf("manager exposure: %s", managerExposureLabel(m.snapshot.Config.ProdListDB, fallback(m.cfg.ProdDBFilter, m.snapshot.Config.ProdDBFilter))),
+		fmt.Sprintf("env source: %s", fallback(m.snapshot.Config.EnvPath, ".env")),
+		"",
+		titleStyle.Render("Resource Usage"),
+	}
+
+	stats := append([]stateLikeStat(nil), convertStats(m.snapshot.Stats)...)
+	sort.Slice(stats, func(i, j int) bool {
+		return stats[i].CPUPercent > stats[j].CPUPercent
 	})
+	if len(stats) == 0 {
+		lines = append(lines, mutedStyle.Render("No docker stats available."))
+	} else {
+		for _, stat := range stats {
+			lines = append(lines, fmt.Sprintf("%s  CPU %5.1f%%  MEM %5.1f%%", stat.Name, stat.CPUPercent, stat.MemPercent))
+			if stat.MemUsage != "" {
+				lines = append(lines, mutedStyle.Render("  "+stat.MemUsage))
+			}
+		}
+	}
+
+	lines = append(lines, "", titleStyle.Render("Incidents / Next Step"))
+	lines = append(lines, m.snapshot.Runtime.LastIncident)
+	lines = append(lines, warnStyle.Render("next: "+fallback(m.snapshot.Runtime.SuggestedNextStep, "open Logs or Doctor")))
+	if len(m.snapshot.Incidents) > 0 {
+		for idx, incident := range m.snapshot.Incidents {
+			if idx >= 3 {
+				break
+			}
+			lines = append(lines, "", fmt.Sprintf("%s %s", severityDot(incident.Severity), incident.Summary))
+			lines = append(lines, mutedStyle.Render(incident.Cause))
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
-func detectMode(containers []docker.Container) string {
-	if pidRunning(filepath.Join("logs", "odoo-dev-project.pid")) {
-		return "client dev · docker db"
-	}
-	if pidRunning(filepath.Join("logs", "odoo-dev-host.pid")) {
-		return "client dev · local db"
-	}
-
-	runtime := runtimeProfile(containers)
-	if runtime != "unknown runtime" {
-		if containerRunning(containers, "kodoo-cloudflared") {
-			return "stable tunnel · " + runtime
-		}
-		if containerRunning(containers, "kodoo-odoo") {
-			return "stable docker · " + runtime
-		}
-		if containerExists(containers, "kodoo-odoo") {
-			return "stable docker stopped · " + runtime
-		}
-	}
-	return "idle"
+type stateLikeStat struct {
+	Name       string
+	CPUPercent float64
+	MemPercent float64
+	MemUsage   string
 }
 
-func runtimeProfile(containers []docker.Container) string {
-	for _, container := range containers {
-		if container.Name != "kodoo-odoo" {
+func convertStats(stats []docker.Stat) []stateLikeStat {
+	rows := make([]stateLikeStat, 0, len(stats))
+	for _, stat := range stats {
+		rows = append(rows, stateLikeStat{
+			Name:       stat.Name,
+			CPUPercent: stat.CPUPercent,
+			MemPercent: stat.MemPercent,
+			MemUsage:   stat.MemUsage,
+		})
+	}
+	return rows
+}
+
+func tenantDatabases(rows []state.DatabaseInfo, rootDB string) []string {
+	tenants := make([]string, 0, len(rows))
+	for _, row := range rows {
+		if row.Backend != "docker" {
 			continue
 		}
-		switch {
-		case strings.Contains(container.Image, "19.0-public-sector"), strings.Contains(container.Image, "19.0-agi-gov"), strings.Contains(container.Image, "19.0-gov"):
-			return "public-sector runtime"
-		case strings.Contains(container.Image, "19.0"):
-			return "plain runtime"
-		default:
-			return container.Image
-		}
-	}
-	return "unknown runtime"
-}
-
-func containerRunning(containers []docker.Container, name string) bool {
-	for _, container := range containers {
-		if container.Name != name {
+		switch row.Name {
+		case "", "postgres", rootDB:
 			continue
 		}
-		status := strings.ToLower(container.Status)
-		return strings.HasPrefix(status, "up") || strings.Contains(status, "running")
+		tenants = append(tenants, row.Name)
 	}
-	return false
+	sort.Strings(tenants)
+	return tenants
 }
 
-func containerExists(containers []docker.Container, name string) bool {
-	for _, container := range containers {
-		if container.Name == name {
-			return true
-		}
-	}
-	return false
+func tenantHost(dbName, domain string) string {
+	return dbName + "." + domain
 }
 
-func pidRunning(path string) bool {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return false
+func severityDot(level state.Severity) string {
+	switch level {
+	case state.SeverityCritical:
+		return errStyle.Render("●")
+	case state.SeverityWarning:
+		return warnStyle.Render("●")
+	default:
+		return okStyle.Render("●")
 	}
-	pid := strings.TrimSpace(string(data))
-	if pid == "" {
-		return false
-	}
-	_, err = os.Stat(filepath.Clean("/proc/" + pid))
-	return err == nil
 }
 
-func colorizeLogLine(line string) string {
-	service := ""
-	rest := line
-	if parts := strings.SplitN(line, "|", 2); len(parts) == 2 {
-		service = strings.TrimSpace(parts[0])
-		rest = strings.TrimSpace(parts[1])
+func enabledLabel(value bool) string {
+	if value {
+		return okStyle.Render("enabled")
 	}
+	return warnStyle.Render("disabled")
+}
 
-	if service != "" {
-		palette := map[string]lipgloss.Style{
-			"odoo":        lipgloss.NewStyle().Foreground(lipgloss.Color("33")),
-			"nginx":       lipgloss.NewStyle().Foreground(lipgloss.Color("42")),
-			"db":          lipgloss.NewStyle().Foreground(lipgloss.Color("214")),
-			"cloudflared": lipgloss.NewStyle().Foreground(lipgloss.Color("99")),
-			"ollama":      lipgloss.NewStyle().Foreground(lipgloss.Color("205")),
-		}
-		style := palette[service]
-		if style.String() == "" {
-			style = mutedStyle
-		}
-		return style.Render(service) + " | " + rest
+func presenceLabel(value bool) string {
+	if value {
+		return okStyle.Render("present")
 	}
-	return rest
+	return warnStyle.Render("missing")
+}
+
+func dbFilterPosture(filter string) string {
+	if strings.Contains(filter, "%d") {
+		return okStyle.Render("tenant-safe")
+	}
+	if strings.TrimSpace(filter) == "" {
+		return warnStyle.Render("unset")
+	}
+	return errStyle.Render("broad")
+}
+
+func managerExposureLabel(listDB bool, filter string) string {
+	if !listDB {
+		return neutralStyle.Render("closed")
+	}
+	if strings.Contains(filter, "%d") {
+		return okStyle.Render("open with tenant filter")
+	}
+	return errStyle.Render("open and broad")
 }
 
 func requestCmd(msg tea.Msg) tea.Cmd {
 	return func() tea.Msg { return msg }
 }
 
-func clamp(value float64) float64 {
-	if value < 0 {
-		return 0
-	}
-	if value > 1 {
-		return 1
+func fallback(value, or string) string {
+	if strings.TrimSpace(value) == "" {
+		return or
 	}
 	return value
 }
 
 func max(a, b int) int {
 	if a > b {
+		return a
+	}
+	return b
+}
+
+func min(a, b int) int {
+	if a < b {
 		return a
 	}
 	return b

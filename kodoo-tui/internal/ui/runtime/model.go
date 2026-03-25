@@ -74,7 +74,7 @@ func New() Model {
 						"DOMAIN", "CLOUDFLARED_TOKEN",
 					},
 				},
-				SecondaryTip: "Abra Overview para checar smoke público depois do boot.",
+				SecondaryTip: "Abra Dashboard para checar smoke público, tenant routing e exposição.",
 			},
 			{
 				Key:         "Dev Host",
@@ -142,7 +142,7 @@ func New() Model {
 					RequireTypedCheck: true,
 					ConfirmWord:       "sim",
 				},
-				SecondaryTip: "Use Overview para confirmar o estado parado após a ação.",
+				SecondaryTip: "Use Dashboard para confirmar o estado parado após a ação.",
 			},
 		},
 	}

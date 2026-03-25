@@ -22,12 +22,19 @@ The backend Makefile remains the operational engine; the redesign changes naviga
 
 ## Main Screens
 
-- `1 Overview`: mode, active DB, local/public URLs, service health, smoke, incidents, suggested next step
+- `1 Dashboard`: mode, active DB, local/public URLs, service health, tenant routing, security posture, resource usage, incidents, suggested next step
 - `2 Runtime`: operational modes such as Stable Docker, Stable Tunnel, Dev Host, Dev Project, Local Diagnostic / Manager, and Stopped
 - `3 Databases`: docker/local database inventory with connectivity, compatibility, and direct actions
 - `4 Doctor`: diagnostics by stack modality, prioritizing the current failure and common incident patterns
 - `5 Logs`: incident-first view plus raw compose logs
 - `6 Config`: setup/validation summary, config values table, edit flow, and config generation actions
+
+For tenant-per-database mode, the dashboard assumes the recommended contract:
+
+- `kodoo.online` routes to database `kodoo`
+- `<db>.kodoo.online` routes to database `<db>`
+- `PROD_DBFILTER=^%d$`
+- Cloudflare should expose a wildcard public hostname such as `*.kodoo.online -> http://nginx:80`
 
 ## Command Palette
 
@@ -48,7 +55,7 @@ Use `p` to open the command palette / quick switcher for:
 - `q` or `ctrl+c`: quit
 - `esc`: close help, palette, or the current action overlay
 
-## Overview Shortcuts
+## Dashboard Shortcuts
 
 - `s`: contextual start/stop
 - `w`: open Runtime

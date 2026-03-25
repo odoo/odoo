@@ -93,7 +93,7 @@ CONFIG_FIND_CMD = find . \
 	ops-status ops-patch ops-release ops-hotfix ops-experiment ops-rollback \
 	odoo-lnav build build-base up up-base up-cpu up-gpu down down-base logs logs-base status status-base \
 	probe certbot certbot-renew \
-	db-init db-check db-list db-manager \
+	db-init db-check db-list db-manager prod-db-create prod-db-init prod-db-ensure \
 	stop ports-clean \
 	refresh-safe safe-refresh \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
@@ -204,6 +204,9 @@ help:
 	@echo "  make db-check       # Check if base module exists in DB"
 	@echo "  make db-list        # List reachable PostgreSQL databases and tags"
 	@echo "  make db-manager     # Open the interactive database manager"
+	@echo "  make prod-db-create # Ensure production database $(PROD_DB_NAME) exists"
+	@echo "  make prod-db-init   # Install Odoo base on $(PROD_DB_NAME) when the DB is still empty"
+	@echo "  make prod-db-ensure # Create/init production DB on fresh servers before compose up"
 	@echo ""
 	@echo "Containers:"
 	@echo "  make build          # Build Docker images"
@@ -784,6 +787,7 @@ up-base:
 	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@$(MAKE) prod-db-ensure
 	@$(COMPOSE_BASE) up -d db odoo nginx ollama
 	@$(MAKE) ollama-pull
 	@echo "Stable plain Odoo runtime: https://$(DOMAIN)"
@@ -999,6 +1003,7 @@ up-cpu:
 	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@$(MAKE) prod-db-ensure
 	@$(COMPOSE) up -d db odoo nginx ollama
 	@$(MAKE) ollama-pull
 
@@ -1006,6 +1011,7 @@ up-gpu:
 	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@$(MAKE) prod-db-ensure
 	@if ! command -v nvidia-smi >/dev/null 2>&1; then echo "NVIDIA GPU not detected. Use 'make up-cpu'."; exit 1; fi
 	@$(COMPOSE_GPU) up -d db odoo nginx ollama
 	@$(MAKE) ollama-pull
@@ -1013,7 +1019,8 @@ up-gpu:
 up-local:
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
-	@echo "Starting local-dev mode via nginx on localhost (websocket enabled)."
+	@$(MAKE) prod-db-ensure
+	@echo "Starting local-dev mode via nginx on $(LOCAL_BIND_HOST) (websocket enabled)."
 	@$(COMPOSE_LOCAL) up -d db odoo nginx ollama
 	@$(MAKE) ollama-pull
 	@echo "Local Odoo: http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)"
@@ -1067,6 +1074,34 @@ db-list:
 
 db-manager:
 	@./scripts/db-manager.sh
+
+prod-db-create:
+	@$(MAKE) prod-config
+	@$(COMPOSE) up -d db
+	@echo "Ensuring PostgreSQL database '$(PROD_DB_NAME)' exists..."
+	@exists="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$(PROD_DB_NAME)'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$exists" = "1" ]; then \
+	  echo "Production database '$(PROD_DB_NAME)' already exists."; \
+	else \
+	  docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -c "CREATE DATABASE \"$(PROD_DB_NAME)\" OWNER \"$(PROD_DB_USER)\""; \
+	  echo "Created production database '$(PROD_DB_NAME)'."; \
+	fi
+
+prod-db-init:
+	@$(MAKE) prod-config
+	@$(MAKE) prod-db-create
+	@echo "Checking whether Odoo schema is initialized in '$(PROD_DB_NAME)'..."
+	@has_schema="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d "$(PROD_DB_NAME)" -tAc "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_module_module'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$has_schema" = "1" ]; then \
+	  echo "Production database '$(PROD_DB_NAME)' already has Odoo base schema."; \
+	else \
+	  echo "Initializing Odoo base on fresh database '$(PROD_DB_NAME)'..."; \
+	  $(COMPOSE) run --rm --no-deps odoo odoo -c /etc/odoo/odoo.conf -d "$(PROD_DB_NAME)" -i base --without-demo=True --stop-after-init; \
+	  echo "Odoo base installed on '$(PROD_DB_NAME)'."; \
+	fi
+
+prod-db-ensure:
+	@$(MAKE) prod-db-init
 
 odoo-tui:
 	@$(MAKE) prod-config
@@ -1506,6 +1541,7 @@ up-insecure:
 	@$(MAKE) guard-prod-host
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(INSECURE_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
+	@$(MAKE) prod-db-ensure
 	@echo "WARNING: insecure mode enabled (no TLS/reverse-proxy protections)."
 	@$(COMPOSE) stop nginx >/dev/null 2>&1 || true
 	@$(COMPOSE_INSECURE) up -d db odoo ollama
@@ -1534,6 +1570,7 @@ up-tunnel:
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
 	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env first."; exit 1)
+	@$(MAKE) prod-db-ensure
 	@$(COMPOSE_TUNNEL) up -d db odoo nginx ollama cloudflared
 	@$(MAKE) ollama-pull
 	@echo "Cloudflare tunnel mode started."
@@ -1552,6 +1589,7 @@ up-lean-tunnel:
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) 80"
 	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env first."; exit 1)
+	@$(MAKE) prod-db-ensure
 	@$(COMPOSE_LEAN_TUNNEL) up -d db odoo nginx ollama cloudflared
 	@$(MAKE) ollama-pull
 	@echo "Lean Tunnel mode started."

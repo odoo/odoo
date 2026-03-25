@@ -42,6 +42,8 @@ type Config struct {
 	ProdDBUser              string
 	ProdDBPassword          string
 	ProdAdminPassword       string
+	ProdListDB              bool
+	ProdDBFilter            string
 	DevHostHTTPPort         int
 	DevHostDB               string
 	DevHostTestDB           string
@@ -73,6 +75,8 @@ var defaultValues = map[string]string{
 	"PROD_DB_USER":               "kodoo",
 	"PROD_DB_PASSWORD":           "",
 	"PROD_ADMIN_PASSWORD":        "",
+	"PROD_LIST_DB":               "True",
+	"PROD_DBFILTER":              "^%d$",
 	"DEV_HOST_HTTP_PORT":         "8070",
 	"DEV_HOST_DB":                "kodoo",
 	"DEV_HOST_TEST_DB":           "ktest",
@@ -346,6 +350,8 @@ func (c *Config) applyTypedValues() {
 	c.ProdDBUser = c.Value("PROD_DB_USER")
 	c.ProdDBPassword = c.Value("PROD_DB_PASSWORD")
 	c.ProdAdminPassword = c.Value("PROD_ADMIN_PASSWORD")
+	c.ProdListDB = toBool(c.Value("PROD_LIST_DB"))
+	c.ProdDBFilter = c.Value("PROD_DBFILTER")
 	c.DevHostHTTPPort = atoi(c.Value("DEV_HOST_HTTP_PORT"), 8070)
 	c.DevHostDB = c.Value("DEV_HOST_DB")
 	c.DevHostTestDB = c.Value("DEV_HOST_TEST_DB")

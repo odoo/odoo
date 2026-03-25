@@ -44,7 +44,7 @@ func New(cfg *envconfig.Config) Model {
 
 	input := textinput.New()
 	input.Prompt = "> "
-	input.CharLimit = 200
+	input.CharLimit = 4096
 	input.Blur()
 
 	tbl := table.New(
@@ -64,6 +64,7 @@ func New(cfg *envconfig.Config) Model {
 		search: search,
 		input:  input,
 	}
+	model.updateTableLayout()
 	model.refreshRows()
 	return model
 }
@@ -74,10 +75,14 @@ func (m Model) Title() string {
 
 func (m Model) HelpLines() []string {
 	if m.editing {
-		return []string{
+		lines := []string{
 			"enter save value",
 			"esc cancel edit",
 		}
+		if isLongSecretKey(m.editKey) {
+			lines = append(lines, "paste the raw token/value; no quotes and no 'cole aqui'")
+		}
+		return lines
 	}
 	return []string{
 		"/ search variables",
@@ -108,8 +113,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
-		m.table.SetWidth(max(30, m.width-8))
-		m.table.SetHeight(max(8, m.height-18))
+		m.updateTableLayout()
 	case tea.KeyMsg:
 		if m.editing {
 			switch msg.String() {
@@ -159,6 +163,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			if len(row) > 0 {
 				m.editing = true
 				m.editKey = row[0]
+				m.input.CharLimit = charLimitForKey(m.editKey)
 				m.input.SetValue(m.cfg.Value(m.editKey))
 				m.input.Focus()
 				return m, textinput.Blink
@@ -192,23 +197,24 @@ func (m Model) View(width, height int) string {
 		return ""
 	}
 
-	top := configPanelStyle.Width(width - 2).Height(9).Render(m.summaryView())
-	middle := configPanelStyle.Width(width - 2).Height(max(10, height-19)).Render(m.tableView())
-	bottom := configPanelStyle.Width(width - 2).Height(7).Render(strings.Join([]string{
-		configTitleStyle.Render("Generate / Validate"),
-		"p  make prod-config    h  make dev-host-config    j  make dev-project-config",
-		"i  make env-init       e  open active env file    enter  edit selected",
-		"Validation: .env, generated configs, missing required keys, DB reachability incidents",
-	}, "\n"))
+	panelWidth := max(24, width-2)
+	topHeight, bottomHeight := m.panelHeights(height)
+	middleHeight := max(8, height-topHeight-bottomHeight)
+
+	top := configPanelStyle.Width(panelWidth).Height(topHeight).Render(m.summaryView(topHeight))
+	middle := configPanelStyle.Width(panelWidth).Height(middleHeight).Render(m.tableView())
+	bottom := configPanelStyle.Width(panelWidth).Height(bottomHeight).Render(m.shortcutsView(bottomHeight))
 	return lipgloss.JoinVertical(lipgloss.Left, top, middle, bottom)
 }
 
-func (m Model) summaryView() string {
+func (m Model) summaryView(height int) string {
 	lines := []string{
 		configTitleStyle.Render("Setup Wizard / Validation"),
 		fmt.Sprintf("env file: %s", fallback(m.snapshot.Config.EnvPath, m.cfg.Path)),
 		fmt.Sprintf("exists: %t", m.snapshot.Config.EnvExists),
 		fmt.Sprintf("missing required keys: %d", len(m.snapshot.Config.MissingKeys)),
+		fmt.Sprintf("db manager: %t", m.snapshot.Config.ProdListDB),
+		fmt.Sprintf("dbfilter: %s", fallback(m.snapshot.Config.ProdDBFilter, m.cfg.Value("PROD_DBFILTER"))),
 	}
 	if m.snapshot.Config.UsesLegacyFile {
 		lines = append(lines, warnStyle.Render("legacy fallback active: docker compose will expect .env"))
@@ -222,6 +228,17 @@ func (m Model) summaryView() string {
 	}
 	if len(m.snapshot.Config.MissingKeys) > 0 {
 		lines = append(lines, warnStyle.Render("fill these first: "+strings.Join(m.snapshot.Config.MissingKeys, ", ")))
+	}
+	if tokenLooksTruncated(m.cfg.Value("CLOUDFLARED_TOKEN")) {
+		lines = append(lines, warnStyle.Render("CLOUDFLARED_TOKEN looks truncated; re-paste the full raw token in Config"))
+	}
+	if !strings.Contains(fallback(m.snapshot.Config.ProdDBFilter, m.cfg.Value("PROD_DBFILTER")), "%d") {
+		lines = append(lines, warnStyle.Render("recommended for tenant-per-subdomain mode: PROD_DBFILTER=^%d$"))
+	}
+	maxLines := max(3, height-2)
+	if len(lines) > maxLines {
+		lines = lines[:maxLines-1]
+		lines = append(lines, mutedStyle.Render("..."))
 	}
 	return strings.Join(lines, "\n")
 }
@@ -237,6 +254,73 @@ func (m Model) tableView() string {
 		topLines = append(topLines, warnStyle.Render(".env not found. Press i to create it."))
 	}
 	return strings.Join(topLines, "\n") + "\n\n" + m.table.View()
+}
+
+func (m Model) shortcutsView(height int) string {
+	lines := []string{
+		configTitleStyle.Render("Generate / Validate"),
+		"p prod config  h dev-host  j dev-project  i init .env",
+		"e edit env file  enter edit selected key  / search",
+	}
+	if height >= 6 {
+		lines = append(lines, "Validation covers: .env, generated configs, required keys and DB reachability.")
+	}
+	maxLines := max(2, height-2)
+	if len(lines) > maxLines {
+		lines = lines[:maxLines]
+	}
+	return strings.Join(lines, "\n")
+}
+
+func (m *Model) updateTableLayout() {
+	contentWidth := max(30, m.width-8)
+	m.table.SetWidth(contentWidth)
+
+	topHeight, bottomHeight := m.panelHeights(m.height)
+	tableHeight := max(6, m.height-topHeight-bottomHeight-4)
+	m.table.SetHeight(tableHeight)
+
+	keyWidth, valueWidth, originWidth, requiredWidth := tableColumnWidths(contentWidth)
+	m.table.SetColumns([]table.Column{
+		{Title: "Key", Width: keyWidth},
+		{Title: "Value", Width: valueWidth},
+		{Title: "Origin", Width: originWidth},
+		{Title: "Required", Width: requiredWidth},
+	})
+}
+
+func (m Model) panelHeights(totalHeight int) (int, int) {
+	switch {
+	case totalHeight <= 20:
+		return 5, 4
+	case totalHeight <= 28:
+		return 7, 5
+	default:
+		return 9, 7
+	}
+}
+
+func tableColumnWidths(totalWidth int) (int, int, int, int) {
+	requiredWidth := 8
+	originWidth := 10
+
+	switch {
+	case totalWidth <= 54:
+		requiredWidth = 6
+		originWidth = 8
+	case totalWidth <= 72:
+		requiredWidth = 7
+		originWidth = 9
+	}
+
+	remaining := totalWidth - originWidth - requiredWidth - 6
+	if remaining < 20 {
+		remaining = 20
+	}
+
+	keyWidth := max(12, remaining/3)
+	valueWidth := max(12, remaining-keyWidth)
+	return keyWidth, valueWidth, originWidth, requiredWidth
 }
 
 func (m *Model) refreshRows() {
@@ -298,6 +382,23 @@ func makeMsg(target, description string, relevant []string) tea.Msg {
 		Description:  description,
 		RelevantKeys: relevant,
 	}
+}
+
+func charLimitForKey(key string) int {
+	if isLongSecretKey(key) {
+		return 4096
+	}
+	return 512
+}
+
+func isLongSecretKey(key string) bool {
+	upper := strings.ToUpper(strings.TrimSpace(key))
+	return strings.Contains(upper, "TOKEN") || strings.Contains(upper, "PASSWORD")
+}
+
+func tokenLooksTruncated(value string) bool {
+	value = strings.TrimSpace(value)
+	return len(value) == 200
 }
 
 func requestCmd(msg tea.Msg) tea.Cmd {

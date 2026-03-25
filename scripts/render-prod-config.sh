@@ -10,6 +10,8 @@ PROD_DB_HOST="${PROD_DB_HOST:-db}"
 PROD_DB_PORT="${PROD_DB_PORT:-5432}"
 PROD_DB_USER="${PROD_DB_USER:-kodoo}"
 PROD_DB_PASSWORD="${PROD_DB_PASSWORD:-}"
+PROD_LIST_DB="${PROD_LIST_DB:-True}"
+PROD_DBFILTER="${PROD_DBFILTER:-^%d$}"
 
 require_value() {
     local name="$1"
@@ -50,7 +52,8 @@ db_password = $PROD_DB_PASSWORD
 addons_path = $ADDONS_PATH
 
 proxy_mode = True
-list_db = False
+list_db = $PROD_LIST_DB
+dbfilter = $PROD_DBFILTER
 
 http_port = 8069
 http_interface = 0.0.0.0

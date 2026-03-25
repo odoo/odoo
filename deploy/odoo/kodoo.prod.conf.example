@@ -13,7 +13,8 @@ db_password = change-me-in-.env
 addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons,/mnt/custom-addons,/mnt/custom-addons/public_sector,/mnt/custom-addons/knowledge,/mnt/custom-addons/om_account_accountant-19.0.1.0.3
 
 proxy_mode = True
-list_db = False
+list_db = True
+dbfilter = ^%d$
 
 http_port = 8069
 http_interface = 0.0.0.0

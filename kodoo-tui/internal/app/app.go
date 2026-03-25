@@ -21,10 +21,10 @@ import (
 	"github.com/kodoo/kodoo-tui/internal/runner"
 	"github.com/kodoo/kodoo-tui/internal/state"
 	"github.com/kodoo/kodoo-tui/internal/ui/config"
+	"github.com/kodoo/kodoo-tui/internal/ui/dashboard"
 	"github.com/kodoo/kodoo-tui/internal/ui/databases"
 	"github.com/kodoo/kodoo-tui/internal/ui/doctor"
 	"github.com/kodoo/kodoo-tui/internal/ui/logs"
-	"github.com/kodoo/kodoo-tui/internal/ui/overview"
 	"github.com/kodoo/kodoo-tui/internal/ui/runtime"
 )
 
@@ -100,7 +100,7 @@ type Model struct {
 	width          int
 	height         int
 	snapshot       state.Snapshot
-	overview       overview.Model
+	dashboard      dashboard.Model
 	runtime        runtime.Model
 	databases      databases.Model
 	doctor         doctor.Model
@@ -125,7 +125,7 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 	model := Model{
 		repoDir:   repoDir,
 		cfg:       cfg,
-		overview:  overview.New(),
+		dashboard: dashboard.New(cfg),
 		runtime:   runtime.New(),
 		databases: databases.New(),
 		doctor:    doctor.New(),
@@ -164,7 +164,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.lastError = ""
 		m.snapshot = msg.Snapshot
-		m.overview = m.overview.SetSnapshot(msg.Snapshot)
+		m.dashboard = m.dashboard.SetSnapshot(msg.Snapshot)
 		m.runtime = m.runtime.SetSnapshot(msg.Snapshot)
 		m.databases = m.databases.SetSnapshot(msg.Snapshot)
 		m.doctor = m.doctor.SetSnapshot(msg.Snapshot)
@@ -569,6 +569,7 @@ func (m Model) reloadConfig() (Model, tea.Cmd) {
 
 	m.cfg = cfg
 	m.logs = logs.New().SetSnapshot(m.snapshot)
+	m.dashboard = m.dashboard.SetConfig(cfg)
 	m.config = m.config.SetConfig(cfg)
 	m.palette = m.buildPalette()
 	return m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
@@ -578,7 +579,7 @@ func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 	var cmd tea.Cmd
 
-	m.overview, cmd = m.overview.Update(msg)
+	m.dashboard, cmd = m.dashboard.Update(msg)
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
@@ -608,8 +609,8 @@ func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.activeTab {
 	case 0:
-		next, cmd := m.overview.Update(msg)
-		m.overview = next
+		next, cmd := m.dashboard.Update(msg)
+		m.dashboard = next
 		return m, cmd
 	case 1:
 		next, cmd := m.runtime.Update(msg)
@@ -636,7 +637,7 @@ func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) tabsView() string {
 	tabs := []string{
-		m.renderTab(0, "1 Overview"),
+		m.renderTab(0, "1 Dashboard"),
 		m.renderTab(1, "2 Runtime"),
 		m.renderTab(2, "3 Databases"),
 		m.renderTab(3, "4 Doctor"),
@@ -656,7 +657,7 @@ func (m Model) renderTab(index int, label string) string {
 func (m Model) activeTabView(width, height int) string {
 	switch m.activeTab {
 	case 0:
-		return m.overview.View(width, height)
+		return m.dashboard.View(width, height)
 	case 1:
 		return m.runtime.View(width, height)
 	case 2:
@@ -771,7 +772,7 @@ func (m Model) statusBar(width int) string {
 func (m Model) currentHelpLines() []string {
 	switch m.activeTab {
 	case 0:
-		return m.overview.HelpLines()
+		return m.dashboard.HelpLines()
 	case 1:
 		return m.runtime.HelpLines()
 	case 2:
@@ -928,7 +929,7 @@ func slugify(value string) string {
 
 func (m Model) buildPalette() []paletteOption {
 	return []paletteOption{
-		{Title: "Overview", Description: "Quick switch to the operational summary.", Mode: paletteSwitch, Tab: 0},
+		{Title: "Dashboard", Description: "Operational health, tenant routing, security and resource summary.", Mode: paletteSwitch, Tab: 0},
 		{Title: "Runtime", Description: "Quick switch to runtime mode control.", Mode: paletteSwitch, Tab: 1},
 		{Title: "Databases", Description: "Quick switch to database operations.", Mode: paletteSwitch, Tab: 2},
 		{Title: "Doctor", Description: "Quick switch to mode-specific diagnostics.", Mode: paletteSwitch, Tab: 3},
