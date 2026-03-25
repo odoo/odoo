@@ -880,6 +880,7 @@ class AccountMoveLine(models.Model):
             self.cumulated_balance = 0
             return
 
+<<<<<<< 4c8aa62c994f9145837999ae7d384ab27e923399
         account = self.env['account.account'].browse(account_id)
         if len(set(account.company_ids.mapped('currency_id'))) != 1:
             # If the account is shared between multiple companies with different currencies,
@@ -919,6 +920,42 @@ class AccountMoveLine(models.Model):
 
             initial_balance += record.balance
             record.cumulated_balance = initial_balance
+||||||| 600ef1810dbc52a862ace88d5c6d24a8ed5be19f
+        # get the where clause
+        query = self._search(self.env.context.get('domain_cumulated_balance') or [], bypass_access=True)
+        sql_order = self._order_to_sql(query.table, self.env.context.get('order_cumulated_balance'), reverse=True)
+        result = dict(self.env.execute_query(query.select(
+            query.table.id,
+            SQL(
+                "SUM(%s) OVER (ORDER BY %s ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
+                query.table.balance,
+                sql_order,
+            ),
+        )))
+        for record in self:
+            record.cumulated_balance = result[record.id]
+=======
+        # get the where clause
+        query = self._search(self.env.context.get('domain_cumulated_balance') or [], bypass_access=True)
+        sql_order = self._order_to_sql(query.table, self.env.context.get('order_cumulated_balance'), reverse=True)
+        subquery = query.subselect(
+            query.table.id,
+            SQL(
+                "SUM(%s) OVER (ORDER BY %s ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
+                query.table.balance,
+                sql_order,
+            ),
+        )
+        result = dict(self.env.execute_query(
+            SQL(
+                "SELECT * FROM (%(subquery)s) AS aml WHERE id = ANY(%(ids)s)",
+                subquery=subquery,
+                ids=self.ids,
+            ),
+        ))
+        for record in self:
+            record.cumulated_balance = result[record.id]
+>>>>>>> 6efebfe9027ace999352d3ff09f788ed44ee379d
 
     def _search_open_on_date(self, operator, value):
         return []
