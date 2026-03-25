@@ -895,6 +895,10 @@ class BaseCase(case.TestCase):
                         # add a subtest in order to continue the test_method in case of failures
                         with self.subTest():
                             self.fail(msg % (login, count, expected, funcname, filename, linenum))
+                    elif expected and not count:
+                        msg = "Query count did not detect any queries %s: expected %d in %s at %s:%s"
+                        with self.subTest():
+                            self.fail(msg % (login, expected, funcname, filename, linenum))
                     else:
                         logger = logging.getLogger(type(self).__module__)
                         msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"

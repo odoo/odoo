@@ -83,6 +83,7 @@ class TestCursor(Cursor):
             tos = self._cursors_stack.pop()
             if tos is not self:
                 _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+            self._cnx._cursor.sql_log_count += self.sql_log_count  # propagate stats to the main cursor
             self._lock.release()
 
     def commit(self) -> None:

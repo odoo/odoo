@@ -434,9 +434,6 @@ class Cursor(_CursorProtocol):
     def print_log(self) -> None:
         global sql_counter
 
-        if not _logger.isEnabledFor(logging.DEBUG):
-            return
-
         def process(log_type: str):
             sqllogs = {'from': self.sql_from_log, 'into': self.sql_into_log}
             sqllog = sqllogs[log_type]
@@ -453,7 +450,6 @@ class Cursor(_CursorProtocol):
 
         process('from')
         process('into')
-        self.sql_log_count = 0
 
     @contextmanager
     def _enable_logging(self):
@@ -492,7 +488,8 @@ class Cursor(_CursorProtocol):
             self._closed = True
 
             # Advanced stats only at logging.DEBUG level
-            self.print_log()
+            if _logger.isEnabledFor(logging.DEBUG):
+                self.print_log()
 
             # This force the cursor to be freed, and thus, available again. It is
             # important because otherwise we can overload the server very easily
