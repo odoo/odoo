@@ -9,7 +9,12 @@ function identity(cmd) {
     return [cmd];
 }
 
-const { coreTypes, invalidateEvaluationCommands, readonlyAllowedCommands } = spreadsheet;
+const {
+    coreTypes,
+    invalidateEvaluationCommands,
+    readonlyAllowedCommands,
+    lockedSheetAllowedCommands,
+} = spreadsheet;
 
 coreTypes.add("ADD_GLOBAL_FILTER");
 coreTypes.add("EDIT_GLOBAL_FILTER");
@@ -27,6 +32,8 @@ readonlyAllowedCommands.add("UPDATE_OBJECT_DOMAINS");
 readonlyAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
 readonlyAllowedCommands.add("UPDATE_CHART_GRANULARITY");
+
+lockedSheetAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
 inverseCommandRegistry
     .add("EDIT_GLOBAL_FILTER", identity)
