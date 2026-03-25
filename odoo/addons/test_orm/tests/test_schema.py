@@ -27,7 +27,7 @@ class TestReflection(common.TransactionCase):
 
     def test_models_fields(self):
         """ check that all models and fields are reflected as expected. """
-        model_names = ['domain.bool', 'decimal.precision.test', *(
+        model_names = ['domain.bool', *(
             cls._name
             for cls in MetaModel._module_to_models__['test_orm']
             if cls._name.startswith('test_orm')
