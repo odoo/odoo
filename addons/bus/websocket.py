@@ -44,6 +44,7 @@ from .session_helpers import check_session, new_env
 from .tools import orjson
 
 _logger = logging.getLogger(__name__)
+_stopping = threading.Event()
 
 
 MAX_TRY_ON_POOL_ERROR = 10
@@ -74,6 +75,7 @@ def acquire_cursor(db):
 # ------------------------------------------------------
 # EXCEPTIONS
 # ------------------------------------------------------
+
 
 class UpgradeRequired(HTTPException):
     code = 426
@@ -1005,6 +1007,8 @@ class WebsocketConnectionHandler:
         """
         if not cls.websocket_allowed(request):
             raise ServiceUnavailable("Websocket is disabled in test mode")
+        if _stopping.is_set():
+            raise ServiceUnavailable("Websocket is shutting down")
         public_session = cls._handle_public_configuration(request)
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
@@ -1141,17 +1145,38 @@ class WebsocketConnectionHandler:
 
 def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
-    _logger.info('disconnecting %s websockets', len(_websocket_instances))
-    count = 0
-    wait_threshold = max(odoo.sql_db._Pool._maxconn // 8, 8) if odoo.sql_db._Pool else 32
-    for websocket in _websocket_instances:
-        if websocket.state is ConnectionState.OPEN:
-            websocket.close(code)
-            count += 1
-            if count % wait_threshold == 0:
-                time.sleep(0.5)
-                _logger.debug('kicking websockets %s/%s ...', count, len(_websocket_instances))
-    _logger.debug('kicking websockets %s/%s done', count, len(_websocket_instances))
+    _stopping.set()  # refuse new connections
+    try:
+        _logger.info("Disconnecting %s websockets", len(_websocket_instances))
+        count = 0
+        wait_threshold = max(odoo.sql_db._Pool._maxconn // 8, 8) if odoo.sql_db._Pool else 32
+        for websocket in _websocket_instances:
+            if websocket.state is ConnectionState.OPEN:
+                websocket.close(code)
+                count += 1
+                if count % wait_threshold == 0:
+                    time.sleep(0.5)
+                    _logger.debug("signaling websockets to shutdown %s/%s ...", count, len(_websocket_instances))
+        _logger.debug("signaling websockets to shutdown %s/%s done", count, len(_websocket_instances))
+
+        # Every websocket has been signaled to shut down, but the
+        # closing handshake might not be complete yet, wait up to
+        # TIMEOUT/10 seconds for all handshaked to be done.
+        for _ in range(int(TimeoutManager.TIMEOUT)):
+            if all(
+                websocket.state is ConnectionState.CLOSED
+                for websocket in _websocket_instances
+            ):
+                break
+            time.sleep(.1)
+        else:
+            _logger.warning("There remain %s closing websockets", sum(
+                1
+                for websocket in _websocket_instances
+                if websocket.state is not ConnectionState.CLOSED
+            ))
+    finally:
+        _stopping.clear()
 
 
 CommonServer.on_stop(_kick_all)
