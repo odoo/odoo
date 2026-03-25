@@ -158,12 +158,19 @@ class BaseString(Field[str | typing.Literal[False]]):
             else:
                 get_base = lambda term: term
 
+            translations = self._get_stored_translations(record)
+
             # use a wrapper to let the frontend js code identify each term and
             # its metadata in the 'edit_translations' context
             def translate_func(term):
                 source_term = get_base(term)
-                translation_state = 'translated' if lang == base_lang or source_term != term else 'to_translate'
+                if lang == base_lang or (source_term != term and lang in translations):
+                    translation_state = 'translated'
+                else:
+                    translation_state = 'to_translate'
+
                 translation_source_sha = sha256(source_term.encode()).hexdigest()
+
                 return (
                     '<span '
                         f'''{'class="o_delay_translation" ' if delay_translation else ''}'''

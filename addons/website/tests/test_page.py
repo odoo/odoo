@@ -614,6 +614,22 @@ class WithContext(HttpCase):
         r = self.url_open(generic_page.url)
         self.assertEqual(r.status_code, 404, "Generic should not be reachable")
 
+    def test_20_depend_lang(self):
+        website = self.env.ref('website.default_website')
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        # lang_fr.write({'url_code': 'fr'})
+        website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        website.default_lang_id = self.env.ref('base.lang_en')
+
+        self.base_view.arch_db = '''<t name="Homepage" t-name="test.base_view">BIDULE</t>'''
+        self.base_view.update_field_translations('arch_db', {
+            'en_US': {'BIDULE': 'BIDULE EN !'},
+            lang_fr.code: {'BIDULE': 'BIDULE FR !'},
+        })
+
+        self.assertEqual(self.env['website.page'].with_context({'lang': 'en_US'}).search([('url', '=', '/page_1')]).arch, '''<t name="Homepage" t-name="test.base_view">BIDULE EN !</t>''')
+        self.assertEqual(self.env['website.page'].with_context({'lang': lang_fr.code}).search([('url', '=', '/page_1')]).arch, '''<t name="Homepage" t-name="test.base_view">BIDULE FR !</t>''')
+
 
 @tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
