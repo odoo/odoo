@@ -287,6 +287,7 @@ class HrExpenseSheet(models.Model):
             else:
                 sheet.selectable_payment_method_line_ids = self.env['account.payment.method.line'].search([
                     ('payment_type', '=', 'outbound'),
+                    ('journal_id.active', '=', True),
                     ('company_id', 'parent_of', sheet.company_id.id)
                 ])
 
