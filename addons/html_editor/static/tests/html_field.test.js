@@ -43,7 +43,13 @@ import { delay } from "@web/core/utils/concurrency";
 import { FormController } from "@web/views/form/form_controller";
 import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
-import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import {
+    insertText,
+    pasteHtml,
+    pasteOdooEditorHtml,
+    pasteText,
+    undo,
+} from "./_helpers/user_actions";
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -1741,6 +1747,39 @@ test("typing '[] ' does not create a checklist when 'allowChecklist' is false", 
     setSelectionInHtmlField();
     await insertText(htmlEditor, "[] ");
     expect(queryOne(".odoo-editor-editable")).toHaveInnerHTML("<p>[] </p>");
+});
+
+test("should not paste checklist when allowchecklist is false", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: "<p><br></p>",
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowChecklist': false}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    pasteOdooEditorHtml(
+        htmlEditor,
+        `<ul class="o_checklist"><li><div class="o-paragraph">1</div><ul class="o_checklist"><li><div class="o-paragraph">2</div><ul class="o_checklist"><li>3</li></ul></li></ul></li></ul>`
+    );
+    expect(queryOne(".odoo-editor-editable")).toHaveInnerHTML(
+        `<div class="o-paragraph">1</div><div class="o-paragraph">2</div><div class="o-paragraph">3</div>`
+    );
+    pasteHtml(
+        htmlEditor,
+        `<ul class="o_checklist"><li><div class="o-paragraph">1</div><ul class="o_checklist"><li><div class="o-paragraph">2</div><ul class="o_checklist"><li>3</li></ul></li></ul></li></ul>`
+    );
+    expect(queryOne(".odoo-editor-editable")).toHaveInnerHTML(
+        `<div class="o-paragraph">1</div><div class="o-paragraph">2</div><div class="o-paragraph">31</div><div class="o-paragraph">2</div><div class="o-paragraph">3</div>`
+    );
 });
 
 describe("sandbox", () => {
