@@ -24,7 +24,8 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
             checks_amount = sum(checks.mapped('amount'))
-            if not wizard.currency_id.is_zero(checks_amount) and wizard.currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0:
+            currency_id = wizard.currency_id or wizard.company_currency_id
+            if not currency_id.is_zero(checks_amount) and currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0:
                 if wizard.partner_type == 'supplier':
                     original_amount = wizard.amount
                     f_delta = checks_amount - wizard.l10n_ar_net_amount
@@ -40,10 +41,10 @@ class AccountPaymentRegister(models.TransientModel):
                     wizard._compute_l10n_ar_net_amount()
                     for i in range(201):
                         f_delta = checks_amount - wizard.l10n_ar_net_amount
-                        if wizard.currency_id.is_zero(f_delta):
+                        if currency_id.is_zero(f_delta):
                             break
                         der = ((wizard.l10n_ar_net_amount - f_previous) / d) if abs(d) >= 0.01 else 1.0
-                        if wizard.currency_id.is_zero(der):
+                        if currency_id.is_zero(der):
                             i = 200
                             break
                         d = max(f_delta / der, 0.01)
@@ -61,7 +62,8 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
             checks_amount = sum(checks.mapped('amount'))
-            wizard.l10n_ar_adjustment_warning = not wizard.currency_id.is_zero(checks_amount) and wizard.currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0
+            currency_id = wizard.currency_id or wizard.company_currency_id
+            wizard.l10n_ar_adjustment_warning = not currency_id.is_zero(checks_amount) and currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0
 
     @api.depends('amount', 'l10n_ar_withholding_ids.amount')
     def _compute_l10n_ar_net_amount(self):
