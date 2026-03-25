@@ -180,6 +180,7 @@ class ResUsers(models.Model):
                     )
         return users
 
+    @Store.with_versioning
     def write(self, vals):
         log_portal_access = 'group_ids' in vals and not self.env.context.get('mail_create_nolog') and not self.env.context.get('mail_notrack')
         user_portal_access_dict = {
@@ -237,7 +238,7 @@ class ResUsers(models.Model):
                 )
         if "notification_type" in vals:
             for user in user_notification_type_modified:
-                Store(bus_channel=user).add(user, ["notification_type"]).bus_send()
+                Store.to(user).add(user, ["notification_type"])
 
         return write_res
 

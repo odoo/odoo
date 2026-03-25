@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 from odoo import models
 from odoo.fields import Domain
-from odoo.addons.mail.tools.discuss import add_guest_to_context, store_version
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 from odoo.tools.misc import verify_limited_field_access_token
 
 PRESENCE_CHANNEL_PREFIX = "odoo-presence-"
@@ -31,10 +31,10 @@ class IrWebsocket(models.AbstractModel):
             self._update_mail_presence(**data)
 
     @add_guest_to_context
+    @Store.with_versioning
     def _subscribe(self, og_data):
         super()._subscribe(og_data)
 
-    @store_version
     @add_guest_to_context
     def _update_mail_presence(self, inactivity_period):
         user, guest = self.env["res.users"]._get_current_persona()
@@ -105,7 +105,6 @@ class IrWebsocket(models.AbstractModel):
         data["missed_presences"] = self.env["mail.presence"].sudo().search(presence_domain)
         return data
 
-    @store_version
     def _after_subscribe_data(self, data):
         user, guest = self.env["res.users"]._get_current_persona()
         if user or guest:

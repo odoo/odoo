@@ -47,8 +47,8 @@ class PublicPageController(http.Controller):
         # sudo: discuss.channel - channel access is validated with invitation_token
         if not channel or not channel.sudo().uuid or not consteq(channel.sudo().uuid, invitation_token):
             raise NotFound()
-        store = Store().add_global_values(isChannelTokenSecret=True)
-        return self._response_discuss_channel_invitation(store, channel, guest_email)
+        Store.default(self).add_global_values(isChannelTokenSecret=True)
+        return self._response_discuss_channel_invitation(channel, guest_email)
 
     @mail_route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     def discuss_channel(self, channel_id, *, highlight_message_id=None):
@@ -56,7 +56,7 @@ class PublicPageController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return self._response_discuss_public_template(Store(), channel)
+        return self._response_discuss_public_template(channel)
 
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         # sudo: ir.config_parameter - reading hard-coded key and using it in a simple condition
@@ -80,10 +80,10 @@ class PublicPageController(http.Controller):
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
                 channel_sudo = channel_sudo.search([("uuid", "=", create_token)])
-        store = Store().add_global_values(isChannelTokenSecret=False)
-        return self._response_discuss_channel_invitation(store, channel_sudo.sudo(False))
+        Store.default(self).add_global_values(isChannelTokenSecret=False)
+        return self._response_discuss_channel_invitation(channel_sudo.sudo(False))
 
-    def _response_discuss_channel_invitation(self, store, channel, guest_email=None):
+    def _response_discuss_channel_invitation(self, channel, guest_email=None):
         # group restriction takes precedence over token
         # sudo - res.groups: can access group public id of parent channel to determine if we
         # can access the channel.
@@ -102,13 +102,14 @@ class PublicPageController(http.Controller):
             # sudo - mail.guest: writing email address of self guest is allowed
             guest.sudo().email = guest_email
         if guest and not guest_already_known:
-            store.add_global_values(is_welcome_page_displayed=True)
+            Store.default(self).add_global_values(is_welcome_page_displayed=True)
             channel = channel.with_context(guest=guest)
         if self.env.user._is_internal():
             return request.redirect(f"/odoo/action-mail.action_discuss?active_id={channel.id}")
-        return self._response_discuss_public_template(store, channel)
+        return self._response_discuss_public_template(channel)
 
-    def _response_discuss_public_template(self, store: Store, channel):
+    def _response_discuss_public_template(self, channel):
+        store = Store.default(self)
         store.add_global_values(
             companyName=request.env.company.name,
             inPublicPage=True,
@@ -121,7 +122,7 @@ class PublicPageController(http.Controller):
         return request.render(
             "mail.discuss_public_channel_template",
             {
-                "data": store.get_result(),
+                "data": store,
                 "session_info": channel.env["ir.http"].session_info(),
             },
         )

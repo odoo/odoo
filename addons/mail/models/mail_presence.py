@@ -43,11 +43,13 @@ class MailPresence(models.Model):
     )
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
         presences = super().create(vals_list)
         presences._send_presence()
         return presences
 
+    @Store.with_versioning
     def write(self, vals):
         status_by_presence = {presence: presence.status for presence in self}
         result = super().write(vals)
@@ -55,6 +57,7 @@ class MailPresence(models.Model):
         updated._send_presence()
         return result
 
+    @Store.with_versioning
     def unlink(self):
         self._send_presence("offline")
         return super().unlink()
@@ -98,22 +101,21 @@ class MailPresence(models.Model):
 
         :param im_status: 'online', 'away' or 'offline'
         """
-        stores = Store.Stores()
         for presence in self:
             persona = presence.guest_id or presence.user_id
             target = bus_target or (persona, "presence")
-            stores[target].add(
+            bus_channel, bus_subchannel = target if isinstance(target, tuple) else (target, None)
+            Store.to(bus_channel, bus_subchannel=bus_subchannel, env=self.env).add(
                 presence.guest_id or presence.user_id.partner_id,
                 {"im_status": im_status or persona.im_status},
             )
             if bus_target is None or persona == bus_target:
-                stores[persona].add(
+                Store.to(persona).add(
                     persona
                     if isinstance(persona, self.env.registry["mail.guest"])
                     else persona.partner_id,
                     {"presence_status": im_status or presence.status},
                 )
-        stores.bus_send()
 
     @api.autovacuum
     def _gc_bus_presence(self):

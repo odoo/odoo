@@ -23,10 +23,10 @@ class BusSyncMixin(models.AbstractModel):
         :param res: list of field names that will be sync
         """
 
+    @Store.with_versioning
     def write(self, vals):
-        stores = Store.Stores()
         manager_by_bus_target = lazymapping(
-            lambda bus_target: Store.FieldListManager(stores, self, bus_target),
+            lambda bus_target: Store.FieldListManager(self, bus_target),
         )
         self._sync_field_names(manager_by_bus_target)
         get_vals = Store.FieldListManager.get_val_by_field_by_store_by_record
@@ -45,5 +45,4 @@ class BusSyncMixin(models.AbstractModel):
                 if field_list:
                     record._store_sync_extra_fields(field_list)
                     store.add(record, field_list)
-        stores.bus_send()
         return result

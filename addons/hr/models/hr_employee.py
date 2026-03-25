@@ -1684,6 +1684,7 @@ class HrEmployee(models.Model):
         return list(in_cycle)
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
         vals_per_company = defaultdict(list)
         for idx, vals in enumerate(vals_list):

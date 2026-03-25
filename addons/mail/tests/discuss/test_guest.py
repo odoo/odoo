@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
+from odoo.tests import HttpCase
+
 from odoo.addons.mail.tests.common import MailCase
 
 
-class TestGuest(MailCase):
+class TestGuest(HttpCase, MailCase):
 
     def test_updating_guest_name_linked_to_multiple_channels(self):
         """This test ensures that when a guest is linked to multiple channels,
@@ -39,5 +41,9 @@ class TestGuest(MailCase):
 
         self._reset_bus()
         with self.assertBus(get_params=get_guest_bus_params):
-            guest._update_name("Guest Name Updated")
+            self.make_jsonrpc_request(
+                "/mail/guest/update_name",
+                {"guest_id": guest.id, "name": "Guest Name Updated"},
+                cookies={guest._cookie_name: guest._format_auth_cookie()},
+            )
         self.assertEqual(guest.name, "Guest Name Updated")

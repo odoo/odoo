@@ -277,11 +277,12 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
+    @Store.with_versioning
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also (internal) users, and then extend the research to all partners.
         """
-        store = Store().add(
+        store = Store.default(self).add(
             self._search_mention_suggestions(self._get_mention_suggestions_domain(search), limit),
             lambda res: (
                 res.from_method("_store_partner_fields"),
@@ -293,7 +294,7 @@ class ResPartner(models.Model):
             store.add(roles, ["name", "user_ids_count"])
         except AccessError:
             pass
-        return store.get_result()
+        return store
 
     @api.model
     def _get_mention_suggestions_domain(self, search):

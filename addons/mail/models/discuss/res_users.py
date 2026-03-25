@@ -11,11 +11,13 @@ class ResUsers(models.Model):
     is_in_call = fields.Boolean("Is in call", related="partner_id.is_in_call")
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
         users = super().create(vals_list)
         self.env["discuss.channel"].search([("group_ids", "in", users.all_group_ids.ids)])._subscribe_users_automatically()
         return users
 
+    @Store.with_versioning
     def write(self, vals):
         res = super().write(vals)
         if "active" in vals and not vals["active"]:

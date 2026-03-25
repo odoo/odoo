@@ -2978,6 +2978,7 @@ class MailThread(models.AbstractModel):
                        for record in self]
         return self.sudo()._message_create(values_list)
 
+    @Store.with_versioning
     def set_message_pin(self, message_id, pinned):
         """(Un)pin a message on the thread.
         The message must belong to the thread on which it is called.
@@ -3003,7 +3004,7 @@ class MailThread(models.AbstractModel):
             "UPDATE mail_message SET pinned_at=%(pinned_at)s WHERE id=%(id)s",
             {"pinned_at": fields.Datetime.now() if pinned else None, "id": message.id},
         )
-        Store(bus_channel=message).add(message, ["pinned_at"]).bus_send()
+        Store.to(message).add(message, ["pinned_at"])
         return True
 
     # ------------------------------------------------------------
@@ -3383,6 +3384,7 @@ class MailThread(models.AbstractModel):
 
         return recipients_data
 
+    @Store.with_versioning
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Notify recipients inbox of a message. It is done in two main steps
 
@@ -3424,13 +3426,12 @@ class MailThread(models.AbstractModel):
             )
             batch_vals = {"msg_vals": msg_vals, "inbox_fields": True, "followers": followers}
             for user in users:
-                store = Store(bus_channel=user).add(
+                store = Store.to(user).add(
                     message.with_user(user).with_context(allowed_company_ids=[]),
                     "_store_message_fields",
                     fields_params=batch_vals,
                 )
-                data = store.get_result()
-                user._bus_send("mail.message/inbox", {"message_id": message.id, "store_data": data})
+                user._bus_send("mail.message/inbox", {"message_id": message.id, "store_data": store})
 
     def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -4929,14 +4930,14 @@ class MailThread(models.AbstractModel):
         return True
 
     @api.readonly
+    @Store.with_versioning
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
-        store = Store().add(
+        return Store.default(self).add(
             self,
             "_store_message_followers_fields",
             fields_params={"after": after, "limit": limit, "filter_recipients": filter_recipients},
             as_thread=True,
         )
-        return store.get_result()
 
     def _store_message_followers_fields(
         self,
@@ -5010,6 +5011,7 @@ class MailThread(models.AbstractModel):
         msg_not_comment.sudo().write(msg_vals)
         return True
 
+    @Store.with_versioning
     def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None,
                                 strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
@@ -5092,7 +5094,7 @@ class MailThread(models.AbstractModel):
             self.env["mail.message.translation"].sudo().search(
                 [("message_id", "=", message.id)],
             ).unlink()
-        Store(bus_channel=message).add(
+        Store.to(message, env=self.env).add(
             message,
             lambda res: (
                 res.many("attachment_ids", "_store_attachment_fields", sort="id"),
@@ -5109,7 +5111,7 @@ class MailThread(models.AbstractModel):
                 self._store_message_update_extra_fields(res),
                 res.attr("translationValue", False, predicate=lambda m: m.body is not None),
             ),
-        ).bus_send()
+        )
 
     def _clean_empty_message(self, message):
         message.message_link_preview_ids._unlink_and_notify()

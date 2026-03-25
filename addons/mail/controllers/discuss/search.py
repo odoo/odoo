@@ -9,7 +9,6 @@ from odoo.addons.mail.tools.discuss import mail_route, Store
 class SearchController(http.Controller):
     @mail_route("/discuss/search", methods=["POST"], type="jsonrpc", auth="public")
     def search(self, term, category_id=None, limit=10):
-        store = Store()
         base_domain = Domain("name", "ilike", term) & Domain("channel_type", "!=", "chat")
         priority_conditions = [
             Domain("is_member", "=", True) & base_domain,
@@ -25,6 +24,5 @@ class SearchController(http.Controller):
             # really slow.
             query = channels._search(Domain('id', 'not in', channels.ids) & domain, limit=remaining_limit)
             channels |= channels.browse(query)
-        store.add(channels, "_store_channel_fields")
-        request.env["res.partner"]._search_for_channel_invite(store, search_term=term, limit=limit)
-        return store.get_result()
+        request.env["res.partner"]._search_for_channel_invite(search_term=term, limit=limit)
+        return Store.default(self).add(channels, "_store_channel_fields")

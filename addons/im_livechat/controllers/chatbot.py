@@ -14,8 +14,10 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
-        store = Store().add(message, "_store_message_fields")
-        return {"message_id": message.id, "store_data": store.get_result()}
+        return {
+            "message_id": message.id,
+            "store_data": Store.default(self).add(message, "_store_message_fields"),
+        }
 
     @mail_route("/chatbot/answer/save", type="jsonrpc", auth="public")
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
@@ -62,7 +64,7 @@ class LivechatChatbotScriptController(http.Controller):
             if chatbot.exists():
                 next_step = chatbot.script_step_ids[:1]
         user, guest = self.env["res.users"]._get_current_persona()
-        store = Store(bus_channel=user or guest)
+        store = Store.to(user or guest)
         store.data_id = data_id
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
@@ -83,8 +85,7 @@ class LivechatChatbotScriptController(http.Controller):
                 ),
             )
             store.resolve_data_request()
-            store.bus_send()
-            return store.get_result()
+            return store
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
         step_data = next_step._process_step(discuss_channel)
@@ -113,7 +114,6 @@ class LivechatChatbotScriptController(http.Controller):
                 res.attr("steps", [("ADD", [chatbot_next_step])]),
             ),
         )
-        store.bus_send()
 
     @mail_route("/chatbot/step/validate_contact_info", type="jsonrpc", auth="public")
     def chatbot_validate_contact_info(self, channel_id):
@@ -142,7 +142,7 @@ class LivechatChatbotScriptController(http.Controller):
             elif step_type == "question_phone":
                 result = chatbot._validate_phone(last_user_message.body, discuss_channel)
             if posted_message := result.pop("posted_message"):
-                store = Store().add(
+                result["data"] = Store.default(self).add(
                     discuss_channel,
                     lambda res: res.many(
                         "messages",
@@ -151,5 +151,4 @@ class LivechatChatbotScriptController(http.Controller):
                         value=posted_message,
                     ),
                 )
-                result["data"] = store.get_result()
         return result

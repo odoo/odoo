@@ -72,14 +72,14 @@ class AttachmentController(ThreadController):
             # sudo: ir.attachment - posting a new attachment on an accessible thread
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
-            store = Store().add(
+            store = Store.default(self).add(
                 attachment,
                 lambda res: (
                     res.from_method("_store_attachment_fields"),
                     res.from_method("_store_ownership_fields"),
                 ),
             )
-            res = {"data": {"store_data": store.get_result(), "attachment_id": attachment.id}}
+            res = {"data": {"store_data": store, "attachment_id": attachment.id}}
         except AccessError:
             res = {"error": _("You are not allowed to upload an attachment here.")}
         return res
@@ -151,7 +151,7 @@ class AttachmentController(ThreadController):
             with file_open("web/static/img/mimetypes/unknown.svg", "rb") as f:
                 thumbnail = BinaryBytes(f.read())
         attachment_sudo.thumbnail = thumbnail
-        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"]).bus_send()
+        Store.to(attachment_sudo).add(attachment_sudo, ["has_thumbnail"])
 
     def _get_pdf_first_page_response(self, attachment):
         try:

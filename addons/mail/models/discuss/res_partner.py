@@ -29,6 +29,7 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
+    @Store.with_versioning
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
         """Returns partners matching search_term that can be invited to a channel.
 
@@ -40,8 +41,8 @@ class ResPartner(models.Model):
           the channel allows invites by email.
 
         """
-        store = Store()
-        channel_invites = self._search_for_channel_invite(store, search_term, channel_id, limit)
+        store = Store.default(self)
+        channel_invites = self._search_for_channel_invite(search_term, channel_id, limit)
         selectable_email = None
         email_already_sent = None
         if channel_invites["count"] == 0 and single_email_re.match(search_term):
@@ -73,12 +74,12 @@ class ResPartner(models.Model):
             **channel_invites,
             "email_already_sent": email_already_sent,
             "selectable_email": selectable_email,
-            "store_data": store.get_result(),
+            "store_data": store,
         }
 
     @api.readonly
     @api.model
-    def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
+    def _search_for_channel_invite(self, search_term, channel_id=None, limit=30):
         domain = Domain.AND(
             [
                 Domain("name", "ilike", search_term) | Domain("email", "ilike", search_term),
@@ -98,7 +99,7 @@ class ResPartner(models.Model):
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
         selectable_partners = self.env["res.partner"].browse(query)
-        store.add(
+        Store.default(self).add(
             selectable_partners,
             "_store_channel_invite_fields",
             fields_params={"channel": channel},
@@ -113,6 +114,7 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
+    @Store.with_versioning
     def get_mention_suggestions_from_channel(self, channel_id, search, limit=8):
         """Return 'limit'-first partners' such that the name or email matches a 'search' string.
         Prioritize partners that are also (internal) users, and then extend the research to all partners.
@@ -139,7 +141,7 @@ class ResPartner(models.Model):
             ("partner_id", "in", partners.ids)
         ]
         members = self.env["discuss.channel.member"].search(members_domain)
-        store = Store()
+        store = Store.default(self)
         store.add(members, "_store_identifying_fields")
         store.add(
             partners,
@@ -157,4 +159,4 @@ class ResPartner(models.Model):
             store.add(roles, ["name", "user_ids_count"])
         except AccessError:
             pass
-        return store.get_result()
+        return store

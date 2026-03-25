@@ -145,6 +145,7 @@ class DiscussChannelMember(models.Model):
         )
 
     @api.autovacuum
+    @Store.with_versioning
     def _gc_unpin_livechat_sessions(self):
         """ Unpin read livechat sessions with no activity for at least one day to
             clean the operator's interface """
@@ -155,10 +156,8 @@ class DiscussChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.channel_id.livechat_end_dt = fields.Datetime.now()
-        stores = Store.Stores()
-        for member, store in sessions_to_be_unpinned._get_member_store_list(stores):
+        for member, store in sessions_to_be_unpinned._get_member_store_list():
             store.add(member.channel_id, {"close_chat_window": True})
-        stores.bus_send()
         sessions_to_be_unpinned.unpin_dt = fields.Datetime.now()
 
     def _store_member_fields(self, res: Store.FieldList):

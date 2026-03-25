@@ -20,6 +20,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             )
         )
 
+    @Store.with_versioning
     def _action_next_screen(self):
         """Clear all partner threads from the client store then proceed as in super.
 
@@ -29,4 +30,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         Other threads were actually deleted so they should be cleared either way.
         """
         action = super()._action_next_screen()
-        return Store().delete(self.partner_ids | self.dst_partner_id, as_thread=True).get_client_action(next_action=action)
+        return (
+            Store.default(self)
+            .delete(self.partner_ids | self.dst_partner_id, as_thread=True)
+            .get_client_action(next_action=action)
+        )

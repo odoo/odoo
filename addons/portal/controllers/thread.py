@@ -30,8 +30,9 @@ class PortalThreadController(ThreadController):
 
 class PortalWebClientController(WebclientController):
     @classmethod
-    def _process_request_for_all(self, store: Store, name, params):
-        super()._process_request_for_all(store, name, params)
+    def _process_request_for_all(self, name, params):
+        super()._process_request_for_all(name, params)
+        store = Store.default(request)
         if name == "/mail/chatter_fetch":
             # Only search into website_message_ids, so apply the same domain to perform only one search
             # extract domain from the 'website_message_ids' field
@@ -65,7 +66,6 @@ class PortalWebClientController(WebclientController):
             )
             # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
             messages = self._resolve_messages(
-                store,
                 domain=domain,
                 thread=thread,
                 fetch_params=fetch_params,

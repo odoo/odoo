@@ -231,6 +231,7 @@ class DiscussChannel(models.Model):
         "(channel_type, create_date) WHERE channel_type = 'livechat'"
     )
 
+    @Store.with_versioning
     def write(self, vals):
         if (
             self.filtered(
@@ -247,12 +248,11 @@ class DiscussChannel(models.Model):
         result = super().write(vals)
         need_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
         group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
-        store = Store(bus_channel=group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
+        store = Store.to(group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
         store.add(need_help_after - need_help_before, "_store_channel_fields")
         store.add(need_help_before - need_help_after, ["livechat_status"])
         if "livechat_expertise_ids" in vals:
             store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name", "color"]))
-        store.bus_send()
         return result
 
     def channel_change_description(self, description):
@@ -745,7 +745,7 @@ class DiscussChannel(models.Model):
             subtype_xmlid="mail.mt_comment",
         )
         if rated_partner not in self.channel_member_ids.partner_id:
-            store = Store(bus_channel=rated_partner.sudo().user_ids)
+            store = Store.to(rated_partner.sudo().user_ids, auto_bus_send=False)
             store.add(user, lambda res: res.one("partner_id", ["name"]))
             store.add(guest, ["name"]).add(self, [])
             rated_partner.sudo().user_ids._bus_send(
@@ -755,7 +755,7 @@ class DiscussChannel(models.Model):
                     "feedback": reason,
                     "rating_image_url": rating_url,
                     "channel_id": self.id,
-                    "store_data": store.get_result(),
+                    "store_data": store,
                 },
             )
 
@@ -864,7 +864,7 @@ class DiscussChannel(models.Model):
                     store.add(message, "_store_message_fields")
                     store.add(question_msg.mail_message_id, "_store_message_fields")
                 user, guest = self.env["res.users"]._get_current_persona()
-                Store(bus_channel=user or guest).add_model_values(
+                Store.to(user or guest).add_model_values(
                     "ChatbotStep",
                     {
                         "id": (self.chatbot_current_step_id.id, question_msg.mail_message_id.id),
@@ -872,23 +872,25 @@ class DiscussChannel(models.Model):
                         "message": question_msg.mail_message_id.id,
                         "selectedAnswer": selected_answer.id,
                     },
-                ).bus_send()
+                )
 
             self.env["chatbot.message"].sudo().create(
                 {
                     "mail_message_id": message.id,
                     "discuss_channel_id": self.id,
                     "script_step_id": self.chatbot_current_step_id.id,
-                }
+                },
             )
 
         author_history = self.env["im_livechat.channel.member.history"]
         # sudo - discuss.channel: accessing history to update its state is acceptable
         if message.author_id or message.author_guest_id:
             author_history = self.sudo().livechat_channel_member_history_ids.filtered(
-                lambda h: h.partner_id == message.author_id
-                if message.author_id
-                else h.guest_id == message.author_guest_id
+                lambda h: (
+                    h.partner_id == message.author_id
+                    if message.author_id
+                    else h.guest_id == message.author_guest_id
+                ),
             )
         if author_history:
             if message.message_type not in ("notification", "user_notification"):
@@ -951,6 +953,7 @@ class DiscussChannel(models.Model):
         self._add_members(users=self.env.user)
         return True
 
+    @Store.with_versioning
     def _forward_human_operator(self, chatbot_script_step=None, users=None):
         """ Add a human operator to the conversation. The conversation with the chatbot (scripted chatbot or ai agent) is stopped
         the visitor will continue the conversation with a real person.
@@ -1063,7 +1066,7 @@ class DiscussChannel(models.Model):
                 if m.script_step_id == chatbot_script_step
                 and m.mail_message_id.author_id == chatbot_script_step.chatbot_script_id.operator_partner_id
             ), self.env["mail.message"])
-            Store(bus_channel=self).add_model_values(
+            Store.to(self).add_model_values(
                 "ChatbotStep",
                 {
                     "id": (chatbot_script_step.id, step_message.id),
@@ -1071,7 +1074,7 @@ class DiscussChannel(models.Model):
                     "message": step_message.id,
                     "operatorFound": True,
                 },
-            ).bus_send()
+            )
 
     def _allow_invite_by_email(self):
         return self.channel_type == "livechat" or super()._allow_invite_by_email()

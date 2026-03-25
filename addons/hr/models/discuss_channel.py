@@ -4,6 +4,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.mail.tools.discuss import Store
+
 
 class DiscussChannel(models.Model):
     _inherit = 'discuss.channel'
@@ -28,8 +30,17 @@ class DiscussChannel(models.Model):
             )
         return new_members
 
+    @Store.with_versioning
     def write(self, vals):
         res = super().write(vals)
         if vals.get('subscription_department_ids'):
             self._subscribe_users_automatically()
         return res
+
+    @Store.with_versioning
+    def _some_private_method(self):
+        Store.to(some_channel).add(record, "_store_fields")  # Automatically send at the end of the top-level decorated function.
+        Store.default(self).add(record, "_store_fields")  # Request store.
+
+
+record = some_channel = None

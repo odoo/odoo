@@ -27,12 +27,11 @@ class DiscussCategory(models.Model):
         self._store_category_fields(res[None])
 
     @api.ondelete(at_uninstall=False)
+    @Store.with_versioning
     def _unlink_sync_to_channel(self):
-        stores = Store.Stores()
         for category in self:
             for channel in category.channel_ids:
-                stores[channel].delete(category)
-        stores.bus_send()
+                Store.to(channel).delete(category)
 
     def _get_bus_channel_access_token(self):
         """Return a scoped limited access token that indicates the current category

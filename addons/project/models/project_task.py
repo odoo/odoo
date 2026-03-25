@@ -2134,6 +2134,7 @@ class ProjectTask(models.Model):
                 token = token
         return super()._get_thread_with_access(thread_id, project_sharing_id=project_sharing_id, token=token, **kwargs)
 
+    @Store.with_versioning
     def get_mention_suggestions(self, search, limit=8):
         """Return the 'limit'-first followers of the given task or followers of its project matching
         a 'search' string.
@@ -2153,7 +2154,7 @@ class ProjectTask(models.Model):
             Domain(self.env["res.partner"]._get_mention_suggestions_domain(search))
             & Domain("id", "in", followers.partner_id.ids)
         )
-        store = Store().add(
+        return Store.default(self).add(
             self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit),
             lambda res: (
                 res.extend(["email", "name"]),
@@ -2161,7 +2162,6 @@ class ProjectTask(models.Model):
                 res.from_method("_store_mention_fields"),
             ),
         )
-        return store.get_result()
 
     @api.model
     def get_import_templates(self):

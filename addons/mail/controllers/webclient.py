@@ -15,25 +15,25 @@ class WebclientController(ThreadController):
         """Execute actions and returns data depending on request parameters.
         This is similar to /mail/data except this method can have side effects.
         """
-        return self._process_request(fetch_params, context=context)
+        self._process_request(fetch_params, context=context)
+        return Store.default(self)
 
     @mail_route("/mail/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     def mail_data(self, fetch_params, context=None):
         """Returns data depending on request parameters.
         This is similar to /mail/action except this method should be read-only.
         """
-        return self._process_request(fetch_params, context=context)
+        self._process_request(fetch_params, context=context)
+        return Store.default(self)
 
     @classmethod
     def _process_request(self, fetch_params, context):
-        store = Store()
         if context:
             request.update_context(**context)
-        self._process_request_loop(store, fetch_params)
-        return store.get_result()
+        self._process_request_loop(fetch_params)
 
     @classmethod
-    def _process_request_loop(self, store: Store, fetch_params):
+    def _process_request_loop(self, fetch_params):
         # aggregate of messages to return, to batch them in a single query when all the fetch params
         # have been processed
         request.update_context(messages=request.env["mail.message"], add_inbox_fields=False)
@@ -43,12 +43,13 @@ class WebclientController(ThreadController):
                 if isinstance(fetch_param, str)
                 else (fetch_param + [None, None])[:3]
             )
+            store = Store.default(request)
             store.data_id = data_id
-            self._process_request_for_all(store, name, params)
+            self._process_request_for_all(name, params)
             if not request.env.user._is_public():
-                self._process_request_for_logged_in_user(store, name, params)
+                self._process_request_for_logged_in_user(name, params)
             if request.env.user._is_internal():
-                self._process_request_for_internal_user(store, name, params)
+                self._process_request_for_internal_user(name, params)
         if messages := request.env.context["messages"]:
             store.add(
                 messages,
@@ -60,7 +61,8 @@ class WebclientController(ThreadController):
         store.data_id = None
 
     @classmethod
-    def _process_request_for_all(self, store: Store, name, params):
+    def _process_request_for_all(self, name, params):
+        store = Store.default(request.env)
         if name == "init_messaging":
             if request.env.user._is_internal():
                 # sudo: bus.bus: reading non-sensitive last id
@@ -100,7 +102,7 @@ class WebclientController(ThreadController):
                     store.add(opt_sudo.vote_ids, "_store_vote_fields")
 
     @classmethod
-    def _process_request_for_logged_in_user(self, store: Store, name, params):
+    def _process_request_for_logged_in_user(self, name, params):
         if name == "failures":
             domain = [
                 ("author_id", "=", request.env.user.partner_id.id),
@@ -127,7 +129,7 @@ class WebclientController(ThreadController):
             # and solves it by removing useless notifications
             if lost:
                 lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
-            store.add(valid.mail_message_id, "_store_notification_fields")
+            Store.default(request).add(valid.mail_message_id, "_store_notification_fields")
         if name == "/mail/thread/messages":
             if thread := self._get_thread_with_access(
                 params["thread_model"],
@@ -135,7 +137,6 @@ class WebclientController(ThreadController):
                 mode="read",
             ):
                 messages = self._resolve_messages(
-                    store,
                     thread=thread,
                     fetch_params=params.get("fetch_params"),
                 )
@@ -143,7 +144,8 @@ class WebclientController(ThreadController):
                     messages.set_message_done()
 
     @classmethod
-    def _process_request_for_internal_user(self, store: Store, name, params):
+    def _process_request_for_internal_user(self, name, params):
+        store = Store.default(request)
         if name == "systray_get_activities":
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
@@ -195,8 +197,6 @@ class WebclientController(ThreadController):
     @classmethod
     def _resolve_messages(
         self,
-        store: Store,
-        /,
         *,
         domain=None,
         thread=None,
@@ -212,7 +212,7 @@ class WebclientController(ThreadController):
         messages = fetch_res.pop("messages")
         if add_to_store:
             request.update_context(messages=request.env.context["messages"] | messages)
-        store.resolve_data_request(
+        Store.default(request).resolve_data_request(
             lambda res: (
                 [res.attr(k, v) for k, v in fetch_res.items()],
                 res.many("messages", [], value=messages),

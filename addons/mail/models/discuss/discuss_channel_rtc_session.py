@@ -38,11 +38,11 @@ class DiscussChannelRtcSession(models.Model):
     )
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
-        stores = Store.Stores()
         rtc_sessions = super().create(vals_list)
         for rtc_session in rtc_sessions:
-            stores[rtc_session.channel_id].add(
+            Store.to(rtc_session.channel_id).add(
                 rtc_session.channel_id,
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_session},
@@ -58,12 +58,11 @@ class DiscussChannelRtcSession(models.Model):
                     "start_call_message_id": message.id,
                 },
             )
-            stores[channel].add(message, ["call_history_ids"])
-        stores.bus_send()
+            Store.to(channel).add(message, ["call_history_ids"])
         return rtc_sessions
 
+    @Store.with_versioning
     def unlink(self):
-        stores = Store.Stores()
         call_ended_channels = self.channel_id.filtered(lambda c: not (c.rtc_session_ids - self))
         for channel in call_ended_channels:
             # If there is no member left in the RTC call, all invitations are cancelled.
@@ -76,7 +75,7 @@ class DiscussChannelRtcSession(models.Model):
             channel.sfu_channel_uuid = False
             channel.sfu_server_url = False
         for rtc_session in self:
-            stores[rtc_session.channel_id].add(
+            Store.to(rtc_session.channel_id).add(
                 rtc_session.channel_id,
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
@@ -90,8 +89,7 @@ class DiscussChannelRtcSession(models.Model):
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
         for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
-            stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
-        stores.bus_send()
+            Store.to(history.channel_id).add(history, ["duration_hour", "end_dt"])
         return super().unlink()
 
     def _bus_channels(self):
@@ -103,10 +101,12 @@ class DiscussChannelRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        store = Store(bus_channel=self.channel_id).add(self, "_store_extra_fields")
+        store = (
+            Store.to(self.channel_id, auto_bus_send=False).add(self, "_store_extra_fields")
+        )
         self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
-            {"data": store.get_result(), "channelId": self.channel_id.id},
+            {"data": store, "channelId": self.channel_id.id},
         )
 
     @api.autovacuum

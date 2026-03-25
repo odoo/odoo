@@ -414,6 +414,7 @@ class DiscussChannel(models.Model):
         return ["channel_role", "partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
         for vals in vals_list:
             # find partners to add from partner_ids
@@ -472,7 +473,7 @@ class DiscussChannel(models.Model):
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
         if not self.env.context.get("install_mode") and not self.env.user._is_public():
-            Store(bus_channel=self.env.user).add(channels, "_store_channel_fields").bus_send()
+            Store.to(self.env.user).add(channels, "_store_channel_fields")
         return channels
 
     def action_reset_invitation_uuid(self):
@@ -493,6 +494,7 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel._bus_send("discuss.channel/delete", {"id": channel.id})
 
+    @Store.with_versioning
     def write(self, vals):
         if 'channel_type' in vals:
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
@@ -578,8 +580,7 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
-        stores = Store.Stores()
-        for member, store in new_members._get_member_store_list(stores):
+        for member, store in new_members._get_member_store_list():
             store.add(member.channel_id, "_store_channel_fields").add(
                 member,
                 lambda res: (
@@ -587,7 +588,6 @@ class DiscussChannel(models.Model):
                     res.attr("unpin_dt"),
                 ),
             )
-        stores.bus_send()
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
@@ -597,6 +597,7 @@ class DiscussChannel(models.Model):
                 for channel in self
             )
 
+    @Store.with_versioning
     def action_unfollow(self):
         if self.channel_type in self._types_allowing_unfollow():
             self._action_unfollow(self.env.user.partner_id)
@@ -617,8 +618,10 @@ class DiscussChannel(models.Model):
             ]
         )
         for bus_channel in ((member or partner or guest)._bus_channels()):
-            custom_store = Store(bus_channel=bus_channel)
-            custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False}).bus_send()
+            Store.to(bus_channel).add(
+                self,
+                {"close_chat_window": True, "isLocallyPinned": False},
+            )
         if not member:
             return
         if self.channel_type != "channel" and post_leave_message:
@@ -642,6 +645,7 @@ class DiscussChannel(models.Model):
             post_joined_message=post_joined_message,
         )
 
+    @Store.with_versioning
     def _add_members(
         self,
         *,
@@ -653,7 +657,6 @@ class DiscussChannel(models.Model):
         post_joined_message=True,
         inviting_partner=None,
     ):
-        stores = Store.Stores()
         inviting_partner = inviting_partner or self.env["res.partner"]
         partners = partners or self.env["res.partner"]
         if users:
@@ -682,8 +685,7 @@ class DiscussChannel(models.Model):
             else:
                 new_members = self.env["discuss.channel.member"].create(members_to_create)
             all_new_members += new_members
-            joined_stores = Store.Stores()
-            for member, joined_store in new_members._get_member_store_list(joined_stores):
+            for member, joined_store in new_members._get_member_store_list():
                 joined_store.add(member.channel_id, "_store_channel_fields")
                 joined_store.add(member, ["unpin_dt"])
                 payload = {
@@ -703,15 +705,13 @@ class DiscussChannel(models.Model):
                         subtype_xmlid="mail.mt_comment",
                     )
             if new_members:
-                stores[channel].add(channel, ["member_count"])
-                stores[channel].add(new_members, "_store_member_fields")
+                Store.to(channel).add(channel, ["member_count"]).add(new_members, "_store_member_fields")
             if existing_members and (bus_channel := current_user or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                stores[bus_channel].add(channel, ["member_count"])
-                stores[bus_channel].add(existing_members, "_store_member_fields")
-        stores.bus_send()
+                Store.to(bus_channel).add(channel, ["member_count"])
+                Store.to(bus_channel).add(existing_members, "_store_member_fields")
         if invite_to_rtc_call:
             for channel in self:
                 current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
@@ -828,7 +828,7 @@ class DiscussChannel(models.Model):
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         members.rtc_inviting_session_id = False
         if members:
-            Store(bus_channel=self).add(
+            Store.to(self).add(
                 self,
                 lambda res: res.many(
                     "invited_member_ids",
@@ -836,7 +836,7 @@ class DiscussChannel(models.Model):
                     mode="DELETE",
                     value=members,
                 ),
-            ).bus_send()
+            )
             devices, private_key, public_key = self._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 self._web_push_send_notification(devices, private_key, public_key, payload={
@@ -973,13 +973,14 @@ class DiscussChannel(models.Model):
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
 
+    @Store.with_versioning
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        store = Store(bus_channel=self).add(message, "_store_message_fields")
+        store = Store.to(self).add(message, "_store_message_fields")
         if message.channel_id.parent_channel_id:
             store.add(message.channel_id, ["message_count"])
-        payload = {"data": store.get_result(), "id": self.id}
+        payload = {"data": store, "id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
         if kwargs.get("silent"):
@@ -1152,16 +1153,15 @@ class DiscussChannel(models.Model):
     # BROADCAST
     # ------------------------------------------------------------
 
-    # Anonymous method
     def _broadcast(self, users):
         """ Broadcast the current channel header to the given users
             :param users : the users to notify
         """
         for user in users:
-            Store(bus_channel=user).add(
+            Store.to(user, env=self.env).add(
                 self.with_user(user).with_context(allowed_company_ids=[]),
                 "_store_channel_fields",
-            ).bus_send()
+            )
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
@@ -1464,9 +1464,10 @@ class DiscussChannel(models.Model):
         else:
             self.self_member_id.last_interest_dt = fields.Datetime.now()
 
+    @Store.with_versioning
     def open_chat_window_action(self):
         """Return an action the web client can use to open this channel."""
-        return Store().add(self, "_store_open_chat_window_fields").get_client_action()
+        return Store.default(self).add(self, "_store_open_chat_window_fields").get_client_action()
 
     @api.model
     def _create_channel(self, name, group_id, is_readonly=False):
@@ -1563,11 +1564,12 @@ class DiscussChannel(models.Model):
 
     @api.readonly
     @api.model
+    @Store.with_versioning
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        store = Store().add(
+        return Store.default(self).add(
             self.search([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
             lambda res: (
                 res.extend(["name", "channel_type"]),
@@ -1575,7 +1577,6 @@ class DiscussChannel(models.Model):
                 res.attr("parent_channel_id"),
             ),
         )
-        return store.get_result()
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""

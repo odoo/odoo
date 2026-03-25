@@ -67,6 +67,7 @@ class DiscussChannelMember(models.Model):
     _seen_message_id_idx = models.Index("(channel_id, partner_id, seen_message_id)")
 
     @api.autovacuum
+    @Store.with_versioning
     def _gc_unpin_outdated_sub_channels(self):
         outdated_dt = fields.Datetime.now() - timedelta(days=2)
         self.env["discuss.channel"].flush_model()
@@ -101,10 +102,8 @@ class DiscussChannelMember(models.Model):
             [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
         )
         members.unpin_dt = fields.Datetime.now()
-        stores = Store.Stores()
-        for member, store in members._get_member_store_list(stores):
+        for member, store in members._get_member_store_list():
             store.add(member.channel_id, {"close_chat_window": True})
-        stores.bus_send()
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -216,6 +215,7 @@ class DiscussChannelMember(models.Model):
     )
 
     @api.model_create_multi
+    @Store.with_versioning
     def create(self, vals_list):
         if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
             self = self.sudo()
@@ -250,10 +250,10 @@ class DiscussChannelMember(models.Model):
         for channel, members in name_members_by_channel.items():
             if channel.channel_name_member_ids == members:
                 continue
-            Store(bus_channel=channel).add(
+            Store.to(channel).add(
                 channel,
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
-            ).bus_send()
+            )
         return res
 
     def write(self, vals):
@@ -288,6 +288,7 @@ class DiscussChannelMember(models.Model):
             res.remove("is_pinned")
             res.one("channel_id", "_store_channel_fields", predicate=lambda m: m.is_pinned)
 
+    @Store.with_versioning
     def unlink(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
@@ -311,20 +312,18 @@ class DiscussChannelMember(models.Model):
             channel: self.filtered(lambda m: m.channel_id == channel) for channel in self.channel_id
         }
         res = super().unlink()
-        stores = Store.Stores()
         for channel, members in name_members_by_channel.items():
             # sudo - discuss.channel: updating channel names according to members is allowed,
             # even after the member left the channel.
             channel_sudo = channel.sudo()
             if channel_sudo.channel_name_member_ids == members:
                 continue
-            stores[channel].add(
+            Store.to(channel).add(
                 channel_sudo,
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
             )
         for channel, members in members_by_channel.items():
-            stores[channel].delete(members).add(channel, ["member_count"])
-        stores.bus_send()
+            Store.to(channel).delete(members).add(channel, ["member_count"])
         return res
 
     def _bus_channels(self):
@@ -335,14 +334,14 @@ class DiscussChannelMember(models.Model):
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
-            Store(bus_channel=member.channel_id).add(
+            Store.to(member.channel_id).add(
                 member,
                 lambda res: (
                     res.from_method("_store_member_fields"),
                     res.attr("isTyping", is_typing),
                     res.attr("is_typing_dt", fields.Datetime.now()),
                 ),
-            ).bus_send()
+            )
 
     def _notify_mute(self):
         for member in self:
@@ -358,12 +357,12 @@ class DiscussChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _get_member_store_list(self, stores: Store.Stores):
+    def _get_member_store_list(self):
         """Returns the list of (member, store) combinations.
         This is necessary because members are currently linked to partners,
         which can have multiple users."""
         return [
-            (member, stores[bus_channel])
+            (member, Store.to(bus_channel))
             for member in self
             for bus_channel in member._bus_channels()
         ]
@@ -567,6 +566,7 @@ class DiscussChannelMember(models.Model):
             domain &= Domain('id', 'in', member_ids)
         return domain
 
+    @Store.with_versioning
     def _rtc_invite_members(self, member_ids=None):
         """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited,
             if member_ids is set, only the specified ids will be invited.
@@ -579,7 +579,7 @@ class DiscussChannelMember(models.Model):
         )
         if members:
             members.rtc_inviting_session_id = self.rtc_session_ids.id
-            Store(bus_channel=self.channel_id).add(
+            Store.to(self.channel_id).add(
                 self.channel_id,
                 lambda res: res.many(
                     "invited_member_ids",
@@ -587,7 +587,7 @@ class DiscussChannelMember(models.Model):
                     value=members,
                     mode="ADD",
                 ),
-            ).bus_send()
+            )
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 if self.channel_id.channel_type != 'chat':
@@ -650,6 +650,7 @@ class DiscussChannelMember(models.Model):
         self._set_last_seen_message(last_message)
         self._set_new_message_separator(last_message.id + 1)
 
+    @Store.with_versioning
     def _set_last_seen_message(self, message, notify=True):
         """
         Set the last seen message of the current member.
@@ -670,8 +671,9 @@ class DiscussChannelMember(models.Model):
         if not notify:
             return
         for bus_channel in bus_channels:
-            Store(bus_channel=bus_channel).add(self, "_store_seen_fields").bus_send()
+            Store.to(bus_channel).add(self, "_store_seen_fields")
 
+    @Store.with_versioning
     def _set_new_message_separator(self, message_id):
         """
         :param message_id: id of the message above which the new message
@@ -681,7 +683,7 @@ class DiscussChannelMember(models.Model):
         if message_id == self.new_message_separator:
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
             for bus_channel in self._bus_channels():
-                Store(bus_channel=bus_channel).add(
+                Store.to(bus_channel).add(
                     self,
                     lambda res: (
                         res.attr("message_unread_counter"),
@@ -689,7 +691,7 @@ class DiscussChannelMember(models.Model):
                         res.attr("new_message_separator"),
                         res.from_method("_store_identifying_fields"),
                     ),
-                ).bus_send()
+                )
             return
         self.new_message_separator = message_id
 

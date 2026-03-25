@@ -13,10 +13,10 @@ from odoo.exceptions import AccessError
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
     @classmethod
-    def _add_has_unpinned_channels_to_store(self, store: Store):
+    def _add_has_unpinned_channels_to_store(self):
         # sudo: discuss.channel.member: sudo for performance. Checking existence of unpinned
         # channels is acceptable, even if the channel is no longer accessible to the user.
-        store.add_global_values(
+        Store.default(request).add_global_values(
             has_unpinned_channels=request.env["discuss.channel.member"]
             .sudo()
             .search_count(
@@ -31,14 +31,15 @@ class DiscussChannelWebclientController(WebclientController):
         )
 
     @classmethod
-    def _process_request_loop(self, store: Store, fetch_params):
+    def _process_request_loop(self, fetch_params):
         """Override to add discuss channel specific features."""
         # aggregate of channels to return, to batch them in a single query when all the fetch params
         # have been processed
         request.update_context(
             channels=request.env["discuss.channel"], add_channels_last_message=False
         )
-        super()._process_request_loop(store, fetch_params)
+        super()._process_request_loop(fetch_params)
+        store = Store.default(request)
         channels = request.env.context["channels"]
         if channels:
             store.add(channels, "_store_channel_fields")
@@ -49,9 +50,9 @@ class DiscussChannelWebclientController(WebclientController):
             store.add(channels._get_last_messages(), "_store_message_fields")
 
     @classmethod
-    def _process_request_for_all(self, store: Store, name, params):
+    def _process_request_for_all(self, name, params):
         """Override to return channel as member and last messages."""
-        super()._process_request_for_all(store, name, params)
+        super()._process_request_for_all(name, params)
         if name == "init_messaging":
             member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
             channel_domain = [("channel_member_ids", "any", member_domain)]
@@ -64,7 +65,7 @@ class DiscussChannelWebclientController(WebclientController):
             request.update_context(
                 channels=request.env.context["channels"] | channels, add_channels_last_message=True
             )
-            self._add_has_unpinned_channels_to_store(store)
+            self._add_has_unpinned_channels_to_store()
         if name == "discuss.channel":
             channels = request.env["discuss.channel"].search([("id", "in", params)])
             request.update_context(channels=request.env.context["channels"] | channels)
@@ -77,7 +78,6 @@ class DiscussChannelWebclientController(WebclientController):
             channel = request.env["discuss.channel"].search([("id", "=", params["channel_id"])])
             if channel:
                 messages = self._resolve_messages(
-                    store,
                     thread=channel,
                     fetch_params=params.get("fetch_params"),
                 )
@@ -88,7 +88,7 @@ class DiscussChannelWebclientController(WebclientController):
                 [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
             ):
                 member.unpin_dt = False if params["pinned"] else fields.Datetime.now()
-            self._add_has_unpinned_channels_to_store(store)
+            self._add_has_unpinned_channels_to_store()
         if name == "/discuss/get_or_create_chat":
             resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"],
@@ -106,7 +106,7 @@ class DiscussChannelWebclientController(WebclientController):
                 params.get("name", ""),
             )
         if resolve_channel:
-            store.resolve_data_request(
+            Store.default(request).resolve_data_request(
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
 
@@ -141,10 +141,11 @@ class ChannelController(http.Controller):
             domain=[("id", "not in", known_member_ids), ("channel_id", "=", channel.id)],
             limit=100,
         )
-        store = Store()
-        store.add(channel, ["member_count"])
-        store.add(unknown_members, "_store_member_fields")
-        return store.get_result()
+        return (
+            Store.default(self)
+            .add(channel, ["member_count"])
+            .add(unknown_members, "_store_member_fields")
+        )
 
     @mail_route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
@@ -211,8 +212,10 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        store = Store().add(attachments, "_store_attachment_fields")
-        return {"store_data": store.get_result(), "count": len(attachments)}
+        return {
+            "count": len(attachments),
+            "store_data": Store.default(self).add(attachments, "_store_attachment_fields"),
+        }
 
     @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
@@ -226,8 +229,10 @@ class ChannelController(http.Controller):
                 ),
             )
         sub_channel = channel._create_sub_channel(from_message_id, name)
-        store = Store().add(sub_channel, "_store_channel_fields")
-        return {"store_data": store.get_result(), "sub_channel": sub_channel.id}
+        return {
+            "store_data": Store.default(self).add(sub_channel, "_store_channel_fields"),
+            "sub_channel": sub_channel.id,
+        }
 
     @mail_route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_fetch(self, parent_channel_id, search_term=None, before=None, limit=30):
@@ -240,7 +245,7 @@ class ChannelController(http.Controller):
         if search_term:
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
-        store = Store()
+        store = Store.default(self)
         store.add(sub_channels, "_store_channel_fields")
         store.add(sub_channels._get_last_messages(), "_store_message_fields")
         if sub_channels:
@@ -262,7 +267,7 @@ class ChannelController(http.Controller):
                 "_store_member_fields",
             )
         return {
-            "store_data": store.get_result(),
+            "store_data": store,
             "sub_channel_ids": sub_channels.ids,
         }
 

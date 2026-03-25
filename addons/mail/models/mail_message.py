@@ -913,6 +913,7 @@ class MailMessage(models.Model):
             },
         )
 
+    @Store.with_versioning
     def mark_as_unread(self):
         """Sets the needaction on the messages for the current partner"""
         notifications = self.env["mail.notification"].search([
@@ -923,10 +924,10 @@ class MailMessage(models.Model):
         if not notifications:
             return
         notifications.write({"is_read": False, "read_date": False})
-        store = Store().add(notifications.mail_message_id, "_store_message_fields")
+        store = Store.default(self).add(notifications.mail_message_id, "_store_message_fields")
         self.env.user._bus_send(
             "mail.message/mark_as_unread",
-            {"message_ids": notifications.mail_message_id.ids, "store_data": store.get_result()},
+            {"message_ids": notifications.mail_message_id.ids, "store_data": store},
         )
 
     @api.model
@@ -1016,7 +1017,7 @@ class MailMessage(models.Model):
                 )
         return domain
 
-    def _message_reaction(self, content, action, partner, guest, store: Store = None):
+    def _message_reaction(self, content, action, partner, guest):
         self.ensure_one()
         # search for existing reaction
         domain = [
@@ -1037,16 +1038,15 @@ class MailMessage(models.Model):
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
             reaction.unlink()
-        if store:
-            # fill the store to use for non logged in portal users in mail_message_reaction()
-            store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
+        # fill the store to use for non logged in portal users in mail_message_reaction()
+        Store.default(self).add(self, "_store_reaction_group_fields", fields_params={"content": content})
         # send the reaction group to bus for logged in users
         self._bus_send_reaction_group(content)
 
     def _bus_send_reaction_group(self, content):
-        store = Store(bus_channel=self)
-        store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
-        store.bus_send()
+        Store.to(self).add(
+            self, "_store_reaction_group_fields", fields_params={"content": content}
+        )
 
     def _store_reaction_group_fields(self, res: Store.FieldList, *, content):
         group_domain = [("message_id", "in", self.ids), ("content", "=", content)]
@@ -1341,6 +1341,7 @@ class MailMessage(models.Model):
             as_thread=True,
         )
 
+    @Store.with_versioning
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web
         client. Purpose is to send the updated status per author."""
@@ -1367,10 +1368,8 @@ class MailMessage(models.Model):
                 messages_per_partner[message.author_id] |= message
         for partner, messages in messages_per_partner.items():
             if user := partner.main_user_id:
-                store = Store(bus_channel=user)
                 user_messages = messages.with_user(user)._filtered_access('read')
-                store.add(user_messages, "_store_notification_fields")
-                store.bus_send()
+                Store.to(user).add(user_messages, "_store_notification_fields")
 
     def _bus_channels(self):
         return self.env.user._bus_channels()

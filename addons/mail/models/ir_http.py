@@ -8,6 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
+    @Store.with_versioning
     def session_info(self):
         """Override to add the current user data (partner or guest) if applicable."""
         result = super().session_info()
@@ -20,7 +21,7 @@ class IrHttp(models.AbstractModel):
                     allowed_company_ids.append(company_id)
             user = user.with_context(allowed_company_ids=allowed_company_ids)
         store.add_global_values(user.sudo(False)._store_init_global_fields)
-        result["storeData"] = store.get_result()
+        result["storeData"] = store
         guest = self.env['mail.guest']._get_guest_from_context()
         if not request.session.uid and guest:
             user_context = {'lang': guest.lang}

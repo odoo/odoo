@@ -284,19 +284,21 @@ class Im_LivechatChannel(models.Model):
     # --------------------------
     # Action Methods
     # --------------------------
+    @Store.with_versioning
     def action_join(self):
         self.ensure_one()
         if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
             raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
         # sudo: im_livechat.channel - operators can join channels
         self.sudo().user_ids = [Command.link(self.env.user.id)]
-        Store(bus_channel=self.env.user).add(self, ["are_you_inside", "name"]).bus_send()
+        Store.to(self.env.user).add(self, ["are_you_inside", "name"])
 
+    @Store.with_versioning
     def action_quit(self):
         self.ensure_one()
         # sudo: im_livechat.channel - users can leave channels
         self.sudo().user_ids = [Command.unlink(self.env.user.id)]
-        Store(bus_channel=self.env.user).add(self.sudo(), ["are_you_inside", "name"]).bus_send()
+        Store.to(self.env.user).add(self.sudo(), ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the

@@ -4,6 +4,8 @@ from markupsafe import Markup
 
 from odoo import models, fields, _
 
+from odoo.addons.mail.tools.discuss import Store
+
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -26,6 +28,7 @@ class ResUsers(models.Model):
         if self._is_internal() and self.odoobot_state in [False, "not_initialized"]:
             self._init_odoobot()
 
+    @Store.with_versioning
     def _init_odoobot(self):
         self.ensure_one()
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")

@@ -710,8 +710,9 @@ class MailActivity(models.Model):
         self.filtered('active').date_deadline = date.today() + relativedelta(weeks=1, weekday=MO(-1))
 
     @api.readonly
+    @Store.with_versioning
     def activity_format(self):
-        return Store().add(self, "_store_activity_fields").get_result()
+        return Store.default(self).add(self, "_store_activity_fields")
 
     def _store_activity_fields(self, res: Store.FieldList):
         res.attr("activity_category")

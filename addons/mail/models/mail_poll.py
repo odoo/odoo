@@ -48,7 +48,6 @@ class MailPoll(models.Model):
     def _end_and_notify(self):
         thread_by_message = self.start_message_id._record_by_message()
         thread_by_poll = {poll: thread_by_message[poll.start_message_id] for poll in self}
-        stores = Store.Stores()
         self.poll_end_dt = fields.Datetime.now()
         for poll in self:
             poll.end_message_id = thread_by_poll[poll].message_post(
@@ -56,25 +55,26 @@ class MailPoll(models.Model):
                 message_type="comment",
                 subtype_xmlid="mail.mt_comment",
             )
-            stores[thread_by_poll[poll]._store_target()].add(poll, "_store_poll_fields")
-        stores.bus_send()
+            thread_target = thread_by_poll[poll]._store_target()
+            Store.to(thread_target[0], bus_subchannel=thread_target[1]).add(poll, "_store_poll_fields")
 
     @api.model
+    @Store.with_versioning
     def _end_expired_polls(self):
         self.env["mail.poll"].search_fetch(
             [("poll_end_dt", "<=", "now"), ("end_message_id", "=", None)],
         )._end_and_notify()
 
     @api.ondelete(at_uninstall=False)
+    @Store.with_versioning
     def _poll_on_delete(self):
         thread_by_message = (self.start_message_id | self.end_message_id)._record_by_message()
-        stores = Store.Stores()
         for message in self.start_message_id | self.end_message_id:
-            stores[thread_by_message[message]._store_target()].add(
+            thread_target = thread_by_message[message]._store_target()
+            Store.to(thread_target[0], bus_subchannel=thread_target[1]).add(
                 message,
                 lambda res: (
                     res.many("started_poll_ids", [], mode="DELETE"),
                     res.many("ended_poll_ids", [], mode="DELETE"),
                 ),
             )
-        stores.bus_send()

@@ -21,10 +21,9 @@ class MessageReactionController(ThreadController):
         partner, guest = self._get_reaction_author(message, **kwargs)
         if not partner and not guest:
             raise NotFound()
-        store = Store()
         # sudo: mail.message - access mail.message.reaction through an accessible message is allowed
-        message.sudo()._message_reaction(content, action, partner, guest, store)
-        return store.get_result()
+        message.sudo()._message_reaction(content, action, partner, guest)
+        return Store.default(self)
 
     def _get_reaction_author(self, message, **kwargs):
         user, guest = request.env["res.users"]._get_current_persona()
