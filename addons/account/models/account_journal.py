@@ -914,6 +914,8 @@ class AccountJournal(models.Model):
 
             invoice._extend_with_attachments(attachment, new=True)
 
+            invoice._validate_fields(["fiscal_position_id"])
+
             all_invoices |= invoice
 
             invoice.with_context(
