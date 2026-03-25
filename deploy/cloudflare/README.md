@@ -7,10 +7,16 @@ Use this mode when your ISP is behind CGNAT or your IPv4 changes often.
 1. Add `kodoo.online` to Cloudflare.
 2. In HostGator, change nameservers to the 2 Cloudflare nameservers.
 3. In Cloudflare Zero Trust, create a Tunnel and copy the token.
-4. Add a Public Hostname in the tunnel:
-   - Hostname: `kodoo.online` (and optionally `www.kodoo.online`)
-   - Service type: `HTTP`
-   - URL: `http://nginx:80`
+4. Add Public Hostnames in the tunnel:
+   - Root app:
+     - Hostname: `kodoo.online` (and optionally `www.kodoo.online`)
+     - Service type: `HTTP`
+     - URL: `http://nginx:80`
+   - Multi-tenant subdomains:
+     - Preferred: wildcard hostname `*.kodoo.online`
+     - Service type: `HTTP`
+     - URL: `http://nginx:80`
+     - This is required when Odoo uses `dbfilter = ^%d$` and tenants are mapped by subdomain, for example `semsa.kodoo.online` -> database `semsa`.
 
 ## 2) Local side
 
@@ -43,3 +49,4 @@ make down-tunnel
 - `certbot` and direct/public-IP TLS flow are disabled for now.
 - Public TLS is handled by Cloudflare.
 - Keep host firewall without opening 80/443 to the internet for this mode.
+- If `https://kodoo.online` works but `https://tenant.kodoo.online` does not resolve, the missing piece is on the Cloudflare Tunnel side, not in Odoo/PostgreSQL.

@@ -116,6 +116,7 @@ CONFIG_FIND_CMD = find . \
 	mobile-install mobile-doctor mobile-add-android mobile-add-ios \
 	mobile-sync mobile-open-android mobile-open-ios \
 	ollama-pull ollama-list \
+	tunnel-check \
 	up-local logs-local down-local \
 	up-insecure down-insecure \
 	up-cloudflare logs-cloudflare down-cloudflare \
@@ -164,6 +165,7 @@ help:
 	@echo "  make up-tunnel      # Default internet publishing path via Cloudflare Tunnel"
 	@echo "  make down-tunnel    # Stop Cloudflare Tunnel mode stack"
 	@echo "  make logs-tunnel    # Tail cloudflared + nginx + odoo logs"
+	@echo "  make tunnel-check SUBDOMAIN=name # Check public reachability for a tenant subdomain"
 	@echo "  make up-lean-tunnel # Lean Tunnel: local HTTP (80/8069) + CF Tunnel Internet"
 	@echo "  make down-lean-tunnel # Stop Lean Tunnel mode"
 	@echo "  make logs-lean-tunnel # Tail Lean Tunnel logs"
@@ -197,7 +199,7 @@ help:
 
 	@echo "  make dev-host-config # Generate $(DEV_HOST_CONFIG) from local secrets"
 	@echo "  make dev-project-config # Generate $(DEV_PROJECT_CONFIG) from local secrets"
-	@echo "  make odoo-fix-url   # Force Odoo base URL to https://$(DOMAIN)"
+	@echo "  make odoo-fix-url   # Force Odoo base URL for DB=$(DB) (or BASE_URL=https://...)"
 	@echo ""
 	@echo "Database:"
 	@echo "  make db-init        # Open Odoo database manager over Docker PostgreSQL to create/use DB ($(DB))"
@@ -1113,9 +1115,11 @@ odoo-shell:
 
 odoo-fix-url:
 	@$(MAKE) guard-prod-host
-	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url','https://$(DOMAIN)',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"
-	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url.freeze','True',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"
-	@echo "Odoo base URL fixed to https://$(DOMAIN)."
+	@set -e; \
+	base_url="$${BASE_URL:-https://$(if $(filter $(PROD_DB_NAME),$(DB)),$(DOMAIN),$(DB).$(DOMAIN))}"; \
+	$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url','$$base_url',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"; \
+	$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url.freeze','True',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"; \
+	echo "Odoo base URL fixed to $$base_url for DB=$(DB)."
 
 dev-host-db-setup:
 	@PG_SERVICE="$(PG_LOCAL_SERVICE)" \
@@ -1577,6 +1581,7 @@ up-tunnel:
 	@echo "This is the default public internet publishing path."
 	@echo "Local:  http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)"
 	@echo "Public: https://$(DOMAIN)"
+	@echo "Multi-tenant note: with PROD_DBFILTER=$(PROD_DBFILTER), each tenant also needs a public hostname like https://<db>.$(DOMAIN)"
 
 logs-tunnel:
 	@$(COMPOSE_TUNNEL) logs -f --tail=120 cloudflared nginx odoo
@@ -1596,12 +1601,33 @@ up-lean-tunnel:
 	@echo "Local Odoo:  http://$(LOCAL_BIND_HOST):8069"
 	@echo "Local Nginx: http://$(LOCAL_BIND_HOST):80"
 	@echo "Public:      https://$(DOMAIN)"
+	@echo "Multi-tenant note: with PROD_DBFILTER=$(PROD_DBFILTER), each tenant also needs a public hostname like https://<db>.$(DOMAIN)"
 
 logs-lean-tunnel:
 	@$(COMPOSE_LEAN_TUNNEL) logs -f --tail=120 cloudflared nginx odoo
 
 down-lean-tunnel:
 	@$(COMPOSE_LEAN_TUNNEL) down --remove-orphans
+
+tunnel-check:
+	@test -n "$(SUBDOMAIN)" || (echo "Set SUBDOMAIN=<tenant>."; exit 1)
+	@host="$(SUBDOMAIN).$(DOMAIN)"; \
+	echo "== Tunnel check for $$host =="; \
+	root_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://$(DOMAIN) || true)"; \
+	sub_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://$$host || true)"; \
+	echo "https://$(DOMAIN) -> $$root_code"; \
+	echo "https://$$host -> $$sub_code"; \
+	if [ "$$sub_code" = "000" ]; then \
+	  echo "FAIL: $$host does not resolve or is not routed by Cloudflare Tunnel."; \
+	  echo "Add a Public Hostname or wildcard (*. $(DOMAIN) without the space) pointing to http://nginx:80."; \
+	  exit 1; \
+	fi; \
+	if [ "$$sub_code" -ge 400 ]; then \
+	  echo "WARN: $$host reached the tunnel but returned HTTP $$sub_code."; \
+	  echo "Check Odoo dbfilter, tenant DB existence, and web.base.url for DB=$(SUBDOMAIN)."; \
+	  exit 1; \
+	fi; \
+	echo "OK: $$host is publicly reachable."
 
 clean:
 	@echo "Cleaning Python cache and logs..."
