@@ -69,6 +69,7 @@ export const uploadService = {
                 is_image: true,
                 width: 0,
                 quality: 0,
+                public: true,
             });
         };
 
@@ -206,6 +207,7 @@ export const uploadService = {
                                 is_image: !!isImage,
                                 width: 0,
                                 quality: 0,
+                                public: true,
                             },
                             { xhr: currentXHR }
                         );

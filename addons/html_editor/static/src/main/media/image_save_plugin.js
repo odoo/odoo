@@ -76,6 +76,7 @@ export class ImageSavePlugin extends Plugin {
             is_image: true,
             res_model: resModel,
             res_id: resId,
+            public: true,
         });
     }
 
@@ -113,19 +114,7 @@ export class ImageSavePlugin extends Plugin {
             el.dataset.fileName = attachment.name;
             return this.saveModifiedImage(el, resModel, resId);
         } else {
-            let src = attachment.image_src;
-            if (!attachment.public) {
-                let accessToken = attachment.access_token;
-                if (!accessToken) {
-                    [accessToken] = await this.services.orm.call(
-                        "ir.attachment",
-                        "generate_access_token",
-                        [attachment.id]
-                    );
-                }
-                src += `?access_token=${encodeURIComponent(accessToken)}`;
-            }
-            el.setAttribute("src", src);
+            el.setAttribute("src", attachment.image_src);
         }
         el.classList.remove("o_b64_image_to_save");
     }
