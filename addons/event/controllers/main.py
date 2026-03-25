@@ -53,6 +53,8 @@ class EventController(Controller):
             raise NotFound()
 
         event_registrations_sudo = event_sudo.registration_ids.filtered(lambda reg: reg.id in registration_ids)
+        if not event_registrations_sudo:
+            raise NotFound()
         report_name_prefix = _("Ticket") if responsive_html else _("Badges") if badge_mode else _("Tickets")
         report_date = format_datetime(request.env, event_registrations_sudo[0].event_begin_date, tz=event_sudo.date_tz, dt_format='medium')
         report_name = f"{report_name_prefix} - {event_sudo.name} ({report_date})"
