@@ -178,6 +178,7 @@ class BiometricDeviceDetails(models.Model):
         result = self.env['biometric.attendance.sync'].download_attendance(
             self, incremental=False, force=True)
         _logger.info("=== COMPLETED FULL ATTENDANCE DOWNLOAD ===")
+        self.action_generate_all_absences()
         return result
 
     def action_download_incremental_attendance(self):

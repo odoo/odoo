@@ -171,13 +171,66 @@ class BiometricScheduleHelper(models.AbstractModel):
         return break_deduction_hours
 
     @api.model
+    def _break_overlap_minutes(self, employee, work_date, window_start,
+                               window_end, emp_tz):
+        """Calculate total break minutes that overlap with a time window.
+
+        Used to exclude break time from late / early-leave calculations.
+
+        :param employee: hr.employee record
+        :param work_date: date for break-line lookup
+        :param window_start: tz-aware datetime (window start)
+        :param window_end: tz-aware datetime (window end)
+        :param emp_tz: pytz timezone
+        :return: float – overlap in minutes
+        """
+        overlap_minutes = 0.0
+        calendar = employee.main_calendar_id
+        if not calendar:
+            return overlap_minutes
+        calendar_groups = calendar.calendar_group_ids
+        if not calendar_groups:
+            return overlap_minutes
+
+        day_of_week = str(work_date.weekday())
+        break_lines = self.env['resource.calendar.group.line'].search([
+            ('calendar_group_id', 'in', calendar_groups.ids),
+            ('dayofweek', '=', day_of_week),
+            ('day_period', '=', 'break'),
+        ])
+
+        ref_date = (window_start.date()
+                    if hasattr(window_start, 'date') else work_date)
+        for brk in break_lines:
+            brk_hour = int(brk.hour_from)
+            brk_min = int((brk.hour_from - brk_hour) * 60)
+            brk_end_hour = int(brk.hour_to)
+            brk_end_min = int((brk.hour_to - brk_end_hour) * 60)
+
+            break_start = emp_tz.localize(
+                dt(ref_date.year, ref_date.month, ref_date.day,
+                   brk_hour, brk_min))
+            break_end = emp_tz.localize(
+                dt(ref_date.year, ref_date.month, ref_date.day,
+                   brk_end_hour, brk_end_min))
+
+            # Overlap = max(0, min(window_end, break_end) - max(window_start, break_start))
+            overlap_start = max(window_start, break_start)
+            overlap_end = min(window_end, break_end)
+            if overlap_end > overlap_start:
+                overlap_minutes += (
+                    (overlap_end - overlap_start).total_seconds() / 60.0
+                )
+
+        return overlap_minutes
+
+    @api.model
     def calculate_worked_time(self, check_in, check_out, employee):
         """Calculate worked time considering schedule and grace periods.
 
-        Formula: worked_hours = scheduled_hours - late_minutes - early_leave_minutes - break
-        If absent: worked_hours = 0
-        Grace period: arrival/departure within grace means no late/early deduction.
-        Overtime: anything beyond scheduled end, calculated separately.
+        Late and early-leave minutes exclude break time so that a break
+        period between schedule-start and check-in (or between check-out
+        and schedule-end) is not counted as a penalty.
 
         :param check_in: naive UTC datetime
         :param check_out: naive UTC datetime
@@ -206,40 +259,40 @@ class BiometricScheduleHelper(models.AbstractModel):
         grace_start = sched_start + timedelta(minutes=grace_minutes)
         grace_end = sched_end - timedelta(minutes=grace_minutes)
 
-        # --- Break subtraction ---
-        break_deduction_hours = self.calculate_break_deduction(
-            employee, work_date, local_ci, local_co, emp_tz)
-
-        # --- Scheduled hours (full day minus break) ---
-        scheduled_hours = (
-                (sched_end - sched_start).total_seconds() / 3600.0
-                - break_deduction_hours
-        )
-
-        # --- Late detection ---
+        # --- Late detection (excluding break time) ---
         late_minutes = 0.0
         if local_ci > grace_start:
-            late_minutes = round(
-                (local_ci - sched_start).total_seconds() / 60.0)
+            raw_late = (local_ci - sched_start).total_seconds() / 60.0
+            break_in_late = self._break_overlap_minutes(
+                employee, work_date, sched_start, local_ci, emp_tz)
+            late_minutes = round(max(0.0, raw_late - break_in_late))
 
-        # --- Early leave detection ---
+        # --- Early leave detection (excluding break time) ---
         early_leave_minutes = 0.0
         if local_co < grace_end:
-            early_leave_minutes = round(
-                (sched_end - local_co).total_seconds() / 60.0)
+            raw_early = (sched_end - local_co).total_seconds() / 60.0
+            break_in_early = self._break_overlap_minutes(
+                employee, work_date, local_co, sched_end, emp_tz)
+            early_leave_minutes = round(max(0.0, raw_early - break_in_early))
 
         # --- Overtime: anything beyond the scheduled end ---
         overtime_hours = 0.0
         if local_co > sched_end:
             overtime_hours = (local_co - sched_end).total_seconds() / 3600.0
 
-        # --- Worked hours = scheduled - late - early leave ---
-        worked_hours = max(
-            0.0,
-            scheduled_hours
-            - (late_minutes / 60.0)
-            - (early_leave_minutes / 60.0),
-        )
+        # --- Worked hours: time present within schedule minus breaks ---
+        effective_start = max(local_ci, sched_start)
+        effective_end = min(local_co, sched_end)
+        if effective_end > effective_start:
+            raw_hours = (
+                (effective_end - effective_start).total_seconds() / 3600.0
+            )
+            break_in_work = self._break_overlap_minutes(
+                employee, work_date, effective_start, effective_end,
+                emp_tz) / 60.0
+            worked_hours = max(0.0, raw_hours - break_in_work)
+        else:
+            worked_hours = 0.0
 
         return {
             'worked_hours': worked_hours,

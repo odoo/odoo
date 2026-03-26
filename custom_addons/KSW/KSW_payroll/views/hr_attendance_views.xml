@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.attendance LIST to show deduction columns           -->
+    <!-- ============================================================ -->
+    <record id="hr_attendance_view_list_inherit_deduction" model="ir.ui.view">
+        <field name="name">hr.attendance.list.inherit.deduction</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="x_scheduled_minutes" string="Sched. Min"
+                       optional="hide"/>
+                <field name="x_daily_rate" string="Daily Rate"
+                       optional="hide"/>
+                <field name="x_deduction_amount" string="Deduction"
+                       optional="show"
+                       decoration-danger="x_deduction_amount &gt; 0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.attendance FORM to show deduction breakdown         -->
+    <!-- ============================================================ -->
+    <record id="hr_attendance_view_form_inherit_deduction" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit.deduction</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Salary Deduction"
+                       invisible="x_deduction_amount == 0"
+                       groups="hr.group_hr_user">
+                    <group>
+                        <field name="x_deductible_base" readonly="1"/>
+                        <field name="x_daily_rate" readonly="1"/>
+                        <field name="x_hourly_rate" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="x_scheduled_minutes" readonly="1"/>
+                        <field name="x_deduction_amount" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
+

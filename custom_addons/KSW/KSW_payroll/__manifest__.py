@@ -13,6 +13,8 @@ Manage employee payroll, salary rules, payslips and more.
     'license': 'LGPL-3',
     'depends': [
         'om_hr_payroll',
+        'KSW_attendance_leave',
+        'KSW_working_schedule',
         'mail',
     ],
     'data': [
@@ -22,6 +24,10 @@ Manage employee payroll, salary rules, payslips and more.
 
         # Views
         'views/hr_employee_view.xml',
+        'views/hr_attendance_views.xml',
+
+        # Reports
+        'report/report_payslip_deduction_templates.xml',
     ],
     'assets': {},
     'installable': True,
