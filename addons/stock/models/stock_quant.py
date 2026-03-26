@@ -681,7 +681,13 @@ class StockQuant(models.Model):
                 if pkg[0] is None:
                     # Lazily retrieve ids for single items
                     if not single_item_ids:
+<<<<<<< 85ed3bbfb386e392e2069d1e7adea4bde17cad29
                         single_item_ids = self.search(Domain('package_id', '=', None) & domain).ids
+||||||| e53dae2cf46e580720111f4c72b03dce8a7a898b
+                        single_item_ids = self.search(expression.AND([[('package_id', '=', None)], domain])).ids
+=======
+                        single_item_ids = self.search(expression.AND([[('package_id', '=', None)], domain])).filtered(lambda quant: quant.quantity > quant.reserved_quantity).ids
+>>>>>>> 92ccf87cb82b5a0e01410067baa7566a8c571242
                     selected_single_items.append(single_item_ids.pop())
 
             return (
