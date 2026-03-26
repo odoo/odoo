@@ -10,13 +10,11 @@
         <SelectNumberColumn t-if="this.isActiveItem('column_mode')"/>
     </BuilderRow>
     <t t-if="this.isActiveItem('grid_mode')">
-        <AddElementOption level="1" applyTo="'.o_grid_mode'"/>
         <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
     </t>
 </t>
 
 <t t-name="website.LayoutGridOption">
-    <AddElementOption applyTo="'.o_grid_mode'"/>
     <SpacingOption applyTo="'.o_grid_mode'"/>
 </t>
 

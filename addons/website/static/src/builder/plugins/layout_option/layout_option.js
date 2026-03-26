@@ -1,7 +1,6 @@
 import { SelectNumberColumn } from "@html_builder/core/select_number_column";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
-import { AddElementOption } from "./add_element_option";
 import { SpacingOption } from "./spacing_option";
 
 export class LayoutOption extends BaseOptionComponent {
@@ -10,7 +9,6 @@ export class LayoutOption extends BaseOptionComponent {
     static components = {
         SelectNumberColumn,
         SpacingOption,
-        AddElementOption,
     };
 }
 
@@ -19,7 +17,6 @@ export class LayoutGridOption extends BaseOptionComponent {
     static template = "website.LayoutGridOption";
     static components = {
         SpacingOption,
-        AddElementOption,
     };
 }
 

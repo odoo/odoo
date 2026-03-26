@@ -11,7 +11,3 @@ class TestWebsiteGridLayout(odoo.tests.HttpCase):
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image2.webp')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_replace_grid_image', login="admin")
-
-    def test_02_scroll_to_new_grid_item(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'scroll_to_new_grid_item', login='admin')

@@ -5,7 +5,6 @@ declare module "plugins" {
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
     import { ImageHoverShared } from "@website/builder/plugins/image/image_hover_plugin";
-    import { AddElementOptionShared } from "@website/builder/plugins/layout_option/add_element_option_plugin";
     import { MenuDataShared } from "@website/builder/plugins/menu_data_plugin";
     import { can_have_hover_effect_predicates } from "@website/builder/plugins/options/animate_option";
     import { AnimateOptionShared, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
@@ -37,7 +36,6 @@ declare module "plugins" {
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
     interface SharedMethods {
-        addElementOption: AddElementOptionShared;
         animateOption: AnimateOptionShared;
         carouselOption: CarouselOptionShared;
         cardImageOption: CardImageOptionShared;
