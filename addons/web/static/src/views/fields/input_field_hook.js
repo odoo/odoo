@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -123,6 +123,11 @@ export function useInputField(params) {
         () => [inputRef.el]
     );
 
+    // We need to call getValue to always observe
+    // the corresponding value in the record. Otherwise, in some cases,
+    // if the value in the record change the useLayoutEffect isn't triggered.
+    onWillRender(() => params.getValue());
+
     /**
      * Sometimes, a patch can happen with possible a new value for the field
      * If the user was typing a new value (isDirty) or the field is still invalid,
@@ -130,9 +135,6 @@ export function useInputField(params) {
      * If it is not such a case, we update the field with the new value.
      */
     useLayoutEffect(() => {
-        // We need to call getValue before the condition to always observe
-        // the corresponding value in the record. Otherwise, in some cases,
-        // if the value in the record change the useLayoutEffect isn't triggered.
         const value = params.getValue();
         if (!inputRef.el) {
             return;
