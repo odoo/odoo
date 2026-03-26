@@ -367,10 +367,10 @@ export function trackingMethodIsLot(lot) {
     return [
         {
             content: `tracking method is Lot`,
-            trigger: `li.lot-number:contains("Lot Number ${lot}")`,
+            trigger: `li.lot-number:contains("Lot ${lot}")`,
             run: function () {
                 if (document.querySelectorAll("li.lot-number").length !== 1) {
-                    throw new Error(`Expected exactly one 'Lot Number ${lot}' element.`);
+                    throw new Error(`Expected exactly one 'Lot ${lot}' element.`);
                 }
             },
         },

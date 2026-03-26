@@ -74,6 +74,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         coupon_data = {
             -1: {
                 'points': 50,
+                'won': 50,
                 'program_id': ewallet_program.id,
                 'coupon_id': -1,
                 'barcode': '',
@@ -106,6 +107,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         coupon_data = {
             loyalty_card.id: {
                 'points': -10,
+                'spent': 10,
                 'program_id': ewallet_program.id,
                 'coupon_id': loyalty_card.id,
                 'barcode': '',
