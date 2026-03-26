@@ -18,8 +18,8 @@
             </div>
         </td>
         <td class="text-end" name="quantity">
-            <t t-if="this.data.type == 'operation'" t-esc="this.formatFloatTime(this.data.quantity, {'unit': 'minutes', 'showSeconds': true})"/>
-            <t t-else="" t-esc="this.formatFloat(this.data.quantity, {'digits': [false, this.precision]})"/>
+            <t t-if="this.data.type == 'operation'" t-out="this.formatFloatTime(this.data.quantity, {'unit': 'minutes', 'showSeconds': true})"/>
+            <t t-else="" t-out="this.formatFloat(this.data.quantity, {'digits': [false, this.precision]})"/>
         </td>
          <td t-if="this.showUom" class="text-start" t-out="this.data.uom_name"/>
          <td t-if="this.forecastMode" class="text-center">

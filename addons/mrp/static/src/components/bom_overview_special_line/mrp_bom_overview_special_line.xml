@@ -13,8 +13,8 @@
             </span>
         </td>
         <td name="quantity" class="text-end">
-            <span t-if="this.props.type == 'operations'" t-esc="this.formatFloatTime(this.data.operations_time, {'unit': 'minutes', 'showSeconds': true})"/>
-            <span t-elif="this.props.type == 'byproducts'" t-esc="this.formatFloat(this.data.byproducts_total, {'digits': [false, this.precision]})"/>
+            <span t-if="this.props.type == 'operations'" t-out="this.formatFloatTime(this.data.operations_time, {'unit': 'minutes', 'showSeconds': true})"/>
+            <span t-elif="this.props.type == 'byproducts'" t-out="this.formatFloat(this.data.byproducts_total, {'digits': [false, this.precision]})"/>
         </td>
         <td name="uom" t-if="this.showUom" class="text-start"/>
         <td name="free_to_use" t-if="this.forecastMode"/>

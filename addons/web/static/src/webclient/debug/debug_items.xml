@@ -22,8 +22,8 @@
                 <tbody>
                     <t t-foreach="this.modules" t-as="module" t-key="module.name">
                         <tr style="--table-bg: var(--table-striped-bg)">
-                            <th colspan="2"><span t-esc="module.display_name" /></th>
-                            <th class="text-end"><span t-esc="module.code_lines" /></th>
+                            <th colspan="2"><span t-out="module.display_name" /></th>
+                            <th class="text-end"><span t-out="module.code_lines" /></th>
                             <th class="text-end" ><i class="fa fa-check" t-if="module.code_lines" /></th>
                             <th/>
                         </tr>
