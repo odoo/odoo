@@ -2409,3 +2409,23 @@ test("Prevent adding reactions on messages without a mail thread", async () => {
     await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
     await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
 });
+
+test("context menu should not open on right-click when editing a message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Barbie" });
+    pyEnv["mail.message"].create({
+        body: "Batman",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await click(".o-dropdown-item:contains('Edit')");
+    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Batman" });
+    await rightClick(".o-mail-Message");
+    await animationFrame();
+    await contains(".o-dropdown-item", { count: 0 });
+});
