@@ -1034,3 +1034,60 @@ export function isRedundantElement(node) {
 
 // Selector for QWeb-specific attributes
 export const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
+
+/**
+ * Returns the bounding rect of the iframe containing the given document.
+ * If the document is not inside an iframe, returns `{ top: 0, left: 0 }`.
+ *
+ * @param {Document} document
+ * @returns {{ top: number, left: number } | DOMRect}
+ */
+function getIframeBoundingRect(document) {
+    let frameRect = { top: 0, left: 0 };
+    let frameElement;
+    try {
+        frameElement = document.defaultView.frameElement;
+    } catch {
+        // We don't access the frameElement if we don't have access to it.
+        // (i.e. iframe origin or sandbox restriction)
+    }
+    if (frameElement) {
+        frameRect = frameElement.getBoundingClientRect();
+    }
+    return frameRect;
+}
+
+/**
+ * Returns an element's bounding rect adjusted by its iframe's offset.
+ *
+ * @param {Element} el
+ * @returns {DOMRect} Adjusted rectangle
+ */
+export function getIframeAdjustedBoundingRect(el) {
+    const frameRect = getIframeBoundingRect(el.ownerDocument);
+    let rect = el.getBoundingClientRect();
+    rect = {
+        top: rect.top + frameRect.top,
+        bottom: rect.bottom + frameRect.top,
+        left: rect.left + frameRect.left,
+        right: rect.right + frameRect.left,
+        width: rect.width,
+        height: rect.height,
+    };
+    return rect;
+}
+
+/**
+ * Computes client (viewport) coordinates for an event, adjusted to account
+ * for an iframe offset if the event originates from within one.
+ *
+ * @param {MouseEvent | PointerEvent} ev - The event object
+ * @returns {{ clientX: number, clientY: number }} Adjusted coordinates
+ */
+export function getIframeAdjustedClientCoords(ev) {
+    let { clientX, clientY, target } = ev;
+    const frameRect = getIframeBoundingRect(target.ownerDocument);
+    clientX += frameRect.left;
+    clientY += frameRect.top;
+    return { clientX, clientY };
+}
