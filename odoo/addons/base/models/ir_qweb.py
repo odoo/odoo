@@ -2939,11 +2939,11 @@ class IrQweb(models.AbstractModel):
         lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
         bundles = set()
         for module in modules:
-            modstatic = Manifest.for_addon(module).static_path
-            if not modstatic:
+            manifest = Manifest.for_addon(module, display_warning=False)
+            if not (manifest and manifest.static_path):
                 continue
-            for fname in glob.iglob('**/src/**/*.js', root_dir=modstatic, recursive=True):
-                with file_open(opj(modstatic, fname)) as f:
+            for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):
+                with file_open(opj(manifest.static_path, fname)) as f:
                     fcontent = f.read()
                     if match := lazy_bundle_regex.search(fcontent):
                         bundles.add(match[2])
