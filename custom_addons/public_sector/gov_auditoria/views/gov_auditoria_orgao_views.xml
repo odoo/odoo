@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_auditoria_orgao_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.orgao.list</field>
+        <field name="model">gov.auditoria.orgao</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sigla"/>
+                <field name="name"/>
+                <field name="tipo"/>
+                <field name="prazo_remessa_dias"/>
+                <field name="prazo_defesa_dias"/>
+                <field name="prazo_recurso_dias"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_orgao_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.orgao.form</field>
+        <field name="model">gov.auditoria.orgao</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sigla"/>
+                            <field name="name"/>
+                            <field name="tipo"/>
+                            <field name="estado_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="prazo_remessa_dias"/>
+                            <field name="prazo_defesa_dias"/>
+                            <field name="prazo_recurso_dias"/>
+                            <field name="instrucao_normativa"/>
+                            <field name="portal_url"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="estados_obrigatorios"/>
+                    </group>
+                    <field name="checklist_template_ids">
+                        <list editable="bottom">
+                            <field name="name"/>
+                            <field name="active"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_gov_auditoria_orgao" model="ir.actions.act_window">
+        <field name="name">Orgaos de Controle</field>
+        <field name="res_model">gov.auditoria.orgao</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

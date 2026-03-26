@@ -54,10 +54,19 @@
 
     <menuitem
         id="menu_multicolor_backend_theme_root"
-        name="Backend Themes"
-        parent="base.menu_custom"
-        sequence="60"
-        groups="multicolor_backend_theme.multicolor_theme_manager_access"/>
+        name="Multicolor"
+        action="base.action_res_users_my"
+        sequence="952"
+        groups="base.group_user"
+        web_icon="multicolor_backend_theme,static/description/icon.png"/>
+
+    <menuitem
+        id="menu_multicolor_backend_theme_preferences"
+        name="Preferences"
+        parent="menu_multicolor_backend_theme_root"
+        action="base.action_res_users_my"
+        sequence="5"
+        groups="base.group_user"/>
 
     <menuitem
         id="menu_theme_config"

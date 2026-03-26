@@ -14,6 +14,7 @@ type RequestMakeTargetMsg struct {
 	Description       string
 	RelevantKeys      []string
 	PromptFields      []PromptField
+	Interactive       bool
 	RequireTypedCheck bool
 	ConfirmWord       string
 	SelectDatabase    bool

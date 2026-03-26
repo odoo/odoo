@@ -21,50 +21,38 @@
 #
 #############################################################################
 {
-    'name': 'Remove Powered by Odoo',
+    'name': 'Kodoo Branding',
     # 'version': '1.0.0',
-    'summary': """Remove Powered by Odoo from Login, Portal and Brand Promotion from website footer. 
-    Remove Odoo branding from the footer of portal pages. Connect with your software 
-    Removing the 'Powered by' block entirely 
-        Remove from the portal sidebar.
-        Remove from the login page.
-        Remove from the brand promotion.
-        Remove Odoo branding from the footer of portal pages.
-        Remove branding
-        De branding Odoo
-        Hide Powered by odoo
-        login page
-        connect with your software
-        odoo signin page
-        odoo signup page
-        odoo sign screen
-        hide connect with your software
-    """,
-    'description': """ Remove Powered by Odoo from Portal
-        Removing the 'Powered by' block entirely 
-        Remove from the portal sidebar.
-        Remove from the login page.
-        Remove from the brand promotion.
-        Remove Odoo branding from the footer of portal pages.
-        Remove branding
-        Hide Powered by odoo
-        login page
-    """,
+    'summary': """Replace visible Odoo branding with Kodoo across login, portal, website and webclient.""",
+    'description': """Replace visible Odoo branding with Kodoo across login, portal, website and webclient.""",
     'author': 'TugIT Software',
     'company': 'TugIT Software',
     'maintainer': 'TugIT Software',
-    'website': 'https://tugit.odoo.com',
+    'website': 'https://kodoo.online',
     'license': 'LGPL-3',
     'sequence': 10,
     'category': 'Tools',
-    'depends': ['portal'],
+    'depends': ['web', 'portal'],
     'data': [
+        'data/kodoo_branding_data.xml',
+        'views/web_layout.xml',
         'views/login_layout.xml',
         'views/portal_record_sidebar.xml',
         'views/brand_promotion.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'powered_by_odoo_remove/static/src/js/kodoo_branding.js',
+        ],
+        'web.assets_frontend': [
+            'powered_by_odoo_remove/static/src/js/kodoo_branding.js',
+        ],
+        'web.assets_frontend_minimal': [
+            'powered_by_odoo_remove/static/src/js/kodoo_branding.js',
+        ],
+    },
     'images': ['static/description/banner.png'],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
 }

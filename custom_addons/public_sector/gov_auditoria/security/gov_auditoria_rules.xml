@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_gov_auditoria_ciclo_user" model="ir.rule">
+        <field name="name">GOV Auditoria Ciclo / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_ciclo"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_ciclo_manager" model="ir.rule">
+        <field name="name">GOV Auditoria Ciclo / Gestor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_ciclo"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_ciclo_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Ciclo / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_ciclo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_ciclo_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Ciclo / Auditor Externo</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_ciclo"/>
+        <field name="domain_force">[('auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_evento_user" model="ir.rule">
+        <field name="name">GOV Auditoria Evento / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_evento"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_evento_manager" model="ir.rule">
+        <field name="name">GOV Auditoria Evento / Gestor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_evento"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_evento_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Evento / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_evento"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_evento_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Evento / Auditor Externo</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_evento"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_shared_company_models" model="ir.rule">
+        <field name="name">GOV Auditoria Shared Company Models / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_prazo"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_shared_company_models_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Shared Company Models / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_prazo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_shared_company_models_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Shared Company Models / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_prazo"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_prazo_susp_user" model="ir.rule">
+        <field name="name">GOV Auditoria Prazo Suspensao / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_prazo_suspensao"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('prazo_id.ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_prazo_susp_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Prazo Suspensao / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_prazo_suspensao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_prazo_susp_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Prazo Suspensao / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_prazo_suspensao"/>
+        <field name="domain_force">[('prazo_id.ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_documento_user" model="ir.rule">
+        <field name="name">GOV Auditoria Documento / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_documento"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_documento_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Documento / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_documento"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_documento_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Documento / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_documento"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_apontamento_user" model="ir.rule">
+        <field name="name">GOV Auditoria Apontamento / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_apontamento"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_apontamento_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Apontamento / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_apontamento"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_apontamento_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Apontamento / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_apontamento"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_decisao_user" model="ir.rule">
+        <field name="name">GOV Auditoria Decisao / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_decisao"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_decisao_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Decisao / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_decisao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_decisao_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Decisao / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_decisao"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_determinacao_user" model="ir.rule">
+        <field name="name">GOV Auditoria Determinacao / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_determinacao"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('decisao_id.ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_determinacao_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Determinacao / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_determinacao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_determinacao_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Determinacao / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_determinacao"/>
+        <field name="domain_force">[('decisao_id.ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_espelho_user" model="ir.rule">
+        <field name="name">GOV Auditoria Espelho / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_espelho"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_espelho_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Espelho / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_espelho"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_espelho_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Espelho / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_espelho"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_checklist_user" model="ir.rule">
+        <field name="name">GOV Auditoria Checklist / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_checklist"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_checklist_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Checklist / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_checklist"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_checklist_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Checklist / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_checklist"/>
+        <field name="domain_force">[('ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+
+    <record id="rule_gov_auditoria_checklist_item_user" model="ir.rule">
+        <field name="name">GOV Auditoria Checklist Item / Usuario</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_checklist_item"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('checklist_id.ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_user')), (4, ref('gov_auditoria.group_auditoria_manager'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_checklist_item_admin" model="ir.rule">
+        <field name="name">GOV Auditoria Checklist Item / Admin</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_checklist_item"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_admin'))]"/>
+    </record>
+    <record id="rule_gov_auditoria_checklist_item_auditor" model="ir.rule">
+        <field name="name">GOV Auditoria Checklist Item / Auditor</field>
+        <field name="model_id" ref="gov_auditoria.model_gov_auditoria_checklist_item"/>
+        <field name="domain_force">[('checklist_id.ciclo_id.auditor_externo_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('gov_auditoria.group_auditoria_auditor'))]"/>
+    </record>
+</odoo>

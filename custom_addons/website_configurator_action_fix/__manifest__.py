@@ -6,6 +6,9 @@
     "author": "Kodoo",
     "license": "LGPL-3",
     "depends": ["website"],
+    "data": [
+        "views/website_configurator_action_fix.xml",
+    ],
     "assets": {
         "web.assets_backend": [
             "website_configurator_action_fix/static/src/js/website_configurator_action_fix.js",

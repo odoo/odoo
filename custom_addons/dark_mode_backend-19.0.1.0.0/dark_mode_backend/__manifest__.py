@@ -30,6 +30,10 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': "https://www.cybrosys.com",
+    'depends': ['web', 'base'],
+    'data': [
+        'views/dark_mode_backend_menu.xml',
+    ],
     'assets': {
         'web.assets_backend': [
             'dark_mode_backend/static/src/scss/theme_accent.scss',

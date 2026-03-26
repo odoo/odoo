@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -26,6 +27,7 @@ import (
 	"github.com/kodoo/kodoo-tui/internal/ui/doctor"
 	"github.com/kodoo/kodoo-tui/internal/ui/logs"
 	"github.com/kodoo/kodoo-tui/internal/ui/runtime"
+	shellui "github.com/kodoo/kodoo-tui/internal/ui/shell"
 )
 
 var (
@@ -96,6 +98,11 @@ type paletteOption struct {
 
 type tickMsg time.Time
 
+type interactiveExecDoneMsg struct {
+	title string
+	err   error
+}
+
 type Model struct {
 	repoDir        string
 	cfg            *envconfig.Config
@@ -108,6 +115,7 @@ type Model struct {
 	databases      databases.Model
 	doctor         doctor.Model
 	logs           logs.Model
+	shell          shellui.Model
 	config         config.Model
 	helpVisible    bool
 	paletteVisible bool
@@ -133,6 +141,7 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 		databases: databases.New(cfg),
 		doctor:    doctor.New(),
 		logs:      logs.New().SetTailLines(cfg.TUILogLines),
+		shell:     shellui.New(),
 		config:    config.New(cfg),
 		overlay: overlayState{
 			viewport: viewport.New(60, 10),
@@ -172,6 +181,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.databases = m.databases.SetSnapshot(msg.Snapshot)
 		m.doctor = m.doctor.SetSnapshot(msg.Snapshot)
 		m.logs = m.logs.SetSnapshot(msg.Snapshot)
+		m.shell = m.shell.SetSnapshot(msg.Snapshot)
 		m.config = m.config.SetSnapshot(msg.Snapshot)
 		m.databases = m.databases.SetConfig(m.cfg)
 		m.palette = m.buildPalette()
@@ -277,6 +287,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.syncOverlayViewport()
 		return m, nil
+	case interactiveExecDoneMsg:
+		if msg.err != nil {
+			m.overlay = m.newOverlay()
+			m.overlay.visible = true
+			m.overlay.done = true
+			m.overlay.title = msg.title
+			m.overlay.statusText = "interactive command failed"
+			m.overlay.lines = []string{msg.err.Error()}
+			m.syncOverlayViewport()
+			return m, tea.Batch(state.RefreshCmd(m.cfg, m.repoDir, m.activeDB))
+		}
+		return m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
 	case tea.KeyMsg:
 		if handled, next, cmd := m.handleGlobalKey(msg); handled {
 			return next, cmd
@@ -384,11 +406,14 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 	case "6":
 		m.activeTab = 5
 		return true, m, nil
+	case "7":
+		m.activeTab = 6
+		return true, m, nil
 	case "tab":
-		m.activeTab = (m.activeTab + 1) % 6
+		m.activeTab = (m.activeTab + 1) % 7
 		return true, m, nil
 	case "shift+tab":
-		m.activeTab = (m.activeTab + 5) % 6
+		m.activeTab = (m.activeTab + 6) % 7
 		return true, m, nil
 	case "?":
 		m.helpVisible = true
@@ -405,6 +430,9 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 		return true, m, nil
 	case "ctrl+r":
 		return true, m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
+	case "O":
+		next, cmd := m.prepareActionRequest(shellui.BuildContextualShellRequest(m.snapshot, false))
+		return true, next, cmd
 	}
 
 	if m.activeTab == 0 {
@@ -418,8 +446,11 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 		case "l":
 			m.activeTab = 4
 			return true, m, nil
-		case "c":
+		case "o":
 			m.activeTab = 5
+			return true, m, nil
+		case "c":
+			m.activeTab = 6
 			return true, m, nil
 		case "t":
 			next, cmd := m.prepareActionRequest(event.RequestMakeTargetMsg{
@@ -577,8 +608,32 @@ func (m Model) startAction() (Model, tea.Cmd) {
 		m.activeDB = ""
 	}
 	m.syncOverlayViewport()
-
+	if request.Interactive {
+		return m.startInteractiveAction()
+	}
 	return m, runner.MakeTarget(context.Background(), m.repoDir, request.Target, request.Vars)
+}
+
+func (m Model) startInteractiveAction() (Model, tea.Cmd) {
+	request := m.overlay.request
+	if request == nil {
+		return m, nil
+	}
+
+	if selected := strings.TrimSpace(request.Vars["DB"]); selected != "" {
+		m.activeDB = selected
+	}
+
+	title := request.Target
+	m.overlay = m.newOverlay()
+	cmd := exec.Command("make", makeArgs(request.Target, request.Vars)...)
+	cmd.Dir = m.repoDir
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
+		return interactiveExecDoneMsg{title: title, err: err}
+	})
 }
 
 func (m Model) prepareActionRequest(request event.RequestMakeTargetMsg) (Model, tea.Cmd) {
@@ -649,6 +704,10 @@ func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
+	m.shell, cmd = m.shell.Update(msg)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
 	m.config, cmd = m.config.Update(msg)
 	if cmd != nil {
 		cmds = append(cmds, cmd)
@@ -678,6 +737,10 @@ func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 		next, cmd := m.logs.Update(msg)
 		m.logs = next
 		return m, cmd
+	case 5:
+		next, cmd := m.shell.Update(msg)
+		m.shell = next
+		return m, cmd
 	default:
 		next, cmd := m.config.Update(msg)
 		m.config = next
@@ -692,7 +755,8 @@ func (m Model) tabsView() string {
 		m.renderTab(2, "3 Databases"),
 		m.renderTab(3, "4 Doctor"),
 		m.renderTab(4, "5 Logs"),
-		m.renderTab(5, "6 Config"),
+		m.renderTab(5, "6 Shell"),
+		m.renderTab(6, "7 Config"),
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
 }
@@ -716,6 +780,8 @@ func (m Model) activeTabView(width, height int) string {
 		return m.doctor.View(width, height)
 	case 4:
 		return m.logs.View(width, height)
+	case 5:
+		return m.shell.View(width, height)
 	default:
 		return m.config.View(width, height)
 	}
@@ -724,7 +790,7 @@ func (m Model) activeTabView(width, height int) string {
 func (m Model) helpView(width, height int) string {
 	lines := []string{titleStyle.Render("Help")}
 	lines = append(lines, m.currentHelpLines()...)
-	lines = append(lines, "", "Global keys: 1-6 tabs · tab/shift+tab cycle · ctrl+p palette · ctrl+r refresh · ctrl+y last run · q quit · esc close overlay")
+	lines = append(lines, "", "Global keys: 1-7 tabs · tab/shift+tab cycle · O shell · ctrl+p palette · ctrl+r refresh · ctrl+y last run · q quit · esc close overlay")
 	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
@@ -837,7 +903,7 @@ func (m Model) statusBar(width int) string {
 	if m.lastError != "" {
 		incident = m.lastError
 	}
-	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  ctrl+p palette · ctrl+y last run · ctrl+r refresh · q quit · ? help",
+	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  O shell · ctrl+p palette · ctrl+y last run · ctrl+r refresh · q quit · ? help",
 		m.cfg.Domain, mode, db, incident,
 	)
 	return statusStyle.Width(width).Render(bar)
@@ -855,6 +921,8 @@ func (m Model) currentHelpLines() []string {
 		return m.doctor.HelpLines()
 	case 4:
 		return m.logs.HelpLines()
+	case 5:
+		return m.shell.HelpLines()
 	default:
 		return m.config.HelpLines()
 	}
@@ -1129,7 +1197,14 @@ func (m Model) buildPalette() []paletteOption {
 		{Title: "Databases", Description: "Quick switch to database operations.", Mode: paletteSwitch, Tab: 2},
 		{Title: "Doctor", Description: "Quick switch to mode-specific diagnostics.", Mode: paletteSwitch, Tab: 3},
 		{Title: "Logs", Description: "Quick switch to incidents and raw logs.", Mode: paletteSwitch, Tab: 4},
-		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 5},
+		{Title: "Shell", Description: "Quick switch to the contextual Odoo shell launcher.", Mode: paletteSwitch, Tab: 5},
+		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 6},
+		{
+			Title:       "Open Contextual Odoo Shell",
+			Description: "Open the interactive Odoo shell for the active runtime and selected database.",
+			Mode:        paletteAction,
+			Request:     shellui.BuildContextualShellRequest(m.snapshot, false),
+		},
 		{
 			Title:       "Start Stable Docker",
 			Description: "Boot the stable docker runtime.",
@@ -1280,6 +1355,20 @@ func clearsActiveDB(target string) bool {
 	default:
 		return false
 	}
+}
+
+func makeArgs(target string, vars map[string]string) []string {
+	args := make([]string, 0, len(vars)+1)
+	keys := make([]string, 0, len(vars))
+	for key := range vars {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		args = append(args, fmt.Sprintf("%s=%s", key, vars[key]))
+	}
+	args = append(args, target)
+	return args
 }
 
 func tickCmd(interval time.Duration) tea.Cmd {

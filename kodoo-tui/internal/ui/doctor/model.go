@@ -9,6 +9,7 @@ import (
 
 	"github.com/kodoo/kodoo-tui/internal/event"
 	"github.com/kodoo/kodoo-tui/internal/state"
+	shellui "github.com/kodoo/kodoo-tui/internal/ui/shell"
 )
 
 type doctorCase struct {
@@ -60,6 +61,7 @@ func (m Model) HelpLines() []string {
 	return []string{
 		"↑/↓ move between stack doctor modes",
 		"enter run the suggested primary action for the selected mode",
+		"o open the contextual Odoo shell for the current runtime",
 		"r refresh the global snapshot",
 	}
 }
@@ -85,6 +87,8 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 				return m, nil
 			}
 			return m, requestCmd(m.modes[m.selected].Primary)
+		case "o":
+			return m, requestCmd(shellui.BuildContextualShellRequest(m.snapshot, false))
 		}
 	}
 	return m, nil
@@ -162,6 +166,9 @@ func (m Model) detailView() string {
 		titleStyle.Render("Primary Action"),
 		fmt.Sprintf("make %s", mode.Primary.Target),
 		mode.Primary.Description,
+		"",
+		titleStyle.Render("Shell"),
+		"Press o to open the contextual Odoo shell for the active runtime.",
 	}
 
 	if strings.TrimSpace(mode.CurrentIssue) != "" {

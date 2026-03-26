@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <function model="res.partner" name="write">
+            <value eval="[ref('base.partner_root')]"/>
+            <value eval="{
+                'name': 'KodooBot',
+                'email': 'kodoobot@kodoo.online',
+            }"/>
+        </function>
+
+        <function model="res.users" name="write">
+            <value eval="[ref('base.user_root')]"/>
+            <value eval="{
+                'email': 'kodoobot@kodoo.online',
+                'signature': '&lt;div&gt;KodooBot&lt;/div&gt;',
+            }"/>
+        </function>
+    </data>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_auditoria_espelho_import_wizard_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.espelho.import.wizard.form</field>
+        <field name="model">gov.auditoria.espelho.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar Espelho">
+                <group>
+                    <field name="ciclo_id"/>
+                    <field name="upload_file" filename="upload_filename"/>
+                    <field name="upload_filename"/>
+                    <field name="delimiter"/>
+                    <field name="has_header"/>
+                    <field name="preview_text" nolabel="1" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="action_preview" string="Preview" type="object" class="btn-secondary"/>
+                    <button name="action_import" string="Importar" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_gov_auditoria_espelho_import_wizard" model="ir.actions.act_window">
+        <field name="name">Importar Movimentos</field>
+        <field name="res_model">gov.auditoria.espelho.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

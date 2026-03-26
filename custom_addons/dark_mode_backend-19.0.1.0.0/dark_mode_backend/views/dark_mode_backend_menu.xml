@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_dark_mode_backend_root"
+        name="Dark Mode"
+        action="base.action_res_users_my"
+        sequence="951"
+        groups="base.group_user"
+        web_icon="dark_mode_backend,static/description/icon.png"/>
+
+    <menuitem
+        id="menu_dark_mode_backend_preferences"
+        name="Preferences"
+        parent="menu_dark_mode_backend_root"
+        action="base.action_res_users_my"
+        sequence="10"
+        groups="base.group_user"/>
+</odoo>

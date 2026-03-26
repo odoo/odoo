@@ -54,3 +54,49 @@ class AccountFiscalYear(models.Model):
             limit=1,
         )
 
+    def get_gov_closure_status(self):
+        self.ensure_one()
+        company = self.company_id
+        date_to = self.date_to
+        fiscal_lock_date = company.fiscalyear_lock_date
+        fiscal_lock_satisfied = bool(fiscal_lock_date and date_to and fiscal_lock_date >= date_to)
+
+        journal_model = self.env["account.journal"].with_company(company)
+        journal_lock_supported = hasattr(journal_model, "_get_journal_lock_date")
+        journals = journal_model.search([("company_id", "=", company.id)])
+
+        effective_locked_journals = journals.browse()
+        if journal_lock_supported and date_to:
+            effective_locked_journals = journals.filtered(
+                lambda journal: journal._get_journal_lock_date()
+                and journal._get_journal_lock_date() >= date_to
+            )
+
+        public_accounting_enabled = bool(getattr(company, "gov_public_accounting_enabled", False))
+        journal_lock_complete = (
+            fiscal_lock_satisfied
+            if not journals
+            else len(effective_locked_journals) == len(journals)
+        )
+        reporting_ready = bool(
+            public_accounting_enabled and fiscal_lock_satisfied and journal_lock_complete
+        )
+
+        return {
+            "company_id": company.id,
+            "fiscal_year_id": self.id,
+            "date_from": self.date_from,
+            "date_to": date_to,
+            "public_accounting_enabled": public_accounting_enabled,
+            "fiscal_lock_date": fiscal_lock_date,
+            "fiscal_lock_satisfied": fiscal_lock_satisfied,
+            "journal_lock_supported": journal_lock_supported,
+            "journal_count": len(journals),
+            "journal_locked_count": len(effective_locked_journals),
+            "journal_lock_complete": journal_lock_complete,
+            "reporting_ready": reporting_ready,
+        }
+
+    def is_gov_reporting_ready(self):
+        self.ensure_one()
+        return bool(self.get_gov_closure_status()["reporting_ready"])

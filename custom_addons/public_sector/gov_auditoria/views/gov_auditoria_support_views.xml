@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_auditoria_documento_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.documento.list</field>
+        <field name="model">gov.auditoria.documento</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="nome"/>
+                <field name="tipo"/>
+                <field name="anexo_4320_numero"/>
+                <field name="origem"/>
+                <field name="versao"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_gov_auditoria_documento" model="ir.actions.act_window">
+        <field name="name">Documentos</field>
+        <field name="res_model">gov.auditoria.documento</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_gov_auditoria_evento_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.evento.list</field>
+        <field name="model">gov.auditoria.evento</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="tipo"/>
+                <field name="data_evento"/>
+                <field name="state"/>
+                <field name="responsavel_id"/>
+                <field name="descricao"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_prazo_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.prazo.list</field>
+        <field name="model">gov.auditoria.prazo</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="tipo"/>
+                <field name="descricao"/>
+                <field name="data_inicio"/>
+                <field name="data_fim_legal"/>
+                <field name="data_fim_real"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_espelho_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.espelho.list</field>
+        <field name="model">gov.auditoria.espelho</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="tipo_movimento"/>
+                <field name="data_movimento"/>
+                <field name="valor"/>
+                <field name="origem"/>
+                <field name="validado"/>
+                <field name="historico"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_apontamento_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.apontamento.list</field>
+        <field name="model">gov.auditoria.apontamento</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="codigo"/>
+                <field name="tipo"/>
+                <field name="state"/>
+                <field name="valor_multa"/>
+                <field name="descricao"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_checklist_template_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.checklist.template.list</field>
+        <field name="model">gov.auditoria.checklist.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="orgao_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gov_auditoria_evento" model="ir.actions.act_window">
+        <field name="name">Eventos</field>
+        <field name="res_model">gov.auditoria.evento</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_gov_auditoria_prazo" model="ir.actions.act_window">
+        <field name="name">Prazos</field>
+        <field name="res_model">gov.auditoria.prazo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_gov_auditoria_espelho" model="ir.actions.act_window">
+        <field name="name">Espelho Historico</field>
+        <field name="res_model">gov.auditoria.espelho</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_gov_auditoria_apontamento" model="ir.actions.act_window">
+        <field name="name">Apontamentos</field>
+        <field name="res_model">gov.auditoria.apontamento</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_gov_auditoria_checklist_template" model="ir.actions.act_window">
+        <field name="name">Templates de Checklist</field>
+        <field name="res_model">gov.auditoria.checklist.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

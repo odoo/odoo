@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gov_auditoria_template_tce_default" model="gov.auditoria.checklist.template">
+        <field name="name">Checklist Padrao TCE/TCM</field>
+        <field name="orgao_id" ref="gov_auditoria.gov_auditoria_orgao_tce"/>
+    </record>
+    <record id="gov_auditoria_template_tce_item_1" model="gov.auditoria.checklist.template.item">
+        <field name="template_id" ref="gov_auditoria.gov_auditoria_template_tce_default"/>
+        <field name="sequence">10</field>
+        <field name="descricao">Balanco Orcamentario (Anexo 12)</field>
+        <field name="obrigatorio">True</field>
+    </record>
+    <record id="gov_auditoria_template_tce_item_2" model="gov.auditoria.checklist.template.item">
+        <field name="template_id" ref="gov_auditoria.gov_auditoria_template_tce_default"/>
+        <field name="sequence">20</field>
+        <field name="descricao">Balanco Financeiro (Anexo 13)</field>
+        <field name="obrigatorio">True</field>
+    </record>
+    <record id="gov_auditoria_template_tce_item_3" model="gov.auditoria.checklist.template.item">
+        <field name="template_id" ref="gov_auditoria.gov_auditoria_template_tce_default"/>
+        <field name="sequence">30</field>
+        <field name="descricao">Balanco Patrimonial (Anexo 14)</field>
+        <field name="obrigatorio">True</field>
+    </record>
+    <record id="gov_auditoria_template_tce_item_4" model="gov.auditoria.checklist.template.item">
+        <field name="template_id" ref="gov_auditoria.gov_auditoria_template_tce_default"/>
+        <field name="sequence">40</field>
+        <field name="descricao">DVP (Anexo 15)</field>
+        <field name="obrigatorio">True</field>
+    </record>
+</odoo>

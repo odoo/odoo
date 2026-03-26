@@ -14,6 +14,7 @@
         "gov_conciliacao",
         "gov_compras",
         "gov_public_accounting",
+        "gov_auditoria",
         "gov_ai_ml",
         "gov_knowledge_bridge"
     ],

@@ -2,6 +2,10 @@
 <!-- Copyright © 2025 TugIT. All rights reserved. -->
 <odoo>
     <template id="remove_powered_by_portal" inherit_id="portal.portal_record_sidebar">
-        <xpath expr="//div[hasclass('text-muted') and contains(., 'Powered by')]" position="replace"/>
+        <xpath expr="//div[hasclass('d-none') and hasclass('d-lg-block') and hasclass('text-muted')]" position="replace">
+            <div class="d-none d-lg-block mt-5 small text-center text-muted">
+                Powered by <span class="badge text-bg-light">Kodoo</span>
+            </div>
+        </xpath>
     </template>
 </odoo>

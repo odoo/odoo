@@ -5,6 +5,7 @@
     "depends": ["gov_base", "mail", "base_automation", "web"],
     "data": [
         "security/ir.model.access.csv",
+        "security/gov_processos_rules.xml",
         "data/gov_ai_template_seed.xml",
         "data/gov_ai_template_grp_dfd_seed.xml",
         "data/gov_ai_template_grp_procurement_suite_seed.xml",

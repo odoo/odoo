@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Processo e modelos filhos: operador restrito à própria UG; gestor/admin com visão transversal -->
+
+    <record id="rule_gov_processo_operador_static" model="ir.rule">
+        <field name="name">AGI Gov Processo / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo"/>
+        <field name="domain_force">[('ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_gestor_static" model="ir.rule">
+        <field name="name">AGI Gov Processo / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_admin_static" model="ir.rule">
+        <field name="name">AGI Gov Processo / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_doc_operador" model="ir.rule">
+        <field name="name">AGI Gov Documento / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_doc_gestor" model="ir.rule">
+        <field name="name">AGI Gov Documento / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_doc_admin" model="ir.rule">
+        <field name="name">AGI Gov Documento / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_tramite_operador" model="ir.rule">
+        <field name="name">AGI Gov Tramite / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_tramite"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_tramite_gestor" model="ir.rule">
+        <field name="name">AGI Gov Tramite / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_tramite"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_tramite_admin" model="ir.rule">
+        <field name="name">AGI Gov Tramite / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_tramite"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_vinculo_operador" model="ir.rule">
+        <field name="name">AGI Gov Vinculo / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_vinculo"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_vinculo_gestor" model="ir.rule">
+        <field name="name">AGI Gov Vinculo / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_vinculo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_vinculo_admin" model="ir.rule">
+        <field name="name">AGI Gov Vinculo / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_vinculo"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_dotacao_operador" model="ir.rule">
+        <field name="name">AGI Gov Dotacao / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_dotacao"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_dotacao_gestor" model="ir.rule">
+        <field name="name">AGI Gov Dotacao / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_dotacao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_dotacao_admin" model="ir.rule">
+        <field name="name">AGI Gov Dotacao / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_dotacao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_parametro_operador" model="ir.rule">
+        <field name="name">AGI Gov Parametro / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_parametro"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_parametro_gestor" model="ir.rule">
+        <field name="name">AGI Gov Parametro / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_parametro"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_parametro_admin" model="ir.rule">
+        <field name="name">AGI Gov Parametro / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_parametro"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_planilha_item_operador" model="ir.rule">
+        <field name="name">AGI Gov Planilha Item / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_item"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_planilha_item_gestor" model="ir.rule">
+        <field name="name">AGI Gov Planilha Item / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_item"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_planilha_item_admin" model="ir.rule">
+        <field name="name">AGI Gov Planilha Item / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_item"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_planilha_lote_operador" model="ir.rule">
+        <field name="name">AGI Gov Planilha Lote / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_lote"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_planilha_lote_gestor" model="ir.rule">
+        <field name="name">AGI Gov Planilha Lote / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_lote"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_planilha_lote_admin" model="ir.rule">
+        <field name="name">AGI Gov Planilha Lote / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_lote"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_planilha_job_operador" model="ir.rule">
+        <field name="name">AGI Gov Planilha Job / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_job"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_planilha_job_gestor" model="ir.rule">
+        <field name="name">AGI Gov Planilha Job / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_planilha_job_admin" model="ir.rule">
+        <field name="name">AGI Gov Planilha Job / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_planilha_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_doc_ingest_job_operador" model="ir.rule">
+        <field name="name">AGI Gov Doc Ingest Job / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc_ingest_job"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_doc_ingest_job_gestor" model="ir.rule">
+        <field name="name">AGI Gov Doc Ingest Job / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc_ingest_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_doc_ingest_job_admin" model="ir.rule">
+        <field name="name">AGI Gov Doc Ingest Job / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc_ingest_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_doc_render_job_operador" model="ir.rule">
+        <field name="name">AGI Gov Doc Render Job / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc_render_job"/>
+        <field name="domain_force">[('processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_doc_render_job_gestor" model="ir.rule">
+        <field name="name">AGI Gov Doc Render Job / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc_render_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_doc_render_job_admin" model="ir.rule">
+        <field name="name">AGI Gov Doc Render Job / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_doc_render_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_processo_versao_operador" model="ir.rule">
+        <field name="name">AGI Gov Versao / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_versao"/>
+        <field name="domain_force">[('doc_id.processo_id.ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_processo_versao_gestor" model="ir.rule">
+        <field name="name">AGI Gov Versao / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_versao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_processo_versao_admin" model="ir.rule">
+        <field name="name">AGI Gov Versao / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo_versao"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_timbre_operador" model="ir.rule">
+        <field name="name">AGI Gov Timbre / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_timbre"/>
+        <field name="domain_force">[('ug_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_timbre_gestor" model="ir.rule">
+        <field name="name">AGI Gov Timbre / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_timbre"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_timbre_admin" model="ir.rule">
+        <field name="name">AGI Gov Timbre / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_timbre"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_ai_memory_operador" model="ir.rule">
+        <field name="name">AGI Gov IA Memoria / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_memory"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_ai_memory_gestor" model="ir.rule">
+        <field name="name">AGI Gov IA Memoria / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_memory"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_ai_memory_admin" model="ir.rule">
+        <field name="name">AGI Gov IA Memoria / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_memory"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_ai_provider_config_operador" model="ir.rule">
+        <field name="name">AGI Gov IA Provider / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_provider_config"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_ai_provider_config_gestor" model="ir.rule">
+        <field name="name">AGI Gov IA Provider / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_provider_config"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_ai_provider_config_admin" model="ir.rule">
+        <field name="name">AGI Gov IA Provider / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_provider_config"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+
+    <record id="rule_gov_ai_run_operador" model="ir.rule">
+        <field name="name">AGI Gov IA Run / Operador - UG do usuário</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_run"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_operador'))]"/>
+    </record>
+    <record id="rule_gov_ai_run_gestor" model="ir.rule">
+        <field name="name">AGI Gov IA Run / Gestor - Todas as UGs</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_run"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_gestor'))]"/>
+    </record>
+    <record id="rule_gov_ai_run_admin" model="ir.rule">
+        <field name="name">AGI Gov IA Run / Administrador - Acesso total</field>
+        <field name="model_id" ref="gov_processos.model_gov_ai_run"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('gov_base.group_gov_admin'))]"/>
+    </record>
+</odoo>

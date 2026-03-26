@@ -32,6 +32,7 @@
     'website': 'https://www.cybrosys.com',
     'license': 'LGPL-3',
     'depends': ['web', 'base'],
+    'data': [],
     'assets': {
         'web.assets_backend': [
             'theme_liquid_glass/static/src/scss/variables.scss',
@@ -54,6 +55,6 @@
         'static/description/icon.png'
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
 }

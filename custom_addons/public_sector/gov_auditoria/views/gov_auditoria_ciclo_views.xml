@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_auditoria_ciclo_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.ciclo.list</field>
+        <field name="model">gov.auditoria.ciclo</field>
+        <field name="arch" type="xml">
+            <list string="Ciclos de Prestacao" decoration-danger="state == 'diligencia'" decoration-warning="not reporting_ready">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="exercicio_id"/>
+                <field name="orgao_id"/>
+                <field name="tipo_prestacao"/>
+                <field name="modo_dados"/>
+                <field name="state"/>
+                <field name="reporting_ready"/>
+                <field name="cobertura_espelho_pct" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_auditoria_ciclo_search" model="ir.ui.view">
+        <field name="name">gov.auditoria.ciclo.search</field>
+        <field name="model">gov.auditoria.ciclo</field>
+        <field name="arch" type="xml">
+            <search string="Ciclos de Prestacao">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="orgao_id"/>
+                <field name="state"/>
+                <field name="modo_dados"/>
+                <filter name="f_ativos" string="Em andamento" domain="[('state', 'not in', ['encerrado', 'arquivado'])]"/>
+                <filter name="f_acordao" string="Aguardando Acordao" domain="[('state', 'in', ['em_analise', 'julgamento', 'recurso'])]"/>
+                <filter name="f_empresa" string="Minhas Empresas" domain="[('company_id', 'in', allowed_company_ids)]"/>
+                <filter name="g_company" string="UG" context="{'group_by': 'company_id'}"/>
+                <filter name="g_state" string="Estado" context="{'group_by': 'state'}"/>
+                <filter name="g_orgao" string="Orgao" context="{'group_by': 'orgao_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_gov_auditoria_ciclo_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.ciclo.form</field>
+        <field name="model">gov.auditoria.ciclo</field>
+        <field name="arch" type="xml">
+            <form string="Ciclo de Prestacao">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="rascunho,consolidacao,conferencia,remessa,em_analise,diligencia,defesa,julgamento,acordao,recurso,cumprimento,encerrado,arquivado"/>
+                    <button name="action_to_consolidacao" string="Consolidar" type="object" class="btn-secondary" invisible="state != 'rascunho'"/>
+                    <button name="action_to_conferencia" string="Conferir" type="object" class="btn-secondary" invisible="state != 'consolidacao'"/>
+                    <button name="action_to_remessa" string="Remeter" type="object" class="btn-primary" invisible="state != 'conferencia'"/>
+                    <button name="action_to_em_analise" string="Em Analise" type="object" class="btn-secondary" invisible="state not in ('remessa','defesa','recurso')"/>
+                    <button name="action_to_diligencia" string="Diligencia" type="object" class="btn-secondary" invisible="state not in ('em_analise',)"/>
+                    <button name="action_to_defesa" string="Defesa" type="object" class="btn-secondary" invisible="state != 'diligencia'"/>
+                    <button name="action_to_julgamento" string="Julgamento" type="object" class="btn-secondary" invisible="state not in ('em_analise',)"/>
+                    <button name="action_to_acordao" string="Acordao" type="object" class="btn-secondary" invisible="state not in ('julgamento','recurso')"/>
+                    <button name="action_to_recurso" string="Recurso" type="object" class="btn-secondary" invisible="state != 'acordao'"/>
+                    <button name="action_to_cumprimento" string="Cumprimento" type="object" class="btn-secondary" invisible="state != 'acordao'"/>
+                    <button name="action_to_encerrado" string="Encerrar" type="object" class="btn-secondary" invisible="state not in ('cumprimento','acordao')"/>
+                    <button name="action_to_arquivado" string="Arquivar" type="object" class="btn-secondary" invisible="state in ('arquivado','encerrado')"/>
+                    <button name="action_generate_mvp_annexes" string="Gerar Anexos MVP" type="object" class="btn-primary" invisible="not reporting_ready"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="company_id"/>
+                            <field name="exercicio_id"/>
+                            <field name="orgao_id"/>
+                            <field name="tipo_prestacao"/>
+                            <field name="modo_dados"/>
+                            <field name="processo_id"/>
+                        </group>
+                        <group>
+                            <field name="responsavel_ids" widget="many2many_tags"/>
+                            <field name="auditor_externo_ids" widget="many2many_tags"/>
+                            <field name="data_abertura"/>
+                            <field name="data_remessa"/>
+                            <field name="data_encerramento"/>
+                            <field name="numero_protocolo"/>
+                            <field name="mapeamento_validado"/>
+                            <field name="reporting_ready" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="nota_interna"/>
+                    </group>
+                    <group string="Indicadores">
+                        <field name="native_empenho_count" readonly="1"/>
+                        <field name="native_liquidacao_count" readonly="1"/>
+                        <field name="native_pagamento_count" readonly="1"/>
+                        <field name="cobertura_espelho_pct" readonly="1"/>
+                        <field name="checklist_id" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Eventos">
+                            <field name="evento_ids">
+                                <list editable="bottom">
+                                    <field name="tipo"/>
+                                    <field name="data_evento"/>
+                                    <field name="data_limite"/>
+                                    <field name="responsavel_id"/>
+                                    <field name="state"/>
+                                    <field name="origem"/>
+                                    <field name="descricao"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Prazos">
+                            <field name="prazo_ids">
+                                <list editable="bottom">
+                                    <field name="tipo"/>
+                                    <field name="descricao"/>
+                                    <field name="data_inicio"/>
+                                    <field name="data_fim_legal"/>
+                                    <field name="data_fim_real"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Documentos">
+                            <field name="documento_ids">
+                                <list editable="bottom">
+                                    <field name="nome"/>
+                                    <field name="tipo"/>
+                                    <field name="anexo_4320_numero"/>
+                                    <field name="origem"/>
+                                    <field name="protocolo_externo"/>
+                                    <field name="versao"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Espelho">
+                            <field name="espelho_ids">
+                                <list editable="bottom">
+                                    <field name="tipo_movimento"/>
+                                    <field name="data_movimento"/>
+                                    <field name="valor"/>
+                                    <field name="origem"/>
+                                    <field name="validado"/>
+                                    <field name="historico"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Apontamentos">
+                            <field name="apontamento_ids">
+                                <list editable="bottom">
+                                    <field name="codigo"/>
+                                    <field name="tipo"/>
+                                    <field name="state"/>
+                                    <field name="valor_multa"/>
+                                    <field name="descricao"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Contexto Processo">
+                            <field name="doc_processo_ref_ids" widget="many2many_tags" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_auditoria_ciclo" model="ir.actions.act_window">
+        <field name="name">Ciclos de Prestacao</field>
+        <field name="res_model">gov.auditoria.ciclo</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="gov_auditoria.view_gov_auditoria_ciclo_search"/>
+        <field name="context">{'default_company_id': allowed_company_ids and allowed_company_ids[0]}</field>
+    </record>
+</odoo>

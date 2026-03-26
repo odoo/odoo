@@ -1313,6 +1313,20 @@ odoo-tui:
 odoo-shell:
 	@$(COMPOSE) exec odoo odoo shell -c /etc/odoo/odoo.conf -d "$(DB)"
 
+dev-host-shell:
+	@$(MAKE) guard-dev-host
+	@db_name="$(strip $(DB))"; \
+	if [ -z "$$db_name" ]; then db_name="$(DEV_HOST_DB)"; fi; \
+	$(MAKE) dev-host-config >/dev/null; \
+	"$(PYTHON)" "$(ODOO_BIN)" shell -c "$(DEV_HOST_CONFIG)" -d "$$db_name"
+
+dev-project-shell:
+	@$(MAKE) guard-dev-host
+	@db_name="$(strip $(DB))"; \
+	if [ -z "$$db_name" ]; then db_name="$(DEV_PROJECT_DB)"; fi; \
+	$(MAKE) dev-project-config >/dev/null; \
+	"$(PYTHON)" "$(ODOO_BIN)" shell -c "$(DEV_PROJECT_CONFIG)" -d "$$db_name"
+
 odoo-fix-url:
 	@$(MAKE) guard-prod-host
 	@set -e; \
