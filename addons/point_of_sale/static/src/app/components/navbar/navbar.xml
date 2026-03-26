@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom">
-            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto min-w-0" t-att-class="{'d-none': this.ui.isSmall and state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
+            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto min-w-0" t-att-class="{'d-none': this.ui.isSmall and this.state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
                 <div class="d-flex flex-shrink-0 align-items-center gap-2 gap-lg-3 position-relative pe-2 min-w-0" t-att-class="{ 'w-100': !this.ui.isSmall }">
                     <div class="navbar-menu btn-group" role="group" aria-label="Navigation Menu">
                         <button class="register-label btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': this.mainButton === 'register'}" t-on-click="() => this.onClickRegister()">
