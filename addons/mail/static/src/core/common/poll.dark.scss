@@ -3,9 +3,18 @@
     --border-opacity: .5;
 }
 
+.o-mail-PollResult-emojiWrapper {
+    background-color: rgba(255, 255, 255, 0.096);
+    border-color: transparent;
+}
+
 $poll-color-opacity-map: (
     "secondary": 0.6,
     "o-action": 0.2,
     "o-brand-primary": 0.4
 );
 @include o-mail-poll();
+
+.o-mail-Poll:not(.o-ongoing) .o-mail-PollOption.o-winningOption {
+    --poll-border-color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), 1);
+}

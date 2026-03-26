@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-const cannedResponseButtonSelector = "button[title='Insert a Canned response']";
+const cannedResponseButtonSelector = "button[title='Insert Canned Response']";
 
 registry.category("web_tour.tours").add("portal_composer_actions_tour_internal_user", {
     steps: () => [

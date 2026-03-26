@@ -8,28 +8,29 @@
                     <t t-if="this.props.poll.allow_multiple_options">Select one or more options</t>
                     <t t-else="">Select one option</t>
                 </p>
-                <div class="o-mail-PollOption rounded" t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="this.percentageAttStyle(option)" t-att-class="{'o-selected': this.state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(this.props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
-                    <div t-if="this.isShowingResults" class="d-flex justify-content-between p-2">
-                        <span class="fw-bold me-1 text-truncate" t-out="option.option_label"/>
+                <div class="o-mail-PollOption rounded p-1" t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="this.percentageAttStyle(option)" t-att-class="{'o-selected': this.state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(this.props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
+                    <div t-if="this.isShowingResults" class="d-flex align-items-center p-2">
+                        <span t-if="option.option_emoji" class="fs-2 lh-1 me-2" t-out="option.option_emoji"/>
+                        <span class="fw-bold me-1 text-truncate flex-grow-1" t-out="option.option_label"/>
                         <span class="flex-shrink-0">
                             <span class="me-2 smaller" t-out="this.props.poll.voteCountText(option.number_of_votes)"/>
-                            <span class="o-fw-600"><t t-out="option.vote_percentage"/>%</span>
-                            <i t-if="option.selected_by_self" class="o-mx-1_5 fa fa-lg fa-check-circle"/>
+                            <span class="o-fw-600 me-1"><t t-out="option.vote_percentage"/>%</span>
+                            <i t-if="option.selected_by_self" class="o-mx-1_5 fa fa-lg fa-check-circle" t-att-class="{ 'text-primary': this.props.poll.end_message_id and option.eq(this.props.poll.winning_option_id) }"/>
                         </span>
                     </div>
-                    <label t-else="" class="d-flex justify-content-between p-2 cursor-pointer">
-                        <span class="fw-bold me-1 text-truncate" t-out="option.option_label"/>
-                        <input class="form-check-input" t-att-disabled="this.state.voting" t-att-checked="this.state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" t-att-type="this.props.poll.allow_multiple_options ? 'checkbox' : 'radio'"/>
+                    <label t-else="" class="d-flex align-items-center p-2 cursor-pointer">
+                        <span t-if="option.option_emoji" class="fs-2 lh-1 me-2" t-out="option.option_emoji"/>
+                        <span class="fw-bold text-truncate flex-grow-1" t-out="option.option_label"/>
+                        <input class="form-check-input mt-0" t-att-disabled="this.state.voting" t-att-checked="this.state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" t-att-type="this.props.poll.allow_multiple_options ? 'checkbox' : 'radio'"/>
                     </label>
                 </div>
                 <div class="d-flex align-items-center mt-2">
-                    <div class="small d-flex o-gap-0_5">
+                    <div class="small d-flex o-gap-0_5 flex-grow-1">
                         <a href="#" class="text-decoration-underline link-underline link-underline-opacity-0 link-underline-opacity-100-hover" t-on-click="this.onClickNumberOfVotes" t-out="this.props.poll.voteCountText(this.props.poll.numberOfVotes)"/>
                         <span class="text-muted">&#8729;</span>
                         <span t-if="this.props.poll.end_message_id" class="text-muted">Poll closed</span>
                         <span t-else="" class="text-muted" t-att-title="this.remainingTimeTextTitle" t-out="this.state.remainingTimeText"/>
                     </div>
-                    <span class="flex-grow-1"/>
                     <t t-if="!this.props.poll.end_message_id">
                         <t t-if="!this.props.poll.selfAlreadyVoted">
                             <t t-if="this.isShowingResults">
