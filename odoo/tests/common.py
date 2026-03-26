@@ -11,7 +11,6 @@ import binascii
 import concurrent.futures
 import contextlib
 import difflib
-import functools
 import importlib
 import inspect
 import itertools
@@ -1405,6 +1404,7 @@ class ChromeBrowser:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
+        self.chrome_log_level = logging.RUNBOT
 
         if scs := odoo.tools.config['screencasts']:
             self.screencaster = Screencaster(self, scs)
@@ -1493,8 +1493,10 @@ class ChromeBrowser:
                 self._websocket_request('Browser.close')
             except ChromeBrowserException as e:
                 _logger.runbot("WS error during browser shutdown: %s", e)
+                self.chrome_log_level = logging.RUNBOT
             except Exception:  # noqa: BLE001
                 _logger.warning("Error during browser shutdown", exc_info=True)
+                self.chrome_log_level = logging.RUNBOT
             self._logger.info("Closing websocket connection")
             self.ws.close()
 
@@ -1505,7 +1507,20 @@ class ChromeBrowser:
         except subprocess.TimeoutExpired:
             self._logger.warning("Killing chrome headless with pid %s: still alive", self.chrome.pid)
             self.chrome.kill()
+            self.chrome_log_level = logging.RUNBOT
 
+        log = self.read_log()
+        if log:
+            save_test_file(
+                self.test_case._testMethodName,
+                log,
+                prefix='chrome_log_',
+                extension='txt',
+                document_type="Chrome Log",
+                logger=self._logger,
+                loglevel=self.chrome_log_level,
+                directory='chrome_logs',
+            )
         self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
         shutil.rmtree(self.user_data_dir, ignore_errors=True)
 
@@ -1997,25 +2012,15 @@ which leads to stray network requests and inconsistencies."""
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
         err = ChromeBrowserException("failed")
-        save_log = functools.partial(
-            save_test_file,
-            self.test_case._testMethodName,
-            self.read_log(),
-            prefix='chrome_log_',
-            extension='txt',
-            document_type="Chrome Log",
-            logger=self._logger,
-            directory='chrome_logs',
-        )
         try:
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
-                save_log(loglevel=logging.INFO)
+                self.chrome_log_level = logging.INFO
                 return
         except CancelledError:
             # regular-ish shutdown
-            save_log(loglevel=logging.INFO)
+            self.chrome_log_level = logging.INFO
             return
         except ChromeBrowserException:
             self.screencaster.save()
@@ -2023,7 +2028,6 @@ which leads to stray network requests and inconsistencies."""
         except Exception as e:
             err = e
 
-        save_log()
         self.take_screenshot()
         self.screencaster.save()
 
