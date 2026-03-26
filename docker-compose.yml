@@ -78,6 +78,9 @@ services:
       - ./deploy/nginx/kodoo.https.conf:/etc/nginx/templates/kodoo.https.conf:ro
       - letsencrypt:/etc/letsencrypt
       - certbot-www:/var/www/certbot
+    environment:
+      - DOMAIN=${DOMAIN}
+      - PROD_DB_NAME=${PROD_DB_NAME}
     command: ["/bin/sh", "/etc/nginx/start-nginx.sh"]
     networks:
       - kodoo-net

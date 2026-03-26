@@ -5,7 +5,7 @@
         <field name="model">gov.ai.template</field>
         <field name="inherit_id" ref="gov_processos.view_gov_ai_template_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group/group[@string='Fonte e Saída']" position="inside">
+            <xpath expr="//group[group/field[@name='source_document']]/group[field[@name='source_document'] and field[@name='output_format']]" position="inside">
                 <field name="knowledge_article_id"/>
                 <button
                     name="action_open_knowledge_article"

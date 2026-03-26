@@ -281,6 +281,16 @@ func stableTunnelCases(snapshot state.Snapshot) []doctorCase {
 			Current:  true,
 		})
 	}
+	if hasIncident(snapshot.Incidents, "Apex DNS ausente no edge") {
+		cases = append(cases, doctorCase{
+			Severity: state.SeverityCritical,
+			Title:    "Apex do dominio nao foi publicado",
+			Symptom:  "www responde, mas o dominio raiz continua indisponivel no navegador e no smoke publico.",
+			Cause:    "O edge conhece www.<dominio>, mas o hostname apex ainda nao foi criado no Cloudflare/Tunnel.",
+			Fix:      "Adicionar o Public Hostname do apex no Cloudflare e manter www apenas como redirect para o dominio raiz.",
+			Current:  true,
+		})
+	}
 
 	cases = append(cases,
 		doctorCase{

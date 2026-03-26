@@ -179,7 +179,7 @@ def inspect_container(container_name: str) -> ServiceRow:
     return ServiceRow(container_name, status, health, ", ".join(published) or "-")
 
 
-def probe_http(url: str, websocket: bool = False) -> tuple[str, str]:
+def probe_http(url: str, websocket: bool = False, host_header: str | None = None) -> tuple[str, str]:
     parsed = urlparse(url)
     scheme = parsed.scheme or "http"
     host = parsed.hostname or "127.0.0.1"
@@ -188,7 +188,7 @@ def probe_http(url: str, websocket: bool = False) -> tuple[str, str]:
     if parsed.query:
         path = f"{path}?{parsed.query}"
     headers = {
-        "Host": parsed.netloc or host,
+        "Host": host_header or parsed.netloc or host,
         "User-Agent": "kodoo-tui/1.0",
     }
     if websocket:
@@ -380,14 +380,14 @@ def build_snapshot(env: dict[str, str]) -> Snapshot:
         if not chosen_local_base and status in {"200", "303"}:
             chosen_local_base = url.rsplit("/odoo", 1)[0]
     if chosen_local_base:
-        ws_url = f"{chosen_local_base}/websocket?version=19.0-2"
-        status, detail = probe_http(ws_url, websocket=True)
+        ws_url = f"{chosen_local_base}/websocket/health"
+        status, detail = probe_http(ws_url, websocket=False, host_header=domain)
         endpoints.append(EndpointRow("websocket", ws_url, status, detail))
     else:
         endpoints.append(
             EndpointRow(
                 "websocket",
-                f"http://{local_bind_host}:{local_port}/websocket?version=19.0-2",
+                f"http://{local_bind_host}:{local_port}/websocket/health",
                 "SKIP",
                 "no healthy local base",
             )

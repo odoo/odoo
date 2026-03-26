@@ -341,8 +341,20 @@ func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, docker
 			Suggestion: "Garanta firewall/rede confiável antes de usar esse host fora da máquina local.",
 		})
 	}
+	publicApex, publicWWW := smokeByName(snapshot.Smoke, "public-http"), smokeByName(snapshot.Smoke, "public-www")
+	if !publicApex.OK && publicWWW.OK {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityCritical,
+			Summary:    "Apex DNS ausente no edge",
+			Cause:      fmt.Sprintf("https://%s falhou, mas https://www.%s respondeu. O runtime local pode estar saudável, porém o apex ainda não foi publicado.", cfg.Domain, cfg.Domain),
+			Suggestion: fmt.Sprintf("Publique o hostname apex %s no Cloudflare/Tunnel e mantenha www apenas como redirect opcional.", cfg.Domain),
+		})
+	}
 	for _, check := range snapshot.Smoke {
 		if check.OK {
+			continue
+		}
+		if check.Name == "public-http" && publicWWW.OK {
 			continue
 		}
 		incidents = append(incidents, Incident{
@@ -366,6 +378,15 @@ func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, docker
 	}
 	sortIncidents(incidents)
 	return incidents
+}
+
+func smokeByName(rows []health.CheckResult, name string) health.CheckResult {
+	for _, row := range rows {
+		if row.Name == name {
+			return row
+		}
+	}
+	return health.CheckResult{Name: name}
 }
 
 type pidStatus struct {

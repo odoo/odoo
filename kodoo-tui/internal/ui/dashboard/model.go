@@ -11,6 +11,7 @@ import (
 	"github.com/kodoo/kodoo-tui/internal/docker"
 	"github.com/kodoo/kodoo-tui/internal/envconfig"
 	"github.com/kodoo/kodoo-tui/internal/event"
+	"github.com/kodoo/kodoo-tui/internal/health"
 	"github.com/kodoo/kodoo-tui/internal/state"
 )
 
@@ -138,10 +139,11 @@ func (m Model) healthView() string {
 	}
 
 	lines = append(lines, "", titleStyle.Render("Smoke"))
-	if len(m.snapshot.Smoke) == 0 {
+	smokeRows := prioritizedSmoke(m.snapshot.Smoke)
+	if len(smokeRows) == 0 {
 		lines = append(lines, mutedStyle.Render("No smoke probes available."))
 	} else {
-		for _, result := range m.snapshot.Smoke {
+		for _, result := range smokeRows {
 			status := errStyle.Render("fail")
 			if result.OK {
 				status = okStyle.Render("ok")
@@ -153,6 +155,43 @@ func (m Model) healthView() string {
 		}
 	}
 	return strings.Join(lines, "\n")
+}
+
+func prioritizedSmoke(rows []health.CheckResult) []health.CheckResult {
+	ordered := make([]health.CheckResult, 0, len(rows))
+	index := make(map[string]health.CheckResult, len(rows))
+	for _, row := range rows {
+		index[row.Name] = row
+	}
+	for _, name := range []string{"local-http", "local-websocket", "public-http"} {
+		if row, ok := index[name]; ok {
+			ordered = append(ordered, row)
+		}
+	}
+	if publicWWW, ok := index["public-www"]; ok && (!publicWWW.OK || (hasSmoke(index, "public-http") && !index["public-http"].OK)) {
+		ordered = append(ordered, publicWWW)
+	}
+	for _, row := range rows {
+		if containsSmoke(ordered, row.Name) {
+			continue
+		}
+		ordered = append(ordered, row)
+	}
+	return ordered
+}
+
+func hasSmoke(rows map[string]health.CheckResult, name string) bool {
+	_, ok := rows[name]
+	return ok
+}
+
+func containsSmoke(rows []health.CheckResult, name string) bool {
+	for _, row := range rows {
+		if row.Name == name {
+			return true
+		}
+	}
+	return false
 }
 
 func (m Model) tenantsView() string {
@@ -195,7 +234,7 @@ func (m Model) tenantsView() string {
 	lines = append(lines, "1. Create one DB per customer in the native manager.")
 	lines = append(lines, "2. Install only the addons required for that tenant.")
 	lines = append(lines, "3. Publish the tenant at <db>."+adminHost+".")
-	lines = append(lines, "4. In Cloudflare, map *."+adminHost+" -> http://nginx:80.")
+	lines = append(lines, "4. In Cloudflare, map one hostname per tenant or use a wildcard when available.")
 	return strings.Join(lines, "\n")
 }
 

@@ -1,11 +1,19 @@
 package event
 
+type PromptField struct {
+	Key         string
+	Label       string
+	Placeholder string
+	Secret      bool
+}
+
 // RequestMakeTargetMsg asks the root app to confirm and run a Make target.
 type RequestMakeTargetMsg struct {
 	Target            string
 	Vars              map[string]string
 	Description       string
 	RelevantKeys      []string
+	PromptFields      []PromptField
 	RequireTypedCheck bool
 	ConfirmWord       string
 	SelectDatabase    bool

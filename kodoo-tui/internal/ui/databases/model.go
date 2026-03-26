@@ -7,11 +7,13 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
+	"github.com/kodoo/kodoo-tui/internal/envconfig"
 	"github.com/kodoo/kodoo-tui/internal/event"
 	"github.com/kodoo/kodoo-tui/internal/state"
 )
 
 type Model struct {
+	cfg      *envconfig.Config
 	snapshot state.Snapshot
 	selected int
 }
@@ -26,8 +28,8 @@ var (
 	errStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
 )
 
-func New() Model {
-	return Model{}
+func New(cfg *envconfig.Config) Model {
+	return Model{cfg: cfg}
 }
 
 func (m Model) Title() string {
@@ -38,7 +40,7 @@ func (m Model) HelpLines() []string {
 	return []string{
 		"↑/↓ move between databases",
 		"enter use selected database in the best matching mode",
-		"m open manager, b backup local, r restore local ktest, v validate via db-list",
+		"m manager, o bootstrap defaults, a adjust, x reset, u users, p reset password, g portal, i internal, c create portal, v validate via db-list",
 	}
 }
 
@@ -99,9 +101,117 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 					"DEV_PROJECT_DB", "DEV_HOST_TEST_DB",
 				},
 			})
+		case "a":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-adjust",
+					Description: "Reapply tenant URL/freeze and rerun isolation checks.",
+					RelevantKeys: []string{
+						"DOMAIN", "PROD_DB_NAME",
+					},
+					Vars: map[string]string{"DB": current.Name},
+				})
+			}
+		case "o":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-bootstrap-defaults",
+					Description: "Apply company/admin/lang/currency defaults to the selected tenant database.",
+					RelevantKeys: []string{
+						"DOMAIN", "TENANT_DEFAULT_LANG", "TENANT_DEFAULT_CURRENCY", "TENANT_ADMIN_LOGIN",
+					},
+					Vars: map[string]string{"DB": current.Name},
+				})
+			}
+		case "x":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:            "tenant-reset",
+					Description:       "Drop and recreate the selected tenant database using the configured tenant profile.",
+					RelevantKeys:      []string{"DOMAIN", "PROD_DB_NAME", "TENANT_PROFILE"},
+					RequireTypedCheck: true,
+					ConfirmWord:       "sim",
+					Vars:              map[string]string{"DB": current.Name},
+				})
+			}
+		case "u":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-user-list",
+					Description: "List interactive users in the selected database.",
+					RelevantKeys: []string{
+						"PROD_DB_NAME",
+					},
+					Vars: map[string]string{"DB": current.Name},
+				})
+			}
+		case "p":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-user-password",
+					Description: "Reset one user password inside the selected database.",
+					RelevantKeys: []string{
+						"PROD_DB_NAME",
+					},
+					PromptFields: []event.PromptField{
+						{Key: "LOGIN", Label: "User login", Placeholder: "admin or email"},
+						{Key: "PASSWORD", Label: "New password", Placeholder: "new password", Secret: true},
+					},
+					Vars: map[string]string{"DB": current.Name},
+				})
+			}
+		case "g":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-user-role",
+					Description: "Grant portal access to one user inside the selected database.",
+					RelevantKeys: []string{
+						"PROD_DB_NAME",
+					},
+					PromptFields: []event.PromptField{
+						{Key: "LOGIN", Label: "User login", Placeholder: "login or email"},
+					},
+					Vars: map[string]string{"DB": current.Name, "ROLE": "portal"},
+				})
+			}
+		case "i":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-user-role",
+					Description: "Grant internal access to one user inside the selected database.",
+					RelevantKeys: []string{
+						"PROD_DB_NAME",
+					},
+					PromptFields: []event.PromptField{
+						{Key: "LOGIN", Label: "User login", Placeholder: "login or email"},
+					},
+					Vars: map[string]string{"DB": current.Name, "ROLE": "internal"},
+				})
+			}
+		case "c":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-user-create-portal",
+					Description: "Create a fresh portal user inside the selected database.",
+					RelevantKeys: []string{
+						"PROD_DB_NAME",
+					},
+					PromptFields: []event.PromptField{
+						{Key: "LOGIN", Label: "Portal login", Placeholder: "user@example.com"},
+						{Key: "NAME", Label: "Display name", Placeholder: "Portal User"},
+						{Key: "PASSWORD", Label: "Initial password", Placeholder: "password", Secret: true},
+					},
+					Vars: map[string]string{"DB": current.Name},
+				})
+			}
 		}
 	}
 	return m, nil
+}
+
+func (m Model) SetConfig(cfg *envconfig.Config) Model {
+	m.cfg = cfg
+	return m
 }
 
 func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
@@ -185,10 +295,23 @@ func (m Model) detailView() string {
 		fmt.Sprintf("make %s DB=%s", item.ActionTarget, item.Name),
 		databaseActionHint(item.Backend),
 	}
+	if m.cfg != nil && item.Name == m.cfg.ProdDBName {
+		lines = append(lines, "", warnStyle.Render("primary database: reset is blocked"))
+	} else {
+		lines = append(lines, "", titleStyle.Render("Tenant Ops"))
+		lines = append(lines, "o bootstrap defaults")
+		lines = append(lines, "a adjust url/check")
+		lines = append(lines, "x reset database")
+		lines = append(lines, "u list users")
+		lines = append(lines, "p reset one user password")
+		lines = append(lines, "g grant portal")
+		lines = append(lines, "i grant internal")
+		lines = append(lines, "c create portal user")
+	}
 	if item.Alert != "" {
 		lines = append(lines, "", warnStyle.Render("alert: "+item.Alert))
 	}
-	lines = append(lines, "", mutedStyle.Render("enter use this DB  |  m manager  |  b/r local backup+restore  |  v validate"))
+	lines = append(lines, "", mutedStyle.Render("enter use this DB  |  m manager  |  o/a/x/u/p/g/i/c tenant ops  |  b/r local backup+restore  |  v validate"))
 	return strings.Join(lines, "\n")
 }
 

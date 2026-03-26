@@ -1,0 +1,76 @@
+title: tenant-user-role
+started: 2026-03-25T20:24:54-04:00
+finished: 2026-03-25T20:24:57-04:00
+status: failed with code 2
+description: Grant portal access to one user inside the selected database.
+
+make[1]: Entrando no diretório '/home/green/odoo'
+
+Makefile:1802: aviso: sobrescrevendo os comandos para o alvo 'dev-host-stop'
+Makefile:1330: aviso: ignorando comandos antigos para o alvo 'dev-host-stop' 
+Makefile:1816: aviso: sobrescrevendo os comandos para o alvo 'dev-project-stop'
+Makefile:1390: aviso: ignorando comandos antigos para o alvo 'dev-project-stop' 
+Makefile:1802: aviso: sobrescrevendo os comandos para o alvo 'dev-host-stop'
+Makefile:1330: aviso: ignorando comandos antigos para o alvo 'dev-host-stop' 
+Makefile:1816: aviso: sobrescrevendo os comandos para o alvo 'dev-project-stop'
+Makefile:1390: aviso: ignorando comandos antigos para o alvo 'dev-project-stop' 
+make[2]: Entrando no diretório '/home/green/odoo'
+
+make[2]: Saindo do diretório '/home/green/odoo'
+
+2026-03-26 00:24:55,339 168 INFO ? odoo: Odoo version 19.0-20260305 
+2026-03-26 00:24:55,341 168 INFO ? odoo: Using configuration file at /etc/odoo/odoo.conf 
+2026-03-26 00:24:55,341 168 INFO ? odoo: addons paths: _NamespacePath(['/usr/lib/python3/dist-packages/odoo/addons', '/var/lib/odoo/.local/share/Odoo/addons/19.0', '/mnt/extra-addons', '/mnt/custom-addons', '/mnt/custom-addons/ai_sql-19.0.1.0.0', '/mnt/custom-addons/auto_database_backup-19.0.1.0.0', '/mnt/custom-addons/base_accounting_kit-19.0.2.2.0', '/mnt/custom-addons/dark_mode_backend-19.0.1.0.0', '/mnt/custom-addons/dynamic_accounts_report-19.0.1.0.0', '/mnt/custom-addons/hide_menu_user-19.0.1.0.0', '/mnt/custom-addons/hr_payroll_community-19.0.1.0.1', '/mnt/custom-addons/industry_real_estate-saas-19.2.1.2', '/mnt/custom-addons/knowledge', '/mnt/custom-addons/multicolor_backend_theme-19.0.1.0.0', '/mnt/custom-addons/ohrms_core-19.0.1.0.0', '/mnt/custom-addons/om_account_accountant-19.0.1.0.3', '/mnt/custom-addons/powered_by_odoo_remove-saas-19.1.1.0', '/mnt/custom-addons/public_sector', '/mnt/custom-addons/report_xlsx-19.0.1.0.2', '/mnt/custom-addons/synconics_bi_dashboard-19.0.1.0.3', '/usr/lib/python3/dist-packages/addons']) 
+2026-03-26 00:24:55,341 168 INFO ? odoo: database: kodoo@db:5432 
+2026-03-26 00:24:55,610 168 INFO ? odoo.service.server: Stopping workers gracefully 
+2026-03-26 00:24:55,634 168 INFO semsa odoo.modules.loading: loading 1 modules... 
+2026-03-26 00:24:55,640 168 INFO semsa odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-03-26 00:24:55,667 168 INFO semsa odoo.modules.loading: loading 78 modules... 
+2026-03-26 00:24:56,150 168 WARNING semsa odoo.addons.gov_processos.models.gov_latex_service: pylatexenc nao instalado. Validacao previa de LaTeX desabilitada. 
+2026-03-26 00:24:56,316 168 INFO semsa odoo.modules.loading: 78 modules loaded in 0.65s, 0 queries (+0 extra) 
+2026-03-26 00:24:56,429 168 WARNING semsa odoo.fields: Field document.page.history_head: unknown parameter 'auto_join', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it 
+2026-03-26 00:24:56,476 168 INFO semsa odoo.modules.loading: Modules loaded. 
+2026-03-26 00:24:56,521 168 INFO semsa odoo.registry: Registry loaded in 0.911s 
+Traceback (most recent call last):
+  File "/usr/bin/odoo", line 6, in <module>
+    odoo.cli.main()
+  File "/usr/lib/python3/dist-packages/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 162, in run
+    self.shell(dbnames[0])
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 148, in shell
+    self.console(local_vars)
+  File "/usr/lib/python3/dist-packages/odoo/cli/shell.py", line 82, in console
+    exec(sys.stdin.read(), local_vars)
+  File "<string>", line 22, in <module>
+  File "/usr/lib/python3/dist-packages/odoo/addons/auth_totp_mail/models/res_users.py", line 22, in write
+    res = super().write(vals)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/auth_signup/models/res_users.py", line 282, in write
+    return super().write(vals)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/mail/models/discuss/res_users.py", line 19, in write
+    res = super().write(vals)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/mail/models/res_users.py", line 214, in write
+    write_res = super().write(vals)
+                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/resource/models/res_users.py", line 17, in write
+    rslt = super().write(vals)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/res_users.py", line 1370, in write
+    res = super().write(vals)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/res_users.py", line 617, in write
+    res = super().write(vals)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 4491, in write
+    real_recs._validate_fields(vals, inverse_fields)
+  File "/usr/lib/python3/dist-packages/odoo/orm/models.py", line 1268, in _validate_fields
+    check(records)
+  File "/usr/lib/python3/dist-packages/odoo/addons/base/models/res_users.py", line 555, in _check_at_least_one_administrator
+    raise ValidationError(_("You must have at least an administrator user."))
+odoo.exceptions.ValidationError: Você deve ter pelo menos um usuário administrador.
+make[1]: *** [Makefile:1271: tenant-user-role] Error 1
+make[1]: Saindo do diretório '/home/green/odoo'
+

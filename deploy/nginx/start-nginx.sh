@@ -3,6 +3,7 @@ set -eu
 
 DOMAIN="${DOMAIN:-kodoo.online}"
 WILDCARD_DOMAIN="*.${DOMAIN}"
+ROOT_DB="${PROD_DB_NAME:-kodoo}"
 CERT_PATH="/etc/letsencrypt/live/${DOMAIN}/fullchain.pem"
 KEY_PATH="/etc/letsencrypt/live/${DOMAIN}/privkey.pem"
 
@@ -11,6 +12,7 @@ render_template() {
     sed \
         -e "s|__DOMAIN__|${DOMAIN}|g" \
         -e "s|__WILDCARD_DOMAIN__|${WILDCARD_DOMAIN}|g" \
+        -e "s|__ROOT_DB__|${ROOT_DB}|g" \
         "$template_path" > /etc/nginx/conf.d/default.conf
 }
 

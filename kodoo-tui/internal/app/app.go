@@ -52,6 +52,9 @@ type overlayState struct {
 	startedAt    time.Time
 	statusText   string
 	input        textinput.Model
+	promptInput  textinput.Model
+	promptIndex  int
+	promptValues map[string]string
 	errorText    string
 	selectingDB  bool
 	loadingDBs   bool
@@ -127,7 +130,7 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 		cfg:       cfg,
 		dashboard: dashboard.New(cfg),
 		runtime:   runtime.New(),
-		databases: databases.New(),
+		databases: databases.New(cfg),
 		doctor:    doctor.New(),
 		logs:      logs.New().SetTailLines(cfg.TUILogLines),
 		config:    config.New(cfg),
@@ -170,6 +173,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.doctor = m.doctor.SetSnapshot(msg.Snapshot)
 		m.logs = m.logs.SetSnapshot(msg.Snapshot)
 		m.config = m.config.SetSnapshot(msg.Snapshot)
+		m.databases = m.databases.SetConfig(m.cfg)
 		m.palette = m.buildPalette()
 		return m, nil
 	case event.RequestMakeTargetMsg:
@@ -245,8 +249,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.overlay.done = true
 			if msg.Err != nil {
 				m.overlay.statusText = fmt.Sprintf("failed with code %d", msg.ExitCode)
+				if summary := summarizeRunFailure(m.overlay.request, m.overlay.lines); summary != "" {
+					m.overlay.lines = append([]string{"Summary: " + summary, ""}, m.overlay.lines...)
+				}
 			} else {
 				m.overlay.statusText = "completed"
+				if summary := summarizeRunSuccess(m.overlay.request, m.overlay.lines); summary != "" {
+					m.overlay.lines = append([]string{"Summary: " + summary, ""}, m.overlay.lines...)
+				}
 			}
 			if m.overlay.sessionIndex >= 0 && m.overlay.sessionIndex < len(m.sessionRuns) {
 				m.sessionRuns[m.overlay.sessionIndex].StatusText = m.overlay.statusText
@@ -349,7 +359,7 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 			}
 			next, cmd := m.prepareActionRequest(selected.Request)
 			return true, next, cmd
-		case "esc", "p":
+		case "esc", "ctrl+p":
 			m.paletteVisible = false
 		}
 		return true, m, nil
@@ -383,17 +393,17 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 	case "?":
 		m.helpVisible = true
 		return true, m, nil
-	case "p":
+	case "ctrl+p":
 		m.paletteVisible = true
 		m.palette = m.buildPalette()
 		m.paletteIndex = 0
 		return true, m, nil
-	case "y":
+	case "ctrl+y":
 		if len(m.sessionRuns) > 0 {
 			m = m.openSessionRun(len(m.sessionRuns) - 1)
 		}
 		return true, m, nil
-	case "r":
+	case "ctrl+r":
 		return true, m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
 	}
 
@@ -477,11 +487,46 @@ func (m Model) handleOverlayKey(msg tea.KeyMsg) (Model, tea.Cmd) {
 			request.Vars["DB"] = m.overlay.databases[m.overlay.selectedDB].Name
 			m.overlay.selectingDB = false
 			m.overlay.errorText = ""
-			if request.RequireTypedCheck {
+			if len(request.PromptFields) > 0 {
+				if m.overlay.promptValues == nil {
+					m.overlay.promptValues = make(map[string]string, len(request.PromptFields))
+				}
+				m = m.preparePromptStep()
+			} else if request.RequireTypedCheck {
 				m.overlay.input.Focus()
 			}
 		}
 		return m, nil
+	}
+
+	if m.overlay.prompting() {
+		var cmd tea.Cmd
+		m.overlay.promptInput, cmd = m.overlay.promptInput.Update(msg)
+		switch msg.String() {
+		case "enter":
+			value := strings.TrimSpace(m.overlay.promptInput.Value())
+			if value == "" {
+				m.overlay.errorText = "This value is required."
+				return m, cmd
+			}
+			field := request.PromptFields[m.overlay.promptIndex]
+			if request.Vars == nil {
+				request.Vars = make(map[string]string)
+			}
+			request.Vars[field.Key] = value
+			m.overlay.promptValues[field.Key] = value
+			m.overlay.promptIndex++
+			m.overlay.errorText = ""
+			if m.overlay.prompting() {
+				m = m.preparePromptStep()
+				return m, nil
+			}
+			m.overlay.promptInput.Blur()
+			if request.RequireTypedCheck {
+				m.overlay.input.Focus()
+			}
+		}
+		return m, cmd
 	}
 
 	if request.RequireTypedCheck {
@@ -548,6 +593,10 @@ func (m Model) prepareActionRequest(request event.RequestMakeTargetMsg) (Model, 
 		m.overlay.title = fmt.Sprintf("%s · select database", request.Target)
 		return m, database.ListCmd(context.Background(), m.repoDir, request.DatabaseBackend)
 	}
+	if len(request.PromptFields) > 0 {
+		m.overlay.promptValues = make(map[string]string, len(request.PromptFields))
+		m = m.preparePromptStep()
+	}
 	if request.RequireTypedCheck {
 		m.overlay.input.Focus()
 	}
@@ -570,6 +619,7 @@ func (m Model) reloadConfig() (Model, tea.Cmd) {
 	m.cfg = cfg
 	m.logs = logs.New().SetTailLines(cfg.TUILogLines).SetSnapshot(m.snapshot)
 	m.dashboard = m.dashboard.SetConfig(cfg)
+	m.databases = m.databases.SetConfig(cfg)
 	m.config = m.config.SetConfig(cfg)
 	m.palette = m.buildPalette()
 	return m, state.RefreshCmd(m.cfg, m.repoDir, m.activeDB)
@@ -674,7 +724,7 @@ func (m Model) activeTabView(width, height int) string {
 func (m Model) helpView(width, height int) string {
 	lines := []string{titleStyle.Render("Help")}
 	lines = append(lines, m.currentHelpLines()...)
-	lines = append(lines, "", "Global keys: 1-6 tabs · tab/shift+tab cycle · p palette · r refresh · q quit · esc close overlay")
+	lines = append(lines, "", "Global keys: 1-6 tabs · tab/shift+tab cycle · ctrl+p palette · ctrl+r refresh · ctrl+y last run · q quit · esc close overlay")
 	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
@@ -691,6 +741,30 @@ func (m Model) overlayView(width, height int) string {
 				lines = append(lines, m.databaseSelectionView()...)
 				lines = append(lines, "", "Use ↑/↓ and press enter to continue.")
 			}
+			return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
+		}
+
+		if m.overlay.prompting() {
+			field := m.overlay.request.PromptFields[m.overlay.promptIndex]
+			lines = append(lines, m.overlay.description)
+			lines = append(lines, "", "Relevant variables:")
+			for _, key := range m.overlay.request.RelevantKeys {
+				lines = append(lines, fmt.Sprintf("  %s=%s", key, m.cfg.MaskedValue(key)))
+			}
+			if selected := strings.TrimSpace(m.overlay.request.Vars["DB"]); selected != "" {
+				lines = append(lines, fmt.Sprintf("  DB=%s", selected))
+			}
+			lines = append(lines, "")
+			lines = append(lines, titleStyle.Render(fmt.Sprintf("Prompt %d/%d", m.overlay.promptIndex+1, len(m.overlay.request.PromptFields))))
+			lines = append(lines, field.Label)
+			if field.Placeholder != "" {
+				lines = append(lines, mutedStyle.Render("  "+field.Placeholder))
+			}
+			if m.overlay.errorText != "" {
+				lines = append(lines, failureStyle.Render(m.overlay.errorText))
+			}
+			lines = append(lines, m.overlay.promptInput.View())
+			lines = append(lines, "", "Press enter to continue, esc to cancel.")
 			return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 		}
 
@@ -763,7 +837,7 @@ func (m Model) statusBar(width int) string {
 	if m.lastError != "" {
 		incident = m.lastError
 	}
-	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  p palette · y last run · r refresh · q quit · ? help",
+	bar := fmt.Sprintf("%s  |  mode: %s  |  db: %s  |  incident: %s  |  ctrl+p palette · ctrl+y last run · ctrl+r refresh · q quit · ? help",
 		m.cfg.Domain, mode, db, incident,
 	)
 	return statusStyle.Width(width).Render(bar)
@@ -817,12 +891,40 @@ func (m Model) newOverlay() overlayState {
 	input.Prompt = "type 'sim' > "
 	input.CharLimit = 16
 	input.Blur()
+	promptInput := textinput.New()
+	promptInput.Prompt = "> "
+	promptInput.CharLimit = 128
+	promptInput.Blur()
 	return overlayState{
 		viewport:     viewport.New(60, 10),
 		input:        input,
+		promptInput:  promptInput,
+		promptValues: make(map[string]string),
 		sessionIndex: -1,
 		autoFollow:   true,
 	}
+}
+
+func (m overlayState) prompting() bool {
+	return m.request != nil && m.promptIndex < len(m.request.PromptFields)
+}
+
+func (m Model) preparePromptStep() Model {
+	if !m.overlay.prompting() {
+		return m
+	}
+	field := m.overlay.request.PromptFields[m.overlay.promptIndex]
+	input := textinput.New()
+	input.Prompt = "> "
+	input.Placeholder = field.Placeholder
+	input.CharLimit = 128
+	if field.Secret {
+		input.EchoMode = textinput.EchoPassword
+		input.EchoCharacter = '*'
+	}
+	input.Focus()
+	m.overlay.promptInput = input
+	return m
 }
 
 func (m Model) openSessionRun(index int) Model {
@@ -927,6 +1029,92 @@ func slugify(value string) string {
 	return slug
 }
 
+func summarizeRunFailure(request *event.RequestMakeTargetMsg, lines []string) string {
+	body := strings.ToLower(strings.Join(lines, "\n"))
+	switch {
+	case strings.Contains(body, "address already in use"), strings.Contains(body, "errno 98"):
+		return "Port already in use. The helper tried to start an HTTP service while the stack was already bound."
+	case strings.Contains(body, "user not found:"):
+		for _, line := range lines {
+			if strings.Contains(strings.ToLower(line), "user not found:") {
+				return strings.TrimSpace(line)
+			}
+		}
+		return "User login not found in the selected database."
+	case strings.Contains(body, "refusing tenant-reset for primary db"), strings.Contains(body, "refusing reset of primary db"):
+		return "Primary database reset is blocked."
+	case strings.Contains(body, "could not resolve host"), request != nil && request.Target == "root-smoke":
+		return "Public apex hostname is not resolving. Publish the apex domain in Cloudflare."
+	case strings.Contains(body, "www resolves, but apex"), strings.Contains(body, "apex dns"):
+		return "WWW resolves, but the apex domain is still missing on the edge."
+	case strings.Contains(body, "this value is required"):
+		return "A required prompt value was left empty."
+	default:
+		return ""
+	}
+}
+
+func summarizeRunSuccess(request *event.RequestMakeTargetMsg, lines []string) string {
+	if request == nil {
+		return ""
+	}
+	switch request.Target {
+	case "tenant-user-password":
+		if line := findLineContains(lines, "password updated for "); line != "" {
+			return line
+		}
+	case "tenant-user-role":
+		if line := findLineContains(lines, "user role updated for "); line != "" {
+			return line
+		}
+	case "tenant-user-create-portal":
+		if line := findLineContains(lines, "portal user created for "); line != "" {
+			return line
+		}
+	case "tenant-bootstrap-defaults":
+		if line := findLineContains(lines, "tenant defaults applied to "); line != "" {
+			return line
+		}
+	case "tenant-reset":
+		if line := findLineContains(lines, "Tenant database '"); line != "" {
+			return line
+		}
+	case "tenant-user-list":
+		if count := countUserRows(lines); count > 0 {
+			return fmt.Sprintf("%d tenant users listed.", count)
+		}
+	case "root-smoke":
+		if line := findLineContains(lines, "OK: public root https://"); line != "" {
+			return line
+		}
+		if line := findLineContains(lines, "OK: local root host "); line != "" {
+			return line
+		}
+	}
+	return ""
+}
+
+func findLineContains(lines []string, pattern string) string {
+	for _, line := range lines {
+		if strings.Contains(line, pattern) {
+			return strings.TrimSpace(line)
+		}
+	}
+	return ""
+}
+
+func countUserRows(lines []string) int {
+	total := 0
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || !strings.Contains(trimmed, " | ") {
+			continue
+		}
+		total++
+	}
+	return total
+}
+
 func (m Model) buildPalette() []paletteOption {
 	return []paletteOption{
 		{Title: "Dashboard", Description: "Operational health, tenant routing, security and resource summary.", Mode: paletteSwitch, Tab: 0},
@@ -992,6 +1180,18 @@ func (m Model) buildPalette() []paletteOption {
 				Description: "Run smoke checks.",
 				RelevantKeys: []string{
 					"DOMAIN", "LOCAL_HTTP_PORT",
+				},
+			},
+		},
+		{
+			Title:       "Check Root Site",
+			Description: "Validate kodoo.online locally and through the public edge.",
+			Mode:        paletteAction,
+			Request: event.RequestMakeTargetMsg{
+				Target:      "root-smoke",
+				Description: "Check the main kodoo.online website locally and publicly.",
+				RelevantKeys: []string{
+					"DOMAIN",
 				},
 			},
 		},

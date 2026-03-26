@@ -251,6 +251,11 @@ func (c *Config) PublicHTTPURL() string {
 	return fmt.Sprintf("https://%s", c.Domain)
 }
 
+// PublicWWWURL returns the public WWW endpoint used for edge diagnostics.
+func (c *Config) PublicWWWURL() string {
+	return fmt.Sprintf("https://www.%s", c.Domain)
+}
+
 // LocalWebSocketURL returns the local WebSocket endpoint.
 func (c *Config) LocalWebSocketURL() string {
 	return fmt.Sprintf("ws://%s:%d/websocket", c.LocalBindHost, c.LocalHTTPPort)

@@ -17,6 +17,7 @@ ODOO_BIN ?= ./odoo-bin
 LOG_PATH ?= logs/odoo-lnav.log
 PID_FILE ?= logs/odoo-manager.pid
 DOMAIN ?= kodoo.online
+PROD_RUNTIME ?= auto
 EMAIL ?= [EMAIL_ADDRESS]
 OLLAMA_MODEL ?= qwen3.5:0.8b
 CLOUDFLARED_TOKEN ?=
@@ -46,6 +47,19 @@ PROD_DB_USER ?= kodoo
 PROD_DB_PASSWORD ?=
 PROD_ADMIN_PASSWORD ?=
 DB ?= $(PROD_DB_NAME)
+TENANT_PROFILE ?= standard
+TENANT_BOOTSTRAP_MODULES ?=
+TENANT_PORTAL_MODULES ?= base,web,mail,portal,auth_signup,website
+TENANT_STANDARD_MODULES ?= $(TENANT_PORTAL_MODULES)
+TENANT_KNOWLEDGE_MODULES ?= $(TENANT_PORTAL_MODULES),document_page,document_knowledge
+TENANT_GOV_MODULES ?= $(TENANT_PORTAL_MODULES),gov_suite
+TENANT_SMOKE_PUBLIC ?= 1
+TENANT_DEFAULT_LANG ?= pt_BR
+TENANT_DEFAULT_CURRENCY ?= BRL
+TENANT_COMPANY_NAME ?=
+TENANT_ADMIN_LOGIN ?=
+TENANT_ADMIN_PASSWORD ?=
+TENANT_ADMIN_NAME ?=
 DEV_HOST_CONFIG ?= deploy/odoo/kodoo.dev-host.local.conf
 DEV_HOST_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.dev-host.conf.example
 DEV_HOST_DB ?= kodoo
@@ -83,6 +97,9 @@ COMPOSE_GPU := $(COMPOSE) -f docker-compose.yml -f deploy/ollama/docker-compose.
 COMPOSE_TUNNEL := $(COMPOSE) -f docker-compose.yml -f deploy/cloudflare/docker-compose.tunnel.yml -f deploy/cloudflare/docker-compose.cloudflare.yml
 COMPOSE_LEAN_TUNNEL := $(COMPOSE) -f docker-compose.yml -f deploy/cloudflare/docker-compose.tunnel.yml -f deploy/cloudflare/docker-compose.cloudflare.yml -f deploy/lean-tunnel/docker-compose.lean.yml
 COMPOSE_PROJECT_DB := $(COMPOSE) -f docker-compose.yml -f deploy/dev-project/docker-compose.db-only.yml
+ACTIVE_PROD_RUNTIME := $(if $(filter auto,$(PROD_RUNTIME)),$(if $(strip $(CLOUDFLARED_TOKEN)),tunnel,public),$(PROD_RUNTIME))
+PROD_RUNTIME_COMPOSE := $(if $(filter tunnel,$(ACTIVE_PROD_RUNTIME)),$(COMPOSE_TUNNEL),$(if $(filter local,$(ACTIVE_PROD_RUNTIME)),$(COMPOSE_LOCAL),$(COMPOSE)))
+PROD_LOCAL_HTTP_ORIGIN := $(if $(filter tunnel local,$(ACTIVE_PROD_RUNTIME)),http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT),http://127.0.0.1:$(PUBLIC_HTTP_PORT))
 CONFIG_FIND_CMD = find . \
 	\( -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' \) -prune -o \
 	-type f \( -name '*.conf' -o -name '*.env' -o -name '*.env.*' -o -name '.env' -o -name '.env.*' \) -print | \
@@ -94,6 +111,7 @@ CONFIG_FIND_CMD = find . \
 	odoo-lnav build build-base up up-base up-cpu up-gpu down down-base logs logs-base status status-base \
 	probe certbot certbot-renew \
 	db-init db-check db-list db-manager prod-db-create prod-db-init prod-db-ensure \
+	tenant-provision tenant-install-modules tenant-check tenant-smoke tenant-bootstrap-defaults tenant-adjust tenant-reset tenant-user-list tenant-user-password tenant-user-role tenant-user-create-portal root-smoke \
 	stop ports-clean \
 	refresh-safe safe-refresh \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
@@ -209,6 +227,18 @@ help:
 	@echo "  make prod-db-create # Ensure production database $(PROD_DB_NAME) exists"
 	@echo "  make prod-db-init   # Install Odoo base on $(PROD_DB_NAME) when the DB is still empty"
 	@echo "  make prod-db-ensure # Create/init production DB on fresh servers before compose up"
+	@echo "  make tenant-provision DB=name # Create/init tenant DB and fix URL to https://<db>.$(DOMAIN)"
+	@echo "  make tenant-install-modules DB=name TENANT_BOOTSTRAP_MODULES=mod1,mod2 # Install/upgrade tenant module set"
+	@echo "  make tenant-check DB=name # Validate DB, frozen base URL, and local Host routing"
+	@echo "  make tenant-smoke DB=name [TENANT_SMOKE_PUBLIC=0] # Probe tenant login locally and, optionally, via public URL"
+	@echo "  make tenant-bootstrap-defaults DB=name [TENANT_COMPANY_NAME=...] [TENANT_ADMIN_LOGIN=...] # Apply company/admin/lang/currency defaults"
+	@echo "  make tenant-adjust DB=name # Reapply base URL/freeze and rerun tenant validation"
+	@echo "  make tenant-reset DB=name TENANT_PROFILE=... # Drop and recreate a tenant database"
+	@echo "  make tenant-user-list DB=name # List interactive users from a tenant database"
+	@echo "  make tenant-user-password DB=name LOGIN=user PASSWORD=secret # Reset one tenant user password"
+	@echo "  make tenant-user-role DB=name LOGIN=user ROLE=portal|internal # Change one tenant user role"
+	@echo "  make tenant-user-create-portal DB=name LOGIN=user@example.com NAME='Portal User' PASSWORD=secret # Create one tenant portal user"
+	@echo "  make root-smoke # Validate kodoo.online locally and publicly"
 	@echo ""
 	@echo "Containers:"
 	@echo "  make build          # Build Docker images"
@@ -1105,6 +1135,156 @@ prod-db-init:
 prod-db-ensure:
 	@$(MAKE) prod-db-init
 
+tenant-provision:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'. Use lowercase letters, digits, and hyphens only."; exit 1)
+	@if [ "$(DB)" = "$(PROD_DB_NAME)" ]; then echo "Refusing tenant-provision for primary DB $(PROD_DB_NAME)."; exit 1; fi
+	@$(MAKE) prod-config
+	@$(PROD_RUNTIME_COMPOSE) up -d db odoo nginx
+	@echo "Ensuring tenant database '$(DB)' exists..."
+	@exists="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$(DB)'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$exists" = "1" ]; then \
+	  echo "Tenant database '$(DB)' already exists."; \
+	else \
+	  docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -c "CREATE DATABASE \"$(DB)\" OWNER \"$(PROD_DB_USER)\""; \
+	  echo "Created tenant database '$(DB)'."; \
+	fi
+	@echo "Checking whether Odoo base schema is initialized in '$(DB)'..."
+	@has_schema="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d "$(DB)" -tAc "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_module_module'" 2>/dev/null | tr -d '[:space:]')"; \
+	modules="$(TENANT_BOOTSTRAP_MODULES)"; \
+	if [ -z "$$modules" ]; then \
+	  case "$(TENANT_PROFILE)" in \
+	    standard) modules="$(TENANT_STANDARD_MODULES)" ;; \
+	    knowledge) modules="$(TENANT_KNOWLEDGE_MODULES)" ;; \
+	    gov) modules="$(TENANT_GOV_MODULES)" ;; \
+	    *) echo "Unknown TENANT_PROFILE='$(TENANT_PROFILE)'. Use standard, knowledge, gov, or set TENANT_BOOTSTRAP_MODULES explicitly."; exit 1 ;; \
+	  esac; \
+	fi; \
+	if [ "$$has_schema" = "1" ]; then \
+	  echo "Tenant database '$(DB)' already has Odoo base schema."; \
+	else \
+	  echo "Initializing tenant database '$(DB)' with profile $(TENANT_PROFILE) and modules $$modules..."; \
+	  $(PROD_RUNTIME_COMPOSE) run --rm --no-deps odoo odoo -c /etc/odoo/odoo.conf -d "$(DB)" -i "$$modules" --without-demo=True --stop-after-init; \
+	  echo "Bootstrap modules ($$modules) installed on '$(DB)'."; \
+	fi
+	@$(MAKE) odoo-fix-url DB="$(DB)"
+	@$(MAKE) tenant-bootstrap-defaults DB="$(DB)" TENANT_COMPANY_NAME="$(TENANT_COMPANY_NAME)" TENANT_ADMIN_LOGIN="$(TENANT_ADMIN_LOGIN)" TENANT_ADMIN_PASSWORD="$(TENANT_ADMIN_PASSWORD)" TENANT_ADMIN_NAME="$(TENANT_ADMIN_NAME)"
+	@$(MAKE) tenant-check DB="$(DB)"
+	@$(MAKE) tenant-smoke DB="$(DB)" TENANT_SMOKE_PUBLIC=0
+	@echo "Tenant ready: https://$(DB).$(DOMAIN)"
+	@echo "Cloudflare requirement: add Public Hostname $(DB).$(DOMAIN) -> http://nginx:80"
+
+tenant-install-modules:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'."; exit 1)
+	@modules="$(TENANT_BOOTSTRAP_MODULES)"; \
+	if [ -z "$$modules" ]; then \
+	  case "$(TENANT_PROFILE)" in \
+	    standard) modules="$(TENANT_STANDARD_MODULES)" ;; \
+	    knowledge) modules="$(TENANT_KNOWLEDGE_MODULES)" ;; \
+	    gov) modules="$(TENANT_GOV_MODULES)" ;; \
+	    *) echo "Unknown TENANT_PROFILE='$(TENANT_PROFILE)'. Use standard, knowledge, gov, or set TENANT_BOOTSTRAP_MODULES explicitly."; exit 1 ;; \
+	  esac; \
+	fi; \
+	echo "Installing/upgrading modules ($$modules) on tenant DB '$(DB)'..."; \
+	$(PROD_RUNTIME_COMPOSE) exec -T odoo odoo -c /etc/odoo/odoo.conf -d "$(DB)" --http-port=9069 --gevent-port=9072 --stop-after-init -i "$$modules" -u "$$modules"
+
+tenant-check: SHELL := /bin/zsh
+tenant-check:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'."; exit 1)
+	@$(PROD_RUNTIME_COMPOSE) up -d db odoo nginx >/dev/null
+	@expected_url="$$(if [ "$(DB)" = "$(PROD_DB_NAME)" ]; then printf '%s' "https://$(DOMAIN)"; else printf '%s' "https://$(DB).$(DOMAIN)"; fi)"; \
+	exists="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$(DB)'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$exists" != "1" ]; then echo "FAIL: database '$(DB)' does not exist."; exit 1; fi; \
+	base_url="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d "$(DB)" -tAc "SELECT value FROM ir_config_parameter WHERE key='web.base.url'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$base_url" != "$$expected_url" ]; then echo "FAIL: web.base.url is '$$base_url' but expected '$$expected_url'."; exit 1; fi; \
+	freeze="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d "$(DB)" -tAc "SELECT value FROM ir_config_parameter WHERE key='web.base.url.freeze'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$freeze" != "True" ]; then echo "FAIL: web.base.url.freeze is '$$freeze' (expected True)."; exit 1; fi; \
+	login_status="$$(curl -I -s -H 'Host: $(DB).$(DOMAIN)' '$(PROD_LOCAL_HTTP_ORIGIN)/web/login?db=$(DB)' | head -n 1 | cut -d' ' -f2 | tr -d '\r')"; \
+	if [ "$$login_status" != "200" ]; then echo "FAIL: tenant login endpoint returned HTTP $$login_status."; exit 1; fi; \
+	root_location="$$(curl -s -I -H 'Host: $(DB).$(DOMAIN)' '$(PROD_LOCAL_HTTP_ORIGIN)/' | awk 'BEGIN{IGNORECASE=1} /^Location:/ {print $$2}' | tr -d '\r')"; \
+	case "$$root_location" in \
+	  *"/web/login?db=$(DB)"*) ;; \
+	  *) echo "FAIL: tenant root redirect is '$$root_location'."; exit 1 ;; \
+	esac; \
+	root_status="$$(curl -I -s -H 'Host: $(DOMAIN)' '$(PROD_LOCAL_HTTP_ORIGIN)/' | head -n 1 | cut -d' ' -f2 | tr -d '\r')"; \
+	if [ "$$root_status" != "200" ]; then echo "FAIL: primary root returned HTTP $$root_status."; exit 1; fi; \
+	root_tenant_leak="$$(curl -s -I -H 'Host: $(DOMAIN)' '$(PROD_LOCAL_HTTP_ORIGIN)/' | awk 'BEGIN{IGNORECASE=1} /^Location:/ {print $$2}' | tr -d '\r')"; \
+	case "$$root_tenant_leak" in \
+	  *"/web/login?db="*) echo "FAIL: primary site leaked into tenant redirect '$$root_tenant_leak'."; exit 1 ;; \
+	  *) ;; \
+	esac; \
+	echo "Tenant checks passed for DB=$(DB) ($$expected_url)."
+
+tenant-smoke:
+	@$(MAKE) guard-prod-host
+	@bash ./scripts/tenant-smoke.sh "$(DB)" "$(DOMAIN)" "$(TENANT_SMOKE_PUBLIC)" "$(PROD_LOCAL_HTTP_ORIGIN)"
+
+tenant-bootstrap-defaults:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'."; exit 1)
+	@base_url="$${BASE_URL:-https://$(if $(filter $(PROD_DB_NAME),$(DB)),$(DOMAIN),$(DB).$(DOMAIN))}"; \
+	company_name="$(TENANT_COMPANY_NAME)"; \
+	if [ -z "$$company_name" ]; then company_name="$(DB)"; fi; \
+	echo "Applying tenant defaults to $(DB) ($$company_name, $$base_url)..."; \
+	bash ./scripts/tenant-bootstrap-defaults.sh "$(DB)" "$$base_url" "$$company_name" "$(TENANT_ADMIN_LOGIN)" "$(TENANT_ADMIN_PASSWORD)" "$(TENANT_ADMIN_NAME)" "$(TENANT_DEFAULT_LANG)" "$(TENANT_DEFAULT_CURRENCY)"
+
+tenant-adjust:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'."; exit 1)
+	@$(MAKE) odoo-fix-url DB="$(DB)"
+	@$(MAKE) tenant-bootstrap-defaults DB="$(DB)" TENANT_COMPANY_NAME="$(TENANT_COMPANY_NAME)" TENANT_ADMIN_LOGIN="$(TENANT_ADMIN_LOGIN)" TENANT_ADMIN_PASSWORD="$(TENANT_ADMIN_PASSWORD)" TENANT_ADMIN_NAME="$(TENANT_ADMIN_NAME)"
+	@$(MAKE) tenant-check DB="$(DB)"
+	@$(MAKE) tenant-smoke DB="$(DB)" TENANT_SMOKE_PUBLIC=0
+
+tenant-reset:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'."; exit 1)
+	@if [ "$(DB)" = "$(PROD_DB_NAME)" ]; then echo "Refusing tenant-reset for primary DB $(PROD_DB_NAME)."; exit 1; fi
+	@bash ./scripts/tenant-reset.sh "$(DB)" "$(PROD_DB_USER)" "$(PROD_DB_NAME)"
+	@$(MAKE) tenant-provision DB="$(DB)" TENANT_PROFILE="$(TENANT_PROFILE)" TENANT_BOOTSTRAP_MODULES="$(TENANT_BOOTSTRAP_MODULES)"
+
+tenant-user-list:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@bash ./scripts/tenant-user-list.sh "$(DB)"
+
+tenant-user-password:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@test -n "$(LOGIN)" || (echo "Set LOGIN=<user login>."; exit 1)
+	@test -n "$(PASSWORD)" || (echo "Set PASSWORD=<new password>."; exit 1)
+	@bash ./scripts/tenant-user-password.sh "$(DB)" "$(LOGIN)" "$(PASSWORD)"
+	@$(MAKE) tenant-user-list DB="$(DB)"
+
+tenant-user-role:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@test -n "$(LOGIN)" || (echo "Set LOGIN=<user login or email>."; exit 1)
+	@test -n "$(ROLE)" || (echo "Set ROLE=portal|internal."; exit 1)
+	@bash ./scripts/tenant-user-role.sh "$(DB)" "$(LOGIN)" "$(ROLE)"
+	@$(MAKE) tenant-user-list DB="$(DB)"
+
+tenant-user-create-portal:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@test -n "$(LOGIN)" || (echo "Set LOGIN=<portal email/login>."; exit 1)
+	@test -n "$(NAME)" || (echo "Set NAME=<portal display name>."; exit 1)
+	@test -n "$(PASSWORD)" || (echo "Set PASSWORD=<portal password>."; exit 1)
+	@bash ./scripts/tenant-user-create-portal.sh "$(DB)" "$(LOGIN)" "$(NAME)" "$(PASSWORD)"
+	@$(MAKE) tenant-user-list DB="$(DB)"
+
+root-smoke:
+	@$(MAKE) guard-prod-host
+	@bash ./scripts/root-smoke.sh "$(DOMAIN)" "$(PROD_LOCAL_HTTP_ORIGIN)"
+
 odoo-tui:
 	@$(MAKE) prod-config
 	@$(COMPOSE) up -d odoo
@@ -1117,8 +1297,8 @@ odoo-fix-url:
 	@$(MAKE) guard-prod-host
 	@set -e; \
 	base_url="$${BASE_URL:-https://$(if $(filter $(PROD_DB_NAME),$(DB)),$(DOMAIN),$(DB).$(DOMAIN))}"; \
-	$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url','$$base_url',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"; \
-	$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url.freeze','True',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"; \
+	$(PROD_RUNTIME_COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url','$$base_url',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"; \
+	$(PROD_RUNTIME_COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url.freeze','True',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"; \
 	echo "Odoo base URL fixed to $$base_url for DB=$(DB)."
 
 dev-host-db-setup:
@@ -1308,32 +1488,22 @@ smoke:
 	ws_curl_flags=""; \
 	case "$$local_base" in https://*) ws_curl_flags="-k" ;; esac; \
 	ws_health_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
-	  -H 'X-Odoo-Database: $(DB)' \
+	  -H 'Host: $(DOMAIN)' \
 	  "$$local_base/websocket/health" || true)"; \
 	if [ "$$ws_health_code" != "200" ]; then \
 	  echo "FAIL: websocket health endpoint ($$local_base/websocket/health) returned HTTP $$ws_health_code (expected 200)."; \
 	  exit 1; \
 	fi; \
 	echo "OK: websocket health endpoint HTTP $$ws_health_code."; \
-	ws_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
-	  --max-time 3 \
-	  -H 'X-Odoo-Database: $(DB)' \
-	  -H "Origin: $$local_base" \
-	  -H 'Connection: Upgrade' \
-	  -H 'Upgrade: websocket' \
-	  -H 'Sec-WebSocket-Version: 13' \
-	  -H 'Sec-WebSocket-Key: $(WEBSOCKET_TEST_KEY)' \
-	  "$$local_base/websocket?version=19.0-2" || true)"; \
-	if [ "$$ws_code" != "101" ]; then \
-	  echo "FAIL: websocket endpoint ($$local_base/websocket) returned HTTP $$ws_code (expected 101)."; \
-	  exit 1; \
-	fi; \
-	echo "OK: websocket endpoint HTTP $$ws_code."; \
 	if [ "$(SMOKE_PUBLIC)" = "1" ]; then \
 	  public_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://$(DOMAIN) || true)"; \
 	  if [ "$$public_code" != "200" ] && [ "$$public_code" != "301" ] && [ "$$public_code" != "302" ] && [ "$$public_code" != "303" ]; then \
 	    cloudflared_running="$$(docker inspect -f '{{.State.Running}}' kodoo-cloudflared 2>/dev/null || true)"; \
 	    echo "FAIL: public endpoint https://$(DOMAIN) returned HTTP $$public_code."; \
+	    www_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://www.$(DOMAIN) || true)"; \
+	    if [ "$$www_code" = "200" ] || [ "$$www_code" = "301" ] || [ "$$www_code" = "302" ] || [ "$$www_code" = "303" ]; then \
+	      echo "Hint: https://www.$(DOMAIN) resolves, but apex https://$(DOMAIN) does not. Publish the apex hostname in Cloudflare."; \
+	    fi; \
 	    if [ "$$cloudflared_running" != "true" ]; then \
 	      echo "Hint: domain may be pointing to Cloudflare Tunnel, but 'kodoo-cloudflared' is not running."; \
 	      echo "Run: fill CLOUDFLARED_TOKEN in .env, then use make up-tunnel."; \
@@ -1393,25 +1563,11 @@ troubleshoot:
 	  ws_curl_flags=""; \
 	  case "$$local_base" in https://*) ws_curl_flags="-k" ;; esac; \
 	  ws_health_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
-	    -H 'X-Odoo-Database: $(DB)' \
+	    -H 'Host: $(DOMAIN)' \
 	    "$$local_base/websocket/health" || true)"; \
 	  echo "$$local_base/websocket/health -> $$ws_health_code"; \
 	  if [ "$$ws_health_code" != "200" ]; then \
 	    echo "FAIL: websocket health probe returned $$ws_health_code."; \
-	    rc=1; \
-	  fi; \
-	  ws_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
-	    --max-time 3 \
-	    -H 'X-Odoo-Database: $(DB)' \
-	    -H "Origin: $$local_base" \
-	    -H 'Connection: Upgrade' \
-	    -H 'Upgrade: websocket' \
-	    -H 'Sec-WebSocket-Version: 13' \
-	    -H 'Sec-WebSocket-Key: $(WEBSOCKET_TEST_KEY)' \
-	    "$$local_base/websocket?version=19.0-2" || true)"; \
-	  echo "$$local_base/websocket?version=19.0-2 -> $$ws_code"; \
-	  if [ "$$ws_code" != "101" ]; then \
-	    echo "FAIL: websocket probe returned $$ws_code."; \
 	    rc=1; \
 	  fi; \
 	else \
@@ -1424,6 +1580,11 @@ troubleshoot:
 	  echo "https://$(DOMAIN) -> $$public_code"; \
 	  if [ "$$public_code" != "200" ] && [ "$$public_code" != "301" ] && [ "$$public_code" != "302" ] && [ "$$public_code" != "303" ]; then \
 	    echo "FAIL: public endpoint check failed."; \
+	    www_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://www.$(DOMAIN) || true)"; \
+	    echo "https://www.$(DOMAIN) -> $$www_code"; \
+	    if [ "$$www_code" = "200" ] || [ "$$www_code" = "301" ] || [ "$$www_code" = "302" ] || [ "$$www_code" = "303" ]; then \
+	      echo "INFO: www resolves, but apex $(DOMAIN) does not. Publish the apex hostname in Cloudflare."; \
+	    fi; \
 	    rc=1; \
 	  fi; \
 	  cloudflared_running="$$(docker inspect -f '{{.State.Running}}' kodoo-cloudflared 2>/dev/null || true)"; \
