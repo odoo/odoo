@@ -83,5 +83,26 @@
         <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
     </t>
 </div></template>
+
+        <template id="group_change_template">
+<div class="o_mail_group_log">
+    <t t-if="added">
+        <span>Added groups:</span>
+        <ul>
+            <t t-foreach="added" t-as="group">
+                <li><a href="#" data-oe-model="res.groups" t-att-data-oe-id="group.id" t-out="group.display_name"/></li>
+            </t>
+        </ul>
+    </t>
+    <t t-if="removed">
+        <span>Removed groups:</span>
+        <ul>
+            <t t-foreach="removed" t-as="group">
+                <li><a href="#" data-oe-model="res.groups" t-att-data-oe-id="group.id" t-out="group.display_name"/></li>
+            </t>
+        </ul>
+    </t>
+</div>
+        </template>
     </data>
 </odoo>

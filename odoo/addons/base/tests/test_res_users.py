@@ -602,8 +602,8 @@ class TestUsers2(UsersCommonCase):
         # Process any tracking message at flush for cleaner queryCount
         self.flush_tracking()
 
-        # all modules: 46, base: 17; nightly: +1
-        with self.assertQueryCount(47):
+        # all modules: 51, base: 17; nightly: +1
+        with self.assertQueryCount(52):
             self.user_internal.write({
                 "group_ids": [Command.link(contact_creation_group.id)],
             })

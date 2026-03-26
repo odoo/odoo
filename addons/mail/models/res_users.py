@@ -6,8 +6,9 @@ import contextlib
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, split_every
 from odoo.tools.misc import limited_field_access_token
+from odoo.addons.base.models.res_users import NO_GROUP_CHANGE_LOG
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -110,7 +111,7 @@ class ResUsers(models.Model):
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
         new_portal_users = self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')])
         new_portal_users.notification_type = 'email'
-        new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
+        new_portal_users.with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).write({"group_ids": [Command.unlink(inbox_group_id)]})
 
     @api.depends('out_of_office_from', 'out_of_office_to')
     def _compute_is_out_of_office(self):
@@ -144,8 +145,8 @@ class ResUsers(models.Model):
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.sudo().write({"group_ids": [Command.link(inbox_group.id)]})
-        (self - inbox_users).sudo().write({"group_ids": [Command.unlink(inbox_group.id)]})
+        inbox_users.with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).sudo().write({"group_ids": [Command.link(inbox_group.id)]})
+        (self - inbox_users).with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).sudo().write({"group_ids": [Command.unlink(inbox_group.id)]})
 
     @api.depends_context("uid")
     def _compute_can_edit_role(self):
@@ -282,6 +283,29 @@ class ResUsers(models.Model):
             for creator_sudo, activities_sudo in to_reassign_sudo.items():
                 activities_sudo.user_id = creator_sudo
         return super().action_archive()
+
+    # The goal here is to log group changes in the user's chatter for a nice UX. However this is
+    # inherently insecure as administrators can always modify these messages. Therefore we must
+    # also log these changes in a more secure manner.
+    def _log_group_changes(self, vals, old_group_ids, editing_groups=None):
+        # always log through super first since the function in base simply uses _logger and should not throw any (permission) exceptions
+        super()._log_group_changes(vals, old_group_ids, editing_groups)
+        user_logs = {}
+        # In this case we use normal sets to make logic operations easier than using recordsets, however
+        # this causes the cache to not prefetch all display names, therefore we do it manually here.
+        self.group_ids.fetch(['display_name'])
+        for user in self:
+            old_groups = set(old_group_ids[user.id])
+            new_groups = set(user.sudo().group_ids.ids)
+            added = self.env['res.groups'].browse(new_groups - old_groups)
+            removed = self.env['res.groups'].browse(old_groups - new_groups)
+            if added or removed:
+                user_logs[user.id] = self.env['ir.qweb']._render('mail.group_change_template', {
+                    'added': sorted(added, key=lambda group: group.display_name.lower()),
+                    'removed': sorted(removed, key=lambda group: group.display_name.lower()),
+                })
+        for user_logs_batch in split_every(1000, user_logs.items(), dict):
+            self.browse(user_logs_batch.keys())._message_log_batch(user_logs_batch, message_type='tracking')
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
         """ This method is meant to be called whenever a sensitive update is done on the user's account.
