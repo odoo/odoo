@@ -51,7 +51,6 @@ import { omit } from "@web/core/utils/objects";
  * @typedef { Object } BuilderOptionsShared
  * @property { BuilderOptionsPlugin['checkElement'] } checkElement
  * @property { BuilderOptionsPlugin['closestWithOption'] } closestWithOption
- * @property { BuilderOptionsPlugin['computeContainers'] } computeContainers
  * @property { BuilderOptionsPlugin['findOption'] } findOption
  * @property { BuilderOptionsPlugin['getContainers'] } getContainers
  * @property { BuilderOptionsPlugin['updateContainers'] } updateContainers
@@ -132,7 +131,6 @@ export class BuilderOptionsPlugin extends Plugin {
     static shared = [
         "checkElement",
         "closestWithOption",
-        "computeContainers",
         "findOption",
         "getContainers",
         "updateContainers",
