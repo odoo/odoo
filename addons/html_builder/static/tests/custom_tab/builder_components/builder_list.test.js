@@ -263,7 +263,7 @@ test("do not lose id when adjusting 'selected'", async () => {
                 addItemTitle="'Add'"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"
                 default="{ display_name: 'Extra', selected: false }"
-                records="availableRecords" />`;
+                records="this.availableRecords" />`;
         static props = ["*"];
         setup() {
             this.availableRecords = JSON.stringify([
@@ -344,7 +344,7 @@ test("can add item with string and integer ids", async () => {
                 addItemTitle="'Add'"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"
                 default="{ display_name: 'Extra', selected: false }"
-                records="availableRecords" />`;
+                records="this.availableRecords" />`;
         static props = ["*"];
         setup() {
             this.availableRecords = JSON.stringify([

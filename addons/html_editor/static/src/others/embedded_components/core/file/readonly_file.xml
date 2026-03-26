@@ -3,11 +3,11 @@
     <!-- /file template -->
     <t t-name="html_editor.ReadonlyEmbeddedFile" t-inherit="html_editor.StaticFileBox" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_file_image')]" position="inside">
-            <a t-att-href="fileModel.downloadUrl" t-on-click.prevent.stop="onClickFileImage" class="w-100"/>
+            <a t-att-href="this.fileModel.downloadUrl" t-on-click.prevent.stop="this.onClickFileImage" class="w-100"/>
         </xpath>
 
         <xpath expr="//span[hasclass('o_file_name_container')]/a" position="replace">
-            <span class="o_file_name" t-out="fileModel.filename"/>
+            <span class="o_file_name" t-out="this.fileModel.filename"/>
         </xpath>
 
         <xpath expr="//span[hasclass('o_file_name_container')]" position="after">

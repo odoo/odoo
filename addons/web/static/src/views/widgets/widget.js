@@ -58,8 +58,8 @@ viewWidgetRegistry.addValidation({
  */
 export class Widget extends Component {
     static template = xml/*xml*/ `
-        <div t-att-class="classNames" t-att-style="props.style">
-            <t t-component="widget.component" t-props="widgetProps" />
+        <div t-att-class="this.classNames" t-att-style="this.props.style">
+            <t t-component="this.widget.component" t-props="this.widgetProps" />
         </div>`;
 
     static parseWidgetNode = function (node) {

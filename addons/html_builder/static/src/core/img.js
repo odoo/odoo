@@ -43,13 +43,13 @@ export class Image extends Component {
                 class="hb-svg d-flex m-auto"
                 t-att-class="this.props.class"
                 t-att-style="this.props.style"
-                t-att="props.attrs"/>
+                t-att="this.props.attrs"/>
             <img t-else=""
                 t-att-src="this.props.src"
                 t-att-class="this.props.class"
                 t-att-style="this.props.style"
                 t-att-alt="this.props.alt"
-                t-att="props.attrs"/>
+                t-att="this.props.attrs"/>
         </t>
         `;
 

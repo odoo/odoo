@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="calendar.AttendeeCalendarActivityListPopover">
-        <t t-if="env.isSmall">
+        <t t-if="this.env.isSmall">
             <Dialog title.translate="Activities" withBodyPadding="false">
                 <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
             </Dialog>
