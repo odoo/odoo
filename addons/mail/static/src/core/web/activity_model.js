@@ -202,7 +202,7 @@ export class Activity extends Record {
             [[this.id]],
             { feedback: this.feedback }
         );
-        this.activityBroadcastChannel?.postMessage({
+        this.store.activityBroadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",
             payload: { id: this.res_id, model: this.res_model },
         });
@@ -210,9 +210,12 @@ export class Activity extends Record {
     }
 
     remove({ broadcast = true } = {}) {
+        if (!this.exists()) {
+            return;
+        }
         this.delete();
         if (broadcast) {
-            this.activityBroadcastChannel?.postMessage({
+            this.store.activityBroadcastChannel?.postMessage({
                 type: "DELETE",
                 payload: { id: this.id },
             });
