@@ -86,3 +86,24 @@ class TestIrWebsocket(WebsocketCase):
         self.assertEqual(notification["message"]["payload"]["res.partner"][0]["im_status"], "online")
         self.assertEqual(notification["message"]["payload"]["res.partner"][0]["presence_status"], "online")
         self.assertEqual(notification["message"]["payload"]["res.partner"][0]["id"], bob.partner_id.id)
+
+    def test_receive_others_missed_presences_on_subscribe(self):
+        bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
+        away_user = new_test_user(self.env, login="idler", groups="base.group_user")
+        session = self.authenticate("bob_user", "bob_user")
+        websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
+        self.env["mail.presence"]._update_presence(away_user, (AWAY_TIMER + 1) * 1000)
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.subscribe(
+            websocket,
+            [f"odoo-presence-res.partner_{away_user.partner_id.id}"],
+            self.env["bus.bus"]._bus_last_id(),
+        )
+        notification = json.loads(websocket.recv())[0]
+        self._close_websockets()
+        bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
+        self.assertEqual(bus_record.channel, json_dump(channel_with_db(self.env.cr.dbname, bob)))
+        self.assertEqual(notification["message"]["type"], "mail.record/insert")
+        self.assertEqual(notification["message"]["payload"]["res.partner"][0]["id"], away_user.partner_id.id)
+        self.assertEqual(notification["message"]["payload"]["res.partner"][0]["im_status"], "away")
+        self.assertNotIn("presence_status", notification["message"]["payload"]["res.partner"][0])
