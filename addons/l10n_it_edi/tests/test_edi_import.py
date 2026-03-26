@@ -97,7 +97,7 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2014-12-18'),
             'amount_untaxed': 28.75,
-            'amount_tax': 6.32,
+            'amount_tax': 6.33,
             'invoice_line_ids': [{
                 'quantity': 5.0,
                 'price_unit': 1.0,
@@ -499,6 +499,40 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
                     'name': 'DESCRIZIONE DELLA FORNITURA',
                     'price_unit': 1.0,
                     'discount': -10.0,
+                },
+            ],
+        }], applied_xml)
+
+    def test_receive_bill_with_discount_rounding_issue(self):
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]" position="inside">
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>50.00</Percentuale>
+                </ScontoMaggiorazione>
+            </xpath>
+
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoUnitario" position="replace">
+                <PrezzoUnitario>11.85</PrezzoUnitario>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/Quantita" position="replace">
+                <Quantita>3</Quantita>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale" position="replace">
+                <PrezzoTotale>17.78</PrezzoTotale>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 17.78,
+            'amount_tax': 3.91,
+            'invoice_line_ids': [
+                {
+                    'quantity': 3.0,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'price_unit': 11.85,
+                    'discount': 50.0,
                 },
             ],
         }], applied_xml)
