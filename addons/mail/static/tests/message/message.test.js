@@ -22,6 +22,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -2413,4 +2414,36 @@ test("Prevent adding reactions on messages without a mail thread", async () => {
     await contains("[title='Add a Reaction']");
     await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
     await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
+});
+
+test("context menu should not open on right-click when editing a message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Barbie" });
+    pyEnv["mail.message"].create({
+        body: "Batman",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    patchWithCleanup(Message.prototype, {
+        onContextMenu() {
+            expect.step("Message.onContextMenu");
+            super.onContextMenu(...arguments);
+        },
+        showRightClickMessageActions() {
+            expect.step("Message.showRightClickMessageActions");
+            super.showRightClickMessageActions(...arguments);
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
+    await click(".o-dropdown-item:contains('Edit')");
+    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Batman" });
+    await rightClick(".o-mail-Message");
+    await expect.waitForSteps(["Message.onContextMenu"]);
+    await animationFrame();
+    expect.verifySteps([]);
 });
