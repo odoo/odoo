@@ -791,6 +791,7 @@ class SaleOrder(models.Model):
             )
 
     @api.depends('state')
+    @api.depends_context('lang')
     def _compute_type_name(self):
         for record in self:
             if record.state in ('draft', 'sent', 'cancel'):
@@ -1041,7 +1042,6 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.filtered(lambda so: so.state in ('draft', 'sent')).order_line._validate_analytic_distribution()
-        lang = self.env.context.get('lang')
 
         ctx = {
             'default_model': 'sale.order',
@@ -1058,7 +1058,6 @@ class SaleOrder(models.Model):
         else:
             ctx.update({
                 'force_email': True,
-                'model_description': self.with_context(lang=lang).type_name,
             })
             if not self.env.context.get('hide_default_template'):
                 mail_template = self._find_mail_template()
@@ -1067,8 +1066,6 @@ class SaleOrder(models.Model):
                         'default_template_id': mail_template.id,
                         'mark_so_as_sent': True,
                     })
-                if mail_template and mail_template.lang:
-                    lang = mail_template._render_lang(self.ids)[self.id]
             else:
                 for order in self:
                     order._portal_ensure_token()
@@ -1758,6 +1755,11 @@ class SaleOrder(models.Model):
         elif 'state' in init_values and self.state == 'sent':
             return self.env.ref('sale.mt_order_sent')
         return super()._track_subtype(init_values)
+
+    def _get_model_description(self, model_name):
+        if not self:
+            return super()._get_model_description(model_name)
+        return self.type_name
 
     # PAYMENT #
 
