@@ -331,6 +331,16 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(child_fr.computed_name, 'fr')
         self.assertEqual(child_en.computed_name, 'en')
 
+        record_real = self.env['test_orm.related_translation_1'].create({'name': 'en'})
+        record_real.with_context(lang='fr_FR').name = 'fr'
+        result = self.env['test_orm.related_translation_2'].with_context(lang='fr_FR').onchange({
+            'name': 'new fr',  # updated from 'fr' to 'new fr'
+            'related_id': record_real.id,
+            'computed_name': 'fr',
+            'name_en': 'en',
+        }, ['name'], child_en._get_fields_spec())
+        self.assertEqual(result['value'], {})
+
     def test_new_records_html(self):
         model = self.env['test_orm.related_translation_1']
 
