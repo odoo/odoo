@@ -180,3 +180,6 @@ class SaleOrderLine(models.Model):
         return super()._get_downpayment_line_price_unit(invoices) + sum(
             pol.price_unit for pol in self.sudo().pos_order_line_ids
         )
+
+    def has_valued_move_ids_batch(self):
+        return {rec.id: rec.has_valued_move_ids() for rec in self}

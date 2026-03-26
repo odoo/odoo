@@ -48,13 +48,13 @@ patch(PosOrderline.prototype, {
      * @param {'sale.order.line'} saleOrderLine
      */
     async setQuantityFromSOL(saleOrderLine) {
-        if (!saleOrderLine.has_valued_move_ids) {
-            this.set_quantity(saleOrderLine.product_uom_qty);
-        } else if (
+        if (
             this.product_id.type === "service" &&
             !["sent", "draft"].includes(this.sale_order_origin_id.state)
         ) {
             this.set_quantity(saleOrderLine.qty_to_invoice);
+        } else if (!saleOrderLine.has_valued_move_ids){
+            this.set_quantity(saleOrderLine.product_uom_qty);
         } else {
             this.set_quantity(
                 saleOrderLine.product_uom_qty -
