@@ -39,6 +39,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_easypost = fields.Boolean("Easypost Connector")
     module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
+    module_delivery_shipstation = fields.Boolean("ShipStation Connector")
     module_delivery_starshipit = fields.Boolean("Starshipit Connector")
     module_delivery_envia = fields.Boolean("Envia.com Connector")
     module_quality_control = fields.Boolean("Quality")
