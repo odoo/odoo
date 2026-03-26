@@ -1161,16 +1161,16 @@ def _kick_all(code=CloseCode.GOING_AWAY):
 
         # Every websocket has been signaled to shut down, but the
         # closing handshake might not be complete yet, wait up to
-        # TIMEOUT/10 seconds for all handshaked to be done.
-        for _ in range(int(TimeoutManager.TIMEOUT)):
+        # 5 seconds for all handshakes to be done.
+        for _ in range(50):
+            time.sleep(.1)
             if all(
                 websocket.state is ConnectionState.CLOSED
                 for websocket in _websocket_instances
             ):
                 break
-            time.sleep(.1)
         else:
-            _logger.warning("There remain %s closing websockets", sum(
+            _logger.info("There remain %s closing websockets", sum(
                 1
                 for websocket in _websocket_instances
                 if websocket.state is not ConnectionState.CLOSED
