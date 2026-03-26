@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "./color_selector";
 import { isStylable, isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
+import { isCSSColor, normalizeCSSColor, RGBA_REGEX } from "@web/core/utils/colors";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -119,7 +119,7 @@ export class ColorUIPlugin extends Plugin {
         const usedCustomColors = new Set();
         for (const font of allFont) {
             if (isCSSColor(font.style[mode])) {
-                usedCustomColors.add(rgbaToHex(font.style[mode]));
+                usedCustomColors.add(normalizeCSSColor(font.style[mode]));
             }
         }
         return usedCustomColors;
