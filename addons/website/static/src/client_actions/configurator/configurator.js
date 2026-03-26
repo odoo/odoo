@@ -14,6 +14,8 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { loadImage } from "@html_editor/utils/image_processing";
+import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -22,15 +24,9 @@ import { htmlSprintf } from "@web/core/utils/html";
 import { clamp } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { mixCssColors } from "@web/core/utils/colors";
+import { mixCssColors, normalizeCSSColor } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
-import {
-    Component,
-    markup,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-} from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -57,50 +53,102 @@ export const WEBSITE_PURPOSES = {
     5: { id: 5, label: _t("schedule appointments"), name: "schedule_appointments" },
 };
 
-export const PALETTE_NAMES = [
-    "default-light-1",
-    "default-light-2",
-    "default-light-4",
-    "default-light-3",
-    "default-light-5",
-    "default-24",
-    "default-light-7",
-    "default-light-6",
-    "default-light-11",
-    "default-light-14",
-    "default-light-8",
-    "default-6",
-    "default-7",
-    "default-8",
-    "default-9",
-    "default-23",
-    "default-25",
-    "default-12",
-    "default-14",
-    "default-22",
-    "default-15",
-    "default-16",
-    "default-17",
-    "default-light-10",
-    "default-19",
-    "default-20",
-    "default-5",
-    "default-4",
-    "default-light-9",
-    "default-2",
-    "default-light-13",
-    "default-27",
-    "default-light-12",
-    "default-1",
-    "default-28",
-    "default-21",
+export const TONE_OPTIONS = [
+    { value: "professional", label: _t("Professional") },
+    { value: "friendly", label: _t("Friendly") },
+    { value: "inspirational", label: _t("Inspirational") },
+    { value: "educational", label: _t("Educational") },
+    { value: "playful", label: _t("Playful") },
+    { value: "luxury", label: _t("Luxury") },
 ];
+
+export const PALETTE_SECTIONS = [
+    {
+        id: "neutral",
+        label: _t("Neutral"),
+        names: [
+            "default-light-13",
+            "default-light-12",
+            "default-23",
+            "default-14",
+            "default-27",
+            "default-1",
+            "default-28",
+            "default-21",
+        ],
+    },
+    {
+        id: "airy",
+        label: _t("Airy"),
+        names: [
+            "default-light-2",
+            "default-light-4",
+            "default-light-3",
+            "default-light-10",
+            "default-light-5",
+            "default-light-7",
+            "default-light-6",
+            "default-light-8",
+            "default-light-1",
+            "default-24",
+        ],
+    },
+    {
+        id: "sophisticated",
+        label: _t("Sophisticated"),
+        names: [
+            "default-light-11",
+            "default-7",
+            "default-25",
+            "default-12",
+            "default-22",
+            "default-15",
+            "default-17",
+            "default-20",
+        ],
+    },
+    {
+        id: "vibrant",
+        label: _t("Vibrant"),
+        names: [
+            "default-6",
+            "default-8",
+            "default-9",
+            "default-10",
+            "default-11",
+            "default-13",
+            "default-3",
+            "default-16",
+            "default-18",
+            "default-19",
+            "default-26",
+            "default-5",
+            "default-4",
+            "default-light-9",
+            "default-2",
+            "default-light-14",
+        ],
+    },
+];
+
+export const PALETTE_NAMES = PALETTE_SECTIONS.flatMap((section) => section.names);
+
+const RECOMMENDED_PALETTE_PLACEHOLDER = {
+    color1: "#868e96",
+    color2: "#adb5bd",
+    color3: "#ced4da",
+    color4: "#dee2e6",
+    color5: "#495057",
+};
 
 // Attributes for which background color should be retrieved
 // from CSS and added in each palette.
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
+const PREVIEW_BACKGROUND_SHAPE_SELECTOR = ".o_we_shape";
+const PREVIEW_IMAGE_SHAPE_URL_REGEX = /^\/?html_editor\/image_shape(_url)?\//;
+const PREVIEW_DYNAMIC_IMAGE_URL_REGEX = /^\/?html_editor\/(image_)?shape(_url)?\//;
 
 /**
  * Returns a list of maximum "resultNbrMax" themes that depends on the wanted
@@ -119,6 +167,43 @@ async function getRecommendedThemes(orm, state, resultNbrMax = MAX_NBR_DISPLAY_M
         industry_id: state.selectedIndustry?.id || 0,
         result_nbr_max: resultNbrMax,
     });
+}
+
+function getPreviewPaletteCacheKey(paletteName, themeName, logoPalette) {
+    if (paletteName !== "logoPalette" || !logoPalette) {
+        return `${themeName}:${paletteName}`;
+    }
+    return [themeName, "logoPalette", ...[1, 2, 3, 4, 5].map((i) => logoPalette[`color${i}`])].join(
+        ":"
+    );
+}
+
+async function getPreviewPaletteCSS(orm, state, paletteName, logoPalette = state.logoPalette) {
+    const cacheKey = getPreviewPaletteCacheKey(
+        paletteName,
+        state.selectedTheme || "theme_default",
+        logoPalette
+    );
+    if (state.previewPaletteCSS[cacheKey]) {
+        return state.previewPaletteCSS[cacheKey];
+    }
+    if (!state.previewPaletteCSSPromises[cacheKey]) {
+        state.previewPaletteCSSPromises[cacheKey] = orm.silent
+            .call("website.assets", "configurator_get_palette_preview_css", [
+                paletteName,
+                paletteName === "logoPalette" ? logoPalette : false,
+            ])
+            .then((css) => {
+                state.previewPaletteCSS[cacheKey] = css;
+                delete state.previewPaletteCSSPromises[cacheKey];
+                return css;
+            })
+            .catch((error) => {
+                delete state.previewPaletteCSSPromises[cacheKey];
+                throw error;
+            });
+    }
+    return state.previewPaletteCSSPromises[cacheKey];
 }
 
 //------------------------------------------------------------------------------
@@ -416,8 +501,8 @@ export class PaletteSelectionScreen extends Component {
             await this._removeAttachments([this.state.logoAttachmentId]);
         }
         this.state.changeLogo();
-        // Remove recommended palette.
-        this.state.setRecommendedPalette();
+        // Remove logo palette.
+        this.state.setLogoPalette();
     }
 
     async changeLogo() {
@@ -470,7 +555,7 @@ export class PaletteSelectionScreen extends Component {
             [img],
             { mitigate: 255 }
         );
-        this.state.setRecommendedPalette(color1, color2);
+        this.state.setLogoPalette(color1, color2);
     }
 
     selectPalette(paletteName) {
@@ -495,6 +580,21 @@ export class ApplyConfiguratorScreen extends Component {
     setup() {
         this.websiteService = useService("website");
         this.configuratorProgress = 0;
+    }
+
+    async startBuilding() {
+        if (!this.state.selectedPalette) {
+            const fallbackPaletteName = this.state.palettes["default-25"]
+                ? "default-25"
+                : Object.keys(this.state.palettes || {})[0];
+            if (fallbackPaletteName) {
+                this.state.selectPalette(fallbackPaletteName);
+            }
+        }
+        if (!this.state.selectedTheme) {
+            this.state.selectedTheme = "theme_default";
+        }
+        await this.applyConfigurator(this.state.selectedTheme);
     }
 
     async applyConfigurator(themeName) {
@@ -556,18 +656,8 @@ export class ApplyConfiguratorScreen extends Component {
                 getProgress: () => this.configuratorProgress,
                 bottomMessageTemplate: "website.website_loader.tour_tip",
             });
-            let selectedPalette = this.state.selectedPalette.name;
-            if (!selectedPalette) {
-                selectedPalette = [
-                    this.state.selectedPalette.color1,
-                    this.state.selectedPalette.color2,
-                    this.state.selectedPalette.color3,
-                    this.state.selectedPalette.color4,
-                    this.state.selectedPalette.color5,
-                ];
-            }
             const resp = await attemptConfiguratorApply(
-                this.getConfigurationData(selectedFeatures, selectedPalette, themeName)
+                this.getConfigurationData(selectedFeatures, this.state.selectedPalette, themeName)
             );
 
             this.props.clearStorage();
@@ -593,7 +683,10 @@ export class ApplyConfiguratorScreen extends Component {
             selected_features: selectedFeatures,
             industry_id: this.state.selectedIndustry.id,
             industry_name: this.state.selectedIndustry.label.toLowerCase(),
-            selected_palette: selectedPalette,
+            selected_palette:
+                selectedPalette === "logoPalette"
+                    ? [1, 2, 3, 4, 5].map((i) => this.state.logoPalette[`color${i}`])
+                    : selectedPalette,
             theme_name: themeName,
             website_purpose:
                 WEBSITE_PURPOSES[this.state.selectedPurpose || this.state.formerSelectedPurpose]
@@ -817,9 +910,15 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     }
 
     async chooseTheme(themeName) {
-        this.state.previewIsLoading = true;
+        if (this.state.selectedTheme !== themeName) {
+            this.state.recommendedPalettes = undefined;
+            this.state.featuredPaletteNames = [];
+            this.state.selectedPalette = undefined;
+            this.state.fonts = {};
+            this.state.fontNames = [];
+            this.state.selectedFont = undefined;
+        }
         this.state.selectedTheme = themeName;
-        this.state.recommendedPalettes = undefined;
         this.props.navigate(ROUTES.setupStyleScreen);
     }
 
@@ -852,28 +951,209 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.notification = useService("notification");
         this.state = useStore();
+        this.recommendedPalettePlaceholders = [0, 1, 2, 3].map((index) => ({
+            name: `recommended_palette_placeholder_${index}`,
+            ...RECOMMENDED_PALETTE_PLACEHOLDER,
+        }));
+        this.fontPlaceholders = [0, 1, 2, 3].map((index) => ({
+            name: `font_placeholder_${index}`,
+        }));
+        this.previewState = useState({ initialLoaded: false });
+        this.scrollState = useState({
+            isStylePanelBottomReached: false,
+            isColorPanelBottomReached: false,
+        });
         this.previewDevice = useState({ value: "desktop" });
+        this.scrollContentRef = useRef("scrollContent");
+        this.colorPanelBodyRef = useRef("colorPanelBody");
         this.previewIframeRef = useRef("previewIframe");
         this.logoInputRef = useRef("logoSelectionInput");
-        this.state.selectedTone = "Inspirational";
+        this.toneOptions = TONE_OPTIONS;
+        this.state.selectedTone = "inspirational";
         this.is_content_generated = false;
         this.images_loaded = false;
-        this.state.generatorIsLoading = false;
+        this.closeGeneratorNotification = null;
+        this.previewPalettePrefetchId = 0;
+        this.previewPalettePrefetchTimeout = null;
 
-        onWillStart(async () => {
+        onWillStart(() => {
+            this.previewState.initialLoaded = false;
             this.state.previewIsLoading = true;
-            if (!this.state.selectedTheme) {
+        });
+        onMounted(() => {
+            document.body.classList.add("o_configurator_notifications_top");
+            this.onScrollContent(this.scrollContentRef, "isStylePanelBottomReached");
+            this.onScrollContent(this.colorPanelBodyRef, "isColorPanelBottomReached");
+        });
+        onWillUnmount(() => {
+            document.body.classList.remove("o_configurator_notifications_top");
+            this.cancelPreviewPalettePrefetch();
+            this.closeGeneratorNotification?.();
+            this.closeGeneratorNotification = null;
+        });
+    }
+
+    onScrollContent(ref, stateKey) {
+        const el = ref.el;
+        if (!el) {
+            return;
+        }
+        const isBottomReached = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        if (this.scrollState[stateKey] !== isBottomReached) {
+            this.scrollState[stateKey] = isBottomReached;
+        }
+    }
+
+    uploadLogo() {
+        this.logoInputRef.el.click();
+    }
+
+    /**
+     * Removes the previously uploaded logo.
+     *
+     * @param {Event} ev
+     */
+    async removeLogo(ev) {
+        ev.stopPropagation();
+        // Permit to trigger onChange even with the same file.
+        this.logoInputRef.el.value = "";
+        if (this.state.logoAttachmentId) {
+            await this._removeAttachments([this.state.logoAttachmentId]);
+        }
+        this.state.changeLogo();
+        // Remove the logo palette and fill the gap with recommended ones.
+        this.state.setLogoPalette();
+        this.state.featuredPaletteNames = this.completeFeaturedPaletteNames(
+            this.state.featuredPaletteNames.filter((paletteName) => paletteName !== "logoPalette")
+        );
+        if (this.state.selectedPalette === "logoPalette" && this.state.featuredPaletteNames[0]) {
+            await this.setPalette(this.state.featuredPaletteNames[0]);
+        }
+        this.setPreviewLogo();
+    }
+
+    async onLogoChange() {
+        const logoSelectInput = this.logoInputRef.el;
+        if (logoSelectInput.files.length === 1) {
+            const previousLogoAttachmentId = this.state.logoAttachmentId;
+            const file = logoSelectInput.files[0];
+            if (file.size > 2500000) {
+                this.notification.add(
+                    _t("The logo is too large. Please upload a logo smaller than 2.5 MB."),
+                    {
+                        title: file.name,
+                        type: "warning",
+                    }
+                );
                 return;
             }
-        });
+            const data = await getDataURLFromFile(file);
+            const attachment = await rpc("/web_editor/attachment/add_data", {
+                name: "logo",
+                data: data.split(",")[1],
+                is_image: true,
+            });
+            if (!attachment.error) {
+                if (previousLogoAttachmentId) {
+                    await this._removeAttachments([previousLogoAttachmentId]);
+                }
+                this.state.changeLogo(data, attachment.id);
+                await this.updateLogoPalette();
+                if (this.state.selectedPalette === "logoPalette") {
+                    await this.setPalette("logoPalette");
+                }
+                this.setPreviewLogo();
+            } else {
+                this.notification.add(attachment.error, {
+                    title: file.name,
+                });
+            }
+        }
+    }
+
+    setPreviewLogo(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (!iframeDoc?.body) {
+            return;
+        }
+        for (const imgEl of iframeDoc.querySelectorAll(
+            'a[data-name="Navbar Logo"] img, a.navbar-brand.logo img'
+        )) {
+            if (!imgEl.dataset.previewOriginalSrc) {
+                imgEl.dataset.previewOriginalSrc = imgEl.getAttribute("src") || "";
+            }
+            imgEl.src = this.state.logo || imgEl.dataset.previewOriginalSrc;
+        }
+    }
+
+    async updateLogoPalette() {
+        let img = this.state.logo;
+        if (img.startsWith("data:image/svg+xml")) {
+            img = await svgToPNG(img);
+        }
+        if (img.startsWith("data:image/webp")) {
+            img = await webpToPNG(img);
+        }
+        img = img.split(",")[1];
+        const [color1, color2] = await this.orm.call(
+            "base.document.layout",
+            "extract_image_primary_secondary_colors",
+            [img],
+            { mitigate: 255 }
+        );
+        this.state.setLogoPalette(color1, color2);
+        // Logo colors are always featured first when available.
+        this.updateFeaturedPaletteNames("logoPalette");
+    }
+
+    /**
+     * Removes the attachments from the DB.
+     *
+     * @private
+     * @param {Array<number>} ids the attachment ids to remove
+     */
+    async _removeAttachments(ids) {
+        rpc("/html_editor/attachment/remove", { ids: ids });
     }
 
     changeTheme() {
         this.props.navigate(ROUTES.themeSelectionScreen);
     }
 
-    getPalettes() {
+    // When logo is removed => Fill missing featured slots with recommended
+    // palettes, in order.
+    completeFeaturedPaletteNames(featuredPaletteNames) {
+        for (const palette of this.state.recommendedPalettes || []) {
+            if (featuredPaletteNames.length >= 4) {
+                break;
+            }
+            if (!featuredPaletteNames.includes(palette.name)) {
+                featuredPaletteNames.push(palette.name);
+            }
+        }
+        return featuredPaletteNames;
+    }
+
+    // Keep featured palettes ordered by recent user actions.
+    // If logo palette is added, drop the last non-active palette.
+    updateFeaturedPaletteNames(paletteName, position = 0) {
+        const featuredPaletteNames = this.state.featuredPaletteNames.filter(
+            (featuredPaletteName) => featuredPaletteName !== paletteName
+        );
+        featuredPaletteNames.splice(position, 0, paletteName);
+        if (featuredPaletteNames.length > 4) {
+            for (let index = featuredPaletteNames.length - 1; index >= 0; index--) {
+                if (featuredPaletteNames[index] !== this.state.selectedPalette) {
+                    featuredPaletteNames.splice(index, 1);
+                    break;
+                }
+            }
+        }
+        this.state.featuredPaletteNames = featuredPaletteNames;
+    }
+
+    initializePalettesFromPreview() {
         const iframeDoc = this.previewIframeRef.el?.contentDocument;
         const iframeRoot = iframeDoc?.documentElement;
         if (!iframeRoot) {
@@ -881,36 +1161,254 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         }
         const style = getComputedStyle(iframeRoot);
         const mainPalette = this.cleanValue(style.getPropertyValue("--color-palettes-name"));
-        const options = style
-            .getPropertyValue("--options-color-palettes-name")
+        const recommendedPalettes = style
+            .getPropertyValue("--recommended-palette-name")
             .replace(/[()]/g, "")
             .split(",")
             .map((value) => this.cleanValue(value))
             .filter(Boolean);
-        this.state.recommendedPalettes = options.length ? options : [mainPalette].filter(Boolean);
-        if (
-            !this.state.selectedPalette ||
-            !this.state.recommendedPalettes.includes(this.state.selectedPalette)
-        ) {
-            this.state.selectedPalette =
-                mainPalette && this.state.recommendedPalettes.includes(mainPalette)
-                    ? mainPalette
-                    : this.state.recommendedPalettes[0];
+        // Read the theme recommendations from the preview CSS.
+        this.state.recommendedPalettes = (
+            recommendedPalettes.length ? recommendedPalettes : [mainPalette].filter(Boolean)
+        ).map((paletteName) => this.state.palettes[paletteName]);
+        // Preserve the current featured order across reloads and page refreshes.
+        this.state.featuredPaletteNames = this.completeFeaturedPaletteNames(
+            this.state.featuredPaletteNames.length
+                ? [...this.state.featuredPaletteNames]
+                : this.state.recommendedPalettes.slice(0, 4).map((palette) => palette.name)
+        );
+        if (this.state.logoPalette) {
+            this.updateFeaturedPaletteNames("logoPalette");
+        }
+        // Keep the selected swatch aligned with the palette currently shown
+        // in the preview.
+        if (this.state.selectedPalette !== "logoPalette") {
+            this.state.selectedPalette = mainPalette || this.state.recommendedPalettes[0]?.name;
         }
     }
 
-    async setPalette(palette) {
-        this.state.selectedPalette = palette;
-        this.state.previewIsLoading = true;
-        await this.orm.silent.call("website.assets", "make_scss_customization", [
-            "/website/static/src/scss/options/user_values.scss",
-            { "color-palettes-name": `'${palette}'` },
-        ]);
-        await rpc("/website/theme_customize_bundle_reload");
-        const iframe = this.previewIframeRef.el;
-        if (iframe) {
-            iframe.src = `${this.previewUrl}&palette_ts=${Date.now()}`;
+    getFeaturedPalettes() {
+        return this.state.featuredPaletteNames.map((paletteName) =>
+            paletteName === "logoPalette"
+                ? { name: "logoPalette", ...(this.state.logoPalette || {}) }
+                : this.state.palettes[paletteName]
+        );
+    }
+
+    getOtherPaletteSections() {
+        const recommendedPaletteNames = new Set(
+            (this.state.recommendedPalettes || []).map((palette) => palette.name)
+        );
+        return PALETTE_SECTIONS.map((section) => ({
+            id: section.id,
+            label: section.label,
+            palettes: section.names
+                .filter((paletteName) => !recommendedPaletteNames.has(paletteName))
+                .map((paletteName) => this.state.palettes[paletteName]),
+        })).filter((section) => section.palettes.length);
+    }
+
+    cancelPreviewPalettePrefetch() {
+        this.previewPalettePrefetchId++;
+        if (this.previewPalettePrefetchTimeout) {
+            browser.clearTimeout(this.previewPalettePrefetchTimeout);
+            this.previewPalettePrefetchTimeout = null;
         }
+    }
+
+    schedulePreviewPalettePrefetch() {
+        this.cancelPreviewPalettePrefetch();
+        const requestId = this.previewPalettePrefetchId;
+        // Start with the theme recommendations, then continue with common
+        // palettes in the background.
+        const paletteNames = [
+            ...(this.state.recommendedPalettes || []).map((palette) => palette.name),
+            ...PALETTE_NAMES,
+        ];
+        this.previewPalettePrefetchTimeout = browser.setTimeout(async () => {
+            this.previewPalettePrefetchTimeout = null;
+            for (const paletteName of new Set(paletteNames)) {
+                if (requestId !== this.previewPalettePrefetchId) {
+                    return;
+                }
+                await getPreviewPaletteCSS(this.orm, this.state, paletteName).catch(() => {});
+                await delay(100);
+            }
+        }, 500);
+    }
+
+    async setPalette(paletteName) {
+        this.state.selectedPalette = paletteName;
+        if (!this.state.featuredPaletteNames.includes(paletteName)) {
+            // Keep the logo palette first if it is already featured.
+            this.updateFeaturedPaletteNames(
+                paletteName,
+                this.state.featuredPaletteNames[0] === "logoPalette" ? 1 : 0
+            );
+        }
+        this.cancelPreviewPalettePrefetch();
+        const loadingTimer = browser.setTimeout(() => {
+            this.state.previewIsLoading = true;
+        }, 500);
+        try {
+            await this.applyPreviewPalette(paletteName);
+        } finally {
+            browser.clearTimeout(loadingTimer);
+            this.state.previewIsLoading = false;
+            this.schedulePreviewPalettePrefetch();
+        }
+    }
+
+    async applyPreviewPalette(paletteName, iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (!iframeDoc?.head || !iframeDoc.documentElement) {
+            return;
+        }
+        const css = await getPreviewPaletteCSS(this.orm, this.state, paletteName);
+        let styleEl = iframeDoc.getElementById("o_configurator_preview_palette_test");
+        if (!styleEl) {
+            styleEl = iframeDoc.createElement("style");
+            styleEl.id = "o_configurator_preview_palette_test";
+            iframeDoc.head.appendChild(styleEl);
+        }
+        // Read the new palette colors before the CSS is applied.
+        const colorValues = {};
+        for (const match of css.matchAll(/--o-color-([1-5])\s*:\s*([^;]+);/g)) {
+            colorValues[`o-color-${match[1]}`] = match[2].trim();
+        }
+        this.ensurePreviewShapeSources(iframeDoc);
+        // Preload recolored shapes first so the whole preview switches together.
+        const { imageSrcUpdates, backgroundImageUpdates } =
+            await this.getPreviewDynamicShapeUpdates(iframeDoc, colorValues);
+        styleEl.textContent = css;
+        this.applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates);
+    }
+
+    // Rebuild dynamic shape URLs with the current iframe palette colors.
+    async updatePreviewDynamicShapes(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        // This is used after iframe reloads, when the preview CSS is already on
+        // the page and we only need to sync dynamic shape URLs again.
+        this.ensurePreviewShapeSources(iframeDoc);
+        const { imageSrcUpdates, backgroundImageUpdates } =
+            await this.getPreviewDynamicShapeUpdates(iframeDoc);
+        this.applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates);
+    }
+
+    ensurePreviewShapeSources(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (!iframeDoc?.documentElement) {
+            return;
+        }
+        const style = getComputedStyle(iframeDoc.documentElement);
+        const paletteColors = Object.fromEntries(
+            [1, 2, 3, 4, 5]
+                .map((i) => [
+                    normalizeCSSColor(getCSSVariableValue(`o-color-${i}`, style)),
+                    `o-color-${i}`,
+                ])
+                .filter(([color]) => color)
+        );
+        const getPaletteShapeURL = (originalSrc) => {
+            const url = new URL(originalSrc, window.location.origin);
+            url.searchParams.forEach((value, key) => {
+                if (!/^c[1-5]$/.test(key)) {
+                    return;
+                }
+                const paletteColorName = paletteColors[normalizeCSSColor(value)];
+                if (paletteColorName) {
+                    url.searchParams.set(key, paletteColorName);
+                }
+            });
+            return url.pathname + url.search;
+        };
+        for (const [elements, datasetKey, getOriginalSrc] of [
+            [
+                Array.from(iframeDoc.querySelectorAll("img")).filter((imgEl) =>
+                    PREVIEW_IMAGE_SHAPE_URL_REGEX.test(imgEl.getAttribute("src") || "")
+                ),
+                "configuratorOriginalSrc",
+                (imgEl) => imgEl.getAttribute("src"),
+            ],
+            [
+                iframeDoc.querySelectorAll(PREVIEW_BACKGROUND_SHAPE_SELECTOR),
+                "configuratorOriginalBgSrc",
+                (shapeEl) => getBgImageURLFromEl(shapeEl),
+            ],
+        ]) {
+            for (const el of elements) {
+                if (el.dataset[datasetKey]) {
+                    continue;
+                }
+                const originalSrc = getOriginalSrc(el);
+                if (!originalSrc) {
+                    continue;
+                }
+                // Keep a palette-based source so shapes follow palette changes.
+                el.dataset[datasetKey] = getPaletteShapeURL(originalSrc);
+            }
+        }
+    }
+
+    applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates) {
+        imageSrcUpdates.forEach(({ el, originalSrc, src }) => {
+            el.dataset.configuratorOriginalSrc = originalSrc;
+            el.setAttribute("src", src);
+        });
+        backgroundImageUpdates.forEach(({ el, originalSrc, src }) => {
+            el.dataset.configuratorOriginalBgSrc = originalSrc;
+            el.style.setProperty("background-image", `url("${src}")`);
+        });
+    }
+
+    async getPreviewDynamicShapeUpdates(
+        iframeDoc = this.previewIframeRef.el?.contentDocument,
+        colorValues = null
+    ) {
+        if (!iframeDoc?.documentElement) {
+            return { imageSrcUpdates: [], backgroundImageUpdates: [] };
+        }
+        const style = getComputedStyle(iframeDoc.documentElement);
+        const shapeURLRegex = /^\/html_editor\/(image_)?shape(_url)?\//;
+        const colorizeShapeURL = (originalSrc) => {
+            const url = new URL(originalSrc, window.location.origin);
+            url.searchParams.forEach((value, key) => {
+                const match = value.match(/^o-color-([1-5])$/);
+                if (/^c[1-5]$/.test(key) && match) {
+                    url.searchParams.set(
+                        key,
+                        colorValues?.[`o-color-${match[1]}`] ||
+                            getCSSVariableValue(`o-color-${match[1]}`, style)
+                    );
+                }
+            });
+            return url.pathname + url.search;
+        };
+        const imageSrcUpdates = Array.from(iframeDoc.querySelectorAll("img"))
+            .filter((imgEl) => PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(imgEl.getAttribute("src") || ""))
+            .map((imgEl) => {
+                // Keep the original palette-based URL so each palette change starts
+                // from c1=o-color-1, c2=o-color-2, ...
+                const originalSrc =
+                    imgEl.dataset.configuratorOriginalSrc || imgEl.getAttribute("src");
+                return { el: imgEl, originalSrc, src: colorizeShapeURL(originalSrc) };
+            });
+        const backgroundImageUpdates = Array.from(
+            iframeDoc.querySelectorAll(PREVIEW_BACKGROUND_SHAPE_SELECTOR)
+        )
+            .map((shapeEl) => {
+                const originalSrc =
+                    shapeEl.dataset.configuratorOriginalBgSrc || getBgImageURLFromEl(shapeEl);
+                if (!originalSrc || !shapeURLRegex.test(originalSrc)) {
+                    return false;
+                }
+                return { el: shapeEl, originalSrc, src: colorizeShapeURL(originalSrc) };
+            })
+            .filter(Boolean);
+        // Wait for the new URLs before applying them to avoid a short flash.
+        await Promise.all(
+            [...new Set([...imageSrcUpdates, ...backgroundImageUpdates].map(({ src }) => src))].map(
+                (src) => loadImage(src).catch(() => null)
+            )
+        );
+        return { imageSrcUpdates, backgroundImageUpdates };
     }
 
     cleanValue(value) {
@@ -1014,32 +1512,44 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         return this.previewDevice.value === "mobile";
     }
 
-    async startBuilding() {
-        if (!this.state.selectedPalette) {
-            const fallbackPaletteName = this.state.palettes["default-25"]
-                ? "default-25"
-                : Object.keys(this.state.palettes || {})[0];
-            if (fallbackPaletteName) {
-                this.state.selectPalette(fallbackPaletteName);
-            }
-        }
-        if (!this.state.selectedTheme) {
-            this.state.selectedTheme = "theme_default";
-        }
-        await this.applyConfigurator(this.state.selectedTheme);
+    nextStep() {
+        return this.startBuilding();
     }
 
     async onPreviewIframeLoad() {
+        const hadGeneratorNotification = !!this.closeGeneratorNotification;
         const iframeDoc = this.previewIframeRef.el?.contentDocument;
         if (iframeDoc) {
             this.deactivatePreviewInteractions(iframeDoc);
+            this.setPreviewLogo(iframeDoc);
             this.getFonts();
             this.applyPreviewFont();
             if (!this.state.recommendedPalettes?.length) {
-                this.getPalettes();
+                this.initializePalettesFromPreview();
             }
+            this.schedulePreviewPalettePrefetch();
+            const mainPalette = this.cleanValue(
+                getComputedStyle(iframeDoc.documentElement).getPropertyValue(
+                    "--color-palettes-name"
+                )
+            );
+            if (
+                this.state.selectedPalette &&
+                (this.state.selectedPalette === "logoPalette" ||
+                    this.state.selectedPalette !== mainPalette)
+            ) {
+                await this.applyPreviewPalette(this.state.selectedPalette, iframeDoc);
+            }
+            await this.updatePreviewDynamicShapes(iframeDoc);
         }
-        this.state.generatorIsLoading = false;
+        this.closeGeneratorNotification?.();
+        this.closeGeneratorNotification = null;
+        if (hadGeneratorNotification) {
+            this.notification.add(_t("Your website content has been generated."), {
+                type: "success",
+            });
+        }
+        this.previewState.initialLoaded = true;
         this.state.previewIsLoading = false;
         if (!this.is_content_generated) {
             this.generateContent();
@@ -1090,7 +1600,18 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             });
             const iframe = this.previewIframeRef.el;
             if (iframe) {
-                this.state.generatorIsLoading = true;
+                this.closeGeneratorNotification?.();
+                this.closeGeneratorNotification = this.notification.add(
+                    markup(
+                        `<i class="fa fa-circle-o-notch fa-spin me-2" role="img" aria-label="${_t(
+                            "Loading"
+                        )}"></i>${_t("Generating your website content with AI...")}`
+                    ),
+                    {
+                        type: "info",
+                        sticky: true,
+                    }
+                );
                 this.is_content_generated = true;
                 this.images_loaded = true;
                 iframe.src = `/website/configurator/preview?${params.toString()}&preview_ts=${Date.now()}`;
@@ -1155,8 +1676,7 @@ export class Store {
      * @returns {string | false}
      */
     getSelectedPaletteName() {
-        const palette = this.selectedPalette;
-        return palette ? palette.name || "recommendedPalette" : false;
+        return this.selectedPalette || false;
     }
 
     //-------------------------------------------------------------------------
@@ -1205,11 +1725,7 @@ export class Store {
     }
 
     selectPalette(paletteName) {
-        if (paletteName === "recommendedPalette") {
-            this.selectedPalette = this.recommendedPalette;
-        } else {
-            this.selectedPalette = this.palettes[paletteName];
-        }
+        this.selectedPalette = paletteName;
     }
 
     toggleFeature(featureId) {
@@ -1218,12 +1734,12 @@ export class Store {
         feature.selected = !feature.selected || isModuleInstalled;
     }
 
-    setRecommendedPalette(color1, color2) {
+    setLogoPalette(color1, color2) {
         if (color1 && color2) {
             if (color1 === color2) {
                 color2 = mixCssColors("#FFFFFF", color1, 0.2);
             }
-            const recommendedPalette = {
+            const logoPalette = {
                 color1: color1,
                 color2: color2,
                 color3: mixCssColors("#FFFFFF", color2, 0.9),
@@ -1231,13 +1747,13 @@ export class Store {
                 color5: mixCssColors(color1, "#000000", 0.125),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-                recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];
+                logoPalette[attr] = logoPalette[this.defaultColors[attr]];
             });
-            this.recommendedPalette = recommendedPalette;
+            this.logoPalette = logoPalette;
         } else {
-            this.recommendedPalette = undefined;
+            this.logoPalette = undefined;
         }
-        this.selectedPalette = this.recommendedPalette;
+        // Keep the extracted logo palette available without changing selection.
     }
 
     updateRecommendedThemes(themes) {
@@ -1381,7 +1897,9 @@ export class Configurator extends Component {
             .split(/[,\s]+/)
             .map((name) => name.trim().replace(/^['"]|['"]$/g, ""))
             .filter(Boolean);
+
         const allPaletteNames = paletteNames.length ? paletteNames : PALETTE_NAMES;
+
         allPaletteNames.forEach((paletteName) => {
             const palette = {
                 name: paletteName,
@@ -1400,7 +1918,14 @@ export class Configurator extends Component {
 
         const localState = JSON.parse(sessionStorage.getItem(this.storageItemName));
         if (localState) {
-            return Object.assign(r, { ...localState, palettes, themes: [] });
+            return Object.assign(r, {
+                featuredPaletteNames: [],
+                ...localState,
+                palettes,
+                previewPaletteCSS: {},
+                previewPaletteCSSPromises: {},
+                themes: [],
+            });
         }
 
         const features = {};
@@ -1430,9 +1955,12 @@ export class Configurator extends Component {
             selectedPalette: undefined,
             selectedTheme: undefined,
             previewIsLoading: false,
-            recommendedPalette: undefined,
+            featuredPaletteNames: [],
+            logoPalette: undefined,
             defaultColors: defaultColors,
             palettes: palettes,
+            previewPaletteCSS: {},
+            previewPaletteCSSPromises: {},
             features: features,
             themes: [],
             logoAttachmentId: undefined,
@@ -1451,7 +1979,8 @@ export class Configurator extends Component {
             selectedPurpose: state.selectedPurpose,
             formerSelectedPurpose: state.formerSelectedPurpose,
             selectedType: state.selectedType,
-            recommendedPalette: state.recommendedPalette,
+            featuredPaletteNames: state.featuredPaletteNames,
+            logoPalette: state.logoPalette,
         });
         sessionStorage.setItem(this.storageItemName, newState);
     }

@@ -236,61 +236,124 @@
     </div>
 </t>
 
+<t t-name="website.Configurator.SetupStyleScreenPaletteButton">
+    <button type="button"
+        class="btn btn-outline-secondary d-flex w-100 o_setup_style_screen_color_palette p-2 position-relative"
+        t-att-class="{'active': this.state.selectedPalette === palette.name}"
+        t-on-click="() => this.setPalette(palette.name)">
+        <t t-if="palette.name === 'logoPalette'">
+            <div class="o_setup_style_screen_logo_palette_info shadow-sm position-absolute top-0 start-100 translate-middle d-inline-flex align-items-center justify-content-center rounded-circle border bg-light p-1"
+                data-tooltip="Palette extracted from your logo">
+                <i class="fa fa-eyedropper"/>
+            </div>
+        </t>
+        <t t-foreach="[1, 2, 3, 4, 5]" t-as="i" t-key="i">
+            <span class="flex-grow-1 border rounded"
+                t-attf-style="background-color: {{(palette and palette['color' + i]) || 'transparent'}};"/>
+        </t>
+    </button>
+</t>
+
 <t t-name="website.Configurator.SetupStyleScreen">
     <div class="o_configurator_screen o_setup_style_screen h-100 d-flex flex-column overflow-hidden">
         <div class="o_configurator_screen_content h-100 overflow-hidden">
             <div class="container-fluid p-0 h-100">
                 <div class="row g-0 h-100">
                     <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden">
-                        <div class="flex-grow-1 overflow-auto pb-4 px-3">
+                        <div class="flex-grow-1 overflow-auto pb-4 px-3"
+                            t-custom-ref="scrollContent"
+                            t-on-scroll="() => this.onScrollContent(this.scrollContentRef, 'isStylePanelBottomReached')">
                             <div class="o_configurator_typing_text pt-3 mb-4">
                                 <b>Style</b>
                             </div>
                             <div class="mb-5">
+                                <h3><b>Logo</b></h3>
+                                <button class="btn btn-outline-secondary w-100 p-2 position-relative"
+                                    t-att-class="this.state.logo ? 'bg-transparent' : 'bg-100'"
+                                    t-on-click="this.uploadLogo">
+                                    <input type="file" class="d-none"
+                                        t-on-change="this.onLogoChange" name="logo_selection"
+                                        t-custom-ref="logoSelectionInput" accept="image/*"/>
+                                    <div t-att-class="{'invisible': this.state.logo}">
+                                        <i class="fa fa-cloud-upload fa-2x"></i>
+                                        <p class="text-muted m-0">Upload your logo</p>
+                                    </div>
+                                    <t t-if="this.state.logo">
+                                        <div class="position-absolute top-0 bottom-0 end-0 start-0 py-1 px-4">
+                                            <img class="h-100 mw-100 object-fit-contain" t-attf-src="{{this.state.logo}}" alt="Logo"/>
+                                        </div>
+                                        <i class="fa fa-trash text-danger position-absolute top-0 end-0 pe-1 pt-1"
+                                            t-on-click="this.removeLogo"/>
+                                    </t>
+                                </button>
+                            </div>
+                            <div class="mb-5">
                                 <h3><b>Colors</b></h3>
                                 <div class="row g-3">
-                                    <t t-foreach="this.state.recommendedPalettes || []" t-as="palette" t-key="palette">
-                                        <div class="col-6">
-                                            <button
-                                                type="button"
-                                                t-att-class="'w-100 text-start p-1' + (this.state.selectedPalette === palette ? ' active' : '')"
-                                                t-on-click="() => this.setPalette(palette)"
-                                            >
-                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color1) || 'transparent')"></div>
-                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color2) || 'transparent')"></div>
-                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color3) || 'transparent')"></div>
-                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color4) || 'transparent')"></div>
-                                                <div t-att-style="'background-color: ' + ((this.state.palettes[palette] and this.state.palettes[palette].color5) || 'transparent')"></div>
-                                            </button>
+                                    <t t-foreach="!this.previewState.initialLoaded ? this.recommendedPalettePlaceholders : this.getFeaturedPalettes()" t-as="palette" t-key="palette.name">
+                                        <div class="col-6" t-att-class="{'o_configurator_screen_option_loading': !this.previewState.initialLoaded}">
+                                            <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
                                         </div>
                                     </t>
-                                    <a href="#" class="text-center"><b>Show More</b></a>
+                                    <a href="#" class="text-center" type="button" data-bs-toggle="offcanvas"
+                                        data-bs-target="#colorPanel" aria-controls="colorPanel">
+                                        <b>Show More</b>
+                                    </a>
                                 </div>
                             </div>
-                            <div>
-                                <h3>Colors</h3>   
+                            <div class="offcanvas offcanvas-start shadow bg-white" tabindex="-1"
+                                id="colorPanel" aria-labelledby="colorPanelLabel" data-bs-backdrop="false">
+                                <div class="offcanvas-body"
+                                    t-custom-ref="colorPanelBody"
+                                    t-on-scroll="() => this.onScrollContent(this.colorPanelBodyRef, 'isColorPanelBottomReached')">
+                                    <div class="o_configurator_typing_text mb-4">Change <b>Colors</b></div>
+                                    <p class="text-muted mb-2">Recommended</p>
+                                    <div class="row g-3 mb-4">
+                                        <t t-foreach="this.state.recommendedPalettes || []" t-as="palette" t-key="palette.name">
+                                            <div class="col-6">
+                                                <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <t t-foreach="this.getOtherPaletteSections()" t-as="section" t-key="section.id">
+                                        <p class="text-muted mb-2" t-esc="section.label"/>
+                                        <div class="row g-3 mb-4">
+                                            <t t-foreach="section.palettes" t-as="palette" t-key="palette.name">
+                                                <div class="col-6">
+                                                    <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="d-flex w-100 p-3 bg-white"
+                                    t-att-class="{'o_setup_style_screen_buttons': !this.scrollState.isColorPanelBottomReached}">
+                                    <button type="button" class="btn btn-secondary btn-lg ms-auto" data-bs-dismiss="offcanvas">
+                                        <i class="oi oi-chevron-left" role="img"/>
+                                        Back
+                                    </button>
+                                </div>
                             </div>
                             <div class="mb-5">
                                 <h3><b>Font</b></h3>
                                 <div class="row g-3">
-                                    <t t-foreach="this.state.fontNames || []" t-as="font" t-key="font">
-                                        <div class="col-6">
+                                    <t t-foreach="this.previewState.initialLoaded ? (this.state.fontNames || []) : this.fontPlaceholders" t-as="font" t-key="this.previewState.initialLoaded ? font : font.name">
+                                        <div class="col-6" t-att-class="{'o_configurator_screen_option_loading': !this.previewState.initialLoaded}">
                                             <button
                                                 type="button"
-                                                class="w-100 h-100 text-start p-3"
-                                                t-att-class="'btn btn-outline-secondary' + (this.state.selectedFont === font ? ' active' : '')"
-                                                t-on-click="() => this.setFont(font)"
+                                                class="btn btn-outline-secondary w-100 h-100 text-start p-3"
+                                                t-att-class="{'active': this.previewState.initialLoaded and this.state.selectedFont === font}"
+                                                t-on-click="() => this.previewState.initialLoaded and this.setFont(font)"
                                             >
-                                                <h4 class="mb-1" t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['headings'])">
+                                                <h4 class="mb-1" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['headings']) : ''">
                                                     Heading
                                                 </h4>
-                                                <p class="m-0 text-muted small" t-att-style="'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['family'])">
+                                                <p class="m-0 text-muted small" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['family']) : ''">
                                                     This is a paragraph
                                                 </p>
                                             </button>
                                         </div>
                                     </t>
-                                    <a href="#" class="text-center"><b>Show More</b></a>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -308,21 +371,23 @@
                             <div class="mb-3">
                                 <h4 class="mb-2">Tone of voice</h4>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Professional'}" t-on-click="() => this.changeTone('Professional')">Professional</button>
-                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Friendly'}" t-on-click="() => this.changeTone('Friendly')">Friendly</button>
-                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Inspirational'}" t-on-click="() => this.changeTone('Inspirational')">Inspirational</button>
-                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Educational'}" t-on-click="() => this.changeTone('Educational')">Educational</button>
-                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Playful'}" t-on-click="() => this.changeTone('Playful')">Playful</button>
-                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Luxury'}" t-on-click="() => this.changeTone('Luxury')">Luxury</button>
+                                    <t t-foreach="this.toneOptions" t-as="tone" t-key="tone.value">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            t-att-class="{'active': this.state.selectedTone === tone.value}"
+                                            t-on-click="() => this.changeTone(tone.value)">
+                                            <t t-esc="tone.label"/>
+                                        </button>
+                                    </t>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex p-3 bg-white o_setup_style_screen_buttons">
-                            <button type="button" class="btn btn-secondary btn-lg" t-on-click="this.changeTheme">
+                        <div class="o_setup_style_screen_footer d-flex p-3 bg-white"
+                            t-att-class="{'o_setup_style_screen_buttons': !this.scrollState.isStylePanelBottomReached}">
+                            <button t-if="this.state.themes.length" type="button" class="btn btn-secondary btn-lg" t-on-click="this.changeTheme">
                                 <i class="oi oi-chevron-left" role="img"/>
                                 Change Theme
                             </button>
-                            <button type="button" class="btn btn-primary btn-lg ms-auto" t-on-click="this.startBuilding">
+                            <button type="button" class="btn btn-primary btn-lg ms-auto" t-on-click="this.nextStep">
                                 Start Building
                             </button>
                         </div>
@@ -366,15 +431,13 @@
                                     <div class="o_setup_style_screen_fake_searchbar py-1 bg-white rounded-pill opacity-75 mx-auto"/>
                                 </div>
                                 <iframe
-                                    class="o_configurator_preview_iframe w-100 flex-grow-1 border-0"
+                                    class="o_configurator_preview_iframe w-100 flex-grow-1 border-0 bg-white"
+                                    t-att-class="{'loading': this.state.previewIsLoading}"
                                     t-custom-ref="previewIframe"
                                     t-on-load="this.onPreviewIframeLoad"
                                     t-att-src="this.previewUrl"
                                 />
-                                <div t-if="this.state.previewIsLoading" class="position-absolute top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center">
-                                    <div class="spinner-border text-primary" role="status"/>
-                                </div>
-                                <div t-if="this.state.generatorIsLoading" class="o_ai_loading position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                <div t-if="this.state.previewIsLoading" class="o_configurator_preview_loader position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." width="50" height="50"/>
                                 </div>
                             </div>
