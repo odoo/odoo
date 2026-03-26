@@ -142,6 +142,31 @@ class PosOrder(models.Model):
         return []
 
     @api.model
+    def _check_pos_order_payment(self, device_type, order, payment):
+        if device_type != "kiosk" or not payment or len(payment) != 1 or len(payment[0]) != 3:
+            return []
+
+        command, payment_id = payment[0][0:2]
+        if command != Command.CREATE or payment_id != 0:
+            return []
+
+        payment_line = payment[0][2]
+        if "amount" not in payment_line or payment_line["amount"] != order.get("amount_total", 0):
+            return []
+
+        safe_fields = [
+            "payment_method_id", "card_type", "card_brand", "card_no", "cardholder_name",
+            "payment_ref_no", "payment_method_authcode", "payment_method_issuer_bank",
+            "payment_method_payment_mode", "transaction_id", "ticket", "uuid",
+        ] + self.env["pos.payment"]._get_additional_payment_fields()
+
+        return [[Command.CREATE, 0, {
+            'amount': order.get('amount_total'),
+            'payment_status': 'done',
+            **{field: payment_line.get(field) for field in safe_fields}
+        }]]
+
+    @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
         company = pos_config.company_id
         preset_id = order['preset_id'] if pos_config.use_presets else False
@@ -171,6 +196,8 @@ class PosOrder(models.Model):
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
+        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
+        payment_lines = [line for line in payment_lines if len(line)]
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
 
@@ -213,6 +240,7 @@ class PosOrder(models.Model):
             'uuid': order.get('uuid'),
             'has_deleted_line': order.get('has_deleted_line'),
             'lines': lines,
+            'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 

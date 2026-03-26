@@ -11,6 +11,8 @@ class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
         pos_config, table = self._verify_authorization(access_token, table_identifier, order)
+        if not pos_config.self_ordering_mode == device_type:
+            raise Unauthorized("Invalid device type")
 
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
