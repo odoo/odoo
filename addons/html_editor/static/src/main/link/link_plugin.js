@@ -218,7 +218,7 @@ export class LinkPlugin extends Plugin {
 
         toolbar_groups: [
             withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
-            withSequence(30, { id: "image_link", namespaces: ["image"] }),
+            withSequence(30, { id: "image_link", namespaces: ["image", "icon"] }),
         ],
         toolbar_items: [
             {
@@ -531,7 +531,7 @@ export class LinkPlugin extends Plugin {
         }
 
         const selectionTextContent = selection?.textContent();
-        const isImage = !!findInSelection(selection, "img");
+        const isImage = !!findInSelection(selection, "img, .fa");
 
         const applyCallback = (url, label, classes, linkTarget, attachmentId, relValue) => {
             if (this.linkInDocument) {
@@ -719,7 +719,7 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.color.removeAllColor();
                 }
                 // Remove the current link (linkInDocument) if it has no content
-                if (cleanZWChars(link.textContent) === "" && !link.querySelector("img")) {
+                if (cleanZWChars(link.textContent) === "" && !link.querySelector("img, .fa")) {
                     const [anchorNode, anchorOffset] = rightPos(link);
                     // We force the cursor after the link before removing the link
                     // to ensure we don't lose the selection position.
