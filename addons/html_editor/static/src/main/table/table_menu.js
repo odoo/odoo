@@ -11,7 +11,7 @@ import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { isEmpty } from "@html_editor/utils/dom_info";
+import { getIframeAdjustedBoundingRect, isEmpty } from "@html_editor/utils/dom_info";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 
 export class TableMenu extends Component {
@@ -127,22 +127,11 @@ export class TableMenu extends Component {
         if (!this.overlayEl || !target) {
             return;
         }
-        let frameRect = { top: 0, left: 0 };
-        let frameElement;
-        try {
-            frameElement = this.props.document.defaultView.frameElement;
-        } catch {
-            // We don't access the frameElement if we don't have access to it.
-            // (i.e. iframe origin or sandbox restriction)
-        }
-        if (frameElement) {
-            frameRect = frameElement.getBoundingClientRect();
-        }
-        const targetRect = target.getBoundingClientRect();
+        const targetRect = getIframeAdjustedBoundingRect(target);
         const container = this.overlayEl.parentElement;
         const containerRect = container.getBoundingClientRect();
-        const top = frameRect.top + targetRect.top - containerRect.top;
-        const left = frameRect.left + targetRect.left - containerRect.left;
+        const top = targetRect.top - containerRect.top;
+        const left = targetRect.left - containerRect.left;
         this.overlayEl.classList.remove("h-100", "w-100");
         if (type === "column") {
             Object.assign(this.overlayEl.style, {
@@ -153,9 +142,7 @@ export class TableMenu extends Component {
             });
         } else {
             const isLTR = direction === "ltr";
-            const inlineStartOffset = isLTR
-                ? left
-                : containerRect.right - (frameRect.left + targetRect.right);
+            const inlineStartOffset = isLTR ? left : containerRect.right - targetRect.right;
             Object.assign(this.overlayEl.style, {
                 position: "absolute",
                 top: `${top}px`,

@@ -1,7 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { isEditorTab, isEmptyBlock } from "@html_editor/utils/dom_info";
+import {
+    getIframeAdjustedBoundingRect,
+    isEditorTab,
+    isEmptyBlock,
+} from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
@@ -143,7 +147,7 @@ export class PowerButtonsPlugin extends Plugin {
             return;
         }
         const block = closestBlock(documentSelection.anchorNode);
-        const blockRect = block.getBoundingClientRect();
+        const blockRect = getIframeAdjustedBoundingRect(block);
         const editableRect = this.editable.getBoundingClientRect();
         if (
             documentSelection.isCollapsed &&
@@ -188,41 +192,24 @@ export class PowerButtonsPlugin extends Plugin {
     setPowerButtonsPosition(block, blockRect, direction) {
         // Resetting the position of the power buttons.
         const overlayRect = this.powerButtonsOverlay.getBoundingClientRect();
-        let referenceRect = { top: 0, left: 0 };
-        let frameElement;
-        try {
-            frameElement = this.document.defaultView.frameElement;
-        } catch {
-            // We don't access the frameElement if we don't have access to it.
-            // (i.e. iframe origin or sandbox restriction)
-        }
-        if (frameElement) {
-            referenceRect = frameElement.getBoundingClientRect();
-        }
         const placeholderWidth = this.getPlaceholderWidth(block);
         let newButtonContainerLeft;
-        const editableRect = this.editable.getBoundingClientRect();
+        const editableRect = getIframeAdjustedBoundingRect(this.editable);
         if (direction === "rtl") {
-            newButtonContainerLeft =
-                blockRect.right - (overlayRect.left - referenceRect.left) - placeholderWidth - 30;
+            newButtonContainerLeft = blockRect.right - overlayRect.left - placeholderWidth - 30;
             if (newButtonContainerLeft <= 0) {
                 this.powerButtonsContainer
                     .querySelectorAll(".power_button:not(:last-child)")
                     .forEach((el) => el.classList.add("d-none"));
-                newButtonContainerLeft =
-                    blockRect.right -
-                    (overlayRect.left - referenceRect.left) -
-                    placeholderWidth -
-                    30;
+                newButtonContainerLeft = blockRect.right - overlayRect.left - placeholderWidth - 30;
             }
             this.powerButtonsContainer.style.transform = "translateX(-100%)";
         } else {
             this.powerButtonsContainer.style.transform = "unset";
-            newButtonContainerLeft =
-                blockRect.left - (overlayRect.left - referenceRect.left) + placeholderWidth + 30;
+            newButtonContainerLeft = blockRect.left - overlayRect.left + placeholderWidth + 30;
             if (
                 newButtonContainerLeft + this.powerButtonsContainer.offsetWidth >
-                editableRect.right + referenceRect.left
+                editableRect.right
             ) {
                 this.powerButtonsContainer
                     .querySelectorAll(".power_button:not(:last-child)")
@@ -230,8 +217,7 @@ export class PowerButtonsPlugin extends Plugin {
             }
         }
         this.powerButtonsContainer.style.left = newButtonContainerLeft + "px";
-        this.powerButtonsContainer.style.top =
-            blockRect.top - (overlayRect.top - referenceRect.top) + "px";
+        this.powerButtonsContainer.style.top = blockRect.top - overlayRect.top + "px";
     }
 
     /**
