@@ -786,14 +786,17 @@ class IrActionsReport(models.Model):
         raise UserError(_("Odoo is unable to merge the generated PDFs."))
 
     @api.model
-    def _merge_pdfs(self, streams, handle_error=_handle_merge_pdfs_error):
+    def _merge_pdfs(self, streams, handle_error=None):
         writer = PdfFileWriter()
         for stream in streams:
             try:
                 reader = PdfFileReader(stream)
                 writer.append_pages_from_reader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError) as e:
-                handle_error(error=e, error_stream=stream)
+                if handle_error is None:
+                    self._handle_merge_pdfs_error(error=e, error_stream=stream)
+                else:
+                    handle_error(error=e, error_stream=stream)
         result_stream = io.BytesIO()
         streams.append(result_stream)
         try:
