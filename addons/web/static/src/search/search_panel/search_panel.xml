@@ -195,7 +195,7 @@
                     class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0 gap-1"
                     t-att-class="{
                         'o_with_counters': section.enableCounters,
-                        'o_search_panel_label_expanded':  state.expanded[section.id][valueId]
+                        'o_search_panel_label_expanded':  this.state.expanded[section.id][valueId]
                         }"
                     t-att-data-tooltip="value.display_name"
                     >
@@ -217,7 +217,7 @@
                 </div>
                 <small t-if="section.enableCounters and value.__count gt 0"
                     class="o_search_panel_counter mx-2 fw-bold lh-sm"
-                    t-att-class="{'text-muted': state.active[section.id] !== valueId}"
+                    t-att-class="{'text-muted': this.state.active[section.id] !== valueId}"
                     t-out="value.__count"
                 />
             </header>

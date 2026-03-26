@@ -44,7 +44,7 @@
 
                             <DropdownItem
                                 t-else=""
-                                class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': offline.offline and !(item.availableOffline and !env.model.root.isNew) }"
+                                class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offline.offline and !(item.availableOffline and !this.env.model.root.isNew) }"
                                 onSelected="() => this.onItemSelected(item)"
                             >
                                 <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>

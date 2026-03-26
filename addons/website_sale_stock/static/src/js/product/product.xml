@@ -4,7 +4,7 @@
         <QuantityButtons position="attributes">
             <attribute name="t-if" add="!this.isOutOfStock()" separator=" &amp;&amp; "/>
             <attribute name="isPlusButtonDisabled">
-                !env.isQuantityAllowed(props, props.quantity + 1)
+                !this.env.isQuantityAllowed(this.props, this.props.quantity + 1)
             </attribute>
         </QuantityButtons>
         <QuantityButtons position="after">
