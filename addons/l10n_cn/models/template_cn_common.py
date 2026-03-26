@@ -19,7 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.cn',
-                'bank_account_code_prefix': '1002',
+                'bank_account_code_prefix': '1002.01',
                 'cash_account_code_prefix': '1001',
                 'deferred_expense_account_id': 'l10n_cn_common_account_1801',
                 'deferred_revenue_account_id': 'l10n_cn_common_account_2401',
@@ -39,5 +39,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'cash',
                 'default_account_id': 'l10n_cn_common_account_1001',
             },
-            'bank': {'default_account_id': 'l10n_cn_common_account_1002'},
+            'bank': {'default_account_id': 'l10n_cn_common_account_100201'},
         }
