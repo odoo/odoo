@@ -290,6 +290,7 @@ class StockValuationLayer(models.Model):
                     'credit': 0,
                     'product_id': product.id,
                     'quantity': 0,
+                    'tax_ids': [],
                 }), (0, 0, {
                     'name': name,
                     'account_id': credit_account_id,
@@ -297,6 +298,7 @@ class StockValuationLayer(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                     'quantity': 0,
+                    'tax_ids': [],
                 })],
             }
             am_vals_list.append(move_vals)
