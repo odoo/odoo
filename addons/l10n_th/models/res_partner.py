@@ -10,6 +10,12 @@ class ResPartner(models.Model):
 
     l10n_th_branch_name = fields.Char(compute="_compute_l10n_th_branch_name")
 
+    def _compute_is_company(self):
+        super()._compute_is_company()
+        self.filtered(
+            lambda p: p.country_code == 'TH' and not (p.vat or '').startswith("0"),
+        ).is_company = False
+
     def _compute_l10n_th_branch_name(self):
         for partner in self:
             if not partner.is_company or partner.country_code != 'TH':
