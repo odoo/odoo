@@ -9,7 +9,8 @@ patch(DataServiceOptions.prototype, {
                 key: "id",
                 condition: (record) => {
                     return (
-                        !record.pos_order_line_id || record.pos_order_line_id?.order_id?.finalized
+                        !record.pos_order_line_id ||
+                        record.pos_order_line_id?.order_id?.canBeRemovedFromIndexedDB
                     );
                 },
             },
@@ -18,7 +19,8 @@ patch(DataServiceOptions.prototype, {
                 condition: (record) => {
                     return (
                         !record.registration_id ||
-                        record.registration_id?.pos_order_line_id?.order_id?.finalized
+                        record.registration_id?.pos_order_line_id?.order_id
+                            ?.canBeRemovedFromIndexedDB
                     );
                 },
             },
