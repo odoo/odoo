@@ -283,7 +283,7 @@ class ResCurrency(models.CachedModel):
     @ormcache(cache='stable')
     @api.model
     def get_all_currencies(self):
-        currencies = self.sudo().browse(self._cached_data()['id'])
+        currencies = self.sudo().get_all()
         return {
             c.id: {'name': c.name, 'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
             for c in currencies
