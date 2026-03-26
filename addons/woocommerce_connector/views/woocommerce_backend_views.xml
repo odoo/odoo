@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Backend List ──────────────────────────────────────────────────── -->
+    <record id="view_woocommerce_backend_list" model="ir.ui.view">
+        <field name="name">woocommerce.backend.list</field>
+        <field name="model">woocommerce.backend</field>
+        <field name="arch" type="xml">
+            <list string="WooCommerce Backends"
+                  decoration-danger="state == 'error'"
+                  decoration-success="state == 'connected'"
+                  decoration-muted="not active">
+                <field name="name"/>
+                <field name="url"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'connected'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'error'"/>
+                <field name="last_orders_sync"/>
+                <field name="last_products_sync"/>
+                <field name="order_binding_count" string="Orders"/>
+                <field name="product_binding_count" string="Products"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Backend Form ──────────────────────────────────────────────────── -->
+    <record id="view_woocommerce_backend_form" model="ir.ui.view">
+        <field name="name">woocommerce.backend.form</field>
+        <field name="model">woocommerce.backend</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Backend">
+                <header>
+                    <button name="action_test_connection" string="Test Connection"
+                            type="object" class="btn-primary"
+                            groups="woocommerce_connector.group_woocommerce_manager"/>
+                    <button name="action_sync_products" string="Sync Products Now"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'connected')]}"
+                            groups="woocommerce_connector.group_woocommerce_manager"/>
+                    <button name="action_sync_orders" string="Sync Orders Now"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'connected')]}"
+                            groups="woocommerce_connector.group_woocommerce_manager"/>
+                    <button name="action_register_webhooks" string="Register Webhooks"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'connected')]}"
+                            groups="woocommerce_connector.group_woocommerce_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,connected"/>
+                </header>
+
+                <sheet>
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_product_bindings"
+                                type="object" class="oe_stat_button" icon="fa-cubes"
+                                attrs="{'invisible': [('product_binding_count', '=', 0)]}">
+                            <field name="product_binding_count" widget="statinfo"
+                                   string="Products"/>
+                        </button>
+                        <button name="action_view_order_bindings"
+                                type="object" class="oe_stat_button" icon="fa-shopping-cart"
+                                attrs="{'invisible': [('order_binding_count', '=', 0)]}">
+                            <field name="order_binding_count" widget="statinfo"
+                                   string="Orders"/>
+                        </button>
+                        <button name="action_view_customer_bindings"
+                                type="object" class="oe_stat_button" icon="fa-users"
+                                attrs="{'invisible': [('customer_binding_count', '=', 0)]}">
+                            <field name="customer_binding_count" widget="statinfo"
+                                   string="Customers"/>
+                        </button>
+                        <button name="action_view_sync_logs"
+                                type="object" class="oe_stat_button" icon="fa-list-alt">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Sync Logs</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Backend Name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Connection">
+                            <field name="url" placeholder="https://mystore.com"/>
+                            <field name="consumer_key"
+                                   groups="woocommerce_connector.group_woocommerce_manager"
+                                   password="True"/>
+                            <field name="consumer_secret"
+                                   groups="woocommerce_connector.group_woocommerce_manager"
+                                   password="True"/>
+                            <field name="verify_ssl"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Status">
+                            <field name="state" readonly="1"/>
+                            <field name="last_connection_error" readonly="1"
+                                   attrs="{'invisible': [('last_connection_error', '=', False)]}"/>
+                            <field name="last_products_sync" readonly="1"/>
+                            <field name="last_orders_sync" readonly="1"/>
+                            <field name="last_customers_sync" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Sync Settings">
+                            <group>
+                                <group string="What to Sync">
+                                    <field name="import_products"/>
+                                    <field name="import_orders"/>
+                                    <field name="import_customers"/>
+                                    <field name="export_inventory"/>
+                                    <field name="product_as_storable"/>
+                                </group>
+                                <group string="Defaults">
+                                    <field name="warehouse_id"/>
+                                    <field name="default_product_categ_id"/>
+                                    <field name="default_pricelist_id"/>
+                                    <field name="default_sales_team_id"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Order Import">
+                                    <field name="order_statuses_to_import"
+                                           placeholder="pending,processing,on-hold,completed,..."/>
+                                    <field name="sync_orders_from_date"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Webhooks"
+                              groups="woocommerce_connector.group_woocommerce_manager">
+                            <group>
+                                <field name="webhook_base_url"
+                                       placeholder="https://your-odoo.com"/>
+                                <field name="webhook_secret" password="True"/>
+                            </group>
+                            <div class="alert alert-info" role="alert">
+                                <strong>How to set up webhooks:</strong>
+                                <ol>
+                                    <li>Set the Webhook Base URL to your Odoo instance's public URL.</li>
+                                    <li>Set a strong Webhook Secret.</li>
+                                    <li>Click <strong>Register Webhooks</strong> in the header.</li>
+                                    <li>Odoo will register all required topics on your WooCommerce store.</li>
+                                </ol>
+                                <p>Webhooks provide real-time updates. Without them, sync relies on cron jobs only.</p>
+                            </div>
+                        </page>
+
+                        <page string="Chatter">
+                            <div class="oe_chatter">
+                                <field name="message_follower_ids"/>
+                                <field name="activity_ids"/>
+                                <field name="message_ids"/>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── Backend Action ────────────────────────────────────────────────── -->
+    <record id="action_woocommerce_backend" model="ir.actions.act_window">
+        <field name="name">WooCommerce Backends</field>
+        <field name="res_model">woocommerce.backend</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Connect your first WooCommerce store
+            </p>
+            <p>
+                Add a WooCommerce backend to start syncing products, orders, and customers.
+                You will need a WooCommerce REST API Consumer Key and Consumer Secret.
+            </p>
+        </field>
+    </record>
+
+</odoo>

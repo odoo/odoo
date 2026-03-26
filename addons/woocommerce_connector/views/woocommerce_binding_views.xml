@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         Product Bindings
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <record id="view_woo_product_binding_list" model="ir.ui.view">
+        <field name="name">woocommerce.product.binding.list</field>
+        <field name="model">woocommerce.product.binding</field>
+        <field name="arch" type="xml">
+            <list string="WooCommerce Product Bindings"
+                  decoration-danger="sync_state == 'error'"
+                  decoration-success="sync_state == 'synced'">
+                <field name="backend_id"/>
+                <field name="external_id" string="WC ID"/>
+                <field name="wc_sku" string="WC SKU"/>
+                <field name="odoo_id" string="Odoo Product"/>
+                <field name="wc_type" string="Type"/>
+                <field name="wc_status" string="WC Status"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-danger="sync_state == 'error'"
+                       decoration-warning="sync_state == 'pending'"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_woo_product_binding_form" model="ir.ui.view">
+        <field name="name">woocommerce.product.binding.form</field>
+        <field name="model">woocommerce.product.binding</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Product Binding">
+                <sheet>
+                    <group>
+                        <group string="WooCommerce">
+                            <field name="backend_id"/>
+                            <field name="external_id" string="WC Product ID"/>
+                            <field name="wc_sku" string="WC SKU"/>
+                            <field name="wc_type"/>
+                            <field name="wc_status"/>
+                            <field name="wc_permalink" widget="url"/>
+                        </group>
+                        <group string="Odoo">
+                            <field name="odoo_id" string="Product"/>
+                            <field name="sync_state"/>
+                            <field name="last_sync"/>
+                            <field name="sync_error"
+                                   attrs="{'invisible': [('sync_state', '!=', 'error')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_woo_product_binding" model="ir.actions.act_window">
+        <field name="name">WooCommerce Products</field>
+        <field name="res_model">woocommerce.product.binding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         Order Bindings
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <record id="view_woo_order_binding_list" model="ir.ui.view">
+        <field name="name">woocommerce.order.binding.list</field>
+        <field name="model">woocommerce.order.binding</field>
+        <field name="arch" type="xml">
+            <list string="WooCommerce Order Bindings"
+                  decoration-danger="sync_state == 'error'"
+                  decoration-success="sync_state == 'synced'">
+                <field name="backend_id"/>
+                <field name="wc_number" string="WC Order #"/>
+                <field name="external_id" string="WC ID"/>
+                <field name="odoo_id" string="Odoo Order"/>
+                <field name="wc_status" string="WC Status"/>
+                <field name="wc_total" string="WC Total" widget="monetary"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-danger="sync_state == 'error'"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_woo_order_binding" model="ir.actions.act_window">
+        <field name="name">WooCommerce Orders</field>
+        <field name="res_model">woocommerce.order.binding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         Customer Bindings
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <record id="view_woo_customer_binding_list" model="ir.ui.view">
+        <field name="name">woocommerce.customer.binding.list</field>
+        <field name="model">woocommerce.customer.binding</field>
+        <field name="arch" type="xml">
+            <list string="WooCommerce Customer Bindings"
+                  decoration-danger="sync_state == 'error'"
+                  decoration-success="sync_state == 'synced'">
+                <field name="backend_id"/>
+                <field name="external_id" string="WC ID"/>
+                <field name="wc_email" string="WC Email"/>
+                <field name="odoo_id" string="Odoo Contact"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-danger="sync_state == 'error'"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_woo_customer_binding" model="ir.actions.act_window">
+        <field name="name">WooCommerce Customers</field>
+        <field name="res_model">woocommerce.customer.binding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

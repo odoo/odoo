@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Security Category -->
+        <record id="module_channel_base" model="ir.module.category">
+            <field name="name">Channel Integration</field>
+            <field name="description">Manage marketplace channel integrations</field>
+            <field name="sequence">90</field>
+        </record>
+
+        <!-- Groups -->
+        <record id="group_channel_user" model="res.groups">
+            <field name="name">Channel User</field>
+            <field name="category_id" ref="module_channel_base"/>
+            <field name="comment">Can view channel backends and sync logs.</field>
+        </record>
+
+        <record id="group_channel_manager" model="res.groups">
+            <field name="name">Channel Manager</field>
+            <field name="category_id" ref="module_channel_base"/>
+            <field name="implied_ids" eval="[(4, ref('group_channel_user'))]"/>
+            <field name="comment">Can configure channel backends and trigger syncs.</field>
+        </record>
+
+    </data>
+</odoo>

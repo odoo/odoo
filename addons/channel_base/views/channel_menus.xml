@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top-level "Channels" menu — only visible with channel_user group -->
+    <menuitem id="menu_channel_root"
+              name="Channels"
+              sequence="90"
+              groups="channel_base.group_channel_user"
+              web_icon="channel_base,static/description/icon.png"/>
+
+    <menuitem id="menu_channel_configuration"
+              name="Configuration"
+              parent="menu_channel_root"
+              sequence="90"
+              groups="channel_base.group_channel_manager"/>
+
+    <menuitem id="menu_channel_sync_logs"
+              name="Sync Logs"
+              parent="menu_channel_root"
+              action="action_channel_sync_log"
+              sequence="80"
+              groups="channel_base.group_channel_user"/>
+
+</odoo>

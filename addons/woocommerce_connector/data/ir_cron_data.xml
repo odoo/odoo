@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Products: every 2 hours -->
+        <record id="ir_cron_woo_sync_products" model="ir.cron">
+            <field name="name">WooCommerce: Import Products</field>
+            <field name="model_id" ref="model_woocommerce_backend"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_sync_products()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">2</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="priority">6</field>
+        </record>
+
+        <!-- Orders: every 15 minutes -->
+        <record id="ir_cron_woo_sync_orders" model="ir.cron">
+            <field name="name">WooCommerce: Import Orders</field>
+            <field name="model_id" ref="model_woocommerce_backend"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_sync_orders()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="priority">5</field>
+        </record>
+
+        <!-- Inventory Push: every 30 minutes -->
+        <record id="ir_cron_woo_export_inventory" model="ir.cron">
+            <field name="name">WooCommerce: Export Inventory</field>
+            <field name="model_id" ref="model_woocommerce_inventory_sync"/>
+            <field name="state">code</field>
+            <field name="code">model._run_export_all()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="priority">7</field>
+        </record>
+
+    </data>
+</odoo>

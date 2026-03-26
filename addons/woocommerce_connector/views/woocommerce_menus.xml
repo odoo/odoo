@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- WooCommerce sub-menu under the top-level Channels menu -->
+    <menuitem id="menu_woocommerce_root"
+              name="WooCommerce"
+              parent="channel_base.menu_channel_root"
+              sequence="10"
+              groups="woocommerce_connector.group_woocommerce_user"/>
+
+    <!-- Operations -->
+    <menuitem id="menu_woo_orders"
+              name="Orders"
+              parent="menu_woocommerce_root"
+              action="action_woo_order_binding"
+              sequence="10"
+              groups="woocommerce_connector.group_woocommerce_user"/>
+
+    <menuitem id="menu_woo_products"
+              name="Products"
+              parent="menu_woocommerce_root"
+              action="action_woo_product_binding"
+              sequence="20"
+              groups="woocommerce_connector.group_woocommerce_user"/>
+
+    <menuitem id="menu_woo_customers"
+              name="Customers"
+              parent="menu_woocommerce_root"
+              action="action_woo_customer_binding"
+              sequence="30"
+              groups="woocommerce_connector.group_woocommerce_user"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_woo_backends"
+              name="WooCommerce Stores"
+              parent="channel_base.menu_channel_configuration"
+              action="action_woocommerce_backend"
+              sequence="10"
+              groups="woocommerce_connector.group_woocommerce_manager"/>
+
+</odoo>

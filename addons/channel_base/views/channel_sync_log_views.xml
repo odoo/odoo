@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sync Log List -->
+    <record id="view_channel_sync_log_list" model="ir.ui.view">
+        <field name="name">channel.sync.log.list</field>
+        <field name="model">channel.sync.log</field>
+        <field name="arch" type="xml">
+            <list string="Sync Logs" decoration-danger="state == 'error'"
+                  decoration-muted="state == 'skipped'"
+                  decoration-success="state == 'done'">
+                <field name="create_date" string="Date"/>
+                <field name="backend_ref"/>
+                <field name="object_type"/>
+                <field name="operation"/>
+                <field name="external_id"/>
+                <field name="odoo_record_ref" optional="show"/>
+                <field name="state"/>
+                <field name="duration" string="Dur. (s)" optional="show"/>
+                <field name="retry_count" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Sync Log Form -->
+    <record id="view_channel_sync_log_form" model="ir.ui.view">
+        <field name="name">channel.sync.log.form</field>
+        <field name="model">channel.sync.log</field>
+        <field name="arch" type="xml">
+            <form string="Sync Log" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="Context">
+                            <field name="backend_ref"/>
+                            <field name="object_type"/>
+                            <field name="operation"/>
+                            <field name="external_id"/>
+                            <field name="odoo_record_ref"/>
+                        </group>
+                        <group string="Execution">
+                            <field name="state"/>
+                            <field name="started_at"/>
+                            <field name="finished_at"/>
+                            <field name="duration"/>
+                            <field name="retry_count"/>
+                        </group>
+                    </group>
+                    <group string="Error" attrs="{'invisible': [('state', '!=', 'error')]}">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                    <group string="Notes" attrs="{'invisible': [('notes', '=', False)]}">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                    <group string="Raw Payload">
+                        <field name="raw_data" nolabel="1" widget="ace" options="{'mode': 'json'}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sync Log Search -->
+    <record id="view_channel_sync_log_search" model="ir.ui.view">
+        <field name="name">channel.sync.log.search</field>
+        <field name="model">channel.sync.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Sync Logs">
+                <field name="external_id"/>
+                <field name="object_type"/>
+                <filter name="filter_error" string="Errors" domain="[('state','=','error')]"/>
+                <filter name="filter_done" string="Done" domain="[('state','=','done')]"/>
+                <filter name="filter_pending" string="Pending/Running"
+                        domain="[('state','in',['pending','running'])]"/>
+                <separator/>
+                <filter name="filter_product" string="Products"
+                        domain="[('object_type','=','product')]"/>
+                <filter name="filter_order" string="Orders"
+                        domain="[('object_type','=','order')]"/>
+                <filter name="filter_customer" string="Customers"
+                        domain="[('object_type','=','customer')]"/>
+                <separator/>
+                <filter name="filter_today" string="Today"
+                        domain="[('create_date','&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_by_type" string="Object Type"
+                            context="{'group_by': 'object_type'}"/>
+                    <filter name="group_by_backend" string="Backend"
+                            context="{'group_by': 'backend_ref'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Sync Log Action -->
+    <record id="action_channel_sync_log" model="ir.actions.act_window">
+        <field name="name">Sync Logs</field>
+        <field name="res_model">channel.sync.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_channel_sync_log_search"/>
+        <field name="context">{'search_default_filter_error': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No sync logs yet.
+            </p>
+            <p>Sync logs appear here once channel sync operations run.</p>
+        </field>
+    </record>
+
+</odoo>
