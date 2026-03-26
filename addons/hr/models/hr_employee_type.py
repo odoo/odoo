@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrEmployeeType(models.Model):
@@ -21,7 +22,10 @@ class HrEmployeeType(models.Model):
 
     def _compute_employee_count(self):
         employee_count_by_employee_type = dict(self.env['hr.employee']._read_group(
-            domain=[('employee_type_id', 'in', self.ids)],
+            domain=[
+                    ('employee_type_id', 'in', self.ids),
+                    ('company_id', 'in', self.env.companies.ids),
+                ],
             groupby=['employee_type_id'],
             aggregates=['id:count'],
         ))
@@ -30,7 +34,10 @@ class HrEmployeeType(models.Model):
 
     def action_open_employees(self):
         self.ensure_one()
-        employees = self.env['hr.employee'].search([('employee_type_id', 'in', self.ids)])
+        employees = self.env['hr.employee'].search([
+                ('employee_type_id', 'in', self.ids),
+                ('company_id', 'in', self.env.companies.ids),
+            ])
         if len(employees) == 1:
             return {
                 'name': self.env._('Employee'),
@@ -48,3 +55,15 @@ class HrEmployeeType(models.Model):
             'views': [(False, 'kanban'), (False, 'form')],
             'domain': [('id', 'in', employees.ids)],
         }
+
+    @api.constrains('country_id')
+    def _check_country_id(self):
+        for record in self:
+            if not record.country_id:
+                continue
+            countries_with_same_employee_type = self.env['hr.employee'].sudo().search_count([
+                    ('employee_type_id', '=', record.id),
+                    ('company_id', 'any', [('partner_id.country_code', '!=', record.country_id.code)]),
+            ], limit=1)
+            if countries_with_same_employee_type:
+                raise ValidationError(self.env._("This employee type is used in another company, you can't modify the country where it's applicable for now.\nChange the employee type on the employees of the other company to be able to modify this."))
