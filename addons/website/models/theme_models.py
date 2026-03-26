@@ -246,6 +246,12 @@ class ThemeUtils(models.AbstractModel):
         'website.footer_custom',
     ]
 
+    # Templates managing the header content width.
+    _header_width_templates = [
+        'website.header_width_small',
+        'website.header_width_full',
+    ]
+
     def _post_copy(self, mod):
         # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name
@@ -290,6 +296,10 @@ class ThemeUtils(models.AbstractModel):
 
         # Reinitialize footer scrolltop template
         self.disable_view('website.option_footer_scrolltop')
+
+        # Reinitialize the header content width
+        for view in self._header_width_templates:
+            self.disable_view(view)
 
     @api.model
     def _toggle_asset(self, key, active):
@@ -346,6 +356,9 @@ class ThemeUtils(models.AbstractModel):
                 self.disable_view(view)
         elif xml_id in self._footer_templates:
             for view in self._footer_templates:
+                self.disable_view(view)
+        elif xml_id in self._header_width_templates:
+            for view in self._header_width_templates:
                 self.disable_view(view)
         self._toggle_view(xml_id, True)
 
