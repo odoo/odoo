@@ -61,7 +61,7 @@
                 <div t-if="this.state.showTraceback">
                     <button
                         class="btn bg-100 position-absolute top-0 end-0 p-1"
-                        t-ref="copyButton"
+                        t-custom-ref="copyButton"
                         t-on-click="this.onClickClipboard"
                     >
                         <span class="fa fa-clipboard"/>

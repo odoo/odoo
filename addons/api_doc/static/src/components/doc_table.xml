@@ -89,7 +89,7 @@
     <div
         class="o-doc-dynamic-tooltip p-3 border overflow-auto"
         t-att-style="this.state.tooltipStyle"
-        t-ref="tooltipRef"
+        t-custom-ref="tooltipRef"
         t-on-mouseenter="() => this.keepAlive()"
         t-on-mouseleave="(ev) => this.scheduleHide(ev)"
     >
