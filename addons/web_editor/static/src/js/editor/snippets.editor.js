@@ -5147,9 +5147,13 @@ class SnippetsMenu extends Component {
                 dropZoneEls.forEach(dropZoneEl => dropZoneEl.classList.add("invisible"));
                 // Do not allow drop by click in another snippet
                 // (e.g., "table of content") unless it is a "s_popup".
-                dropZoneEls = [...dropZoneEls].filter(dropzoneEl => {
+                // If no dropzone is left after the filter, then allow the drop
+                // by click inside [data-snippet] elements
+                dropZoneEls = [...dropZoneEls];
+                const filteredDropzoneEls = dropZoneEls.filter(dropzoneEl => {
                     return !dropzoneEl.closest("[data-snippet]:not(.s_popup), #website_cookies_bar");
                 });
+                dropZoneEls = filteredDropzoneEls.length ? filteredDropzoneEls : dropZoneEls;
                 if (dropZoneEls?.length) {
                     hookEl = this._getClosestDropzone(dropZoneEls)
                         || dropZoneEls[dropZoneEls.length - 1];
