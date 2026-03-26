@@ -1822,7 +1822,7 @@ class _String(Field):
 
         # not dirty fields
         if not dirty:
-            if self.compute and self.inverse:
+            if self.compute and self.inverse and any(records._ids):
                 # invalidate the values in other languages to force their recomputation
                 lang = self._lang(records.env)
                 values = [{lang: cache_value} for _id in records._ids]
