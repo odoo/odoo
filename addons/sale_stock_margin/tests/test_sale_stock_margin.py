@@ -3,7 +3,7 @@
 import datetime
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
@@ -625,3 +625,40 @@ class TestSaleStockMargin(TestStockValuationCommon):
             # purchase_unit_from_delivery = line.move_ids(done)._get_price_unit = (2 * 32.5 + 1 * 32.5) / (2 + 1) = 32.5
             self.assertEqual(sol3.purchase_price, 32.5, "purchase_price = 2 * 32.5 + 1 * 32.5) / (2 + 1) = 32.5")
             self.assertEqual(sol3.margin, -32.5, "margin = SOL qty * sale price - purchase_price * qty_delivered = (0 - 32.5) * 1 = -32.5")
+
+    def test_dropship_fifo_purchase_price(self):
+        """ Check that when the product is dropshipped, the purchase_price used is based on the unit
+        price of the purchase order.
+        """
+        try:
+            dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        except ValueError:
+            self.skipTest('This test requires the following module: stock_dropshipping')
+
+        self.product_fifo_auto.write({
+            'seller_ids': [Command.create({'partner_id': self.vendor.id, 'price': 20})],
+            'route_ids': [Command.link(dropship_route.id)]
+        })
+        # create and confirm SO and PO
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.product_fifo_auto.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        so.action_confirm()
+        po = self.env['purchase.order'].search([
+            ('origin', '=', so.name),
+            ('partner_id', '=', self.vendor.id),
+        ], limit=1)
+        po.button_confirm()
+
+        # untill dropship validation, purchase price of the sale order line is the product's standard price
+        self.assertEqual(self.product_fifo_auto.standard_price, 10)
+        self.assertEqual(so.order_line.purchase_price, 10)
+
+        # after dropship validation, purchase price of the sale order line is the PO's unit cost
+        so.picking_ids.button_validate()
+        self.assertEqual(po.order_line.price_unit, 20)
+        self.assertEqual(so.order_line.purchase_price, 20)
