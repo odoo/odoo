@@ -7,10 +7,12 @@ from unittest.mock import patch
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
+from odoo import Command
+from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
-from odoo.addons.base.models.res_users import ResUsersPatchedInTest
+from odoo.addons.base.models.res_users import NO_GROUP_CHANGE_LOG, ResUsersPatchedInTest
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
@@ -276,3 +278,90 @@ class TestUserSettings(MailCommon):
             "no_notif",
             "channel_notifications state should be updated correctly"
         )
+
+
+@tagged('mail_tools', 'res_users')
+class TestUserGroupChangeLog(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.normal_user = mail_new_test_user(
+            cls.env,
+            login='test_internal_user',
+            name='Internal User',
+        )
+        cls.second_user = mail_new_test_user(
+            cls.env,
+            login='test_internal_user_2',
+            name='Second Internal User',
+        )
+
+    def test_add_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            users.write({'group_ids': [Command.link(group.id)]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Added groups'})
+                self.assertMessageFields(user.message_ids[0], {'body_content': group.display_name})
+
+    def test_group_add_members(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            group.write({'user_ids': [Command.link(user.id) for user in users]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Added groups'})
+                self.assertMessageFields(user.message_ids[0], {'body_content': group.display_name})
+
+    def test_group_remove_members(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        group.write({'user_ids': [Command.link(user.id) for user in users]})
+        with self.mock_mail_app():
+            group.write({'user_ids': [Command.unlink(user.id) for user in users]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Removed groups'})
+
+    def test_no_group_change_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            users.with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).write(
+                {'group_ids': [Command.link(group.id)]}
+            )
+            self.assertEqual(len(self._new_msgs), 0)
+
+    def test_no_log_existing_groups(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        users.write({'group_ids': [Command.link(group.id)]})
+        with self.mock_mail_app():
+            users.write({'group_ids': [Command.link(group.id)]})
+            self.assertEqual(len(self._new_msgs), 0)
+
+    def test_no_logs_upon_access_error(self):
+        group = self.env.ref('base.group_partner_manager')
+        portal_user = self._create_portal_user()
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            with self.assertRaises(AccessError):
+                users.with_user(portal_user).write(
+                    {'group_ids': [Command.link(group.id)]}
+                )
+        self.assertEqual(len(self._new_msgs), 0)
+
+    def test_remove_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        users.write({'group_ids': [Command.link(group.id)]})
+        with self.mock_mail_app():
+            users.write({'group_ids': [Command.unlink(group.id)]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Removed groups'})
+                self.assertMessageFields(user.message_ids[0], {'body_content': group.display_name})
