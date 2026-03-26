@@ -462,9 +462,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            product_query = request.env['product.template']._search(
+                self._get_shop_domain(search_term, category, attribute_value_dict)
+            )
             attributes_grouped = request.env['product.template.attribute.line']._read_group(
                 domain=[
-                    ('product_tmpl_id', 'in', search_product.ids),
+                    ('product_tmpl_id', 'in', product_query),
                     ('attribute_id.visibility', '=', 'visible'),
                 ],
                 groupby=['attribute_id'],
