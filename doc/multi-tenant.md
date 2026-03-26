@@ -23,6 +23,8 @@ Built-in tenant defaults:
 - `TENANT_DEFAULT_CURRENCY=BRL`
 - `TENANT_COMPANY_NAME=<tenant>` when omitted
 - `TENANT_ADMIN_LOGIN`, `TENANT_ADMIN_NAME`, and `TENANT_ADMIN_PASSWORD` are optional and only applied when provided
+- `TENANT_OWNER_LOGIN`, `TENANT_OWNER_NAME`, and `TENANT_OWNER_PASSWORD` optionally create/update your operator account for that tenant
+- `TENANT_CLIENT_LOGIN`, `TENANT_CLIENT_NAME`, and `TENANT_CLIENT_PASSWORD` optionally create the initial client-facing portal account
 
 Operational flow for a new tenant:
 
@@ -74,6 +76,8 @@ make tenant-smoke DB=semsa
 make tenant-bootstrap-defaults DB=semsa TENANT_COMPANY_NAME='SEMSA'
 make tenant-user-list DB=semsa
 make tenant-user-password DB=semsa LOGIN=admin PASSWORD='new-secret'
+make tenant-user-create-operator DB=semsa LOGIN=me@example.com NAME='Operator' PASSWORD='secret'
+make tenant-user-create-client DB=semsa LOGIN=cliente@example.com NAME='Client User' PASSWORD='secret'
 ```
 
 Expected behavior:
@@ -95,6 +99,8 @@ Post-provision tenant defaults:
 - company name and company partner are aligned to the tenant identity
 - `web.base.url` and `web.base.url.freeze` are enforced again
 - admin login/name/password can be set if passed in the environment
+- owner login/name/password create your operator account with internal + settings access when passed in the environment
+- client login/name/password create a portal-only user when passed in the environment
 - language and currency are normalized for the tenant
 
 Portal behavior:
@@ -102,3 +108,10 @@ Portal behavior:
 - internal users still land in `/odoo` after login
 - portal users land in the frontend/portal flow once `portal` + `website` are installed
 - if a tenant must behave like a client portal instead of a backoffice, create or downgrade the customer-facing accounts as portal users rather than internal users
+
+Recommended account split per tenant:
+
+- keep `admin` as the technical emergency account
+- create one operator account for yourself with `tenant-user-create-operator`
+- create client-facing accounts with `tenant-user-create-client`
+- do not let client-facing users stay as internal/system users unless they really need the backoffice

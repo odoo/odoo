@@ -60,6 +60,12 @@ TENANT_COMPANY_NAME ?=
 TENANT_ADMIN_LOGIN ?=
 TENANT_ADMIN_PASSWORD ?=
 TENANT_ADMIN_NAME ?=
+TENANT_OWNER_LOGIN ?=
+TENANT_OWNER_PASSWORD ?=
+TENANT_OWNER_NAME ?=
+TENANT_CLIENT_LOGIN ?=
+TENANT_CLIENT_PASSWORD ?=
+TENANT_CLIENT_NAME ?=
 DEV_HOST_CONFIG ?= deploy/odoo/kodoo.dev-host.local.conf
 DEV_HOST_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.dev-host.conf.example
 DEV_HOST_DB ?= kodoo
@@ -111,7 +117,7 @@ CONFIG_FIND_CMD = find . \
 	odoo-lnav build build-base up up-base up-cpu up-gpu down down-base logs logs-base status status-base \
 	probe certbot certbot-renew \
 	db-init db-check db-list db-manager prod-db-create prod-db-init prod-db-ensure \
-	tenant-provision tenant-install-modules tenant-check tenant-smoke tenant-bootstrap-defaults tenant-adjust tenant-reset tenant-user-list tenant-user-password tenant-user-role tenant-user-create-portal root-smoke \
+	tenant-provision tenant-install-modules tenant-check tenant-smoke tenant-bootstrap-defaults tenant-adjust tenant-reset tenant-user-list tenant-user-password tenant-user-role tenant-user-create-portal tenant-user-create-client tenant-user-create-operator root-smoke \
 	stop ports-clean \
 	refresh-safe safe-refresh \
 	env-init config-list config-view config-view-all config-edit config-create prod-config \
@@ -231,13 +237,15 @@ help:
 	@echo "  make tenant-install-modules DB=name TENANT_BOOTSTRAP_MODULES=mod1,mod2 # Install/upgrade tenant module set"
 	@echo "  make tenant-check DB=name # Validate DB, frozen base URL, and local Host routing"
 	@echo "  make tenant-smoke DB=name [TENANT_SMOKE_PUBLIC=0] # Probe tenant login locally and, optionally, via public URL"
-	@echo "  make tenant-bootstrap-defaults DB=name [TENANT_COMPANY_NAME=...] [TENANT_ADMIN_LOGIN=...] # Apply company/admin/lang/currency defaults"
+	@echo "  make tenant-bootstrap-defaults DB=name [TENANT_COMPANY_NAME=...] [TENANT_OWNER_LOGIN=...] # Apply company/admin/lang/currency defaults"
 	@echo "  make tenant-adjust DB=name # Reapply base URL/freeze and rerun tenant validation"
 	@echo "  make tenant-reset DB=name TENANT_PROFILE=... # Drop and recreate a tenant database"
 	@echo "  make tenant-user-list DB=name # List interactive users from a tenant database"
 	@echo "  make tenant-user-password DB=name LOGIN=user PASSWORD=secret # Reset one tenant user password"
-	@echo "  make tenant-user-role DB=name LOGIN=user ROLE=portal|internal # Change one tenant user role"
+	@echo "  make tenant-user-role DB=name LOGIN=user ROLE=portal|internal|operator # Change one tenant user role"
+	@echo "  make tenant-user-create-operator DB=name LOGIN=me@example.com NAME='Operator' PASSWORD=secret # Create/update one tenant operator"
 	@echo "  make tenant-user-create-portal DB=name LOGIN=user@example.com NAME='Portal User' PASSWORD=secret # Create one tenant portal user"
+	@echo "  make tenant-user-create-client DB=name LOGIN=user@example.com NAME='Client User' PASSWORD=secret # Alias for tenant portal user"
 	@echo "  make root-smoke # Validate kodoo.online locally and publicly"
 	@echo ""
 	@echo "Containers:"
@@ -1169,7 +1177,7 @@ tenant-provision:
 	  echo "Bootstrap modules ($$modules) installed on '$(DB)'."; \
 	fi
 	@$(MAKE) odoo-fix-url DB="$(DB)"
-	@$(MAKE) tenant-bootstrap-defaults DB="$(DB)" TENANT_COMPANY_NAME="$(TENANT_COMPANY_NAME)" TENANT_ADMIN_LOGIN="$(TENANT_ADMIN_LOGIN)" TENANT_ADMIN_PASSWORD="$(TENANT_ADMIN_PASSWORD)" TENANT_ADMIN_NAME="$(TENANT_ADMIN_NAME)"
+	@$(MAKE) tenant-bootstrap-defaults DB="$(DB)" TENANT_COMPANY_NAME="$(TENANT_COMPANY_NAME)" TENANT_ADMIN_LOGIN="$(TENANT_ADMIN_LOGIN)" TENANT_ADMIN_PASSWORD="$(TENANT_ADMIN_PASSWORD)" TENANT_ADMIN_NAME="$(TENANT_ADMIN_NAME)" TENANT_OWNER_LOGIN="$(TENANT_OWNER_LOGIN)" TENANT_OWNER_PASSWORD="$(TENANT_OWNER_PASSWORD)" TENANT_OWNER_NAME="$(TENANT_OWNER_NAME)" TENANT_CLIENT_LOGIN="$(TENANT_CLIENT_LOGIN)" TENANT_CLIENT_PASSWORD="$(TENANT_CLIENT_PASSWORD)" TENANT_CLIENT_NAME="$(TENANT_CLIENT_NAME)"
 	@$(MAKE) tenant-check DB="$(DB)"
 	@$(MAKE) tenant-smoke DB="$(DB)" TENANT_SMOKE_PUBLIC=0
 	@echo "Tenant ready: https://$(DB).$(DOMAIN)"
@@ -1232,14 +1240,14 @@ tenant-bootstrap-defaults:
 	company_name="$(TENANT_COMPANY_NAME)"; \
 	if [ -z "$$company_name" ]; then company_name="$(DB)"; fi; \
 	echo "Applying tenant defaults to $(DB) ($$company_name, $$base_url)..."; \
-	bash ./scripts/tenant-bootstrap-defaults.sh "$(DB)" "$$base_url" "$$company_name" "$(TENANT_ADMIN_LOGIN)" "$(TENANT_ADMIN_PASSWORD)" "$(TENANT_ADMIN_NAME)" "$(TENANT_DEFAULT_LANG)" "$(TENANT_DEFAULT_CURRENCY)"
+	bash ./scripts/tenant-bootstrap-defaults.sh "$(DB)" "$$base_url" "$$company_name" "$(TENANT_ADMIN_LOGIN)" "$(TENANT_ADMIN_PASSWORD)" "$(TENANT_ADMIN_NAME)" "$(TENANT_DEFAULT_LANG)" "$(TENANT_DEFAULT_CURRENCY)" "$(TENANT_OWNER_LOGIN)" "$(TENANT_OWNER_PASSWORD)" "$(TENANT_OWNER_NAME)" "$(TENANT_CLIENT_LOGIN)" "$(TENANT_CLIENT_PASSWORD)" "$(TENANT_CLIENT_NAME)"
 
 tenant-adjust:
 	@$(MAKE) guard-prod-host
 	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
 	@printf '%s\n' "$(DB)" | grep -Eq '^[a-z0-9][a-z0-9-]*$$' || (echo "Invalid DB name '$(DB)'."; exit 1)
 	@$(MAKE) odoo-fix-url DB="$(DB)"
-	@$(MAKE) tenant-bootstrap-defaults DB="$(DB)" TENANT_COMPANY_NAME="$(TENANT_COMPANY_NAME)" TENANT_ADMIN_LOGIN="$(TENANT_ADMIN_LOGIN)" TENANT_ADMIN_PASSWORD="$(TENANT_ADMIN_PASSWORD)" TENANT_ADMIN_NAME="$(TENANT_ADMIN_NAME)"
+	@$(MAKE) tenant-bootstrap-defaults DB="$(DB)" TENANT_COMPANY_NAME="$(TENANT_COMPANY_NAME)" TENANT_ADMIN_LOGIN="$(TENANT_ADMIN_LOGIN)" TENANT_ADMIN_PASSWORD="$(TENANT_ADMIN_PASSWORD)" TENANT_ADMIN_NAME="$(TENANT_ADMIN_NAME)" TENANT_OWNER_LOGIN="$(TENANT_OWNER_LOGIN)" TENANT_OWNER_PASSWORD="$(TENANT_OWNER_PASSWORD)" TENANT_OWNER_NAME="$(TENANT_OWNER_NAME)" TENANT_CLIENT_LOGIN="$(TENANT_CLIENT_LOGIN)" TENANT_CLIENT_PASSWORD="$(TENANT_CLIENT_PASSWORD)" TENANT_CLIENT_NAME="$(TENANT_CLIENT_NAME)"
 	@$(MAKE) tenant-check DB="$(DB)"
 	@$(MAKE) tenant-smoke DB="$(DB)" TENANT_SMOKE_PUBLIC=0
 
@@ -1268,8 +1276,17 @@ tenant-user-role:
 	@$(MAKE) guard-prod-host
 	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
 	@test -n "$(LOGIN)" || (echo "Set LOGIN=<user login or email>."; exit 1)
-	@test -n "$(ROLE)" || (echo "Set ROLE=portal|internal."; exit 1)
+	@test -n "$(ROLE)" || (echo "Set ROLE=portal|internal|operator."; exit 1)
 	@bash ./scripts/tenant-user-role.sh "$(DB)" "$(LOGIN)" "$(ROLE)"
+	@$(MAKE) tenant-user-list DB="$(DB)"
+
+tenant-user-create-operator:
+	@$(MAKE) guard-prod-host
+	@test -n "$(DB)" || (echo "Set DB=<tenant>."; exit 1)
+	@test -n "$(LOGIN)" || (echo "Set LOGIN=<operator email/login>."; exit 1)
+	@test -n "$(NAME)" || (echo "Set NAME=<operator display name>."; exit 1)
+	@test -n "$(PASSWORD)" || (echo "Set PASSWORD=<operator password>."; exit 1)
+	@bash ./scripts/tenant-user-create-operator.sh "$(DB)" "$(LOGIN)" "$(NAME)" "$(PASSWORD)"
 	@$(MAKE) tenant-user-list DB="$(DB)"
 
 tenant-user-create-portal:
@@ -1280,6 +1297,9 @@ tenant-user-create-portal:
 	@test -n "$(PASSWORD)" || (echo "Set PASSWORD=<portal password>."; exit 1)
 	@bash ./scripts/tenant-user-create-portal.sh "$(DB)" "$(LOGIN)" "$(NAME)" "$(PASSWORD)"
 	@$(MAKE) tenant-user-list DB="$(DB)"
+
+tenant-user-create-client:
+	@$(MAKE) tenant-user-create-portal DB="$(DB)" LOGIN="$(LOGIN)" NAME="$(NAME)" PASSWORD="$(PASSWORD)"
 
 root-smoke:
 	@$(MAKE) guard-prod-host

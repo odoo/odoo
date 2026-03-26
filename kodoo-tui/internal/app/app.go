@@ -1067,7 +1067,14 @@ func summarizeRunSuccess(request *event.RequestMakeTargetMsg, lines []string) st
 		if line := findLineContains(lines, "user role updated for "); line != "" {
 			return line
 		}
-	case "tenant-user-create-portal":
+	case "tenant-user-create-operator":
+		if line := findLineContains(lines, "operator user created for "); line != "" {
+			return line
+		}
+		if line := findLineContains(lines, "operator user updated for "); line != "" {
+			return line
+		}
+	case "tenant-user-create-client", "tenant-user-create-portal":
 		if line := findLineContains(lines, "portal user created for "); line != "" {
 			return line
 		}

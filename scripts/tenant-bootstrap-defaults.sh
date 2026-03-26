@@ -10,6 +10,12 @@ admin_password="${5:-}"
 admin_name="${6:-}"
 lang_code="${7:-pt_BR}"
 currency_code="${8:-BRL}"
+owner_login="${9:-}"
+owner_password="${10:-}"
+owner_name="${11:-}"
+client_login="${12:-}"
+client_password="${13:-}"
+client_name="${14:-}"
 
 if [[ -z "$db" ]]; then
   echo "Set DB=<tenant>."
@@ -33,6 +39,12 @@ docker exec -i \
   -e KODOO_ADMIN_NAME="$admin_name" \
   -e KODOO_LANG_CODE="$lang_code" \
   -e KODOO_CURRENCY_CODE="$currency_code" \
+  -e KODOO_OWNER_LOGIN="$owner_login" \
+  -e KODOO_OWNER_PASSWORD="$owner_password" \
+  -e KODOO_OWNER_NAME="$owner_name" \
+  -e KODOO_CLIENT_LOGIN="$client_login" \
+  -e KODOO_CLIENT_PASSWORD="$client_password" \
+  -e KODOO_CLIENT_NAME="$client_name" \
   kodoo-odoo \
   odoo shell --no-http -c /etc/odoo/odoo.conf -d "$db" <<'PY'
 import os
@@ -44,6 +56,12 @@ admin_password = os.environ["KODOO_ADMIN_PASSWORD"].strip()
 admin_name = os.environ["KODOO_ADMIN_NAME"].strip()
 lang_code = os.environ["KODOO_LANG_CODE"].strip() or "pt_BR"
 currency_code = os.environ["KODOO_CURRENCY_CODE"].strip() or "BRL"
+owner_login = os.environ["KODOO_OWNER_LOGIN"].strip()
+owner_password = os.environ["KODOO_OWNER_PASSWORD"].strip()
+owner_name = os.environ["KODOO_OWNER_NAME"].strip()
+client_login = os.environ["KODOO_CLIENT_LOGIN"].strip()
+client_password = os.environ["KODOO_CLIENT_PASSWORD"].strip()
+client_name = os.environ["KODOO_CLIENT_NAME"].strip()
 
 params = env["ir.config_parameter"].sudo()
 params.set_param("web.base.url", base_url)
@@ -78,6 +96,71 @@ if admin_updates:
 if admin_password:
     admin.write({"password": admin_password})
 
+user_model = env["res.users"].sudo()
+partner_model = env["res.partner"].sudo()
+internal_group = env.ref("base.group_user").sudo()
+system_group = env.ref("base.group_system").sudo()
+portal_group = env.ref("base.group_portal").sudo()
+
+def upsert_user(login, display_name, password, group_ids, share):
+    users = user_model.search(
+        ["|", ("login", "=", login), ("partner_id.email", "=", login)],
+        limit=2,
+    )
+    if len(users) > 1:
+        raise SystemExit(f"multiple users matched login/email: {login}")
+    if users:
+        user = users[0]
+        partner = user.partner_id
+        partner.write({"name": display_name, "email": login})
+        user.write({
+            "login": login,
+            "password": password,
+            "group_ids": [(6, 0, group_ids)],
+            "share": share,
+            "active": True,
+        })
+        return user, "updated"
+    partner = partner_model.search([("email", "=", login)], limit=1)
+    if not partner:
+        partner = partner_model.create({"name": display_name, "email": login})
+    else:
+        partner.write({"name": display_name, "email": login})
+    user = user_model.create({
+        "name": display_name,
+        "login": login,
+        "password": password,
+        "partner_id": partner.id,
+        "group_ids": [(6, 0, group_ids)],
+        "share": share,
+        "active": True,
+    })
+    return user, "created"
+
+owner_user = None
+owner_action = ""
+if owner_login and owner_password:
+    owner_display_name = owner_name or "Tenant Operator"
+    owner_user, owner_action = upsert_user(
+        owner_login,
+        owner_display_name,
+        owner_password,
+        [internal_group.id, system_group.id],
+        False,
+    )
+
+client_user = None
+client_action = ""
+if client_login and client_password:
+    client_display_name = client_name or "Client User"
+    client_user, client_action = upsert_user(
+        client_login,
+        client_display_name,
+        client_password,
+        [portal_group.id],
+        True,
+    )
+
 if "website" in env:
     websites = env["website"].sudo().search([])
     for website in websites:
@@ -96,4 +179,8 @@ print(f"company={company.name}")
 print(f"lang={lang.code if lang else 'n/a'}")
 print(f"currency={currency.name if currency else 'n/a'}")
 print(f"admin_login={admin.login}")
+if owner_user:
+    print(f"owner_{owner_action}={owner_user.login}")
+if client_user:
+    print(f"client_{client_action}={client_user.login}")
 PY

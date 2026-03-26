@@ -17,9 +17,9 @@ if [[ -z "$login" ]]; then
 fi
 
 case "$role" in
-  portal|internal) ;;
+  portal|internal|operator) ;;
   *)
-    echo "Set ROLE=portal|internal."
+    echo "Set ROLE=portal|internal|operator."
     exit 1
     ;;
 esac
@@ -49,8 +49,11 @@ if user.login == "__system__":
 
 portal_group = env.ref("base.group_portal").sudo()
 internal_group = env.ref("base.group_user").sudo()
+system_group = env.ref("base.group_system").sudo()
 if role == "portal":
     user.write({"group_ids": [(6, 0, [portal_group.id])], "share": True, "active": True})
+elif role == "operator":
+    user.write({"group_ids": [(6, 0, [internal_group.id, system_group.id])], "share": False, "active": True})
 else:
     user.write({"group_ids": [(6, 0, [internal_group.id])], "share": False, "active": True})
 

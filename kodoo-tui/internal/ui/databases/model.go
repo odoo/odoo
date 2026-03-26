@@ -40,7 +40,7 @@ func (m Model) HelpLines() []string {
 	return []string{
 		"↑/↓ move between databases",
 		"enter use selected database in the best matching mode",
-		"m manager, o bootstrap defaults, a adjust, x reset, u users, p reset password, g portal, i internal, c create portal, v validate via db-list",
+		"m manager, o bootstrap defaults, a adjust, x reset, u users, p reset password, y operator, g portal, i internal, c create client, v validate via db-list",
 	}
 }
 
@@ -174,6 +174,22 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 					Vars: map[string]string{"DB": current.Name, "ROLE": "portal"},
 				})
 			}
+		case "y":
+			if current, ok := m.current(); ok {
+				return m, requestCmd(event.RequestMakeTargetMsg{
+					Target:      "tenant-user-create-operator",
+					Description: "Create or update your operator account inside the selected database.",
+					RelevantKeys: []string{
+						"PROD_DB_NAME",
+					},
+					PromptFields: []event.PromptField{
+						{Key: "LOGIN", Label: "Operator login", Placeholder: "me@example.com"},
+						{Key: "NAME", Label: "Display name", Placeholder: "Tenant Operator"},
+						{Key: "PASSWORD", Label: "Password", Placeholder: "password", Secret: true},
+					},
+					Vars: map[string]string{"DB": current.Name},
+				})
+			}
 		case "i":
 			if current, ok := m.current(); ok {
 				return m, requestCmd(event.RequestMakeTargetMsg{
@@ -191,14 +207,14 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		case "c":
 			if current, ok := m.current(); ok {
 				return m, requestCmd(event.RequestMakeTargetMsg{
-					Target:      "tenant-user-create-portal",
-					Description: "Create a fresh portal user inside the selected database.",
+					Target:      "tenant-user-create-client",
+					Description: "Create a fresh client user with portal access inside the selected database.",
 					RelevantKeys: []string{
 						"PROD_DB_NAME",
 					},
 					PromptFields: []event.PromptField{
-						{Key: "LOGIN", Label: "Portal login", Placeholder: "user@example.com"},
-						{Key: "NAME", Label: "Display name", Placeholder: "Portal User"},
+						{Key: "LOGIN", Label: "Client login", Placeholder: "user@example.com"},
+						{Key: "NAME", Label: "Display name", Placeholder: "Client User"},
 						{Key: "PASSWORD", Label: "Initial password", Placeholder: "password", Secret: true},
 					},
 					Vars: map[string]string{"DB": current.Name},
@@ -306,7 +322,8 @@ func (m Model) detailView() string {
 		lines = append(lines, "p reset one user password")
 		lines = append(lines, "g grant portal")
 		lines = append(lines, "i grant internal")
-		lines = append(lines, "c create portal user")
+		lines = append(lines, "y create operator user")
+		lines = append(lines, "c create client portal user")
 	}
 	if item.Alert != "" {
 		lines = append(lines, "", warnStyle.Render("alert: "+item.Alert))
