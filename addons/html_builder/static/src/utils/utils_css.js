@@ -1,7 +1,7 @@
 import { EDITOR_COLOR_CSS_VARIABLES, isColorCombinationName } from "@html_editor/utils/color";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
-import { normalizeCSSColor, isCSSColor, isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { convertNumericToUnit, getCSSVariableValue } from "@html_editor/utils/formatting";
 
 /**
@@ -467,7 +467,7 @@ export function getAllUsedColors(el) {
     const usedCustomColors = new Set();
     const collectColor = (colorValue) => {
         if (isCSSColor(colorValue)) {
-            usedCustomColors.add(rgbaToHex(colorValue));
+            usedCustomColors.add(normalizeCSSColor(colorValue));
         }
     };
     for (const coloredEl of selectElements(el, '[style*="color"]')) {
