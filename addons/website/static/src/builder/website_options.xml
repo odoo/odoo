@@ -10,8 +10,8 @@
 
     <!-- Hook order guideline (option placement):
         1) top_options_hook
-        2) background_options
-        3) Layout / Vertical Alignment (when relevant)
+        2) Layout / Vertical Alignment (when relevant)
+        3) background_options
         4) key_snippet_specific_options (for options above snippet_specific_options)
         5) snippet_specific_options (default area, most options go here)
         6) trailing bottom options (Animation / Visibility)
@@ -24,6 +24,31 @@
 
         <!-- Hook for high-priority options that must appear at the top of the builder panel. -->
         <t id="top_options_hook"/>
+
+        <text_alignment_option
+            template="html_builder.TextAlignmentOption"
+            selector=".s_share, .s_text_highlight, .s_social_media"/>
+        <layout_option
+            selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
+            exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <layout_grid_option
+            selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories"
+            applyTo=":scope > *:has(> .row)"/>
+        <layout_column_option
+            selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <vertical_alignment_option
+            selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid"
+            applyTo=".row"/>
+        <vertical_alignment_option
+            selector=".s_pricelist_cafe"
+            applyTo=".row:has(.s_pricelist_cafe_col)"
+            props='{ "level": 0 }'/>
+        <vertical_alignment_option
+            selector=".s_attributes_vertical_col"
+            applyTo=":scope > .row"
+            props='{ "level": 0, "justify": false }'/>
 
         <t id="background_options">
             <website_background_option
@@ -53,31 +78,6 @@
                 t-att-selector="this.baseOnlyBgImageSelector"
                 props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
         </t>
-
-        <text_alignment_option
-            template="html_builder.TextAlignmentOption"
-            selector=".s_share, .s_text_highlight, .s_social_media"/>
-        <layout_option
-            selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
-            exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro"
-            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
-        <layout_grid_option
-            selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories"
-            applyTo=":scope > *:has(> .row)"/>
-        <layout_column_option
-            selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
-            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
-        <vertical_alignment_option
-            selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid"
-            applyTo=".row"/>
-        <vertical_alignment_option
-            selector=".s_pricelist_cafe"
-            applyTo=".row:has(.s_pricelist_cafe_col)"
-            props='{ "level": 0 }'/>
-        <vertical_alignment_option
-            selector=".s_attributes_vertical_col"
-            applyTo=":scope > .row"
-            props='{ "level": 0, "justify": false }'/>
 
         <t id="image_options">
             <replace_media_option
