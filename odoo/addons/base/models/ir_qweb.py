@@ -621,13 +621,22 @@ class QwebContent:
     params__: QwebCallParameters  # not available for the python expression inside the xml
 
     def __init__(self, irQweb: IrQweb, params: QwebCallParameters, process):
-        self.irQweb = irQweb
+        self.__irQweb = irQweb
         self.html = None
         self.params__ = params
         self.process__ = process
 
+    @property
+    def irQweb(self):
+        irQweb = self.__irQweb
+        if threading.current_thread().dbname != irQweb.env.cr.dbname:
+            return None
+        return irQweb
+
     def __str__(self):
         if self.html is None:
+            if self.irQweb is None:
+                return ''
             params = self.params__
             process = self.process__
             self.html = ''.join(self.irQweb._render_iterall(
