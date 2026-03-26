@@ -335,6 +335,7 @@ patch(PosStore.prototype, {
                     if (preparationLine) {
                         const preparationLineCopy = { ...preparationLine };
                         preparationLineCopy.order_id = destinationOrder.id;
+                        preparationLineCopy.uuid = newOrderLine.uuid;
                         destinationOrder.last_order_preparation_change.lines[
                             newOrderLine.preparationKey
                         ] = preparationLineCopy;

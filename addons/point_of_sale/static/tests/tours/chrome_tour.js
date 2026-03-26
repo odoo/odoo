@@ -241,6 +241,11 @@ registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
                     customerNote: "Test customer note",
                 }),
             ]),
+            {
+                content: "Wait for the debouncedSync to be complete",
+                trigger: "body",
+                run: async () => await new Promise((resolve) => setTimeout(resolve, 250)),
+            },
             Utils.refresh(),
             inLeftSide([
                 { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },

@@ -284,7 +284,14 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'test_fiscal_position_between_frontend_and_backend')
 
+        draft_orders = self.pos_config.current_session_id.order_ids.filtered(lambda o: o.state == 'draft')
+        draft_orders.action_pos_order_cancel()
+        self.pos_config.current_session_id.action_pos_session_validate()
+
         self.tax_21.price_include_override = 'tax_excluded'
         self.tax_6.price_include_override = 'tax_excluded'
 
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'test_fiscal_position_between_frontend_and_backend')
