@@ -1,4 +1,5 @@
 .o-mail-ActionList {
+    --o-mail-ActionList-icon-opacity: 65%;
 
     .o-mail-ActionList-group:has(.rounded-circle.o-hasBtnBg) {
         gap: map-get($spacers, 1);
@@ -49,7 +50,7 @@
         }
 
         &:not(.o-inline)>i {
-            opacity: 65%;
+            opacity: var(--o-mail-ActionList-icon-opacity);
 
             .o_bottom_sheet_sheet:has(&) {
                 opacity: 100%;
@@ -156,4 +157,9 @@
         }
     }
 
+    // Neutralize colorful SVG app icons in dropdown menus to match the monochrome style of other icons.
+    button.o-dropdown-item .o_ui_app_icon {
+        --oi-color: currentColor !important;
+        opacity: var(--o-mail-ActionList-icon-opacity) !important;
+    }
 }

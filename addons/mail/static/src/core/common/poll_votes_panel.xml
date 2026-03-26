@@ -14,9 +14,12 @@
             <Tabs initialTabId="this.props.poll.option_ids[0]?.id" direction="this.store.useMobileView ? 'h' : 'v'" ref="this.tabsRef">
                 <t t-set-slot="headers">
                     <TabHeader t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" id="option.id">
-                        <div class="p-2 d-flex justify-content-between w-100">
-                            <span class="me-2" t-out="option.option_label"/>
-                            <span t-out="option.number_of_votes"/>
+                        <div class="d-flex align-items-center gap-1 w-100 min-w-0 px-2 py-1">
+                            <span t-if="option.option_emoji" class="fs-2 lh-1 me-1" t-out="option.option_emoji"/>
+                            <div class="d-flex align-items-center text-truncate">
+                                <span class="text-truncate" t-out="option.option_label"/>
+                                <span class="ms-1 flex-shrink-0">(<t t-out="option.number_of_votes"/>)</span>
+                            </div>
                         </div>
                     </TabHeader>
                 </t>

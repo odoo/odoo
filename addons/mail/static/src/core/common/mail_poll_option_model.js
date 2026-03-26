@@ -19,6 +19,8 @@ export class MailPollOptionModel extends Record {
     /** @type {number} */
     number_of_vote;
     /** @type {string} */
+    option_emoji;
+    /** @type {string} */
     option_label;
     poll_id = fields.One("mail.poll");
     /** @type {boolean} */

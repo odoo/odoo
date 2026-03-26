@@ -26,7 +26,6 @@ export class CreatePollDialog extends Component {
             question: "",
             submitted: false,
         });
-        this.orm = useService("orm");
     }
 
     onClickAddOption() {
@@ -44,7 +43,9 @@ export class CreatePollDialog extends Component {
         }
         await rpc("/mail/poll/create", {
             allow_multiple_options: this.state.allowMultipleOptions,
-            option_labels: this.state.options.map(({ label }) => label).filter(Boolean),
+            options: this.state.options
+                .map(({ emoji, label }) => ({ emoji, label: label.trim() }))
+                .filter(({ label }) => label),
             duration: parseInt(this.state.duration),
             question: this.state.question,
             thread_id: this.props.thread.id,

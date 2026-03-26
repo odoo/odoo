@@ -2,9 +2,19 @@
 <templates xml:space="preserve">
     <t t-name="mail.CreatePollOptionDialog">
         <div class="o-mail-CreatePollOptionDialog d-flex gap-2 mb-3">
-            <div class=" input-group">
-                <button class="btn btn-outline-secondary" type="button" t-custom-ref="picker"><i class="fa fa-lg fa-smile-o"/></button>
-                <input type="text" t-model.proxy="this.props.model.label" class="form-control rounded" placeholder="Type your option" t-custom-ref="root"/>
+            <div class="input-group">
+                <Dropdown t-if="this.props.model.emoji" menuClass="'bg-body border border-secondary rounded-3 py-1 shadow-sm'">
+                    <button class="o-mail-CreatePollOptionDialog-emoji btn btn-outline-secondary d-flex align-items-center justify-content-center opacity-trigger-hover" type="button" t-custom-ref="picker" t-on-click.capture="(ev) => this.onClickEmojiDropdownButton(ev)">
+                        <span class="fs-2 lh-1 opacity-0-hover transition-fade" t-out="this.props.model.emoji"/>
+                        <div class="position-absolute opacity-0 opacity-100-hover transition-fade"><i class="fa fa-pencil"/></div>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.openEmojiPicker()" tag="'button'">Replace Emoji</DropdownItem>
+                        <DropdownItem class="'text-danger'" onSelected="() => this.onClickRemoveEmoji()" tag="'button'">Remove Emoji</DropdownItem>
+                    </t>
+                </Dropdown>
+                <button t-else="" class="o-mail-CreatePollOptionDialog-emoji btn btn-outline-secondary p-0" type="button" t-custom-ref="picker" t-on-click="() => this.toggleEmojiPicker()"><i class="fa fa-lg fa-smile-o"/></button>
+                <input type="text" t-model.proxy="this.props.model.label" class="form-control rounded o-py-1_5" placeholder="Type your option" t-custom-ref="root"/>
             </div>
             <button t-if="this.props.deletable" class="btn btn-primary" title="Delete option" t-on-click="this.props.onClickRemove"><i class="fa fa-trash"/></button>
         </div>
