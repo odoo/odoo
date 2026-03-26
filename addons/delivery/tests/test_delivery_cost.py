@@ -633,3 +633,49 @@ class TestDeliveryCost(DeliveryCommon):
         delivery_sol = so.order_line[-1]
         self.assertEqual(delivery_sol.product_id, delivery.product_id)
         self.assertEqual(delivery_sol.price_subtotal, 12.5)
+
+    def test_base_on_rule_cost_for_combo_product(self):
+        """
+        For based on rules delivery methods that use the quantity to compute the cost,
+        check that the cost is computed correctly when there is a combo product.
+        """
+        delivery = self.env["delivery.carrier"].create({
+            "name": "Delivery Charges",
+            "delivery_type": "base_on_rule",
+            "product_id": self.product_delivery_normal.id,
+            "price_rule_ids": [
+                Command.create({
+                    "variable": "quantity",
+                    "operator": ">=",
+                    "max_value": 0,
+                    "list_base_price": 0,
+                    "list_price": 5,
+                    "variable_factor": "quantity",
+                })
+            ],
+        })
+
+        combo = self.env["product.combo"].create({
+            "name": "Desks Combo",
+            "combo_item_ids": [Command.create({"product_id": self.product.id})],
+        })
+
+        product_combo = self._create_product(type="combo", combo_ids=combo.ids)
+
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner_4.id,
+            "partner_invoice_id": self.partner_4.id,
+            "partner_shipping_id": self.partner_4.id,
+            "order_line": [
+                Command.create({
+                    "product_id": product_combo.id,
+                    "product_uom_qty": 5,
+                }),
+                Command.create({
+                    "product_id": self.product.id,
+                    "product_uom_qty": 5,
+                })
+            ],
+        })
+
+        self.assertEqual(delivery._get_price_available(so), 25)
