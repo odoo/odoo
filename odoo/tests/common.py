@@ -11,7 +11,6 @@ import binascii
 import concurrent.futures
 import contextlib
 import difflib
-import functools
 import importlib
 import inspect
 import itertools
@@ -1299,6 +1298,19 @@ class ChromeBrowser:
             'Removing chrome user profile "%s"',
             self.user_data_dir,
         )
+        self.chrome_log_level = logging.RUNBOT
+        self.cleanup.callback(
+            lambda: save_test_file(
+                self.test_case._testMethodName,
+                self.read_log(),
+                prefix='chrome_log_',
+                extension='txt',
+                document_type="Chrome Log",
+                logger=self._logger,
+                loglevel=self.chrome_log_level,
+                directory='chrome_logs',
+            )
+        )
 
         if os.name == 'posix':
             sigxcpu_handler = signal.signal(signal.SIGXCPU, self.signal_handler)
@@ -1377,8 +1389,10 @@ class ChromeBrowser:
             self._websocket_request('Browser.close')
         except ChromeBrowserException as e:
             _logger.runbot("WS error during browser shutdown: %s", e)
+            self.chrome_log_level = logging.RUNBOT
         except Exception:  # noqa: BLE001
             _logger.warning("Error during browser shutdown", exc_info=True)
+            self.chrome_log_level = logging.RUNBOT
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1513,6 +1527,7 @@ class ChromeBrowser:
             except subprocess.TimeoutExpired:
                 self._logger.warning("Killing chrome headless with pid %s: still alive", proc.pid)
                 proc.kill()
+                self.chrome_log_level = logging.RUNBOT
 
     def read_log(self) -> bytes:
         try:
@@ -1895,25 +1910,15 @@ which leads to stray network requests and inconsistencies."""
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
         err = ChromeBrowserException("failed")
-        save_log = functools.partial(
-            save_test_file,
-            self.test_case._testMethodName,
-            self.read_log(),
-            prefix='chrome_log_',
-            extension='txt',
-            document_type="Chrome Log",
-            logger=self._logger,
-            directory='chrome_logs',
-        )
         try:
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
-                save_log(loglevel=logging.INFO)
+                self.chrome_log_level = logging.INFO
                 return
         except CancelledError:
             # regular-ish shutdown
-            save_log(loglevel=logging.INFO)
+            self.chrome_log_level = logging.INFO
             return
         except ChromeBrowserException:
             self.screencaster.save()
@@ -1921,7 +1926,6 @@ which leads to stray network requests and inconsistencies."""
         except Exception as e:
             err = e
 
-        save_log()
         self.take_screenshot()
         self.screencaster.save()
 
