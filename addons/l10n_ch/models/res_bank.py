@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from itertools import chain
 from stdnum.util import clean
 
 from odoo import api, fields, models, _
@@ -13,6 +14,9 @@ from odoo.tools.misc import mod10r
 
 ISR_SUBSCRIPTION_CODE = {'CHF': '01', 'EUR': '03'}
 CLEARING = "09000"
+# Swiss Payment Standards - Swiss Implementation Guidelines for the QR-bill - version 2.3
+UNICODE_ALLOWED = {chr(ucode) for ucode in
+                   chain(range(0x20, 0x80), range(0xA0, 0x180), range(0x218, 0x21C), [0x20AC])}
 _re_postal = re.compile('^[0-9]{2}-[0-9]{1,6}-[0-9]$')
 
 
@@ -237,9 +241,20 @@ class ResPartnerBank(models.Model):
             return self._pretty_postal_num(iban[-9:])
         return None
 
+    def _l10n_ch_filter_text(self, value):
+        value = ' '.join((value or '').split())
+        if value.isprintable() and value.isascii() or {*value} < UNICODE_ALLOWED:
+            return value  # shortcut for performance
+        forbidden = {*value} - UNICODE_ALLOWED
+        for char in forbidden:
+            value = value.replace(char, '')
+        return value.strip()
+
     def _l10n_ch_get_qr_vals(self, amount, currency, debtor_partner, free_communication, structured_communication):
+        filter_text = self._l10n_ch_filter_text
         comment = ""
         if free_communication:
+            free_communication = filter_text(free_communication)
             comment = (free_communication[:137] + '...') if len(free_communication) > 140 else free_communication
 
         cred_street, cred_street_number, cred_zip, cred_city = self._get_partner_address_lines(self.partner_id)
@@ -262,6 +277,8 @@ class ResPartnerBank(models.Model):
             reference = structured_communication.replace(' ', '')
 
         currency = currency or self.currency_id or self.company_id.currency_id
+        cred_name = filter_text(self.acc_holder_name or self.partner_id.name)
+        debt_name = filter_text(debtor_partner.commercial_partner_id.name)
 
         return [
             'SPC',                                                # QR Type
@@ -269,7 +286,7 @@ class ResPartnerBank(models.Model):
             '1',                                                  # Coding Type
             acc_number,                                           # IBAN / QR-IBAN
             'S',                                                  # Creditor Address Type
-            (self.acc_holder_name or self.partner_id.name)[:70],  # Creditor Name
+            cred_name[:70],                                       # Creditor Name
             cred_street,                                          # Creditor Street Name
             cred_street_number,                                   # Creditor Building Number
             cred_zip,                                             # Creditor Postal Code
@@ -285,7 +302,7 @@ class ResPartnerBank(models.Model):
             '{:.2f}'.format(amount),                              # Amount
             currency.name,                                        # Currency
             'S',                                                  # Ultimate Debtor Address Type
-            debtor_partner.commercial_partner_id.name[:70],       # Ultimate Debtor Name
+            debt_name[:70],                                       # Ultimate Debtor Name
             debt_street,                                          # Ultimate Debtor Street Name
             debt_street_number,                                   # Ultimate Debtor Building Number
             debt_zip,                                             # Ultimate Debtor Postal Code
@@ -320,23 +337,24 @@ class ResPartnerBank(models.Model):
         """ Retrieves the partner's address fields, truncated to respect the line specs.
         :returns: tuple(street, street_number, zip, city)
         """
-        street_1_split = street_split(partner.street or '')
+        filter_text = self._l10n_ch_filter_text
+        street_1_split = street_split(filter_text(partner.street))
         street_name = street_1_split['street_name']
         building_number = f"{street_1_split['street_number']} {street_1_split['street_number2']}".strip()
 
         if building_number:
-            concatenated_building_number = f"{building_number} {partner.street2 or ''}".strip()
+            concatenated_building_number = f"{building_number} {filter_text(partner.street2)}".strip()
             if len(concatenated_building_number) <= 16:
                 building_number = concatenated_building_number
         else:
             # Try to complete the address with street2
-            street_2_split = street_split(partner.street2 or '')
+            street_2_split = street_split(filter_text(partner.street2))
 
             building_number = f"{street_2_split['street_number']} {street_2_split['street_number2']}".strip()
             if building_number:
                 street_name = f"{street_name} {street_2_split['street_name']}".strip()
             else:
-                building_number = (partner.street2 or '').strip()
+                building_number = filter_text(partner.street2)
 
         return street_name[:70], building_number[:16], partner.zip[:16], partner.city[:35]
 
