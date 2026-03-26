@@ -58,9 +58,7 @@
 </t>
 
 <t t-name="website.PopupCookiesOption">
-    <t t-call="website.base_popup_options">
-        <t t-set="isCookiesOption" t-value="true"/>
-    </t>
+    <t t-call="website.base_popup_options" isCookiesOption="true"/>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">

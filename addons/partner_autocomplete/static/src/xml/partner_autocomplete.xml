@@ -34,9 +34,7 @@
                     placeholder="this.props.placeholder || ''"
                 >
                     <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
-                        <t t-call="partner_autocomplete.DropdownOption">
-                            <t t-set="option" t-value="partnerOptionScope"/>
-                        </t>
+                        <t t-call="partner_autocomplete.DropdownOption" option="partnerOptionScope"/>
                     </t>
                 </PartnerAutoComplete>
             </t>
@@ -82,9 +80,7 @@
     <t t-name="partner_autocomplete.PartnerAutoCompleteMany2one">
         <Many2One t-props="this.m2oProps">
             <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
-                <t t-call="partner_autocomplete.DropdownOption">
-                    <t t-set="option" t-value="partnerOptionScope"/>
-                </t>
+                <t t-call="partner_autocomplete.DropdownOption" option="partnerOptionScope"/>
             </t>
         </Many2One>
     </t>

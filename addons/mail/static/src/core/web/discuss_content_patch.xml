@@ -15,15 +15,9 @@
     </t>
     <t t-name="mail.DiscussContent.mobileTopbar">
         <div class="btn-group d-flex w-100 p-1">
-            <t t-call="mail.MobileMailbox" >
-                <t t-set="mailbox" t-value="this.store.inbox"/>
-            </t>
-            <t t-call="mail.MobileMailbox">
-                <t t-set="mailbox" t-value="this.store.bookmarkBox"/>
-            </t>
-            <t t-call="mail.MobileMailbox">
-                <t t-set="mailbox" t-value="this.store.history"/>
-            </t>
+            <t t-call="mail.MobileMailbox" mailbox="this.store.inbox" />
+            <t t-call="mail.MobileMailbox" mailbox="this.store.bookmarkBox"/>
+            <t t-call="mail.MobileMailbox" mailbox="this.store.history"/>
         </div>
     </t>
 </templates>

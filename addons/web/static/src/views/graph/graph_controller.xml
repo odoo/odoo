@@ -70,10 +70,9 @@
                     </t>
                     <t t-component="this.props.Renderer" model="this.model" buttonTemplate="this.props.buttonTemplate" />
                 </t>
-                <t t-elif="this.model.isReady" t-call="web.NoContentHelper">
-                    <t t-set="title">Invalid data</t>
-                    <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
-                </t>
+                <t t-elif="this.model.isReady" t-call="web.NoContentHelper"
+                    title.translate="Invalid data"
+                    description.translate="Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results"/>
             </Layout>
         </div>
     </t>
