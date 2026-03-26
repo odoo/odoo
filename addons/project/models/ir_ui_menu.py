@@ -9,8 +9,6 @@ class IrUiMenu(models.Model):
 
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()
-        if not self.env.user.has_group('project.group_project_manager'):
-            res.append(self.env.ref('project.rating_rating_menu_project').id)
         if self.env.user.has_group('project.group_project_stages'):
             res.append(self.env.ref('project.menu_projects').id)
             res.append(self.env.ref('project.menu_projects_config').id)
