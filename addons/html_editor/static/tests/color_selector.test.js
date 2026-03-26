@@ -161,6 +161,7 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
         `<p>
             <font style="color: rgb(255, 0, 0);">test</font>
             <font style="color: rgb(0, 255, 0);">[test]</font>
+            <font style="color: color(srgb 0.4 0.2 0.8 / 0.4);">color_function_test</font>
         </p>`
     );
     await expandToolbar();
@@ -170,10 +171,12 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
     await click(".btn:contains('Custom')");
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
-    expect("button[data-color='#ff0000']").toHaveCount(1);
-    expect("button[data-color='#ff0000']").toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
-    expect("button[data-color='#00ff00']").toHaveCount(1);
-    expect("button[data-color='#00ff00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
+    expect("button[data-color='#FF0000']").toHaveCount(1);
+    expect("button[data-color='#FF0000']").toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
+    expect("button[data-color='#00FF00']").toHaveCount(1);
+    expect("button[data-color='#00FF00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
+    expect("button[data-color='#6632CD66']").toHaveCount(1);
+    expect("button[data-color='#6632CD66']").toHaveStyle({ backgroundColor: "rgba(102, 50, 205, 0.4)" });
 });
 
 test("custom background colors used in the editor are shown in the colorpicker", async () => {
@@ -181,6 +184,7 @@ test("custom background colors used in the editor are shown in the colorpicker",
         `<p>
             <font style="background-color: rgb(255, 0, 0);">test</font>
             <font style="background-color: rgb(0, 255, 0);">[test]</font>
+            <font style="background-color: color(srgb 0.4 0.2 0.8 / 0.4);">color_function_test</font>
         </p>`
     );
     await expandToolbar();
@@ -190,10 +194,12 @@ test("custom background colors used in the editor are shown in the colorpicker",
     await click(".btn:contains('Custom')");
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
-    expect("button[data-color='#ff0000']").toHaveCount(1);
-    expect("button[data-color='#ff0000']").toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
-    expect("button[data-color='#00ff00']").toHaveCount(1);
-    expect("button[data-color='#00ff00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
+    expect("button[data-color='#FF0000']").toHaveCount(1);
+    expect("button[data-color='#FF0000']").toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
+    expect("button[data-color='#00FF00']").toHaveCount(1);
+    expect("button[data-color='#00FF00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
+    expect("button[data-color='#00FF00']").toHaveCount(1);
+    expect("button[data-color='#6632CD66']").toHaveStyle({ backgroundColor: "rgba(102, 50, 205, 0.4)" });
 });
 
 test("applied custom color should be shown in colorpicker after switching tab", async () => {
@@ -429,6 +435,19 @@ test("selected text color is shown in the toolbar and update when clicking", asy
     await animationFrame();
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
 });
+
+test("selected text color using color function is shown in the toolbar", async () => {
+    await setupEditor(
+        `<p>
+            <font style="color: color(srgb 0.4 0.2 0.8 / 0.4);">[color_function_test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgba(102, 50, 205, 0.4)" });
+});
+
 test("selected text color is not shown in the toolbar after removeFormat", async () => {
     const defaultTextColor = "rgb(1, 10, 100)";
     const styleContent = `* {color: ${defaultTextColor};}`;
@@ -467,6 +486,18 @@ test("selected color is shown and updates when selection change", async () => {
     });
     await waitUntil(() => queryOne("i.fa-font").style.borderBottomColor === "rgb(255, 156, 0)");
     expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 156, 0)" });
+});
+
+test("selected background color using color function is shown in the toolbar", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background: color(srgb 0.4 0.2 0.8 / 0.4);">[color_function_test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    await animationFrame();
+    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgba(102, 50, 205, 0.4)" });
 });
 
 test("selected background color is shown in the toolbar and update when clicking", async () => {
@@ -720,7 +751,7 @@ test("custom tab color navigation using keys", async () => {
     await press("Tab");
     await press("Tab");
     await press("Tab");
-    expect(`.o_font_color_selector button[data-color="#ff0000"]`).toBeFocused();
+    expect(`.o_font_color_selector button[data-color="#FF0000"]`).toBeFocused();
     await press("ArrowDown");
     expect('.o_font_color_selector button[data-color="black"]').toBeFocused();
     await press("ArrowDown");
