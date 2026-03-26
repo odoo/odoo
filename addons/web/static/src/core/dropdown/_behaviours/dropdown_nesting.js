@@ -1,8 +1,7 @@
 import { useChildSubEnv, useEnv, useLayoutEffect } from "@web/owl2/utils";
-import { EventBus, onWillDestroy } from "@odoo/owl";
+import { EventBus, onWillDestroy, useEffect } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 
 export const DROPDOWN_NESTING = Symbol("dropdownNesting");
 const BUS = new EventBus();
@@ -95,12 +94,9 @@ export function useDropdownNesting(state) {
     useChildSubEnv({ [DROPDOWN_NESTING]: current });
     useBus(BUS, "dropdown-opened", ({ detail: other }) => current.handleChange(other));
 
-    effect(
-        (state) => {
-            current.isOpen = state.isOpen;
-        },
-        [state]
-    );
+    useEffect(() => {
+        current.isOpen = state.isOpen;
+    });
 
     onWillDestroy(() => {
         current.remove();

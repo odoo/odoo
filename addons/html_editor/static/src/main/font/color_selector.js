@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { useChildEnv, useState } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
 import { Component } from "@odoo/owl";
 import {
@@ -75,7 +75,7 @@ export class ColorSelector extends Component {
                 useDefaultThemeColors: this.props.useDefaultThemeColors,
             },
             {
-                env: this.__owl__.childEnv,
+                env: useChildEnv(),
                 onClose: () => {
                     this.props.applyColorResetPreview();
                     this.props.onClose();
