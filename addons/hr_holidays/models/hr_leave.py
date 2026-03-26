@@ -151,6 +151,7 @@ class HrLeave(models.Model):
                 ('requires_allocation', '=', False),
                 ('has_valid_allocation', '=', True),
         ]""",
+        index='btree_not_null',
         tracking=True)
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
