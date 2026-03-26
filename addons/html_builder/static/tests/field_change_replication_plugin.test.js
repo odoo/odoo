@@ -116,9 +116,6 @@ describe("replicate changes", () => {
         });
         await contains(":iframe .test-1 > span").click();
         await contains("button.btn.dropdown").click();
-        // TODO: remove in 19.0 (The autofocus of select menu does not work well here, we click 2 extra times to ensure we fetch what we need)
-        await contains("button.btn.dropdown").click();
-        await contains("button.btn.dropdown").click();
         await contains("span.o-dropdown-item.dropdown-item").click();
 
         expect(":iframe .test-1 > *").toHaveAttribute("data-oe-many2one-id", 1);
