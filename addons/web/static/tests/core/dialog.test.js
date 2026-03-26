@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { destroy, expect, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, useState, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
     getService,

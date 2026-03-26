@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { RecordStore } from "./record_store";
@@ -19,7 +20,7 @@ import { Base } from "./base";
 import { processModelDefs } from "./model_defs";
 import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
-import { reactive, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {

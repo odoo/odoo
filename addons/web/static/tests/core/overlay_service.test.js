@@ -1,6 +1,7 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useSubEnv, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";

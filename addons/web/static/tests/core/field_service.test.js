@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import {
     defineModels,
@@ -11,7 +12,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**

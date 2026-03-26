@@ -1,8 +1,9 @@
+import { useState } from "@web/owl2/utils";
 import { test, expect } from "@odoo/hoot";
 import { Transition, useTransition, config as transitionConfig } from "@web/core/transition";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, xml, useState } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 test("useTransition hook (default params)", async () => {

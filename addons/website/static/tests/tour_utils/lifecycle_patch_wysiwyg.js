@@ -1,4 +1,5 @@
-import { onMounted, onWillRender } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 
 odoo.loader.bus.addEventListener("module-started", (e) => {

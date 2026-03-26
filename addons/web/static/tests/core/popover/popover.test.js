@@ -1,7 +1,8 @@
+import { useRef, useState } from "@web/owl2/utils";
 import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import { queryOne, queryRect, resize, scroll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineStyle,
@@ -483,8 +484,8 @@ test("arrow follows target and can get sucked", async () => {
     class Parent extends Component {
         static props = ["*"];
         static template = xml`
-            <div class="popover-container" t-ref="popover-container">
-                <div class="popover-target" t-ref="popover-target" t-on-click="this.openPopover"/>
+            <div class="popover-container" t-custom-ref="popover-container">
+                <div class="popover-target" t-custom-ref="popover-target" t-on-click="this.openPopover"/>
             </div>
         `;
         setup() {

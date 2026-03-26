@@ -1,4 +1,5 @@
-import { markRaw, onWillDestroy, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { markRaw, onWillDestroy } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 /**

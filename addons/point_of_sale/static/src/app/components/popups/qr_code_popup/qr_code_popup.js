@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class QRPopup extends Component {
     static template = "point_of_sale.QRPopup";

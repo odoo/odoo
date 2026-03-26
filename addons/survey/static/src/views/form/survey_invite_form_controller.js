@@ -1,6 +1,7 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
-import { EventBus, useSubEnv } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 export class SurveyInviteController extends formView.Controller {
     static props = {

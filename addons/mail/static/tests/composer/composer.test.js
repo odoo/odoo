@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import {
     insertText as htmlInsertText,
     pasteText,
@@ -41,7 +42,6 @@ import { Composer } from "@mail/core/common/composer";
 import { edit, press, queryFirst } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
-import { useSubEnv } from "@odoo/owl";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1826,7 +1826,9 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
     await contains(`.o-mail-Composer-html.odoo-editor-editable:text('Hello General')`);
     await contains(editor.editable.querySelector("i.fa-hashtag"));
     await htmlInsertText(editor, "nice to meet you!");
-    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello General nice to meet you!')");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('Hello General nice to meet you!')"
+    );
     await focus(editor.editable);
     await press("Control+a");
     await press("Backspace");
