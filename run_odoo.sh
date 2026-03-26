@@ -11,9 +11,9 @@ fi
 
 source .venv/bin/activate
 
-DB_NAME="${1:-mydb_v18}"
+DB_NAME="${1:-pruebas}"
 if [[ $# -gt 0 ]]; then
   shift
 fi
 
-exec ./odoo-bin -c debian/odoo.conf -d "$DB_NAME" "$@"
+exec ./odoo-bin -c debian/odoo.conf "$DB_NAME" "$@"

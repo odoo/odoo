@@ -60,6 +60,21 @@
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
 
+                <div class="oe_title d-flex align-items-center gap-3 mb-3">
+                    <field name="image_1920"
+                       widget="image"
+                       class="oe_avatar"
+                       options="{'preview_image': 'image_128', 'size': [90, 90]}"/>
+                <div>
+                    <label for="name" string="Nombre de cuenta"/>
+                    <h1>
+                        <field name="name"
+                               placeholder="Ej: DSI Soluciones Industriales"
+                               required="1"/>
+                    </h1>
+                </div>
+                </div>
+
                     <notebook>
                         <page string="Resumen">
                             <group string="INFORMACIÓN DE LA CUENTA" col="2">
@@ -68,6 +83,7 @@
                                     <field name="vat" string="CIF" placeholder="Ej: B12345678"/>
                                     <field name="trade_name" string="Marca Comercial" placeholder="Ej: DSI"/>
                                     <field name="phone" string="Teléfono" placeholder="Ej: 628787560"/>
+                                    <field name="email" string="Correo electrónico" placeholder="Ej: info@empresa.com"/>
                                     <label for="website" string="Sitio web"/>
                                     <div class="o_row">
                                         <field name="website" nolabel="1"/>

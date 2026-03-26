@@ -1,0 +1,1586 @@
+2026-03-26 11:08:26,963 54078 INFO ? odoo: Odoo version 18.0 
+2026-03-26 11:08:26,963 54078 INFO ? odoo: Using configuration file at /home/pablo/odoo/debian/odoo.conf 
+2026-03-26 11:08:26,963 54078 INFO ? odoo: addons paths: ['/home/pablo/odoo/odoo/addons', '/home/pablo/.local/share/Odoo/addons/18.0', '/home/pablo/odoo/addons', '/home/pablo/odoo/custom', '/home/pablo/odoo/custom/field-service', '/home/pablo/odoo/custom/product-attribute', '/home/pablo/odoo/custom/rma', '/home/pablo/odoo/custom/helpdesk'] 
+2026-03-26 11:08:26,963 54078 INFO ? odoo: database: pablo@localhost:5432 
+2026-03-26 11:08:27,184 54078 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-03-26 11:08:27,250 54078 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltoimage to generate images from html. 
+2026-03-26 11:08:27,460 54078 INFO pruebas odoo.modules.loading: loading 1 modules... 
+2026-03-26 11:08:27,465 54078 INFO pruebas odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-03-26 11:08:27,494 54078 INFO pruebas odoo.modules.loading: updating modules list 
+2026-03-26 11:08:27,497 54078 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-26 11:08:29,150 54078 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Base Territory', 'Field Service'] to user __system__ #1 via n/a 
+2026-03-26 11:08:29,150 54078 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Base Territory', 'Field Service'] to user __system__ #1 via n/a 
+2026-03-26 11:08:30,386 54078 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-03-26 11:08:30,430 54078 INFO pruebas odoo.modules.loading: loading 58 modules... 
+2026-03-26 11:08:30,430 54078 INFO pruebas odoo.modules.loading: Loading module base_territory (2/58) 
+2026-03-26 11:08:30,476 54078 INFO pruebas odoo.modules.registry: module base_territory: creating or updating database tables 
+2026-03-26 11:08:30,539 54078 INFO pruebas odoo.modules.loading: loading base_territory/security/ir.model.access.csv 
+2026-03-26 11:08:30,558 54078 INFO pruebas odoo.modules.loading: loading base_territory/views/res_territory.xml 
+2026-03-26 11:08:30,586 54078 INFO pruebas odoo.modules.loading: loading base_territory/views/res_branch.xml 
+2026-03-26 11:08:30,604 54078 INFO pruebas odoo.modules.loading: loading base_territory/views/res_district.xml 
+2026-03-26 11:08:30,626 54078 INFO pruebas odoo.modules.loading: loading base_territory/views/res_region.xml 
+2026-03-26 11:08:30,643 54078 INFO pruebas odoo.modules.loading: loading base_territory/views/res_country.xml 
+2026-03-26 11:08:30,660 54078 INFO pruebas odoo.modules.loading: loading base_territory/views/menu.xml 
+2026-03-26 11:08:30,703 54078 INFO pruebas odoo.modules.loading: Module base_territory loaded in 0.27s, 221 queries (+221 other) 
+2026-03-26 11:08:31,094 54078 INFO pruebas odoo.modules.loading: Loading module fieldservice (35/58) 
+2026-03-26 11:08:31,255 54078 INFO pruebas odoo.modules.registry: module fieldservice: creating or updating database tables 
+2026-03-26 11:08:31,546 54078 INFO pruebas odoo.modules.loading: loading fieldservice/data/ir_sequence.xml 
+2026-03-26 11:08:31,549 54078 INFO pruebas odoo.modules.loading: loading fieldservice/data/mail_message_subtype.xml 
+2026-03-26 11:08:31,557 54078 INFO pruebas odoo.modules.loading: loading fieldservice/data/module_category.xml 
+2026-03-26 11:08:31,561 54078 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_stage.xml 
+2026-03-26 11:08:31,565 54078 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_team.xml 
+2026-03-26 11:08:31,567 54078 INFO pruebas odoo.modules.loading: loading fieldservice/security/res_groups.xml 
+2026-03-26 11:08:31,752 54078 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir.model.access.csv 
+2026-03-26 11:08:31,803 54078 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir_rule.xml 
+2026-03-26 11:08:31,856 54078 INFO pruebas odoo.modules.loading: loading fieldservice/report/fsm_order_report_template.xml 
+2026-03-26 11:08:31,872 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_config_settings.xml 
+2026-03-26 11:08:31,939 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_territory.xml 
+2026-03-26 11:08:31,973 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_stage.xml 
+2026-03-26 11:08:32,035 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_tag.xml 
+2026-03-26 11:08:32,083 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_partner.xml 
+2026-03-26 11:08:32,140 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location.xml 
+2026-03-26 11:08:32,187 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location_person.xml 
+2026-03-26 11:08:32,206 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_person.xml 
+2026-03-26 11:08:32,236 54078 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_order_sign_wizard.xml 
+2026-03-26 11:08:32,252 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order.xml 
+2026-03-26 11:08:32,321 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order_type.xml 
+2026-03-26 11:08:32,341 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_category.xml 
+2026-03-26 11:08:32,365 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_equipment.xml 
+2026-03-26 11:08:32,416 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_template.xml 
+2026-03-26 11:08:32,433 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_team.xml 
+2026-03-26 11:08:32,468 54078 INFO pruebas odoo.modules.loading: loading fieldservice/views/menu.xml 
+2026-03-26 11:08:32,587 54078 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_wizard.xml 
+2026-03-26 11:08:32,635 54078 INFO pruebas odoo.modules.loading: Module fieldservice loaded in 1.54s, 1251 queries (+1251 other) 
+2026-03-26 11:08:32,815 54078 INFO pruebas odoo.modules.loading: 58 modules loaded in 2.38s, 1472 queries (+1472 extra) 
+2026-03-26 11:08:32,817 54078 INFO pruebas odoo.modules.loading: loading 59 modules... 
+2026-03-26 11:08:32,818 54078 INFO pruebas odoo.modules.loading: Loading module helpdesk_mgmt (59/59) 
+2026-03-26 11:08:33,013 54078 INFO pruebas odoo.modules.registry: module helpdesk_mgmt: creating or updating database tables 
+2026-03-26 11:08:33,031 54078 INFO pruebas odoo.models: Constraint name 'helpdesk_ticket_state_reason_helpdesk_ticket_state_reason_name_uniq' has more than 63 characters, internal PG identifier is 'helpdesk_ticket_state_reason_helpdesk_ticket_state_rea_f0a76b59' 
+2026-03-26 11:08:33,221 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:08:33,221 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:08:33,221 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:08:33,221 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:08:33,222 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:08:33,222 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:08:33,222 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:08:33,222 54078 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:08:33,772 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/data/helpdesk_data.xml 
+2026-03-26 11:08:33,838 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/helpdesk_security.xml 
+2026-03-26 11:08:34,081 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/ir.model.access.csv 
+2026-03-26 11:08:34,115 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_partner_views.xml 
+2026-03-26 11:08:34,140 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_config_settings_views.xml 
+2026-03-26 11:08:34,167 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_templates.xml 
+2026-03-26 11:08:34,237 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_time_line_views.xml 
+2026-03-26 11:08:34,244 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_views.xml 
+2026-03-26 11:08:34,327 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_graph_views.xml 
+2026-03-26 11:08:34,370 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_board_dashboard_views.xml 
+2026-03-26 11:08:34,387 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_menu.xml 
+2026-03-26 11:08:34,561 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_team_views.xml 
+2026-03-26 11:08:34,588 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_stage_views.xml 
+2026-03-26 11:08:34,606 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_category_views.xml 
+2026-03-26 11:08:34,630 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_channel_views.xml 
+2026-03-26 11:08:34,646 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_tag_views.xml 
+2026-03-26 11:08:34,661 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_dashboard_views.xml 
+2026-03-26 11:08:34,673 54078 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/wizards/helpdesk_ticket_duplicate_wizard_views.xml 
+2026-03-26 11:08:34,707 54078 INFO pruebas odoo.modules.loading: Module helpdesk_mgmt loaded in 1.89s, 1552 queries (+1552 other) 
+2026-03-26 11:08:34,707 54078 INFO pruebas odoo.modules.loading: 59 modules loaded in 1.89s, 1552 queries (+1552 extra) 
+2026-03-26 11:08:35,057 54078 INFO pruebas odoo.modules.loading: Model crm.iap.lead.helpers is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:08:35,057 54078 INFO pruebas odoo.modules.loading: Model crm.iap.lead.industry is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:08:35,058 54078 INFO pruebas odoo.modules.loading: Model crm.iap.lead.role is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:08:35,058 54078 INFO pruebas odoo.modules.loading: Model crm.iap.lead.seniority is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:08:35,058 54078 INFO pruebas odoo.modules.loading: Model crm.iap.lead.mining.request is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:08:35,224 54078 INFO pruebas odoo.modules.registry: verifying fields for every extended model 
+2026-03-26 11:08:36,067 54078 INFO pruebas odoo.modules.loading: Modules loaded. 
+2026-03-26 11:08:36,073 54078 INFO pruebas odoo.modules.registry: Registry changed, signaling through the database 
+2026-03-26 11:08:36,075 54078 INFO pruebas odoo.modules.registry: Registry loaded in 8.647s 
+2026-03-26 11:08:36,075 54078 INFO pruebas odoo.service.server: Initiating shutdown 
+2026-03-26 11:08:36,075 54078 INFO pruebas odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-26 11:08:36,076 54078 INFO pruebas odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-03-26 11:28:37,709 58579 INFO ? odoo: Odoo version 18.0 
+2026-03-26 11:28:37,709 58579 INFO ? odoo: Using configuration file at /home/pablo/odoo/debian/odoo.conf 
+2026-03-26 11:28:37,709 58579 INFO ? odoo: addons paths: ['/home/pablo/odoo/odoo/addons', '/home/pablo/.local/share/Odoo/addons/18.0', '/home/pablo/odoo/addons', '/home/pablo/odoo/custom', '/home/pablo/odoo/custom/field-service', '/home/pablo/odoo/custom/product-attribute', '/home/pablo/odoo/custom/rma', '/home/pablo/odoo/custom/helpdesk'] 
+2026-03-26 11:28:37,709 58579 INFO ? odoo: database: pablo@localhost:5432 
+2026-03-26 11:28:38,137 58579 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-03-26 11:28:38,173 58579 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltoimage to generate images from html. 
+2026-03-26 11:28:38,396 58579 INFO pruebas odoo.modules.loading: loading 1 modules... 
+2026-03-26 11:28:38,402 58579 INFO pruebas odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-03-26 11:28:38,435 58579 INFO pruebas odoo.modules.loading: updating modules list 
+2026-03-26 11:28:38,439 58579 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-26 11:28:40,238 58579 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Field Service', 'Helpdesk Management'] to user __system__ #1 via n/a 
+2026-03-26 11:28:40,238 58579 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Field Service', 'Helpdesk Management'] to user __system__ #1 via n/a 
+2026-03-26 11:28:41,380 58579 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-03-26 11:28:41,429 58579 INFO pruebas odoo.modules.loading: loading 77 modules... 
+2026-03-26 11:28:41,820 58579 INFO pruebas odoo.modules.loading: Loading module fieldservice (37/77) 
+2026-03-26 11:28:41,981 58579 INFO pruebas odoo.modules.registry: module fieldservice: creating or updating database tables 
+2026-03-26 11:28:42,289 58579 INFO pruebas odoo.modules.loading: loading fieldservice/data/ir_sequence.xml 
+2026-03-26 11:28:42,292 58579 INFO pruebas odoo.modules.loading: loading fieldservice/data/mail_message_subtype.xml 
+2026-03-26 11:28:42,299 58579 INFO pruebas odoo.modules.loading: loading fieldservice/data/module_category.xml 
+2026-03-26 11:28:42,301 58579 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_stage.xml 
+2026-03-26 11:28:42,306 58579 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_team.xml 
+2026-03-26 11:28:42,309 58579 INFO pruebas odoo.modules.loading: loading fieldservice/security/res_groups.xml 
+2026-03-26 11:28:42,550 58579 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir.model.access.csv 
+2026-03-26 11:28:42,684 58579 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir_rule.xml 
+2026-03-26 11:28:42,747 58579 INFO pruebas odoo.modules.loading: loading fieldservice/report/fsm_order_report_template.xml 
+2026-03-26 11:28:42,764 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_config_settings.xml 
+2026-03-26 11:28:42,811 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_territory.xml 
+2026-03-26 11:28:42,829 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_stage.xml 
+2026-03-26 11:28:42,861 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_tag.xml 
+2026-03-26 11:28:42,881 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_partner.xml 
+2026-03-26 11:28:42,921 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location.xml 
+2026-03-26 11:28:42,984 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location_person.xml 
+2026-03-26 11:28:43,010 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_person.xml 
+2026-03-26 11:28:43,038 58579 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_order_sign_wizard.xml 
+2026-03-26 11:28:43,051 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order.xml 
+2026-03-26 11:28:43,115 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order_type.xml 
+2026-03-26 11:28:43,135 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_category.xml 
+2026-03-26 11:28:43,154 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_equipment.xml 
+2026-03-26 11:28:43,208 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_template.xml 
+2026-03-26 11:28:43,228 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_team.xml 
+2026-03-26 11:28:43,263 58579 INFO pruebas odoo.modules.loading: loading fieldservice/views/menu.xml 
+2026-03-26 11:28:43,404 58579 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_wizard.xml 
+2026-03-26 11:28:43,455 58579 INFO pruebas odoo.modules.loading: Module fieldservice loaded in 1.64s, 1253 queries (+1253 other) 
+2026-03-26 11:28:43,715 58579 INFO pruebas odoo.modules.loading: Loading module helpdesk_mgmt (65/77) 
+2026-03-26 11:28:44,131 58579 INFO pruebas odoo.modules.registry: module helpdesk_mgmt: creating or updating database tables 
+2026-03-26 11:28:44,318 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:28:44,318 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:28:44,318 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:28:44,318 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:28:44,318 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:28:44,319 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:28:44,319 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:28:44,319 58579 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:28:44,549 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/data/helpdesk_data.xml 
+2026-03-26 11:28:44,593 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/helpdesk_security.xml 
+2026-03-26 11:28:44,712 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/ir.model.access.csv 
+2026-03-26 11:28:44,779 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_partner_views.xml 
+2026-03-26 11:28:44,823 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_config_settings_views.xml 
+2026-03-26 11:28:44,888 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_templates.xml 
+2026-03-26 11:28:44,982 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_time_line_views.xml 
+2026-03-26 11:28:44,991 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_views.xml 
+2026-03-26 11:28:45,072 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_graph_views.xml 
+2026-03-26 11:28:45,116 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_board_dashboard_views.xml 
+2026-03-26 11:28:45,134 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_menu.xml 
+2026-03-26 11:28:45,307 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_team_views.xml 
+2026-03-26 11:28:45,329 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_stage_views.xml 
+2026-03-26 11:28:45,347 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_category_views.xml 
+2026-03-26 11:28:45,367 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_channel_views.xml 
+2026-03-26 11:28:45,385 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_tag_views.xml 
+2026-03-26 11:28:45,404 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_dashboard_views.xml 
+2026-03-26 11:28:45,416 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/wizards/helpdesk_ticket_duplicate_wizard_views.xml 
+2026-03-26 11:28:45,477 58579 INFO pruebas odoo.modules.loading: Module helpdesk_mgmt loaded in 1.76s, 1203 queries (+1203 other) 
+2026-03-26 11:28:45,522 58579 INFO pruebas odoo.modules.loading: 77 modules loaded in 4.09s, 2456 queries (+2456 extra) 
+2026-03-26 11:28:45,526 58579 INFO pruebas odoo.modules.loading: loading 81 modules... 
+2026-03-26 11:28:45,526 58579 INFO pruebas odoo.modules.loading: Loading module purchase_product_template_tags (67/81) 
+2026-03-26 11:28:45,749 58579 INFO pruebas odoo.modules.loading: loading purchase_product_template_tags/views/product_template_tag.xml 
+2026-03-26 11:28:45,817 58579 INFO pruebas odoo.modules.loading: Module purchase_product_template_tags loaded in 0.29s, 34 queries (+34 other) 
+2026-03-26 11:28:45,818 58579 INFO pruebas odoo.modules.loading: Loading module helpdesk_mgmt_sale (71/81) 
+2026-03-26 11:28:46,046 58579 INFO pruebas odoo.modules.registry: module helpdesk_mgmt_sale: creating or updating database tables 
+2026-03-26 11:28:46,371 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt_sale/security/ir.model.access.csv 
+2026-03-26 11:28:46,392 58579 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt_sale/views/helpdesk_ticket_views.xml 
+2026-03-26 11:28:46,419 58579 WARNING pruebas odoo.modules.loading: Transient module states were reset 
+2026-03-26 11:28:46,423 58579 ERROR pruebas odoo.modules.registry: Failed to load registry 
+2026-03-26 11:28:46,423 58579 CRITICAL pruebas odoo.service.server: Failed to initialize database `pruebas`. 
+Traceback (most recent call last):
+  File "/home/pablo/odoo/odoo/service/server.py", line 1366, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module)
+  File "/home/pablo/odoo/.venv/lib/python3.13/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/pablo/odoo/odoo/tools/func.py", line 97, in locked
+    return func(inst, *args, **kwargs)
+  File "/home/pablo/odoo/odoo/modules/registry.py", line 129, in new
+    odoo.modules.load_modules(registry, force_demo, status, update_module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 489, in load_modules
+    processed_modules += load_marked_modules(env, graph,
+                         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+        ['to install'], force, status, report,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        loaded_modules, update_module, models_to_check)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 365, in load_marked_modules
+    loaded, processed = load_module_graph(
+                        ~~~~~~~~~~~~~~~~~^
+        env, graph, progressdict, report=report, skip_modules=loaded_modules,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        perform_checks=perform_checks, models_to_check=models_to_check
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 228, in load_module_graph
+    load_data(env, idref, mode, kind='data', package=package)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 72, in load_data
+    tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 662, in convert_file
+    convert_xml_import(env, module, fp, idref, mode, noupdate)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 733, in convert_xml_import
+    obj.parse(doc.getroot())
+    ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 648, in parse
+    self._tag_root(de)
+    ~~~~~~~~~~~~~~^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 601, in _tag_root
+    raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+odoo.tools.convert.ParseError: while parsing /home/pablo/odoo/custom/helpdesk/helpdesk_mgmt_sale/views/helpdesk_ticket_views.xml:5
+Error while parsing or validating view:
+
+Element '<xpath expr="//div[@name=&#39;button_box&#39;]">' cannot be located in parent view
+
+View error context:
+{'file': '/home/pablo/odoo/custom/helpdesk/helpdesk_mgmt_sale/views/helpdesk_ticket_views.xml',
+ 'line': 1,
+ 'name': 'helpdesk.ticket form',
+ 'view': ir.ui.view(1545,),
+ 'view.model': 'helpdesk.ticket',
+ 'view.parent': ir.ui.view(1115,),
+ 'xmlid': 'ticket_view_form'}
+
+2026-03-26 11:28:46,428 58579 INFO pruebas odoo.service.server: Initiating shutdown 
+2026-03-26 11:28:46,428 58579 INFO pruebas odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-26 11:28:46,429 58579 INFO pruebas odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-03-26 11:40:20,920 61022 INFO ? odoo: Odoo version 18.0 
+2026-03-26 11:40:20,920 61022 INFO ? odoo: Using configuration file at /home/pablo/odoo/debian/odoo.conf 
+2026-03-26 11:40:20,920 61022 INFO ? odoo: addons paths: ['/home/pablo/odoo/odoo/addons', '/home/pablo/.local/share/Odoo/addons/18.0', '/home/pablo/odoo/addons', '/home/pablo/odoo/custom', '/home/pablo/odoo/custom/field-service', '/home/pablo/odoo/custom/product-attribute', '/home/pablo/odoo/custom/rma', '/home/pablo/odoo/custom/helpdesk'] 
+2026-03-26 11:40:20,921 61022 INFO ? odoo: database: pablo@localhost:5432 
+2026-03-26 11:40:21,255 61022 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-03-26 11:40:21,275 61022 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltoimage to generate images from html. 
+2026-03-26 11:40:21,439 61022 INFO pruebas odoo.modules.loading: loading 1 modules... 
+2026-03-26 11:40:21,445 61022 INFO pruebas odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-03-26 11:40:21,471 61022 INFO pruebas odoo.modules.loading: updating modules list 
+2026-03-26 11:40:21,474 61022 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-26 11:40:22,988 61022 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Base Territory', 'Field Service', 'Helpdesk Management'] to user __system__ #1 via n/a 
+2026-03-26 11:40:22,988 61022 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Base Territory', 'Field Service', 'Helpdesk Management'] to user __system__ #1 via n/a 
+2026-03-26 11:40:24,033 61022 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-03-26 11:40:24,080 61022 INFO pruebas odoo.modules.loading: loading 79 modules... 
+2026-03-26 11:40:24,080 61022 INFO pruebas odoo.modules.loading: Loading module base_territory (2/79) 
+2026-03-26 11:40:24,128 61022 INFO pruebas odoo.modules.registry: module base_territory: creating or updating database tables 
+2026-03-26 11:40:24,182 61022 INFO pruebas odoo.modules.loading: loading base_territory/security/ir.model.access.csv 
+2026-03-26 11:40:24,196 61022 INFO pruebas odoo.modules.loading: loading base_territory/views/res_territory.xml 
+2026-03-26 11:40:24,218 61022 INFO pruebas odoo.modules.loading: loading base_territory/views/res_branch.xml 
+2026-03-26 11:40:24,235 61022 INFO pruebas odoo.modules.loading: loading base_territory/views/res_district.xml 
+2026-03-26 11:40:24,249 61022 INFO pruebas odoo.modules.loading: loading base_territory/views/res_region.xml 
+2026-03-26 11:40:24,266 61022 INFO pruebas odoo.modules.loading: loading base_territory/views/res_country.xml 
+2026-03-26 11:40:24,284 61022 INFO pruebas odoo.modules.loading: loading base_territory/views/menu.xml 
+2026-03-26 11:40:24,322 61022 INFO pruebas odoo.modules.loading: Module base_territory loaded in 0.24s, 221 queries (+221 other) 
+2026-03-26 11:40:24,679 61022 INFO pruebas odoo.modules.loading: Loading module fieldservice (37/79) 
+2026-03-26 11:40:24,850 61022 INFO pruebas odoo.modules.registry: module fieldservice: creating or updating database tables 
+2026-03-26 11:40:25,148 61022 INFO pruebas odoo.modules.loading: loading fieldservice/data/ir_sequence.xml 
+2026-03-26 11:40:25,151 61022 INFO pruebas odoo.modules.loading: loading fieldservice/data/mail_message_subtype.xml 
+2026-03-26 11:40:25,159 61022 INFO pruebas odoo.modules.loading: loading fieldservice/data/module_category.xml 
+2026-03-26 11:40:25,162 61022 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_stage.xml 
+2026-03-26 11:40:25,169 61022 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_team.xml 
+2026-03-26 11:40:25,173 61022 INFO pruebas odoo.modules.loading: loading fieldservice/security/res_groups.xml 
+2026-03-26 11:40:25,353 61022 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir.model.access.csv 
+2026-03-26 11:40:25,395 61022 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir_rule.xml 
+2026-03-26 11:40:25,437 61022 INFO pruebas odoo.modules.loading: loading fieldservice/report/fsm_order_report_template.xml 
+2026-03-26 11:40:25,450 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_config_settings.xml 
+2026-03-26 11:40:25,483 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_territory.xml 
+2026-03-26 11:40:25,495 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_stage.xml 
+2026-03-26 11:40:25,518 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_tag.xml 
+2026-03-26 11:40:25,534 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_partner.xml 
+2026-03-26 11:40:25,574 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location.xml 
+2026-03-26 11:40:25,613 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location_person.xml 
+2026-03-26 11:40:25,632 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_person.xml 
+2026-03-26 11:40:25,654 61022 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_order_sign_wizard.xml 
+2026-03-26 11:40:25,667 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order.xml 
+2026-03-26 11:40:25,724 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order_type.xml 
+2026-03-26 11:40:25,739 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_category.xml 
+2026-03-26 11:40:25,755 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_equipment.xml 
+2026-03-26 11:40:25,798 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_template.xml 
+2026-03-26 11:40:25,820 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_team.xml 
+2026-03-26 11:40:25,855 61022 INFO pruebas odoo.modules.loading: loading fieldservice/views/menu.xml 
+2026-03-26 11:40:25,979 61022 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_wizard.xml 
+2026-03-26 11:40:26,028 61022 INFO pruebas odoo.modules.loading: Module fieldservice loaded in 1.35s, 1254 queries (+1254 other) 
+2026-03-26 11:40:26,238 61022 INFO pruebas odoo.modules.loading: Loading module helpdesk_mgmt (65/79) 
+2026-03-26 11:40:26,586 61022 INFO pruebas odoo.modules.registry: module helpdesk_mgmt: creating or updating database tables 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:40:26,742 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:40:26,743 61022 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:40:26,950 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/data/helpdesk_data.xml 
+2026-03-26 11:40:26,989 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/helpdesk_security.xml 
+2026-03-26 11:40:27,101 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/ir.model.access.csv 
+2026-03-26 11:40:27,169 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_partner_views.xml 
+2026-03-26 11:40:27,207 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_config_settings_views.xml 
+2026-03-26 11:40:27,262 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_templates.xml 
+2026-03-26 11:40:27,337 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_time_line_views.xml 
+2026-03-26 11:40:27,348 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_views.xml 
+2026-03-26 11:40:27,426 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_graph_views.xml 
+2026-03-26 11:40:27,461 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_board_dashboard_views.xml 
+2026-03-26 11:40:27,475 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_menu.xml 
+2026-03-26 11:40:27,603 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_team_views.xml 
+2026-03-26 11:40:27,632 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_stage_views.xml 
+2026-03-26 11:40:27,649 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_category_views.xml 
+2026-03-26 11:40:27,668 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_channel_views.xml 
+2026-03-26 11:40:27,684 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_tag_views.xml 
+2026-03-26 11:40:27,698 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_dashboard_views.xml 
+2026-03-26 11:40:27,708 61022 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/wizards/helpdesk_ticket_duplicate_wizard_views.xml 
+2026-03-26 11:40:27,750 61022 INFO pruebas odoo.modules.loading: Module helpdesk_mgmt loaded in 1.51s, 1203 queries (+1203 other) 
+2026-03-26 11:40:27,800 61022 INFO pruebas odoo.modules.loading: 79 modules loaded in 3.72s, 2678 queries (+2678 extra) 
+2026-03-26 11:40:27,804 61022 INFO pruebas odoo.modules.loading: loading 80 modules... 
+2026-03-26 11:40:27,804 61022 INFO pruebas odoo.modules.loading: Loading module helpdesk_product (70/80) 
+2026-03-26 11:40:27,989 61022 INFO pruebas odoo.modules.registry: module helpdesk_product: creating or updating database tables 
+2026-03-26 11:40:28,263 61022 INFO pruebas odoo.modules.loading: loading helpdesk_product/security/ir.model.access.csv 
+2026-03-26 11:40:28,280 61022 INFO pruebas odoo.modules.loading: loading helpdesk_product/views/product_view.xml 
+2026-03-26 11:40:28,373 61022 WARNING pruebas odoo.modules.loading: Transient module states were reset 
+2026-03-26 11:40:28,379 61022 ERROR pruebas odoo.modules.registry: Failed to load registry 
+2026-03-26 11:40:28,379 61022 CRITICAL pruebas odoo.service.server: Failed to initialize database `pruebas`. 
+Traceback (most recent call last):
+  File "/home/pablo/odoo/odoo/tools/cache.py", line 103, in lookup
+    r = d[key]
+        ~^^^^^
+  File "/home/pablo/odoo/.venv/lib/python3.13/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/pablo/odoo/odoo/tools/func.py", line 97, in locked
+    return func(inst, *args, **kwargs)
+  File "/home/pablo/odoo/odoo/tools/lru.py", line 33, in __getitem__
+    a = self.d[obj]
+        ~~~~~~^^^^^
+KeyError: ('ir.model.data', <function IrModelData._xmlid_lookup at 0x7fcbe3c96ca0>, 'product.menu_catalog')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 590, in _tag_root
+    f(rec)
+    ~^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 280, in _tag_menuitem
+    values['parent_id'] = self.id_get(rec.attrib['parent'])
+                          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 572, in id_get
+    res = self.model_id_get(id_str, raise_if_not_found)
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 578, in model_id_get
+    return self.env['ir.model.data']._xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/addons/base/models/ir_model.py", line 2292, in _xmlid_to_res_model_res_id
+    return self._xmlid_lookup(xmlid)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/pablo/odoo/.venv/lib/python3.13/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/pablo/odoo/odoo/tools/cache.py", line 110, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/addons/base/models/ir_model.py", line 2285, in _xmlid_lookup
+    raise ValueError('External ID not found in the system: %s' % xmlid)
+ValueError: External ID not found in the system: product.menu_catalog
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/pablo/odoo/odoo/service/server.py", line 1366, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module)
+  File "/home/pablo/odoo/.venv/lib/python3.13/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/pablo/odoo/odoo/tools/func.py", line 97, in locked
+    return func(inst, *args, **kwargs)
+  File "/home/pablo/odoo/odoo/modules/registry.py", line 129, in new
+    odoo.modules.load_modules(registry, force_demo, status, update_module)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 489, in load_modules
+    processed_modules += load_marked_modules(env, graph,
+                         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+        ['to install'], force, status, report,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        loaded_modules, update_module, models_to_check)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 365, in load_marked_modules
+    loaded, processed = load_module_graph(
+                        ~~~~~~~~~~~~~~~~~^
+        env, graph, progressdict, report=report, skip_modules=loaded_modules,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        perform_checks=perform_checks, models_to_check=models_to_check
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 228, in load_module_graph
+    load_data(env, idref, mode, kind='data', package=package)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/modules/loading.py", line 72, in load_data
+    tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 662, in convert_file
+    convert_xml_import(env, module, fp, idref, mode, noupdate)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 733, in convert_xml_import
+    obj.parse(doc.getroot())
+    ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 648, in parse
+    self._tag_root(de)
+    ~~~~~~~~~~~~~~^^^^
+  File "/home/pablo/odoo/odoo/tools/convert.py", line 603, in _tag_root
+    raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
+    ...<3 lines>...
+    )) from e
+odoo.tools.convert.ParseError: while parsing /home/pablo/odoo/custom/helpdesk/helpdesk_product/views/product_view.xml:393, somewhere inside
+<menuitem id="menu_helpdesk_product_catalog" name="Productos Helpdesk" parent="product.menu_catalog" action="product_template_action_helpdesk" sequence="50"/>
+2026-03-26 11:40:28,386 61022 INFO pruebas odoo.service.server: Initiating shutdown 
+2026-03-26 11:40:28,387 61022 INFO pruebas odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-26 11:40:28,387 61022 INFO pruebas odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+2026-03-26 11:46:15,708 62347 INFO ? odoo: Odoo version 18.0 
+2026-03-26 11:46:15,710 62347 INFO ? odoo: Using configuration file at /home/pablo/odoo/debian/odoo.conf 
+2026-03-26 11:46:15,711 62347 INFO ? odoo: addons paths: ['/home/pablo/odoo/odoo/addons', '/home/pablo/.local/share/Odoo/addons/18.0', '/home/pablo/odoo/addons', '/home/pablo/odoo/custom', '/home/pablo/odoo/custom/field-service', '/home/pablo/odoo/custom/product-attribute', '/home/pablo/odoo/custom/rma', '/home/pablo/odoo/custom/helpdesk'] 
+2026-03-26 11:46:15,712 62347 INFO ? odoo: database: pablo@localhost:5432 
+2026-03-26 11:46:15,907 62347 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-03-26 11:46:15,930 62347 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltoimage to generate images from html. 
+2026-03-26 11:46:16,158 62347 WARNING ? odoo.service.server: 'inotify' module not installed. Code autoreload feature is disabled 
+2026-03-26 11:46:16,212 62347 INFO pruebas odoo.modules.loading: loading 1 modules... 
+2026-03-26 11:46:16,212 62347 INFO pruebas odoo.modules.loading: Loading module base (1/1) 
+2026-03-26 11:46:16,245 62347 INFO pruebas odoo.modules.registry: module base: creating or updating database tables 
+2026-03-26 11:46:17,020 62347 INFO pruebas odoo.modules.loading: loading base/data/res_bank.xml 
+2026-03-26 11:46:17,023 62347 INFO pruebas odoo.modules.loading: loading base/data/res.lang.csv 
+2026-03-26 11:46:17,261 62347 INFO pruebas odoo.modules.loading: loading base/data/res_lang_data.xml 
+2026-03-26 11:46:17,294 62347 INFO pruebas odoo.modules.loading: loading base/data/res_partner_data.xml 
+2026-03-26 11:46:17,322 62347 INFO pruebas odoo.modules.loading: loading base/data/res_currency_data.xml 
+2026-03-26 11:46:17,483 62347 INFO pruebas odoo.modules.loading: loading base/data/res_company_data.xml 
+2026-03-26 11:46:17,486 62347 INFO pruebas odoo.modules.loading: loading base/data/res_users_data.xml 
+2026-03-26 11:46:17,494 62347 INFO pruebas odoo.modules.loading: loading base/data/report_paperformat_data.xml 
+2026-03-26 11:46:17,499 62347 INFO pruebas odoo.modules.loading: loading base/data/res_country_data.xml 
+2026-03-26 11:46:17,718 62347 INFO pruebas odoo.modules.loading: loading base/data/ir_demo_data.xml 
+2026-03-26 11:46:17,736 62347 INFO pruebas odoo.modules.loading: loading base/security/base_groups.xml 
+2026-03-26 11:46:17,974 62347 INFO pruebas odoo.modules.loading: loading base/security/base_security.xml 
+2026-03-26 11:46:18,015 62347 INFO pruebas odoo.modules.loading: loading base/views/base_menus.xml 
+2026-03-26 11:46:18,081 62347 INFO pruebas odoo.modules.loading: loading base/views/decimal_precision_views.xml 
+2026-03-26 11:46:18,100 62347 INFO pruebas odoo.modules.loading: loading base/views/res_config_views.xml 
+2026-03-26 11:46:18,107 62347 INFO pruebas odoo.modules.loading: loading base/data/res.country.state.csv 
+2026-03-26 11:46:18,709 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_actions_views.xml 
+2026-03-26 11:46:18,900 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_asset_views.xml 
+2026-03-26 11:46:18,927 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_config_parameter_views.xml 
+2026-03-26 11:46:18,953 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_cron_views.xml 
+2026-03-26 11:46:19,000 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_cron_trigger_views.xml 
+2026-03-26 11:46:19,041 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_filters_views.xml 
+2026-03-26 11:46:19,077 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_mail_server_views.xml 
+2026-03-26 11:46:19,105 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_model_views.xml 
+2026-03-26 11:46:19,306 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_attachment_views.xml 
+2026-03-26 11:46:19,372 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_rule_views.xml 
+2026-03-26 11:46:19,404 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_sequence_views.xml 
+2026-03-26 11:46:19,429 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_ui_menu_views.xml 
+2026-03-26 11:46:19,460 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_ui_view_views.xml 
+2026-03-26 11:46:19,537 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_default_views.xml 
+2026-03-26 11:46:19,568 62347 INFO pruebas odoo.modules.loading: loading base/data/ir_config_parameter_data.xml 
+2026-03-26 11:46:19,571 62347 INFO pruebas odoo.modules.loading: loading base/data/ir_cron_data.xml 
+2026-03-26 11:46:19,586 62347 INFO pruebas odoo.modules.loading: loading base/report/ir_model_report.xml 
+2026-03-26 11:46:19,591 62347 INFO pruebas odoo.modules.loading: loading base/report/ir_model_templates.xml 
+2026-03-26 11:46:19,603 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_logging_views.xml 
+2026-03-26 11:46:19,630 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_qweb_widget_templates.xml 
+2026-03-26 11:46:19,676 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_module_views.xml 
+2026-03-26 11:46:19,766 62347 INFO pruebas odoo.modules.loading: loading base/data/ir_module_category_data.xml 
+2026-03-26 11:46:19,948 62347 INFO pruebas odoo.modules.loading: loading base/data/ir_module_module.xml 
+2026-03-26 11:46:19,975 62347 INFO pruebas odoo.modules.loading: loading base/report/ir_module_reports.xml 
+2026-03-26 11:46:19,978 62347 INFO pruebas odoo.modules.loading: loading base/report/ir_module_report_templates.xml 
+2026-03-26 11:46:19,985 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_module_update_views.xml 
+2026-03-26 11:46:20,004 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_language_install_views.xml 
+2026-03-26 11:46:20,019 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_import_language_views.xml 
+2026-03-26 11:46:20,035 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_module_upgrade_views.xml 
+2026-03-26 11:46:20,059 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_module_uninstall_views.xml 
+2026-03-26 11:46:20,072 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_export_language_views.xml 
+2026-03-26 11:46:20,089 62347 INFO pruebas odoo.modules.loading: loading base/wizard/base_partner_merge_views.xml 
+2026-03-26 11:46:20,106 62347 INFO pruebas odoo.modules.loading: loading base/data/ir_demo_failure_data.xml 
+2026-03-26 11:46:20,128 62347 INFO pruebas odoo.modules.loading: loading base/views/ir_profile_views.xml 
+2026-03-26 11:46:20,162 62347 INFO pruebas odoo.modules.loading: loading base/views/res_company_views.xml 
+2026-03-26 11:46:20,192 62347 INFO pruebas odoo.modules.loading: loading base/views/res_lang_views.xml 
+2026-03-26 11:46:20,230 62347 INFO pruebas odoo.modules.loading: loading base/views/res_partner_views.xml 
+2026-03-26 11:46:20,380 62347 INFO pruebas odoo.modules.loading: loading base/views/res_bank_views.xml 
+2026-03-26 11:46:20,421 62347 INFO pruebas odoo.modules.loading: loading base/views/res_country_views.xml 
+2026-03-26 11:46:20,472 62347 INFO pruebas odoo.modules.loading: loading base/views/res_currency_views.xml 
+2026-03-26 11:46:20,520 62347 INFO pruebas odoo.modules.loading: loading base/views/res_users_views.xml 
+2026-03-26 11:46:20,730 62347 INFO pruebas odoo.modules.loading: loading base/views/res_device_views.xml 
+2026-03-26 11:46:20,755 62347 INFO pruebas odoo.modules.loading: loading base/views/res_users_identitycheck_views.xml 
+2026-03-26 11:46:20,763 62347 INFO pruebas odoo.modules.loading: loading base/views/res_config_settings_views.xml 
+2026-03-26 11:46:20,774 62347 INFO pruebas odoo.modules.loading: loading base/views/report_paperformat_views.xml 
+2026-03-26 11:46:20,808 62347 INFO pruebas odoo.modules.loading: loading base/security/ir.model.access.csv 
+2026-03-26 11:46:21,108 62347 INFO pruebas odoo.modules.loading: Module base loaded in 4.90s, 5278 queries (+5278 other) 
+2026-03-26 11:46:21,108 62347 INFO pruebas odoo.modules.loading: 1 modules loaded in 4.90s, 5278 queries (+5278 extra) 
+2026-03-26 11:46:21,126 62347 INFO pruebas odoo.modules.loading: updating modules list 
+2026-03-26 11:46:21,129 62347 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-26 11:46:22,528 62347 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['Base'] to user __system__ #1 via n/a 
+2026-03-26 11:46:22,529 62347 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['Base'] to user __system__ #1 via n/a 
+2026-03-26 11:46:23,704 62347 INFO pruebas odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-03-26 11:46:24,067 62347 INFO pruebas odoo.modules.loading: loading 80 modules... 
+2026-03-26 11:46:24,067 62347 INFO pruebas odoo.modules.loading: Loading module base_territory (2/80) 
+2026-03-26 11:46:24,112 62347 INFO pruebas odoo.modules.registry: module base_territory: creating or updating database tables 
+2026-03-26 11:46:24,160 62347 INFO pruebas odoo.modules.loading: loading base_territory/security/ir.model.access.csv 
+2026-03-26 11:46:24,171 62347 INFO pruebas odoo.modules.loading: loading base_territory/views/res_territory.xml 
+2026-03-26 11:46:24,191 62347 INFO pruebas odoo.modules.loading: loading base_territory/views/res_branch.xml 
+2026-03-26 11:46:24,208 62347 INFO pruebas odoo.modules.loading: loading base_territory/views/res_district.xml 
+2026-03-26 11:46:24,222 62347 INFO pruebas odoo.modules.loading: loading base_territory/views/res_region.xml 
+2026-03-26 11:46:24,235 62347 INFO pruebas odoo.modules.loading: loading base_territory/views/res_country.xml 
+2026-03-26 11:46:24,255 62347 INFO pruebas odoo.modules.loading: loading base_territory/views/menu.xml 
+2026-03-26 11:46:24,303 62347 INFO pruebas odoo.modules.loading: Module base_territory loaded in 0.24s, 222 queries (+222 other) 
+2026-03-26 11:46:24,304 62347 INFO pruebas odoo.modules.loading: Loading module uom (3/80) 
+2026-03-26 11:46:24,349 62347 INFO pruebas odoo.modules.registry: module uom: creating or updating database tables 
+2026-03-26 11:46:24,382 62347 INFO pruebas odoo.modules.loading: loading uom/data/uom_data.xml 
+2026-03-26 11:46:24,407 62347 INFO pruebas odoo.modules.loading: loading uom/security/uom_security.xml 
+2026-03-26 11:46:24,413 62347 INFO pruebas odoo.modules.loading: loading uom/security/ir.model.access.csv 
+2026-03-26 11:46:24,427 62347 INFO pruebas odoo.modules.loading: loading uom/views/uom_uom_views.xml 
+2026-03-26 11:46:24,503 62347 INFO pruebas odoo.modules.loading: Module uom loaded in 0.20s, 210 queries (+210 other) 
+2026-03-26 11:46:24,503 62347 INFO pruebas odoo.modules.loading: Loading module web (4/80) 
+2026-03-26 11:46:24,547 62347 INFO pruebas odoo.modules.registry: module web: creating or updating database tables 
+2026-03-26 11:46:25,366 62347 INFO pruebas odoo.modules.loading: loading web/security/ir.model.access.csv 
+2026-03-26 11:46:25,376 62347 INFO pruebas odoo.modules.loading: loading web/views/webclient_templates.xml 
+2026-03-26 11:46:25,476 62347 INFO pruebas odoo.modules.loading: loading web/views/report_templates.xml 
+2026-03-26 11:46:25,632 62347 INFO pruebas odoo.modules.loading: loading web/views/base_document_layout_views.xml 
+2026-03-26 11:46:25,651 62347 INFO pruebas odoo.modules.loading: loading web/views/partner_view.xml 
+2026-03-26 11:46:25,656 62347 INFO pruebas odoo.modules.loading: loading web/views/speedscope_template.xml 
+2026-03-26 11:46:25,663 62347 INFO pruebas odoo.modules.loading: loading web/views/neutralize_views.xml 
+2026-03-26 11:46:25,671 62347 INFO pruebas odoo.modules.loading: loading web/data/ir_attachment.xml 
+2026-03-26 11:46:25,675 62347 INFO pruebas odoo.modules.loading: loading web/data/report_layout.xml 
+2026-03-26 11:46:25,693 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='company.id' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,693 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='font' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,693 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,694 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,694 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,694 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,695 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,695 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,696 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,696 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,696 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,697 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,698 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,698 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,700 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,701 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='secondary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,701 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,701 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,701 62347 WARNING pruebas odoo.addons.base.models.ir_qweb: Found deprecated directive @t-esc='primary' in template 223. Replace by @t-out 
+2026-03-26 11:46:25,736 62347 INFO pruebas odoo.modules.loading: Module web loaded in 1.23s, 1278 queries (+1278 other) 
+2026-03-26 11:46:25,736 62347 INFO pruebas odoo.modules.loading: Loading module auth_totp (5/80) 
+2026-03-26 11:46:25,785 62347 INFO pruebas odoo.modules.registry: module auth_totp: creating or updating database tables 
+2026-03-26 11:46:25,829 62347 INFO pruebas odoo.modules.loading: loading auth_totp/security/security.xml 
+2026-03-26 11:46:25,862 62347 INFO pruebas odoo.modules.loading: loading auth_totp/security/ir.model.access.csv 
+2026-03-26 11:46:25,871 62347 INFO pruebas odoo.modules.loading: loading auth_totp/data/ir_action_data.xml 
+2026-03-26 11:46:25,878 62347 INFO pruebas odoo.modules.loading: loading auth_totp/views/res_users_views.xml 
+2026-03-26 11:46:25,934 62347 INFO pruebas odoo.modules.loading: loading auth_totp/views/templates.xml 
+2026-03-26 11:46:25,947 62347 INFO pruebas odoo.modules.loading: loading auth_totp/wizard/auth_totp_wizard_views.xml 
+2026-03-26 11:46:25,978 62347 INFO pruebas odoo.modules.loading: Module auth_totp loaded in 0.24s, 192 queries (+192 other) 
+2026-03-26 11:46:25,978 62347 INFO pruebas odoo.modules.loading: Loading module barcodes (6/80) 
+2026-03-26 11:46:26,032 62347 INFO pruebas odoo.modules.registry: module barcodes: creating or updating database tables 
+2026-03-26 11:46:26,079 62347 INFO pruebas odoo.modules.loading: loading barcodes/data/barcodes_data.xml 
+2026-03-26 11:46:26,083 62347 INFO pruebas odoo.modules.loading: loading barcodes/views/barcodes_view.xml 
+2026-03-26 11:46:26,117 62347 INFO pruebas odoo.modules.loading: loading barcodes/security/ir.model.access.csv 
+2026-03-26 11:46:26,144 62347 INFO pruebas odoo.modules.loading: Module barcodes loaded in 0.17s, 127 queries (+127 other) 
+2026-03-26 11:46:26,144 62347 INFO pruebas odoo.modules.loading: Loading module base_import (7/80) 
+2026-03-26 11:46:26,292 62347 INFO pruebas odoo.modules.registry: module base_import: creating or updating database tables 
+2026-03-26 11:46:27,119 62347 INFO pruebas odoo.modules.loading: loading base_import/security/ir.model.access.csv 
+2026-03-26 11:46:27,145 62347 INFO pruebas odoo.modules.loading: Module base_import loaded in 1.00s, 918 queries (+918 other) 
+2026-03-26 11:46:27,145 62347 INFO pruebas odoo.modules.loading: Loading module base_import_module (8/80) 
+2026-03-26 11:46:27,195 62347 INFO pruebas odoo.modules.registry: module base_import_module: creating or updating database tables 
+2026-03-26 11:46:27,251 62347 INFO pruebas odoo.modules.loading: loading base_import_module/security/ir.model.access.csv 
+2026-03-26 11:46:27,261 62347 INFO pruebas odoo.modules.loading: loading base_import_module/views/base_import_module_view.xml 
+2026-03-26 11:46:27,280 62347 INFO pruebas odoo.modules.loading: loading base_import_module/views/ir_module_views.xml 
+2026-03-26 11:46:27,355 62347 INFO pruebas odoo.modules.loading: Module base_import_module loaded in 0.21s, 168 queries (+168 other) 
+2026-03-26 11:46:27,356 62347 INFO pruebas odoo.modules.loading: Loading module base_setup (9/80) 
+2026-03-26 11:46:27,398 62347 INFO pruebas odoo.modules.registry: module base_setup: creating or updating database tables 
+2026-03-26 11:46:27,458 62347 INFO pruebas odoo.modules.loading: loading base_setup/data/base_setup_data.xml 
+2026-03-26 11:46:27,463 62347 INFO pruebas odoo.modules.loading: loading base_setup/views/res_config_settings_views.xml 
+2026-03-26 11:46:27,499 62347 INFO pruebas odoo.modules.loading: loading base_setup/views/res_partner_views.xml 
+2026-03-26 11:46:27,538 62347 INFO pruebas odoo.modules.loading: Module base_setup loaded in 0.18s, 134 queries (+134 other) 
+2026-03-26 11:46:27,538 62347 INFO pruebas odoo.modules.loading: Loading module bus (10/80) 
+2026-03-26 11:46:27,600 62347 INFO pruebas odoo.modules.registry: module bus: creating or updating database tables 
+2026-03-26 11:46:27,735 62347 INFO pruebas odoo.modules.loading: loading bus/security/ir.model.access.csv 
+2026-03-26 11:46:27,759 62347 INFO pruebas odoo.modules.loading: Module bus loaded in 0.22s, 152 queries (+152 other) 
+2026-03-26 11:46:27,759 62347 INFO pruebas odoo.modules.loading: Loading module http_routing (11/80) 
+2026-03-26 11:46:27,803 62347 INFO pruebas odoo.modules.registry: module http_routing: creating or updating database tables 
+2026-03-26 11:46:27,835 62347 INFO pruebas odoo.modules.loading: loading http_routing/views/http_routing_template.xml 
+2026-03-26 11:46:27,880 62347 INFO pruebas odoo.modules.loading: loading http_routing/views/res_lang_views.xml 
+2026-03-26 11:46:27,924 62347 INFO pruebas odoo.modules.loading: Module http_routing loaded in 0.17s, 142 queries (+142 other) 
+2026-03-26 11:46:27,924 62347 INFO pruebas odoo.modules.loading: Loading module onboarding (12/80) 
+2026-03-26 11:46:27,968 62347 INFO pruebas odoo.modules.registry: module onboarding: creating or updating database tables 
+2026-03-26 11:46:28,014 62347 INFO pruebas odoo.modules.loading: loading onboarding/views/onboarding_templates.xml 
+2026-03-26 11:46:28,036 62347 INFO pruebas odoo.modules.loading: loading onboarding/views/onboarding_views.xml 
+2026-03-26 11:46:28,077 62347 INFO pruebas odoo.modules.loading: loading onboarding/views/onboarding_menus.xml 
+2026-03-26 11:46:28,091 62347 INFO pruebas odoo.modules.loading: loading onboarding/security/ir.model.access.csv 
+2026-03-26 11:46:28,135 62347 INFO pruebas odoo.modules.loading: Module onboarding loaded in 0.21s, 181 queries (+181 other) 
+2026-03-26 11:46:28,135 62347 INFO pruebas odoo.modules.loading: Loading module resource (13/80) 
+2026-03-26 11:46:28,186 62347 INFO pruebas odoo.modules.registry: module resource: creating or updating database tables 
+2026-03-26 11:46:28,274 62347 INFO pruebas odoo.modules.loading: loading resource/data/resource_data.xml 
+2026-03-26 11:46:28,280 62347 INFO pruebas odoo.modules.loading: loading resource/security/ir.model.access.csv 
+2026-03-26 11:46:28,302 62347 INFO pruebas odoo.modules.loading: loading resource/security/resource_security.xml 
+2026-03-26 11:46:28,307 62347 INFO pruebas odoo.modules.loading: loading resource/views/resource_resource_views.xml 
+2026-03-26 11:46:28,339 62347 INFO pruebas odoo.modules.loading: loading resource/views/resource_calendar_leaves_views.xml 
+2026-03-26 11:46:28,374 62347 INFO pruebas odoo.modules.loading: loading resource/views/resource_calendar_attendance_views.xml 
+2026-03-26 11:46:28,390 62347 INFO pruebas odoo.modules.loading: loading resource/views/resource_calendar_views.xml 
+2026-03-26 11:46:28,416 62347 INFO pruebas odoo.modules.loading: loading resource/views/menuitems.xml 
+2026-03-26 11:46:28,458 62347 INFO pruebas odoo.modules.loading: Module resource loaded in 0.32s, 294 queries (+294 other) 
+2026-03-26 11:46:28,458 62347 INFO pruebas odoo.modules.loading: Loading module utm (14/80) 
+2026-03-26 11:46:28,507 62347 INFO pruebas odoo.modules.registry: module utm: creating or updating database tables 
+2026-03-26 11:46:28,576 62347 INFO pruebas odoo.modules.loading: loading utm/data/utm_medium_data.xml 
+2026-03-26 11:46:28,587 62347 INFO pruebas odoo.modules.loading: loading utm/data/utm_source_data.xml 
+2026-03-26 11:46:28,597 62347 INFO pruebas odoo.modules.loading: loading utm/data/utm_stage_data.xml 
+2026-03-26 11:46:28,602 62347 INFO pruebas odoo.modules.loading: loading utm/data/utm_tag_data.xml 
+2026-03-26 11:46:28,606 62347 INFO pruebas odoo.modules.loading: loading utm/views/utm_campaign_views.xml 
+2026-03-26 11:46:28,647 62347 INFO pruebas odoo.modules.loading: loading utm/views/utm_medium_views.xml 
+2026-03-26 11:46:28,675 62347 INFO pruebas odoo.modules.loading: loading utm/views/utm_source_views.xml 
+2026-03-26 11:46:28,697 62347 INFO pruebas odoo.modules.loading: loading utm/views/utm_stage_views.xml 
+2026-03-26 11:46:28,717 62347 INFO pruebas odoo.modules.loading: loading utm/views/utm_tag_views.xml 
+2026-03-26 11:46:28,730 62347 INFO pruebas odoo.modules.loading: loading utm/views/utm_menus.xml 
+2026-03-26 11:46:28,767 62347 INFO pruebas odoo.modules.loading: loading utm/security/ir.model.access.csv 
+2026-03-26 11:46:28,815 62347 INFO pruebas odoo.modules.loading: Module utm loaded in 0.36s, 340 queries (+340 other) 
+2026-03-26 11:46:28,815 62347 INFO pruebas odoo.modules.loading: Loading module web_tour (15/80) 
+2026-03-26 11:46:28,875 62347 INFO pruebas odoo.modules.registry: module web_tour: creating or updating database tables 
+2026-03-26 11:46:28,958 62347 INFO pruebas odoo.modules.loading: loading web_tour/security/ir.model.access.csv 
+2026-03-26 11:46:28,974 62347 INFO pruebas odoo.modules.loading: loading web_tour/views/tour_views.xml 
+2026-03-26 11:46:29,028 62347 INFO pruebas odoo.modules.loading: loading web_tour/views/res_users_views.xml 
+2026-03-26 11:46:29,096 62347 INFO pruebas odoo.modules.loading: Module web_tour loaded in 0.28s, 162 queries (+162 other) 
+2026-03-26 11:46:29,096 62347 INFO pruebas odoo.modules.loading: Loading module barcodes_gs1_nomenclature (16/80) 
+2026-03-26 11:46:29,179 62347 INFO pruebas odoo.modules.registry: module barcodes_gs1_nomenclature: creating or updating database tables 
+2026-03-26 11:46:29,217 62347 INFO pruebas odoo.modules.loading: loading barcodes_gs1_nomenclature/data/barcodes_gs1_rules.xml 
+2026-03-26 11:46:29,254 62347 INFO pruebas odoo.modules.loading: loading barcodes_gs1_nomenclature/views/barcodes_view.xml 
+2026-03-26 11:46:29,334 62347 INFO pruebas odoo.modules.loading: Module barcodes_gs1_nomenclature loaded in 0.24s, 148 queries (+148 other) 
+2026-03-26 11:46:29,334 62347 INFO pruebas odoo.modules.loading: Loading module base_geolocalize (17/80) 
+2026-03-26 11:46:29,400 62347 INFO pruebas odoo.modules.registry: module base_geolocalize: creating or updating database tables 
+2026-03-26 11:46:29,526 62347 INFO pruebas odoo.modules.loading: loading base_geolocalize/security/ir.model.access.csv 
+2026-03-26 11:46:29,545 62347 INFO pruebas odoo.modules.loading: loading base_geolocalize/views/geo_provider_view.xml 
+2026-03-26 11:46:29,565 62347 INFO pruebas odoo.modules.loading: loading base_geolocalize/views/res_partner_views.xml 
+2026-03-26 11:46:29,601 62347 INFO pruebas odoo.modules.loading: loading base_geolocalize/views/res_config_settings_views.xml 
+2026-03-26 11:46:29,640 62347 INFO pruebas odoo.modules.loading: loading base_geolocalize/data/data.xml 
+2026-03-26 11:46:29,670 62347 INFO pruebas odoo.modules.loading: Module base_geolocalize loaded in 0.34s, 156 queries (+156 other) 
+2026-03-26 11:46:29,670 62347 INFO pruebas odoo.modules.loading: Loading module html_editor (18/80) 
+2026-03-26 11:46:29,805 62347 INFO pruebas odoo.modules.registry: module html_editor: creating or updating database tables 
+2026-03-26 11:46:29,861 62347 INFO pruebas odoo.modules.loading: Module html_editor loaded in 0.19s, 38 queries (+38 other) 
+2026-03-26 11:46:29,861 62347 INFO pruebas odoo.modules.loading: Loading module iap (19/80) 
+2026-03-26 11:46:29,922 62347 INFO pruebas odoo.modules.registry: module iap: creating or updating database tables 
+2026-03-26 11:46:29,964 62347 INFO pruebas odoo.modules.loading: loading iap/data/services.xml 
+2026-03-26 11:46:29,970 62347 INFO pruebas odoo.modules.loading: loading iap/security/ir.model.access.csv 
+2026-03-26 11:46:29,986 62347 INFO pruebas odoo.modules.loading: loading iap/security/ir_rule.xml 
+2026-03-26 11:46:29,990 62347 INFO pruebas odoo.modules.loading: loading iap/views/iap_views.xml 
+2026-03-26 11:46:30,027 62347 INFO pruebas odoo.modules.loading: loading iap/views/res_config_settings.xml 
+2026-03-26 11:46:30,107 62347 INFO pruebas odoo.modules.loading: Module iap loaded in 0.25s, 155 queries (+155 other) 
+2026-03-26 11:46:30,107 62347 INFO pruebas odoo.modules.loading: Loading module mail (20/80) 
+2026-03-26 11:46:30,224 62347 INFO pruebas odoo.modules.registry: module mail: creating or updating database tables 
+2026-03-26 11:46:32,168 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_groups.xml 
+2026-03-26 11:46:32,187 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_activity_schedule_views.xml 
+2026-03-26 11:46:32,248 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_blacklist_remove_views.xml 
+2026-03-26 11:46:32,265 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_compose_message_views.xml 
+2026-03-26 11:46:32,311 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_resend_message_views.xml 
+2026-03-26 11:46:32,343 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_resend_partner_views.xml 
+2026-03-26 11:46:32,355 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_template_preview_views.xml 
+2026-03-26 11:46:32,373 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_wizard_invite_views.xml 
+2026-03-26 11:46:32,397 62347 INFO pruebas odoo.modules.loading: loading mail/wizard/mail_template_reset_views.xml 
+2026-03-26 11:46:32,418 62347 INFO pruebas odoo.modules.loading: loading mail/views/fetchmail_views.xml 
+2026-03-26 11:46:32,452 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_message_subtype_views.xml 
+2026-03-26 11:46:32,479 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_tracking_value_views.xml 
+2026-03-26 11:46:32,505 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_notification_views.xml 
+2026-03-26 11:46:32,549 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_message_views.xml 
+2026-03-26 11:46:32,613 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_message_schedule_views.xml 
+2026-03-26 11:46:32,661 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_mail_views.xml 
+2026-03-26 11:46:32,729 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_followers_views.xml 
+2026-03-26 11:46:32,763 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_ice_server_views.xml 
+2026-03-26 11:46:32,939 62347 INFO pruebas odoo.modules.loading: loading mail/views/discuss_channel_member_views.xml 
+2026-03-26 11:46:32,976 62347 INFO pruebas odoo.modules.loading: loading mail/views/discuss_channel_rtc_session_views.xml 
+2026-03-26 11:46:33,023 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_link_preview_views.xml 
+2026-03-26 11:46:33,057 62347 INFO pruebas odoo.modules.loading: loading mail/views/discuss/discuss_gif_favorite_views.xml 
+2026-03-26 11:46:33,104 62347 INFO pruebas odoo.modules.loading: loading mail/views/discuss_channel_views.xml 
+2026-03-26 11:46:33,214 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_canned_response_views.xml 
+2026-03-26 11:46:33,265 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_activity_views.xml 
+2026-03-26 11:46:33,846 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_activity_plan_views.xml 
+2026-03-26 11:46:33,905 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_activity_plan_template_views.xml 
+2026-03-26 11:46:33,919 62347 INFO pruebas odoo.modules.loading: loading mail/views/res_config_settings_views.xml 
+2026-03-26 11:46:33,969 62347 INFO pruebas odoo.modules.loading: loading mail/data/ir_config_parameter_data.xml 
+2026-03-26 11:46:33,974 62347 INFO pruebas odoo.modules.loading: loading mail/data/res_partner_data.xml 
+2026-03-26 11:46:33,979 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_message_subtype_data.xml 
+2026-03-26 11:46:33,983 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_templates_chatter.xml 
+2026-03-26 11:46:34,012 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_templates_email_layouts.xml 
+2026-03-26 11:46:34,053 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_templates_mailgateway.xml 
+2026-03-26 11:46:34,081 62347 INFO pruebas odoo.modules.loading: loading mail/data/discuss_channel_data.xml 
+2026-03-26 11:46:34,095 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_activity_data.xml 
+2026-03-26 11:46:34,108 62347 INFO pruebas odoo.modules.loading: loading mail/data/security_notifications_templates.xml 
+2026-03-26 11:46:34,124 62347 INFO pruebas odoo.modules.loading: loading mail/data/ir_cron_data.xml 
+2026-03-26 11:46:34,142 62347 INFO pruebas odoo.modules.loading: loading mail/data/ir_actions_client.xml 
+2026-03-26 11:46:34,148 62347 INFO pruebas odoo.modules.loading: loading mail/security/mail_security.xml 
+2026-03-26 11:46:34,170 62347 INFO pruebas odoo.modules.loading: loading mail/security/ir.model.access.csv 
+2026-03-26 11:46:34,337 62347 INFO pruebas odoo.modules.loading: loading mail/views/discuss_public_templates.xml 
+2026-03-26 11:46:34,347 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_alias_domain_views.xml 
+2026-03-26 11:46:34,369 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_alias_views.xml 
+2026-03-26 11:46:34,393 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_gateway_allowed_views.xml 
+2026-03-26 11:46:34,408 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_guest_views.xml 
+2026-03-26 11:46:34,424 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_message_reaction_views.xml 
+2026-03-26 11:46:34,439 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_templates_public.xml 
+2026-03-26 11:46:34,454 62347 INFO pruebas odoo.modules.loading: loading mail/views/res_users_views.xml 
+2026-03-26 11:46:34,498 62347 INFO pruebas odoo.modules.loading: loading mail/views/res_users_settings_views.xml 
+2026-03-26 11:46:34,515 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_template_views.xml 
+2026-03-26 11:46:34,543 62347 INFO pruebas odoo.modules.loading: loading mail/views/ir_actions_server_views.xml 
+2026-03-26 11:46:34,570 62347 INFO pruebas odoo.modules.loading: loading mail/views/ir_model_views.xml 
+2026-03-26 11:46:34,621 62347 INFO pruebas odoo.modules.loading: loading mail/views/res_partner_views.xml 
+2026-03-26 11:46:34,784 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_blacklist_views.xml 
+2026-03-26 11:46:34,806 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_menus.xml 
+2026-03-26 11:46:35,011 62347 INFO pruebas odoo.modules.loading: loading mail/views/res_company_views.xml 
+2026-03-26 11:46:35,028 62347 INFO pruebas odoo.modules.loading: loading mail/views/mail_scheduled_message_views.xml 
+2026-03-26 11:46:35,038 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_canned_response_data.xml 
+2026-03-26 11:46:35,041 62347 INFO pruebas odoo.modules.loading: loading mail/data/mail_templates_invite.xml 
+2026-03-26 11:46:35,059 62347 INFO pruebas odoo.modules.loading: loading mail/data/web_tour_tour.xml 
+2026-03-26 11:46:35,111 62347 INFO pruebas odoo.modules.loading: Module mail loaded in 5.00s, 3320 queries (+3320 other) 
+2026-03-26 11:46:35,111 62347 INFO pruebas odoo.modules.loading: Loading module web_editor (21/80) 
+2026-03-26 11:46:35,241 62347 INFO pruebas odoo.modules.registry: module web_editor: creating or updating database tables 
+2026-03-26 11:46:36,727 62347 INFO pruebas odoo.modules.loading: loading web_editor/security/ir.model.access.csv 
+2026-03-26 11:46:36,738 62347 INFO pruebas odoo.modules.loading: loading web_editor/data/editor_assets.xml 
+2026-03-26 11:46:36,741 62347 INFO pruebas odoo.modules.loading: loading web_editor/views/editor.xml 
+2026-03-26 11:46:36,758 62347 INFO pruebas odoo.modules.loading: loading web_editor/views/snippets.xml 
+2026-03-26 11:46:36,841 62347 INFO pruebas odoo.modules.loading: Module web_editor loaded in 1.73s, 1573 queries (+1573 other) 
+2026-03-26 11:46:36,842 62347 INFO pruebas odoo.modules.loading: Loading module analytic (22/80) 
+2026-03-26 11:46:36,991 62347 INFO pruebas odoo.modules.registry: module analytic: creating or updating database tables 
+2026-03-26 11:46:37,107 62347 INFO pruebas odoo.modules.loading: loading analytic/security/analytic_security.xml 
+2026-03-26 11:46:37,119 62347 INFO pruebas odoo.modules.loading: loading analytic/security/ir.model.access.csv 
+2026-03-26 11:46:37,158 62347 INFO pruebas odoo.modules.loading: loading analytic/views/analytic_line_views.xml 
+2026-03-26 11:46:37,241 62347 INFO pruebas odoo.modules.loading: loading analytic/views/analytic_account_views.xml 
+2026-03-26 11:46:37,292 62347 INFO pruebas odoo.modules.loading: loading analytic/views/analytic_plan_views.xml 
+2026-03-26 11:46:37,331 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [69, 70] 
+2026-03-26 11:46:37,339 62347 INFO pruebas odoo.modules.loading: loading analytic/views/analytic_distribution_model_views.xml 
+2026-03-26 11:46:37,363 62347 INFO pruebas odoo.modules.loading: loading analytic/data/analytic_data.xml 
+2026-03-26 11:46:37,401 62347 INFO pruebas odoo.modules.loading: Module analytic loaded in 0.56s, 304 queries (+304 other) 
+2026-03-26 11:46:37,401 62347 INFO pruebas odoo.modules.loading: Loading module auth_signup (23/80) 
+2026-03-26 11:46:37,511 62347 INFO pruebas odoo.modules.registry: module auth_signup: creating or updating database tables 
+2026-03-26 11:46:37,639 62347 INFO pruebas odoo.modules.loading: loading auth_signup/data/ir_config_parameter_data.xml 
+2026-03-26 11:46:37,641 62347 INFO pruebas odoo.modules.loading: loading auth_signup/data/ir_cron_data.xml 
+2026-03-26 11:46:37,668 62347 INFO pruebas odoo.modules.loading: loading auth_signup/data/mail_template_data.xml 
+2026-03-26 11:46:37,675 62347 INFO pruebas odoo.modules.loading: loading auth_signup/views/res_config_settings_views.xml 
+2026-03-26 11:46:37,723 62347 INFO pruebas odoo.modules.loading: loading auth_signup/views/res_users_views.xml 
+2026-03-26 11:46:37,768 62347 INFO pruebas odoo.modules.loading: loading auth_signup/views/auth_signup_login_templates.xml 
+2026-03-26 11:46:37,799 62347 INFO pruebas odoo.modules.loading: loading auth_signup/views/auth_signup_templates_email.xml 
+2026-03-26 11:46:37,815 62347 INFO pruebas odoo.modules.loading: loading auth_signup/views/webclient_templates.xml 
+2026-03-26 11:46:37,851 62347 INFO pruebas odoo.modules.loading: Module auth_signup loaded in 0.45s, 260 queries (+260 other) 
+2026-03-26 11:46:37,851 62347 INFO pruebas odoo.modules.loading: Loading module auth_totp_mail (24/80) 
+2026-03-26 11:46:37,956 62347 INFO pruebas odoo.modules.registry: module auth_totp_mail: creating or updating database tables 
+2026-03-26 11:46:38,020 62347 INFO pruebas odoo.modules.loading: loading auth_totp_mail/data/ir_action_data.xml 
+2026-03-26 11:46:38,033 62347 INFO pruebas odoo.modules.loading: loading auth_totp_mail/data/mail_template_data.xml 
+2026-03-26 11:46:38,036 62347 INFO pruebas odoo.modules.loading: loading auth_totp_mail/data/security_notifications_template.xml 
+2026-03-26 11:46:38,050 62347 INFO pruebas odoo.modules.loading: loading auth_totp_mail/views/res_users_views.xml 
+2026-03-26 11:46:38,153 62347 INFO pruebas odoo.modules.loading: Module auth_totp_mail loaded in 0.30s, 136 queries (+136 other) 
+2026-03-26 11:46:38,153 62347 INFO pruebas odoo.modules.loading: Loading module base_install_request (25/80) 
+2026-03-26 11:46:38,279 62347 INFO pruebas odoo.modules.registry: module base_install_request: creating or updating database tables 
+2026-03-26 11:46:38,329 62347 INFO pruebas odoo.modules.loading: loading base_install_request/security/ir.model.access.csv 
+2026-03-26 11:46:38,351 62347 INFO pruebas odoo.modules.loading: loading base_install_request/wizard/base_module_install_request_views.xml 
+2026-03-26 11:46:38,380 62347 INFO pruebas odoo.modules.loading: loading base_install_request/data/mail_template_data.xml 
+2026-03-26 11:46:38,384 62347 INFO pruebas odoo.modules.loading: loading base_install_request/data/mail_templates_module_install.xml 
+2026-03-26 11:46:38,407 62347 INFO pruebas odoo.modules.loading: loading base_install_request/views/ir_module_module_views.xml 
+2026-03-26 11:46:38,507 62347 INFO pruebas odoo.modules.loading: Module base_install_request loaded in 0.35s, 135 queries (+135 other) 
+2026-03-26 11:46:38,507 62347 INFO pruebas odoo.modules.loading: Loading module calendar (26/80) 
+2026-03-26 11:46:38,698 62347 INFO pruebas odoo.modules.registry: module calendar: creating or updating database tables 
+2026-03-26 11:46:39,004 62347 INFO pruebas odoo.modules.loading: loading calendar/security/ir.model.access.csv 
+2026-03-26 11:46:39,058 62347 INFO pruebas odoo.modules.loading: loading calendar/security/calendar_security.xml 
+2026-03-26 11:46:39,072 62347 INFO pruebas odoo.modules.loading: loading calendar/data/calendar_cron.xml 
+2026-03-26 11:46:39,075 62347 INFO pruebas odoo.modules.loading: loading calendar/data/mail_template_data.xml 
+2026-03-26 11:46:39,083 62347 INFO pruebas odoo.modules.loading: loading calendar/data/calendar_data.xml 
+2026-03-26 11:46:39,093 62347 INFO pruebas odoo.modules.loading: loading calendar/data/mail_activity_type_data.xml 
+2026-03-26 11:46:39,099 62347 INFO pruebas odoo.modules.loading: loading calendar/data/mail_message_subtype_data.xml 
+2026-03-26 11:46:39,102 62347 INFO pruebas odoo.modules.loading: loading calendar/views/mail_activity_views.xml 
+2026-03-26 11:46:39,135 62347 INFO pruebas odoo.modules.loading: loading calendar/views/calendar_templates.xml 
+2026-03-26 11:46:39,145 62347 INFO pruebas odoo.modules.loading: loading calendar/views/calendar_views.xml 
+2026-03-26 11:46:39,366 62347 INFO pruebas odoo.modules.loading: loading calendar/views/res_config_settings_views.xml 
+2026-03-26 11:46:39,433 62347 INFO pruebas odoo.modules.loading: loading calendar/views/res_partner_views.xml 
+2026-03-26 11:46:39,476 62347 INFO pruebas odoo.modules.loading: loading calendar/views/res_users_views.xml 
+2026-03-26 11:46:39,551 62347 INFO pruebas odoo.modules.loading: loading calendar/wizard/calendar_provider_config.xml 
+2026-03-26 11:46:39,560 62347 INFO pruebas odoo.modules.loading: loading calendar/wizard/calendar_popover_delete_wizard.xml 
+2026-03-26 11:46:39,574 62347 INFO pruebas odoo.modules.loading: loading calendar/wizard/mail_activity_schedule_views.xml 
+2026-03-26 11:46:39,654 62347 INFO pruebas odoo.modules.loading: Module calendar loaded in 1.15s, 623 queries (+623 other) 
+2026-03-26 11:46:39,654 62347 INFO pruebas odoo.modules.loading: Loading module contacts (27/80) 
+2026-03-26 11:46:39,777 62347 INFO pruebas odoo.modules.registry: module contacts: creating or updating database tables 
+2026-03-26 11:46:39,944 62347 INFO pruebas odoo.modules.loading: loading contacts/views/contact_views.xml 
+2026-03-26 11:46:40,120 62347 INFO pruebas odoo.modules.loading: Module contacts loaded in 0.47s, 251 queries (+251 other) 
+2026-03-26 11:46:40,120 62347 INFO pruebas odoo.modules.loading: Loading module google_gmail (28/80) 
+2026-03-26 11:46:40,234 62347 INFO pruebas odoo.modules.registry: module google_gmail: creating or updating database tables 
+2026-03-26 11:46:40,326 62347 INFO pruebas odoo.modules.loading: loading google_gmail/views/fetchmail_server_views.xml 
+2026-03-26 11:46:40,353 62347 INFO pruebas odoo.modules.loading: loading google_gmail/views/ir_mail_server_views.xml 
+2026-03-26 11:46:40,385 62347 INFO pruebas odoo.modules.loading: loading google_gmail/views/res_config_settings_views.xml 
+2026-03-26 11:46:40,456 62347 INFO pruebas odoo.modules.loading: Module google_gmail loaded in 0.34s, 132 queries (+132 other) 
+2026-03-26 11:46:40,456 62347 INFO pruebas odoo.modules.loading: Loading module iap_mail (29/80) 
+2026-03-26 11:46:40,635 62347 INFO pruebas odoo.modules.registry: module iap_mail: creating or updating database tables 
+2026-03-26 11:46:40,704 62347 INFO pruebas odoo.modules.loading: loading iap_mail/data/mail_templates.xml 
+2026-03-26 11:46:40,726 62347 INFO pruebas odoo.modules.loading: loading iap_mail/views/iap_views.xml 
+2026-03-26 11:46:40,794 62347 INFO pruebas odoo.modules.loading: Module iap_mail loaded in 0.34s, 84 queries (+84 other) 
+2026-03-26 11:46:40,795 62347 INFO pruebas odoo.modules.loading: Loading module mail_bot (30/80) 
+2026-03-26 11:46:40,933 62347 INFO pruebas odoo.modules.registry: module mail_bot: creating or updating database tables 
+2026-03-26 11:46:41,013 62347 INFO pruebas odoo.modules.loading: loading mail_bot/views/res_users_views.xml 
+2026-03-26 11:46:41,093 62347 INFO pruebas odoo.modules.loading: loading mail_bot/data/mailbot_data.xml 
+2026-03-26 11:46:41,119 62347 INFO pruebas odoo.modules.loading: Module mail_bot loaded in 0.32s, 133 queries (+133 other) 
+2026-03-26 11:46:41,119 62347 INFO pruebas odoo.modules.loading: Loading module phone_validation (31/80) 
+2026-03-26 11:46:41,315 62347 INFO pruebas odoo.modules.registry: module phone_validation: creating or updating database tables 
+2026-03-26 11:46:43,531 62347 INFO pruebas odoo.modules.loading: loading phone_validation/security/ir.model.access.csv 
+2026-03-26 11:46:43,548 62347 INFO pruebas odoo.modules.loading: loading phone_validation/views/phone_blacklist_views.xml 
+2026-03-26 11:46:43,602 62347 INFO pruebas odoo.modules.loading: loading phone_validation/wizard/phone_blacklist_remove_view.xml 
+2026-03-26 11:46:43,632 62347 INFO pruebas odoo.modules.loading: Module phone_validation loaded in 2.51s, 1685 queries (+1685 other) 
+2026-03-26 11:46:43,632 62347 INFO pruebas odoo.modules.loading: Loading module privacy_lookup (32/80) 
+2026-03-26 11:46:43,875 62347 INFO pruebas odoo.modules.registry: module privacy_lookup: creating or updating database tables 
+2026-03-26 11:46:44,054 62347 INFO pruebas odoo.modules.loading: loading privacy_lookup/wizard/privacy_lookup_wizard_views.xml 
+2026-03-26 11:46:44,178 62347 INFO pruebas odoo.modules.loading: loading privacy_lookup/views/privacy_log_views.xml 
+2026-03-26 11:46:44,281 62347 INFO pruebas odoo.modules.loading: loading privacy_lookup/security/ir.model.access.csv 
+2026-03-26 11:46:44,343 62347 INFO pruebas odoo.modules.loading: loading privacy_lookup/data/ir_actions_server_data.xml 
+2026-03-26 11:46:44,477 62347 INFO pruebas odoo.modules.loading: Module privacy_lookup loaded in 0.84s, 217 queries (+217 other) 
+2026-03-26 11:46:44,477 62347 INFO pruebas odoo.modules.loading: Loading module product (33/80) 
+2026-03-26 11:46:44,937 62347 INFO pruebas odoo.modules.registry: module product: creating or updating database tables 
+2026-03-26 11:46:45,967 62347 INFO pruebas odoo.modules.loading: loading product/data/product_data.xml 
+2026-03-26 11:46:45,990 62347 INFO pruebas odoo.modules.loading: loading product/security/product_security.xml 
+2026-03-26 11:46:46,210 62347 INFO pruebas odoo.modules.loading: loading product/security/ir.model.access.csv 
+2026-03-26 11:46:46,346 62347 INFO pruebas odoo.modules.loading: loading product/wizard/product_label_layout_views.xml 
+2026-03-26 11:46:46,388 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [71] 
+2026-03-26 11:46:46,399 62347 INFO pruebas odoo.modules.loading: loading product/wizard/update_product_attribute_value_views.xml 
+2026-03-26 11:46:46,420 62347 INFO pruebas odoo.modules.loading: loading product/views/product_tag_views.xml 
+2026-03-26 11:46:46,513 62347 INFO pruebas odoo.modules.loading: loading product/views/product_views.xml 
+2026-03-26 11:46:46,661 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [72, 73, 74] 
+2026-03-26 11:46:46,897 62347 INFO pruebas odoo.modules.loading: loading product/views/res_config_settings_views.xml 
+2026-03-26 11:46:46,992 62347 INFO pruebas odoo.modules.loading: loading product/views/product_attribute_views.xml 
+2026-03-26 11:46:47,147 62347 INFO pruebas odoo.modules.loading: loading product/views/product_attribute_value_views.xml 
+2026-03-26 11:46:47,163 62347 INFO pruebas odoo.modules.loading: loading product/views/product_category_views.xml 
+2026-03-26 11:46:47,218 62347 INFO pruebas odoo.modules.loading: loading product/views/product_combo_views.xml 
+2026-03-26 11:46:47,302 62347 INFO pruebas odoo.modules.loading: loading product/views/product_document_views.xml 
+2026-03-26 11:46:47,383 62347 INFO pruebas odoo.modules.loading: loading product/views/product_packaging_views.xml 
+2026-03-26 11:46:47,509 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [75, 76] 
+2026-03-26 11:46:47,522 62347 INFO pruebas odoo.modules.loading: loading product/views/product_pricelist_item_views.xml 
+2026-03-26 11:46:47,601 62347 INFO pruebas odoo.modules.loading: loading product/views/product_pricelist_views.xml 
+2026-03-26 11:46:47,749 62347 INFO pruebas odoo.modules.loading: loading product/views/product_supplierinfo_views.xml 
+2026-03-26 11:46:47,823 62347 INFO pruebas odoo.modules.loading: loading product/views/product_template_attribute_line_views.xml 
+2026-03-26 11:46:47,842 62347 INFO pruebas odoo.modules.loading: loading product/views/product_template_views.xml 
+2026-03-26 11:46:47,965 62347 INFO pruebas odoo.modules.loading: loading product/views/res_country_group_views.xml 
+2026-03-26 11:46:47,987 62347 INFO pruebas odoo.modules.loading: loading product/views/res_partner_views.xml 
+2026-03-26 11:46:48,069 62347 INFO pruebas odoo.modules.loading: loading product/report/product_reports.xml 
+2026-03-26 11:46:48,117 62347 INFO pruebas odoo.modules.loading: loading product/report/product_product_templates.xml 
+2026-03-26 11:46:48,251 62347 INFO pruebas odoo.modules.loading: loading product/report/product_template_templates.xml 
+2026-03-26 11:46:48,330 62347 INFO pruebas odoo.modules.loading: loading product/report/product_packaging.xml 
+2026-03-26 11:46:48,341 62347 INFO pruebas odoo.modules.loading: loading product/report/product_pricelist_report_templates.xml 
+2026-03-26 11:46:48,441 62347 INFO pruebas odoo.modules.loading: Module product loaded in 3.96s, 1302 queries (+1302 other) 
+2026-03-26 11:46:48,441 62347 INFO pruebas odoo.modules.loading: Loading module resource_mail (34/80) 
+2026-03-26 11:46:48,658 62347 INFO pruebas odoo.modules.registry: module resource_mail: creating or updating database tables 
+2026-03-26 11:46:48,723 62347 INFO pruebas odoo.modules.loading: Module resource_mail loaded in 0.28s, 37 queries (+37 other) 
+2026-03-26 11:46:48,724 62347 INFO pruebas odoo.modules.loading: Loading module sales_team (35/80) 
+2026-03-26 11:46:48,877 62347 INFO pruebas odoo.modules.registry: module sales_team: creating or updating database tables 
+2026-03-26 11:46:48,954 62347 INFO pruebas odoo.modules.loading: loading sales_team/security/sales_team_security.xml 
+2026-03-26 11:46:49,052 62347 INFO pruebas odoo.modules.loading: loading sales_team/security/ir.model.access.csv 
+2026-03-26 11:46:49,077 62347 INFO pruebas odoo.modules.loading: loading sales_team/data/crm_team_data.xml 
+2026-03-26 11:46:49,083 62347 INFO pruebas odoo.modules.loading: loading sales_team/views/crm_tag_views.xml 
+2026-03-26 11:46:49,115 62347 INFO pruebas odoo.modules.loading: loading sales_team/views/crm_team_views.xml 
+2026-03-26 11:46:49,161 62347 INFO pruebas odoo.modules.loading: loading sales_team/views/crm_team_member_views.xml 
+2026-03-26 11:46:49,224 62347 INFO pruebas odoo.modules.loading: loading sales_team/views/mail_activity_views.xml 
+2026-03-26 11:46:49,261 62347 INFO pruebas odoo.modules.loading: Module sales_team loaded in 0.54s, 352 queries (+352 other) 
+2026-03-26 11:46:49,261 62347 INFO pruebas odoo.modules.loading: Loading module web_unsplash (36/80) 
+2026-03-26 11:46:49,415 62347 INFO pruebas odoo.modules.registry: module web_unsplash: creating or updating database tables 
+2026-03-26 11:46:49,587 62347 INFO pruebas odoo.modules.loading: loading web_unsplash/views/res_config_settings_view.xml 
+2026-03-26 11:46:49,646 62347 INFO pruebas odoo.modules.loading: Module web_unsplash loaded in 0.39s, 124 queries (+124 other) 
+2026-03-26 11:46:49,646 62347 INFO pruebas odoo.modules.loading: Loading module fieldservice (37/80) 
+2026-03-26 11:46:49,797 62347 INFO pruebas odoo.modules.registry: module fieldservice: creating or updating database tables 
+2026-03-26 11:46:50,084 62347 INFO pruebas odoo.modules.loading: loading fieldservice/data/ir_sequence.xml 
+2026-03-26 11:46:50,087 62347 INFO pruebas odoo.modules.loading: loading fieldservice/data/mail_message_subtype.xml 
+2026-03-26 11:46:50,098 62347 INFO pruebas odoo.modules.loading: loading fieldservice/data/module_category.xml 
+2026-03-26 11:46:50,101 62347 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_stage.xml 
+2026-03-26 11:46:50,109 62347 INFO pruebas odoo.modules.loading: loading fieldservice/data/fsm_team.xml 
+2026-03-26 11:46:50,114 62347 INFO pruebas odoo.modules.loading: loading fieldservice/security/res_groups.xml 
+2026-03-26 11:46:50,272 62347 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir.model.access.csv 
+2026-03-26 11:46:50,331 62347 INFO pruebas odoo.modules.loading: loading fieldservice/security/ir_rule.xml 
+2026-03-26 11:46:50,386 62347 INFO pruebas odoo.modules.loading: loading fieldservice/report/fsm_order_report_template.xml 
+2026-03-26 11:46:50,403 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_config_settings.xml 
+2026-03-26 11:46:50,464 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_territory.xml 
+2026-03-26 11:46:50,478 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_stage.xml 
+2026-03-26 11:46:50,500 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_tag.xml 
+2026-03-26 11:46:50,515 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/res_partner.xml 
+2026-03-26 11:46:50,568 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location.xml 
+2026-03-26 11:46:50,609 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_location_person.xml 
+2026-03-26 11:46:50,628 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_person.xml 
+2026-03-26 11:46:50,660 62347 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_order_sign_wizard.xml 
+2026-03-26 11:46:50,675 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order.xml 
+2026-03-26 11:46:50,735 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_order_type.xml 
+2026-03-26 11:46:50,754 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_category.xml 
+2026-03-26 11:46:50,771 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_equipment.xml 
+2026-03-26 11:46:50,827 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_template.xml 
+2026-03-26 11:46:50,843 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/fsm_team.xml 
+2026-03-26 11:46:50,877 62347 INFO pruebas odoo.modules.loading: loading fieldservice/views/menu.xml 
+2026-03-26 11:46:51,005 62347 INFO pruebas odoo.modules.loading: loading fieldservice/wizard/fsm_wizard.xml 
+2026-03-26 11:46:51,056 62347 INFO pruebas odoo.modules.loading: Module fieldservice loaded in 1.41s, 1260 queries (+1260 other) 
+2026-03-26 11:46:51,056 62347 INFO pruebas odoo.modules.loading: Loading module partner_autocomplete (38/80) 
+2026-03-26 11:46:51,222 62347 INFO pruebas odoo.modules.registry: module partner_autocomplete: creating or updating database tables 
+2026-03-26 11:46:51,406 62347 INFO pruebas odoo.modules.loading: loading partner_autocomplete/security/ir.model.access.csv 
+2026-03-26 11:46:51,456 62347 INFO pruebas odoo.modules.loading: loading partner_autocomplete/views/res_partner_views.xml 
+2026-03-26 11:46:51,563 62347 INFO pruebas odoo.modules.loading: loading partner_autocomplete/views/res_company_views.xml 
+2026-03-26 11:46:51,598 62347 INFO pruebas odoo.modules.loading: loading partner_autocomplete/views/res_config_settings_views.xml 
+2026-03-26 11:46:51,695 62347 INFO pruebas odoo.modules.loading: loading partner_autocomplete/data/cron.xml 
+2026-03-26 11:46:51,721 62347 INFO pruebas odoo.modules.loading: loading partner_autocomplete/data/iap_service_data.xml 
+2026-03-26 11:46:51,751 62347 INFO pruebas odoo.modules.loading: Module partner_autocomplete loaded in 0.70s, 251 queries (+251 other) 
+2026-03-26 11:46:51,752 62347 INFO pruebas odoo.modules.loading: Loading module portal (39/80) 
+2026-03-26 11:46:51,908 62347 INFO pruebas odoo.modules.registry: module portal: creating or updating database tables 
+2026-03-26 11:46:52,295 62347 INFO pruebas odoo.modules.loading: loading portal/security/ir.model.access.csv 
+2026-03-26 11:46:52,310 62347 INFO pruebas odoo.modules.loading: loading portal/data/mail_template_data.xml 
+2026-03-26 11:46:52,313 62347 INFO pruebas odoo.modules.loading: loading portal/data/mail_templates.xml 
+2026-03-26 11:46:52,316 62347 INFO pruebas odoo.modules.loading: loading portal/views/mail_templates_public.xml 
+2026-03-26 11:46:52,328 62347 INFO pruebas odoo.modules.loading: loading portal/views/portal_templates.xml 
+2026-03-26 11:46:52,553 62347 INFO pruebas odoo.modules.loading: loading portal/views/res_config_settings_views.xml 
+2026-03-26 11:46:52,603 62347 INFO pruebas odoo.modules.loading: loading portal/wizard/portal_share_views.xml 
+2026-03-26 11:46:52,615 62347 INFO pruebas odoo.modules.loading: loading portal/wizard/portal_wizard_views.xml 
+2026-03-26 11:46:52,661 62347 INFO pruebas odoo.modules.loading: Module portal loaded in 0.91s, 705 queries (+705 other) 
+2026-03-26 11:46:52,661 62347 INFO pruebas odoo.modules.loading: Loading module sms (40/80) 
+2026-03-26 11:46:52,865 62347 INFO pruebas odoo.modules.registry: module sms: creating or updating database tables 
+2026-03-26 11:46:55,905 62347 INFO pruebas odoo.modules.loading: loading sms/data/iap_service_data.xml 
+2026-03-26 11:46:55,910 62347 INFO pruebas odoo.modules.loading: loading sms/data/ir_cron_data.xml 
+2026-03-26 11:46:55,914 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_account_code_views.xml 
+2026-03-26 11:46:55,940 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_account_phone_views.xml 
+2026-03-26 11:46:55,955 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_account_sender_views.xml 
+2026-03-26 11:46:55,969 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_composer_views.xml 
+2026-03-26 11:46:55,990 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_template_preview_views.xml 
+2026-03-26 11:46:56,003 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_resend_views.xml 
+2026-03-26 11:46:56,022 62347 INFO pruebas odoo.modules.loading: loading sms/wizard/sms_template_reset_views.xml 
+2026-03-26 11:46:56,037 62347 INFO pruebas odoo.modules.loading: loading sms/views/ir_actions_server_views.xml 
+2026-03-26 11:46:56,071 62347 INFO pruebas odoo.modules.loading: loading sms/views/mail_notification_views.xml 
+2026-03-26 11:46:56,117 62347 INFO pruebas odoo.modules.loading: loading sms/views/res_config_settings_views.xml 
+2026-03-26 11:46:56,219 62347 INFO pruebas odoo.modules.loading: loading sms/views/res_partner_views.xml 
+2026-03-26 11:46:56,302 62347 INFO pruebas odoo.modules.loading: loading sms/views/iap_account_views.xml 
+2026-03-26 11:46:56,336 62347 INFO pruebas odoo.modules.loading: loading sms/views/sms_sms_views.xml 
+2026-03-26 11:46:56,382 62347 INFO pruebas odoo.modules.loading: loading sms/views/sms_template_views.xml 
+2026-03-26 11:46:56,411 62347 INFO pruebas odoo.modules.loading: loading sms/security/ir.model.access.csv 
+2026-03-26 11:46:56,469 62347 INFO pruebas odoo.modules.loading: loading sms/security/sms_security.xml 
+2026-03-26 11:46:56,507 62347 INFO pruebas odoo.modules.loading: Module sms loaded in 3.85s, 2395 queries (+2395 other) 
+2026-03-26 11:46:56,508 62347 INFO pruebas odoo.modules.loading: Loading module snailmail (41/80) 
+2026-03-26 11:46:56,737 62347 INFO pruebas odoo.modules.registry: module snailmail: creating or updating database tables 
+2026-03-26 11:46:57,192 62347 INFO pruebas odoo.modules.loading: loading snailmail/data/iap_service_data.xml 
+2026-03-26 11:46:57,196 62347 INFO pruebas odoo.modules.loading: loading snailmail/data/snailmail_data.xml 
+2026-03-26 11:46:57,208 62347 INFO pruebas odoo.modules.loading: loading snailmail/views/report_assets.xml 
+2026-03-26 11:46:57,236 62347 INFO pruebas odoo.modules.loading: loading snailmail/views/snailmail_views.xml 
+2026-03-26 11:46:57,270 62347 INFO pruebas odoo.modules.loading: loading snailmail/wizard/snailmail_letter_format_error_views.xml 
+2026-03-26 11:46:57,284 62347 INFO pruebas odoo.modules.loading: loading snailmail/wizard/snailmail_letter_missing_required_fields_views.xml 
+2026-03-26 11:46:57,297 62347 INFO pruebas odoo.modules.loading: loading snailmail/security/ir.model.access.csv 
+2026-03-26 11:46:57,340 62347 INFO pruebas odoo.modules.loading: Module snailmail loaded in 0.83s, 466 queries (+466 other) 
+2026-03-26 11:46:57,341 62347 INFO pruebas odoo.modules.loading: Loading module auth_totp_portal (42/80) 
+2026-03-26 11:46:57,536 62347 INFO pruebas odoo.modules.registry: module auth_totp_portal: creating or updating database tables 
+2026-03-26 11:46:57,621 62347 INFO pruebas odoo.modules.loading: loading auth_totp_portal/security/security.xml 
+2026-03-26 11:46:57,640 62347 INFO pruebas odoo.modules.loading: loading auth_totp_portal/views/templates.xml 
+2026-03-26 11:46:57,709 62347 INFO pruebas odoo.modules.loading: Module auth_totp_portal loaded in 0.37s, 74 queries (+74 other) 
+2026-03-26 11:46:57,709 62347 INFO pruebas odoo.modules.loading: Loading module calendar_sms (43/80) 
+2026-03-26 11:46:57,998 62347 INFO pruebas odoo.modules.registry: module calendar_sms: creating or updating database tables 
+2026-03-26 11:46:58,093 62347 INFO pruebas odoo.modules.loading: loading calendar_sms/data/sms_data.xml 
+2026-03-26 11:46:58,101 62347 INFO pruebas odoo.modules.loading: loading calendar_sms/views/calendar_views.xml 
+2026-03-26 11:46:58,199 62347 INFO pruebas odoo.modules.loading: Module calendar_sms loaded in 0.49s, 102 queries (+102 other) 
+2026-03-26 11:46:58,200 62347 INFO pruebas odoo.modules.loading: Loading module digest (44/80) 
+2026-03-26 11:46:58,408 62347 INFO pruebas odoo.modules.registry: module digest: creating or updating database tables 
+2026-03-26 11:46:58,511 62347 INFO pruebas odoo.modules.loading: loading digest/security/ir.model.access.csv 
+2026-03-26 11:46:58,527 62347 INFO pruebas odoo.modules.loading: loading digest/data/digest_data.xml 
+2026-03-26 11:46:58,534 62347 INFO pruebas odoo.modules.loading: loading digest/data/digest_tips_data.xml 
+2026-03-26 11:46:58,559 62347 INFO pruebas odoo.modules.loading: loading digest/data/ir_cron_data.xml 
+2026-03-26 11:46:58,574 62347 INFO pruebas odoo.modules.loading: loading digest/data/res_config_settings_data.xml 
+2026-03-26 11:46:58,578 62347 INFO pruebas odoo.modules.loading: loading digest/views/digest_views.xml 
+2026-03-26 11:46:58,660 62347 INFO pruebas odoo.modules.loading: loading digest/views/digest_templates.xml 
+2026-03-26 11:46:58,671 62347 INFO pruebas odoo.modules.loading: loading digest/views/res_config_settings_views.xml 
+2026-03-26 11:46:58,829 62347 INFO pruebas odoo.modules.loading: Module digest loaded in 0.63s, 296 queries (+296 other) 
+2026-03-26 11:46:58,830 62347 INFO pruebas odoo.modules.loading: Loading module payment (45/80) 
+2026-03-26 11:46:59,019 62347 INFO pruebas odoo.modules.registry: module payment: creating or updating database tables 
+2026-03-26 11:46:59,397 62347 INFO pruebas odoo.modules.loading: loading payment/data/ir_actions_server_data.xml 
+2026-03-26 11:46:59,406 62347 INFO pruebas odoo.modules.loading: loading payment/data/onboarding_data.xml 
+2026-03-26 11:46:59,409 62347 INFO pruebas odoo.modules.loading: loading payment/data/payment_method_data.xml 
+2026-03-26 11:46:59,624 62347 INFO pruebas odoo.modules.loading: loading payment/data/payment_provider_data.xml 
+2026-03-26 11:46:59,643 62347 INFO pruebas odoo.modules.loading: loading payment/data/payment_cron.xml 
+2026-03-26 11:46:59,659 62347 INFO pruebas odoo.modules.loading: loading payment/views/express_checkout_templates.xml 
+2026-03-26 11:46:59,668 62347 INFO pruebas odoo.modules.loading: loading payment/views/payment_form_templates.xml 
+2026-03-26 11:46:59,731 62347 INFO pruebas odoo.modules.loading: loading payment/views/portal_templates.xml 
+2026-03-26 11:46:59,801 62347 INFO pruebas odoo.modules.loading: loading payment/views/payment_provider_views.xml 
+2026-03-26 11:46:59,853 62347 INFO pruebas odoo.modules.loading: loading payment/views/payment_method_views.xml 
+2026-03-26 11:46:59,898 62347 INFO pruebas odoo.modules.loading: loading payment/views/payment_transaction_views.xml 
+2026-03-26 11:46:59,951 62347 INFO pruebas odoo.modules.loading: loading payment/views/payment_token_views.xml 
+2026-03-26 11:46:59,981 62347 INFO pruebas odoo.modules.loading: loading payment/views/res_partner_views.xml 
+2026-03-26 11:47:00,034 62347 INFO pruebas odoo.modules.loading: loading payment/security/ir.model.access.csv 
+2026-03-26 11:47:00,093 62347 INFO pruebas odoo.modules.loading: loading payment/security/payment_security.xml 
+2026-03-26 11:47:00,099 62347 INFO pruebas odoo.modules.loading: loading payment/wizards/payment_capture_wizard_views.xml 
+2026-03-26 11:47:00,112 62347 INFO pruebas odoo.modules.loading: loading payment/wizards/payment_link_wizard_views.xml 
+2026-03-26 11:47:00,134 62347 INFO pruebas odoo.modules.loading: loading payment/wizards/payment_onboarding_views.xml 
+2026-03-26 11:47:00,190 62347 INFO pruebas odoo.modules.loading: Module payment loaded in 1.36s, 1093 queries (+1093 other) 
+2026-03-26 11:47:00,190 62347 INFO pruebas odoo.modules.loading: Loading module spreadsheet (46/80) 
+2026-03-26 11:47:00,371 62347 INFO pruebas odoo.modules.registry: module spreadsheet: creating or updating database tables 
+2026-03-26 11:47:00,446 62347 INFO pruebas odoo.modules.loading: loading spreadsheet/views/public_readonly_spreadsheet_templates.xml 
+2026-03-26 11:47:00,475 62347 INFO pruebas odoo.modules.loading: Module spreadsheet loaded in 0.28s, 90 queries (+90 other) 
+2026-03-26 11:47:00,475 62347 INFO pruebas odoo.modules.loading: Loading module account (47/80) 
+2026-03-26 11:47:00,771 62347 INFO pruebas odoo.modules.registry: module account: creating or updating database tables 
+2026-03-26 11:47:01,853 62347 INFO pruebas odoo.modules.loading: loading account/security/account_security.xml 
+2026-03-26 11:47:02,181 62347 INFO pruebas odoo.modules.loading: loading account/security/ir.model.access.csv 
+2026-03-26 11:47:02,500 62347 INFO pruebas odoo.modules.loading: loading account/data/account_data.xml 
+2026-03-26 11:47:02,522 62347 INFO pruebas odoo.modules.loading: loading account/data/digest_data.xml 
+2026-03-26 11:47:02,534 62347 INFO pruebas odoo.modules.loading: loading account/views/account_report.xml 
+2026-03-26 11:47:02,553 62347 INFO pruebas odoo.modules.loading: loading account/data/mail_template_data.xml 
+2026-03-26 11:47:02,558 62347 INFO pruebas odoo.modules.loading: loading account/data/onboarding_data.xml 
+2026-03-26 11:47:02,566 62347 INFO pruebas odoo.modules.loading: loading account/data/account_tour.xml 
+2026-03-26 11:47:02,571 62347 INFO pruebas odoo.modules.loading: loading account/data/ir_sequence.xml 
+2026-03-26 11:47:02,576 62347 INFO pruebas odoo.modules.loading: loading account/views/account_payment_view.xml 
+2026-03-26 11:47:02,669 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_automatic_entry_wizard_views.xml 
+2026-03-26 11:47:02,689 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_autopost_bills_wizard.xml 
+2026-03-26 11:47:02,700 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_unreconcile_view.xml 
+2026-03-26 11:47:02,708 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_move_reversal_view.xml 
+2026-03-26 11:47:02,724 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_resequence_views.xml 
+2026-03-26 11:47:02,736 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_payment_register_views.xml 
+2026-03-26 11:47:02,752 62347 INFO pruebas odoo.modules.loading: loading account/views/account_move_views.xml 
+2026-03-26 11:47:03,527 62347 INFO pruebas odoo.modules.loading: loading account/wizard/setup_wizards_view.xml 
+2026-03-26 11:47:03,559 62347 INFO pruebas odoo.modules.loading: loading account/views/account_account_views.xml 
+2026-03-26 11:47:03,606 62347 INFO pruebas odoo.modules.loading: loading account/views/account_group_views.xml 
+2026-03-26 11:47:03,630 62347 INFO pruebas odoo.modules.loading: loading account/views/account_journal_views.xml 
+2026-03-26 11:47:03,717 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [77, 78, 79] 
+2026-03-26 11:47:03,743 62347 INFO pruebas odoo.modules.loading: loading account/views/account_account_tag_views.xml 
+2026-03-26 11:47:03,767 62347 INFO pruebas odoo.modules.loading: loading account/views/account_bank_statement_views.xml 
+2026-03-26 11:47:03,822 62347 INFO pruebas odoo.modules.loading: loading account/views/account_reconcile_model_views.xml 
+2026-03-26 11:47:03,911 62347 INFO pruebas odoo.modules.loading: loading account/views/account_tax_views.xml 
+2026-03-26 11:47:04,098 62347 INFO pruebas odoo.modules.loading: loading account/views/account_full_reconcile_views.xml 
+2026-03-26 11:47:04,129 62347 INFO pruebas odoo.modules.loading: loading account/views/account_payment_term_views.xml 
+2026-03-26 11:47:04,193 62347 INFO pruebas odoo.modules.loading: loading account/views/account_payment_method.xml 
+2026-03-26 11:47:04,241 62347 INFO pruebas odoo.modules.loading: loading account/views/res_partner_bank_views.xml 
+2026-03-26 11:47:04,300 62347 INFO pruebas odoo.modules.loading: loading account/views/report_statement.xml 
+2026-03-26 11:47:04,326 62347 INFO pruebas odoo.modules.loading: loading account/views/terms_template.xml 
+2026-03-26 11:47:04,350 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_validate_move_view.xml 
+2026-03-26 11:47:04,374 62347 INFO pruebas odoo.modules.loading: loading account/views/res_company_views.xml 
+2026-03-26 11:47:04,414 62347 INFO pruebas odoo.modules.loading: loading account/views/product_view.xml 
+2026-03-26 11:47:04,469 62347 INFO pruebas odoo.modules.loading: loading account/views/account_analytic_plan_views.xml 
+2026-03-26 11:47:04,489 62347 INFO pruebas odoo.modules.loading: loading account/views/account_analytic_account_views.xml 
+2026-03-26 11:47:04,523 62347 INFO pruebas odoo.modules.loading: loading account/views/account_analytic_distribution_model_views.xml 
+2026-03-26 11:47:04,550 62347 INFO pruebas odoo.modules.loading: loading account/views/account_analytic_line_views.xml 
+2026-03-26 11:47:04,612 62347 INFO pruebas odoo.modules.loading: loading account/views/report_invoice.xml 
+2026-03-26 11:47:04,679 62347 INFO pruebas odoo.modules.loading: loading account/report/account_invoice_report_view.xml 
+2026-03-26 11:47:04,733 62347 INFO pruebas odoo.modules.loading: loading account/views/account_cash_rounding_view.xml 
+2026-03-26 11:47:04,758 62347 INFO pruebas odoo.modules.loading: loading account/views/ir_actions_views.xml 
+2026-03-26 11:47:04,774 62347 INFO pruebas odoo.modules.loading: loading account/views/ir_module_views.xml 
+2026-03-26 11:47:04,788 62347 INFO pruebas odoo.modules.loading: loading account/views/base_document_layout_views.xml 
+2026-03-26 11:47:04,811 62347 INFO pruebas odoo.modules.loading: loading account/views/res_config_settings_views.xml 
+2026-03-26 11:47:04,928 62347 INFO pruebas odoo.modules.loading: loading account/views/partner_view.xml 
+2026-03-26 11:47:05,095 62347 INFO pruebas odoo.modules.loading: loading account/views/account_journal_dashboard_view.xml 
+2026-03-26 11:47:05,118 62347 INFO pruebas odoo.modules.loading: loading account/views/account_portal_templates.xml 
+2026-03-26 11:47:05,209 62347 INFO pruebas odoo.modules.loading: loading account/views/report_payment_receipt_templates.xml 
+2026-03-26 11:47:05,224 62347 INFO pruebas odoo.modules.loading: loading account/data/service_cron.xml 
+2026-03-26 11:47:05,246 62347 INFO pruebas odoo.modules.loading: loading account/views/account_incoterms_view.xml 
+2026-03-26 11:47:05,278 62347 INFO pruebas odoo.modules.loading: loading account/data/account_incoterms_data.xml 
+2026-03-26 11:47:05,294 62347 INFO pruebas odoo.modules.loading: loading account/views/digest_views.xml 
+2026-03-26 11:47:05,312 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_move_send_wizard.xml 
+2026-03-26 11:47:05,323 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_move_send_batch_wizard.xml 
+2026-03-26 11:47:05,334 62347 INFO pruebas odoo.modules.loading: loading account/report/account_hash_integrity_templates.xml 
+2026-03-26 11:47:05,344 62347 INFO pruebas odoo.modules.loading: loading account/views/res_currency.xml 
+2026-03-26 11:47:05,365 62347 INFO pruebas odoo.modules.loading: loading account/views/account_menuitem.xml 
+2026-03-26 11:47:05,672 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_secure_entries_wizard.xml 
+2026-03-26 11:47:05,694 62347 INFO pruebas odoo.modules.loading: loading account/views/mail_message_views.xml 
+2026-03-26 11:47:05,730 62347 INFO pruebas odoo.modules.loading: loading account/wizard/accrued_orders.xml 
+2026-03-26 11:47:05,741 62347 INFO pruebas odoo.modules.loading: loading account/views/bill_preview_template.xml 
+2026-03-26 11:47:05,758 62347 INFO pruebas odoo.modules.loading: loading account/data/account_reports_data.xml 
+2026-03-26 11:47:05,779 62347 INFO pruebas odoo.modules.loading: loading account/views/uom_uom_views.xml 
+2026-03-26 11:47:05,800 62347 INFO pruebas odoo.modules.loading: loading account/views/product_views.xml 
+2026-03-26 11:47:05,831 62347 INFO pruebas odoo.modules.loading: loading account/views/tests_shared_js_python.xml 
+2026-03-26 11:47:05,837 62347 INFO pruebas odoo.modules.loading: loading account/views/account_lock_exception_views.xml 
+2026-03-26 11:47:05,849 62347 INFO pruebas odoo.modules.loading: loading account/views/report_templates.xml 
+2026-03-26 11:47:05,908 62347 INFO pruebas odoo.modules.loading: loading account/wizard/account_merge_wizard_views.xml 
+2026-03-26 11:47:06,064 62347 INFO pruebas odoo.modules.loading: Module account loaded in 5.59s, 4036 queries (+4036 other) 
+2026-03-26 11:47:06,064 62347 INFO pruebas odoo.modules.loading: Loading module crm (48/80) 
+2026-03-26 11:47:06,372 62347 INFO pruebas odoo.modules.registry: module crm: creating or updating database tables 
+2026-03-26 11:47:06,562 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:06,562 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:06,562 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:06,562 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:06,563 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:06,563 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:06,563 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:06,563 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:06,861 62347 INFO pruebas odoo.modules.loading: loading crm/security/crm_security.xml 
+2026-03-26 11:47:06,879 62347 INFO pruebas odoo.modules.loading: loading crm/security/ir.model.access.csv 
+2026-03-26 11:47:06,967 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_lead_merge_template.xml 
+2026-03-26 11:47:06,980 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_lead_prediction_data.xml 
+2026-03-26 11:47:07,004 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_lost_reason_data.xml 
+2026-03-26 11:47:07,013 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_stage_data.xml 
+2026-03-26 11:47:07,021 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_team_data.xml 
+2026-03-26 11:47:07,032 62347 INFO pruebas odoo.modules.loading: loading crm/data/digest_data.xml 
+2026-03-26 11:47:07,061 62347 INFO pruebas odoo.modules.loading: loading crm/data/ir_action_data.xml 
+2026-03-26 11:47:07,074 62347 INFO pruebas odoo.modules.loading: loading crm/data/ir_cron_data.xml 
+2026-03-26 11:47:07,078 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_relationship_type_data.xml 
+2026-03-26 11:47:07,083 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_payment_method_data.xml 
+2026-03-26 11:47:07,088 62347 INFO pruebas odoo.modules.loading: loading crm/data/mail_message_subtype_data.xml 
+2026-03-26 11:47:07,099 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_recurring_plan_data.xml 
+2026-03-26 11:47:07,105 62347 INFO pruebas odoo.modules.loading: loading crm/data/crm_tour.xml 
+2026-03-26 11:47:07,113 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/crm_lead_lost_views.xml 
+2026-03-26 11:47:07,131 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/crm_lead_to_opportunity_views.xml 
+2026-03-26 11:47:07,147 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/crm_lead_to_opportunity_mass_views.xml 
+2026-03-26 11:47:07,161 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/crm_merge_opportunities_views.xml 
+2026-03-26 11:47:07,175 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/crm_lead_pls_update_views.xml 
+2026-03-26 11:47:07,185 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/LOPDDocumentWizard_views.xml 
+2026-03-26 11:47:07,194 62347 INFO pruebas odoo.modules.loading: loading crm/wizard/outlook_message_wizard_views.xml 
+2026-03-26 11:47:07,202 62347 INFO pruebas odoo.modules.loading: loading crm/views/calendar_views.xml 
+2026-03-26 11:47:07,217 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_recurring_plan_views.xml 
+2026-03-26 11:47:07,241 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_lost_reason_views.xml 
+2026-03-26 11:47:07,274 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_stage_views.xml 
+2026-03-26 11:47:07,299 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_lead_views.xml 
+2026-03-26 11:47:07,563 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_team_member_views.xml 
+2026-03-26 11:47:07,603 62347 INFO pruebas odoo.modules.loading: loading crm/views/digest_views.xml 
+2026-03-26 11:47:07,623 62347 INFO pruebas odoo.modules.loading: loading crm/views/mail_activity_plan_views.xml 
+2026-03-26 11:47:07,630 62347 INFO pruebas odoo.modules.loading: loading crm/views/mail_activity_views.xml 
+2026-03-26 11:47:07,634 62347 INFO pruebas odoo.modules.loading: loading crm/views/res_config_settings_views.xml 
+2026-03-26 11:47:07,715 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_team_views.xml 
+2026-03-26 11:47:07,739 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [115, 116] 
+2026-03-26 11:47:07,826 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_menu_views.xml 
+2026-03-26 11:47:07,983 62347 INFO pruebas odoo.modules.loading: loading crm/views/res_partner_views.xml 
+2026-03-26 11:47:08,046 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [117, 118, 119] 
+2026-03-26 11:47:08,074 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [120, 121] 
+2026-03-26 11:47:08,105 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [122, 123] 
+2026-03-26 11:47:08,131 62347 INFO pruebas odoo.modules.loading: loading crm/views/utm_campaign_views.xml 
+2026-03-26 11:47:08,159 62347 INFO pruebas odoo.modules.loading: loading crm/report/crm_activity_report_views.xml 
+2026-03-26 11:47:08,192 62347 INFO pruebas odoo.modules.loading: loading crm/report/crm_opportunity_report_views.xml 
+2026-03-26 11:47:08,270 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [124, 125, 126] 
+2026-03-26 11:47:08,284 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [127, 128, 129, 130] 
+2026-03-26 11:47:08,289 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_relationship_type_views.xml 
+2026-03-26 11:47:08,317 62347 INFO pruebas odoo.modules.loading: loading crm/views/crm_helper_templates.xml 
+2026-03-26 11:47:08,367 62347 INFO pruebas odoo.modules.loading: Module crm loaded in 2.30s, 1908 queries (+1908 other) 
+2026-03-26 11:47:08,367 62347 INFO pruebas odoo.modules.loading: Loading module spreadsheet_dashboard (49/80) 
+2026-03-26 11:47:08,676 62347 INFO pruebas odoo.modules.registry: module spreadsheet_dashboard: creating or updating database tables 
+2026-03-26 11:47:08,772 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard/security/security.xml 
+2026-03-26 11:47:08,856 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard/security/ir.model.access.csv 
+2026-03-26 11:47:08,873 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard/views/spreadsheet_dashboard_views.xml 
+2026-03-26 11:47:08,916 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard/views/menu_views.xml 
+2026-03-26 11:47:08,954 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard/data/dashboard.xml 
+2026-03-26 11:47:08,988 62347 INFO pruebas odoo.modules.loading: Module spreadsheet_dashboard loaded in 0.62s, 238 queries (+238 other) 
+2026-03-26 11:47:08,988 62347 INFO pruebas odoo.modules.loading: Loading module stock (50/80) 
+2026-03-26 11:47:09,434 62347 INFO pruebas odoo.modules.registry: module stock: creating or updating database tables 
+2026-03-26 11:47:09,752 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:09,752 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:09,753 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:09,753 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:09,754 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:09,754 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:09,755 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:09,755 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:10,295 62347 INFO pruebas odoo.modules.loading: loading stock/security/stock_security.xml 
+2026-03-26 11:47:10,460 62347 INFO pruebas odoo.modules.loading: loading stock/security/ir.model.access.csv 
+2026-03-26 11:47:10,662 62347 INFO pruebas odoo.modules.loading: loading stock/data/digest_data.xml 
+2026-03-26 11:47:10,671 62347 INFO pruebas odoo.modules.loading: loading stock/data/mail_templates.xml 
+2026-03-26 11:47:10,688 62347 INFO pruebas odoo.modules.loading: loading stock/data/default_barcode_patterns.xml 
+2026-03-26 11:47:10,694 62347 INFO pruebas odoo.modules.loading: loading stock/data/stock_data.xml 
+2026-03-26 11:47:10,717 62347 INFO pruebas odoo.modules.loading: loading stock/data/stock_sequence_data.xml 
+2026-03-26 11:47:10,725 62347 INFO pruebas odoo.modules.loading: loading stock/data/stock_traceability_report_data.xml 
+2026-03-26 11:47:10,731 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_stock_quantity.xml 
+2026-03-26 11:47:10,748 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_stock_reception.xml 
+2026-03-26 11:47:10,783 62347 INFO pruebas odoo.modules.loading: loading stock/report/stock_report_views.xml 
+2026-03-26 11:47:10,823 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_package_barcode.xml 
+2026-03-26 11:47:10,853 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_lot_barcode.xml 
+2026-03-26 11:47:10,864 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_location_barcode.xml 
+2026-03-26 11:47:10,888 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_stockpicking_operations.xml 
+2026-03-26 11:47:10,915 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_deliveryslip.xml 
+2026-03-26 11:47:10,969 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_stockinventory.xml 
+2026-03-26 11:47:10,978 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_stock_rule.xml 
+2026-03-26 11:47:11,024 62347 INFO pruebas odoo.modules.loading: loading stock/report/stock_lot_customer.xml 
+2026-03-26 11:47:11,049 62347 INFO pruebas odoo.modules.loading: loading stock/report/package_templates.xml 
+2026-03-26 11:47:11,058 62347 INFO pruebas odoo.modules.loading: loading stock/report/picking_templates.xml 
+2026-03-26 11:47:11,092 62347 INFO pruebas odoo.modules.loading: loading stock/report/product_templates.xml 
+2026-03-26 11:47:11,108 62347 INFO pruebas odoo.modules.loading: loading stock/report/product_packaging.xml 
+2026-03-26 11:47:11,118 62347 INFO pruebas odoo.modules.loading: loading stock/report/report_return_slip.xml 
+2026-03-26 11:47:11,130 62347 INFO pruebas odoo.modules.loading: loading stock/data/mail_template_data.xml 
+2026-03-26 11:47:11,135 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_menu_views.xml 
+2026-03-26 11:47:11,328 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_change_product_qty_views.xml 
+2026-03-26 11:47:11,375 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_picking_return_views.xml 
+2026-03-26 11:47:11,421 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_inventory_conflict.xml 
+2026-03-26 11:47:11,523 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_backorder_confirmation_views.xml 
+2026-03-26 11:47:11,571 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_quantity_history.xml 
+2026-03-26 11:47:11,609 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_request_count.xml 
+2026-03-26 11:47:11,655 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_replenishment_info.xml 
+2026-03-26 11:47:11,731 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_rules_report_views.xml 
+2026-03-26 11:47:11,772 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_warn_insufficient_qty_views.xml 
+2026-03-26 11:47:11,808 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/product_replenish_views.xml 
+2026-03-26 11:47:11,831 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/product_label_layout_views.xml 
+2026-03-26 11:47:11,852 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_track_confirmation_views.xml 
+2026-03-26 11:47:11,865 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_orderpoint_snooze_views.xml 
+2026-03-26 11:47:11,875 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_package_destination_views.xml 
+2026-03-26 11:47:11,887 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_inventory_adjustment_name.xml 
+2026-03-26 11:47:11,903 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_inventory_warning.xml 
+2026-03-26 11:47:11,922 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_label_type.xml 
+2026-03-26 11:47:11,935 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_lot_label_layout.xml 
+2026-03-26 11:47:11,945 62347 INFO pruebas odoo.modules.loading: loading stock/wizard/stock_quant_relocate.xml 
+2026-03-26 11:47:11,954 62347 INFO pruebas odoo.modules.loading: loading stock/views/res_partner_views.xml 
+2026-03-26 11:47:12,029 62347 INFO pruebas odoo.modules.loading: loading stock/views/product_strategy_views.xml 
+2026-03-26 11:47:12,072 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_lot_views.xml 
+2026-03-26 11:47:12,134 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [81, 82, 83] 
+2026-03-26 11:47:12,146 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [84, 85, 86] 
+2026-03-26 11:47:12,157 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_scrap_views.xml 
+2026-03-26 11:47:12,206 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_quant_views.xml 
+2026-03-26 11:47:12,482 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_warehouse_views.xml 
+2026-03-26 11:47:12,511 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_move_line_views.xml 
+2026-03-26 11:47:12,583 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_move_views.xml 
+2026-03-26 11:47:12,687 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_picking_views.xml 
+2026-03-26 11:47:12,895 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [92] 
+2026-03-26 11:47:12,916 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_picking_type_views.xml 
+2026-03-26 11:47:12,978 62347 INFO pruebas odoo.modules.loading: loading stock/views/product_views.xml 
+2026-03-26 11:47:13,281 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_location_views.xml 
+2026-03-26 11:47:13,377 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_orderpoint_views.xml 
+2026-03-26 11:47:13,449 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_storage_category_views.xml 
+2026-03-26 11:47:13,487 62347 INFO pruebas odoo.modules.loading: loading stock/views/res_config_settings_views.xml 
+2026-03-26 11:47:13,594 62347 INFO pruebas odoo.modules.loading: loading stock/views/report_stock_traceability.xml 
+2026-03-26 11:47:13,611 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_template.xml 
+2026-03-26 11:47:13,639 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_rule_views.xml 
+2026-03-26 11:47:13,700 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_package_level_views.xml 
+2026-03-26 11:47:13,740 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_package_type_view.xml 
+2026-03-26 11:47:13,784 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [93, 94] 
+2026-03-26 11:47:13,803 62347 INFO pruebas odoo.modules.loading: loading stock/views/stock_forecasted.xml 
+2026-03-26 11:47:13,889 62347 INFO pruebas odoo.modules.loading: Module stock loaded in 4.90s, 3473 queries (+3473 other) 
+2026-03-26 11:47:13,889 62347 INFO pruebas odoo.modules.loading: Loading module account_add_gln (51/80) 
+2026-03-26 11:47:14,245 62347 INFO pruebas odoo.modules.registry: module account_add_gln: creating or updating database tables 
+2026-03-26 11:47:14,282 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:14,283 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:14,283 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:14,283 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:14,283 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:14,283 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:14,283 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:14,284 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:14,418 62347 INFO pruebas odoo.modules.loading: loading account_add_gln/views/res_partner_views.xml 
+2026-03-26 11:47:14,530 62347 INFO pruebas odoo.modules.loading: Module account_add_gln loaded in 0.64s, 133 queries (+133 other) 
+2026-03-26 11:47:14,531 62347 INFO pruebas odoo.modules.loading: Loading module account_edi_ubl_cii (52/80) 
+2026-03-26 11:47:14,879 62347 INFO pruebas odoo.modules.registry: module account_edi_ubl_cii: creating or updating database tables 
+2026-03-26 11:47:14,950 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:14,950 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:14,950 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:14,950 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:14,950 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:14,950 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:14,951 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:14,951 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:15,154 62347 INFO pruebas odoo.modules.loading: loading account_edi_ubl_cii/data/cii_22_templates.xml 
+2026-03-26 11:47:15,215 62347 INFO pruebas odoo.modules.loading: loading account_edi_ubl_cii/data/ubl_20_templates.xml 
+2026-03-26 11:47:15,579 62347 INFO pruebas odoo.modules.loading: loading account_edi_ubl_cii/data/ubl_21_templates.xml 
+2026-03-26 11:47:15,685 62347 INFO pruebas odoo.modules.loading: loading account_edi_ubl_cii/views/res_partner_views.xml 
+2026-03-26 11:47:15,767 62347 INFO pruebas odoo.modules.loading: loading account_edi_ubl_cii/report/account_edi_ubl_cii_report_templates.xml 
+2026-03-26 11:47:15,851 62347 INFO pruebas odoo.modules.loading: Module account_edi_ubl_cii loaded in 1.32s, 619 queries (+619 other) 
+2026-03-26 11:47:15,851 62347 INFO pruebas odoo.modules.loading: Loading module account_payment (53/80) 
+2026-03-26 11:47:16,250 62347 INFO pruebas odoo.modules.registry: module account_payment: creating or updating database tables 
+2026-03-26 11:47:16,578 62347 INFO pruebas odoo.modules.loading: loading account_payment/data/ir_config_parameter.xml 
+2026-03-26 11:47:16,582 62347 INFO pruebas odoo.modules.loading: loading account_payment/data/onboarding_data.xml 
+2026-03-26 11:47:16,587 62347 INFO pruebas odoo.modules.loading: loading account_payment/security/ir.model.access.csv 
+2026-03-26 11:47:16,606 62347 INFO pruebas odoo.modules.loading: loading account_payment/security/ir_rules.xml 
+2026-03-26 11:47:16,609 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/account_payment_menus.xml 
+2026-03-26 11:47:16,639 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/account_portal_templates.xml 
+2026-03-26 11:47:16,777 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/account_move_views.xml 
+2026-03-26 11:47:16,864 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/account_journal_views.xml 
+2026-03-26 11:47:16,892 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/account_payment_views.xml 
+2026-03-26 11:47:16,918 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/payment_form_templates.xml 
+2026-03-26 11:47:16,933 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/payment_provider_views.xml 
+2026-03-26 11:47:16,949 62347 INFO pruebas odoo.modules.loading: loading account_payment/views/payment_transaction_views.xml 
+2026-03-26 11:47:16,963 62347 INFO pruebas odoo.modules.loading: loading account_payment/wizards/account_payment_register_views.xml 
+2026-03-26 11:47:16,981 62347 INFO pruebas odoo.modules.loading: loading account_payment/wizards/payment_link_wizard_views.xml 
+2026-03-26 11:47:16,999 62347 INFO pruebas odoo.modules.loading: loading account_payment/wizards/payment_refund_wizard_views.xml 
+2026-03-26 11:47:17,007 62347 INFO pruebas odoo.modules.loading: loading account_payment/wizards/res_config_settings_views.xml 
+2026-03-26 11:47:17,153 62347 INFO pruebas odoo.modules.loading: Module account_payment loaded in 1.30s, 569 queries (+569 other) 
+2026-03-26 11:47:17,154 62347 INFO pruebas odoo.modules.loading: Loading module base_vat (54/80) 
+2026-03-26 11:47:17,479 62347 INFO pruebas odoo.modules.registry: module base_vat: creating or updating database tables 
+2026-03-26 11:47:17,531 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:17,531 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:17,532 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:17,532 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:17,532 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:17,532 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:17,532 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:17,532 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:17,839 62347 INFO pruebas odoo.modules.loading: loading base_vat/views/res_config_settings_views.xml 
+2026-03-26 11:47:17,944 62347 INFO pruebas odoo.modules.loading: loading base_vat/views/res_partner_views.xml 
+2026-03-26 11:47:18,046 62347 INFO pruebas odoo.modules.loading: Module base_vat loaded in 0.89s, 219 queries (+219 other) 
+2026-03-26 11:47:18,047 62347 INFO pruebas odoo.modules.loading: Loading module board (55/80) 
+2026-03-26 11:47:18,367 62347 INFO pruebas odoo.modules.registry: module board: creating or updating database tables 
+2026-03-26 11:47:18,416 62347 INFO pruebas odoo.modules.loading: loading board/security/ir.model.access.csv 
+2026-03-26 11:47:18,430 62347 INFO pruebas odoo.modules.loading: loading board/views/board_views.xml 
+2026-03-26 11:47:18,469 62347 INFO pruebas odoo.modules.loading: Module board loaded in 0.42s, 69 queries (+69 other) 
+2026-03-26 11:47:18,469 62347 INFO pruebas odoo.modules.loading: Loading module crm_sms (56/80) 
+2026-03-26 11:47:18,817 62347 INFO pruebas odoo.modules.loading: loading crm_sms/views/crm_lead_views.xml 
+2026-03-26 11:47:18,880 62347 INFO pruebas odoo.modules.loading: loading crm_sms/security/ir.model.access.csv 
+2026-03-26 11:47:18,894 62347 INFO pruebas odoo.modules.loading: loading crm_sms/security/sms_security.xml 
+2026-03-26 11:47:18,921 62347 INFO pruebas odoo.modules.loading: Module crm_sms loaded in 0.45s, 89 queries (+89 other) 
+2026-03-26 11:47:18,921 62347 INFO pruebas odoo.modules.loading: Loading module iap_crm (57/80) 
+2026-03-26 11:47:19,622 62347 INFO pruebas odoo.modules.registry: module iap_crm: creating or updating database tables 
+2026-03-26 11:47:19,746 62347 INFO pruebas odoo.modules.loading: Module iap_crm loaded in 0.82s, 59 queries (+59 other) 
+2026-03-26 11:47:19,746 62347 INFO pruebas odoo.modules.loading: Loading module osm_address_autocomplete (58/80) 
+2026-03-26 11:47:20,162 62347 INFO pruebas odoo.modules.loading: loading osm_address_autocomplete/views/res_partner_views.xml 
+2026-03-26 11:47:20,212 62347 INFO pruebas odoo.modules.loading: Module osm_address_autocomplete loaded in 0.47s, 42 queries (+42 other) 
+2026-03-26 11:47:20,213 62347 INFO pruebas odoo.modules.loading: Loading module purchase (59/80) 
+2026-03-26 11:47:20,582 62347 INFO pruebas odoo.modules.registry: module purchase: creating or updating database tables 
+2026-03-26 11:47:20,750 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:20,750 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:20,750 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:20,750 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:20,751 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:20,751 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:20,751 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:20,751 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:21,047 62347 INFO pruebas odoo.modules.loading: loading purchase/security/purchase_security.xml 
+2026-03-26 11:47:21,136 62347 INFO pruebas odoo.modules.loading: loading purchase/security/ir.model.access.csv 
+2026-03-26 11:47:21,236 62347 INFO pruebas odoo.modules.loading: loading purchase/data/digest_data.xml 
+2026-03-26 11:47:21,246 62347 INFO pruebas odoo.modules.loading: loading purchase/views/account_move_views.xml 
+2026-03-26 11:47:21,327 62347 INFO pruebas odoo.modules.loading: loading purchase/data/purchase_data.xml 
+2026-03-26 11:47:21,332 62347 INFO pruebas odoo.modules.loading: loading purchase/data/ir_cron_data.xml 
+2026-03-26 11:47:21,334 62347 INFO pruebas odoo.modules.loading: loading purchase/report/purchase_reports.xml 
+2026-03-26 11:47:21,342 62347 INFO pruebas odoo.modules.loading: loading purchase/views/purchase_views.xml 
+2026-03-26 11:47:21,586 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [95, 96] 
+2026-03-26 11:47:21,679 62347 INFO pruebas odoo.modules.loading: loading purchase/views/purchase_bill_line_match_views.xml 
+2026-03-26 11:47:21,693 62347 INFO pruebas odoo.modules.loading: loading purchase/views/res_config_settings_views.xml 
+2026-03-26 11:47:21,809 62347 INFO pruebas odoo.modules.loading: loading purchase/views/product_views.xml 
+2026-03-26 11:47:22,044 62347 INFO pruebas odoo.modules.loading: loading purchase/views/res_partner_views.xml 
+2026-03-26 11:47:22,131 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.actions.act_window.view records with IDs: [97, 98] 
+2026-03-26 11:47:22,276 62347 INFO pruebas odoo.modules.loading: loading purchase/report/purchase_bill_views.xml 
+2026-03-26 11:47:22,293 62347 INFO pruebas odoo.modules.loading: loading purchase/report/purchase_report_views.xml 
+2026-03-26 11:47:22,350 62347 INFO pruebas odoo.modules.loading: loading purchase/data/mail_templates.xml 
+2026-03-26 11:47:22,353 62347 INFO pruebas odoo.modules.loading: loading purchase/data/mail_template_data.xml 
+2026-03-26 11:47:22,359 62347 INFO pruebas odoo.modules.loading: loading purchase/views/portal_templates.xml 
+2026-03-26 11:47:22,486 62347 INFO pruebas odoo.modules.loading: loading purchase/report/purchase_order_templates.xml 
+2026-03-26 11:47:22,526 62347 INFO pruebas odoo.modules.loading: loading purchase/report/purchase_quotation_templates.xml 
+2026-03-26 11:47:22,555 62347 INFO pruebas odoo.modules.loading: loading purchase/views/product_packaging_views.xml 
+2026-03-26 11:47:22,603 62347 INFO pruebas odoo.modules.loading: loading purchase/views/analytic_account_views.xml 
+2026-03-26 11:47:22,634 62347 INFO pruebas odoo.modules.loading: loading purchase/wizard/bill_to_po_wizard_views.xml 
+2026-03-26 11:47:22,649 62347 INFO pruebas odoo.modules.loading: loading purchase/data/purchase_tour.xml 
+2026-03-26 11:47:22,716 62347 INFO pruebas odoo.modules.loading: Module purchase loaded in 2.50s, 1512 queries (+1512 other) 
+2026-03-26 11:47:22,716 62347 INFO pruebas odoo.modules.loading: Loading module snailmail_account (60/80) 
+2026-03-26 11:47:23,353 62347 INFO pruebas odoo.modules.registry: module snailmail_account: creating or updating database tables 
+2026-03-26 11:47:23,415 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:23,415 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:23,416 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:23,416 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:23,416 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:23,416 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:23,416 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:23,416 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:23,631 62347 INFO pruebas odoo.modules.loading: loading snailmail_account/views/res_config_settings_views.xml 
+2026-03-26 11:47:23,778 62347 INFO pruebas odoo.modules.loading: Module snailmail_account loaded in 1.06s, 189 queries (+189 other) 
+2026-03-26 11:47:23,778 62347 INFO pruebas odoo.modules.loading: Loading module spreadsheet_account (61/80) 
+2026-03-26 11:47:24,286 62347 INFO pruebas odoo.modules.registry: module spreadsheet_account: creating or updating database tables 
+2026-03-26 11:47:24,503 62347 INFO pruebas odoo.modules.loading: Module spreadsheet_account loaded in 0.73s, 62 queries (+62 other) 
+2026-03-26 11:47:24,504 62347 INFO pruebas odoo.modules.loading: Loading module spreadsheet_dashboard_account (62/80) 
+2026-03-26 11:47:24,914 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard_account/data/dashboards.xml 
+2026-03-26 11:47:24,971 62347 INFO pruebas odoo.modules.loading: Module spreadsheet_dashboard_account loaded in 0.47s, 34 queries (+34 other) 
+2026-03-26 11:47:24,971 62347 INFO pruebas odoo.modules.loading: Loading module stock_account (63/80) 
+2026-03-26 11:47:25,369 62347 INFO pruebas odoo.modules.registry: module stock_account: creating or updating database tables 
+2026-03-26 11:47:25,904 62347 INFO pruebas odoo.modules.loading: loading stock_account/security/stock_account_security.xml 
+2026-03-26 11:47:25,909 62347 INFO pruebas odoo.modules.loading: loading stock_account/security/ir.model.access.csv 
+2026-03-26 11:47:25,938 62347 INFO pruebas odoo.modules.loading: loading stock_account/data/stock_account_data.xml 
+2026-03-26 11:47:25,940 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/stock_account_views.xml 
+2026-03-26 11:47:26,161 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/res_config_settings_views.xml 
+2026-03-26 11:47:26,259 62347 INFO pruebas odoo.modules.loading: loading stock_account/data/product_data.xml 
+2026-03-26 11:47:26,265 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/report_invoice.xml 
+2026-03-26 11:47:26,288 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/stock_valuation_layer_views.xml 
+2026-03-26 11:47:26,467 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/stock_quant_views.xml 
+2026-03-26 11:47:26,509 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/product_views.xml 
+2026-03-26 11:47:26,624 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/stock_lot_views.xml 
+2026-03-26 11:47:26,645 62347 INFO pruebas odoo.modules.loading: loading stock_account/views/stock_picking_views.xml 
+2026-03-26 11:47:26,679 62347 INFO pruebas odoo.modules.loading: loading stock_account/wizard/stock_request_count.xml 
+2026-03-26 11:47:26,691 62347 INFO pruebas odoo.modules.loading: loading stock_account/wizard/stock_valuation_layer_revaluation_views.xml 
+2026-03-26 11:47:26,704 62347 INFO pruebas odoo.modules.loading: loading stock_account/wizard/stock_quantity_history.xml 
+2026-03-26 11:47:26,717 62347 INFO pruebas odoo.modules.loading: loading stock_account/report/account_invoice_report_view.xml 
+2026-03-26 11:47:26,753 62347 INFO pruebas odoo.modules.loading: Module stock_account loaded in 1.78s, 777 queries (+777 other) 
+2026-03-26 11:47:26,753 62347 INFO pruebas odoo.modules.loading: Loading module stock_sms (64/80) 
+2026-03-26 11:47:27,108 62347 INFO pruebas odoo.modules.registry: module stock_sms: creating or updating database tables 
+2026-03-26 11:47:27,322 62347 INFO pruebas odoo.modules.loading: loading stock_sms/data/sms_data.xml 
+2026-03-26 11:47:27,326 62347 INFO pruebas odoo.modules.loading: loading stock_sms/views/res_config_settings_views.xml 
+2026-03-26 11:47:27,477 62347 INFO pruebas odoo.modules.loading: loading stock_sms/wizard/confirm_stock_sms_views.xml 
+2026-03-26 11:47:27,487 62347 INFO pruebas odoo.modules.loading: loading stock_sms/security/ir.model.access.csv 
+2026-03-26 11:47:27,511 62347 INFO pruebas odoo.modules.loading: loading stock_sms/security/sms_security.xml 
+2026-03-26 11:47:27,530 62347 INFO pruebas odoo.modules.loading: Module stock_sms loaded in 0.78s, 171 queries (+171 other) 
+2026-03-26 11:47:27,530 62347 INFO pruebas odoo.modules.loading: Loading module crm_iap_enrich (65/80) 
+2026-03-26 11:47:28,133 62347 INFO pruebas odoo.modules.registry: module crm_iap_enrich: creating or updating database tables 
+2026-03-26 11:47:28,247 62347 INFO pruebas odoo.modules.loading: loading crm_iap_enrich/data/ir_cron.xml 
+2026-03-26 11:47:28,267 62347 INFO pruebas odoo.modules.loading: loading crm_iap_enrich/data/ir_action.xml 
+2026-03-26 11:47:28,274 62347 INFO pruebas odoo.modules.loading: loading crm_iap_enrich/data/mail_templates.xml 
+2026-03-26 11:47:28,282 62347 INFO pruebas odoo.modules.loading: loading crm_iap_enrich/views/crm_lead_views.xml 
+2026-03-26 11:47:28,335 62347 INFO pruebas odoo.modules.loading: loading crm_iap_enrich/views/res_config_settings_view.xml 
+2026-03-26 11:47:28,611 62347 INFO pruebas odoo.modules.loading: Module crm_iap_enrich loaded in 1.08s, 188 queries (+188 other) 
+2026-03-26 11:47:28,611 62347 INFO pruebas odoo.modules.loading: Loading module helpdesk_mgmt (66/80) 
+2026-03-26 11:47:29,074 62347 INFO pruebas odoo.modules.registry: module helpdesk_mgmt: creating or updating database tables 
+2026-03-26 11:47:29,310 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:29,310 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:29,311 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:29,311 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:29,311 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:29,311 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:29,311 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:29,311 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:29,632 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/data/helpdesk_data.xml 
+2026-03-26 11:47:29,686 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/helpdesk_security.xml 
+2026-03-26 11:47:29,812 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/security/ir.model.access.csv 
+2026-03-26 11:47:29,882 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_partner_views.xml 
+2026-03-26 11:47:29,955 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/res_config_settings_views.xml 
+2026-03-26 11:47:30,057 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_templates.xml 
+2026-03-26 11:47:30,173 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_time_line_views.xml 
+2026-03-26 11:47:30,182 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_views.xml 
+2026-03-26 11:47:30,288 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_graph_views.xml 
+2026-03-26 11:47:30,336 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_board_dashboard_views.xml 
+2026-03-26 11:47:30,349 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_menu.xml 
+2026-03-26 11:47:30,457 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_team_views.xml 
+2026-03-26 11:47:30,480 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_stage_views.xml 
+2026-03-26 11:47:30,506 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_category_views.xml 
+2026-03-26 11:47:30,531 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_channel_views.xml 
+2026-03-26 11:47:30,553 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_ticket_tag_views.xml 
+2026-03-26 11:47:30,571 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/views/helpdesk_dashboard_views.xml 
+2026-03-26 11:47:30,583 62347 INFO pruebas odoo.modules.loading: loading helpdesk_mgmt/wizards/helpdesk_ticket_duplicate_wizard_views.xml 
+2026-03-26 11:47:30,634 62347 INFO pruebas odoo.modules.loading: Module helpdesk_mgmt loaded in 2.02s, 1207 queries (+1207 other) 
+2026-03-26 11:47:30,634 62347 INFO pruebas odoo.modules.loading: Loading module purchase_edi_ubl_bis3 (67/80) 
+2026-03-26 11:47:30,957 62347 INFO pruebas odoo.modules.registry: module purchase_edi_ubl_bis3: creating or updating database tables 
+2026-03-26 11:47:31,023 62347 INFO pruebas odoo.modules.loading: loading purchase_edi_ubl_bis3/data/bis3_templates.xml 
+2026-03-26 11:47:31,086 62347 INFO pruebas odoo.modules.loading: loading purchase_edi_ubl_bis3/views/portal_templates_edi_ubl_connect_software.xml 
+2026-03-26 11:47:31,133 62347 INFO pruebas odoo.modules.loading: Module purchase_edi_ubl_bis3 loaded in 0.50s, 158 queries (+158 other) 
+2026-03-26 11:47:31,133 62347 INFO pruebas odoo.modules.loading: Loading module purchase_stock (68/80) 
+2026-03-26 11:47:31,562 62347 INFO pruebas odoo.modules.registry: module purchase_stock: creating or updating database tables 
+2026-03-26 11:47:31,772 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:31,772 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:31,773 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:31,773 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:31,773 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:31,773 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:31,773 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:31,773 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:32,116 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/security/ir.model.access.csv 
+2026-03-26 11:47:32,157 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/data/purchase_stock_data.xml 
+2026-03-26 11:47:32,161 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/data/mail_templates.xml 
+2026-03-26 11:47:32,173 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/report/vendor_delay_report.xml 
+2026-03-26 11:47:32,202 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/purchase_views.xml 
+2026-03-26 11:47:32,271 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/stock_views.xml 
+2026-03-26 11:47:32,383 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/stock_picking_views.xml 
+2026-03-26 11:47:32,407 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/stock_rule_views.xml 
+2026-03-26 11:47:32,430 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/res_config_settings_views.xml 
+2026-03-26 11:47:32,630 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/res_partner_views.xml 
+2026-03-26 11:47:32,702 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/stock_lot_views.xml 
+2026-03-26 11:47:32,724 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/stock_orderpoint_views.xml 
+2026-03-26 11:47:32,737 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/views/product_views.xml 
+2026-03-26 11:47:32,841 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/report/purchase_report_views.xml 
+2026-03-26 11:47:32,860 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/report/purchase_report_templates.xml 
+2026-03-26 11:47:32,896 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/report/report_stock_rule.xml 
+2026-03-26 11:47:32,918 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/wizard/stock_replenishment_info.xml 
+2026-03-26 11:47:32,958 62347 INFO pruebas odoo.modules.loading: loading purchase_stock/wizard/product_replenish_views.xml 
+2026-03-26 11:47:33,006 62347 INFO pruebas odoo.modules.loading: Module purchase_stock loaded in 1.87s, 900 queries (+900 other) 
+2026-03-26 11:47:33,007 62347 INFO pruebas odoo.modules.loading: Loading module sale (69/80) 
+2026-03-26 11:47:33,390 62347 INFO pruebas odoo.modules.registry: module sale: creating or updating database tables 
+2026-03-26 11:47:33,607 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.partner() have the same label: Tipo de relación. [Modules: crm and crm] 
+2026-03-26 11:47:33,608 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.partner() have the same label: Incidencias cobro. [Modules: crm and crm] 
+2026-03-26 11:47:33,608 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.location() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:33,608 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.location() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:33,609 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:33,609 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:33,609 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of fsm.person() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:33,609 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of fsm.person() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:34,156 62347 INFO pruebas odoo.modules.loading: loading sale/security/ir.model.access.csv 
+2026-03-26 11:47:34,277 62347 INFO pruebas odoo.modules.loading: loading sale/security/res_groups.xml 
+2026-03-26 11:47:34,297 62347 INFO pruebas odoo.modules.loading: loading sale/security/ir_rules.xml 
+2026-03-26 11:47:34,331 62347 INFO pruebas odoo.modules.loading: loading sale/report/account_invoice_report_views.xml 
+2026-03-26 11:47:34,373 62347 INFO pruebas odoo.modules.loading: loading sale/report/ir_actions_report_templates.xml 
+2026-03-26 11:47:34,421 62347 INFO pruebas odoo.modules.loading: loading sale/report/ir_actions_report.xml 
+2026-03-26 11:47:34,429 62347 INFO pruebas odoo.modules.loading: loading sale/report/sale_report_views.xml 
+2026-03-26 11:47:34,505 62347 INFO pruebas odoo.modules.loading: loading sale/data/ir_cron.xml 
+2026-03-26 11:47:34,510 62347 INFO pruebas odoo.modules.loading: loading sale/data/ir_sequence_data.xml 
+2026-03-26 11:47:34,512 62347 INFO pruebas odoo.modules.loading: loading sale/data/mail_activity_type_data.xml 
+2026-03-26 11:47:34,515 62347 INFO pruebas odoo.modules.loading: loading sale/data/mail_message_subtype_data.xml 
+2026-03-26 11:47:34,526 62347 INFO pruebas odoo.modules.loading: loading sale/data/mail_template_data.xml 
+2026-03-26 11:47:34,535 62347 INFO pruebas odoo.modules.loading: loading sale/data/sale_tour.xml 
+2026-03-26 11:47:34,543 62347 INFO pruebas odoo.modules.loading: loading sale/data/ir_config_parameter.xml 
+2026-03-26 11:47:34,547 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/account_accrued_orders_wizard_views.xml 
+2026-03-26 11:47:34,554 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/mass_cancel_orders_views.xml 
+2026-03-26 11:47:34,574 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/payment_link_wizard_views.xml 
+2026-03-26 11:47:34,601 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/res_config_settings_views.xml 
+2026-03-26 11:47:34,755 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/sale_make_invoice_advance_views.xml 
+2026-03-26 11:47:34,767 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/sale_order_cancel_views.xml 
+2026-03-26 11:47:34,779 62347 INFO pruebas odoo.modules.loading: loading sale/wizard/sale_order_discount_views.xml 
+2026-03-26 11:47:34,789 62347 INFO pruebas odoo.modules.loading: loading sale/views/sale_order_views.xml 
+2026-03-26 11:47:35,044 62347 INFO pruebas odoo.modules.loading: loading sale/views/account_views.xml 
+2026-03-26 11:47:35,176 62347 INFO pruebas odoo.modules.loading: loading sale/views/crm_team_views.xml 
+2026-03-26 11:47:35,264 62347 INFO pruebas odoo.modules.loading: loading sale/views/mail_activity_views.xml 
+2026-03-26 11:47:35,270 62347 INFO pruebas odoo.modules.loading: loading sale/views/mail_activity_plan_views.xml 
+2026-03-26 11:47:35,277 62347 INFO pruebas odoo.modules.loading: loading sale/views/payment_views.xml 
+2026-03-26 11:47:35,325 62347 INFO pruebas odoo.modules.loading: loading sale/views/product_document_views.xml 
+2026-03-26 11:47:35,378 62347 INFO pruebas odoo.modules.loading: loading sale/views/product_packaging_views.xml 
+2026-03-26 11:47:35,412 62347 INFO pruebas odoo.modules.loading: loading sale/views/product_template_views.xml 
+2026-03-26 11:47:35,457 62347 INFO pruebas odoo.modules.loading: loading sale/views/product_views.xml 
+2026-03-26 11:47:35,626 62347 INFO pruebas odoo.modules.loading: loading sale/views/res_partner_views.xml 
+2026-03-26 11:47:35,792 62347 INFO pruebas odoo.modules.loading: loading sale/views/sale_order_line_views.xml 
+2026-03-26 11:47:35,818 62347 INFO pruebas odoo.modules.loading: loading sale/views/sale_portal_templates.xml 
+2026-03-26 11:47:35,903 62347 INFO pruebas odoo.modules.loading: loading sale/views/utm_campaign_views.xml 
+2026-03-26 11:47:35,934 62347 INFO pruebas odoo.modules.loading: loading sale/views/sale_menus.xml 
+2026-03-26 11:47:36,189 62347 INFO pruebas odoo.modules.loading: Module sale loaded in 3.18s, 2149 queries (+2149 other) 
+2026-03-26 11:47:36,189 62347 INFO pruebas odoo.modules.loading: Loading module spreadsheet_dashboard_stock_account (70/80) 
+2026-03-26 11:47:36,592 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard_stock_account/data/dashboards.xml 
+2026-03-26 11:47:36,635 62347 INFO pruebas odoo.modules.loading: Module spreadsheet_dashboard_stock_account loaded in 0.45s, 33 queries (+33 other) 
+2026-03-26 11:47:36,635 62347 INFO pruebas odoo.modules.loading: Loading module sale_async_emails (71/80) 
+2026-03-26 11:47:37,030 62347 INFO pruebas odoo.modules.registry: module sale_async_emails: creating or updating database tables 
+2026-03-26 11:47:37,111 62347 INFO pruebas odoo.modules.loading: loading sale_async_emails/data/ir_config_parameter.xml 
+2026-03-26 11:47:37,114 62347 INFO pruebas odoo.modules.loading: loading sale_async_emails/data/ir_cron.xml 
+2026-03-26 11:47:37,131 62347 INFO pruebas odoo.modules.loading: Module sale_async_emails loaded in 0.50s, 57 queries (+57 other) 
+2026-03-26 11:47:37,132 62347 INFO pruebas odoo.modules.loading: Loading module sale_crm (72/80) 
+2026-03-26 11:47:37,534 62347 INFO pruebas odoo.modules.registry: module sale_crm: creating or updating database tables 
+2026-03-26 11:47:37,568 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:37,568 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:37,679 62347 INFO pruebas odoo.modules.loading: loading sale_crm/security/ir.model.access.csv 
+2026-03-26 11:47:37,692 62347 INFO pruebas odoo.modules.loading: loading sale_crm/data/crm_lead_merge_template.xml 
+2026-03-26 11:47:37,728 62347 INFO pruebas odoo.modules.loading: loading sale_crm/views/partner_views.xml 
+2026-03-26 11:47:37,803 62347 INFO pruebas odoo.modules.loading: loading sale_crm/views/sale_order_views.xml 
+2026-03-26 11:47:37,864 62347 INFO pruebas odoo.modules.loading: loading sale_crm/views/crm_lead_views.xml 
+2026-03-26 11:47:37,916 62347 INFO pruebas odoo.modules.loading: loading sale_crm/views/crm_team_views.xml 
+2026-03-26 11:47:37,942 62347 INFO pruebas odoo.modules.loading: loading sale_crm/wizard/crm_opportunity_to_quotation_views.xml 
+2026-03-26 11:47:37,973 62347 INFO pruebas odoo.modules.loading: Module sale_crm loaded in 0.84s, 283 queries (+283 other) 
+2026-03-26 11:47:37,973 62347 INFO pruebas odoo.modules.loading: Loading module sale_edi_ubl (73/80) 
+2026-03-26 11:47:38,504 62347 INFO pruebas odoo.modules.registry: module sale_edi_ubl: creating or updating database tables 
+2026-03-26 11:47:38,613 62347 INFO pruebas odoo.modules.loading: Module sale_edi_ubl loaded in 0.64s, 63 queries (+63 other) 
+2026-03-26 11:47:38,613 62347 INFO pruebas odoo.modules.loading: Loading module sale_management (74/80) 
+2026-03-26 11:47:39,047 62347 INFO pruebas odoo.modules.registry: module sale_management: creating or updating database tables 
+2026-03-26 11:47:39,640 62347 INFO pruebas odoo.modules.loading: loading sale_management/data/digest_data.xml 
+2026-03-26 11:47:39,652 62347 INFO pruebas odoo.modules.loading: loading sale_management/security/ir.model.access.csv 
+2026-03-26 11:47:39,681 62347 INFO pruebas odoo.modules.loading: loading sale_management/security/sale_management_security.xml 
+2026-03-26 11:47:39,688 62347 INFO pruebas odoo.modules.loading: loading sale_management/report/sale_report_templates.xml 
+2026-03-26 11:47:39,710 62347 INFO pruebas odoo.modules.loading: loading sale_management/views/sale_order_template_views.xml 
+2026-03-26 11:47:39,757 62347 INFO pruebas odoo.modules.loading: loading sale_management/views/digest_views.xml 
+2026-03-26 11:47:39,782 62347 INFO pruebas odoo.modules.loading: loading sale_management/views/res_config_settings_views.xml 
+2026-03-26 11:47:39,901 62347 INFO pruebas odoo.modules.loading: loading sale_management/views/sale_order_views.xml 
+2026-03-26 11:47:39,969 62347 INFO pruebas odoo.modules.loading: loading sale_management/views/sale_portal_templates.xml 
+2026-03-26 11:47:39,991 62347 INFO pruebas odoo.modules.loading: loading sale_management/views/sale_management_menus.xml 
+2026-03-26 11:47:40,023 62347 INFO pruebas odoo.modules.loading: Module sale_management loaded in 1.41s, 391 queries (+391 other) 
+2026-03-26 11:47:40,024 62347 INFO pruebas odoo.modules.loading: Loading module sale_purchase (75/80) 
+2026-03-26 11:47:40,368 62347 INFO pruebas odoo.modules.registry: module sale_purchase: creating or updating database tables 
+2026-03-26 11:47:40,547 62347 INFO pruebas odoo.modules.loading: loading sale_purchase/data/mail_templates.xml 
+2026-03-26 11:47:40,567 62347 INFO pruebas odoo.modules.loading: loading sale_purchase/views/product_views.xml 
+2026-03-26 11:47:40,608 62347 INFO pruebas odoo.modules.loading: loading sale_purchase/views/sale_order_views.xml 
+2026-03-26 11:47:40,666 62347 INFO pruebas odoo.modules.loading: loading sale_purchase/views/purchase_order_views.xml 
+2026-03-26 11:47:40,707 62347 INFO pruebas odoo.modules.loading: loading sale_purchase/wizards/sale_order_cancel_views.xml 
+2026-03-26 11:47:40,747 62347 INFO pruebas odoo.modules.loading: Module sale_purchase loaded in 0.72s, 255 queries (+255 other) 
+2026-03-26 11:47:40,748 62347 INFO pruebas odoo.modules.loading: Loading module sale_sms (76/80) 
+2026-03-26 11:47:41,141 62347 INFO pruebas odoo.modules.loading: loading sale_sms/security/ir.model.access.csv 
+2026-03-26 11:47:41,153 62347 INFO pruebas odoo.modules.loading: loading sale_sms/security/security.xml 
+2026-03-26 11:47:41,207 62347 INFO pruebas odoo.modules.loading: Module sale_sms loaded in 0.46s, 43 queries (+43 other) 
+2026-03-26 11:47:41,207 62347 INFO pruebas odoo.modules.loading: Loading module sale_stock (77/80) 
+2026-03-26 11:47:41,622 62347 INFO pruebas odoo.modules.registry: module sale_stock: creating or updating database tables 
+2026-03-26 11:47:41,782 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (relationship_type_id, relationship_type) of res.users() have the same label: Tipo de relación. [Modules: None and None] 
+2026-03-26 11:47:41,782 62347 WARNING pruebas odoo.addons.base.models.ir_model: Two fields (contract_incidents_cobro, billing_incidents_cobro) of res.users() have the same label: Incidencias cobro. [Modules: None and None] 
+2026-03-26 11:47:42,179 62347 INFO pruebas odoo.modules.loading: loading sale_stock/security/sale_stock_security.xml 
+2026-03-26 11:47:42,186 62347 INFO pruebas odoo.modules.loading: loading sale_stock/security/ir.model.access.csv 
+2026-03-26 11:47:42,269 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/sale_order_views.xml 
+2026-03-26 11:47:42,461 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/stock_route_views.xml 
+2026-03-26 11:47:42,481 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/res_config_settings_views.xml 
+2026-03-26 11:47:42,642 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/sale_stock_portal_template.xml 
+2026-03-26 11:47:42,689 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/stock_lot_views.xml 
+2026-03-26 11:47:42,767 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/res_users_views.xml 
+2026-03-26 11:47:42,844 62347 INFO pruebas odoo.modules.loading: loading sale_stock/views/stock_picking_views.xml 
+2026-03-26 11:47:42,907 62347 INFO pruebas odoo.modules.loading: loading sale_stock/report/sale_order_report_templates.xml 
+2026-03-26 11:47:42,935 62347 INFO pruebas odoo.modules.loading: loading sale_stock/report/stock_report_deliveryslip.xml 
+2026-03-26 11:47:42,953 62347 INFO pruebas odoo.modules.loading: loading sale_stock/data/mail_templates.xml 
+2026-03-26 11:47:42,968 62347 INFO pruebas odoo.modules.loading: loading sale_stock/data/sale_stock_data.xml 
+2026-03-26 11:47:42,972 62347 INFO pruebas odoo.modules.loading: loading sale_stock/wizard/stock_rules_report_views.xml 
+2026-03-26 11:47:42,998 62347 INFO pruebas odoo.modules.loading: loading sale_stock/wizard/sale_order_cancel_views.xml 
+2026-03-26 11:47:43,051 62347 INFO pruebas odoo.modules.loading: Module sale_stock loaded in 1.84s, 781 queries (+781 other) 
+2026-03-26 11:47:43,051 62347 INFO pruebas odoo.modules.loading: Loading module spreadsheet_dashboard_sale (78/80) 
+2026-03-26 11:47:43,544 62347 INFO pruebas odoo.modules.loading: loading spreadsheet_dashboard_sale/data/dashboards.xml 
+2026-03-26 11:47:43,640 62347 INFO pruebas odoo.modules.loading: Module spreadsheet_dashboard_sale loaded in 0.59s, 40 queries (+40 other) 
+2026-03-26 11:47:43,640 62347 INFO pruebas odoo.modules.loading: Loading module sale_pdf_quote_builder (79/80) 
+2026-03-26 11:47:44,325 62347 INFO pruebas odoo.modules.registry: module sale_pdf_quote_builder: creating or updating database tables 
+2026-03-26 11:47:44,484 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/data/ir_cron.xml 
+2026-03-26 11:47:44,498 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/data/sale_pdf_form_field.xml 
+2026-03-26 11:47:44,499 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/report/ir_actions_report.xml 
+2026-03-26 11:47:44,506 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/security/ir.model.access.csv 
+2026-03-26 11:47:44,529 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/security/ir_rules.xml 
+2026-03-26 11:47:44,532 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/views/product_document_views.xml 
+2026-03-26 11:47:44,555 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/views/quotation_document_views.xml 
+2026-03-26 11:47:44,586 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/views/sale_order_template_views.xml 
+2026-03-26 11:47:44,611 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/views/sale_order_views.xml 
+2026-03-26 11:47:44,677 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/views/sale_pdf_form_field_views.xml 
+2026-03-26 11:47:44,691 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/views/sale_pdf_quote_builder_menus.xml 
+2026-03-26 11:47:44,698 62347 INFO pruebas odoo.modules.loading: loading sale_pdf_quote_builder/wizards/res_config_settings_views.xml 
+2026-03-26 11:47:44,858 62347 INFO pruebas odoo.modules.loading: Module sale_pdf_quote_builder loaded in 1.22s, 389 queries (+389 other) 
+2026-03-26 11:47:44,858 62347 INFO pruebas odoo.modules.loading: Loading module sale_purchase_stock (80/80) 
+2026-03-26 11:47:45,237 62347 INFO pruebas odoo.modules.registry: module sale_purchase_stock: creating or updating database tables 
+2026-03-26 11:47:45,383 62347 INFO pruebas odoo.modules.loading: Module sale_purchase_stock loaded in 0.52s, 85 queries (+85 other) 
+2026-03-26 11:47:45,383 62347 INFO pruebas odoo.modules.loading: 80 modules loaded in 81.32s, 43638 queries (+43638 extra) 
+2026-03-26 11:47:46,124 62347 INFO pruebas odoo.modules.loading: Model crm.iap.lead.helpers is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:47:46,124 62347 INFO pruebas odoo.modules.loading: Model crm.iap.lead.industry is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:47:46,124 62347 INFO pruebas odoo.modules.loading: Model crm.iap.lead.role is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:47:46,124 62347 INFO pruebas odoo.modules.loading: Model crm.iap.lead.seniority is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:47:46,124 62347 INFO pruebas odoo.modules.loading: Model crm.iap.lead.mining.request is declared but cannot be loaded! (Perhaps a module was partially removed or renamed) 
+2026-03-26 11:47:46,473 62347 INFO pruebas odoo.models.unlink: User #1 deleted ir.model.data records with IDs: [29628, 29627, 29520, 29519, 29391, 29390, 29316, 29315, 29134, 29133] 
+2026-03-26 11:47:47,404 62347 INFO pruebas odoo.modules.loading: Modules loaded. 
+2026-03-26 11:47:47,896 62347 INFO pruebas odoo.modules.registry: Registry changed, signaling through the database 
+2026-03-26 11:47:47,897 62347 INFO pruebas odoo.modules.registry: Registry loaded in 91.739s 
+2026-03-26 11:47:47,898 62347 INFO pruebas odoo.service.server: Initiating shutdown 
+2026-03-26 11:47:47,898 62347 INFO pruebas odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-26 11:47:47,898 62347 INFO pruebas odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
