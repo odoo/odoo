@@ -1,6 +1,8 @@
 import { onMounted, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { patch } from "@web/core/utils/patch";
+import { ImageViewerTouchMixin } from "@website_sale/js/utils/image_viewer_gestures";
 
 const ZOOM_STEP = 0.1;
 const TOUCHMOVE_STEP = 96;
@@ -30,6 +32,8 @@ export class ProductImageViewer extends Dialog {
             carouselOffset: 0,
         });
         this.isDragging = false;
+        this.initialPinchDistance = null;
+        this.initialPinchScale = 1;
         this.dragStartPos = { x: 0, y: 0 };
         // Doing a full render for the translate is too slow.
         this.imageTranslate = { x: 0, y: 0 };
@@ -211,4 +215,6 @@ export class ProductImageViewer extends Dialog {
         }
     }
 }
+
+patch(ProductImageViewer.prototype, ImageViewerTouchMixin);
 delete ProductImageViewer.props.slots;

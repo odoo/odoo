@@ -22,6 +22,9 @@
                                 t-att-src="selectedImage.src"
                                 t-att-style="imageStyle"
                                 t-on-mousedown="onMousedownImage"
+                                t-on-touchend="_onTouchendImage"
+                                t-on-touchmove="_onTouchmoveImage"
+                                t-on-touchstart="_onTouchstartImage"
                                 t-on-wheel.stop="onWheelImage"
                             />
                         </div>

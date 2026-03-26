@@ -137,6 +137,7 @@
             # backend.
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/js/location_selector/**/*',
+            'website_sale/static/src/js/utils/image_viewer_gestures.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
