@@ -245,7 +245,17 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
     def _fetch_mails(self, **kw):
         """ Method called by cron to fetch mails from servers """
         assert self.env.context.get('cron_id') == self.env.ref('mail.ir_cron_mail_gateway_action').id, "Meant for cron usage only"
-        self.search(MAIL_SERVER_DOMAIN)._fetch_mail(**kw)
+        # We sort by priority first (lowest first).
+        # Then by date ASC (oldest first), date is updated after server is processed by cron
+        # This ensures that the fetchmail servers are rotated for each job run
+        custom_order = "priority asc, date asc nulls first, id asc"
+        records = self.search(MAIL_SERVER_DOMAIN, order=custom_order)
+        # To ensure that all N inbox can be looped over to be checked (when empty),
+        # we add a time buffer of 4*N sec, assuming an EXTREME edge-case of 2*2s latency
+        # to connect and check the empty inbox.
+        # Should be adapted if ir_cron is refactored in the future
+        time_buffer = self.env.context['cron_end_time'] + (4 * len(records))
+        records.with_context(cron_end_time=time_buffer)._fetch_mail(**kw)
         if not self.search_count(MAIL_SERVER_DOMAIN):
             # no server is active anymore
             self.env['ir.cron']._commit_progress(deactivate=True)
@@ -257,8 +267,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         """
         result_exception = None
         servers = self.with_context(fetchmail_cron_running=True)
-        total_remaining = len(servers)  # number of remaining messages + number of unchecked servers
+        total_remaining = len(servers)  # number of unseen messages + number of unchecked servers
         self.env['ir.cron']._commit_progress(remaining=total_remaining)
+        _logger.info("Fetchmail servers (in order) to be processed %s", servers.mapped('name'))
 
         for server in servers:
             total_remaining -= 1  # the server is checked
@@ -296,7 +307,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         MailThread.env.cr.rollback()
                         failed += 1
                         _logger.info('Failed to process mail from %s server %s.', *server_type_and_name, exc_info=True)
-                        remaining_time = MailThread.env['ir.cron']._commit_progress()
+                        # mail failed, but still "seen", so one unit of work
+                        remaining_time = MailThread.env['ir.cron']._commit_progress(1)
                     server_connection.handled_message(message_num)
                     if count >= batch_limit or not remaining_time:
                         break
@@ -326,7 +338,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             # updated for messages using another transaction. Without a commit
             # before updating the progress, we would have a serialization error.
             self.env.cr.commit()
-            if not self.env['ir.cron']._commit_progress(remaining=total_remaining):
+            # checked server, so one unit of work done (even if no messages fetched on server)
+            remaining_time = self.env['ir.cron']._commit_progress(1, remaining=total_remaining)
+            if not remaining_time:
                 break
         return result_exception
 
