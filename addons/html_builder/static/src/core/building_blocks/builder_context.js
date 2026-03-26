@@ -5,7 +5,7 @@ import { BuilderComponent } from "./builder_component";
 export class BuilderContext extends Component {
     static template = xml`
         <BuilderComponent>
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </BuilderComponent>
     `;
     static props = {

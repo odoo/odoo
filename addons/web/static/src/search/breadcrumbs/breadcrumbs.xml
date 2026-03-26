@@ -53,12 +53,12 @@
             <t t-call="web.Breadcrumb.Actions"/>
         </div>
 
-        <t t-slot="breadcrumb-status-indicator" />
+        <t t-call-slot="breadcrumb-status-indicator" />
     </t>
 
     <t t-name="web.Breadcrumb.Actions">
         <div class="o_control_panel_breadcrumbs_actions d-inline-flex d-print-none">
-            <t t-slot="breadcrumb-additional-actions"/>
+            <t t-call-slot="breadcrumb-additional-actions"/>
         </div>
     </t>
 

@@ -122,7 +122,7 @@
 
     <t t-name="web.KanbanDropdownMenuWrapper">
         <div t-on-click="this.onClick" style="display:contents" t-custom-ref="rootRef">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </div>
     </t>
 

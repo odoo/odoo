@@ -3,7 +3,7 @@
     <t t-name="html_editor.EmbeddedComponentToolbar">
         <span class="o_embedded_toolbar d-flex justify-content-end align-items-center">
             <span t-attf-class="btn-group d-flex flex-wrap #{ this.props.buttonsGroupClass ? this.props.buttonsGroupClass : '' }">
-                <t t-slot="buttons"/>
+                <t t-call-slot="buttons"/>
             </span>
         </span>
     </t>

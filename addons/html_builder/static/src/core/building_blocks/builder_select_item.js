@@ -80,7 +80,7 @@ export class BuilderSelectItemInternal extends Component {
 export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
     static template = xml`
         <BuilderSelectItemInternal t-props="this.forwardedProps">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </BuilderSelectItemInternal>
         `;
     static components = { BuilderSelectItemInternal };
