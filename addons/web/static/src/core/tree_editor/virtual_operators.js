@@ -3,24 +3,24 @@ import {
     areEqualTrees,
     cloneTree,
     condition,
+    updateCondition,
     connector,
-    expression,
-    FALSE_TREE,
     isTree,
     normalizeValue,
     operate,
-    rewriteNConsecutiveChildren,
+    FALSE_TREE,
     TRUE_TREE,
+    rewriteNConsecutiveChildren,
 } from "./condition_tree";
-import { parseRelativeValue } from "./utils";
+import { getRelativeDateExpr, getBounds, parseRelativeValue } from "./utils";
 
-function splitPath(path, is_property) {
-    if (typeof path !== "string" || path === "") {
+function splitPath(c) {
+    if (typeof c.path !== "string" || c.path === "") {
         return { initialPath: "", lastPart: "" };
     }
 
-    const pathParts = path.split(".");
-    if (is_property && pathParts.length >= 2) {
+    const pathParts = c.path.split(".");
+    if (c.isProperty && pathParts.length >= 2) {
         return {
             initialPath: pathParts.slice(0, -2).join("."),
             lastPart: pathParts.slice(-2).join("."),
@@ -32,34 +32,27 @@ function splitPath(path, is_property) {
     return { initialPath, lastPart };
 }
 
-function isSimplePath(path, isProperty) {
-    return typeof path === "string" && !splitPath(path, isProperty).initialPath;
+function isSimplePath(c) {
+    return typeof c.path === "string" && !splitPath(c).initialPath;
 }
 
 function wrapInAny(tree, initialPath, negate) {
-    let con = cloneTree(tree);
     if (initialPath) {
-        con = condition(initialPath, "any", con);
+        return condition(initialPath, "any", cloneTree(tree), negate);
     }
-    con.negate = negate;
-    return con;
+    return { ...cloneTree(tree), negate };
 }
 
 function introduceSetOperators(tree, options = {}) {
     function _introduceSetOperator(c, options = {}) {
-        const { negate, path, operator, value } = c;
-        const fieldType = options.getFieldDef?.(path)?.type;
-        if (["=", "!="].includes(operator)) {
-            if (fieldType) {
-                if (fieldType === "boolean" && value === true) {
-                    return condition(path, operator === "=" ? "set" : "not set", value, negate);
-                } else if (
-                    !["many2one", "date", "datetime"].includes(fieldType) &&
-                    value === false
-                ) {
-                    return condition(path, operator === "=" ? "not set" : "set", value, negate);
-                }
-            }
+        const fieldType = options.getFieldDef?.(c.path)?.type;
+        if (!["=", "!="].includes(c.operator) || !fieldType) {
+            return;
+        }
+        if (fieldType === "boolean" && c.value === true) {
+            return updateCondition(c, { operator: c.operator === "=" ? "set" : "not set" });
+        } else if (!["many2one", "date", "datetime"].includes(fieldType) && c.value === false) {
+            return updateCondition(c, { operator: c.operator === "=" ? "not set" : "set" });
         }
     }
     return operate(_introduceSetOperator, tree, options);
@@ -67,12 +60,9 @@ function introduceSetOperators(tree, options = {}) {
 
 function eliminateSetOperators(tree) {
     function _removeSetOperator(c) {
-        const { negate, path, operator, value, isProperty } = c;
-        if (["set", "not set"].includes(operator)) {
-            if (value === true) {
-                return condition(path, operator === "set" ? "=" : "!=", value, negate, isProperty);
-            }
-            return condition(path, operator === "set" ? "!=" : "=", value, negate, isProperty);
+        if (["set", "not set"].includes(c.operator)) {
+            const op = c.operator === "set" ? (c.value ? "=" : "!=") : c.value ? "!=" : "=";
+            return updateCondition(c, { operator: op });
         }
     }
     return operate(_removeSetOperator, tree);
@@ -80,15 +70,14 @@ function eliminateSetOperators(tree) {
 
 function introduceStartsWithOperators(tree, options) {
     function _introduceStartsWithOperator(c, options) {
-        const { negate, path, operator, value, isProperty } = c;
-        const fieldType = options.getFieldDef?.(path)?.type;
+        const fieldType = options.getFieldDef?.(c.path)?.type;
         if (
             ["char", "text", "html"].includes(fieldType) &&
-            operator === "=ilike" &&
-            typeof value === "string"
+            c.operator === "=ilike" &&
+            typeof c.value === "string"
         ) {
-            if (value.endsWith("%")) {
-                return condition(path, "starts with", value.slice(0, -1), negate, isProperty);
+            if (c.value.endsWith("%")) {
+                return updateCondition(c, { operator: "starts with", value: c.value.slice(0, -1) });
             }
         }
     }
@@ -97,9 +86,8 @@ function introduceStartsWithOperators(tree, options) {
 
 function eliminateStartsWithOperators(tree) {
     function _eliminateStartsWithOperator(c) {
-        const { negate, path, operator, value, isProperty } = c;
-        if (operator === "starts with") {
-            return condition(path, "=ilike", `${value}%`, negate, isProperty);
+        if (c.operator === "starts with") {
+            return updateCondition(c, { operator: "=ilike", value: `${c.value}%` });
         }
     }
     return operate(_eliminateStartsWithOperator, tree);
@@ -249,117 +237,41 @@ function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fieldType
     ]);
 }
 
-/**
- * Helper to build the chained relativedelta string
- * e.g. ["months=1", "days=1"] -> "relativedelta(months=1) + relativedelta(days=1)"
- */
-function buildDeltaExpr(deltas) {
-    const arr = Array.isArray(deltas) ? deltas : deltas ? [deltas] : [];
-    if (arr.length === 0) {
-        return null;
-    }
-    return arr.map((d) => `relativedelta(${d})`).join(" + ");
-}
-
-export function boundDate(deltas) {
-    const deltaExpr = buildDeltaExpr(deltas);
-    if (!deltaExpr) {
-        return expression(`context_today().strftime("%Y-%m-%d")`);
-    }
-    return expression(`(context_today() + ${deltaExpr}).strftime('%Y-%m-%d')`);
-}
-
-export function boundDatetime(deltas) {
-    const deltaExpr = buildDeltaExpr(deltas);
-    if (!deltaExpr) {
-        return expression(
-            `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-        );
-    }
-    return expression(
-        `datetime.datetime.combine(context_today() + ${deltaExpr}, datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-    );
-}
-
-const BOUNDS_SMART_DATES = [
-    ["today", "today", "today +1d"],
-    ["last7Days", "today -7d", "today"],
-    ["last30Days", "today -30d", "today"],
-    ["monthToDate", "today =1d", "today +1d"],
-    ["lastMonth", "today =1d -1m", "today =1d"],
-    ["yearToDate", "today =1m =1d", "today +1d"],
-    ["last365Days", "today -365d", "today"],
-];
-const DELTAS = [
-    ["today", "", "days = 1"],
-    ["last7Days", "days = -7", ""],
-    ["last30Days", "days = -30", ""],
-    ["monthToDate", "day = 1", "days = 1"],
-    ["lastMonth", "day = 1, months = -1", "day = 1"],
-    ["yearToDate", "day = 1, month = 1", "days = 1"],
-    ["last365Days", "days = -365", ""],
-];
-const BOUNDS_DATE = DELTAS.map(([k, l, r]) => [k, boundDate(l), boundDate(r)]);
-const BOUNDS_DATETIME = DELTAS.map(([k, l, r]) => [k, boundDatetime(l), boundDatetime(r)]);
-
-function getBounds(generateSmartDates, fieldType) {
-    return generateSmartDates
-        ? BOUNDS_SMART_DATES
-        : fieldType === "date"
-        ? BOUNDS_DATE
-        : BOUNDS_DATETIME;
-}
-
 function introduceInRangeOperators(tree, options = {}) {
     function _introduceInRangeOperator(c, options) {
         const path = c.children[0].path;
         const fieldType = options.getFieldDef?.(path)?.type;
         const isProperty = c.children[0].isProperty;
         const isDate = ["date", "datetime"].includes(fieldType);
-        if (!isSimpleAnd(c) || !isDate || !isSimplePath(c.children[0].path, isProperty)) {
+        if (!isSimpleAnd(c) || !isDate || !isSimplePath(c.children[0])) {
             return;
         }
         const generateSmartDates = options.generateSmartDates ?? true;
+        const base = condition(path, "in range", "_replaced_below", false, isProperty);
+
         let res = isStrictBetween(c);
         if (res) {
             const bounds = getBounds(generateSmartDates, fieldType);
-            for (const [valueType, leftBound, rightBound] of bounds) {
-                if (
-                    generateSmartDates
-                        ? res.value1 === leftBound && res.value2 === rightBound
-                        : res.value1._expr === leftBound._expr &&
-                          res.value2._expr === rightBound._expr
-                ) {
-                    return condition(
-                        path,
-                        "in range",
-                        [fieldType, valueType, false, false],
-                        false,
-                        isProperty
-                    );
-                }
+            const match = bounds.find(([, left, right]) =>
+                generateSmartDates
+                    ? res.value1 === left && res.value2 === right
+                    : res.value1._expr === left._expr && res.value2._expr === right._expr
+            );
+            if (match) {
+                return updateCondition(base, { value: [fieldType, match[0], false, false] });
             }
         }
         res = isRelativeBetween(c, fieldType);
         if (res) {
-            const value = [fieldType, "relativeRange", res.diff, res.unit];
-            return condition(path, "in range", value);
+            return updateCondition(base, {
+                value: [fieldType, "relativeRange", res.diff, res.unit],
+            });
         }
         res = isBetween(c);
         if (res) {
-            const { path, value1, value2 } = res;
-            return condition(
-                path,
-                "in range",
-                [
-                    fieldType,
-                    "dateRange",
-                    // @ts-ignore
-                    ...normalizeValue([value1, value2]),
-                ],
-                false,
-                isProperty
-            );
+            return updateCondition(base, {
+                value: [fieldType, "dateRange", ...normalizeValue([res.value1, res.value2])],
+            });
         }
     }
     return operate(
@@ -372,25 +284,23 @@ function introduceInRangeOperators(tree, options = {}) {
 
 function eliminateInRangeOperators(tree, options = {}) {
     function _eliminateInRangeOperator(c, options) {
-        const { negate, path, operator, value, isProperty } = c;
-        // @ts-ignore
-        if (operator !== "in range") {
+        if (c.operator !== "in range") {
             return;
         }
-        const { initialPath, lastPart } = splitPath(path, isProperty);
-        const [fieldType, valueType, value1, value2] = value;
+        const { initialPath, lastPart } = splitPath(c);
+        const [fieldType, valueType, v1, v2] = c.value;
         const smartDates = options.generateSmartDates ?? true;
         let tree;
         if (valueType === "dateRange") {
-            tree = makeBetween(lastPart, value1, value2, isProperty);
+            tree = makeBetween(lastPart, v1, v2, c.isProperty);
         } else if (valueType === "relativeRange") {
-            tree = makeRelativeBetween(lastPart, value1, value2, isProperty, smartDates, fieldType);
+            tree = makeRelativeBetween(lastPart, v1, v2, c.isProperty, smartDates, fieldType);
         } else {
             const bounds = getBounds(smartDates, fieldType);
             const [, leftBound, rightBound] = bounds.find(([v]) => v === valueType);
-            tree = makeStrictBetween(lastPart, leftBound, rightBound, isProperty);
+            tree = makeStrictBetween(lastPart, leftBound, rightBound, c.isProperty);
         }
-        return wrapInAny(tree, initialPath, negate);
+        return wrapInAny(tree, initialPath, c.negate);
     }
     return operate(_eliminateInRangeOperator, tree, options);
 }
@@ -401,11 +311,11 @@ function introduceBetweenOperators(tree, options = {}) {
         if (!res) {
             return;
         }
-        // @ts-ignore
         const { path, value1, value2 } = res;
         const fieldType = options.getFieldDef?.(path)?.type;
-        if (["integer", "float", "monetary"].includes(fieldType) && isSimplePath(path)) {
-            return condition(path, "between", normalizeValue([value1, value2]));
+        const isProperty = c.children[0].isProperty;
+        if (["integer", "float", "monetary"].includes(fieldType) && isSimplePath(c.children[0])) {
+            return condition(path, "between", normalizeValue([value1, value2]), false, isProperty);
         }
     }
     return operate(
@@ -418,44 +328,34 @@ function introduceBetweenOperators(tree, options = {}) {
 
 function eliminateBetweenOperators(tree) {
     function _eliminateBetweenOperator(c) {
-        const { negate, path, operator, value, isProperty } = c;
-        // @ts-ignore
-        if (operator !== "between") {
+        if (c.operator !== "between") {
             return;
         }
-        const { initialPath, lastPart } = splitPath(path, isProperty);
+        const { initialPath, lastPart } = splitPath(c);
         return wrapInAny(
-            makeBetween(lastPart, value[0], value[1], isProperty),
+            makeBetween(lastPart, c.value[0], c.value[1], c.isProperty),
             initialPath,
-            negate
+            c.negate
         );
     }
     return operate(_eliminateBetweenOperator, tree);
 }
 
-function _eliminateAnyOperator(c) {
-    const { path, operator, value, negate } = c;
-    if (
-        operator === "any" &&
-        isTree(value) &&
-        value.type === "condition" &&
-        typeof path === "string" &&
-        typeof value.path === "string" &&
-        !negate &&
-        !value.negate &&
-        ["between", "in range"].includes(value.operator)
-    ) {
-        return condition(
-            `${path}.${value.path}`,
-            value.operator,
-            value.value,
-            false,
-            value.isProperty
-        );
-    }
-}
-
 function eliminateAnyOperators(tree) {
+    function _eliminateAnyOperator(c) {
+        if (
+            c.operator === "any" &&
+            isTree(c.value) &&
+            c.value.type === "condition" &&
+            typeof c.path === "string" &&
+            typeof c.value.path === "string" &&
+            !c.negate &&
+            !c.value.negate &&
+            ["between", "in range"].includes(c.value.operator)
+        ) {
+            return updateCondition(c.value, { path: `${c.path}.${c.value.path}` });
+        }
+    }
     return operate(_eliminateAnyOperator, tree);
 }
 

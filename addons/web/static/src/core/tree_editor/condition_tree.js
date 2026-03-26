@@ -103,6 +103,16 @@ export function condition(path, operator, value, negate = false, isProperty = fa
     return { type: "condition", path, operator, value, negate, isProperty };
 }
 
+/**
+ * Clones a condition and applies updates, preserving all other metadata.
+ * @param {Condition} c
+ * @param {Object} updates
+ * @returns {Condition}
+ */
+export function updateCondition(c, updates) {
+    return { ...c, ...updates, type: "condition" };
+}
+
 export const TRUE_TREE = condition(1, "=", 1);
 export const FALSE_TREE = condition(0, "=", 1);
 
@@ -262,11 +272,7 @@ function normalizeConnector(connector) {
     if (newTree.children.length === 1) {
         const child = newTree.children[0];
         if (newTree.negate) {
-            const newChild = { ...child, negate: !child.negate };
-            if (newChild.type === "condition") {
-                return newChild;
-            }
-            return newChild;
+            return { ...child, negate: !child.negate };
         }
         return child;
     }
