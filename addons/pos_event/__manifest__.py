@@ -24,8 +24,15 @@
         'point_of_sale._assets_pos': [
             'pos_event/static/src/**/*',
         ],
-          'web.assets_tests': [
+         'web.assets_tests': [
             'pos_event/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'point_of_sale/static/src/app/models/utils/currency.js',
+            'point_of_sale/static/src/app/models/utils/compute_combo_items.js',
+            'point_of_sale/static/src/app/models/pos_order.js',
+            'pos_event/static/src/app/models/data_service_options.js',
+            'pos_event/static/tests/unit/**/*',
         ],
     },
     'license': 'LGPL-3',
