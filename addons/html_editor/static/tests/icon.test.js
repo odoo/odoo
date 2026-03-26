@@ -4,10 +4,11 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { splitBlock, undo } from "./_helpers/user_actions";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
+import { expandToolbar } from "./_helpers/toolbar";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -456,4 +457,30 @@ test("should wrap icons in feff when under list item", async () => {
             </ul>
         `),
     });
+});
+
+test("should not allow to edit label if selection contain icon", async () => {
+    await setupEditor(`<p>[ab<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await click('.o-we-toolbar button[name="link"]');
+    await waitFor('[name="o_linkpopover_url_img"]');
+    expect('[name="o_linkpopover_url_img"]').toHaveCount(1);
+});
+
+test("should be able to unlink an icon", async () => {
+    onRpc(`${location.origin}/test`, () => ({
+        title: "title",
+        description: "description",
+    }));
+    onRpc(`/html_editor/link_preview_internal`, () => ({
+        title: "title",
+        description: "description",
+    }));
+    await setupEditor(
+        `<p><a href="/test" class="my_link o_link_in_selection">[<span class="fa fa-glass" contenteditable="false"></span>]</a></p>`
+    );
+    await waitFor(".o-we-toolbar");
+    await click('[name="unlink"]');
+    expect(".my_link").toHaveCount(0);
 });
