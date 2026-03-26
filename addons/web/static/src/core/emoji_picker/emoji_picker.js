@@ -532,15 +532,14 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
             };
             if (ref?.el) {
                 pickerMobileProps.close = () => remove();
-                const app = new App(PickerMobile, {
+                const app = new App({
                     name: "Popout",
                     env: component.env,
-                    props: pickerMobileProps,
                     getTemplate,
                     translatableAttributes: ["data-tooltip"],
                     translateFn: appTranslateFn,
                 });
-                app.mount(ref.el);
+                app.createRoot(PickerMobile, { props: pickerMobileProps }).mount(ref.el);
                 remove = () => {
                     state.isOpen = false;
                     props.onClose?.();
