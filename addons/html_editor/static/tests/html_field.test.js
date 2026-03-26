@@ -2708,10 +2708,11 @@ describe("save image", () => {
         expect(b64img).toHaveClass("o_b64_image_to_save");
 
         // Switch tab, this should trigger the image save.
-        await contains(".o_notebook_headers .nav-link:not(.active)").click();
-        await delay(50);
-        // reswitch tab, and check the image was saved properly.
-        await contains(".o_notebook_headers .nav-link:not(.active)").click();
+        await contains(".o_notebook_headers .nav-link:not(.active)[name='empty']").click();
+        await waitFor(".o_notebook_headers .nav-link.active[name='empty']");
+        // Reswitch tab, and check the image was saved properly.
+        await contains(".o_notebook_headers .nav-link:not(.active)[name='html']").click();
+        await waitFor(".o_notebook_headers .nav-link.active[name='html']");
         await waitFor(".odoo-editor-editable", { timeout: 1500 });
         const savedImg = htmlEditor.editable.querySelector("img");
         expect(savedImg.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
