@@ -504,10 +504,10 @@ class TestHrAttendanceUndertime(HttpCase):
             'check_out': datetime(2023, 1, 4, 18, 0),
         })
         # The hours will now be recomputed
-        # But they should have the 'to_approve' status
-        self.assertEqual(attendance.linked_overtime_ids.status, 'to_approve', "Record should be flagged for approval")
+        # But they should have the 'approved' status since it is on a different day and there is only daily rules
+        self.assertEqual(attendance.linked_overtime_ids.status, 'approved')
         self.assertAlmostEqual(attendance.linked_overtime_ids.duration, -2.0, 2, "Math should be reset to -2.0")
-        self.assertEqual(attendance.validated_overtime_hours, 0.0, "Validated hours should be 0 until approved")
+        self.assertEqual(attendance.validated_overtime_hours, -1.5, "Validated hours should be -1.5 as it was already approved")
 
     def test_overtime_employee_tolerance(self):
         self.ruleset.rule_ids[0].employee_tolerance = 10 / 60
