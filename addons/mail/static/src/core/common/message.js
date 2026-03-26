@@ -463,7 +463,7 @@ export class Message extends Component {
             // Mobile OS long press is handled with useLongPress()
             return;
         }
-        if (ev.target.tagName === "A" || !this.props.hasActions) {
+        if (ev.target.tagName === "A" || !this.props.hasActions || this.isEditing) {
             return;
         }
         this.showRightClickMessageActions(ev);
