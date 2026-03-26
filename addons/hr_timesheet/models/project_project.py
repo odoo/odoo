@@ -88,7 +88,7 @@ class ProjectProject(models.Model):
                 project.stat_timesheet_value = False
                 project.stat_extra_time_value = False
                 project.stat_success_rate = False
-                return
+                continue
             encode_uom = project.timesheet_encode_uom_id
             uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
 
