@@ -10,12 +10,32 @@
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
 
+                    <div class="oe_title d-flex align-items-center gap-3 mb-3">
+                        <field name="image_1920"
+                           widget="image"
+                           class="oe_avatar"
+                           options="{'preview_image': 'image_128', 'size': [90, 90]}"/>
+                    <div>
+                        <label for="name" string="Nombre de contacto"/>
+                        <h1 class="text-break" style="word-break: break-word;">
+                            <field name="name"
+                                   placeholder="Ej: Juan Pérez"
+                                   required="1"/>
+                        </h1>
+                    </div>
+                    </div>
+
                     <group string="INFORMACIÓN DE CONTACTO" col="2">
                         <group>
                             <field name="first_name" required="1" placeholder="Ej: Juan"/>
                             <field name="last_name" required="1" placeholder="Ej: Pérez"/>
                             <field name="function" string="Puesto"/>
-                            <field name="parent_id" string="Cuenta" domain="[('is_company', '=', True), ('id', '!=', id)]" options="{'no_create': True}" placeholder="Selecciona una cuenta" context="{'form_view_ref': 'crm.view_partner_form_crm_company'}"/>
+                            <div class="w-100">
+                                <label for="parent_id" string="Cuenta"/>
+                                <div class="text-break" style="word-break: break-word; white-space: normal;">
+                                    <field name="parent_id" string="Cuenta" domain="[('is_company', '=', True), ('id', '!=', id)]" options="{'no_create': True}" placeholder="Selecciona una cuenta" context="{'form_view_ref': 'crm.view_partner_form_crm_company'}"/>
+                                </div>
+                            </div>
                         </group>
                         <group>
                             <field name="email" string="Correo electrónico" placeholder="nombre@empresa.com"/>
@@ -67,7 +87,7 @@
                        options="{'preview_image': 'image_128', 'size': [90, 90]}"/>
                 <div>
                     <label for="name" string="Nombre de cuenta"/>
-                    <h1>
+                    <h1 class="text-break" style="word-break: break-word;">
                         <field name="name"
                                placeholder="Ej: DSI Soluciones Industriales"
                                required="1"/>
