@@ -8,6 +8,7 @@
 
 /**
  * Normalizes a string for use in comparison.
+ * Handles ligatures, compatibility symbols, diacritics, and French/German accents.
  *
  * @example
  * normalize("déçûmes") === normalize("DECUMES")
@@ -18,8 +19,60 @@
  * @param {string} str
  * @returns {string}
  */
+
+const CUSTOM_FOLDINGS = {
+    ß: "ss", // German (Eszett): "Großmann", "Straße"
+    æ: "ae", // Danish, Norwegian, Icelandic: "Ærøskøbing", "Læse"
+    œ: "oe", // French (ligature): "Cœur", "Œil"
+    ø: "o", // Danish, Norwegian, Faroese: "Tromsø", "København"
+    ħ: "h", // Maltese: "Ħamrun", "Ħelu" (sweet)
+    đ: "d", // Serbo-Croatian, Vietnamese: "Đurađ", "Đakovo"
+    ð: "d", // Icelandic, Faroese (Eth): "Borgarfjörður", "Suðuroy"
+    ł: "l", // Polish, Sorbian: "Paweł", "Łódź"
+    ŋ: "n", // Sami, Dinka: "Nuŋ" (Dinka name), "Uiŋ" (Sami: "of the night")
+    ŧ: "t", // Northern Sami: "itŧin" (tomorrow), "mátŧi" (capable)
+    þ: "th", // Icelandic, Old English (Thorn): "Þingvellir", "Þorlákshöfn"
+    "·": "", // Catalan (Middle Dot): ensures "paral·lel"
+    ŀ: "l", // Catalan (L with middle dot): "paral·lel", "col·lecció"
+    ı: "i", // Turkish (Dotless I): "Diyarbakır", "ılık" (warm)
+};
+
+// Pre-compiled regex for atomic characters that don't decompose via NFKD
+const FOLDING_REGEX = new RegExp(`[${Object.keys(CUSTOM_FOLDINGS).join("")}]`, "gu");
+
+// Targets common combining marks (accents) and format chars,
+// but avoids the Brahmic/Indic ranges to preserve script integrity.
+const STRIP_REGEX = /[\u0300-\u036f\p{Cf}]/gu;
+
+// Standard US-ASCII character set (codes from 32 to 126):
+// Lowercase letters: a to z
+// Uppercase letters: A to Z
+// Digits: 0 to 9
+// Space
+// Standard Punctuation: ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _  { | } ~`
+const ASCII_SAFE_REGEX = /^[\x20-\x7E]*$/;
+
 export function normalize(str) {
-    return casefold(unaccent(expandLigatures(str.normalize("NFKC"))));
+    if (!str) {
+        return "";
+    }
+
+    // Fast check
+    if (ASCII_SAFE_REGEX.test(str)) {
+        return str.toLowerCase();
+    }
+
+    return (
+        str
+            // 1. Decompose: splits 'é' into 'e + ´' and expands symbols like '㎩' to 'Pa'
+            .normalize("NFKD")
+            // 2. Strip Marks: removes all 'floating' Unicode marks (accents marks) and format characters
+            .replace(STRIP_REGEX, "")
+            // 3. Standardize case for comparison
+            .toLowerCase()
+            // 4. Atomic Foldings: manually convert unique letters (like 'ø' or 'ß') to ASCII
+            .replace(FOLDING_REGEX, (m) => CUSTOM_FOLDINGS[m])
+    );
 }
 
 /**
@@ -108,84 +161,4 @@ export function normalizedMatches(src, substr) {
         }
     }
     return matches;
-}
-
-const DECOMPOSITION_BY_LIGATURE = new Map([
-    ["Æ", "Ae"], // Danish, Norwegian, Icelandic, French (rare)...
-    ["æ", "ae"],
-    ["Œ", "Oe"], // French: "Richard Cœur de Lion"
-    ["œ", "oe"],
-    ["Ĳ", "IJ"], // Dutch: "IJzer"
-    ["ĳ", "ij"],
-]);
-
-/**
- * Splits ligatures into their constituent glyphs, e.g. turns Œ into Oe.
- *
- * @param {string} str
- * @returns {string}
- */
-function expandLigatures(str) {
-    return Array.from(str, (char) => DECOMPOSITION_BY_LIGATURE.get(char) ?? char).join("");
-}
-
-/**
- * Diacritics are marks, such as accents or cedilla, that when added to a letter
- * change its pronunciation or meaning. Unicode has a category for them, but it
- * doesn't consider characters like "ø" to be a diacritical "o". Below is a list
- * of characters that could be considered "diacritical characters" but aren't
- * labeled as such by Unicode.
- */
-const DIACRITIC_LIKES = new Map([
-    ["Ø", "O"], // notably used in Danish and Norwegian: "Jørgen"
-    ["ø", "o"],
-    ["Ł", "L"], // notably used in Polish: "Paweł"
-    ["ł", "l"],
-    ["Ð", "D"], // Icelandic, "Borgarfjörður"
-    ["ð", "d"],
-    ["Ħ", "H"], // Maltese, "Ħamrun Spartans Football Club"
-    ["ħ", "h"],
-    ["Ŧ", "T"], // apparently used in Sámi languages, very few speakers
-    ["ŧ", "t"],
-]);
-
-/**
- * Removes "diacritics" (funny marks added to letters, such as accents and
- * cedillas) from a string.
- *
- * @param {string} str
- * @returns {string}
- */
-function unaccent(str) {
-    return Array.from(
-        str.normalize("NFD").replace(/\p{Nonspacing_Mark}/gu, ""),
-        (char) => DIACRITIC_LIKES.get(char) ?? char
-    ).join("");
-}
-
-/**
- * Normalizes string case for use in comparison.
- *
- * Some characters change length when converted from one case to another. A
- * common example is the German letter "ß," which becomes "SS" when uppercased.
- * This function ensures that these special cases are handled correctly.
- *
- * ⚠ Doesn't preserve "Turkish I"s.
- *
- * @see https://www.w3.org/TR/charmod-norm/#definitionCaseFolding
- * @see https://www.unicode.org/Public/UNIDATA/CaseFolding.txt
- *
- * @example
- * casefold("AAAAAAAA")                 // "aaaaaaaa"
- * casefold("և")                        // "ԵՒ"
- * casefold("Kevin Großkreutz")         // "kevin grosskreutz"
- * casefold("Diyarbakır")               // "diyarbakir"
- * casefold("ß") !== "ß".toLowerCase()  // true
- * casefold("ß") === casefold("SS")     // true
- *
- * @param {string} str
- * @returns {string} lowercase string after "full case folding"
- */
-function casefold(str) {
-    return str.toLowerCase().toUpperCase().toLowerCase();
 }
