@@ -308,7 +308,7 @@ class ResLang(models.CachedModel):
     @api.model
     def _get_active_langs(self):
         """ Return active languages. """
-        return self.browse(self._cached_data()['id'])
+        return self.get_all()
 
     def _get_data(self, **kwargs) -> LangData:
         """ Get the language data for the given field value in kwargs
