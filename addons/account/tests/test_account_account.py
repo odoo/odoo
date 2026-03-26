@@ -1029,3 +1029,15 @@ class TestAccountAccount(TestAccountMergeCommon):
                 {'name': 'Account 02', 'code': False, 'account_type': 'asset_current', 'parent_id': a0.id, 'active': False},
             ],
         )
+
+    def test_search_account_with_existing_code(self):
+        """ Ensure that we can properly search records by code, even if they are inactive """
+        example_account = self.env["account.account"].search([], limit=1)
+        found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
+        self.assertEqual(found, example_account)
+
+        example_account.active = False
+        found = self.env["account.account"].search([("code", "=ilike", example_account.code), ("active", "=", False)])
+        not_found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
+        self.assertEqual(found, example_account)
+        self.assertFalse(not_found)
