@@ -5,7 +5,6 @@ declare module "plugins" {
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
-    import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
     import { dropzone_selectors, DropZoneShared, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { on_replicated_handlers } from "@html_builder/core/field_change_replication_plugin";
@@ -47,7 +46,6 @@ declare module "plugins" {
         builderOverlay: BuilderOverlayShared;
         cachedModel: CachedModelShared;
         clone: CloneShared;
-        customizeTab: CustomizeTabShared;
         disableSnippets: DisableSnippetsShared;
         dropzone: DropZoneShared;
         media_website: MediaWebsiteShared;
