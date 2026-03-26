@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.controlButton">
-        <button 
+        <button
         t-attf-class="control-button btn btn-lg {{btnClasses ? btnClasses : ''}} d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
         t-on-click="onClick"
         t-att-disabled="disabled ? 'disabled' : ''">
@@ -18,7 +18,7 @@
         <t t-if="!this.props.showRemainingButtons">
             <SelectPartnerButton partner="this.partner"/>
             <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
-            <button 
+            <button
                 t-if="this.pos.config.use_presets"
                 class="btn btn-secondary btn-lg border-0 lh-lg text-truncate"
                 t-attf-class="{{this.currentOrder.preset_id?.color and `o_colorlist_item_color_${this.currentOrder.preset_id?.color}`}}"
@@ -44,7 +44,7 @@
                     class="'btn-secondary '"
                     icon="'fa fa-sticky-note'"/>
                 <!-- Bill Button -->
-                <t t-if="this.pos.config.iface_printbill"> 
+                <t t-if="this.pos.config.iface_printbill">
                     <t t-call="point_of_sale.controlButton"
                         iconClasses="'fa fa-print'"
                         btnText.translate="Bill"
@@ -55,7 +55,7 @@
                 <!-- Pricelist Button -->
                 <t t-set="pricelistSubText">
                     <t t-if="this.currentOrder?.pricelist_id">
-                        <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
+                        <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
                 <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"

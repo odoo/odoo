@@ -60,6 +60,18 @@
                         <page string="Schedule" name="resource" invisible="not use_timing or not resource_calendar_id">
                             <field name="attendance_ids"/>
                         </page>
+                        <page string="Options" name="options">
+                            <group>
+                                <group name="additional_fee" string="Additional Fee">
+                                    <field name="service_fee" widget="boolean_toggle"/>
+                                    <field name="service_fee_product_id" invisible="not service_fee" required="service_fee" />
+                                    <field name="service_fee_type" invisible="not service_fee" widget="radio" />
+                                    <field name="service_fee_based_on" invisible="not service_fee or service_fee_type != 'percent'" />
+                                    <field name="service_fee_amount" invisible="not service_fee or service_fee_type != 'fixed'" />
+                                    <field name="service_fee_amount" invisible="not service_fee or service_fee_type != 'percent'" widget="percentage" />
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
             </form>

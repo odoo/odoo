@@ -91,7 +91,10 @@ export class Orderline extends Component {
         const attributeStr = line.orderDisplayProductName.attributeString;
         const taxGroup = this.line.taxGroupLabels;
         const showPrice =
-            line.getQuantityStr() != 1 && line.price_type !== "original" && !line.combo_parent_id;
+            line.getQuantityStr() != 1 &&
+            line.price_type !== "original" &&
+            !line.combo_parent_id &&
+            !line.isServiceFeeLine();
         const priceUnit = `${line.currencyDisplayPriceUnit} / ${
             line.product_id?.uom_id?.name || ""
         }`;
@@ -109,6 +112,8 @@ export class Orderline extends Component {
             productImage: this.props.showImage && imageUrl,
             taxGroup: this.props.showTaxGroup && taxGroup,
             price: this.line.currencyDisplayPrice,
+            isServiceFeeLine: line.isServiceFeeLine(),
+            serviceFeeDisplayInfo: line.getServiceFeeDisplayInfo(),
         };
     }
 }

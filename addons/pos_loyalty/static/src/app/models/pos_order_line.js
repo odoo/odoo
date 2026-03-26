@@ -94,4 +94,11 @@ patch(PosOrderline.prototype, {
             this._e_wallet_program_id === orderline._e_wallet_program_id
         );
     },
+    isServiceFeeApplicable() {
+        const coupon = this.coupon_id;
+        if (coupon && !this.is_reward_line) {
+            return false;
+        }
+        return super.isServiceFeeApplicable?.() ?? true;
+    },
 });

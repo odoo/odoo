@@ -19,7 +19,7 @@
                             <t t-set="line" t-value="scope.line" />
                              <Orderline line="line"
                                 mode="'split'"
-                                t-if="line.product_id.id != this.pos.config?.discount_product_id?.id"
+                                t-if="line.product_id.id != this.pos.config?.discount_product_id?.id and line.product_id.id != this.currentOrder.preset_id?.service_fee_product_id?.id"
                                 t-on-click="() => this.onClickLine(line)"
                                 class="{'selected active': this.qtyTracker[line.uuid] and this.qtyTracker[line.uuid] !== 0}" />
                         </OrderDisplay>

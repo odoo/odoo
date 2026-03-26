@@ -72,6 +72,9 @@ class PosOrderReceipt(models.AbstractModel):
         products = self.lines.product_id.with_context(display_default_code=False).read(product_fields, load=False)
         product_by_id = {product['id']: product for product in products}
 
+        preset_id = self.preset_id
+        service_fee_product = preset_id.service_fee_product_id if preset_id else None
+
         lines = []
         for line in self.lines:
             data = line.read(lines_fields, load=False)[0]
@@ -91,6 +94,15 @@ class PosOrderReceipt(models.AbstractModel):
             taxes = line.tax_ids.compute_all(data['product_data']['lst_price'], line.order_id.currency_id, 1)
             product_unit_price = taxes['total_included'] if display_price_incl else taxes['total_excluded']
             data['product_unit_price'] = self._order_receipt_format_currency(product_unit_price)
+
+            if service_fee_product and line.product_id.id == service_fee_product.id:
+                data['is_service_fee_line'] = True
+                data['service_fee_display_info'] = {
+                    'amount': (preset_id.service_fee_type == 'percent' and f"{preset_id.service_fee_amount * 100}%") or self._order_receipt_format_currency(line.price_subtotal_incl),
+                    'description': (preset_id.service_fee_based_on == 'pre_discount' and _(" (before discount)")) or _(" (after discount)"),
+                }
+            else:
+                data['is_service_fee_line'] = False
 
             lines.append(data)
 

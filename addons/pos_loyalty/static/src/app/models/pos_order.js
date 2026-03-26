@@ -162,16 +162,19 @@ patch(PosOrder.prototype, {
         const orderlines = super.getOrderlines(this, arguments);
         const rewardLines = [];
         const nonRewardLines = [];
+        const serviceFeeLines = [];
 
         for (const line of orderlines) {
             if (line.is_reward_line) {
                 rewardLines.push(line);
+            } else if (line.isServiceFeeLine()) {
+                serviceFeeLines.push(line);
             } else {
                 nonRewardLines.push(line);
             }
         }
 
-        return [...nonRewardLines, ...rewardLines];
+        return [...nonRewardLines, ...rewardLines, ...serviceFeeLines];
     },
     _get_reward_lines() {
         if (this.lines) {

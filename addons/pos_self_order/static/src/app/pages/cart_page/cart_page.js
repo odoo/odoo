@@ -39,6 +39,17 @@ export class CartPage extends Component {
                 return [order.preset_id?.id, nonDeliveryTotal];
             }
         );
+        useLayoutEffect(
+            () => this.selfOrder.currentOrder.recomputeServiceFees(),
+            () => {
+                const order = this.selfOrder.currentOrder;
+                const serviceFeeProductId = order.preset_id?.service_fee_product_id?.id;
+                const applicableTotal = order.lines
+                    .filter((l) => l.product_id?.id !== serviceFeeProductId)
+                    .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
+                return [order.preset_id?.id, applicableTotal];
+            }
+        );
     }
 
     get showCancelButton() {
@@ -62,7 +73,13 @@ export class CartPage extends Component {
                 ? order.unsentLines
                 : this.selfOrder.currentOrder.lines) || [];
 
-        return lines.filter((line) => !line.combo_parent_id);
+        const regularLines = [];
+        const serviceFeeLines = [];
+        for (const line of lines.filter((line) => !line.combo_parent_id)) {
+            (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
+        }
+
+        return [...regularLines, ...serviceFeeLines];
     }
 
     get totalPriceAndTax() {

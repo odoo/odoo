@@ -27,7 +27,7 @@ patch(PosStore.prototype, {
             const line = this.models["pos.order.line"].get(data.id);
             const order = line.order_id;
 
-            if (!line.isDiscountLine) {
+            if (!line.isDiscountLine && !line.isServiceFeeLine()) {
                 updateOrderDiscount(order);
             }
         });
