@@ -9,7 +9,7 @@ from odoo.tools.misc import get_lang
 class CalendarController(http.Controller):
 
     # YTI Note: Keep id and kwargs only for retrocompatibility purpose
-    @http.route('/calendar/meeting/accept', type='http', auth="calendar")
+    @http.route('/calendar/meeting/accept', type='http', auth="calendar", methods=['POST'])
     def accept_meeting(self, token, id, **kwargs):
         attendee = request.env['calendar.attendee'].sudo().search([
             ('access_token', '=', token),
@@ -31,7 +31,7 @@ class CalendarController(http.Controller):
             attendees.do_accept()
         return self.view_meeting(token, id)
 
-    @http.route('/calendar/meeting/decline', type='http', auth="calendar")
+    @http.route('/calendar/meeting/decline', type='http', auth="calendar", methods=['POST'])
     def decline_meeting(self, token, id, **kwargs):
         attendee = request.env['calendar.attendee'].sudo().search([
             ('access_token', '=', token),

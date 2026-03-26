@@ -29,7 +29,8 @@ class TestCalendarController(HttpCase):
         attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
         token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
-        res = self.url_open(url)
+        self.authenticate(None, None)
+        res = self.url_open(url, method='POST', data={'csrf_token': self.csrf_token()})
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
         self.env.invalidate_all()
@@ -41,7 +42,7 @@ class TestCalendarController(HttpCase):
         token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
         self.authenticate("test_user_2", "P@ssw0rd!")
-        res = self.url_open(url)
+        res = self.url_open(url, method='POST', data={'csrf_token': self.csrf_token()})
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
         self.env.invalidate_all()
