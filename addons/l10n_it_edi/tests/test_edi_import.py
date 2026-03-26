@@ -320,6 +320,40 @@ class TestItEdiImport(TestItEdi):
             ],
         }], applied_xml)
 
+    def test_receive_bill_with_discount_rounding_issue(self):
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]" position="inside">
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>50.00</Percentuale>
+                </ScontoMaggiorazione>
+            </xpath>
+
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoUnitario" position="replace">
+                <PrezzoUnitario>11.85</PrezzoUnitario>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/Quantita" position="replace">
+                <Quantita>3</Quantita>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale" position="replace">
+                <PrezzoTotale>17.78</PrezzoTotale>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 17.78,
+            'amount_tax': 3.91,
+            'invoice_line_ids': [
+                {
+                    'quantity': 3.0,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'price_unit': 11.85,
+                    'discount': 50.0,
+                },
+            ],
+        }], applied_xml)
+
     def test_invoice_user_can_compute_is_self_invoice(self):
         """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
         user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
