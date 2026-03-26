@@ -197,9 +197,7 @@
 
 <t t-name="website_sale.ProductsDesignPanel">
     <BuilderRow label="this.props.label">
-        <t t-call="website_sale.ProductsDesignPanelPresets">
-            <t t-set="showImages" t-value="false"/>
-        </t>
+        <t t-call="website_sale.ProductsDesignPanelPresets" showImages="false"/>
         <BuilderSlidingPanel
             label.translate="Design"
             extraClasses="'btn-primary fa fa-paint-brush'"
@@ -211,10 +209,9 @@
                     label.translate="Preset"
                     tooltip.translate="Choose one pre-made preset and customise it as you wish"
                 >
-                    <t t-call="website_sale.ProductsDesignPanelPresets">
-                        <t t-set="label">Presets</t>
-                        <t t-set="showImages" t-value="true"/>
-                    </t>
+                    <t t-call="website_sale.ProductsDesignPanelPresets"
+                        label.translate="Presets"
+                        showImages="true"/>
                 </BuilderRow>
 
                 <div class="o_wsale_design_panel_section_title ps-2 pt-2 pb-1 fw-bold">General</div>

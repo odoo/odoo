@@ -7,9 +7,8 @@
                role="image"
                title="Relevant to your expertise"
             />
-            <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread">
-                <t t-set="templateParams" t-value="{ livechatThread: this.props.channel.thread, small: true }"/>
-            </t>
+            <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread"
+                templateParams="{ livechatThread: this.props.channel.thread, small: true }"/>
         </xpath>
     </t>
 
@@ -72,9 +71,7 @@
                             class="form-check-input m-0"
                     />
                     <span class="o-livechat-LivechatStatusSelection-Label text-truncate cursor-pointer flex-grow-1 " t-out="btn.label"/>
-                    <t t-call="im_livechat.LivechatStatusLabel">
-                        <t t-set="templateParams" t-value="{ btn }"/>
-                    </t>
+                    <t t-call="im_livechat.LivechatStatusLabel" templateParams="{ btn }"/>
                 </button>
             </t>
         </div>

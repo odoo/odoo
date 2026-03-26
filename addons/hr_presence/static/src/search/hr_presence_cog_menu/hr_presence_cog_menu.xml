@@ -4,9 +4,7 @@
     <t t-name="hr_presence.cogmenu" t-inherit="web.FormCogMenu" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='this.state.printItems.length']" position="after">
             <t t-if="this.PresenceActionItems.length">
-                <t t-call="hr_presence.menu">
-                    <t t-set="is_actionmenu" t-value="''"/>
-                </t>
+                <t t-call="hr_presence.menu" is_actionmenu="''"/>
             </t>
         </xpath>
     </t>

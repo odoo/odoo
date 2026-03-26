@@ -15,10 +15,7 @@
                             <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
                                 <t t-if="cell.measure" t-call="web.PivotMeasure"/>
                                 <t t-elif="cell.isLeaf !== undefined">
-                                    <t t-call="web.PivotHeader.title">
-                                        <t t-set="isXAxis" t-value="true"/>
-                                        <t t-set="isInHead" t-value="true"/>
-                                    </t>
+                                    <t t-call="web.PivotHeader.title" isXAxis="true" isInHead="true"/>
                                 </t>
                                 <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="border-0 bg-100 fw-normal" t-att-class="{ 'border-0': cell_index != 0 }"/>
                             </t>
@@ -26,11 +23,10 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="this.table.rows" t-as="row" t-key="'row_' + row_index">
-                            <t t-call="web.PivotHeader.title">
-                                <t t-set="cell" t-value="row"/>
-                                <t t-set="isXAxis" t-value="false"/>
-                                <t t-set="isInHead" t-value="false"/>
-                            </t>
+                            <t t-call="web.PivotHeader.title"
+                                cell="row"
+                                isXAxis="false"
+                                isInHead="false"/>
                             <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
                                 <td class="o_pivot_cell_value bg-100" t-att-class="{
                                         o_empty: cell.value === undefined,

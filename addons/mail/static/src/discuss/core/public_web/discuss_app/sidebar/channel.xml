@@ -45,10 +45,10 @@
                 <t t-component="this.indicators[0]" t-props="{ channel: this.channel }"/>
             </div>
             <t t-if="this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt and this.channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
-            <t t-if="this.channel.importantCounter > 0 and (this.showingActions.isOpen or this.store.discuss.isSidebarCompact or !this.hover.isHover)" t-call="mail.discuss_badge">
-                <t t-set="counter" t-value="this.channel.importantCounter"/>
-                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge shadow-sm flex-shrink-0 fw-bold ' + (this.channel.self_member_id?.mute_until_dt ? 'o-muted' : '') + ' ' + (this.store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'ms-1 me-0') + (this.channel.importantCounter &lt; 10 ? ' o-discuss-badge-circle' : '') "/>
-                <t t-set="floating" t-value="this.store.discuss.isSidebarCompact"/>
+            <t t-if="this.channel.importantCounter > 0 and (this.showingActions.isOpen or this.store.discuss.isSidebarCompact or !this.hover.isHover)" t-call="mail.discuss_badge"
+                counter="this.channel.importantCounter"
+                badgeClass="'o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge shadow-sm flex-shrink-0 fw-bold ' + (this.channel.self_member_id?.mute_until_dt ? 'o-muted' : '') + ' ' + (this.store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'ms-1 me-0') + (this.channel.importantCounter &lt; 10 ? ' o-discuss-badge-circle' : '') "
+                floating="this.store.discuss.isSidebarCompact">
             </t>
             <t t-if="!this.store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
         </button>

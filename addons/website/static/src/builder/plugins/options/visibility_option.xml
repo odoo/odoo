@@ -12,7 +12,7 @@
 
 <t t-name="website.DeviceVisibilityOption">
     <BuilderRow label.translate="Visibility">
-        <t t-call="website.DeviceVisibility"></t>
+        <t t-call="website.DeviceVisibility"/>
     </BuilderRow>
 </t>
 
@@ -40,49 +40,44 @@
 
     <t t-set="geoip_country_code" t-value="this.websiteSession.geoip_country_code"/>
     <BuilderRow label.translate="Visibility" expand="true" observeCollapseContent="true">
-        <t t-call="website.DeviceVisibility"></t>
+        <t t-call="website.DeviceVisibility"/>
         <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="null">No condition</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'conditional'" classAction="'o_snippet_invisible'" id="'visibility_conditional'">Conditionally</BuilderSelectItem>
         </BuilderSelect>
 	    <t t-set-slot="collapse">
 		    <t t-if="geoip_country_code">
-			    <t t-call="website.snippet_options_conditional_visibility">
-			        <t t-set="option_name">Country</t>
-			        <t t-set="attribute_rule" t-value="'visibilityValueCountryRule'"/>
-			        <t t-set="save_attribute" t-value="'visibilityValueCountry'"/>
-			        <t t-set="model" t-value="'res.country'"/>
-			        <t t-set="data_fields" t-value="['code']"/>
-			    </t>
+			    <t t-call="website.snippet_options_conditional_visibility"
+           option_name.translate="Country"
+           attribute_rule="'visibilityValueCountryRule'"
+           save_attribute="'visibilityValueCountry'"
+           model="'res.country'"
+           data_fields="['code']"/>
 		    </t>
 		    <t t-if="language_ids.length > 1">
-			    <t t-call="website.snippet_options_conditional_visibility">
-			        <t t-set="option_name">Languages</t>
-			        <t t-set="attribute_rule" t-value="'visibilityValueLangRule'"/>
-			        <t t-set="save_attribute" t-value="'visibilityValueLang'"/>
-			        <t t-set="model" t-value="'res.lang'"/>
-			        <t t-set="domain" t-value="[['id', 'in', language_ids]]"/>
-			        <t t-set="data_fields" t-value="['code']"/>
-		        </t>
+			    <t t-call="website.snippet_options_conditional_visibility"
+                    option_name.translate="Languages"
+                    attribute_rule="'visibilityValueLangRule'"
+                    save_attribute="'visibilityValueLang'"
+                    model="'res.lang'"
+                    domain="[['id', 'in', language_ids]]"
+                    data_fields="['code']"/>
 		    </t>
-		    <t t-call="website.snippet_options_conditional_visibility">
-		        <t t-set="option_name">UTM Campaign</t>
-		        <t t-set="attribute_rule" t-value="'visibilityValueUtmCampaignRule'"/>
-		        <t t-set="save_attribute" t-value="'visibilityValueUtmCampaign'"/>
-		        <t t-set="model" t-value="'utm.campaign'"/>
-		    </t>
-		    <t t-call="website.snippet_options_conditional_visibility">
-		        <t t-set="option_name">UTM Medium</t>
-		        <t t-set="attribute_rule" t-value="'visibilityValueUtmMediumRule'"/>
-		        <t t-set="save_attribute" t-value="'visibilityValueUtmMedium'"/>
-		        <t t-set="model" t-value="'utm.medium'"/>
-		    </t>
-		    <t t-call="website.snippet_options_conditional_visibility">
-		        <t t-set="option_name">UTM Source</t>
-		        <t t-set="attribute_rule" t-value="'visibilityValueUtmSourceRule'"/>
-		        <t t-set="save_attribute" t-value="'visibilityValueUtmSource'"/>
-		        <t t-set="model" t-value="'utm.source'"/>
-		    </t>
+		    <t t-call="website.snippet_options_conditional_visibility"
+                option_name.translate="UTM Campaign"
+                attribute_rule="'visibilityValueUtmCampaignRule'"
+                save_attribute="'visibilityValueUtmCampaign'"
+                model="'utm.campaign'"/>
+		    <t t-call="website.snippet_options_conditional_visibility"
+                option_name.translate="UTM Medium"
+                attribute_rule="'visibilityValueUtmMediumRule'"
+                save_attribute="'visibilityValueUtmMedium'"
+                model="'utm.medium'"/>
+		    <t t-call="website.snippet_options_conditional_visibility"
+                option_name.translate="UTM Source"
+                attribute_rule="'visibilityValueUtmSourceRule'"
+                save_attribute="'visibilityValueUtmSource'"
+                model="'utm.source'"/>
 		    <BuilderRow label.translate="Users" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
 		        <BuilderSelect dataAttributeAction="'visibilityValueLogged'">
 		            <BuilderSelectItem dataAttributeActionValue="'[{&quot;id&quot;:1,&quot;value&quot;:&quot;true&quot;}]'">Visible for Logged In</BuilderSelectItem>

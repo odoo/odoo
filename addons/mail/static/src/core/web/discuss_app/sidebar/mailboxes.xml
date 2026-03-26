@@ -41,11 +41,11 @@
                 <div class="o-mail-DiscussSidebar-itemName me-2 text-truncate small" t-out="this.mailbox.display_name"/>
                 <div t-attf-class="flex-grow-1 {{ this.mailbox.counter === 0 ? 'me-3': '' }}"/>
             </t>
-            <t t-if="this.mailbox.counter > 0" t-call="mail.discuss_badge">
-                <t t-set="counter" t-value="this.mailbox.counter"/>
-                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge ' + (this.store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'mx-1')"/>
-                <t t-set="counterClass" t-value="(this.mailbox.id === 'bookmark' ? 'o-muted' : '')"/>
-                <t t-set="floating" t-value="this.store.discuss.isSidebarCompact"/>
+            <t t-if="this.mailbox.counter > 0" t-call="mail.discuss_badge"
+                counter="this.mailbox.counter"
+                badgeClass="'o-mail-DiscussSidebar-badge ' + (this.store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'mx-1')"
+                counterClass="(this.mailbox.id === 'bookmark' ? 'o-muted' : '')"
+                floating="this.store.discuss.isSidebarCompact">
             </t>
         </button>
     </t>

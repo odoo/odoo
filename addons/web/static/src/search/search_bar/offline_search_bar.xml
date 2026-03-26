@@ -15,9 +15,7 @@
                     <div class="form-control d-print-contents d-flex align-items-center py-1 border-end-0 rounded-end-0" role="search" aria-autocomplete="list">
                         <i class="d-print-none oi oi-search me-2" role="img"/>
                         <div class="d-flex flex-grow-1 flex-wrap gap-1 mw-100">
-                            <t t-call="web.OfflineSearchBar.Facets">
-                                <t t-set="facets" t-value="this.currentSearch.facets"/>
-                            </t>
+                            <t t-call="web.OfflineSearchBar.Facets" facets="this.currentSearch.facets"/>
                             <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="this.onRemoveSearch">
                                 <i class="oi oi-close small"/>
                             </div>
@@ -53,9 +51,7 @@
                             'gap-1': true,
                             'fw-bolder': search.key === this.currentSearch.key
                         }">
-                        <t t-call="web.OfflineSearchBar.Facets">
-                            <t t-set="facets" t-value="search.facets"/>
-                        </t>
+                        <t t-call="web.OfflineSearchBar.Facets" facets="search.facets"/>
                     </DropdownItem>
                     <DropdownItem t-if="this.state.searches.length > this.state.limit"
                         closingMode="'none'"
