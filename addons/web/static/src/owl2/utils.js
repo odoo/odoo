@@ -8,16 +8,16 @@ let currentNode = null;
 
 class Component extends owl.Component {
     static template = "";
+    static props = {};
+    static defaultProps = {};
 
     /**
-     * @param {any} props
-     * @param {any} env
      * @param {any} node
      */
-    constructor(props, env, node) {
-        super(props, env, node);
-        this.props = props;
-        this.env = env;
+    constructor(node) {
+        super(node);
+        this.props = owl.props(null, this.constructor.defaultProps);
+        this.env = useChildEnv();
         this.__owl__ = node;
         currentNode = node;
     }
@@ -53,7 +53,7 @@ export function render(component, deep = false) {
  * @param {any} descr
  */
 export function validate(value, descr) {
-    return owl.validate(value, descr);
+    // return owl.validate(...arguments);
 }
 
 /**
@@ -85,7 +85,15 @@ export function onRendered(cb) {
  * @param {string} name
  */
 export function useRef(name) {
-    return owl.useRef(name);
+    const node = getCurrentNode();
+    if (!node.__refs__) {
+        node.__refs__ = {};
+    }
+    return {
+        get el() {
+            return node.__refs__[name] || null;
+        },
+    };
 }
 
 /**
@@ -112,7 +120,7 @@ export function useExternalListener(target, eventName, handler, eventParams) {
  * @param {T} data
  */
 export function useState(data) {
-    return owl.useState(data);
+    return owl.proxy(data);
 }
 
 /**
@@ -124,7 +132,7 @@ export function reactive(data, callback) {
     // if (callback) {
     //     console.trace("reactive called with callback");
     // }
-    return owl.reactive(data, callback);
+    return owl.proxy(data);
 }
 
 /**
@@ -154,22 +162,49 @@ export function useLayoutEffect(effect, computeDependencies = () => [NaN]) {
     owl.onWillUnmount(() => cleanup && cleanup());
 }
 
+class EnvPlugin extends owl.Plugin {
+    static id = "__ENV__";
+    env = owl.config("env") ?? {};
+}
+
 export function useEnv() {
-    return owl.useEnv();
+    return getCurrentNode().component.env;
+}
+
+export function useChildEnv() {
+    return owl.plugin(EnvPlugin).env;
+}
+
+/**
+ * @param {object} env
+ */
+export function provideEnv(env) {
+    owl.providePlugins([EnvPlugin], { env });
+    return env;
+}
+
+/**
+ * @param {object} extension
+ */
+function extendEnv(extension) {
+    const env = useChildEnv();
+    const subEnv = Object.assign(Object.create(env), extension);
+    return provideEnv(subEnv);
 }
 
 /**
  * @param {object} extension
  */
 export function useSubEnv(extension) {
-    return owl.useSubEnv(extension);
+    const component = getCurrentNode().component;
+    component.env = extendEnv(extension);
 }
 
 /**
  * @param {object} extension
  */
 export function useChildSubEnv(extension) {
-    return owl.useChildSubEnv(extension);
+    extendEnv(extension);
 }
 
 class VPortal extends owl.blockDom.text("").constructor {
@@ -225,7 +260,7 @@ class VPortal extends owl.blockDom.text("").constructor {
 }
 
 class Portal extends owl.Component {
-    static template = owl.xml`<t t-slot="default"/>`;
+    static template = owl.xml`<t t-call-slot="default"/>`;
     static props = { selector: String, slots: true };
 
     setup() {
@@ -259,7 +294,8 @@ const customDirectives = {
      * @param {string} value
      */
     ref: (node, value) => {
-        node.setAttribute("t-ref", value);
+        const refName = `"` + value.replaceAll(/\{\{(.+?)\}\}/g, `" + $1 + "`) + `"`;
+        node.setAttribute("t-ref", `__globals__.createRefSignal(this, ${refName})`);
     },
     /**
      * @param {HTMLElement} node
@@ -271,7 +307,9 @@ const customDirectives = {
         for (const modifier of modifiers) {
             attribute += `.${modifier}`;
         }
-        node.setAttribute(attribute, value);
+        const getter = `() => ${value}`;
+        const setter = `(nv) => {${value} = nv;}`;
+        node.setAttribute(attribute, `__globals__.createModelSignal(${getter}, ${setter})`);
     },
     /**
      * @param {HTMLElement} node
@@ -287,16 +325,33 @@ const customDirectives = {
 };
 
 const globalValues = {
+    /**
+     * @param {any} component
+     * @param {string} refName
+     */
+    createRefSignal: (component, refName) => ({
+        /** @param {HTMLElement | null} value */
+        set(value) {
+            if (!component.__owl__.__refs__) {
+                component.__owl__.__refs__ = {};
+            }
+            component.__owl__.__refs__[refName] = value;
+        },
+    }),
+    /**
+     * @param {Function} getter
+     * @param {Function} setter
+     */
+    createModelSignal: (getter, setter) => Object.assign(getter, { set: setter }),
     Portal,
 };
 
 class App extends owl.App {
     /**
-     * @param {any} component
      * @param {any} config
      */
-    constructor(component, config) {
-        super(component, {
+    constructor(config) {
+        super({
             ...config,
             customDirectives: {
                 ...customDirectives,
@@ -306,7 +361,26 @@ class App extends owl.App {
                 ...globalValues,
                 ...config.globalValues,
             },
+            config: config.config
+                ? Object.assign(Object.create(config.config), {
+                      env: config.env,
+                  })
+                : { env: config.env },
         });
+        this.pluginManager.startPlugins([EnvPlugin]);
+        this.env = config.env ?? {};
+    }
+
+    createRoot(component, config = {}) {
+        if (config.env) {
+            component = class extends component {
+                constructor(node) {
+                    super(node);
+                    this.env = provideEnv(config.env);
+                }
+            };
+        }
+        return super.createRoot(component, config);
     }
 }
 owl.App = App;
@@ -317,6 +391,6 @@ owl.App = App;
  * @param {any} config
  */
 async function mount(C, target, config = {}) {
-    return new App(C, config).mount(target, config);
+    return new App(config).createRoot(C, config).mount(target, config);
 }
 owl.mount = mount;
