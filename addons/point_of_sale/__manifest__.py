@@ -8,6 +8,7 @@
     'summary': 'Handle checkouts and payments for shops and restaurants.',
     'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete'],
     'uninstall_hook': 'uninstall_hook',
+    'post_init_hook': 'post_init_hook',
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',

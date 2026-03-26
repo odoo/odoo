@@ -844,7 +844,9 @@ class SaleOrderLine(models.Model):
         # Compute the combo product's price.
         combo_line = self._get_linked_line()
         combo_product_price = combo_line._get_display_price_ignore_combo()
-        # Compute the combos' base prices.
+        # Compute the combos' weighted base prices.
+        # A combo can include several free items (`qty_free`), so the combo's contribution to the
+        # total base price must be weighted accordingly.
         combo_base_prices = {
             combo_id: combo_id.currency_id._convert(
                 from_amount=combo_id.base_price,
@@ -852,6 +854,7 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
+            * combo_id.qty_free
             for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
@@ -870,10 +873,25 @@ class SaleOrderLine(models.Model):
         combo_price_delta = combo_product_price - sum(combo_prices.values())
         if combo_price_delta:
             combo_prices[combo_line.product_template_id.sudo().combo_ids[-1]] += combo_price_delta
+        # Compute unit price of combo item based on linked lines and combo quantity
+        combo_line_qty = combo_line.product_uom_qty or 1
+        selected_combo_items_qty = (
+            sum(
+                linked_line.product_uom_qty / combo_line_qty
+                for linked_line in combo_line.linked_line_ids.filtered(
+                    lambda line: line.combo_item_id.combo_id == self.combo_item_id.combo_id
+                )
+            )
+            or self.combo_item_id.combo_id.qty_free
+        )
+        combo_item_base_price = self.currency_id.round(
+            combo_prices[self.combo_item_id.combo_id] / selected_combo_items_qty
+        )
+
         # Add the extra price of this combo item, as well as the extra prices of any `no_variant`
         # attributes to the combo price.
         return (
-            combo_prices[self.combo_item_id.combo_id]
+            combo_item_base_price
             + self.combo_item_id.extra_price
             + self.product_id._get_no_variant_attributes_price_extra(
                 self.product_no_variant_attribute_value_ids

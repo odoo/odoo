@@ -72,7 +72,7 @@
                             </div>
                         </group>
                     </group>
-                    
+
                     <notebook>
                         <page string="General Information" name="general_information">
                             <group>
@@ -82,6 +82,7 @@
                                     <field
                                         name="combo_ids"
                                         widget="many2many_tags"
+                                        context="{'from_sale': True}"
                                         placeholder="e.g. Starter - Meal - Desert"
                                         invisible="type != 'combo'"
                                         options="{

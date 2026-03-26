@@ -9,8 +9,8 @@ class ProductCombo(models.Model):
     _inherit = ['product.combo', 'pos.load.mixin']
 
     qty_max = fields.Integer(string="Maximum quantity", default=1, help="Maximum number of items to select in the combo.")
-    qty_free = fields.Integer(string="Free quantity", default=1, help="Number of free items included in the combo.")
     is_upsell = fields.Boolean(string="Is Upsell", default=False, help="Indicates if the combo is an upsell to the customer. This can be compared to a minimum quantity of 0.")
+    from_sale = fields.Boolean(compute="_compute_from_sale", store=False)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -26,6 +26,11 @@ class ProductCombo(models.Model):
             self.qty_free = 0
         if not self.is_upsell and self.qty_free == 0:
             self.qty_free = 1
+
+    @api.onchange('qty_free')
+    def _onchange_qty_free(self):
+        if self.qty_free > self.qty_max:
+            self.qty_max = self.qty_free
 
     @api.constrains('qty_max')
     def _check_qty_max(self):
@@ -43,3 +48,7 @@ class ProductCombo(models.Model):
     def _check_qty_max_greater_than_qty_free(self):
         if any(combo.qty_free > combo.qty_max for combo in self):
             raise ValidationError(_("The free quantity must be smaller or equal to the maximum quantity."))
+
+    def _compute_from_sale(self):
+        for rec in self:
+            rec.from_sale = self.env.context.get('from_sale', False)

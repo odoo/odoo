@@ -7,7 +7,7 @@
                 t-attf-class="px-2 px-md-3 btn btn-secondary {{ this.props.btnClasses or 'd-md-inline-block' }}"
                 aria-label="Remove one"
                 t-att-disabled="this.props.isMinusButtonDisabled"
-                t-on-click="this.decreaseQuantity"
+                t-on-click.stop="this.decreaseQuantity"
             >
                 <i class="oi oi-minus"/>
             </button>
@@ -16,6 +16,7 @@
                 name="sale_quantity"
                 type="number"
                 t-att-value="this.props.quantity"
+                t-on-click.stop=""
                 t-on-change="this.setQuantity"
             />
             <button
@@ -23,7 +24,7 @@
                 name="sale_quantity_button_plus"
                 aria-label="Add one"
                 t-att-disabled="this.props.isPlusButtonDisabled"
-                t-on-click="this.increaseQuantity"
+                t-on-click.stop="this.increaseQuantity"
             >
                 <i class="oi oi-plus"/>
             </button>
