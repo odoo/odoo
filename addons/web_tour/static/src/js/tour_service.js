@@ -165,8 +165,22 @@ export class TourService {
             if (!tour) {
                 throw new Error(`Tour '${name}' is not found in the database.`);
             }
+<<<<<<< 7c2427369fea22a18818de5400094a6463e63a72
             if (!tour.steps.length && tourRegistry.contains(tour.name)) {
                 tour.steps = tourRegistry.get(tour.name).steps;
+||||||| f2434aac74324a65ccd81aa18c7b0e8318e59fde
+
+            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
+                tour.steps = tourRegistry.get(tour.name).steps;
+=======
+
+            if (!tour.steps.length) {
+                if (tourRegistry.contains(tour.name)) {
+                    tour.steps = tourRegistry.get(tour.name).steps;
+                } else {
+                    tour.onHold = true;
+                }
+>>>>>>> 70f166258e85e33b30a835ae4905c27e4a8755ab
             }
             return {
                 ...tour,
