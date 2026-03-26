@@ -152,11 +152,12 @@ class DiscussChannel(models.Model):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
-        # sudo - chatbot.message: visitor can access chat bot messages.
+        # sudo - mail.message: visitors can access messages on chats they have access to
+        messages = self.sudo().chatbot_message_ids.mail_message_id or self.message_ids
         return Markup("").join(
             Markup("%s: %s<br/>")
             % (m.author_id.name or self.anonymous_name, html2plaintext(m.body))
-            for m in self.sudo().chatbot_message_ids.mail_message_id.sorted("id")
+            for m in messages.sorted("id")
         )
 
     # =======================
