@@ -484,4 +484,14 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="False"/>
         </record>
+        <record model="ir.rule" id="ir_rule_mail_scheduled_message">
+            <field name="name">access check to res_id</field>
+            <field name="model_id" ref="model_mail_scheduled_message"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access', '=', True)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
 </odoo>
