@@ -155,11 +155,7 @@ class IrActionsActions(models.Model):
                     # the user may not perform this action
                     continue
                 res_model = action.pop('res_model', None)
-                if res_model and not self.env['ir.model.access'].check(
-                    res_model,
-                    mode='read',
-                    raise_exception=False
-                ):
+                if res_model and not ((model := self.env.get(res_model)) is not None and model.has_access('read')):
                     # the user won't be able to read records
                     continue
                 actions.append(action)

@@ -365,7 +365,7 @@ class ProductProduct(models.Model):
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
-        read_access = self.env['ir.model.access'].check('product.supplierinfo', 'read', False)
+        read_access = self.env['product.supplierinfo'].has_access('read')
         for product in self:
             product.code = product.default_code
             if read_access:

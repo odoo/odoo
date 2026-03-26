@@ -1335,7 +1335,7 @@ class HrEmployee(models.Model):
         if operation == 'read' and self.env.context.get('_allow_read_hr_employee') is _ALLOW_READ_HR_EMPLOYEE:
             return Domain.TRUE
 
-        if not self.env['ir.model.access'].check(self._name, operation, raise_exception=False):
+        if self._name not in self.env['ir.model.access']._get_allowed_models(operation):
             return Domain.FALSE
 
         return self.env['ir.rule']._compute_domain(self._name, operation, include_inherits=False)

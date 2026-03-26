@@ -2,7 +2,7 @@
 import json
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.misc import clean_context, OrderedSet
@@ -397,13 +397,16 @@ class MrpBom(models.Model):
         domain = self._bom_find_domain(products, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
 
         # Performance optimization, allow usage of limit and avoid the for loop `bom.product_tmpl_id.product_variant_ids`
-        if len(products) == 1:
-            bom = self.search(domain, order='sequence, product_id, id', limit=1)
-            if bom:
-                bom_by_product[products] = bom
+        try:
+            if len(products) == 1:
+                bom = self.search(domain, order='sequence, product_id, id', limit=1)
+                if bom:
+                    bom_by_product[products] = bom
+                return bom_by_product
+            else:
+                boms = self.search(domain, order='sequence, product_id, id')
+        except AccessError:
             return bom_by_product
-
-        boms = self.search(domain, order='sequence, product_id, id')
 
         products_ids = set(products.ids)
         for bom in boms:

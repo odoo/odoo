@@ -675,8 +675,9 @@ class TestSaleMrpKitBom(BaseCommon):
 
     def test_sale_kit_qty_change(self):
 
-        # Create record rule
+        # Create record rule (remove access from all)
         mrp_bom_model = self.env['ir.model']._get('mrp.bom')
+        self.env['ir.rule'].search([('model_id', '=', mrp_bom_model.id)]).unlink()
         self.env['ir.rule'].create({
             'name': "No one allowed to access BoMs",
             'model_id': mrp_bom_model.id,
