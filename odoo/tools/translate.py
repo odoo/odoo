@@ -1750,13 +1750,16 @@ class TranslationModuleReader(TranslationReader):
             self._export_imdinfo(model, imd_per_id)
 
     def _get_module_from_path(self, path):
-        for (mp, rec) in self._path_list:
-            mp = os.path.join(mp, '')
-            dirname = os.path.join(os.path.dirname(path), '')
-            if rec and path.startswith(mp) and dirname != mp:
-                path = path[len(mp):]
-                return path.split(os.path.sep)[0]
-        return 'base' # files that are not in a module are considered as being in 'base' module
+        dirname = os.path.join(os.path.dirname(path), '')
+        best_mp = max((
+            mpf for mp, rec in self._path_list
+            if rec and (mpf := os.path.join(mp, '')) and path.startswith(mpf) and dirname != mpf
+        ), key=len, default='')
+
+        if best_mp:
+            path = path[len(best_mp):]
+            return path.split(os.path.sep)[0]
+        return 'base'  # files that are not in a module are considered as being in 'base' module
 
     def _verified_module_filepaths(self, fname, path, root):
         fabsolutepath = join(root, fname)
