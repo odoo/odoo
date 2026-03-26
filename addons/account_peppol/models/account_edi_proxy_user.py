@@ -241,6 +241,62 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
 
+<<<<<<< ea18f34a48d61350f80c79894bef66bf02840bfc
+||||||| 4d84b961cdabd283e1acef6b487b2648bc543a5a
+    def _peppol_get_import_journal_and_move_type(self, attachment, journal=None):
+        self.ensure_one()
+        # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
+        # In this case, the invoice needs to be created as an out_invoice in a sale journal.
+        xml_tree = etree.fromstring(attachment.raw)
+
+        invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
+        credit_note_type_code = xml_tree.findtext('.//{*}CreditNoteTypeCode')
+
+        if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
+            # 329/527: Self-billing invoice; 261: Self-billing credit note
+            journal = self.env['account.journal'].search(
+                [
+                    *self.env['account.journal']._check_company_domain(self.company_id),
+                    ('type', '=', 'sale'),
+                ],
+                limit=1,
+            )
+            move_type = 'out_invoice' if invoice_type_code else 'out_refund'
+        else:
+            journal = journal or self.company_id.peppol_purchase_journal_id
+            move_type = 'in_invoice'
+
+        return journal, move_type
+
+=======
+    def _peppol_get_import_journal_and_move_type(self, attachment, journal=None):
+        # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
+        # In this case, the invoice needs to be created as an out_invoice in a sale journal.
+        self.ensure_one()
+        journal = journal or self.company_id.peppol_purchase_journal_id
+        move_type = 'in_invoice'
+
+        try:
+            xml_tree = etree.fromstring(attachment.raw)
+        except etree.XMLSyntaxError:
+            _logger.exception("The Peppol XML file is invalid for attachment ID %s", attachment.id)
+            return journal, move_type
+
+        invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
+        credit_note_type_code = xml_tree.findtext('.//{*}CreditNoteTypeCode')
+        if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
+            # 329/527: Self-billing invoice; 261: Self-billing credit note
+            journal = self.env['account.journal'].search(
+                [
+                    *self.env['account.journal']._check_company_domain(self.company_id),
+                    ('type', '=', 'sale'),
+                ],
+                limit=1,
+            )
+            move_type = 'out_invoice' if invoice_type_code else 'out_refund'
+        return journal, move_type
+
+>>>>>>> be16546e98325ea0f481bcd828534b27d588286d
     def _peppol_get_new_documents(self, skip_no_journal=False):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
         job_count = self.env.context.get('peppol_crons_job_count') or BATCH_SIZE
