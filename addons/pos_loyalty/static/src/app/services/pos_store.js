@@ -762,8 +762,12 @@ patch(PosStore.prototype, {
         const rewardLines = order._get_reward_lines();
         const partner = order.getPartner();
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
+            const earnedPoints =
+                pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id));
             agg[pe.coupon_id] = Object.assign({}, pe, {
-                points: pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id)),
+                points: earnedPoints,
+                points_earned: earnedPoints,
+                points_spent: 0,
             });
             const program = ProgramModel.get(pe.program_id);
             if (
@@ -783,6 +787,8 @@ patch(PosStore.prototype, {
             if (!couponData[couponId]) {
                 couponData[couponId] = {
                     points: 0,
+                    points_earned: 0,
+                    points_spent: 0,
                     program_id: reward.program_id.id,
                     coupon_id: couponId,
                     barcode: false,
@@ -797,8 +803,14 @@ patch(PosStore.prototype, {
             if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
                 !couponData[couponId].line_codes.push(line.reward_identifier_code);
             }
-            couponData[couponId].points =
-                line.refunded_qty > 0 ? 0.0 : couponData[couponId].points - line.points_cost;
+            if (line.refunded_qty > 0) {
+                couponData[couponId].points_spent = 0;
+                couponData[couponId].points_earned = 0;
+                couponData[couponId].points = 0;
+            } else {
+                couponData[couponId].points -= line.points_cost;
+                couponData[couponId].points_spent += line.points_cost;
+            }
         }
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
         couponData = Object.fromEntries(
