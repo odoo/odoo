@@ -196,6 +196,9 @@ export function isValidEmail(email) {
 // 169.254.0.0 - 169.254.255.255
 // 192.168.0.0 - 192.168.255.255
 export function isPrivateIp(ip) {
+    if (!ip || typeof ip !== "string") {
+        return false;
+    }
     const blocks = ip.split(".");
     if (blocks.length !== 4) {
         return false;
