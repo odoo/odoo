@@ -73,6 +73,14 @@ export class LinkPopover extends Component {
             linkElement.hash?.length && this.isAbsoluteURLInCurrentDomain(linkElement.href)
                 ? "_self"
                 : "_blank";
+        const hasButtonSizeOrShapeOrCustom = this.props.linkElement.className.match(
+            /btn-(lg|sm|xs|custom)|rounded-circle|(?:^|\\s)(outline|fill|flat)(?:\\s|$)/
+        );
+        const buttonType = hasButtonSizeOrShapeOrCustom
+            ? "custom"
+            : this.props.linkElement.className
+                  .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
+                  ?.pop() || "link";
         this.state = useState({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
@@ -87,7 +95,16 @@ export class LinkPopover extends Component {
             urlDescription: "",
             linkPreviewName: "",
             imgSrc: "",
+<<<<<<< 97678d27a9d3f7d39e91091c474d0a68449a12ba
             type: this.props.type || getButtonType(linkElement),
+||||||| 3ca35f88f00b0654409c2a0d8430feefc1d4b3b6
+            type:
+                this.props.type ||
+                linkElement.className.match(/btn(-[a-z0-9_-]*)(primary|secondary|custom)/)?.pop() ||
+                "link",
+=======
+            type: this.props.type || buttonType,
+>>>>>>> cec156cc93a95e9398d33761d9abd92c60e8bf67
             linkTarget: linkElement.target === "_blank" ? "_blank" : "",
             directDownload: true,
             isDocument: false,

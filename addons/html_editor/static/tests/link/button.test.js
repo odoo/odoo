@@ -257,6 +257,22 @@ describe("Custom button style", () => {
         expect(a).toHaveClass("btn btn-fill-primary rounded-circle");
         expect(cleanLinkArtifacts(getContent(a))).toBe("link[]Label");
     });
+
+    test("button with size classes should be detected as custom type", async () => {
+        // Setup: Editor with a button link containing size class (btn-lg) + primary class
+        await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-lg btn-primary">link[]Label</a></p>',
+            allowCustomOpt
+        );
+
+        // Wait for popover and click edit
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+
+        // The button type should be detected as "custom" because it has btn-lg
+        expect(queryOne('button[name="link_type"]').innerText).toBe("Custom");
+    });
 });
 
 describe("button edit", () => {
