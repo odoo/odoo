@@ -306,7 +306,7 @@ class BaseString(Field[str | typing.Literal[False]]):
 
         # not dirty fields
         if not dirty:
-            if self.compute and self.inverse:
+            if self.compute and self.inverse and any(records._ids):
                 # invalidate the values in other languages to force their recomputation
                 self._update_cache(records.with_context(prefetch_langs=True), {lang: cache_value}, dirty=False)
             else:
