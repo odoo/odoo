@@ -617,7 +617,25 @@
             <t t-out="0"/>
         </t>
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+<<<<<<< 2a7b7fb04eec4c1c97d5f82d1f0a7deacb40d614
             <t t-call="web.external_layout_footer_content" footer_content_classes="'border-top pt-2'"/>
+||||||| 995629db3231de944710751c3184bf1b8b1355c7
+            <div class="o_footer_content d-flex border-top pt-2">
+                <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
+                <div class="text-end text-muted">
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
+                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                </div>
+            </div>
+=======
+            <div class="o_footer_content d-flex border-top pt-2">
+                <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
+                <div class="text-end text-muted text-nowrap">
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
+                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                </div>
+            </div>
+>>>>>>> dc7f391aaa08198b5fe3779c2bb053144eee6cf8
         </div>
     </template>
 
