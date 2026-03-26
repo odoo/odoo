@@ -1986,7 +1986,7 @@ class _String(Field[str | typing.Literal[False]]):
 
         # not dirty fields
         if not dirty:
-            if self.compute and self.inverse:
+            if self.compute and self.inverse and any(records._ids):
                 # invalidate the values in other languages to force their recomputation
                 values = [{lang: cache_value} for _id in records._ids]
                 cache.update_raw(records, self, values, dirty=False)
