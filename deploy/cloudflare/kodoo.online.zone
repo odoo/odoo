@@ -1,0 +1,21 @@
+$ORIGIN kodoo.online.
+$TTL 300
+
+; Cloudflare Tunnel DNS import for kodoo.online
+; Tunnel ID extracted from the running cloudflared container:
+; c3a08019-80dc-458e-b9db-0f5345ba4518
+;
+; Cloudflare target:
+; c3a08019-80dc-458e-b9db-0f5345ba4518.cfargotunnel.com.
+;
+; Hosts covered here:
+; - kodoo.online
+; - www.kodoo.online
+; - semsa.kodoo.online
+;
+; If Cloudflare's zone import rejects the apex CNAME (@),
+; create that one manually in the DNS UI as a proxied CNAME.
+
+@       IN CNAME c3a08019-80dc-458e-b9db-0f5345ba4518.cfargotunnel.com.
+www     IN CNAME c3a08019-80dc-458e-b9db-0f5345ba4518.cfargotunnel.com.
+semsa   IN CNAME c3a08019-80dc-458e-b9db-0f5345ba4518.cfargotunnel.com.
