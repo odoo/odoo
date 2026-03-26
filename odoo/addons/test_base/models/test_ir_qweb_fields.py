@@ -36,3 +36,12 @@ class Test_ConverterMonetary(models.Model):
     _name = 'test_converter.monetary'
     _description = 'Test Converter Monetary'
     value = fields.Float(digits=(16, 55))
+
+
+class DecimalPrecisionTest(models.Model):
+    _name = 'decimal.precision.test'
+    _description = 'Decimal Precision Test'
+
+    float = fields.Float()
+    float_2 = fields.Float(digits=(16, 2))
+    float_4 = fields.Float(digits=(16, 4))
