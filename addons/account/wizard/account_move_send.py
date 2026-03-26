@@ -203,16 +203,17 @@ class AccountMoveSend(models.TransientModel):
     def _get_placeholder_mail_template_dynamic_attachments_data(self, move, mail_template):
         invoice_template = self.env.ref('account.account_invoices')
         extra_mail_templates = mail_template.report_template_ids - invoice_template
-        filename = move._get_invoice_report_filename()
-        return [
-            {
+        attachments = []
+        for extra_mail_template in extra_mail_templates:
+            filename = move._get_invoice_report_filename(report=extra_mail_template)
+            attachments.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
-                'name': f'{extra_mail_template.name.lower()}_{filename}',
+                'name': filename,
                 'mimetype': 'application/pdf',
                 'placeholder': True,
                 'dynamic_report': extra_mail_template.report_name,
-            } for extra_mail_template in extra_mail_templates
-        ]
+            })
+        return attachments
 
     @api.model
     def _get_invoice_extra_attachments(self, move):

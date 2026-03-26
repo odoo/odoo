@@ -35,6 +35,7 @@ from odoo.tools import (
     create_index,
     StackMap,
 )
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -4769,10 +4770,17 @@ class AccountMove(models.Model):
         pdf_name = self._get_invoice_report_filename() if len(self) == 1 else "Invoices.pdf"
         return pdf_content, pdf_name
 
-    def _get_invoice_report_filename(self, extension='pdf'):
+    def _get_invoice_report_filename(self, extension='pdf', report=None):
         """ Get the filename of the generated invoice report with extension file. """
         self.ensure_one()
-        return f"{self.name.replace('/', '_')}.{extension}"
+        if report:
+            if report.print_report_name and isinstance(report.print_report_name, str):
+                file_name = safe_eval(report.print_report_name, {'object': self})
+            else:
+                file_name = f"{report.name.lower()}_{self.name}"
+        else:
+            file_name = self.name
+        return f"{file_name.replace('/', '_')}.{extension}"
 
     def _get_invoice_proforma_pdf_report_filename(self):
         """ Get the filename of the generated proforma PDF invoice report. """
