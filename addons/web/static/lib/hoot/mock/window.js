@@ -202,6 +202,7 @@ function getWatchedEventTargets(view) {
         // Other event targets
         EventBus.prototype,
         MockEventTarget.prototype,
+        view.MediaDevices.prototype,
     ];
 }
 
