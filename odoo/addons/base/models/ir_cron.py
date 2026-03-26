@@ -34,7 +34,7 @@ _logger = logging.getLogger(__name__)
 BASE_VERSION = Manifest.for_addon('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
 MIN_RUNS_PER_JOB = 10
-MIN_TIME_PER_JOB = 10  # seconds
+MIN_TIME_PER_JOB = 120  # seconds
 CONSECUTIVE_TIMEOUT_FOR_FAILURE = 3
 MIN_FAILURE_COUNT_BEFORE_DEACTIVATION = 5
 MIN_DELTA_BEFORE_DEACTIVATION = timedelta(days=7)

@@ -237,9 +237,9 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 state['call_count'] += 1
             return f, state
 
-        def eleven_success(cron):
+        def success_121(cron):
             state = {'call_count': 0}
-            CALL_TARGET = 11
+            CALL_TARGET = 121
             def f(self):
                 frozen_datetime.tick(delta=timedelta(seconds=1))
                 state['call_count'] += 1
@@ -249,7 +249,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 )
             return f, state
 
-        def five_success(cron):
+        def success_5(cron):
             state = {'call_count': 0}
             CALL_TARGET = 5
             def f(self):
@@ -307,11 +307,11 @@ class TestIrCron(TransactionCase, CronMixinCase):
             #       callback, curr_failures, trigger, call_count, done_count, fail_count, active,
             (        nothing,             0,   False,          1,          0,          0,  True),
             (        nothing, almost_failed,   False,          1,          0,          0,  True),
-            ( eleven_success,             0,    True,         10,         10,          0,  True),
-            ( eleven_success, almost_failed,    True,         10,         10,          0,  True),
-            (   five_success,             0,   False,          5,          5,          0,  True),
-            (   five_success, almost_failed,   False,          5,          5,          0,  True),
-            (       end_time,             0,    True,          2,         10,          0,  True),
+            (    success_121,             0,    True,        120,        120,          0,  True),
+            (    success_121, almost_failed,    True,        120,        120,          0,  True),
+            (      success_5,             0,   False,          5,          5,          0,  True),
+            (      success_5, almost_failed,   False,          5,          5,          0,  True),
+            (       end_time,             0,    True,          2,        120,          0,  True),
             (        failure,             0,   False,          1,          0,          1,  True),
             (        failure, almost_failed,   False,          1,          0,          0, False),
             (failure_partial,             0,   False,          5,          5,          1,  True),
@@ -374,8 +374,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             self.registry.cursor() as cr,
         ):
-            # make each run 2 seconds, so that it is run 10 times, 20 seconds in total
-            mocked_run_state['duration'] = 2
+            # make it run 10 times, 120 seconds in total
+            mocked_run_state['duration'] = 120 / 10
             self.registry['ir.cron']._process_job(
                 cr,
                 {**self.cron.read(load=None)[0], **default_progress_values}
@@ -400,8 +400,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             self.registry.cursor() as cr,
         ):
-            # make each run 0.5 seconds, so that it is run 20 times, 10 seconds in total
-            mocked_run_state['duration'] = 0.5
+            # make it run 20 times, 120 seconds in total
+            mocked_run_state['duration'] = 120 / 20
             self.registry['ir.cron']._process_job(
                 cr,
                 {**self.cron.read(load=None)[0], **default_progress_values}
