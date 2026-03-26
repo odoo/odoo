@@ -58,9 +58,7 @@
                 >
 
                     <!-- Search bar -->
-                    <t t-call="delivery.locationSelector.searchbar">
-                        <t t-set="wrapClass" t-value="'d-flex'"/>
-                    </t>
+                    <t t-call="delivery.locationSelector.searchbar" wrapClass="'d-flex'"/>
 
                     <!-- List group -->
                     <LocationList

@@ -20,10 +20,7 @@
             <t t-foreach="row" t-as="cell" t-key="cell_index">
                 <t t-set="marginOnSmallScreen" t-value="cell_last ? 'mb-3 mb-sm-0' : ''"/>
                 <t t-if="cell.subType === 'item_component'">
-                    <t t-call="web.Form.InnerGroup.ItemComponent">
-                        <t t-set="cell" t-value="cell" />
-                        <t t-set="marginOnSmallScreen" t-value="marginOnSmallScreen" />
-                    </t>
+                    <t t-call="web.Form.InnerGroup.ItemComponent" cell="cell" marginOnSmallScreen="marginOnSmallScreen"/>
                 </t>
 
                 <t t-else="">

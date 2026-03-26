@@ -56,9 +56,7 @@
             t-as="linkedLine"
             t-key="linkedLine.id"
         >
-            <t t-call="website_sale.CartNotificationLine">
-                <t t-set="line" t-value="linkedLine"/>
-            </t>
+            <t t-call="website_sale.CartNotificationLine" line="linkedLine"/>
         </div>
     </t>
 

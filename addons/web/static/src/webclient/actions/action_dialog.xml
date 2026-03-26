@@ -16,9 +16,7 @@
       <t t-if="this.props.ActionComponent" t-component="this.props.ActionComponent" t-props="this.props.actionProps"/>
     </xpath>
     <xpath expr="//t[@t-call-slot='header']" position="replace">
-      <t t-call="web.ActionDialog.header">
-        <t t-set="fullscreen" t-value="this.props.isFullscreen"/>
-      </t>
+      <t t-call="web.ActionDialog.header" fullscreen="this.props.isFullscreen"/>
     </xpath>
   </t>
 

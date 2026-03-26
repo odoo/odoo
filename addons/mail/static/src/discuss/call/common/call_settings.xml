@@ -93,25 +93,22 @@
                 <DeviceSelect kind="'videoinput'"/>
             </label>
             <div class="d-flex flex-column my-1">
-                <t t-call="discuss.CallSettings.textToggler">
-                    <t t-set="text">Show video participants only</t>
-                    <t t-set="value" t-value="this.store.settings.showOnlyVideo"/>
-                    <t t-set="onchange" t-value="this.onChangeShowOnlyVideo"/>
-                </t>
+                <t t-call="discuss.CallSettings.textToggler"
+                    text.translate="Show video participants only"
+                    value="this.store.settings.showOnlyVideo"
+                    onchange="this.onChangeShowOnlyVideo"/>
             </div>
             <div class="d-flex flex-column my-1">
-                <t t-call="discuss.CallSettings.textToggler">
-                    <t t-set="text">Auto-focus speaker</t>
-                    <t t-set="value" t-value="this.store.settings.useCallAutoFocus"/>
-                    <t t-set="onchange" t-value="this.onChangeCallAutoFocus"/>
-                </t>
+                <t t-call="discuss.CallSettings.textToggler"
+                    text.translate="Auto-focus speaker"
+                    value="this.store.settings.useCallAutoFocus"
+                    onchange="this.onChangeCallAutoFocus"/>
             </div>
             <div t-if="this.store.settings.hasCanvasFilterSupport" class="d-flex flex-column my-1 o-discuss-CallSettings-item">
-                <t t-call="discuss.CallSettings.textToggler">
-                    <t t-set="text">Blur video background</t>
-                    <t t-set="value" t-value="this.store.settings.useBlur"/>
-                    <t t-set="onchange" t-value="this.onChangeBlur"/>
-                </t>
+                <t t-call="discuss.CallSettings.textToggler"
+                    text.translate="Blur video background"
+                    value="this.store.settings.useBlur"
+                    onchange="this.onChangeBlur"/>
             </div>
             <t t-if="this.store.settings.useBlur">
                 <div class="d-flex mt-1" t-att-class="{'flex-column': this.props.isCompact}">
@@ -139,11 +136,10 @@
             <h4>Technical Settings</h4>
             <t t-if="this.env.debug">
                 <div class="d-flex flex-column my-1">
-                    <t t-call="discuss.CallSettings.textToggler">
-                        <t t-set="text">Log RTC events</t>
-                        <t t-set="value" t-value="this.store.settings.logRtc"/>
-                        <t t-set="onchange" t-value="this.onChangeLogRtc"/>
-                    </t>
+                    <t t-call="discuss.CallSettings.textToggler"
+                        text.translate="Log RTC events"
+                        value="this.store.settings.logRtc"
+                        onchange="this.onChangeLogRtc"/>
                 </div>
             </t>
             <button class="btn btn-secondary mt-1 mb-2 w-100" t-on-click="this.onClickDownloadLogs">Download logs</button>

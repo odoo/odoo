@@ -25,15 +25,13 @@
                     </div>
                     <div t-if="this.state.searchResultCount > this.selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
                     <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
-                        </t>
+                        <t t-call="discuss.ChannelInvitation-selectableItem"
+                            selectableItemIndex="selectablePartner_index"/>
                     </t>
                     <t t-foreach="this.state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableEmailAddress" t-value="selectableEmailAddress"/>
-                            <t t-set="selectableItemIndex" t-value="this.selectablePartners.length + selectableEmailAddress_index"/>
-                        </t>
+                        <t t-call="discuss.ChannelInvitation-selectableItem"
+                            selectableEmailAddress="selectableEmailAddress"
+                            selectableItemIndex="this.selectablePartners.length + selectableEmailAddress_index"/>
                     </t>
                 </ul>
             </t>
