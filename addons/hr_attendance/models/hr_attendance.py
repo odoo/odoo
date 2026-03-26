@@ -252,30 +252,24 @@ class HrAttendance(models.Model):
                                                        datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
     def _get_overtimes_to_update_domain(self):
-        checked_out_attendances = self.filtered('check_out')
-        localized_times_by_attendance = checked_out_attendances._get_localized_times_by_attendance()
-        domain_list = []
-        for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items():
-            tz = ZoneInfo(employee.sudo()._get_tz())
-            local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
-            local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
-            rulesets = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date).ruleset_id)
-            # append this domain only for weekly rules
-            if any(rule.quantity_period == 'week' for rule in rulesets.sudo().rule_ids):
-                date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
-                date_to = local_check_out.date() + relativedelta(weekday=SU)
-            else:
-                date_from = local_check_in.date()
-                date_to = local_check_out.date()
+        dates_by_employee = defaultdict(list)
+        for timezone, tz_attendances in self.filtered('check_out').grouped(lambda att: att.employee_id.sudo()._get_tz(att.date)).items():
+            tz = ZoneInfo(timezone)
+            for ruleset, ruleset_attendances in tz_attendances.grouped(lambda att: att.employee_id.sudo()._get_version(att.date).ruleset_id).items():
+                by_week = bool(ruleset.rule_ids.filtered(lambda rule: rule.quantity_period == 'week'))
+                for employee, attendances in ruleset_attendances.grouped('employee_id').items():
+                    date_from = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz).date()
+                    date_to = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz).date()
+                    if by_week:
+                        date_from += relativedelta(weekday=MO(-1))
+                        date_to += relativedelta(weekday=SU)
+                    dates_by_employee[employee].extend([date_from, date_to])
 
-        for employee, attendances in checked_out_attendances.grouped('employee_id').items():
-            times = set(chain.from_iterable([localized_times_by_attendance[attendance] for attendance in attendances]))
-            domain_list.append(Domain.AND([
-                Domain('employee_id', '=', employee.id),
-                Domain('date', '<=', max(times).date() + relativedelta(weekday=SU(1))),
-                Domain('date', '>=', min(times).date() + relativedelta(weekday=MO(-1))),
-            ]))
-        return Domain.OR(domain_list)
+        return Domain.OR([[
+            ('employee_id', '=', employee.id),
+            ('date', '<=', max(dates)),
+            ('date', '>=', min(dates)),
+        ] for employee, dates in dates_by_employee.items()])
 
     def _update_overtime(self, attendance_domain=None):
         if not attendance_domain:
