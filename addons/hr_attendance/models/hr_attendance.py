@@ -282,8 +282,14 @@ class HrAttendance(models.Model):
             tz = ZoneInfo(employee.sudo()._get_tz())
             local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
             local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
-            date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
-            date_to = local_check_out.date() + relativedelta(weekday=SU)
+            rulesets = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date)).ruleset_id
+            # append this domain only for weekly rules
+            if any(rule.quantity_period == 'week' for rule in rulesets.sudo().rule_ids):
+                date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
+                date_to = local_check_out.date() + relativedelta(weekday=SU)
+            else:
+                date_from = local_check_in.date()
+                date_to = local_check_out.date()
 
             domain_list.append(Domain.AND([
                 Domain('employee_id', '=', employee.id),
