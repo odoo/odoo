@@ -867,7 +867,7 @@ class ResCompany(models.Model):
         # Do not assume '999999' doesn't exist since the user might have created such an account
         # manually.
         code = 999999
-        while self.env['account.account'].with_company(self).search_count([
+        while self.env['account.account'].with_company(self).with_context(active_test=False).search_count([
             *self.env['account.account']._check_company_domain(self),
             ('code', '=', str(code)),
         ], limit=1):
