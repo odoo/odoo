@@ -1,4 +1,4 @@
-import { App, blockDom, Component, markup } from "@odoo/owl";
+import { App, blockDom, markup } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { appTranslateFn } from "@web/core/l10n/translation";
 
@@ -37,7 +37,7 @@ let app;
 Object.defineProperty(renderToString, "app", {
     get: () => {
         if (!app) {
-            app = new App(Component, {
+            app = new App({
                 name: "renderToString",
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],

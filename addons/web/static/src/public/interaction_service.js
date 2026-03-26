@@ -69,7 +69,7 @@ class InteractionService {
                 warnIfNoStaticProps: this.env.debug,
                 translatableAttributes: ["data-tooltip"],
             };
-            this.owlApp = new App(null, appConfig);
+            this.owlApp = new App(appConfig);
         }
         const root = this.owlApp.createRoot(C, { props, env: this.env });
         const rootEl = document.createElement("owl-root");

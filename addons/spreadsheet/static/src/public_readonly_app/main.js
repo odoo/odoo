@@ -16,16 +16,18 @@ import { appTranslateFn } from "@web/core/l10n/translation";
     const env = makeEnv();
     await startServices(env);
     await whenReady();
-    const app = new App(PublicReadonlySpreadsheet, {
+    const app = new App({
         env,
-        props: session.spreadsheet_public_props,
         getTemplate,
         translateFn: appTranslateFn,
         dev: env.debug,
         warnIfNoStaticProps: env.debug,
         translatableAttributes: ["data-tooltip"],
     });
-    const root = await app.mount(document.getElementById("spreadsheet-mount-anchor"));
-    odoo.__WOWL_DEBUG__ = { root };
+    const root = app.createRoot(PublicReadonlySpreadsheet, {
+        props: session.spreadsheet_public_props,
+    });
+    const component = await root.mount(document.getElementById("spreadsheet-mount-anchor"));
+    odoo.__WOWL_DEBUG__ = { root: component };
     odoo.isReady = true;
 })();
