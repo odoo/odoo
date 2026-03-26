@@ -69,7 +69,7 @@
                             <t t-call="web.SelectMenu.search" />
                         </t>
                     </div>
-                    <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-ref="choicesRef">
+                    <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-custom-ref="choicesRef">
                         <t t-if="this.state.choices.length === 0">
                             <p class="text-muted fst-italic mx-4 my-1">No results</p>
                         </t>
