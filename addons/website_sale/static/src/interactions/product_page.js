@@ -7,7 +7,9 @@ import { rpc } from '@web/core/network/rpc';
 import { url } from '@web/core/utils/urls';
 import { memoize, uniqueId } from '@web/core/utils/functions';
 import { KeepLast } from '@web/core/utils/concurrency';
+import { setElementContent } from '@web/core/utils/html';
 import { insertThousandsSep } from '@web/core/utils/numbers';
+import { renderToFragment } from '@web/core/utils/render';
 import { throttleForAnimation } from '@web/core/utils/timing';
 import { htmlEscape, markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
@@ -707,6 +709,40 @@ export class ProductPage extends Interaction {
         ));
 
         this.handleCustomValues(ev.target);
+
+        const addQtyInput = parent.querySelector('input[name="add_qty"]');
+        const qty = parseFloat(addQtyInput?.value) || 1;
+        const ctaWrapper = parent.querySelector('#o_wsale_cta_wrapper');
+        if (!combination.allow_out_of_stock_order) {
+            const unavailableQty = await this.waitFor(this._getUnavailableQty(combination));
+            combination.free_qty -= unavailableQty;
+            if (combination.free_qty < 0) {
+                combination.free_qty = 0;
+            }
+            if (addQtyInput) {
+                addQtyInput.dataset.max = combination.free_qty || 1;
+                if (qty > combination.free_qty) {
+                    addQtyInput.value = addQtyInput.dataset.max;
+                }
+            }
+            if (combination.free_qty < 1 && !combination.prevent_sale) {
+                ctaWrapper.classList.replace('d-flex', 'd-none');
+                ctaWrapper.classList.add('out_of_stock');
+            }
+        }
+        if (combination.out_of_stock_message) {
+            combination.out_of_stock_message = markup(combination.out_of_stock_message);
+            const outOfStockMessage = document.createElement('div');
+            setElementContent(outOfStockMessage, combination.out_of_stock_message);
+            combination.has_out_of_stock_message = !!outOfStockMessage.textContent.trim();
+        }
+        this.el.querySelector('div.availability_messages').append(renderToFragment(
+            'website_sale.product_availability', combination
+        ));
+    }
+
+    async _getUnavailableQty(combination) {
+        return parseInt(combination.cart_qty);
     }
 
     /**

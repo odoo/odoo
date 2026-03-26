@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="website_sale.product_availability">
+        <div
+            t-if="is_storable and !prevent_sale"
+            id="product_stock_availability"
+        >
+            <div
+                t-if="free_qty lte 0 and !cart_qty"
+                t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2 mb-2"
+            >
+                <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
+                    <t t-if="!allow_out_of_stock_order">
+                        <div class="badge text-bg-danger">
+                            <i class="fa fa-circle me-2 text-danger"/>Out of Stock
+                        </div>
+                    </t>
+                    <t t-if="has_out_of_stock_message" t-out="out_of_stock_message"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

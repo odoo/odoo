@@ -135,28 +135,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.website_id.warehouse_id.id
 
-    def _get_cart_qty(self, product_id):
-        """Return the quantity of the given product in the current cart, if any.
-
-        :param int product_id: `product.product` id
-        :return: product quantity in the product uom
-        :rtype: float
-        """
-        if not self:
-            return 0.0
-        order_lines = self._get_common_product_lines(product_id)
-        return sum(
-            order_lines.mapped(
-                lambda sol: sol.product_uom_id._compute_quantity(
-                    sol.product_uom_qty, sol.product_id.uom_id
-                )
-            )
-        )
-
-    def _get_common_product_lines(self, product_id=None):
-        """Get all the lines of the current order with the given product."""
-        return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
-
     def _check_cart_is_ready_to_be_paid(self):
         values = [line.shop_warning for line in self.order_line if not line._check_availability()]
         if values:

@@ -3,9 +3,8 @@ import { isEmail } from '@web/core/utils/strings';
 import { patch } from '@web/core/utils/patch';
 import { renderToElement, renderToFragment } from '@web/core/utils/render';
 import { formatFloat } from '@web/core/utils/numbers';
-import { setElementContent } from '@web/core/utils/html';
+
 import { patchDynamicContent } from '@web/public/utils';
-import { markup } from '@odoo/owl';
 import { ProductPage } from '@website_sale/interactions/product_page';
 
 patch(ProductPage.prototype, {
@@ -109,23 +108,7 @@ patch(ProductPage.prototype, {
         ctaWrapper.classList.replace('d-none', 'd-flex');
         ctaWrapper.classList.remove('out_of_stock');
 
-        if (!combination.allow_out_of_stock_order) {
-            const unavailableQty = await this.waitFor(this._getUnavailableQty(combination));
-            combination.free_qty -= unavailableQty;
-            if (combination.free_qty < 0) {
-                combination.free_qty = 0;
-            }
-            if (addQtyInput) {
-                addQtyInput.dataset.max = combination.free_qty || 1;
-                if (qty > combination.free_qty) {
-                    addQtyInput.value = addQtyInput.dataset.max;
-                }
-            }
-            if (combination.free_qty < 1 && !combination.prevent_sale) {
-                ctaWrapper.classList.replace('d-flex', 'd-none');
-                ctaWrapper.classList.add('out_of_stock');
-            }
-        } else if (has_max_combo_quantity) {
+        if (has_max_combo_quantity) {
             if (addQtyInput) {
                 addQtyInput.dataset.max = combination.max_combo_quantity || 1;
                 if (qty > combination.max_combo_quantity) {
@@ -151,12 +134,6 @@ patch(ProductPage.prototype, {
         document.querySelector('.oe_website_sale')
             .querySelectorAll('.availability_message_' + combination.product_template)
             .forEach(el => el.remove());
-        if (combination.out_of_stock_message) {
-            combination.out_of_stock_message = markup(combination.out_of_stock_message);
-            const outOfStockMessage = document.createElement('div');
-            setElementContent(outOfStockMessage, combination.out_of_stock_message);
-            combination.has_out_of_stock_message = !!outOfStockMessage.textContent.trim();
-        }
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale_stock.product_availability', combination
         ));
@@ -173,7 +150,4 @@ patch(ProductPage.prototype, {
         }
     },
 
-    async _getUnavailableQty(combination) {
-        return parseInt(combination.cart_qty);
-    },
 });

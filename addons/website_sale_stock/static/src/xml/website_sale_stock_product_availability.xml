@@ -1,54 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
-    <t t-name="website_sale_stock.product_availability">
-        <div
-            t-if="is_storable and !prevent_sale"
-            id="product_stock_availability"
-        >
-            <div
-                t-if="free_qty lte 0 and !cart_qty"
-                t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2 mb-2"
-            >
-                <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
-                    <t t-if="!allow_out_of_stock_order">
-                        <div class="badge text-bg-danger">
-                            <i class="fa fa-circle me-2 text-danger"/>Out of Stock
-                        </div>
-                    </t>
-                    <t t-if="has_out_of_stock_message" t-out="out_of_stock_message"/>
+    <t
+        t-name="website_sale_stock.product_availability"
+        t-inherit="website_sale.product_availability"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[@id='out_of_stock_message']" position="after">
+            <div id="stock_notification_div" t-if="!allow_out_of_stock_order">
+                <div class="btn btn-link px-0" t-if="!has_stock_notification"
+                     id="product_stock_notification_message">
+                    <i class="fa fa-envelope-o me-2"/>Get notified when back in stock
                 </div>
-                <div id="stock_notification_div" t-if="!allow_out_of_stock_order">
-                    <div class="btn btn-link px-0" t-if="!has_stock_notification"
-                         id="product_stock_notification_message">
-                        <i class="fa fa-envelope-o me-2"/>Get notified when back in stock
+                <div id="stock_notification_form" class="d-none">
+                    <div class="input-group">
+                        <input class="form-control"
+                               id="stock_notification_input" name="email"
+                               type="text" placeholder="youremail@gmail.com" t-att-value="stock_notification_email? stock_notification_email: ''"/>
+                        <button
+                            id="product_stock_notification_form_submit_button"
+                            class="btn btn-primary"
+                            t-att-data-product-id="product_id"
+                        >
+                            <i class="fa fa-paper-plane"/>
+                        </button>
                     </div>
-                    <div id="stock_notification_form" class="d-none">
-                        <div class="input-group">
-                            <input class="form-control"
-                                   id="stock_notification_input" name="email"
-                                   type="text" placeholder="youremail@gmail.com" t-att-value="stock_notification_email? stock_notification_email: ''"/>
-                            <button
-                                id="product_stock_notification_form_submit_button"
-                                class="btn btn-primary"
-                                t-att-data-product-id="product_id"
-                            >
-                                <i class="fa fa-paper-plane"/>
-                            </button>
-                        </div>
-                        <div id="stock_notification_input_incorrect" class="d-none form-text text-danger">
-                            Invalid email
-                        </div>
+                    <div id="stock_notification_input_incorrect" class="d-none form-text text-danger">
+                        Invalid email
+                    </div>
 
-                    </div>
-                    <div id="stock_notification_success_message"
-                         t-att-class="has_stock_notification ? '' : 'd-none'">
-                        <div class="py-2 small text-muted">
-                            <i class="fa fa-bell me-2"/>We'll notify you once the product is back in stock
-                        </div>
+                </div>
+                <div id="stock_notification_success_message"
+                     t-att-class="has_stock_notification ? '' : 'd-none'">
+                    <div class="py-2 small text-muted">
+                        <i class="fa fa-bell me-2"/>We'll notify you once the product is back in stock
                     </div>
                 </div>
             </div>
+        </xpath>
+        <xpath expr="//div[@id='product_stock_availability']" position="inside">
             <div
                 id="threshold_message"
                 t-elif="show_availability and free_qty lte available_threshold"
@@ -69,7 +59,7 @@
                     </t>
                 </span>
             </div>
-        </div>
+        </xpath>
     </t>
     <t t-name="website_sale_stock.product_availability_wishlist">
         <div

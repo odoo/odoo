@@ -93,6 +93,7 @@
                                                 t-att-data-product-type="product.type"
                                                 t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                t-att-disabled="wish.product_id._is_sold_out()"
                                             >
                                                 <span class="d-inline-flex align-items-baseline">
                                                     <i
@@ -132,6 +133,15 @@
                                             <i class="oi oi-close" role="presentation"/>
                                         </button>
                                     </t>
+                                    <t t-set="product_extra_information">
+                                        <span
+                                            t-if="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order"
+                                            class="o_wsale_stock_badge badge text-bg-danger align-self-start align-top"
+                                        >
+                                            <i class="fa fa-circle text-danger me-1" aria-hidden="true"/>
+                                            Out of stock
+                                        </span>
+                                    </t>
                                     <t t-call="website_sale.products_item"
                                         show_variations="False"
                                         show_ribbons="False"
@@ -139,6 +149,7 @@
                                         product_actions="product_actions"
                                         extra_actions="extra_actions"
                                         show_combination_name="True"
+                                        product_extra_information="product_extra_information"
                                     />
                                 </div>
                             </t>

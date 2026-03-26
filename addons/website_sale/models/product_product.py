@@ -79,7 +79,7 @@ class ProductProduct(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        if not self.filtered_domain(self.env["website"]._product_domain()):
+        if self._is_sold_out() or not self.filtered_domain(self.env["website"]._product_domain()):
             return False
         if not self._get_available_uoms():
             return False
@@ -143,6 +143,12 @@ class ProductProduct(models.Model):
             markup_data["description"] = self.website_meta_description or self.description_sale
         if self.barcode:
             markup_data["gtin"] = self.barcode
+        if self.is_product_variant and self.is_storable:
+            if not self._is_sold_out():
+                availability = "https://schema.org/InStock"
+            else:
+                availability = "https://schema.org/OutOfStock"
+            markup_data["offers"]["availability"] = availability
         return markup_data
 
     def _get_image_1920_url(self):
@@ -282,3 +288,18 @@ class ProductProduct(models.Model):
         ):
             extra_tracking_values['product_id'] = res_id
         return extra_tracking_values
+
+    def _is_sold_out(self):
+        """Return whether the product is sold out (no available quantity).
+
+        If a product inventory is not tracked, or if it's allowed to be sold regardless
+        of availabilities, the product is never considered sold out.
+
+        :return: whether the product can still be sold
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not self.is_storable or self.allow_out_of_stock_order:
+            return False
+        free_qty = self.env["website"].get_current_website()._get_product_available_qty(self.sudo())
+        return free_qty <= 0

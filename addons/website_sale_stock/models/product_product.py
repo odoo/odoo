@@ -34,24 +34,6 @@ class ProductProduct(models.Model):
             return free_qty - cart_qty
         return None
 
-    def _is_sold_out(self):
-        """Return whether the product is sold out (no available quantity).
-
-        If a product inventory is not tracked, or if it's allowed to be sold regardless
-        of availabilities, the product is never considered sold out.
-
-        :return: whether the product can still be sold
-        :rtype: bool
-        """
-        self.ensure_one()
-        if not self.is_storable or self.allow_out_of_stock_order:
-            return False
-        free_qty = self.env["website"].get_current_website()._get_product_available_qty(self.sudo())
-        return free_qty <= 0
-
-    def _website_show_quick_add(self):
-        return not self._is_sold_out() and super()._website_show_quick_add()
-
     def _send_availability_email(self):
         products = self.search([("stock_notification_partner_ids", "!=", False)]).filtered(
             lambda p: not p._is_sold_out()
@@ -98,14 +80,3 @@ class ProductProduct(models.Model):
 
                 product.stock_notification_partner_ids -= partner
                 self.env["ir.cron"]._commit_progress(1)
-
-    def _to_markup_data(self, website):
-        """Override of `website_sale` to include the product availability in the offer."""
-        markup_data = super()._to_markup_data(website)
-        if self.is_product_variant and self.is_storable:
-            if not self._is_sold_out():
-                availability = "https://schema.org/InStock"
-            else:
-                availability = "https://schema.org/OutOfStock"
-            markup_data["offers"]["availability"] = availability
-        return markup_data

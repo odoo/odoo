@@ -128,6 +128,7 @@
             "website/static/lib/multirange/multirange_custom.js",
             "website/static/src/interactions/multirange_input.js",
             "website_sale/static/src/xml/website_sale_image_viewer.xml",
+            "website_sale/static/src/xml/website_sale_product_availability.xml",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
             "website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.js",
             "website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml",
