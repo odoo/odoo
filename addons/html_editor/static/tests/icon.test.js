@@ -6,6 +6,7 @@ import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { splitBlock, undo } from "./_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { expandToolbar } from "./_helpers/toolbar";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -312,4 +313,21 @@ test("should insert two empty paragraphs when Enter is pressed twice before the 
     expect(getContent(el)).toBe(
         `<p><br></p><p><br></p><p>\ufeff[]<span class="fa fa-glass" contenteditable="false">\u200B</span>\ufeff</p>`
     );
+});
+
+test("should not allow to edit label if selection contain icon", async () => {
+    await setupEditor(`<p>[ab<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await click('.o-we-toolbar button[name="link"]');
+    await waitFor('[name="o_linkpopover_url_img"]');
+    expect('[name="o_linkpopover_url_img"]').toHaveCount(1);
+});
+
+test("should be able to unlink an icon", async () => {
+    await setupEditor(
+        `<p><a href="#" class="my_link o_link_in_selection">[<span class="fa fa-glass" contenteditable="false"></span>]</a></p>`
+    );
+    await click(".o_we_remove_link");
+    expect(".my_link").toHaveCount(0);
 });
