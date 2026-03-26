@@ -4,7 +4,7 @@
         <h2 t-if="this.props.title" t-custom-ref="settingsContainerTitle"><HighlightText originalText="this.props.title"/></h2>
         <h3 t-if="this.props.tip" class="o_setting_tip text-muted" t-custom-ref="settingsContainerTip"><HighlightText originalText="this.props.tip"/></h3>
         <div class="row mt16 o_settings_container" t-att-class="this.props.class" t-custom-ref="settingsContainer">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </div>
     </t>
 </templates>

@@ -42,7 +42,7 @@ export class SingleData extends Component {
         <div t-if="this.props.btnName">
             <button class="btn btn-primary btn-sm" t-esc="this.props.btnName" t-on-click="() => this.props.btnAction()" />
         </div>
-        <t t-if="this.props.slots and this.props.slots['button']" t-slot="button" />
+        <t t-if="this.props.slots and this.props.slots['button']" t-call-slot="button" />
     </div>
   `;
 }

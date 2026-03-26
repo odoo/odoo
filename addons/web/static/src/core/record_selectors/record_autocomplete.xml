@@ -13,7 +13,7 @@
         >
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <t t-if="optionScope.data.record">
-                    <t t-slot="autoCompleteItem" label="optionScope.label" data="optionScope.data"/>
+                    <t t-call-slot="autoCompleteItem" label="optionScope.label" data="optionScope.data"/>
                 </t>
                 <t t-else="">
                     <t t-out="optionScope.label"/>

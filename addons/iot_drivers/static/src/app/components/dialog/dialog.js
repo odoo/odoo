@@ -54,11 +54,11 @@ export class Dialog extends Component {
                         <a t-if="props.help" t-att-href="props.help" class="fa fa-question-circle text-decoration-none text-dark" target="_blank"/>
                     </div>
                     <div class="modal-body position-relative dialog-body">
-                        <t t-slot="body" />
+                        <t t-call-slot="body" />
                     </div>
                     <div class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
                         <div class="d-flex gap-2">
-                            <t t-slot="footer" />
+                            <t t-call-slot="footer" />
                         </div>
                     </div>
                 </div>

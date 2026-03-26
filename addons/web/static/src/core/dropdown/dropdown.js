@@ -43,7 +43,7 @@ export function getFirstElementOfNode(node) {
  * dropdown menus.
  */
 export class Dropdown extends Component {
-    static template = xml`<t t-slot="default"/>`;
+    static template = xml`<t t-call-slot="default"/>`;
     static components = {};
     static props = {
         menuClass: { optional: true },

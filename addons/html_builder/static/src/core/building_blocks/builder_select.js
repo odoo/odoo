@@ -13,7 +13,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { setElementContent } from "@web/core/utils/html";
 
 export class WithIgnoreItem extends Component {
-    static template = xml`<t t-slot="default"/>`;
+    static template = xml`<t t-call-slot="default"/>`;
     static props = {
         slots: { type: Object },
     };

@@ -15,14 +15,14 @@
 
   <t t-name="web.DefaultCommandItem">
     <div class="o_command_default d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
-      <t t-slot="name"/>
-      <t t-slot="focusMessage"/>
+      <t t-call-slot="name"/>
+      <t t-call-slot="focusMessage"/>
     </div>
   </t>
 
   <t t-name="web.HotkeyCommandItem">
     <div class="o_command_hotkey d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
-      <t t-slot="name"/>
+      <t t-call-slot="name"/>
       <span>
         <t t-foreach="this.getKeysToPress(this.props)" t-as="key" t-key="key_index">
           <kbd t-out="key" class="d-inline-block px-3 py-1" />

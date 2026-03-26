@@ -10,7 +10,7 @@
             <t t-if="this.displayCourses">
                 <t t-foreach="this.order.courses" t-as="course" t-key="course_index">
                     <OrderCourse course="course" course_index="course_index" t-slot-scope="course_scope">
-                        <t t-if="this.props.slots.default" t-slot="default" line="course_scope.line"/>
+                        <t t-if="this.props.slots.default" t-call-slot="default" line="course_scope.line"/>
                         <Orderline t-else="" line="course_scope.line" mode="this.props.mode"/>
                     </OrderCourse>
                 </t>

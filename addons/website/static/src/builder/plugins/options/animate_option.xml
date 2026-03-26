@@ -30,7 +30,7 @@
                             id="'animation_on_hover_opt'"
                             t-if="this.state.canHover">On Hover</BuilderSelectItem>
             </BuilderSelect>
-            <t t-if="!!this.props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
+            <t t-if="!!this.props.slots?.animationRowTrailing" t-call-slot="animationRowTrailing"/>
             <t t-else="" t-call="website.animateOnScrollInOut"/> 
         </BuilderRow>
         <BuilderRow label.translate="On Scroll" level="1" t-if="!!this.props.slots?.animationRowTrailing">

@@ -63,7 +63,7 @@
                                         </t>
                                     </div>
                                     <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-out="lot" />
-                                    <t t-slot="default" />
+                                    <t t-call-slot="default" />
                                 </ul>
                             </div>
                         </li>
