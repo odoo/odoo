@@ -9,13 +9,18 @@
     t,
     [t-esc],
     [t-out],
-    [t-raw] {
+    [t-raw],
+    [t-field] {
         border-radius: 2px;
     }
     [t-esc],
     [t-out],
-    [t-raw] {
+    [t-raw],
+    [t-field] {
         background-color: rgba(36, 154, 255, 0.16) !important;
+    }
+    [t-field]:empty::before {
+        content: attr(t-field);
     }
     [t-esc]:empty::before {
         content: attr(t-esc);

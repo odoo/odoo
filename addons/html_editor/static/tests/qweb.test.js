@@ -14,6 +14,7 @@ import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { processThroughCleanForSave } from "./_helpers/dispatch";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
 describe("qweb picker", () => {
@@ -250,6 +251,34 @@ describe("qweb picker", () => {
     });
 });
 
+test("show t-out expression in picker on click", async () => {
+    const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
+        config,
+    });
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
+            '<p data-selection-placeholder=""><br></p>'
+    );
+    await click(queryOne(`[t-out]`));
+    await expectElementCount(".o-we-qweb-picker", 1);
+    expect(queryOne(".o-we-qweb-picker div")).toHaveText("t-out: test");
+});
+
+test("show t-field expression in picker on click", async () => {
+    const { el } = await setupEditor(`<div><t t-field="test">Hello</t></div>`, {
+        config,
+    });
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div><t t-field="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
+            '<p data-selection-placeholder=""><br></p>'
+    );
+    await click(queryOne(`[t-field]`));
+    await expectElementCount(".o-we-qweb-picker", 1);
+    expect(queryOne(".o-we-qweb-picker div")).toHaveText("t-field: test");
+});
+
 test("select text inside t-out", async () => {
     const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
         config,
@@ -277,27 +306,27 @@ test("select text inside t-out", async () => {
 });
 
 test("select text inside t-esc", async () => {
-    const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
+    const { el } = await setupEditor(`<div><t t-esc="test">Hello</t></div>`, {
         config,
     });
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
+            `<div><t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
 
-    setSelection({ anchorNode: el.querySelector("t[t-out]").childNodes[0], anchorOffset: 1 });
+    setSelection({ anchorNode: el.querySelector("t[t-esc]").childNodes[0], anchorOffset: 1 });
 
     await tick();
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">H[]ello</t></div>` +
+            `<div><t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">H[]ello</t></div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
     await dblclick("t");
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div>[<t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>]</div>` +
+            `<div>[<t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>]</div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
 });
