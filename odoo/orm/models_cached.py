@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from typing import Self
+
 from odoo.tools import frozendict, ormcache
 
-from .models import Model
+from .models import api, Model
 
 
 class CachedModel(Model):
@@ -53,3 +55,9 @@ class CachedModel(Model):
                 self.check_access('read')
                 return
         super()._fetch_field(field)
+
+    @api.model
+    @api.private
+    def get_all(self) -> Self:
+        """Get all instances in cache."""
+        return self.browse(self._cached_data()['id'])
