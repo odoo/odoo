@@ -10,7 +10,7 @@
             </div>
             <div class="d-flex gap-1">
                 <button t-on-click="this.onMobilePreviewClick" type="button" class="o-hb-btn btn btn-success-color-active d-flex align-items-center" t-att-class="{ active: this.props.isMobile }" data-action="mobile" title="Mobile Preview" accesskey="m" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
-                <t t-if="this.props.slots?.extraActions" t-slot="extraActions"/>
+                <t t-if="this.props.slots?.extraActions" t-call-slot="extraActions"/>
             </div>
         </div>
         <div t-if="!this.props.onlyCustomizeTab" class="o-snippets-tabs position-relative">

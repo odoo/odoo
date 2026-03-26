@@ -7,7 +7,7 @@
         t-on-click="this.showSlidingPanel"
         t-att-class="this.props.extraClasses"
     >
-        <t t-slot="default"/>
+        <t t-call-slot="default"/>
     </button>
     <div t-custom-ref="slidingPanel"
         class="hb-sliding-panel mb-1 h-100 d-none"
@@ -23,7 +23,7 @@
                     </button>
                 </div>
             </div>
-            <t t-slot="content" close="this.hideSlidingPanel.bind(this)"/>
+            <t t-call-slot="content" close="this.hideSlidingPanel.bind(this)"/>
         </div>
     </div>
 </t>

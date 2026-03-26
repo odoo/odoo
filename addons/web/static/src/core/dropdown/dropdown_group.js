@@ -24,7 +24,7 @@ function removeGroup(id) {
 
 export const DROPDOWN_GROUP = Symbol("dropdownGroup");
 export class DropdownGroup extends Component {
-    static template = xml`<t t-slot="default"/>`;
+    static template = xml`<t t-call-slot="default"/>`;
     static props = {
         group: { type: String, optional: true },
         slots: Object,

@@ -14,7 +14,7 @@
             t-on-change="this.onChange"
         />
         <label t-att-for="this.props.id or this.id" class="form-check-label">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </label>
     </div>
 </t>

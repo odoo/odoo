@@ -34,7 +34,7 @@
             t-att-max="!this.props.composable and this.props.max"
             t-att-step="!this.props.composable and this.props.step"
         />
-        <t t-slot="default"/>
+        <t t-call-slot="default"/>
     </div>
 </t>
 

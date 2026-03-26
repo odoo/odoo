@@ -3,7 +3,7 @@ import { Component, xml } from "@odoo/owl";
 import { batched } from "@web/core/utils/timing";
 
 export class ImgGroup extends Component {
-    static template = xml`<t><t t-slot="default"/></t>`;
+    static template = xml`<t><t t-call-slot="default"/></t>`;
     static props = {
         slots: Object,
     };

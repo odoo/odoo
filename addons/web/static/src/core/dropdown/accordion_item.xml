@@ -12,7 +12,7 @@
             />
             <t t-if="this.state.open">
                 <div class="o_accordion_values ms-4 border-start">
-                    <t t-slot="default"/>
+                    <t t-call-slot="default"/>
                 </div>
             </t>
         </div>

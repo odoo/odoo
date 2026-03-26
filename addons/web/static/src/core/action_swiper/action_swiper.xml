@@ -5,7 +5,7 @@
             <div class="o_actionswiper" t-on-touchstart="this._onTouchStartSwipe" t-custom-ref="root">
                 <div class="o_actionswiper_overflow_container position-relative overflow-hidden">
                     <div class="o_actionswiper_target_container" t-custom-ref="targetContainer">
-                        <t t-slot="default"/>
+                        <t t-call-slot="default"/>
                         <t t-if="this.localizedProps.onRightSwipe">
                             <div t-custom-ref="leftPanel" class="o_actionswiper_right_swipe_area position-absolute overflow-hidden w-100 h-100">
                                 <t t-if="this.props.animationType === 'forwards'">
@@ -31,7 +31,7 @@
             </div>
         </t>
         <t t-else="">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </t>
     </t>
 </templates>

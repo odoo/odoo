@@ -52,7 +52,7 @@
             </div>
         </t>
         <div t-attf-class="o_hr_attendance_kiosk_mode d-flex flex-column w-100 h-100 {{this.props.kioskModeClasses}} overflow-auto px-3">
-            <t t-slot="default" />
+            <t t-call-slot="default" />
         </div>
     </div>
 </t>

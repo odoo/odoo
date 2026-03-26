@@ -9,7 +9,7 @@
                     <span class="text-truncate flex-shrink-0 opacity-75 mw-75 small" t-out="this.props.channel?.parent_channel_id.displayName"/>
                     <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                 </t>
-                <t t-slot="name" />
+                <t t-call-slot="name" />
             </span>
             <span t-if="this.email" class="text-truncate text-muted smaller opacity-75" t-att-title="this.email">
                 <span class="pe-1">-</span>

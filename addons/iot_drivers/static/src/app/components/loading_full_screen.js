@@ -35,7 +35,7 @@ export class LoadingFullScreen extends Component {
         <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
-        <t t-slot="body" />
+        <t t-call-slot="body" />
     </div>
   `;
 }

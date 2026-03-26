@@ -1,9 +1,9 @@
 <templates>
 
     <t t-name="account.AccountFileUploader" t-inherit="account.DocumentFileUploader" t-inherit-mode="primary">
-        <xpath expr="//t[@t-slot='toggler']" position="replace">
+        <xpath expr="//t[@t-call-slot='toggler']" position="replace">
             <t t-if="this.props.togglerTemplate" t-call="{{ this.props.togglerTemplate }}"/>
-            <t t-else="" t-slot="toggler"/>
+            <t t-else="" t-call-slot="toggler"/>
          </xpath>
     </t>
 

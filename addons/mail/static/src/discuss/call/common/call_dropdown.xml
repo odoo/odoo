@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallDropdown">
-        <t t-slot="default"/>
+        <t t-call-slot="default"/>
         <div t-if="this.isOpen" class="o-discuss-CallDropdown" t-att-class="this.props.class">
             <div t-custom-ref="menu" t-on-click="this.onClickMenu" class="o-discuss-CallDropdown-content o-dropdown--menu dropdown-menu d-block" t-att-class="this.props.menuClass">
-                <t t-slot="content"/>
+                <t t-call-slot="content"/>
             </div>
         </div>
     </t>

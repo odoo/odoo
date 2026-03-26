@@ -4,7 +4,7 @@
         <div class="o_command_default d-flex align-items-center justify-content-between px-4 py-2">
             <i class="me-2" t-att-class="this.props.iconClass"/>
             <span class="flex-grow-1 text-ellipsis">
-                <t t-slot="name"/>
+                <t t-call-slot="name"/>
             </span>
         </div>
     </t>
