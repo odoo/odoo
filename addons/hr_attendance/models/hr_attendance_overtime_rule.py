@@ -307,8 +307,14 @@ class HrAttendanceOvertimeRule(models.Model):
         employee = attendances.employee_id
         company = self.company_id or employee.company_id
         if company.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
-            last_attendance = sorted(intervals_attendance_by_attendance.keys(), key=lambda att: att.check_out)[-1]
-            return {}, {last_attendance: [(overtime_amount, self)]}
+            undertime_attendance_intervals = sorted(intervals_attendance_by_attendance.items(),
+                                                    # Sorting the attendance-intervals pair by the date of the last interval
+                                                    key=lambda x: x[1]._items[-1][1] if x[1]._items else datetime.min)
+            if not undertime_attendance_intervals:
+                return {}, {}
+
+            last_attendance, last_interval = undertime_attendance_intervals[-1]
+            return {}, {last_attendance: [(overtime_amount, last_interval._items[0][0].date(), self)]}
 
         if float_compare(overtime_amount, self.employer_tolerance, 5) != 1:
             return {}, {}
@@ -706,13 +712,12 @@ class HrAttendanceOvertimeRule(models.Model):
                 _add_overtime_val(attendance, duration_by_day_by_rules)
 
         for employee, intervals_by_attendance in undertimes.items():
-            tz = timezone(employee.sudo()._get_tz())
             for attendance, intervals in intervals_by_attendance.items():
-                date = attendance.check_in.astimezone(tz).date()
                 duration_by_day_by_rules = defaultdict(lambda: defaultdict(float))
-                min_duration_tuple = max(intervals, key=lambda x: x[0])
-                duration, rules = min_duration_tuple
-                duration_by_day_by_rules[date][rules] += duration
+                for undertime, date, rule in intervals:
+                    duration_by_day_by_rules[date][rule] += undertime
+                for date in duration_by_day_by_rules:
+                    duration_by_day_by_rules[date] = dict([max(duration_by_day_by_rules[date].items(), key=lambda x: x[1])])
                 _add_overtime_val(attendance, duration_by_day_by_rules)
         return vals
 
