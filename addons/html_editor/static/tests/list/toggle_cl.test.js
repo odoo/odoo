@@ -646,6 +646,33 @@ describe("Range collapsed", () => {
                 contentAfter: "<p>ab<br><b>cd</b><br><i>ef[]</i></p>",
             });
         });
+
+        test("Toggling a list item off should preserve the parent list's classes on the remaining list", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul class="o_checklist outerClass">
+                        <li><p>Test1[]</p>
+                            <ul class="o_checklist innerClass">
+                                <li>Test2</li>
+                            </ul>
+                        </li>
+                        <li>Test3</li>
+                    </ul>
+                `),
+                stepFunction: toggleCheckList,
+                contentAfter: unformat(`
+                    <p>Test1[]</p>
+                    <ul class="o_checklist outerClass">
+                        <li class="oe-nested">
+                            <ul class="o_checklist innerClass">
+                                <li>Test2</li>
+                            </ul>
+                        </li>
+                        <li>Test3</li>
+                    </ul>
+                `),
+            });
+        });
     });
 });
 

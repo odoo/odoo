@@ -664,7 +664,7 @@ export class ListPlugin extends Plugin {
     splitList(node) {
         const cursors = this.dependencies.selection.preserveSelection();
         // Create new list
-        const currentList = closestElement(node, "ul, ol");
+        const currentList = closestElement(node.parentElement, "ul, ol");
         const newList = currentList.cloneNode(false);
         const isList = isListElement(node);
         const wrapperLi = isList ? this.document.createElement("li") : node;
