@@ -1624,7 +1624,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         )
 
     def test_pos_payment_direction_and_accounts(self):
-        """Ensure POS payments create correct inbound/outbound payments and accounts."""
+        """Ensure POS payments create correct inbound/outbound payments and accounts and related journal items"""
 
         def _do_pos_transaction(amount, split, index):
             self.bank_payment_method.write({'split_transactions': split})
@@ -1663,8 +1663,9 @@ class TestPointOfSaleFlow(CommonPosTest):
             _do_pos_transaction(amount, split, idx).id
             for idx, (amount, split) in enumerate([(100, False), (-100, False), (100, True), (-100, True)])
         ]
+        payments = self.env['account.payment'].search([('pos_session_id', 'in', session_ids)], order='id')
         self.assertRecordValues(
-            self.env['account.payment'].search([('pos_session_id', 'in', session_ids)], order='id'),
+            payments,
             [
                 {
                     "payment_type": "inbound",
@@ -1673,8 +1674,8 @@ class TestPointOfSaleFlow(CommonPosTest):
                 },
                 {
                     "payment_type": "outbound",
-                    "outstanding_account_id": self.bank_payment_method.receivable_account_id.id,
-                    "destination_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
                 },
                 {
                     "payment_type": "inbound",
@@ -1683,8 +1684,21 @@ class TestPointOfSaleFlow(CommonPosTest):
                 },
                 {
                     "payment_type": "outbound",
-                    "outstanding_account_id": self.bank_payment_method.receivable_account_id.id,
-                    "destination_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
                 },
             ],
         )
+
+        for payment in payments:
+            move_lines = payment.move_id.line_ids.sorted('balance')
+            if payment.payment_type == "inbound":
+                self.assertRecordValues(move_lines, [
+                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                    {'account_id': self.bank_payment_method.outstanding_account_id.id},
+                ])
+            else:
+                self.assertRecordValues(move_lines, [
+                    {'account_id': self.bank_payment_method.outstanding_account_id.id},
+                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                ])
