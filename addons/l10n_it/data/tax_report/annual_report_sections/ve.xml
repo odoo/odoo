@@ -28,7 +28,7 @@
                         <field name="name">Contributions of agricultural products and transfers from exempt farmers (in case of exceeding 1/3)</field>
                         <field name="name@it">Conferimenti di prodotti agricoli e cessioni da agricoltori esonerati (in caso di superamento di 1/3)</field>
                         <field name="code">VE_section1</field>
-                        <field name="foldable" eval="True"/>
+                        <field name="foldability">foldable</field>
                         <field name="children_ids">
                             <record id="tax_annual_report_line_ve1" model="account.report.line">
                                 <field name="name">VE1 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 2%</field>
@@ -223,7 +223,7 @@
                         <field name="name">Agricultural taxable transactions (Article 34 paragraph 1) and commercial and professional taxable transactions</field>
                         <field name="name@it">Operazioni imponibili agricole (art.34 comma 1) e operazioni imponibili commerciali e professionali</field>
                         <field name="code">VE_section2</field>
-                        <field name="foldable" eval="True"/>
+                        <field name="foldability">foldable</field>
                         <field name="children_ids">
                             <record id="tax_annual_report_line_ve20" model="account.report.line">
                                 <field name="name">VE20 - Taxable transactions rate 4%</field>
@@ -299,7 +299,7 @@
                         <field name="name">Total taxable income and tax</field>
                         <field name="name@it">Totale imponibile e imposta</field>
                         <field name="code">VE_section3</field>
-                        <field name="foldable" eval="True"/>
+                        <field name="foldability">foldable</field>
                         <field name="children_ids">
                             <record id="tax_annual_report_line_ve24" model="account.report.line">
                                 <field name="name">VE24 - Total lines VE1 to VE11 and lines VE20 to VE23</field>
@@ -340,7 +340,7 @@
                         <field name="name">Other operations</field>
                         <field name="name@it">Altre operazioni</field>
                         <field name="code">VE_section4</field>
-                        <field name="foldable" eval="True"/>
+                        <field name="foldability">foldable</field>
                         <field name="children_ids">
                             <record id="tax_annual_report_line_ve30" model="account.report.line">
                                 <field name="name">VE30 - Transactions that contribute to the formation of the ceiling</field>

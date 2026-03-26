@@ -425,7 +425,6 @@
                         <field name="name">· Total amount of VAT paid on purchased goods, works and services (42=33*10%)</field>
                         <field name="code">VAT_LINE42</field>
                         <field name="groupby" eval="False"/>
-                        <field name="foldable" eval="False"/>
                     </record>
                     <record id="vat_report_line42" model="account.report.line">
                         <field name="aggregation_formula">VAT_LINE33.balance * 0.10</field>
@@ -518,7 +517,6 @@
                     <record id="vat_report_line51" model="account.report.line">
                         <field name="name">Revenue from similar transaction services such as factoring and forfeiting (51)</field>
                         <field name="code">VAT_LINE51</field>
-                        <field name="foldable" eval="True"/>
                         <field name="expression_ids">
                             <record id="vat_report_line51_tag" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -531,7 +529,6 @@
                         <field name="name">Charged VAT (52=(50+51)*10%)</field>
                         <field name="code">VAT_LINE52</field>
                         <field name="groupby" eval="False"/>
-                        <field name="foldable" eval="False"/>
                     </record>
                     <record id="vat_report_line52" model="account.report.line">
                         <field name="aggregation_formula">(VAT_LINE50.balance + VAT_LINE51.balance) * 0.10</field>

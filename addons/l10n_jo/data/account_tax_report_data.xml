@@ -52,7 +52,7 @@
                 <field name="name@ar_001">2. المشتريات المحلية الخاضعة للمعدل القياسي عند</field>
                 <field name="code">jo_2</field>
                 <field name="sequence">3</field>
-                <field name="foldable" eval="True"/>
+                <field name="foldability">foldable</field>
                 <field name="expression_ids">
                     <record id="tax_report_vat_domestic_purchase_base_aggregation" model="account.report.expression">
                         <field name="label">base</field>
@@ -176,7 +176,7 @@
                 <field name="name@ar_001">3. الواردات الخاضعة للمعدل القياسي عند</field>
                 <field name="code">jo_3</field>
                 <field name="sequence">10</field>
-                <field name="foldable" eval="True"/>
+                <field name="foldability">foldable</field>
                 <field name="expression_ids">
                     <record id="tax_report_vat_import_purchase_base_aggregation" model="account.report.expression">
                         <field name="label">base</field>
@@ -357,7 +357,7 @@
                 <field name="name@ar_001">6. المبيعات المحلية الخاضعة للمعدلات القياسية في</field>
                 <field name="code">jo_6</field>
                 <field name="sequence">21</field>
-                <field name="foldable" eval="True"/>
+                <field name="foldability">foldable</field>
                 <field name="expression_ids">
                     <record id="tax_report_vat_sales_base_aggregation" model="account.report.expression">
                         <field name="label">base</field>
@@ -552,7 +552,7 @@
                 <field name="name@ar_001">C. التعديلات</field>
                 <field name="sequence">33</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="True"/>
+                <field name="foldability">foldable</field>
                 <field name="children_ids">
                     <record id="tax_report_vat_tax_adjustment_partner" model="account.report.line">
                         <field name="name">12. Adjustment for the registered person</field>

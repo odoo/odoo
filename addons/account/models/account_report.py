@@ -407,7 +407,16 @@ class AccountReportLine(models.Model):
     )
     sequence = fields.Integer(string="Sequence")
     code = fields.Char(string="Code", help="Unique identifier for this line.")
-    foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.")
+    foldability = fields.Selection(
+        selection=[
+            ('always_unfolded', 'Always Unfolded'),
+            ('never_unfolded', 'Never Unfolded'),
+            ('foldable', 'Foldable'),
+        ],
+        compute='_compute_foldability',
+        store=True,
+        readonly=False,
+    )
     print_on_new_page = fields.Boolean('Print On New Page', help='When checked this line and everything after it will be printed on a new page.')
     action_id = fields.Many2one(string="Action", comodel_name='ir.actions.actions', help="Setting this field will turn the line into a link, executing the action when clicked.")
     hide_if_zero = fields.Boolean(string="Hide if Zero", help="This line and its children will be hidden when all of their columns are 0.")
@@ -444,6 +453,21 @@ class AccountReportLine(models.Model):
             if report_line.parent_id:
                 report_line.horizontal_split_side = report_line.parent_id.horizontal_split_side
 
+    @api.depends('create_date')
+    def _compute_foldability(self):
+        for line in self:
+            if line.foldability:
+                continue
+            has_groupby = bool(line.groupby or line.user_groupby or line.report_id.groupby or line.report_id.user_groupby)
+            if line.children_ids:
+                line.foldability = 'always_unfolded'
+            elif has_groupby and all(expr.engine not in ('aggregation', 'external') for expr in line.expression_ids):
+                line.foldability = 'foldable'
+            elif any(expr.engine in ('aggregation', 'external') for expr in line.expression_ids):
+                line.foldability = 'never_unfolded'
+            else:
+                line.foldability = 'always_unfolded'
+
     @api.depends('groupby', 'expression_ids.engine')
     def _compute_user_groupby(self):
         for report_line in self:
@@ -453,6 +477,11 @@ class AccountReportLine(models.Model):
                 report_line._validate_groupby()
             except UserError:
                 report_line.user_groupby = report_line.groupby
+
+    @api.onchange('user_groupby')
+    def _onchange_user_groupby(self):
+        if self.user_groupby and self.foldability == 'never_unfolded':
+            self.foldability = 'foldable'
 
     @api.constrains('parent_id')
     def _validate_groupby_no_child(self):
