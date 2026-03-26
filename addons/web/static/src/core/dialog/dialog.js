@@ -55,6 +55,7 @@ export class Dialog extends Component {
         },
         withBodyPadding: { type: Boolean, optional: true },
         onExpand: { type: Function, optional: true },
+        setActiveElement: { type: Boolean, optional: true },
     };
     static defaultProps = {
         contentClass: "",
@@ -66,11 +67,14 @@ export class Dialog extends Component {
         technical: true,
         title: "Odoo",
         withBodyPadding: true,
+        setActiveElement: true,
     };
 
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
-        useActiveElement("modalRef");
+        if(this.props.setActiveElement){
+            useActiveElement("modalRef");
+        }
         this.data = useState(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
         useHotkey(
