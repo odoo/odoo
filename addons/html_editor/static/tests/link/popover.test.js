@@ -1501,7 +1501,7 @@ describe("readonly mode", () => {
     });
     // TODO: need to check with AGE
     test.todo("popover should not open for not editable image", async () => {
-        await setupEditor(`<a href="#"><img src="${base64Img}" contenteditable="false"></a>`);
+        await setupEditor(`<a href="/test"><img src="${base64Img}" contenteditable="false"></a>`);
         await click("img");
         await animationFrame();
         await expectElementCount(".o-we-linkpopover", 0);

@@ -485,7 +485,7 @@ export class LinkPlugin extends Plugin {
         }
 
         const selectionTextContent = selection?.textContent();
-        const isImage = !!findInSelection(selection, "img");
+        const isImage = !!findInSelection(selection, "img, .fa");
 
         const applyCallback = (url, label, classes, customStyle, linkTarget, attachmentId) => {
             if (this.linkInDocument) {
@@ -680,7 +680,7 @@ export class LinkPlugin extends Plugin {
                     link.setAttribute("style", saveCustomStyle);
                 }
                 // Remove the current link (linkInDocument) if it has no content
-                if (cleanZWChars(link.textContent) === "" && !link.querySelector("img")) {
+                if (cleanZWChars(link.textContent) === "" && !link.querySelector("img, .fa")) {
                     const [anchorNode, anchorOffset] = rightPos(link);
                     // We force the cursor after the link before removing the link
                     // to ensure we don't lose the selection position.
@@ -791,7 +791,7 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected and the selection
             // is fully contained in the image parent link.
-            const imageNode = findInSelection(selection, "img");
+            const imageNode = findInSelection(selection, "img, .fa");
             const parentElement = imageNode?.parentElement;
             const linkContainingImage = imageNode && closestElement(imageNode, "a");
             if (
