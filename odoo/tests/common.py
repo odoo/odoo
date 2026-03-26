@@ -943,6 +943,7 @@ class ChromeBrowser:
         self.ws = None  # websocket
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
         self.chrome_pid = None
+        self.chrome_log_level = logging.RUNBOT
 
         otc = odoo.tools.config
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
@@ -1013,14 +1014,40 @@ class ChromeBrowser:
 
     def stop(self):
         if self.ws is not None:
-            self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
-            self._websocket_send('Browser.close')
-            self._logger.info("Closing websocket connection")
-            self.ws.close()
+            try:
+                self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
+                self._websocket_send('Browser.close')
+                self._logger.info("Closing websocket connection")
+                self.ws.close()
+            except Exception as e:  # noqa: BLE001
+                self._logger.error("Error while terminating chrome: %s", e)
+                self.chrome_log_level = logging.RUNBOT
         if self.chrome_pid is not None:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
             os.kill(self.chrome_pid, signal.SIGTERM)
+            t = time.time() + 5
+            while time.time() < t:
+                pid, _status = os.waitpid(self.chrome_pid, os.WNOHANG)
+                if pid == self.chrome_pid:
+                    break
+                time.sleep(0.25)
+            else:
+                self.chrome_log_level = logging.RUNBOT
+                os.kill(self.chrome_pid, signal.SIGKILL)
+                os.waitpid(self.chrome_pid, 0)
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
+            log = self.read_log()
+            if log:
+                save_test_file(
+                    self.test_class.__name__,
+                    log,
+                    prefix='chrome_log_',
+                    extension='txt',
+                    document_type="Chrome Log",
+                    logger=self._logger,
+                    loglevel=self.chrome_log_level,
+                    directory='chrome_logs',
+                )
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir, ignore_errors=True)
         # Restore previous signal handler
@@ -1597,30 +1624,19 @@ which leads to stray network requests and inconsistencies."""
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
         err = ChromeBrowserException("failed")
-        save_log = functools.partial(
-            save_test_file,
-            self.test_class.__name__,
-            self.read_log(),
-            prefix='chrome_log_',
-            extension='txt',
-            document_type="Chrome Log",
-            logger=self._logger,
-            directory='chrome_logs',
-        )
         try:
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
-                save_log(loglevel=logging.INFO)
+                self.chrome_log_level = logging.INFO
                 return
         except CancelledError:
             # regular-ish shutdown
-            save_log(loglevel=logging.INFO)
+            self.chrome_log_level = logging.INFO
             return
         except Exception as e:
             err = e
 
-        save_log()
         self.take_screenshot()
         self._save_screencast()
         if isinstance(err, ChromeBrowserException):
