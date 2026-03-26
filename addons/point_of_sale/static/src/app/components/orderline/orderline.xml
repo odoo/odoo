@@ -41,6 +41,9 @@
                             <BadgeTag color="note.colorIndex" text="note.text"/>
                         </t>
                     </div>
+                    <li t-if="vals.isServiceFeeLine" class="price-per-unit">
+                        <em><t t-out="vals.serviceFeeDisplayInfo.amount" /> </em><t t-out="vals.serviceFeeDisplayInfo.description" />
+                    </li>
                     <t t-call-slot="default" />
                 </ul>
             </div>

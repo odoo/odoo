@@ -244,13 +244,22 @@ class PosOrder(models.Model):
         self.ensure_one()
         company = self.company_id
 
-        for line in self.lines:
+        service_fee_lines = self.lines.filtered(
+            lambda line: line.product_id == self.preset_id.service_fee_product_id,
+        )
+        other_lines = self.lines - service_fee_lines
+
+        # First process regular lines so service fee can derive taxes from them
+        for line in other_lines:
             if len(line.combo_line_ids):
                 self._compute_combo_price(line)
             elif line.product_id == self.preset_id.delivery_product_id:
                 self._compute_line_price(line, price=self.preset_id.delivery_product_price)
             elif not line.combo_parent_id:
                 self._compute_line_price(line)
+
+        # Then process service fee lines using the now-computed applicable lines
+        self._compute_service_fee_price()
 
         order_lines = self.lines
         base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
@@ -275,6 +284,69 @@ class PosOrder(models.Model):
         taxes = tax_ids_after_fiscal_position.compute_all(price, self.currency_id, line.qty, product=product, partner=self.partner_id)
         line.price_subtotal = taxes['total_excluded']
         line.price_subtotal_incl = taxes['total_included']
+
+    def _compute_service_fee_price(self):
+        preset = self.preset_id
+        if not preset.service_fee:
+            return
+
+        service_fee_product = preset.service_fee_product_id
+        applicable_lines = self.lines.filtered(
+            lambda line: line.product_id != service_fee_product
+            and line.product_id != self.config_id.tip_product_id
+            and not line.combo_parent_id,
+        )
+
+        if not applicable_lines:
+            return
+
+        # Build base lines from applicable order lines to derive the correct taxes
+        base_lines = [line._prepare_base_line_for_taxes_computation() for line in applicable_lines]
+
+        # For 'pre_discount', ignore discounts when computing service fee
+        if preset.service_fee_based_on == 'pre_discount':
+            for bl in base_lines:
+                bl['discount'] = 0
+
+        self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
+        self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
+
+        amount = preset.service_fee_amount
+        if preset.service_fee_type == 'percent':
+            amount *= 100
+
+        # Group base lines individually (line by line) so each produces its own
+        # service fee contribution with the correct tax breakdown
+        def grouping_function(base_line):
+            return {'line_id': base_line['id']}
+
+        service_fee_base_lines = self.env['account.tax']._reduce_base_lines_to_target_amount(
+            base_lines=base_lines,
+            company=self.company_id,
+            amount_type=preset.service_fee_type,
+            amount=amount,
+            grouping_function=grouping_function,
+        )
+
+        # Update existing service fee lines: each gets the price_unit
+        # and tax_ids from its corresponding reduced base line
+        existing_service_fee_lines = self.lines.filtered(
+            lambda line: line.product_id == service_fee_product,
+        )
+        for service_fee_line, bl in zip(existing_service_fee_lines, service_fee_base_lines):
+            tax_ids = self.env['account.tax']
+            for tax_data in bl['tax_details']['taxes_data']:
+                tax_ids |= tax_data['tax']
+            tax_ids_after_fp = self.fiscal_position_id.map_tax(tax_ids)
+            taxes = tax_ids_after_fp.compute_all(
+                bl['price_unit'], self.currency_id, 1,
+                product=service_fee_product,
+                partner=self.partner_id,
+            )
+            service_fee_line.price_unit = bl['price_unit']
+            service_fee_line.tax_ids = tax_ids
+            service_fee_line.price_subtotal = taxes['total_excluded']
+            service_fee_line.price_subtotal_incl = taxes['total_included']
 
     def _compute_combo_price(self, parent_line):
         """

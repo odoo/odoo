@@ -13,7 +13,8 @@ patch(PosOrderline.prototype, {
                 (this.config.tip_product_id &&
                     this.product_id.id === this.config.tip_product_id?.id) ||
                 (this.config.discount_product_id &&
-                    this.product_id.id === this.config.discount_product_id?.id)
+                    this.product_id.id === this.config.discount_product_id?.id) ||
+                this.isServiceFeeLine()
             )
         );
     },
@@ -26,5 +27,14 @@ patch(PosOrderline.prototype, {
 
     get isValidForRefund() {
         return super.isValidForRefund && !this.isDiscountLine;
+    },
+
+    isServiceFeeApplicable() {
+        return (
+            super.isServiceFeeApplicable() &&
+            ((this.order_id.preset_id?.service_fee_based_on === "post_discount" &&
+                this.isDiscountLine) ||
+                !this.isDiscountLine)
+        );
     },
 });

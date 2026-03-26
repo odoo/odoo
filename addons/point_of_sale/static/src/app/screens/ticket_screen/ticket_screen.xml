@@ -15,11 +15,27 @@
                             onSearch.bind="this.onSearch"
                             onFilterSelected.bind="this.onFilterSelected" />
                         <div class="filter-buttons buttons d-flex gap-1 overflow-auto" t-if="usePreset" t-att-class="{'mt-2 mt-sm-0': this.ui.isSmall}">
-                            <button t-foreach="this.pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
+                            <t t-set="presets" t-value="this.pos.models['pos.preset'].getAll()"/>
+                            <t t-set="dropdownPresets" t-value="presets.slice(3)"/>
+                            <button t-foreach="presets.slice(0, 3)" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
                                 t-att-class="{'active': this.state.selectedPreset === preset}">
                                 <t t-out="preset.name"/>
                             </button>
+                            <Dropdown t-if="dropdownPresets.length > 0">
+                                <button class="btn btn-lg btn-secondary text-nowrap d-flex align-items-center gap-1"
+                                    t-att-class="{'active': dropdownPresets.includes(this.state.selectedPreset)}">
+                                    <span>More</span>
+                                    <i class="fa fa-caret-down"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <DropdownItem t-foreach="dropdownPresets" t-as="preset" t-key="preset.id"
+                                        class="this.state.selectedPreset === preset ? 'active' : ''"
+                                        onSelected="() => this.onPresetSelected(preset)">
+                                        <t t-out="preset.name"/>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
                         </div>
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
                             <span class="page me-2" role="button" t-on-click="this.onClickPageNbr"><t t-out="this.getPageNumber()" /></span>

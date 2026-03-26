@@ -184,6 +184,18 @@ export class OrderSummary extends Component {
             }
             return;
         }
+
+        if (selectedLine?.isServiceFeeLine() && order.preset_id?.service_fee_type !== "fixed") {
+            this.numberBuffer.reset();
+            if (key === "Backspace") {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Cannot modify a service fee"),
+                    body: _t("Service fees cannot be modified from the order."),
+                });
+            }
+            return;
+        }
+
         if (
             selectedLine &&
             this.pos.numpadMode === "quantity" &&

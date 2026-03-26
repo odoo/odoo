@@ -438,6 +438,33 @@ export class PosOrderline extends PosOrderlineAccounting {
     get prepQty() {
         return this.prep_line_ids?.reduce((sum, pl) => sum + pl.quantity - pl.cancelled, 0) ?? 0;
     }
+
+    isServiceFeeApplicable() {
+        return !this.isTipLine() && !this.isServiceFeeLine();
+    }
+    isServiceFeeLine() {
+        const serviceFeeProductIds = this.models["pos.preset"]
+            .getAll()
+            .map((preset) => preset.service_fee_product_id?.id)
+            .filter(Boolean);
+        return serviceFeeProductIds.includes(this.product_id?.id);
+    }
+    getServiceFeeDisplayInfo() {
+        const preset = this.order_id?.preset_id;
+        if (!preset || !this.isServiceFeeLine()) {
+            return {};
+        }
+        return {
+            amount:
+                preset.service_fee_type === "percent"
+                    ? `${formatFloat(preset.service_fee_amount * 100, { trailingZeros: false })}%`
+                    : this.currencyDisplayPrice,
+            description:
+                preset.service_fee_based_on === "pre_discount"
+                    ? _t(" (before discount)")
+                    : _t(" (after discount)"),
+        };
+    }
 }
 
 registry.category("pos_available_models").add(PosOrderline.pythonModel, PosOrderline);

@@ -137,3 +137,10 @@ export function hasCustomerNote(note) {
         },
     ];
 }
+
+export function hasServiceFee(amount) {
+    return {
+        content: `order has service fee of '${amount}'`,
+        trigger: `:has(.product-name:contains("Service Fee")):has(.price:contains("${amount}"))`,
+    };
+}

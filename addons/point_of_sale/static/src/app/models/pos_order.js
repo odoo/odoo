@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 import { getStrNotes } from "./utils/order_change";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 const { DateTime } = luxon;
 
@@ -636,7 +637,12 @@ export class PosOrder extends PosOrderAccounting {
 
     // NOTE: Overrided in pos_loyalty to put loyalty rewards at this end of array.
     getOrderlines() {
-        return this.lines;
+        const regularLines = [];
+        const serviceFeeLines = [];
+        for (const line of this.lines) {
+            (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
+        }
+        return [...regularLines, ...serviceFeeLines];
     }
 
     get floatingOrderName() {
@@ -949,6 +955,111 @@ export class PosOrder extends PosOrderAccounting {
             removedQuantity: removedQuantity,
             noteUpdate: noteUpdate,
         };
+    }
+
+    get serviceFeeLines() {
+        return this.lines?.filter((line) => line.isServiceFeeLine());
+    }
+    removeAllServiceFeeLines() {
+        for (const line of this.serviceFeeLines) {
+            line.delete();
+        }
+    }
+    recomputeServiceFees() {
+        const taxKey = (taxIds) =>
+            taxIds
+                .map((tax) => tax.id)
+                .sort((a, b) => a - b)
+                .join("_");
+
+        if (this.state !== "draft") {
+            return;
+        }
+
+        if (!this.preset_id?.service_fee) {
+            this.removeAllServiceFeeLines();
+            return;
+        }
+
+        const preset = this.preset_id;
+        const serviceFeeProduct = preset?.service_fee_product_id;
+
+        const lines = this.getOrderlines();
+        const serviceFeeApplicableLines = lines.filter((line) => line.isServiceFeeApplicable());
+
+        if (serviceFeeApplicableLines.length === 0) {
+            this.removeAllServiceFeeLines();
+            return;
+        }
+
+        const serviceFeeLinesMap = {};
+        (this.serviceFeeLines || []).forEach((line) => {
+            const key = taxKey(line.tax_ids);
+            serviceFeeLinesMap[key] = line;
+        });
+
+        const baseLines = serviceFeeApplicableLines.map((line) =>
+            accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                line,
+                line.prepareBaseLineForTaxesComputationExtraValues()
+            )
+        );
+
+        let priceUnit;
+        if (preset.service_fee_based_on === "pre_discount") {
+            baseLines.forEach((line) => {
+                line.discount = 0;
+            });
+        }
+
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company_id);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company_id);
+        let amount = preset.service_fee_amount;
+        if (preset.service_fee_type === "percent") {
+            amount *= 100;
+        }
+        const serviceFeeBaseLines = accountTaxHelpers.reduce_base_lines_to_target_amount(
+            baseLines,
+            this.company_id,
+            preset.service_fee_type,
+            amount,
+            {
+                grouping_function: (base_line) => ({
+                    grouping_key: { product_id: serviceFeeProduct },
+                    raw_grouping_key: { product_id: serviceFeeProduct.id },
+                }),
+            }
+        );
+
+        for (const baseLine of serviceFeeBaseLines) {
+            const extraTaxData = accountTaxHelpers.export_base_line_extra_tax_data(baseLine);
+            const key = taxKey(baseLine.tax_ids);
+            const existingLine = serviceFeeLinesMap[key];
+
+            if (existingLine) {
+                existingLine.extra_tax_data = extraTaxData;
+                existingLine.price_unit = baseLine.price_unit;
+                delete serviceFeeLinesMap[key];
+            } else {
+                priceUnit = baseLine.price_unit;
+                this.models["pos.order.line"].create({
+                    order_id: this,
+                    product_id: serviceFeeProduct,
+                    price_unit: priceUnit,
+                    tax_ids: [["link", ...baseLine.tax_ids]],
+                    product_tmpl_id: serviceFeeProduct.product_tmpl_id,
+                    qty: 1,
+                    price_type: "manual",
+                    // course_id is only available when pos_restaurant is installed
+                    course_id: this.hasCourses?.() ? this.getLastCourse() : undefined,
+                    extra_tax_data: extraTaxData,
+                });
+            }
+        }
+
+        Object.values(serviceFeeLinesMap).forEach((line) => {
+            line.delete();
+        });
     }
 }
 

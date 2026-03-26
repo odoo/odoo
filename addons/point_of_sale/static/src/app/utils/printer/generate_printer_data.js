@@ -183,7 +183,6 @@ export class GeneratePrinterData {
         return this.order.lines.map((line) => {
             const productData = { ...line.product_id.raw };
             productData.display_name = line.getFullProductName();
-
             return {
                 ...line.raw,
                 product_data: productData,
@@ -191,6 +190,8 @@ export class GeneratePrinterData {
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
+                is_service_fee_line: line.isServiceFeeLine(),
+                service_fee_display_info: line.getServiceFeeDisplayInfo(),
             };
         });
     }
@@ -220,6 +221,17 @@ export class GeneratePrinterData {
                   this.formatCurrency(this.order.displayPrice * (p / 100)),
               ])
             : false;
+
+        const serviceFeeLines = this.order.serviceFeeLines;
+        let serviceFee = false;
+        const serviceFeeLine = serviceFeeLines?.[0];
+        if (serviceFeeLine) {
+            serviceFee = {
+                amount: serviceFeeLine.currencyDisplayPrice,
+                qty: serviceFeeLine.qty,
+                name: serviceFeeLine.getFullProductName(),
+            };
+        }
 
         return {
             order: this.order.raw,
@@ -251,6 +263,7 @@ export class GeneratePrinterData {
                 prices: this.generateTaxData(),
                 cashier_name: this.order.getCashierName(),
                 formated_date_order: this.order.formatDateOrTime("date_order", "datetime"),
+                service_fee: serviceFee,
             },
         };
     }

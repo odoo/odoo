@@ -212,15 +212,25 @@ export class ProductScreen extends Component {
             "-": "o_colorlist_item_numpad_color_3",
         };
 
+        const order = this.currentOrder;
         const defaultLastRowValues =
             DEFAULT_LAST_ROW.map((button) => button.value) + [BACKSPACE.value];
 
         return getButtons(DEFAULT_LAST_ROW, [
-            { value: "quantity", text: _t("Qty") },
+            {
+                value: "quantity",
+                text: _t("Qty"),
+                disabled:
+                    order?.getSelectedOrderline()?.isServiceFeeLine() &&
+                    order?.preset_id?.service_fee_type === "percent",
+            },
             {
                 value: "discount",
                 text: _t("%"),
-                disabled: !this.pos.config.manual_discount || this.pos.cashier._role === "minimal",
+                disabled:
+                    !this.pos.config.manual_discount ||
+                    this.pos.cashier._role === "minimal" ||
+                    order?.getSelectedOrderline()?.isServiceFeeLine(),
             },
             {
                 value: "price",
@@ -234,7 +244,9 @@ export class ProductScreen extends Component {
             ...button,
             disabled:
                 button.disabled ||
-                (button.value === SWITCHSIGN.value && this.pos.cashier._role === "minimal"),
+                (button.value === SWITCHSIGN.value && this.pos.cashier._role === "minimal") ||
+                (order?.getSelectedOrderline()?.isServiceFeeLine() &&
+                    order?.preset_id?.service_fee_type === "percent"),
             class: `
                 ${defaultLastRowValues.includes(button.value) ? "" : ""}
                 ${colorClassMap[button.value] || ""}

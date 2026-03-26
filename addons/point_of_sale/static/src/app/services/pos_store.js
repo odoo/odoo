@@ -43,6 +43,8 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_screen";
 import { Domain } from "@web/core/domain";
+import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
+import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -177,6 +179,51 @@ export class PosStore extends WithLazyGetterTrap {
         });
 
         this.handleQRPaymentLines();
+
+        this.debouncedRecomputeServiceFees = debounce((order = this.getOrder()) => {
+            order.recomputeServiceFees();
+        });
+        this.models["pos.order.line"].addEventListener("create", ({ ids }) => {
+            const line = this.models["pos.order.line"].get(ids[0]);
+            if (line && !line?.isServiceFeeLine() && !line?.isDiscountLine) {
+                const order = line?.order_id;
+                this.debouncedRecomputeServiceFees(order);
+            }
+        });
+
+        this.models["pos.order.line"].addEventListener("update", ({ id, fields }) => {
+            const fieldTargetted = fields?.some((field) =>
+                PosOrderlineAccounting.accountingFields.has(field)
+            );
+            const line = this.models["pos.order.line"].get(id);
+            if (fieldTargetted && line && !line.isServiceFeeLine()) {
+                const order = line?.order_id;
+                if (order) {
+                    this.debouncedRecomputeServiceFees(order);
+                }
+            }
+        });
+
+        this.models["pos.order"].addEventListener("create", ({ ids }) => {
+            ids.forEach((id) => {
+                const order = this.models["pos.order"].get(id);
+                if (order.lines.filter((line) => line.isServiceFeeApplicable()).length > 0) {
+                    this.debouncedRecomputeServiceFees(order);
+                }
+            });
+        });
+
+        this.models["pos.order"].addEventListener("update", ({ id, fields }) => {
+            const areAccountingFields = fields?.some(
+                (field) => PosOrderAccounting.accountingFields.has(field) || field === "preset_id"
+            );
+            if (areAccountingFields) {
+                const order = this.models["pos.order"].get(id);
+                if (order) {
+                    this.debouncedRecomputeServiceFees(order);
+                }
+            }
+        });
     }
 
     handleQRPaymentLines() {
@@ -907,7 +954,15 @@ export class PosStore extends WithLazyGetterTrap {
 
     selectOrderLine(order, line) {
         order.selectOrderline(line);
-        this.numpadMode = "quantity";
+        if (line?.isServiceFeeLine()) {
+            if (order.preset_id?.service_fee_type === "fixed") {
+                this.numpadMode = "quantity";
+            } else {
+                this.numpadMode = false;
+            }
+        } else {
+            this.numpadMode = "quantity";
+        }
     }
     // This method should be called every time a product is added to an order.
     // The configure parameter is available if the orderline already contains all

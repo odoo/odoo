@@ -129,6 +129,15 @@ export class SplitBillScreen extends Component {
         }
     }
 
+    async handleServiceFeeLines(originalOrder, newOrder) {
+        if (originalOrder.preset_id?.service_fee) {
+            originalOrder.recomputeServiceFees();
+            if (!this.isTransferred) {
+                newOrder.recomputeServiceFees();
+            }
+        }
+    }
+
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -236,6 +245,7 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
         await this.handleDiscountLines(originalOrder, newOrder);
+        await this.handleServiceFeeLines(originalOrder, newOrder);
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         await this.pos.onPrepLinesSynced(prepLinePairs);
         originalOrder.customer_count -= 1;
