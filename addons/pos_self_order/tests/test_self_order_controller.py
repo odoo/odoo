@@ -141,6 +141,40 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertEqual(len(data['pos.order']), 1)
         self.assertEqual(data['pos.order'][0]['id'], order2.id)
 
+    def test_process_order_in_kiosk_allows_payment(self):
+        self.pos_config.self_ordering_mode = 'kiosk'
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        order_data = self._create_order_data(
+            state='draft',
+            product=self.cola,
+            qty=3,
+            price_unit=1.0,
+            price_subtotal_incl=3.0,
+            payments=[[0, 0, {"payment_method_id": self.bank_payment_method.id, "amount": 3.0}]]
+        )
+
+        data = self.make_request_to_controller('/pos-self-order/process-order/kiosk', order_data)
+        pos_order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+
+        self.assertEqual(len(pos_order.payment_ids), 1)
+
+    def test_process_order_in_mobile_does_not_allow_payment(self):
+        self.pos_config.self_ordering_mode = 'mobile'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        order_data = self._create_order_data(
+            state='draft',
+            product=self.cola,
+            qty=3,
+            price_unit=1.0,
+            price_subtotal_incl=3.0,
+            payments=[[0, 0, {"payment_method_id": self.bank_payment_method.id, "amount": 3.0}]]
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
+        pos_order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+
+        self.assertEqual(len(pos_order.payment_ids), 0)
+
     def test_access_right_with_message_follower(self):
         """ Test to ensure that user data is still displayed when a message follower is set on the order """
         self.pos_config.self_ordering_mode = 'mobile'
@@ -170,7 +204,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertEqual(len(data['pos.order']), 1)
         self.assertEqual(data['pos.order'][0]['id'], pos_order.id)
 
-    def _create_order_data(self, state, product, qty, price_unit, price_subtotal_incl=None):
+    def _create_order_data(self, state, product, qty, price_unit, price_subtotal_incl=None, payments=[]):
         return {
             'access_token': self.pos_config.access_token,
             'table_identifier': self.pos_table_1.identifier,
@@ -180,7 +214,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 'state': state,
                 'preset_id': self.in_preset.id,
                 'session_id': self.pos_config.current_session_id.id,
-                'amount_total': 0,
+                'amount_total': price_subtotal_incl,
                 'amount_paid': 0,
                 'amount_tax': 0,
                 'amount_return': 0,
@@ -194,6 +228,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
                     'tax_ids': [(6, 0, product.taxes_id.ids)],
                     'price_subtotal_incl': price_subtotal_incl or 0,
                 }]],
+                'payment_ids': payments,
             }
         }
 

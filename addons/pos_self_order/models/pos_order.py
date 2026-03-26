@@ -140,39 +140,29 @@ class PosOrder(models.Model):
         return []
 
     @api.model
-    def _check_pos_order_payments(self, pos_config, order, payment):
-        existing_order = pos_config.env['pos.order'].browse(order.get('id'))
-        existing_payments = existing_order.payment_ids if existing_order.exists() else pos_config.env['pos.payment']
+    def _check_pos_order_payment(self, device_type, order, payment):
+        if device_type != "kiosk" or not payment or len(payment) != 1 or len(payment[0]) != 3:
+            return []
 
-        if payment[0] == Command.DELETE and payment[1] in existing_payments.ids:
-            return [Command.DELETE, payment[1]]
-        if payment[0] == Command.UNLINK and payment[1] in existing_payments.ids:
-            return [Command.UNLINK, payment[1]]
-        if payment[0] == Command.CREATE or payment[0] == Command.UPDATE:
-            payment_data = payment[2]
+        command, payment_id = payment[0][0:2]
+        if command != Command.CREATE or payment_id != 0:
+            return []
 
-            return [payment[0], 0 if payment[0] == Command.CREATE else payment[1], {
-                'amount': payment_data.get('amount'),
-                'card_brand': payment_data.get('card_brand'),
-                'card_no': payment_data.get('card_no'),
-                'card_type': payment_data.get('card_type'),
-                'cardholder_name': payment_data.get('cardholder_name'),
-                'is_change': payment_data.get('is_change'),
-                'name': payment_data.get('name'),
-                'payment_date': payment_data.get('payment_date'),
-                'payment_method_authcode': payment_data.get('payment_method_authcode'),
-                'payment_method_id': payment_data.get('payment_method_id'),
-                'payment_method_issuer_bank': payment_data.get('payment_method_issuer_bank'),
-                'payment_method_payment_mode': payment_data.get('payment_method_payment_mode'),
-                'payment_ref_no': payment_data.get('payment_ref_no'),
-                'payment_status': payment_data.get('payment_status'),
-                'pos_order_id': existing_order.id if existing_order.exists() else None,
-                'qr_code': payment_data.get('qr_code'),
-                'ticket': payment_data.get('ticket'),
-                'transaction_id': payment_data.get('transaction_id'),
-                'uuid': payment_data.get('uuid'),
-            }]
-        return []
+        payment_line = payment[0][2]
+        if "amount" not in payment_line or payment_line["amount"] != order.get("amount_total", 0):
+            return []
+
+        safe_fields = [
+            "payment_method_id", "card_type", "card_brand", "card_no", "cardholder_name",
+            "payment_ref_no", "payment_method_authcode", "payment_method_issuer_bank",
+            "payment_method_payment_mode", "qr_code", "transaction_id", "ticket", "uuid",
+        ] + self.env["pos.payment"]._get_additional_payment_fields()
+
+        return [[Command.CREATE, 0, {
+            'amount': order.get('amount_total'),
+            'payment_status': 'done',
+            **{field: payment_line.get(field) for field in safe_fields}
+        }]]
 
     @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
@@ -189,7 +179,9 @@ class PosOrder(models.Model):
         fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
-        payments = [self._check_pos_order_payments(pos_config, order, payment) for payment in order.get('payment_ids', [])]
+        lines = [line for line in lines if len(line)]
+        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
+        payment_lines = [line for line in payment_lines if len(line)]
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
 
@@ -237,7 +229,7 @@ class PosOrder(models.Model):
             'uuid': order.get('uuid'),
             'has_deleted_line': order.get('has_deleted_line'),
             'lines': lines,
-            'payment_ids': payments,
+            'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 
