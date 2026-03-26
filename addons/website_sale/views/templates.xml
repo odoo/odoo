@@ -1379,19 +1379,23 @@
                         </div>
                     </div>
                 </div>
+                <t
+                    t-set="show_attribute_filters"
+                    t-value="opt_wsale_attributes or opt_wsale_attributes_top"
+                />
                 <div t-if="opt_wsale_categories" class="accordion-item d-lg-none">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
+                        <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'collapsed' if show_attribute_filters else ''}}"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_categories"
-                                aria-expanded="false"
+                                t-att-aria-expanded="'false' if show_attribute_filters else 'true'"
                                 aria-controls="o_wsale_offcanvas_categories">
                                 <b>Categories</b>
                         </button>
                     </h2>
                     <div id="o_wsale_offcanvas_categories"
-                         class="accordion-collapse collapse"
+                         t-attf-class="accordion-collapse collapse {{'show' if not show_attribute_filters else ''}}"
                          aria-labelledby="o_wsale_offcanvas_categories_header">
                         <div class="accordion-body pt-0">
                             <t t-call="website_sale.products_categories_list">
@@ -1402,10 +1406,13 @@
                         </div>
                     </div>
                 </div>
-                <t t-call="website_sale.product_attribute_filters_form">
+                <t
+                    t-if="show_attribute_filters"
+                    t-call="website_sale.product_attribute_filters_form"
+                >
                     <t t-set="isMobile" t-value="True"/>
                 </t>
-                <t t-if="opt_wsale_filter_price and (opt_wsale_attributes or opt_wsale_attributes_top)"
+                <t t-if="opt_wsale_filter_price and show_attribute_filters"
                    t-call="website_sale.filter_products_price">
                     <t
                         t-set="_classes"
