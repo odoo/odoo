@@ -1,4 +1,5 @@
-import { Component, useState, xml } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
@@ -148,10 +149,10 @@ test("offlineUI: react to [data-available-offline] attribute changes", async () 
     class Root extends Component {
         static template = xml`
             <div>
-                <button type="button" class="btn1" t-att="{ 'data-available-offline': state.btn1Available }">
+                <button type="button" class="btn1" t-att="{ 'data-available-offline': this.state.btn1Available }">
                     First
                 </button>
-                <button type="button" class="btn2" t-att="{ 'data-available-offline': state.btn2Available }">
+                <button type="button" class="btn2" t-att="{ 'data-available-offline': this.state.btn2Available }">
                     Second
                 </button>
             </div>

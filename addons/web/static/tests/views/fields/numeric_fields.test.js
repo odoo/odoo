@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, keyDown, pointerDown, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -10,7 +11,7 @@ import {
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
 class Partner extends models.Model {
@@ -250,7 +251,7 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
 
     class MyComponent extends Component {
         static template = xml`
-            <main t-ref="numpadDecimal">
+            <main t-custom-ref="numpadDecimal">
                 <input type="text" placeholder="input 1" />
                 <input t-if="this.state.showOtherInput" type="text" placeholder="input 2" />
             </main>

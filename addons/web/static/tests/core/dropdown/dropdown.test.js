@@ -1,3 +1,4 @@
+import { useRef, useState } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -12,7 +13,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -188,7 +189,7 @@ test("close on outside click in shadow dom", async () => {
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
         static props = [];
-        static template = xml`<div class="shadow-root" t-ref="shadow-root-ref" />`;
+        static template = xml`<div class="shadow-root" t-custom-ref="shadow-root-ref" />`;
         setup() {
             const shadowRootRef = useRef("shadow-root-ref");
             onMounted(() => {

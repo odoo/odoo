@@ -1,7 +1,7 @@
+import { reactive } from "@web/owl2/utils";
 import { expect, test, getFixture } from "@odoo/hoot";
 import { click, press, keyDown, keyUp, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { reactive } from "@odoo/owl";
 import {
     contains,
     defineModels,

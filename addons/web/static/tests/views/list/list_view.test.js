@@ -1,3 +1,4 @@
+import { onRendered, useRef } from "@web/owl2/utils";
 import {
     animationFrame,
     clear,
@@ -29,7 +30,7 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot";
-import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
+import { Component, markup, onWillStart, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -12289,7 +12290,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     const def = new Deferred();
 
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
+        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
         static props = {
             ...standardFieldProps,
         };

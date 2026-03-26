@@ -1,8 +1,8 @@
-import { render } from "@web/owl2/utils";
+import { render, useState } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { getService, mountWithCleanup } from "../web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -44,7 +44,7 @@ test("a component can be the  UI active element: simple usage", async () => {
         static template = xml`
             <div>
                 <h1>My Component</h1>
-                <div t-if="this.hasRef" id="owner" t-ref="delegatedRef">
+                <div t-if="this.hasRef" id="owner" t-custom-ref="delegatedRef">
                 <input type="text"/>
             </div>
             </div>
@@ -73,7 +73,7 @@ test("UI active element: trap focus", async () => {
             <div>
                 <h1>My Component</h1>
                 <input type="text" placeholder="outerUIActiveElement"/>
-                <div t-ref="delegatedRef">
+                <div t-custom-ref="delegatedRef">
                     <input type="text" placeholder="withFocus"/>
                 </div>
             </div>
@@ -104,9 +104,9 @@ test("UI active element: trap focus - default focus with autofocus", async () =>
             <div>
                 <h1>My Component</h1>
                 <input type="text" placeholder="outerUIActiveElement"/>
-                <div t-ref="delegatedRef">
+                <div t-custom-ref="delegatedRef">
                     <input type="text" placeholder="withoutFocus"/>
-                    <input type="text" t-ref="autofocus" placeholder="withAutoFocus"/>
+                    <input type="text" t-custom-ref="autofocus" placeholder="withAutoFocus"/>
                 </div>
             </div>
         `;
@@ -141,7 +141,7 @@ test("do not become UI active element if no element to focus", async () => {
             <div>
                 <h1>My Component</h1>
                 <input type="text" placeholder="outerUIActiveElement"/>
-                <div id="idActiveElement" t-ref="delegatedRef">
+                <div id="idActiveElement" t-custom-ref="delegatedRef">
                     <div>
                         <span> No focus element </span>
                     </div>
@@ -164,7 +164,7 @@ test("become UI active element if no element to focus but the container is focus
             <div>
                 <h1>My Component</h1>
                 <input type="text" placeholder="outerUIActiveElement"/>
-                <div id="idActiveElement" t-ref="delegatedRef" tabindex="-1">
+                <div id="idActiveElement" t-custom-ref="delegatedRef" tabindex="-1">
                     <div>
                         <span> No focus element </span>
                     </div>
@@ -187,7 +187,7 @@ test("UI active element: trap focus - first or last tabable changes", async () =
             <div>
                 <h1>My Component</h1>
                 <input type="text" name="outer"/>
-                <div id="idActiveElement" t-ref="delegatedRef">
+                <div id="idActiveElement" t-custom-ref="delegatedRef">
                     <div>
                         <input type="text" name="a" t-if="this.show.a"/>
                         <input type="text" name="b"/>
@@ -229,7 +229,7 @@ test("UI active element: trap focus is not bypassed using invisible elements", a
             <div>
                 <h1>My Component</h1>
                 <input type="text" placeholder="outerUIActiveElement"/>
-                <div t-ref="delegatedRef">
+                <div t-custom-ref="delegatedRef">
                     <input type="text" placeholder="withFocus"/>
                     <input class="d-none" type="text" placeholder="withFocusNotDisplayed"/>
                     <div class="d-none">

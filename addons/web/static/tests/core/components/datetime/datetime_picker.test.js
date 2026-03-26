@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
 import {
