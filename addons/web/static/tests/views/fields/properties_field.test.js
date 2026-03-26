@@ -2970,3 +2970,32 @@ test("properties definition: test display and edit", async () => {
         message: "4 field value should be present : 1 for each definition.",
     });
 });
+
+test.tags("desktop");
+test("many2one property in list view", async () => {
+    ResCompany._records[0].definitions.push({
+        name: "m2o_property",
+        string: "My Many2one Property",
+        type: "many2one",
+        comodel: "res.users",
+    });
+    Partner._records[0].properties = {
+        m2o_property: [1, "Alice"],
+    };
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="display_name"/>
+                <field name="properties"/>
+            </list>`,
+    });
+
+    expect(".o_list_table thead th").toHaveCount(3);
+    await contains(".o_optional_columns_dropdown_toggle").click();
+    await contains(".o-dropdown-item input[name='properties.m2o_property']").click();
+    expect(".o_list_table thead th").toHaveCount(4);
+    expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["first partner", "Alice"]);
+    expect(".o_data_row:eq(0) .o_m2o_avatar img").toHaveCount(1);
+});
