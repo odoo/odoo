@@ -1,3 +1,4 @@
+import { onRendered } from "@web/owl2/utils";
 import { beforeEach, destroy, expect, test } from "@odoo/hoot";
 import { queryAll, queryAllAttributes, queryAllTexts, resize } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
@@ -12,7 +13,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, onRendered, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { mockOffline } from "../web_test_helpers";

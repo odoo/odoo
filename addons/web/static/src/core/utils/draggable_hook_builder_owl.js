@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillUnmount, reactive, useExternalListener } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { onWillUnmount, proxy } from "@odoo/owl";
 import { useThrottleForAnimation } from "./timing";
 import { makeDraggableHook as nativeMakeDraggableHook } from "./draggable_hook_builder";
 
@@ -19,7 +19,7 @@ export function makeDraggableHook(params) {
             setup: useLayoutEffect,
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,
-            wrapState: reactive,
+            wrapState: proxy,
         },
     });
 }

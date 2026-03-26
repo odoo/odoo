@@ -1,14 +1,15 @@
+import { useRef } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryRect, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useRef, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
 
 test(`resizable input`, async () => {
     class ResizableInput extends Component {
-        static template = xml`<input class="resizable-input" t-ref="input"/>`;
+        static template = xml`<input class="resizable-input" t-custom-ref="input"/>`;
         static props = ["*"];
 
         setup() {
@@ -24,7 +25,7 @@ test(`resizable input`, async () => {
 
 test(`resizable textarea`, async () => {
     class ResizableTextArea extends Component {
-        static template = xml`<textarea class="resizable-textarea" t-ref="textarea"/>`;
+        static template = xml`<textarea class="resizable-textarea" t-custom-ref="textarea"/>`;
         static props = ["*"];
 
         setup() {
@@ -40,7 +41,7 @@ test(`resizable textarea`, async () => {
 
 test(`resizable textarea with minimum height`, async () => {
     class ResizableTextArea extends Component {
-        static template = xml`<textarea class="resizable-textarea" t-ref="textarea"/>`;
+        static template = xml`<textarea class="resizable-textarea" t-custom-ref="textarea"/>`;
         static props = ["*"];
 
         setup() {
@@ -57,7 +58,7 @@ test(`resizable textarea with minimum height`, async () => {
 
 test(`call onResize callback`, async () => {
     class ResizableInput extends Component {
-        static template = xml`<input class="resizable-input" t-ref="input"/>`;
+        static template = xml`<input class="resizable-input" t-custom-ref="input"/>`;
         static props = ["*"];
 
         setup() {
@@ -81,7 +82,7 @@ test(`call onResize callback`, async () => {
 
 test(`call onResize callback after resizing text area`, async () => {
     class ResizableTextArea extends Component {
-        static template = xml`<textarea class="resizable-textarea" t-ref="textarea"/>`;
+        static template = xml`<textarea class="resizable-textarea" t-custom-ref="textarea"/>`;
         static props = ["*"];
 
         setup() {

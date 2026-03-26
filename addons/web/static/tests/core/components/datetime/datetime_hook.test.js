@@ -1,7 +1,8 @@
+import { reactive, useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { Component, reactive, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
@@ -18,7 +19,7 @@ const mountInput = async (setup) => {
 
 class Root extends Component {
     static components = { DateTimeInput };
-    static template = xml`<input type="text" class="datetime_hook_input" t-ref="start-date"/>`;
+    static template = xml`<input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>`;
     static props = ["*"];
 
     setup() {
@@ -145,13 +146,13 @@ test("value is not updated if it did not change", async () => {
     expect.verifySteps(["2023-07-07"]);
 });
 
-test("close popover when owner component is unmounted", async() => {
+test("close popover when owner component is unmounted", async () => {
     class Child extends Component {
         static components = { DateTimeInput };
         static props = [];
         static template = xml`
             <div>
-                <input type="text" class="datetime_hook_input" t-ref="start-date"/>
+                <input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>
             </div>
         `;
 
@@ -162,7 +163,7 @@ test("close popover when owner component is unmounted", async() => {
                     value: [false, false],
                     type: "date",
                     range: true,
-                }
+                },
             });
         }
     }

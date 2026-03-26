@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { TagsList } from "@web/core/tags_list/tags_list";
 

@@ -1,14 +1,7 @@
+import { reactive, useChildSubEnv, useState, useSubEnv } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import {
-    Component,
-    onWillStart,
-    reactive,
-    useChildSubEnv,
-    useState,
-    useSubEnv,
-    xml,
-} from "@odoo/owl";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import {
     defineModels,
     fields,

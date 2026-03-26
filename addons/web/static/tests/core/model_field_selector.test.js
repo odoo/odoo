@@ -1,8 +1,8 @@
-import { render } from "@web/owl2/utils";
+import { render, useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     clickPrev,
     followRelation,

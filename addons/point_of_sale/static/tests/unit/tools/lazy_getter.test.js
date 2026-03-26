@@ -1,6 +1,7 @@
+import { onWillRender, reactive, useState } from "@web/owl2/utils";
 import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, onWillRender, reactive, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     mountWithCleanup,
     allowTranslations,

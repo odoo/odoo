@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useState } from "@web/owl2/utils";
 import { advanceTime, after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { leave, queryFirst, waitFor } from "@odoo/hoot-dom";
 import {
@@ -8,7 +9,7 @@ import {
     enableTransitions,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,

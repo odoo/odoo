@@ -1,4 +1,5 @@
-import { Component, useState, xml } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, xml } from "@odoo/owl";
 import { beforeEach, expect, queryFirst, test } from "@odoo/hoot";
 import {
     click,

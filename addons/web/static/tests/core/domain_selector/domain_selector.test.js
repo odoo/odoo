@@ -1,8 +1,8 @@
-import { render } from "@web/owl2/utils";
+import { render, useState } from "@web/owl2/utils";
 import { expect, test, getFixture } from "@odoo/hoot";
 import { press, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {

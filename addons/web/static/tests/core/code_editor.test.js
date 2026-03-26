@@ -1,7 +1,8 @@
+import { reactive, useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, reactive, useState, xml } from "@odoo/owl";
+import { Component, markup, xml } from "@odoo/owl";
 import {
     contains,
     editAce,

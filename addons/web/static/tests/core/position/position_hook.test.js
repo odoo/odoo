@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
 import {
     manuallyDispatchProgrammaticEvent,
@@ -7,7 +8,7 @@ import {
     scroll,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, useRef, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { usePosition } from "@web/core/position/position_hook";
@@ -22,10 +23,10 @@ function getTestComponent(popperOptions, styles = {}, target = false) {
     class TestComp extends Component {
         static template = xml`
             <div id="scroll-container" style="overflow: auto; height: 450px">
-                <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px">
-                    <div id="target" t-ref="target" style="background-color: royalblue; width: 50px; height: 50px"/>
-                    <div id="popper" t-ref="popper" style="background-color: maroon; height: 100px; width: 100px">
-                        <div id="popper-content" t-ref="content" style="background-color: seagreen; height: 50px; width: 50px"/>
+                <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px">
+                    <div id="target" t-custom-ref="target" style="background-color: royalblue; width: 50px; height: 50px"/>
+                    <div id="popper" t-custom-ref="popper" style="background-color: maroon; height: 100px; width: 100px">
+                        <div id="popper-content" t-custom-ref="content" style="background-color: seagreen; height: 50px; width: 50px"/>
                     </div>
                 </div>
             </div>
@@ -186,7 +187,7 @@ test("popper is an inner element", async () => {
     class TestComp extends Component {
         static template = xml`
             <div id="not-popper">
-                <div id="popper" t-ref="popper"/>
+                <div id="popper" t-custom-ref="popper"/>
             </div>
         `;
         static props = ["*"];
@@ -322,7 +323,7 @@ test("is positioned relative to its containing block", async () => {
 function getPopperComponent(popperOptions, target) {
     class PopperComp extends Component {
         static template = xml`
-            <div id="popper" t-ref="popper" style="background-color: plum; height: 100px; width: 100px">
+            <div id="popper" t-custom-ref="popper" style="background-color: plum; height: 100px; width: 100px">
                 <div id="popper-content" style="background-color: coral; height: 50px; width: 50px"/>
             </div>
         `;
@@ -639,7 +640,7 @@ test("iframe: default container is the popper owner's document", async () => {
     // Mount the popper component and check its position
     class Popper extends Component {
         static props = ["*"];
-        static template = xml`<div id="popper" t-ref="popper" />`;
+        static template = xml`<div id="popper" t-custom-ref="popper" />`;
         setup() {
             usePosition("popper", () => target, {
                 position: "top-start",
@@ -661,8 +662,8 @@ test("popper as child of another", async () => {
     class Child extends Component {
         static template = /* xml */ xml`
             <div id="child">
-                <div class="target" t-ref="ref" style="background-color: peachpuff; height: 100px; width: 10px"/>
-                <div class="popper" t-ref="popper" style="background-color: olive; height: 100px; width: 10px"/>
+                <div class="target" t-custom-ref="ref" style="background-color: peachpuff; height: 100px; width: 10px"/>
+                <div class="popper" t-custom-ref="popper" style="background-color: olive; height: 100px; width: 10px"/>
             </div>
         `;
         static props = ["*"];
@@ -674,9 +675,9 @@ test("popper as child of another", async () => {
     class Parent extends Component {
         static components = { Child };
         static template = /* xml */ xml`
-            <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
-                <div id="target" t-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
-                <div id="popper" t-ref="popper"><Child/></div>
+            <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
+                <div id="target" t-custom-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
+                <div id="popper" t-custom-ref="popper"><Child/></div>
             </div>
         `;
         static props = ["*"];
@@ -713,9 +714,9 @@ test("batch update call", async () => {
     let position = null;
     class TestComponent extends Component {
         static template = xml`
-            <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
-                <div id="target" t-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
-                <div id="popper" t-ref="popper" style="background-color: olive; height: 50px; width: 50px"/>
+            <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px; overflow: auto">
+                <div id="target" t-custom-ref="target" style="background-color: tomato; width: 200px; height: 600px"/>
+                <div id="popper" t-custom-ref="popper" style="background-color: olive; height: 50px; width: 50px"/>
             </div>
         `;
         static props = ["*"];
@@ -743,7 +744,7 @@ test("not positioned if target not connected", async () => {
     const target = document.createElement("div");
     class TestComponent extends Component {
         static template = xml`
-            <div t-ref="container"><div t-ref="popper"/></div>
+            <div t-custom-ref="container"><div t-custom-ref="popper"/></div>
         `;
         static props = ["*"];
         setup() {
@@ -774,9 +775,9 @@ function shrinkPopperTest(position, offset, onPositioned, popperStyle = {}) {
     return async () => {
         class TestComp extends Component {
             static template = xml`
-                <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px;">
-                    <div id="target" t-ref="target" style="background-color: royalblue; width: 50px; height: 50px; margin-top: ${offset}px;"/>
-                    <div id="popper" t-ref="popper" t-att-style="this.popperStyle">
+                <div id="container" t-custom-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px;">
+                    <div id="target" t-custom-ref="target" style="background-color: royalblue; width: 50px; height: 50px; margin-top: ${offset}px;"/>
+                    <div id="popper" t-custom-ref="popper" t-att-style="this.popperStyle">
                         <div id="popper-content" style="background-color: seagreen; height: 500px; width: 50px;"/>
                     </div>
                 </div>

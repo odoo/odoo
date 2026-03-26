@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
+import { useState } from "@web/owl2/utils";
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     getService,

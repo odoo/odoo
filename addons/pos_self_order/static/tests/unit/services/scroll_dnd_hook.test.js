@@ -1,6 +1,7 @@
+import { useRef } from "@web/owl2/utils";
 import { test, describe, expect } from "@odoo/hoot";
 import { useDraggableScroll } from "@pos_self_order/app/utils/scroll_dnd_hook";
-import { Component, useRef, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -10,7 +11,7 @@ definePosSelfModels();
 const setupComponent = async () => {
     await setupSelfPosEnv();
     class TestComponent extends Component {
-        static template = xml`<div style="width: 200px; overflow-x: auto;" t-ref="scroll">
+        static template = xml`<div style="width: 200px; overflow-x: auto;" t-custom-ref="scroll">
             <div style="width: 1000px; height: 20px;">Scrollable Content</div>
         </div>`;
         static props = [];

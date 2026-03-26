@@ -1,5 +1,6 @@
+import { reactive } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
-import { EventBus, reactive } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 import { Reactive, effect, withComputedProperties } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");

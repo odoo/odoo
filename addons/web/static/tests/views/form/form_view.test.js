@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { after, before, expect, test } from "@odoo/hoot";
 import {
     clear,
@@ -28,9 +28,6 @@ import {
     onPatched,
     onWillStart,
     onWillUpdateProps,
-    useEffect,
-    useRef,
-    useState,
     xml,
 } from "@odoo/owl";
 import {
@@ -5296,7 +5293,7 @@ test(`discard changes on a new (dirty) form view`, async () => {
 test(`discard has to wait for changes in each field`, async () => {
     const def = new Deferred();
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
+        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
         static props = {
             ...standardFieldProps,
         };
@@ -10095,7 +10092,7 @@ test(`basic support for widgets: onchange update`, async () => {
             this.state = useState({
                 dataToDisplay: this.props.record.data.foo,
             });
-            useEffect(() => {
+            useLayoutEffect(() => {
                 this.state.dataToDisplay = this.props.record.data.foo + "!";
             });
         }
