@@ -19,6 +19,7 @@ export class WebsiteLoader extends Component {
             flag: "generic",
             loadingSteps: [],
             currentLoadingStep: undefined,
+            tipMessage: "",
             progressPercentage: 0,
             bottomMessageTemplate: undefined,
             showProgressBar: true,
@@ -55,6 +56,7 @@ export class WebsiteLoader extends Component {
             this.state.isVisible = true;
             for (const key of [
                 "title",
+                "tipMessage",
                 "bottomMessageTemplate",
                 "loadingSteps",
                 "showCloseButton",

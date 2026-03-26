@@ -70,12 +70,6 @@
             overflow-y: auto;
         }
 
-        .o_configurator_logo_wrapper {
-            img {
-                object-fit: contain;
-            }
-        }
-
         // ==== Screens
 
         &.o_description_screen {
@@ -382,8 +376,66 @@
         }
 
         &.o_setup_style_screen {
+            .o_configurator_preview_iframe.loading {
+                filter: brightness(75%);
+                transition: 0.1s;
+            }
+
             .o_setup_style_screen_buttons {
                 box-shadow: 0px 1px 15px #dedede;
+            }
+
+            .o_setup_style_screen_color_palette {
+                height: 50px;
+
+                &:not(.active) {
+                    background-color: $o-gray-100;
+                    border: 1px solid $o-gray-200;;
+                }
+
+                &:hover {
+                    background-color: var(--btn-hover-bg);
+                }
+
+                > span {
+                    &:not(:first-child) {
+                        border-inline-start: 0 !important;
+                        border-start-start-radius: 0 !important;
+                        border-end-start-radius: 0 !important;
+                    }
+
+                    &:not(:last-child) {
+                        border-inline-end: 0 !important;
+                        border-start-end-radius: 0 !important;
+                        border-end-end-radius: 0 !important;
+                    }
+                }
+
+                .o_setup_style_screen_logo_palette_info {
+                    width: 23px;
+                    height: 23px;
+
+                    > i {
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            .offcanvas-start {
+                box-shadow: 0 0 1rem 0 rgba(black, 0.1) !important;
+                // Keep this in sync with the left panel col-5/4/3 classes. If
+                // those Bootstrap classes change, update these widths too. This
+                // keeps the offcanvas width aligned at each breakpoint.
+                flex: 0 0 auto;
+                width: 41.66666667%;
+
+                @include media-breakpoint-up(xl) {
+                    width: 33.33333333%;
+                }
+
+                @include media-breakpoint-up(xxl) {
+                    width: 25%;
+                }
             }
 
             #describeYourWebsiteTextarea {
@@ -423,10 +475,22 @@
                 margin: auto;
             }
 
-            .o_ai_loading {
-                background-color:#714B67;
-                opacity: 0.5;
+            @keyframes pulse {
+                0%, 100% {
+                    opacity: 20%;
+                }
+                50% {
+                    opacity: 50%;
+                }
+            }
+
+            .o_configurator_screen_option_loading {
+                animation: pulse 2s ease-in-out infinite;
             }
         }
     }
+}
+
+.o_configurator_notifications_top .o_notification_manager {
+    top: $o-notification-margin;
 }

@@ -694,7 +694,7 @@ class Website(models.CachedModel):
         return themes_suggested
 
     @api.model
-    def configurator_theme_preview_body(self, theme_name, industry, install_theme=False, generate_content=False, user_prompt=None, tone=None, with_images=False, industry_id=0):
+    def theme_configurator_preview_body(self, theme_name, industry, install_theme=False, generate_content=False, user_prompt=None, tone=None, with_images=False, industry_id=0):
         """Build homepage preview content using a theme configurator snippets."""
         website = self.get_current_website()
         if not theme_name:
