@@ -2,12 +2,14 @@
 
 from collections import defaultdict
 import contextlib
+from markupsafe import Markup
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import email_normalize
 from odoo.tools.misc import limited_field_access_token
+from odoo.addons.base.models.res_users import NO_GROUP_LOG
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -110,7 +112,7 @@ class ResUsers(models.Model):
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
         new_portal_users = self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')])
         new_portal_users.notification_type = 'email'
-        new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
+        new_portal_users.with_context(no_group_log=NO_GROUP_LOG).write({"group_ids": [Command.unlink(inbox_group_id)]})
 
     @api.depends('out_of_office_from', 'out_of_office_to')
     def _compute_is_out_of_office(self):
@@ -144,8 +146,8 @@ class ResUsers(models.Model):
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.sudo().write({"group_ids": [Command.link(inbox_group.id)]})
-        (self - inbox_users).sudo().write({"group_ids": [Command.unlink(inbox_group.id)]})
+        inbox_users.with_context(no_group_log=NO_GROUP_LOG).sudo().write({"group_ids": [Command.link(inbox_group.id)]})
+        (self - inbox_users).with_context(no_group_log=NO_GROUP_LOG).sudo().write({"group_ids": [Command.unlink(inbox_group.id)]})
 
     @api.depends_context("uid")
     def _compute_can_edit_role(self):
@@ -282,6 +284,45 @@ class ResUsers(models.Model):
             for creator_sudo, activities_sudo in to_reassign_sudo.items():
                 activities_sudo.user_id = creator_sudo
         return super().action_archive()
+
+    # The goal here is to log group changes in the user's chatter for a nice UX. However this is
+    # inherently insecure as administrators can always modify these messages. Therefore we must
+    # also log these changes in a more secure manner.
+    def _log_group_changes(self, vals, old_group_ids, editing_groups=None):
+        # always log through super first since the function in base does not use any permission checks
+        if super()._log_group_changes(vals, old_group_ids, editing_groups):
+            return True
+        user_logs = {}
+        # In this case we use normal sets to make logic operations easier than using recordsets, however
+        # this causes the cache to not prefetch all display names, therefore we do it manually here.
+        self.group_ids.fetch(['display_name'])
+        for user in self:
+            old_groups = set(old_group_ids[user.id])
+            new_groups = set(user.sudo().group_ids.ids)
+            added_groups = new_groups - old_groups
+            removed_groups = old_groups - new_groups
+            if added_groups or removed_groups:
+                user_logs[user.id] = user._generate_group_change_msg(added_groups, removed_groups)
+        self.browse(user_logs.keys())._message_log_batch(user_logs)
+
+    def _generate_group_change_msg(self, added, removed):
+        self.ensure_one()
+
+        def generate_text(group_ids, title):
+            if not group_ids:
+                return ""
+            txt = Markup("<span>%s</span><ul>") % title
+            groups = self.env['res.groups'].browse(group_ids)
+            for group in groups:
+                item = Markup('<li><a href="#" data-oe-model="res.groups" data-oe-id="%s">%s</a></li>') % (group.id, group.display_name)
+                txt += item
+            txt += Markup("</ul>")
+            return txt
+        msg = Markup('<div class="o_mail_group_log">')
+        msg += generate_text(added, _("Added groups:"))
+        msg += generate_text(removed, _("Removed groups:"))
+        msg += Markup("</div>")
+        return msg
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
         """ This method is meant to be called whenever a sensitive update is done on the user's account.

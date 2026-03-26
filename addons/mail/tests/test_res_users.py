@@ -6,10 +6,11 @@ from psycopg2 import IntegrityError
 from unittest import skip
 from unittest.mock import patch
 
-from odoo.addons.base.models.res_users import ResUsersPatchedInTest
+from odoo.addons.base.models.res_users import NO_GROUP_LOG, ResUsersPatchedInTest
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+from odoo.fields import Command
 from odoo.tests import RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
@@ -270,3 +271,97 @@ class TestUserSettings(MailCommon):
             "no_notif",
             "channel_notifications state should be updated correctly"
         )
+
+
+@tagged('mail_tools', 'res_users')
+class TestUserGroups(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.normal_user = cls.env['res.users'].create({
+            'name': 'Internal User',
+            'login': 'test_internal_user',
+            'group_ids': [Command.link(cls.env.ref('base.group_user').id)],
+        })
+
+    def test_add_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        before = len(self.normal_user.message_ids)
+        self.normal_user.write({'group_ids': [Command.link(group.id)]})
+        self.assertGreater(len(self.normal_user.message_ids), before)
+        msg = self.normal_user.message_ids[0]
+        self.assertIn('Added groups', msg.body)
+        self.assertIn(group.display_name, msg.body)
+
+    def test_remove_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        self.normal_user.write({'group_ids': [Command.link(group.id)]})
+        before = len(self.normal_user.message_ids)
+        self.normal_user.write({'group_ids': [Command.unlink(group.id)]})
+        self.assertGreater(len(self.normal_user.message_ids), before)
+        msg = self.normal_user.message_ids[0]
+        self.assertIn('Removed groups', msg.body)
+        self.assertIn(group.display_name, msg.body)
+
+    def test_no_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        before = len(self.normal_user.message_ids)
+        self.normal_user.with_context(no_group_log=NO_GROUP_LOG).write(
+            {'group_ids': [Command.link(group.id)]}
+        )
+        self.assertEqual(len(self.normal_user.message_ids), before)
+
+    def test_no_log_existing_groups(self):
+        group = self.env.ref('base.group_partner_manager')
+        self.normal_user.write(
+            {'group_ids': [Command.link(group.id)]}
+        )
+        before = len(self.normal_user.message_ids)
+        self.normal_user.write(
+            {'group_ids': [Command.link(group.id)]}
+        )
+        self.assertEqual(len(self.normal_user.message_ids), before)
+
+    def test_group_add_members(self):
+        group = self.env.ref('base.group_partner_manager')
+        before = len(self.normal_user.message_ids)
+        group.write({'user_ids': [Command.link(self.normal_user.id)]})
+        self.assertGreater(len(self.normal_user.message_ids), before)
+        msg = self.normal_user.message_ids[0]
+        self.assertIn('Added groups', msg.body)
+        self.assertIn(group.display_name, msg.body)
+
+    def test_group_remove_members(self):
+        group = self.env.ref('base.group_partner_manager')
+        group.write({'user_ids': [Command.link(self.normal_user.id)]})
+        before = len(self.normal_user.message_ids)
+        group.write({'user_ids': [Command.unlink(self.normal_user.id)]})
+        self.assertGreater(len(self.normal_user.message_ids), before)
+        msg = self.normal_user.message_ids[0]
+        self.assertIn('Removed groups', msg.body)
+        self.assertIn(group.display_name, msg.body)
+
+    def test_logs_multiple_users(self):
+        second_user = self.env['res.users'].create({
+            'name': 'Second Internal User',
+            'login': 'test_internal_user_2',
+            'group_ids': [Command.link(self.env.ref('base.group_user').id)],
+        })
+        self.addCleanup(second_user.unlink)
+        group = self.env.ref('base.group_partner_manager')
+        before_normal = len(self.normal_user.message_ids)
+        before_second = len(second_user.message_ids)
+        (self.normal_user | second_user).write({'group_ids': [Command.link(group.id)]})
+        self.assertEqual(
+            len(self.normal_user.message_ids),
+            before_normal + 1,
+        )
+        self.assertEqual(
+            len(second_user.message_ids),
+            before_second + 1,
+        )
+        self.assertIn('Added groups', self.normal_user.message_ids[0].body)
+        self.assertIn(group.display_name, self.normal_user.message_ids[0].body)
+        self.assertIn('Added groups', second_user.message_ids[0].body)
+        self.assertIn(group.display_name, second_user.message_ids[0].body)
