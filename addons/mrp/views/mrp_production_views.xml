@@ -453,6 +453,7 @@
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_raw" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="[('type', '=', 'consu')]"/>
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="" widget="forecast_widget"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="hide"/>
@@ -525,6 +526,7 @@
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}" domain="[('type', '=', 'consu')]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
