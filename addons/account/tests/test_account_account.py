@@ -1073,3 +1073,15 @@ class TestAccountAccount(TestAccountMergeCommon):
         # get the accounts from the parent company with the branch user
         accounts = self.env['account.account'].with_user(branch_user.id).search([('company_ids', 'parent_of', [branch.id])])
         self.assertEqual(len(accounts), 1, "Branch user should have access to the accounts of the parent company")
+
+    def test_search_account_with_existing_code(self):
+        """ Ensure that we can properly search records by code, even if they are inactive """
+        example_account = self.env["account.account"].search([], limit=1)
+        found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
+        self.assertEqual(found, example_account)
+
+        example_account.active = False
+        found = self.env["account.account"].search([("code", "=ilike", example_account.code), ("active", "=", False)])
+        not_found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
+        self.assertEqual(found, example_account)
+        self.assertFalse(not_found)
