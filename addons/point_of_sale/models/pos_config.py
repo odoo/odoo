@@ -282,6 +282,8 @@ class PosConfig(models.Model):
 
         if not data[0]['use_pricelist']:
             data[0]['pricelist_id'] = False
+        if request_timeout_ms := self.env['ir.config_parameter'].sudo().get_param('point_of_sale.request_timeout_ms'):
+            data[0]['_request_timeout_ms'] = request_timeout_ms
 
         return {
             'data': data,

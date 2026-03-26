@@ -1,0 +1,26 @@
+// Reuses the Google font definitions from web/static/fonts/fonts.scss.
+// ------------------------------------------------------------------
+// Google fonts
+// ------------------------------------------------------------------
+$google-font-path: '../../../../web/static/fonts/google';
+
+@mixin google-font($family, $type, $weight, $style) {
+    @font-face {
+        font-family: $family;
+        src: url('#{$google-font-path}/#{$family}/#{$family}-#{$type}.ttf') format('truetype');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+
+@mixin google-font-pair($family) {
+    @include google-font('#{$family}', 'Regular', 400, normal);
+}
+
+@include google-font-pair('Montserrat');
+@include google-font-pair('Open_Sans');
+@include google-font-pair('Oswald');
+@include google-font-pair('Raleway');
+@include google-font-pair('Roboto');
+@include google-font-pair('Tajawal');
+@include google-font-pair('Fira_Mono');

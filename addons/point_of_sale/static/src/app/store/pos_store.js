@@ -307,6 +307,10 @@ export class PosStore extends Reactive {
         this.company = this.data.models["res.company"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
         this.currency = this.config.currency_id;
+        const configTimout = this.config._request_timeout_ms;
+        if (configTimout && !isNaN(configTimout)) {
+            this.data.requestTimeoutMs = Number(configTimout);
+        }
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
@@ -327,6 +331,8 @@ export class PosStore extends Reactive {
             const PaymentInterface = this.electronic_payment_interfaces[pm.use_payment_terminal];
             if (PaymentInterface) {
                 pm.payment_terminal = new PaymentInterface(this, pm);
+                // Extend request timeout to 60 sec for payment terminals
+                this.data.requestTimeoutMs = 60000;
             }
         }
 

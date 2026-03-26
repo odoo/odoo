@@ -8,7 +8,7 @@ import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
-import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
+import { ConnectionAbortedError, ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -34,6 +34,7 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
+        this.requestTimeoutMs = 15000;
 
         this.network = {
             warningTriggered: false,
@@ -363,7 +364,6 @@ export class PosData extends Reactive {
                 throw new ConnectionLostError();
             }
 
-            let result = true;
             let limitedFields = false;
             if (fields.length === 0) {
                 fields = this.fields[model] || [];
@@ -376,15 +376,19 @@ export class PosData extends Reactive {
                 limitedFields = true;
             }
 
+            let requestPromise;
             switch (type) {
                 case "write":
-                    result = await this.orm.write(model, ids, values);
+                    requestPromise = this.orm.write(model, ids, values);
                     break;
                 case "delete":
-                    result = await this.orm.unlink(model, ids);
+                    requestPromise = this.orm.unlink(model, ids);
+                    break;
+                case "create":
+                    requestPromise = this.orm.create(model, values);
                     break;
                 case "call":
-                    result = await this.orm.call(model, method, args, kwargs);
+                    requestPromise = this.orm.call(model, method, args, kwargs);
                     break;
                 case "read":
                     queue = false;
@@ -395,7 +399,7 @@ export class PosData extends Reactive {
                         options.context = {};
                     }
                     options.context.display_default_code ??= false;
-                    result = await this.orm.read(model, ids, fields, {
+                    requestPromise = this.orm.read(model, ids, fields, {
                         ...options,
                         context: { ...options.context },
                         load: false,
@@ -410,16 +414,25 @@ export class PosData extends Reactive {
                         options.context = {};
                     }
                     options.context.display_default_code ??= false;
-                    result = await this.orm.searchRead(model, args, fields, {
+                    requestPromise = this.orm.searchRead(model, args, fields, {
                         ...options,
                         context: { ...options.context },
                         load: false,
                     });
             }
 
+            // Timeout handling
+            const { promise: timeoutPromise, resolve: timeoutResolve } = Promise.withResolvers();
+            const timeoutId = setTimeout(() => {
+                requestPromise.abort();
+                timeoutResolve();
+            }, this.requestTimeoutMs || 15000);
+
+            let result = await Promise.race([requestPromise, timeoutPromise]);
+            clearTimeout(timeoutId);
+
             if (type === "create") {
-                const response = await this.orm.create(model, values);
-                values[0].id = response[0];
+                values[0].id = result[0];
                 result = values;
             }
 
@@ -494,7 +507,7 @@ export class PosData extends Reactive {
                 queue &&
                 !uuids.includes(uuid) &&
                 method !== "sync_from_ui" &&
-                error instanceof ConnectionLostError
+                (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError)
             ) {
                 this.network.unsyncData.push({
                     args: [...arguments],
@@ -504,6 +517,11 @@ export class PosData extends Reactive {
                 });
 
                 throwErr = false;
+            }
+
+            if (error instanceof ConnectionAbortedError) {
+                this.checkConnectivity();
+                throw new ConnectionLostError();
             }
 
             if (throwErr) {

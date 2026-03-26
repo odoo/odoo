@@ -329,7 +329,7 @@ function makeDataUrl(content, mimeType) {
     return `data:${mimeType};base64,${content}`;
 }
 async function fetchAsDataURL(url, init, process) {
-    const res = await fetch(url, { ...init, mode: "no-cors" });
+    const res = await fetch(url, { ...init, mode: "no-cors", signal: AbortSignal.timeout(2000) });
     if (res.status === 404) {
         throw new Error(`Resource "${res.url}" not found`);
     }
@@ -668,6 +668,9 @@ async function embedImageNode(clonedNode, options) {
     }
     const url = isImageElement ? clonedNode.src : clonedNode.href.baseVal;
     const dataURL = await resourceToDataURL(url, getMimeType(url), options);
+    if (!dataURL) {
+        return;
+    }
     await new Promise((resolve, reject) => {
         clonedNode.onload = resolve;
         clonedNode.onerror = reject;
