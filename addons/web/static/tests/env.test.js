@@ -193,7 +193,7 @@ test(`mountComponent creates an env and sets the application as root when no env
     });
     const { env } = app;
     expect(env.services).toEqual({ my_service: "a" });
-    expect(odoo.__WOWL_DEBUG__).toEqual({ root: app.root.component });
+    expect(odoo.__WOWL_DEBUG__).toEqual({ root: [...app.roots][0].component });
     expect(getFixture()).toHaveText("Root");
 });
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillUnmount, reactive, useExternalListener } from "@odoo/owl";
+import { onWillUnmount, proxy, useExternalListener } from "@odoo/owl";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { pick } from "@web/core/utils/objects";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
@@ -96,7 +96,7 @@ export function useHierarchyNodeDraggable(params) {
         setup: useLayoutEffect,
         teardown: onWillUnmount,
         throttle: useThrottleForAnimation,
-        wrapState: reactive,
+        wrapState: proxy,
     }
     return makeDraggableHook({ ...hookParams, setupHooks })(params);
 }
