@@ -880,6 +880,14 @@ class AccountReportColumn(models.Model):
     blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")
     custom_audit_action_id = fields.Many2one(string="Custom Audit Action", comodel_name="ir.actions.act_window")
 
+    _sql_constraints = [
+        (
+            "expression_label_uniq",
+            "unique(report_id, expression_label)",
+            "A Expression label with the same name already exists."
+        ),
+    ]
+
 
 class AccountReportExternalValue(models.Model):
     _name = "account.report.external.value"
