@@ -112,7 +112,7 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             await reset(id, { useAlternativeAssets });
-            popout.app = new App(component, {
+            popout.app = new App({
                 name: "Popout",
                 env: Object.assign({}, env, {
                     /**
@@ -121,12 +121,11 @@ export const mailPopoutService = {
                      */
                     pipWindow: externalWindow,
                 }),
-                props,
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
             });
-            popout.app.mount(externalWindow.document.body);
+            popout.app.createRoot(component, { props }).mount(externalWindow.document.body);
             return externalWindow;
         }
 
@@ -150,15 +149,14 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             reset(id);
-            popout.app = new App(component, {
+            popout.app = new App({
                 name: "Popout",
                 env,
-                props,
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
             });
-            popout.app.mount(externalWindow.document.body);
+            popout.app.createRoot(component, { props }).mount(externalWindow.document.body);
             return externalWindow;
         }
 

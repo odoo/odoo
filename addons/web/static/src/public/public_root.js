@@ -37,7 +37,7 @@ export async function createPublicRoot() {
     });
 
     Component.env = env;
-    const app = new App(MainComponentsContainer, {
+    const app = new App({
         getTemplate,
         env,
         dev: env.debug,
@@ -46,7 +46,7 @@ export async function createPublicRoot() {
     });
     const locale = pyToJsLocale(lang) || browser.navigator.language;
     Settings.defaultLocale = locale;
-    const root = await app.mount(document.body);
+    const root = await app.createRoot(MainComponentsContainer).mount(document.body);
     odoo.__WOWL_DEBUG__ = { root };
     return root;
 }

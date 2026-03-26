@@ -38,14 +38,14 @@ export class PortalChatterService {
             root.classList.add("p-0");
         }
         this.createShadow(root).then((shadow) => {
-            new App(PortalChatter, {
+            const app = new App({
                 env,
                 getTemplate,
-                props,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
                 dev: env.debug,
-            }).mount(shadow);
+            });
+            app.createRoot(PortalChatter, { props }).mount(shadow);
         });
         const thread = this.store["mail.thread"].insert({ model: props.resModel, id: props.resId });
         Object.assign(thread, {

@@ -32,9 +32,9 @@ import { getMockEnv, makeMockEnv } from "./env_test_helpers";
  * @param {AppConfig} config
  */
 const mountComponentWithCleanup = (ComponentClass, targetEl, config) => {
-    const app = new App(ComponentClass, config);
+    const app = new App(config);
     after(() => destroy(app));
-    return app.mount(targetEl);
+    return app.createRoot(ComponentClass, config).mount(targetEl);
 };
 
 patch(MainComponentsContainer.prototype, {
