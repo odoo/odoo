@@ -810,6 +810,7 @@ class SaleOrder(models.Model):
             )
 
     @api.depends('state')
+    @api.depends_context('lang')
     def _compute_type_name(self):
         for record in self:
             if record.state in ('draft', 'sent', 'cancel'):
@@ -1783,6 +1784,11 @@ class SaleOrder(models.Model):
         elif 'state' in init_values and self.state == 'sent':
             return self.env.ref('sale.mt_order_sent')
         return super()._track_subtype(init_values)
+
+    def _get_model_description(self, model_name):
+        if not self:
+            return super()._get_model_description(model_name)
+        return self.type_name
 
     # PAYMENT #
 
