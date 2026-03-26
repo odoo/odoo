@@ -1,5 +1,7 @@
 import re
-
+from lxml import etree
+from odoo.upgrade_code.tools_etree import get_indentation, update_etree
+from odoo.upgrade_code.tools_js_expressions import update_template, VariableAggregator
 
 EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -7,6 +9,12 @@ EXCLUDED_PATH = (
     'iot_drivers/static/src/',
     'web/static/src/owl2',
     'addons/web/static/lib/owl/owl.js',
+    'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
+    'html_builder/static/tests/custom_tab/builder_components/builder_row.test.js',  # Test has weird string formatting syntax easier to skip
+    'web_studio/static/src/client_action/report_editor/report_editor_xml/translate_xml.js',  # Weird inline xml, easier to do by hand
+    '/node_modules/',
+    'test_assetsbundle/static/invalid_src',
+    'test_assetsbundle/static/accessible.xml',
 )
 
 CHECKSUM_FILES = (
@@ -21,6 +29,203 @@ CHECKSUM_FILES = (
 )
 
 
+# Templates that are called by:
+# - this.renderAt   (Interaction)
+# - renderToString
+# - renderToFragment
+# - renderToElement
+EXCLUDED_TEMPLATES = (
+    'point_of_sale.Navbar',  # Inherited from checksum file, to remove from list when checksum is recertified
+    'Appointment.appointment_info_no_capacity',
+    'Appointment.appointment_info_no_slot',
+    'Appointment.appointment_info_no_slot_month',
+    'Appointment.appointment_info_upcoming_appointment',
+    'Appointment.appointment_svg',
+    'ai.VoiceTranscriptionBlueprint',
+    'ai_website_livechat.s_ai_livechat_edit',
+    'appointment.resources_capacity_options',
+    'appointment.resources_list',
+    'appointment.slots_list',
+    'calendar.AttendeeCalendarCommonRenderer.event',
+    'event.EventSlotCalendarCommonRenderer.event',
+    'event_booth_checkbox_list',
+    'event_booth_registration_complete',
+    'event_track_proposal_success',
+    'google_recaptcha.recaptcha_legal_terms',
+    'hr_calendar.CalendarCommonRenderer.buttonWorklocation',
+    'hr_calendar.CalendarCommonRendererHeader',
+    'hr_contract_salary.salary_package_resume',
+    'hr_contract_salary_payroll.salary_package_brut_to_net_modal',
+    'html_builder.BuilderOverlay',
+    'html_builder.background_grid',
+    'html_editor.EmbeddedCaptionBlueprint',
+    'html_editor.EmbeddedFileBlueprint',
+    'html_editor.EmbeddedSyntaxHighlightingBlueprint',
+    'html_editor.EmbeddedToggleBlockBlueprint',
+    'html_editor.EmbeddedVideoBlueprint',
+    'html_editor.Signature',
+    'html_editor.StaticFileBox',
+    'html_editor.TableOfContentBlueprint',
+    'knowledge.ArticleBlueprint',
+    'knowledge.ArticleIndexBlueprint',
+    'knowledge.ArticleItemTemplate',
+    'knowledge.EmbeddedClipboardBlueprint',
+    'knowledge.EmbeddedViewBlueprint',
+    'knowledge.EmbeddedViewLinkBlueprint',
+    'knowledge.FoldableSectionBlueprint',
+    'knowledge.threadBeacon',
+    'mail.ExpandableButton',
+    'mail.Message.edited',
+    'mail.Message.mentionedChannelIcon',
+    'mail.Message.messageLink',
+    'mail.Wysiwyg.mentionLink',
+    'mass_mailing.FavoritePreviewBody',
+    'mass_mailing.IframeBody',
+    'mass_mailing.IframeHead',
+    'mass_mailing.MailingPreviewIframeBody',
+    'mass_mailing.portal.list_form_content',
+    'mass_mailing.portal.list_form_content_readonly',
+    'mass_mailing.s_masonry_block_alternation_image_text_template',
+    'mass_mailing.s_masonry_block_alternation_text_image_template',
+    'mass_mailing.s_masonry_block_alternation_text_image_text_template',
+    'mass_mailing.s_masonry_block_alternation_text_template',
+    'mass_mailing.s_masonry_block_default_template',
+    'mass_mailing.s_masonry_block_image_texts_image_template',
+    'mass_mailing.s_masonry_block_images_template',
+    'mass_mailing.s_masonry_block_mosaic_template',
+    'mass_mailing.s_masonry_block_reversed_template',
+    'mass_mailing.s_masonry_block_texts_image_texts_template',
+    'mass_mailing.social_media_link',
+    'mass_mailing.social_media_placeholder',
+    'mass_mailing.social_media_title',
+    'mass_mailing_sale.s_product_snapshot_aside_fragment',
+    'mass_mailing_sale.s_product_snapshot_card_fragment',
+    'mass_mailing_sale.s_product_snapshot_columns_fragment',
+    'mrp.CalendarCommonRenderer.event',
+    'planning.allocation_info',
+    'planning.daygrid_event',
+    'point_of_sale.pos_cash_move_receipt',
+    'point_of_sale.pos_order_change_receipt',
+    'point_of_sale.pos_order_receipt',
+    'point_of_sale.pos_sale_details_receipt',
+    'point_of_sale.pos_tip_receipt',
+    'portal.Chatter.Attachments',
+    'portal.Composer',
+    'portal_rating.PopupComposer',
+    'portal_rating.rating_stars_static',
+    'project_enterprise.TaskGanttRenderer.Header',
+    'quiz.badge',
+    'quiz.comment',
+    'quiz.validation',
+    'sign.signItem',
+    'slide.course.join',
+    'slide.course.prerequisite',
+    'slide.slide.quiz',
+    'slide.slide.quiz.validation',
+    'stock_enterprise.markerPopup',
+    'survey.survey_breadcrumb_template',
+    'survey.survey_image_zoomer',
+    'survey.survey_session_text_answer',
+    'test.render.template.1',
+    'web.CalendarCommonRenderer.event',
+    'web.CalendarCommonRendererHeader',
+    'web.ProfilingQwebView.hover',
+    'web.ProfilingQwebView.info',
+    'web.TestSubInteraction1',
+    'web.caps_lock_warning',
+    'web.sign_svg_text',
+    'web.testRenderAt',
+    'web_gantt.GanttRenderer.Header',
+    'web_map.marker',
+    'web_map.markerPopup',
+    'website.AddPageTemplatePreviewDynamicMessage',
+    'website.MapsDescription',
+    'website.PageDependencies.Tooltip',
+    'website.background.video',
+    'website.cookiesWarning',
+    'website.cookies_bar.classic',
+    'website.cookies_bar.discrete',
+    'website.cookies_bar.popup',
+    'website.cookies_bar.text_button_all',
+    'website.cookies_bar.text_button_essential',
+    'website.cookies_bar.text_primary',
+    'website.cookies_bar.text_secondary',
+    'website.cookies_bar.text_title',
+    'website.empty_image_gallery_alert',
+    'website.empty_social_media_alert',
+    'website.example_social_media_link',
+    'website.form_field_binary',
+    'website.form_field_boolean',
+    'website.form_field_char',
+    'website.form_field_date',
+    'website.form_field_datetime',
+    'website.form_field_description',
+    'website.form_field_email',
+    'website.form_field_float',
+    'website.form_field_hidden',
+    'website.form_field_html',
+    'website.form_field_integer',
+    'website.form_field_many2many',
+    'website.form_field_many2one',
+    'website.form_field_monetary',
+    'website.form_field_one2many',
+    'website.form_field_selection',
+    'website.form_field_tel',
+    'website.form_field_text',
+    'website.form_field_url',
+    'website.homepage_editor_welcome_message',
+    'website.image_mirror.lightbox',
+    'website.s_card.imageWrapper',
+    'website.s_carousel_cards.imageWrapper',
+    'website.s_countdown.end_message',
+    'website.s_countdown.end_redirect_message',
+    'website.s_dynamic_snippet.carousel',
+    'website.s_dynamic_snippet.grid',
+    'website.s_floating_blocks.alert.empty',
+    'website.s_floating_blocks.new_card',
+    'website.s_image_gallery_slideshow',
+    'website.s_searchbar.autocomplete',
+    'website.s_website_form_end_message',
+    'website.s_website_form_recaptcha_legal',
+    'website.s_website_form_status_custom_error',
+    'website.s_website_form_status_error',
+    'website.s_website_form_status_success',
+    'website.slides.fullscreen.certification',
+    'website.slides.fullscreen.content',
+    'website.slides.fullscreen.video.google_drive',
+    'website.slides.fullscreen.video.vimeo',
+    'website.slides.fullscreen.video.youtube',
+    'website.slides.sidebar.done.button',
+    'website.social_modal',
+    'website_cf_turnstile.turnstile_container',
+    'website_cf_turnstile.turnstile_remote_script',
+    'website_event_track.email_reminder_modal',
+    'website_event_track.pwa_install_banner',
+    'website_event_track_live.website_event_track_replay_suggestion',
+    'website_event_track_live.website_event_track_suggestion',
+    'website_forum.spam_search_name',
+    'website_helpdesk.knowledge_base_autocomplete',
+    'website_links.RecentLink',
+    'website_mass_mailing.NewsletterMailingListsCheckboxes',
+    'website_mass_mailing.subscribeListMissingError',
+    'website_mass_mailing_event.s_event_snapshot_aside_fragment',
+    'website_mass_mailing_event.s_event_snapshot_card_fragment',
+    'website_mass_mailing_event.s_event_snapshot_columns_fragment',
+    'website_payment.donation.descriptionTranslationInputs',
+    'website_payment.donation.prefilledButtons',
+    'website_payment.donation.prefilledButtonsDescriptions',
+    'website_payment.donation.slider',
+    'website_payment.s_supported_payment_methods.icons',
+    'website_payment.s_supported_payment_methods.no_payment_methods_alert',
+    'website_sale.s_dynamic_snippet_category.grid',
+    'website_sale_autocomplete.AutocompleteDropDown',
+    'website_sale_mondialrelay',
+    'website_sale_stock.product_availability',
+    'website_sale_stock.product_availability_wishlist',
+    'website_sale_subscription.SubscriptionPricingTableSelect',
+)
+
+
 class JSTooling:
     @staticmethod
     def is_commented(content: str, position: int) -> bool:
@@ -31,12 +236,12 @@ class JSTooling:
             position: The index of the word to check.
 
         Returns:
-            True if the line starts with // before the position.
+            True if the line starts with //, /* or /** before the position.
         """
         # We look back to the start of the current line
         line_start = content.rfind('\n', 0, position) + 1
-        line_text = content[line_start:position]
-        return '//' in line_text
+        line_text = content[line_start:position].lstrip()
+        return '//' in line_text or '/*' in line_text or '/**' in line_text or line_text.startswith("*")
 
     @staticmethod
     def add_import(content: str, name: str, source: str) -> str:
@@ -131,7 +336,7 @@ class JSTooling:
             prefix = match.group(1)
             xml_content = match.group(2)
             suffix = match.group(3)
-            return f"{prefix}{transform_func(xml_content)}{suffix}"
+            return f"{prefix}{transform_func("<t>" + xml_content + "</t>")[3:][:-4]}{suffix}"
 
         return pattern.sub(replacer, content)
 
@@ -190,8 +395,9 @@ class JSTooling:
                 return True
         return False
 
+    @staticmethod
     def replace_usage(content: str, old_name: str, new_name: str) -> str:
-        """Replaces variable usage using word boundaries.
+        """Replaces usage on lines that aren't comments.
 
         Args:
             content: The file content.
@@ -200,7 +406,12 @@ class JSTooling:
         Returns:
             The updated content.
         """
-        return re.sub(rf'\b{old_name}\b', new_name, content)
+        def replacer(match):
+            if JSTooling.is_commented(content, match.start()):
+                return match.group(0)  # Return unchanged
+            return new_name
+
+        return re.sub(rf'\b{old_name}\b', replacer, content)
 
     @staticmethod
     def clean_whitespace(content: str) -> str:
@@ -217,22 +428,36 @@ class JSTooling:
         return content
 
     @staticmethod
-    def get_js_files(file_manager):
-        path_pattern = re.compile('|'.join(EXCLUDED_PATH))
+    def get_js_files(file_manager, include_test_files=True):
+        """Gets all static js files. Include .test.js files if include_test_files is True."""
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
+        target_dir = '/static/' if include_test_files else '/static/src'
+
         return [
-            file for file in file_manager
-            if '/static/src/' in file.path._str
-            and file.path.suffix == '.js'
-            and not re.search(path_pattern, file.path._str)
+            f for f in file_manager
+            if str(f.path).endswith('.js')
+            and '/static/' in str(f.path)
+            and not path_pattern.search(str(f.path))
         ]
 
+    @staticmethod
     def get_template_files(file_manager):
         excluded_path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
         return [
             file for file in file_manager
-            if '/static/src/' in file.path._str
-            and file.path.suffix in ['.xml', '.js']
-            and not re.search(excluded_path_pattern, file.path._str)
+            if '/static/' in str(file.path)
+            and (str(file.path).endswith('.js') or str(file.path).endswith('.xml'))
+            and not re.search(excluded_path_pattern, str(file.path))
+        ]
+
+    @staticmethod
+    def get_xml_files(file_manager):
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
+        return [
+            file for file in file_manager
+            if '/static/' in str(file.path)
+            and str(file.path).endswith('.xml')
+            and not re.search(path_pattern, str(file.path))
         ]
 
 
@@ -243,7 +468,7 @@ class MigrationCollector:
         self.file_manager = file_manager
         self.reports = []
 
-    def run_sub(self, name: str, func) -> None:
+    def run_sub(self, name: str, func, **kwargs) -> None:
         modified_before = sum(1 for f in self.file_manager if f.dirty)
         errors = []
         infos = []
@@ -254,7 +479,7 @@ class MigrationCollector:
         def log_error(path, err):
             errors.append(f"  ❌ {path}: {err}")
 
-        func(self.file_manager, log_info, log_error)
+        func(self.file_manager, log_info, log_error, **kwargs)
 
         modified_after = sum(1 for f in self.file_manager if f.dirty)
         count = modified_after - modified_before
@@ -443,12 +668,7 @@ def upgrade_use_external_listener(file_manager, log_info, log_error):
 def upgrade_tportal(file_manager, log_info, log_error):
     """Sub-task: Migrate t-portal, ignoring comments."""
     path_pattern = re.compile('|'.join(EXCLUDED_PATH))
-    files = [
-        file for file in file_manager
-        if '/static/src/' in file.path._str
-        and file.path.suffix in ['.xml', '.js']
-        and not re.search(path_pattern, file.path._str)
-    ]
+    files = JSTooling.get_template_files(file_manager)
     if not files:
         return
 
@@ -572,6 +792,469 @@ def upgrade_t_model(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(files))
 
 
+WEB_WHITELIST = {
+    "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
+    "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
+    "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
+    "web.FieldTooltip": {'field', 'debug', 'resModel'},  # JSON stringify context
+    "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call I guess,
+    "web.ListRenderer.GroupRow": {'group', 'group_index'},  # dynamic t-call I guess
+    "web.ListHeaderTooltip": {'field'},  # JSON stringify context
+    "web.Many2ManyBinaryField.attachment_preview": {'file'},  # t-for-each above t-call
+    "web.Many2ManyTagsAvatarField.option": {'autoCompleteItemScope'},  # t-slot-scope above dynamic t-call
+    "web.NavBar.AppsMenu.Sidebar": {'apps, subMenu_index'},  # nested t-calls
+    "web.PivotMeasure": {'cell'},  # for each + t-call
+    "web.SearchPanelContent": {'section'},  # dynamic t-call
+    "web.SearchPanel.Small": {'section'},  # dynamic t-call
+    "web.SearchPanel.Category": {'section'},  # dynamic t-call
+    "web.SearchPanel.FiltersGroup": {'values', 'section', 'group', 'isChildList'},  # dynamic t-call
+    "web.SectionMenu": {'subMenu_index', 'apps'},  # dynamic t-call in t-foreach
+    "web.SelectMenu.ChoiceItem": {'choice', 'choice_index'},  # dynamic t-call
+    "web.SelectMenu.search": {'inputClass'},  # Var above t-call
+    "web.StatusBarField": {'items'},  # dynamic t-call
+    "web.TreeEditor.condition:editable": {'node'},  # Nested inherit
+    "web.TreeEditor.condition:readonly": {'node'},  # Nested inherit
+    "web.TreeEditor.controls": {'node', 'ancestors', 'parent'},  # Nested inherit
+    "web.TreeEditor.connector.value": {'node'},  # Nested inherit
+    "web.TreeEditor.condition": {'node'},  # Nested inherit
+    "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
+}
+WEB_EXT_WHITELIST = {
+    "web_map.MapRenderer.PinListItems": {'records'},  # dynamic t-call
+    "web_gantt.GanttRenderer.RowHeader": {'row'},  # dynamic t-calls from loops
+    "web_gantt.GanttRenderer.RowContent": {'row'},  # dynamic t-calls from loops
+    "web_gantt.GanttRenderer.Pill": {'pill', 'row'},  # dynamic t-calls from loops
+    "web_gantt.GanttRenderer.GroupPill": {'pill', 'row'},  # dynamic t-calls from loops
+    "web_gantt.GanttRenderer.ConnectorCreator": {'pill', 'alignment'},  # dynamic t-calls from loops
+    "web_grid.Section": {'row'},  # dynamic t-calls from loops
+    "web_grid.Row": {'row', 'section'},  # dynamic t-calls from loops
+    "web_grid.AddLine": {'row'},  # dynamic t-calls from loops
+    "web_studio.Form.InnerGroup": {'row_index'},  # dynamic t-calls from loops
+    "web_studio.ViewEditor.View": {'scope'},  # dynamic t-call
+    "web_studio.property.subOptions": {'attribute'},  # dynamic t-call
+    "web_studio.property.defaultInput": {'attribute'},  # dynamic t-call
+    "web_studio.property.selection": {'attribute'},  # dynamic t-call
+    "web_studio.property.domain": {'attribute'},  # dynamic t-call
+    "web_studio.property.digits": {'attribute'},  # dynamic t-call
+    "web_studio.property.boolean": {'attribute'},  # dynamic t-call
+    "web_studio.property.field": {'attribute'},  # dynamic t-call
+    "web_studio.property.number": {'attribute'},  # dynamic t-call
+    "web_studio.property.string": {'attribute'},  # dynamic t-call
+    "web_studio.StudioHomeMenu": {'app_index'},  # xpath on a t-foreach
+}
+MAIL_WHITELIST = {
+    "discuss.GifPicker.gif": {'gif_value'},  # for-each above t-call
+    "mail.ActivityViewCell": {'resId'},  # for each + t-call
+    "mail.Composer.extraActions": {'partitionedActions'},  # Var above t-call
+    "mail.Composer.quickActions": {'partitionedActions'},  # Var above t-call
+    "mail.Composer.suggestionSpecial": {'option'},  # dynamic t-call
+    "mail.Composer.suggestionPartner": {'option'},  # dynamic t-call
+    "mail.Composer.suggestionRole": {'option'},  # dynamic t-call
+    "mail.Composer.suggestionChannel": {'option'},  # dynamic t-call
+    "mail.Composer.suggestionChannelCommand": {'option'},  # dynamic t-call
+    "mail.Composer.suggestionCannedResponse": {'option'},  # dynamic t-call
+    "mail.Composer.suggestionEmoji": {'option'},  # dynamic t-call
+    "mail.MessageSeenIndicatorPopover.card": {'member'},  # for-each above t-call
+    "mail.NotificationItem": {'notificationBody'},  # t-slot with name = ... where name is just used for an xpath
+    "mail.RottingStatusBarDurationField": {'item'},  # dynamic t-call
+}
+MISC_WHITELIST = {
+    "account_disallowed_expenses.warning_multi_rate": {'warningParams'},  # dynamic t-call
+    "account_fiscal_categories_fleet.warning_missing_fiscal_category": {'warningParams'},  # dynamic t-call
+    "account_reports.has_bank_miscellaneous_move_lines": {'warningParams'},  # dynamic t-call
+    "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
+    "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
+    "account_saft.company_data_warning": {'warningParams'},  # dynamic t-call
+    "auth_passkey_portal.rename": {'oldname'},  # t-attf-value
+    "crm.ColumnProgress": {'bar'},  # Nested inherit
+    "discuss.ChannelInvitation-selectableItem": {"selectablePartner"},  # nested t-call
+    "documents.SearchPanel.Category": {'isChildList'},  # dynamic t-call
+    "documents.SearchPanel.Category.Small": {'value'},  # Nested t-call/inherit
+    "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+    "helpdesk_timesheet.TimesheetTimerInlineForm": {'data'},  # Nested t-call/inherits
+    "html_builder.invisibleSnippetEntry": {'entry', 'toggleElementVisibility'},  # t- call-context
+    "hr_calendar.CalendarCommonRenderer.buttonWorklocation": {'multiCalendar'},  # Nested t-inherits with a xpath t-call
+    "hr_calendar.AttendeeCalendarCommonPopover.body": {'slot'},  # dynamic t-call
+    "hr_skills.SkillsListRenderer.Rows": {'list'},  # dynamic t-call I guess
+    "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
+    "mrp_workorder.ProductCatalogKanbanRenderer": {'groupOrRecord'},  # Nested t-call or inherit
+    "planning.PlanningCalendarCommonPopover.body": {'slot'},  # dynamic t-calls from loops
+    "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
+    "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
+    "product_matrix.matrix": {'format'},  # Var passed via t-set above t-call
+    "product_matrix.extra_price": {'format'},  # nested t-call
+    "project.NotebookTaskListRenderer.Rows": {'list'},  # dynamic t-call
+    "project.DependOnIdsListRowsRenderer": {'list'},  # dynamic t-call
+    "project_enterprise.TaskGanttRenderer.ColoredCellBorder": {'column'},  # Nested t-call or inherit
+    "sale.ListRenderer.RecordRow": {'record', 'column', 'hasDeleteButton'},  # Nested t-inherits
+    "sale_management.ListRenderer.RecordRow": {'record'},  # Nested t-inherits
+    "sale_timesheet_enterprise.TimesheetTimerInlineForm": {'data'},  # Nested t-call or inherit
+    "social.MentionsTemplate": {'option'},  # Nested t-call or inherit
+    "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
+    "website.dialog.addFont.singlePreview": {'previewFontName'},  # Nested t-call
+    "website.form_radio": {'record_index'},  # dynamic t-calls from loops
+    "website.form_checkbox": {'record_index'},  # dynamic t-calls from loops
+    "website_sale.DynamicSnippetProductsOption": {'filteredTemplates'},  # dynamic t-calls from loops
+}
+
+
+def upgrade_this(file_manager, log_info, log_error, targets=[]):
+    """ Adds `this.` to all .xml templates variables coming from components
+        (in other words to all variables not defined in the template with t-set, t-foreach...)
+
+    Args:
+        targets (array[string]) : Use to target specific modules.
+            eg. "web" will target "web", "web_editor"...
+            Leave empty to run on entire codebase
+    """
+    # Iteration 1: search for component template names in js files
+    component_templates = list()
+    template_re = re.compile(r"""static\s+template\s*=\s*["']([^'"]+)["']""")
+    js_files = JSTooling.get_js_files(file_manager)
+    for file in js_files:
+        content = file.content
+        for template_name in template_re.findall(content):
+            component_templates.append(template_name)
+
+    # Iteration 2: Build template metadata dicts in VariableAggregator (variable, t-call vars, inheritance chain...)
+    xml_files = JSTooling.get_xml_files(file_manager)
+    aggregator = VariableAggregator(component_templates)
+    for _, file in enumerate(xml_files, start=1):
+        def callback(tree):
+            aggregator.link_templates(tree, file.path._str)
+            aggregator.aggregate_inside_vars(tree)
+            aggregator.aggregate_call_vars(tree)
+
+        if not file.content or not file.content.strip():
+            continue
+
+        update_etree(file.content, callback)
+    aggregator.map_inherits_and_calls()
+
+    # Merge white list of vars with vars parsed by aggregator
+    white_vars = MAIL_WHITELIST | WEB_WHITELIST | WEB_EXT_WHITELIST | MISC_WHITELIST
+    d1, d2 = aggregator.all_vars, white_vars
+    merged = {k: d1.get(k, set()) | d2.get(k, set()) for k in d1.keys() | d2.keys()}
+
+    aggregator.all_vars = merged
+
+    # Iteration 3: Update templates
+    for fileno, file in enumerate(xml_files, start=1):
+        try:
+            res, warnings = update_template(file.path._str, file.content, targets, aggregator, EXCLUDED_TEMPLATES)
+            file.content = res
+            for warning in warnings:
+                print(warning)  # noqa: T201
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+
+def upgrade_this_in_js(file_manager, log_info, log_error, targets=[]):
+    """ Adds `this.` to all .js templates variables coming from components
+        (in other words to all variables not defined in the template with t-set, t-foreach...)
+
+    Args:
+        targets (array[string]) : Use to target specific modules.
+            eg. "web" will target "web", "web_editor"...
+            Leave empty to run on entire codebase
+    """
+    js_files = JSTooling.get_js_files(file_manager, include_test_files=True)
+    pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
+    for _, file in enumerate(js_files, start=1):
+        if targets and not any(
+            f"/{module}/" in file.path._str or f"/{module}_" in file.path._str
+            for module in targets
+        ):
+            continue
+        try:
+            def process_match(match):
+                prefix = match.group(1)   # The "xml`" part
+                raw_xml = match.group(2)  # The content inside backticks
+                suffix = match.group(3)   # The closing "`"
+
+                wrapped_xml = f"<t t-name='xyz'>{raw_xml}</t>"
+
+                aggregator = VariableAggregator(is_testing=True)
+                processed_wrapped, _ = update_template("", wrapped_xml, {}, aggregator, EXCLUDED_TEMPLATES)
+
+                inner_xml = re.sub(r'^<[^>]+>', '', processed_wrapped)
+                inner_xml = re.sub(r'</[^>]+>$', '', inner_xml)
+
+                return f"{prefix}{inner_xml}{suffix}"
+
+            new_content = pattern.sub(process_match, file.content)
+
+            if new_content != file.content:
+                file.content = new_content
+
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+
+def upgrade_t_slot(file_manager, log_info, log_error):
+    files = JSTooling.get_template_files(file_manager)
+    reg_t_slot = re.compile(r'\b(?<!-)t-slot(\s*=)')
+
+    def apply_transformations(text):
+        text = reg_t_slot.sub(r't-call-slot\1', text)
+        return text
+
+    for fileno, file in enumerate(files, start=1):
+        try:
+            raw_content = file.path.read_bytes()
+            content = raw_content.decode("utf-8", errors="ignore")
+
+            if file.path.suffix == ".js":
+                new_content = JSTooling.transform_xml_literals(content, apply_transformations)
+            else:
+                new_content = apply_transformations(content)
+
+            if new_content != content:
+                file.content = new_content
+
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
+
+
+def upgrade_t_call_param(file_manager, log_info, log_error):
+    AUTO_CLOSE_T = re.compile(r"(<t [^>]*[^/>])>\s*</t>", flags=re.MULTILINE)
+    XPATH_TCALL_REG = re.compile(r'\[@(t-call)=[^\]]+\]$')
+
+    def detach_node_tail(node):
+        if (prev := node.getprevious()) is not None:
+            prev.tail = (prev.tail or '').rstrip() + (node.tail or '')
+        else:
+            parent = node.getparent()
+            parent.text = (parent.text or '').rstrip() + (node.tail or '')
+
+
+    def move_tset_before_tcall(tset, tcall):
+        parent = tcall.getparent()
+        previous_indent = get_indentation(tset)
+        indent = get_indentation(tcall)
+
+        detach_node_tail(tset)
+        tset.tail = indent
+
+        tset.set('__need_dedent__', str(len(previous_indent) - len(indent)))
+
+        parent.insert(parent.index(tcall), tset)
+
+
+    def remove_tset_add_attribute(tset, tcall):
+        detach_node_tail(tset)
+
+        if 't-value' in tset.attrib:
+            value = tset.get('t-value')
+            tcall.set(tset.get('t-set'), value)
+        else:
+            tcall.set(f"{tset.get('t-set')}.translate", (tset.text or '').strip())
+
+        tset.getparent().remove(tset)
+
+
+    def is_not_direct_children_of(tset, tcall):
+        closest_tcall = tset.xpath('ancestor::t[@t-call or @t-if or @t-elif or @t-else or @t-set or @t-foreach]')
+        return closest_tcall and closest_tcall[-1] != tcall
+
+
+    def varname_is_used_inside(tset, tcall):
+        n = tset
+        while (skip_to := n.getnext()) is None and n != tcall:
+            n = n.getparent()
+        if skip_to is None:
+            return set()
+        return _varname_is_used_inside(tset, tcall, skip_to)
+
+
+    def _varname_is_used_inside(tset, container, skip_to):
+        used = set()
+        varname = tset.get('t-set')
+        REG = re.compile(rf"(^|[,({{ /*+-]){ varname }([\[\] .()}})/*+-]|$)")
+
+        for el in container.iter():
+            if skip_to is not None and el is not skip_to:
+                continue
+            skip_to = None
+            if not el.tag:
+                continue
+
+            # For the t-set using this value, we check if this new value is used
+            # in the template and continue to check the other usecases.
+            # If the varname is used, if is used by an other unused t-set, we
+            # need to move the current t-set before the t-call.
+            # If the varname is use only by attribute and t-set also used, the
+            # current t-set does'nt move.
+            for attr, value in el.attrib.items():
+                if not attr.startswith('t-'):
+                    if el.attrib.get('t-call') and REG.search(value):
+                        used.add('used')
+                elif attr == 't-set' or attr == 't-as':
+                    if value == varname:
+                        closest_tcall = el.xpath('ancestor::t[@t-call]')
+                        if closest_tcall and closest_tcall[-1] == container:
+                            used.add('rewrite')
+                elif REG.search(value):
+                    used.add('current-used')
+
+            is_tset = el.get('t-set')
+            if is_tset:
+                # get if the value is used inside an other t-set
+                if len(el) and _varname_is_used_inside(tset, el, el[0]):
+                    used.add('current-used')
+                skip_to = el.getnext()
+
+            if 'current-used' in used:
+                used.remove('current-used')
+                if is_tset:
+                    sub_used = varname_is_used_inside(el, container) - {'rewrite'}
+                    if sub_used:
+                        used.update(sub_used)
+                    else:
+                        if is_not_direct_children_of(tset, container):
+                            used.add('used')
+                        else:
+                            used.add('t-set')
+                else:
+                    used.add('used')
+
+        return used
+
+    def remove_tset_add_inherit_attribute(tset, container):
+        attribute = etree.Element('attribute')
+        if len(container):
+            container[-1].tail = container.text  # indent
+        container.append(attribute)
+
+        if 't-value' in tset.attrib:
+            value = tset.get('t-value')
+            attribute.attrib['name'] = tset.get('t-set')
+            attribute.text = value
+        elif not len(tset):
+            attribute.attrib['name'] = f"{tset.get('t-set')}.translate"
+            attribute.text = (tset.text or '').strip()
+        else:
+            raise ValueError('Wrong conversion')
+
+        if tset.getparent() is not None:
+            tset.getparent().remove(tset)
+
+    def change(root: etree._ElementTree, path: str) -> bool:
+        content_updated = False
+        for tcall in root.xpath('//*[@t-call or @t-snippet-call][not(@position="inside")]'):
+
+            if any(not att.startswith('t-') for att in tcall.attrib):
+                continue
+
+            # every t-set children
+            for tset in tcall.xpath('.//*[@t-set]'):
+                if is_not_direct_children_of(tset, tcall):
+                    # not in a directive (as t-if, t-foreach...) or an other
+                    # t-set and not in an other t-call
+                    continue
+
+                used = varname_is_used_inside(tset, tcall)
+
+                if 'used' in used:
+                    # This set of characters is used within the current content.
+                    # It is presumably not used by the t-call.
+                    continue
+
+                if 'rewrite' in used:
+                    log_info("Can not determine the position of the rewrited t-set: '%s' in '%s'", tset.get('t-set'), path)
+                    break
+
+                # Move the t-set if the are some content or if it's used for an
+                # other t-set else we can remove it and add as an attribute.
+                if ('t-set' in used or (len(tset) or tset.get('t-if'))):
+                    # Move the t-set if the are some content or if it's used
+                    # for an other t-set
+                    move_tset_before_tcall(tset, tcall)
+                    tcall.set(tset.get('t-set'), tset.get('t-set'))
+                    content_updated = True
+                else:
+                    # never used inside we can remove it and add as an attribute.
+                    remove_tset_add_attribute(tset, tcall)
+                    content_updated = True
+
+        # inherit t-call
+        inherit_tcalls = (
+            root.xpath('//*[@t-call][@position="inside"]') +
+            [
+                tcall for tcall in root.xpath('//xpath[contains(@expr, "@t-call")][@position="inside"]')
+                if XPATH_TCALL_REG.search(tcall.get('expr'))
+            ]
+        )
+        for tcall in inherit_tcalls:
+            parent = tcall.getparent()
+            index = parent.index(tcall)
+            indent = get_indentation(tcall)
+            before = None
+            attributes = None
+            for tset in tcall.xpath('t[@t-set]'):
+                detach_node_tail(tset)
+                content_updated = True
+
+                if attributes is None:
+                    attributes = etree.Element(tcall.tag, tcall.attrib)
+                    attributes.attrib['position'] = 'attributes'
+                    attributes.text = indent + ' ' * 4
+                    attributes.tail = indent
+                    parent.insert(index, attributes)
+
+                t_set_key = tset.get('t-set')
+                if len(tset) or varname_is_used_inside(tset, tcall):
+                    if before is None:
+                        before = etree.Element(tcall.tag, tcall.attrib)
+                        before.attrib['position'] = 'before'
+                        before.text = indent + ' ' * 4
+                        before.tail = indent
+                        parent.insert(index, before)
+
+                    before.append(tset)
+                    tset = etree.Element('t', {'t-set': t_set_key, 't-value': t_set_key})
+
+                remove_tset_add_inherit_attribute(tset, attributes)
+
+            if before is not None:
+                before[-1].tail = indent
+            if attributes is not None:
+                attributes[-1].tail = indent
+
+            if not len(tcall):
+                detach_node_tail(tcall)
+                parent.remove(tcall)
+                content_updated = True
+
+        return content_updated
+
+    def apply_transformations(content, path):
+        content = update_etree(content, lambda root: change(root, path))
+        content = AUTO_CLOSE_T.sub(r"\g<1>/>", content)
+        return content
+
+    files = JSTooling.get_template_files(file_manager)
+    for fileno, file in enumerate(files, start=1):
+        try:
+            raw_content = file.path.read_bytes()
+            content = raw_content.decode("utf-8", errors="ignore")
+
+            if file.path.suffix == ".js":
+                new_content = JSTooling.transform_xml_literals(content, lambda c: apply_transformations(c, str(file.path)))
+            else:
+                new_content = apply_transformations(content, str(file.path))
+
+            if new_content != content:
+                file.content = new_content
+
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
+
+
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
@@ -591,5 +1274,9 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-esc", upgrade_t_esc)
     collector.run_sub("Migrating t-ref", upgrade_t_ref)
     collector.run_sub("Migrating t-model", upgrade_t_model)
+    # collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
+    collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
+    collector.run_sub("Migrating t-slot", upgrade_t_slot)
+    # collector.run_sub("Migrating parametric t-call", upgrade_t_call_param)
 
     collector.finalize()
