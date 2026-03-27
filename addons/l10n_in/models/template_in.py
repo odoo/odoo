@@ -1,5 +1,6 @@
 from odoo import Command, models
 from odoo.addons.account.models.chart_template import template
+from odoo.exceptions import UserError, RedirectWarning
 
 
 class AccountChartTemplate(models.AbstractModel):
@@ -157,3 +158,34 @@ class AccountChartTemplate(models.AbstractModel):
                     AccountChartTemplate.company_xmlid('sale'): journal_data['sale'],
                     AccountChartTemplate.company_xmlid('purchase'): journal_data['purchase'],
                 }})
+
+    def _get_tag_mapper(self, country_id):
+        original_mapper = super()._get_tag_mapper(country_id)
+        if country_id != self.env.ref('base.in').id:
+            return original_mapper
+
+        def wrapped_mapper(*args):
+            try:
+                return original_mapper(*args)
+            except UserError as e:
+                raise RedirectWarning(
+                    message=e.args[0],
+                    action={
+                        'name': self.env._('App need to update'),
+                        'res_model': 'ir.module.module',
+                        'type': 'ir.actions.act_window',
+                        'views': [(self.env.ref('base.module_form').id, 'form')],
+                        'res_id': self.env.ref('base.module_l10n_in').id,
+                    },
+                    button_text=self.env._("Update app"),
+                )
+        return wrapped_mapper
+
+    def _load(self, template_code, company, install_demo, force_create=True):
+        res = super()._load(template_code, company, install_demo, force_create)
+        if template_code == 'in':
+            if company.l10n_in_tds_feature:
+                company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
+            if company.l10n_in_tcs_feature:
+                company._activate_l10n_in_taxes(['tcs_it_act_25_group'], company)
+        return res
