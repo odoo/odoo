@@ -2,6 +2,7 @@
 
 import logging
 import pprint
+import re
 
 from werkzeug import urls
 
@@ -58,7 +59,7 @@ class PaymentTransaction(models.Model):
             'customer': {
                 'email': self.partner_email,
                 'name': self.partner_name,
-                'phonenumber': self.partner_phone,
+                'phonenumber': re.sub(r"[^\d]", "", (self.partner_phone or "").replace("+", "00")),
             },
             'customizations': {
                 'title': self.company_id.name,
