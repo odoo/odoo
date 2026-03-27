@@ -655,8 +655,11 @@ class Website(models.CachedModel):
                     if snippet_name in snippet_list:
                         continue
                     try:
-                        snippet_idx = snippet_list.index(target) + (position == 'after')
-                        snippet_list.insert(snippet_idx, snippet_name)
+                        snippet_idx = snippet_list.index(target)
+                        if position == 'replace':
+                            snippet_list[snippet_idx] = snippet_name
+                        else:
+                            snippet_list.insert(snippet_idx + (position == 'after'), snippet_name)
                     except ValueError:
                         logger.error(
                             "Skipping snippet '%s' because the target snippet is misconfigured.",
