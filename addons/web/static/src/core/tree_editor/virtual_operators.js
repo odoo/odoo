@@ -14,6 +14,18 @@ import {
 } from "./condition_tree";
 import { getRelativeDateExpr, getBounds, parseRelativeValue } from "./utils";
 
+/** @typedef {import("./condition_tree").AST} AST */
+/** @typedef {import("./condition_tree").Value} Value */
+/** @typedef {import("./condition_tree").Condition} Condition */
+/** @typedef {import("./condition_tree").Connector} Connector */
+/** @typedef {import("./condition_tree").Tree} Tree */
+/** @typedef {import("./condition_tree").Options} Options */
+
+/**
+ * Splits a condition's path into an initial segment and a final segment, handling property paths appropriately.
+ * @param {Condition} c
+ * @returns {{ initialPath: string, lastPart: string }}
+ */
 function splitPath(c) {
     if (typeof c.path !== "string" || c.path === "") {
         return { initialPath: "", lastPart: "" };
@@ -32,10 +44,22 @@ function splitPath(c) {
     return { initialPath, lastPart };
 }
 
+/**
+ * Checks if a condition's path is a field string without dot notation (eg. properties).
+ * @param {Condition} c
+ * @returns {boolean}
+ */
 function isSimplePath(c) {
     return typeof c.path === "string" && !splitPath(c).initialPath;
 }
 
+/**
+ * Wraps a given condition tree in an "any" operator condition using the specified initial path.
+ * @param {Tree} tree
+ * @param {string} initialPath
+ * @param {boolean} [negate]
+ * @returns {Tree}
+ */
 function wrapInAny(tree, initialPath, negate) {
     if (initialPath) {
         return condition(initialPath, "any", cloneTree(tree), negate);
@@ -43,6 +67,12 @@ function wrapInAny(tree, initialPath, negate) {
     return { ...cloneTree(tree), negate };
 }
 
+/**
+ * Transforms `=` and `!=` operators into `set` and `not set` operators
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {Tree}
+ */
 function introduceSetOperators(tree, options = {}) {
     function _introduceSetOperator(c, options = {}) {
         const fieldType = options.getFieldDef?.(c.path)?.type;
@@ -58,6 +88,11 @@ function introduceSetOperators(tree, options = {}) {
     return operate(_introduceSetOperator, tree, options);
 }
 
+/**
+ * Transforms `set` and `not set` operators into `=` and `!=` operators
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 function eliminateSetOperators(tree) {
     function _removeSetOperator(c) {
         if (["set", "not set"].includes(c.operator)) {
@@ -68,6 +103,12 @@ function eliminateSetOperators(tree) {
     return operate(_removeSetOperator, tree);
 }
 
+/**
+ * Transforms `ilike` operators into `start with` operators
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {Tree}
+ */
 function introduceStartsWithOperators(tree, options) {
     function _introduceStartsWithOperator(c, options) {
         const fieldType = options.getFieldDef?.(c.path)?.type;
@@ -84,6 +125,11 @@ function introduceStartsWithOperators(tree, options) {
     return operate(_introduceStartsWithOperator, tree, options);
 }
 
+/**
+ * Transforms `start with` operators into `ilike` operators
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 function eliminateStartsWithOperators(tree) {
     function _eliminateStartsWithOperator(c) {
         if (c.operator === "starts with") {
@@ -93,6 +139,11 @@ function eliminateStartsWithOperators(tree) {
     return operate(_eliminateStartsWithOperator, tree);
 }
 
+/**
+ * Checks if a condition is a simple (ie. no nesting) domain AND condition.
+ * @param {Condition} c
+ * @returns {boolean}
+ */
 function isSimpleAnd(c) {
     if (
         c.type === "connector" &&
@@ -106,6 +157,11 @@ function isSimpleAnd(c) {
     return false;
 }
 
+/**
+ * Checks if a condition matches the expected syntax of a between
+ * @param {Condition} c The condition to assess
+ * @returns {boolean}
+ */
 function isBetween(c) {
     const [{ path: p1, operator: op1, value: value1 }, { path: p2, operator: op2, value: value2 }] =
         c.children;
@@ -115,6 +171,14 @@ function isBetween(c) {
     return false;
 }
 
+/**
+ * Creates a domain range condition between 2 dates with a syntax that is interpreted as a between.
+ * @param {string} path - Field name.
+ * @param {'date'|'datetime'} value1 - first date
+ * @param {'date'|'datetime'} value2 - second date
+ * @param {boolean} isProperty - True if field is a metadata property.
+ * @returns {Condition} A combined domain condition (AND).
+ */
 function makeBetween(path, value1, value2, isProperty) {
     return connector("&", [
         condition(path, ">=", value1, false, isProperty),
@@ -122,6 +186,11 @@ function makeBetween(path, value1, value2, isProperty) {
     ]);
 }
 
+/**
+ * Checks if a condition matches the expected syntax of a strict between
+ * @param {Condition} c The condition to assess
+ * @returns {boolean}
+ */
 function isStrictBetween(c) {
     const [{ path: p1, operator: op1, value: value1 }, { path: p2, operator: op2, value: value2 }] =
         c.children;
@@ -131,6 +200,14 @@ function isStrictBetween(c) {
     return false;
 }
 
+/**
+ * Creates a domain range condition between 2 dates with a syntax that is interpreted as a strict between.
+ * @param {string} path - Field name.
+ * @param {'date'|'datetime'} value1 - first date
+ * @param {'date'|'datetime'} value2 - second date
+ * @param {boolean} isProperty - True if field is a metadata property.
+ * @returns {Condition} A combined domain condition (AND).
+ */
 function makeStrictBetween(path, value1, value2, isProperty) {
     return connector("&", [
         condition(path, ">=", value1, false, isProperty),
@@ -237,6 +314,12 @@ function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fieldType
     ]);
 }
 
+/**
+ * Check if a tree can be interpreted as an in range operator (as a `strictBetween`, `relativeBetween` or `between`)
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {boolean}
+ */
 function introduceInRangeOperators(tree, options = {}) {
     function _introduceInRangeOperator(c, options) {
         const path = c.children[0].path;
@@ -282,6 +365,13 @@ function introduceInRangeOperators(tree, options = {}) {
     );
 }
 
+/**
+ * Expands "in range" operators into standard domain bounds, scoping nested paths with
+ * an "any" condition to ensure both bounds apply to the exact same related record.
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {boolean}
+ */
 function eliminateInRangeOperators(tree, options = {}) {
     function _eliminateInRangeOperator(c, options) {
         if (c.operator !== "in range") {
@@ -305,6 +395,12 @@ function eliminateInRangeOperators(tree, options = {}) {
     return operate(_eliminateInRangeOperator, tree, options);
 }
 
+/**
+ * Transforms standard numeric ranges into "between" virtual operators.
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {boolean}
+ */
 function introduceBetweenOperators(tree, options = {}) {
     function _introduceBetweenOperator(c, options) {
         const res = isBetween(c);
@@ -326,6 +422,12 @@ function introduceBetweenOperators(tree, options = {}) {
     );
 }
 
+/**
+ * Expands "Between" operators into standard domain bounds, scoping nested paths with
+ * an "any" condition to ensure both bounds apply to the exact same related record.
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 function eliminateBetweenOperators(tree) {
     function _eliminateBetweenOperator(c) {
         if (c.operator !== "between") {
@@ -341,6 +443,11 @@ function eliminateBetweenOperators(tree) {
     return operate(_eliminateBetweenOperator, tree);
 }
 
+/**
+ * Flattens specific "any" operators containing "between" or "in range" conditions by combining their paths
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 function eliminateAnyOperators(tree) {
     function _eliminateAnyOperator(c) {
         if (
@@ -359,6 +466,11 @@ function eliminateAnyOperators(tree) {
     return operate(_eliminateAnyOperator, tree);
 }
 
+/**
+ * Removes explicit TRUE or FALSE leaf conditions by replacing them with equivalent empty connectors.
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
 function removeFalseTrueLeaves(tree) {
     function _removeFalseTrueLeave(c) {
         const { path, operator, value, negate, isProperty } = c;
@@ -372,6 +484,12 @@ function removeFalseTrueLeaves(tree) {
     return operate(_removeFalseTrueLeave, tree);
 }
 
+/**
+ * Applies transformations to introduce virtual operators (e.g., set, starts with, between, in range).
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {boolean}
+ */
 export function introduceVirtualOperators(tree, options = {}) {
     return applyTransformations(
         [
@@ -386,6 +504,12 @@ export function introduceVirtualOperators(tree, options = {}) {
     );
 }
 
+/**
+ * Reverts virtual operators back into their standard domain condition equivalents.
+ * @param {Tree} tree
+ * @param {TreeOperatorOptions} options
+ * @returns {boolean}
+ */
 export function eliminateVirtualOperators(tree, options = {}) {
     return applyTransformations(
         [
@@ -399,6 +523,12 @@ export function eliminateVirtualOperators(tree, options = {}) {
     );
 }
 
+/**
+ * Compares two condition trees for logical equivalence by removing virtual operators and explicit leaves.
+ * @param {Tree} tree
+ * @param {Tree} otherTree
+ * @returns {boolean}
+ */
 export function areEquivalentTrees(tree, otherTree) {
     const simplifiedTree = removeFalseTrueLeaves(eliminateVirtualOperators(tree));
     const otherSimplifiedTree = removeFalseTrueLeaves(eliminateVirtualOperators(otherTree));
