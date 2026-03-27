@@ -30,7 +30,7 @@ from collections import defaultdict, OrderedDict
 from enum import auto, IntEnum
 from json.encoder import c_make_encoder
 from opcode import opmap, opname
-from types import CodeType
+from types import CodeType, NoneType
 from weakref import WeakKeyDictionary
 
 import werkzeug
@@ -708,7 +708,7 @@ class _SafeChecker:
     def __init__(self):
         self.__hooks: WeakKeyDictionary[type, typing.Callable | None] = WeakKeyDictionary()
         # Add hooks
-        for t in _SafeWhitelist.TRUSTED_TYPES: self.add_hook(t, None)  # Optimization to save time when serializing these types  # noqa: E701
+        for t in _SafeWhitelist.TRUSTED_CLASSES: self.add_hook(t, None)  # Optimization to save time when serializing these types  # noqa: E701
         for t in self.SEQUENCES: self.add_hook(t, list)  # noqa: E701
         for t in self.MAPPINGS: self.add_hook(t, dict)  # noqa: E701
         for t in self.ITERATORS: self.add_hook(t, self._hook_iterator)  # noqa: E701
@@ -809,12 +809,12 @@ class _SafeChecker:
         safe_whitelist.check_module(obj)
 
     def _hook_builtin_function(self, obj):
-        if obj in safe_whitelist.TRUSTED_BUILTIN_FUNCTIONS:
+        if obj in safe_whitelist.TRUSTED_FUNCTIONS:
             return
         safe_whitelist.check_function(obj)
 
     def _hook_function(self, obj):
-        if obj is safe_call:
+        if obj is safe_call or obj in safe_whitelist.TRUSTED_FUNCTIONS:
             return
         if getattr(obj, '__module__', False):  # Not user-defined
             safe_whitelist.check_function(obj)
@@ -832,11 +832,13 @@ class _SafeChecker:
         return (obj._func, obj._args, obj._kwargs)
 
     def _hook_class(self, obj):
-        if obj in safe_whitelist.TRUSTED_TYPES:
+        if obj in safe_whitelist.TRUSTED_CLASSES:
             return
         safe_whitelist.check_class(obj)
 
     def _hook_instance(self, obj):
+        if type(obj) in safe_whitelist.TRUSTED_CLASSES:
+            return
         safe_whitelist.check_instance(obj)
 
 
@@ -856,16 +858,31 @@ class _SafeWhitelist:
     """
 
     RE_NOTHING = re.compile(r'(?!)')
-    TRUSTED_TYPES = frozenset((
+    TRUSTED_CLASSES = frozenset((
+        # basic types
+        object,
+        NoneType, bool, int, float, str, bytes, bytearray, memoryview,
+        # errors
+        Exception,
+        AttributeError, KeyError, TypeError, UnboundLocalError, ValueError,
+        ZeroDivisionError,
+        # iterators and generators
+        enumerate, filter, map, range, reversed, zip,
         *_SafeChecker.MAPPINGS, *_SafeChecker.SEQUENCES,
-        object, bool, int, float, str, bytes, bytearray, memoryview,
-        types.NoneType,
-        filter, map, enumerate, range, zip, reversed,
-        Exception, ValueError, TypeError, AttributeError, KeyError, ZeroDivisionError, UnboundLocalError,
+        # wrapped modules
+        wrap_module,
     ))
-    TRUSTED_BUILTIN_FUNCTIONS = frozenset((
-        min, max, sum, abs, sorted, round, len, repr, all, any, ord, chr, divmod,
-        isinstance, hasattr, iter,
+    TRUSTED_FUNCTIONS = frozenset((
+        # math and numbers
+        abs, divmod, max, min, round, sum,
+        # string and conversion
+        chr, ord, repr,
+        # collections and iterables
+        all, any, len, sorted,
+        # introspection and type checking
+        hasattr, isinstance,
+        # others
+        _import, functools.reduce,
     ))
 
     @staticmethod
@@ -1055,7 +1072,6 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('mappingproxy.*')
     safe_whitelist.add_function('defaultdict.*')
     safe_whitelist.add_function('OrderedDict.*')
-    safe_whitelist.add_function('_functools.reduce')
     # Monkey patches
     safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
     safe_whitelist.add_function('odoo._monkeypatches.*')
@@ -1092,8 +1108,6 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_class('odoo.tools.json._ScriptSafe')
     safe_whitelist.add_class('odoo.tools.json.JSON')
     safe_whitelist.add_class('odoo.tools.profiler.QwebTracker')
-    safe_whitelist.add_class('odoo.tools.safe_eval.wrap_module')
-    safe_whitelist.add_instance('odoo.tools.misc.OrderedSet')
     safe_whitelist.add_instance('odoo.tools.misc.ReversedIterable')
     safe_whitelist.add_instance('odoo.tools.query.Query')
     safe_whitelist.add_instance('odoo.tools.translate.LazyGettext')
@@ -1108,7 +1122,6 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.tools.misc.format_date')
     safe_whitelist.add_function('odoo.tools.misc.format_duration')
     safe_whitelist.add_function('odoo.tools.misc.street_split')
-    safe_whitelist.add_function('odoo.tools.safe_eval._import')
     safe_whitelist.add_function('odoo.tools.translate.html_translate')
     # Psycopg2
     safe_whitelist.add_class('psycopg2.InterfaceError')
