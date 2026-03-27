@@ -157,6 +157,7 @@ class AccountPayment(models.Model):
         compute='_compute_stat_buttons_from_reconciliation')
     reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
         compute='_compute_stat_buttons_from_reconciliation',
+        search='_search_reconciled_invoice_ids',
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
@@ -449,7 +450,7 @@ class AccountPayment(models.Model):
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
                 payment.company_id = (payment.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('reconciled_invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
+    @api.depends('reconciled_invoice_ids.payment_state', 'reconciled_bill_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
         for payment in self:
             if not payment.state:
@@ -462,7 +463,7 @@ class AccountPayment(models.Model):
                     if move.company_currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) or not any(liquidity.account_id.mapped('reconcile')) else
                     'in_process'
                 )
-            if payment.state == 'in_process' and payment.reconciled_invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids):
+            if payment.state == 'in_process' and (moves := (payment.reconciled_invoice_ids | payment.reconciled_bill_ids)) and all(invoice.payment_state == 'paid' for invoice in moves):
                 payment.state = 'paid'
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
