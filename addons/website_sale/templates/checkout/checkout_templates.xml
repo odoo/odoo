@@ -478,7 +478,7 @@
                     </td>
                 </tr>
                 <!-- Tax included view -->
-                <t t-if="tax_included" t-call="website_sale.order_tax_lines"/>
+                <t t-if="tax_included" t-call="website_sale.order_tax_lines" name="tax_included_order_tax_lines"/>
             </table>
         </div>
     </template>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale_loyalty.PromotionProgressBar">
+        <div class="pb-2 mt-2">
+            <div class="d-flex justify-content-between mb-1">
+                <small
+                    t-attf-class="fw-bold #{props.progress === 100 ? 'text-success' : ''}"
+                    t-out="props.reward_name"
+                />
+                <small t-out="getFormattedMinAmount()"/>
+            </div>
+            <div class="progress" style="height: 8px; border-radius: var(--btn-border-radius);">
+                <div
+                    t-attf-class="progress-bar #{props.progress === 100 ? 'bg-success' : ''}"
+                    role="progressbar"
+                    t-attf-style="width: #{props.progress}%; border-radius: inherit; #{props.progress === 100 ? '' : 'color: inherit; background-color: currentColor;'}"
+                    t-att-aria-valuenow="props.progress"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                />
+            </div>
+        </div>
+    </t>
+
+</templates>

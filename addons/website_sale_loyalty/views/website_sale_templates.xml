@@ -220,4 +220,39 @@
             <t t-call="sale_loyalty.sale_purchased_gift_card"/>
         </xpath>
     </template>
+
+    <template
+        id="website_sale_loyalty.promotion_progress_bar"
+        inherit_id="website_sale.total"
+        name="Promotion Progress Bar"
+    >
+        <t name="tax_included_order_tax_lines" position="after">
+            <tr t-if="promotion_progress_bars">
+                <td colspan="3" class="border-0 p-0 pt-2">
+                    <t t-foreach="promotion_progress_bars" t-as="bar">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small
+                                t-attf-class="fw-bold #{bar['progress'] == 100 and 'text-success' or ''}"
+                                t-out="bar['reward_name']"
+                            />
+                            <small
+                                t-out="bar['minimum_amount']"
+                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                            />
+                        </div>
+                        <div class="progress mb-3" style="height: 8px; border-radius: var(--btn-border-radius);" >
+                            <div
+                                t-attf-class="progress-bar #{bar['progress'] == 100 and 'bg-success' or ''}"
+                                role="progressbar"
+                                t-attf-style="width: #{bar['progress']}%; border-radius: inherit; #{bar['progress'] == 100 and '' or 'color: inherit; background-color: currentColor;'}"
+                                t-att-aria-valuenow="bar['progress']"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                            />
+                        </div>
+                    </t>
+                </td>
+            </tr>
+        </t>
+    </template>
 </odoo>

@@ -354,13 +354,17 @@ class Cart(PaymentPortal):
             },
         )
         values["website_sale.total"] = IrUiView._render_template(
-            "website_sale.total", {"website_sale_order": order_sudo}
+            "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
         )
         values["website_sale.quick_reorder_history"] = IrUiView._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
         return values
+
+    def _total_values(self):
+        """Pass additional values when rendering the 'website_sale.total' template."""
+        return {}
 
     def _prepare_order_history(self):
         """Prepare the order history of the current user.
