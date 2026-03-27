@@ -868,6 +868,32 @@ describe("Enter applied to toggle title", () => {
             `)
         );
     });
+    test("empty title with inline elements: should explode toggle", async () => {
+        browser.sessionStorage.setItem(`html_editor.ToggleBlock1.showContent`, "false");
+        const { editor, el } = await setupEditor(
+            unformat(
+                `<div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
+                    <div data-embedded-editable="title">
+                        <p><strong>[]\u200B</strong></p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p><br></p>
+                    </div>
+                </div>
+            `
+            ),
+            {
+                config: getConfig([toggleBlockEmbedding]),
+            }
+        );
+        await embeddedToggleMountedPromise;
+        splitBlock(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+            `)
+        );
+    });
 });
 describe("Tab applied to toggle title", () => {
     test("toggle closed, should move inside previous toggle", async () => {
