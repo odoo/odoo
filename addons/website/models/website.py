@@ -1270,7 +1270,6 @@ class Website(models.CachedModel):
             if not menu:
                 default_menu_values = {
                     'name': name,
-                    'url': page_url,
                     'parent_id': website.menu_id.id,
                     'page_id': page.id,
                     'website_id': website.id,
@@ -1896,7 +1895,7 @@ class Website(models.CachedModel):
             url = '/'
         return self.env['ir.http']._url_localized(
             url=url, lang_code=request.lang.code, canonical_domain=self.get_base_url()
-        )
+        )['location']
 
     def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""

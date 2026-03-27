@@ -79,6 +79,51 @@ class IrHttp(models.AbstractModel):
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
     @classmethod
+    def _translate_url_page(cls, url: str, loc_without_lang: str, lang_code: str) -> str:
+        """ Returns the given URL adapted for the given lang, meaning that the
+        page part of it will be translated.
+
+        :param url: The url that has to be adapted.
+        :param loc_without_lang: The lang code that is potentially in the url.
+        :param lang_code: The lang in which the url has to be found.
+        """
+        if hasattr(request, 'website'):
+            search_page = request.env['website.page']._get_page_from_url(loc_without_lang, request.website.id, False)
+            if search_page:
+                # Replace the url of the page by the translated url
+                url_page_translated = search_page.with_context(lang=lang_code).sudo().url
+                url = url.replace(loc_without_lang, url_page_translated)
+        return url
+
+    @classmethod
+    def _url_lang(cls, path_or_uri: str, lang_code: str | None = None) -> dict:
+        ''' Given a relative URL, make it absolute, add the required lang or
+            remove useless lang and translate the page part of the url if any.
+            Nothing will be done for absolute or invalid URL.
+            If there is only one language installed, the lang will not be
+            handled unless forced with `lang` parameter.
+
+            :param lang_code: Must be the lang `code`. It could also be
+            something else, such as `'[lang]'` (used for url_return).
+        '''
+        url_lang = super()._url_lang(path_or_uri, lang_code)
+        location, loc_without_lang, lang_code = url_lang['location'], url_lang['loc_without_lang'], url_lang['lang_code']
+        if loc_without_lang:
+            location = cls._translate_url_page(location, loc_without_lang, lang_code)
+        return {'location': location, 'loc_without_lang': loc_without_lang, 'lang_code': lang_code}
+
+    @classmethod
+    def _url_localized(cls,
+                       url: str | None = None,
+                       lang_code: str | None = None,
+                       canonical_domain: str | tuple[str, str, str, str, str] | None = None,
+                       prefetch_langs: bool = False, force_default_lang: bool = False) -> str:
+        url_localized = super()._url_localized(url, lang_code, canonical_domain, prefetch_langs, force_default_lang)
+        location, loc_without_lang, lang = url_localized['location'], url_localized['loc_without_lang'], url_localized['lang']
+        location = cls._translate_url_page(location, loc_without_lang, lang.code)
+        return {'location': location, 'loc_without_lang': loc_without_lang, 'lang': lang}
+
+    @classmethod
     def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
         ''' Return the url with the rewriting applied.
             Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.

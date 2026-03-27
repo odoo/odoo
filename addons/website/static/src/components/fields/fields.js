@@ -7,13 +7,14 @@ import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
 import { Component } from "@odoo/owl";
 import { charField, CharField } from "@web/views/fields/char/char_field";
+import { TranslationButton } from "@web/views/fields/translation_button";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
  * is updated.
  */
 class PageUrlField extends UrlField {
-    static components = { ...UrlField.components, PageDependencies };
+    static components = { ...UrlField.components, PageDependencies, TranslationButton };
     static template = "website.PageUrlField";
     static defaultProps = {
         ...UrlField.defaultProps,
@@ -66,6 +67,9 @@ class PageUrlField extends UrlField {
         // and thus doesn't accept an empty string.
         this.props.record.data[this.props.name] = `/${value.trim()}`;
         return value;
+    }
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
     }
 }
 

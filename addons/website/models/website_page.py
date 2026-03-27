@@ -4,6 +4,7 @@ import logging
 import os
 import re
 import time
+import werkzeug.exceptions
 from collections import Counter
 
 from odoo import api, fields, models, tools
@@ -37,7 +38,7 @@ class WebsitePage(models.Model):
     # for how long a cache entry is considered valid (in seconds)
     _CACHE_DURATION = 3600
 
-    url = fields.Char('Page URL', required=True)
+    url = fields.Char('Page URL', required=True, translate=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
 
     view_write_uid = fields.Many2one('res.users', "Last Content Update by",
@@ -72,8 +73,9 @@ class WebsitePage(models.Model):
 
     def _compute_is_homepage(self):
         website = self.env['website'].get_current_website()
+        website_default_lang = website.default_lang_id.code
         for page in self:
-            page.is_homepage = page.url == (website.homepage_url or page.website_id == website and '/')
+            page.is_homepage = page.with_context(lang=website_default_lang).url == (website.homepage_url or page.website_id == website and '/')
 
     def _compute_visible(self):
         for page in self:
@@ -154,7 +156,7 @@ class WebsitePage(models.Model):
             menu = self.env['website.menu'].search([('page_id', '=', page_id)], limit=1)
             if menu:
                 # If the page being cloned has a menu, clone it too
-                menu.copy({'url': new_page.url, 'name': new_page.name, 'page_id': new_page.id})
+                menu.copy({'name': new_page.name, 'page_id': new_page.id})
 
         return new_page.url
 
@@ -174,6 +176,41 @@ class WebsitePage(models.Model):
             self.env.registry.clear_cache('templates')
         return super().unlink()
 
+    def _handle_url_update(self, page, website_id, url, lang):
+        """ Handles a url update. More specifically, it slugifies it and makes
+        sure that the url is unique, handles redirection update, updates page
+        menus and website homepage url if needed.
+        :param page: The page whose url is updated.
+        :param website_id: The id of the website linked to the page.
+        :param url: The new url.
+        :param lang: The lang for which the url has to be updated.
+        """
+        # Slugify the translated url
+        url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
+        page = page.with_context(lang=lang)
+        if page.url != url:
+            # Make sure that the slugified url is unique
+            url = self.env['website'].with_context(website_id=website_id, lang=lang).get_unique_path(url)
+            self.env.registry.clear_cache('templates')
+            # Handle the synchronization of website's homepage URL if the lang
+            # is the default website language.
+            website = self.env['website'].get_current_website().with_context(lang=lang)
+            website_default_lang = website.default_lang_id.code
+            if lang == website_default_lang:
+                page_url_normalized = {'homepage_url': page.url}
+                website._handle_homepage_url(page_url_normalized)
+                if website.homepage_url == page_url_normalized['homepage_url']:
+                    website.homepage_url = url
+        return url
+
+    def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
+        self.ensure_one()
+        if field_name == 'url':
+            for lang, url in translations.items():
+                website_id = self.website_id.id if self.website_id else False
+                translations[lang] = self._handle_url_update(self, website_id, url, lang)
+        return super()._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
+
     def write(self, vals):
         for page in self:
             website_id = False
@@ -183,17 +220,7 @@ class WebsitePage(models.Model):
             # If URL has been edited, slug it
             if 'url' in vals:
                 url = vals['url'] or ''
-                url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
-                if page.url != url:
-                    url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
-                    page.menu_ids.write({'url': url})
-                    # Sync website's homepage URL
-                    website = self.env['website'].get_current_website()
-                    page_url_normalized = {'homepage_url': page.url}
-                    website._handle_homepage_url(page_url_normalized)
-                    if website.homepage_url == page_url_normalized['homepage_url']:
-                        website.homepage_url = url
-                vals['url'] = url
+                vals['url'] = self._handle_url_update(page, website_id, url, self.env.user.lang)
 
             # If name has changed, check for key uniqueness
             if 'name' in vals and page.name != vals['name']:
@@ -460,20 +487,32 @@ class WebsitePage(models.Model):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('(request.httprequest.path, self.env.context.get("website_id"))', cache='templates.cached_values'),
+        tools.ormcache('(request.httprequest.path, self.env.context.get("website_id"), request.env.lang)', cache='templates.cached_values'),
     )
     @api.model
     def _get_page_info(self, request) -> dict | None:
         req_page = request.httprequest.path
 
+        def _search_page(comparator='='):
+            page_domain = Domain('url', comparator, req_page) & request.website.website_domain()
+            search_page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
+            if search_page:
+                return search_page
+            else:
+                # Search if the page domain can be found thanks to a translation
+                # of language installed on the website.
+                search_page = self._get_page_from_url(req_page, request.website.id, comparator == '=')
+                if search_page:
+                    redirect = request.redirect_query(search_page.sudo().with_context(lang=request.env.lang).url, request.httprequest.args)
+                    redirect.set_cookie('frontend_lang', request.env.lang)
+                    werkzeug.exceptions.abort(redirect)
+
         # specific page first
-        page_domain = Domain('url', '=', req_page) & request.website.website_domain()
-        page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
+        page = _search_page()
 
         # case insensitive search
         if not page:
-            page_domain = Domain('url', '=ilike', req_page) & request.website.website_domain()
-            page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
+            page = _search_page('=ilike')
 
         if page:
             return {
@@ -482,3 +521,26 @@ class WebsitePage(models.Model):
                 'view_id': page.view_id.id,
                 'group_ids': page.group_ids.ids,
             }
+
+    def _get_page_from_url(self, url, website_id, case_sensitive):
+        if not isinstance(url, str):
+            return False
+        self.env.cr.execute("""
+            SELECT id
+            FROM website_page p
+            WHERE (
+                p.website_id = %(website_id)s OR p.website_id IS NULL
+            )
+            AND EXISTS (
+                SELECT 1
+                FROM jsonb_each_text(p.url) AS t(lang, url_translated)
+                WHERE (
+                    (%(case_sensitive)s AND url_translated = %(url)s)
+                    OR
+                    (NOT %(case_sensitive)s AND lower(url_translated) = lower(%(url)s))
+                )
+            )
+            ORDER BY p.website_id;;
+        """, params={'url': url, 'website_id': website_id, 'case_sensitive': case_sensitive})
+        res = self.env.cr.fetchall()
+        return len(res) and self.browse(res[0])

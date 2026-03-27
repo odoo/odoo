@@ -161,7 +161,7 @@ class ProductFeed(models.Model):
             "title": website_homepage.website_meta_title or self.website_id.name,
             "link": urls.urljoin(
                 self.website_id.get_base_url(),
-                self.env["ir.http"]._url_lang(homepage_url, lang_code=self.lang_id.code),
+                self.env["ir.http"]._url_lang(homepage_url, lang_code=self.lang_id.code)['location'],
             ),
             "description": website_homepage.website_meta_description or self.website_id,
             "items": self._prepare_gmc_items(),
@@ -188,7 +188,7 @@ class ProductFeed(models.Model):
                 query["pricelist"] = self.pricelist_id.id
                 url_ = parsed_url._replace(query=url_encode(query)).to_url()
             return urls.urljoin(
-                base_url, self.env["ir.http"]._url_lang(url_, lang_code=self.lang_id.code)
+                base_url, self.env["ir.http"]._url_lang(url_, lang_code=self.lang_id.code)['location']
             )
 
         return {

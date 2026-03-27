@@ -549,28 +549,42 @@ class IrModuleModule(models.Model):
         if not default_menu:
             return res
 
-        lang_value_list = [SQL("%(lang)s, o_menu.name->>%(lang)s", lang=lang) for lang in langs if lang != 'en_US']
-        update_jsonb_list = [SQL('jsonb_build_object(%s)', SQL(', ').join(items)) for items in split_every(50, lang_value_list)]
-        update_jsonb = SQL(' || ').join(update_jsonb_list)
-        o_menu_name = SQL('menu.name || %s' if overwrite else '%s || menu.name', update_jsonb)
-        self.env.cr.execute(SQL(
-            """
-            UPDATE website_menu menu
-               SET name = %(o_menu_name)s
-              FROM website_menu o_menu
-             INNER JOIN website_menu s_menu
-                ON o_menu.name->>'en_US' = s_menu.name->>'en_US' AND o_menu.url = s_menu.url
-             INNER JOIN website_menu root_menu
-                ON s_menu.parent_id = root_menu.id AND root_menu.parent_id IS NULL
-             WHERE o_menu.website_id IS NULL AND o_menu.parent_id = %(default_menu_id)s
-               AND s_menu.website_id IS NOT NULL
-               AND menu.id = s_menu.id
-            """,
-            o_menu_name=o_menu_name,
-            default_menu_id=default_menu.id
-        ))
+        default_menus = self.env['website.menu'].search([
+            ('website_id', '=', False),
+            ('parent_id', '=', default_menu.id)
+        ])
 
-        return res
+        site_menus = self.env['website.menu'].search([
+            ('website_id', '!=', False),
+            ('parent_id', '!=', False),
+            ('parent_id.parent_id', '=', None)
+        ])
+        for o_menu in default_menus:
+            for menu in site_menus:
+                if menu.url == o_menu.url and o_menu.with_context(lang='en_US').name == menu.with_context(lang='en_US').name:
+
+                    lang_value_list = [
+                        SQL("%(lang)s, %(value)s", lang=lang, value=o_menu.with_context(lang=lang).name)
+                        for lang in langs if lang != 'en_US'
+                    ]
+
+                    update_jsonb_list = [
+                        SQL('jsonb_build_object(%s)', SQL(', ').join(items))
+                        for items in split_every(50, lang_value_list)
+                    ]
+                    update_jsonb = SQL(' || ').join(update_jsonb_list)
+
+                    o_menu_name = SQL('menu.name || %s' if overwrite else '%s || menu.name', update_jsonb)
+
+                    self.env.cr.execute(SQL(
+                        """
+                        UPDATE website_menu menu
+                        SET name = %(o_menu_name)s
+                        WHERE id = %(menu_id)s
+                        """,
+                        o_menu_name=o_menu_name,
+                        menu_id=menu.id
+                    ))
 
     # ----------------------------------------------------------------
     # New page templates
