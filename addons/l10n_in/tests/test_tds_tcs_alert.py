@@ -16,36 +16,32 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         # ==== Chart of Accounts ====
         cls.purchase_account = ChartTemplate.ref('p2107')
         cls.purchase_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194c').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_393_1_6_i_a_contr_ind_huf').id
         })
         cls.house_expense_account = ChartTemplate.ref('p2103')
         cls.house_expense_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194c').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_393_1_6_i_a_contr_ind_huf').id
         })
         cls.internet_account = ChartTemplate.ref('p2105')
         cls.internet_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194j').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_393_1_6_iii_b_prof').id
         })
         cls.rent_account = ChartTemplate.ref('p2111')
         cls.rent_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194ib').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_393_1_2_ii_b_rent_land').id
         })
         cls.sale_account = ChartTemplate.ref('p20011')
         cls.sale_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tcs_section_206c1g_r').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tcs_section_394_1_7_b_lrs_oth').id
         })
         cls.service_account = ChartTemplate.ref('p20021')
         cls.creditors_account = ChartTemplate.ref('p11211')
 
         # ==== Taxes ====
-        cls.tax_194c = ChartTemplate.ref('tds_20_us_194c')
-        cls.tax_194c.write({'l10n_in_section_id': cls.env.ref('l10n_in.tds_section_194c').id})
-        cls.tax_194j = ChartTemplate.ref('tds_10_us_194j')
-        cls.tax_194j.write({'l10n_in_section_id': cls.env.ref('l10n_in.tds_section_194j').id})
-        cls.tax_194ib = ChartTemplate.ref('tds_20_us_194ib')
-        cls.tax_194ib.write({'l10n_in_section_id': cls.env.ref('l10n_in.tds_section_194ib').id})
-        cls.tax_206c1g_r = ChartTemplate.ref('tcs_5_us_206c_1g_som')
-        cls.tax_206c1g_r.write({'l10n_in_section_id': cls.env.ref('l10n_in.tcs_section_206c1g_r').id})
+        cls.tax_393_1_6_i_a = ChartTemplate.ref('tds_sale_1_us_393_1_6_i_a')
+        cls.tax_393_1_6_iii_b = ChartTemplate.ref('tds_sale_10_us_393_1_6_iii_b')
+        cls.tax_393_1_2_ii_b = ChartTemplate.ref('tds_sale_10_us_393_1_2_ii_b')
+        cls.tax_394_1_7_b = ChartTemplate.ref('tcs_20_us_394_1_7_b_lrs_oth')
 
         country_in_id = cls.env.ref("base.in").id
 
@@ -109,7 +105,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             account_id=self.internet_account,
         )
 
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_on_exceeded_per_transaction_limit(self):
         '''
@@ -120,27 +116,21 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             price_unit=31000,
             company_id=self.branch_a,
         )
-        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
         move_1 = self._create_invoice_one_line(
             price_unit=31000,
             partner_id=self.partner_b,
             company_id=self.branch_b,
         )
-        self.assertEqual(move_1.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
-
-        self._create_invoice_one_line(
-            price_unit=31000,
-            partner_id=self.partner_b,
-            company_id=self.branch_b,
-        )
+        self.assertEqual(move_1.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
         move_3 = self._create_invoice_one_line(
-            price_unit=31000,
+            price_unit=15000,
             partner_id=self.partner_b,
             company_id=self.branch_b,
         )
-        self.assertEqual(move_3.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertFalse(move_3.l10n_in_warning)
 
     def test_tcs_tds_warning_on_monthly_aggregate_limit(self):
         '''
@@ -154,7 +144,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_a,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         with freeze_time('2024-07-06'):
             move_1 = self._create_invoice_one_line(
@@ -163,7 +153,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_b,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
         with freeze_time('2024-07-16'):
             move_2 = self._create_invoice_one_line(
@@ -171,7 +161,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_c,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194IB on this transaction.")
+        self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)2(ii)(b) RENT LAND on this transaction.")
 
         with freeze_time('2024-09-06'):
             move_3 = self._create_invoice_one_line(
@@ -179,7 +169,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_c,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move_3.l10n_in_warning, False)
+        self.assertFalse(move_3.l10n_in_warning)
 
         with freeze_time('2024-09-16'):
             move_4 = self._create_invoice_one_line(
@@ -187,7 +177,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 company_id=self.branch_c,
                 account_id=self.rent_account,
             )
-        self.assertEqual(move_4.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194IB on this transaction.")
+        self.assertEqual(move_4.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)2(ii)(b) RENT LAND on this transaction.")
 
     def test_tcs_tds_warning_partner_with_pan(self):
         '''
@@ -201,7 +191,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.internet_account,
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         move_1 = self._create_invoice_one_line(
             partner_id=self.partner_foreign_2,
@@ -209,7 +199,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_b,
             account_id=self.internet_account,
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
         # same pan number
         move_2 = self._create_invoice_one_line(
@@ -217,7 +207,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.internet_account,
         )
-        self.assertEqual(move_2.l10n_in_warning, False)
+        self.assertFalse(move_2.l10n_in_warning)
 
         move_3 = self._create_invoice_one_line(
             partner_id=self.partner_b,
@@ -225,7 +215,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_b,
             account_id=self.internet_account,
         )
-        self.assertEqual(move_3.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194J on this transaction.")
+        self.assertEqual(move_3.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(iii)(b) PROF on this transaction.")
 
     def test_tcs_tds_warning_on_exceeded_aggregate_limit(self):
         '''
@@ -236,7 +226,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=20000,
                 company_id=self.branch_a,
             )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         with freeze_time('2024-07-06'):
             move_1 = self._create_invoice_one_line(
@@ -244,14 +234,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=20000,
                 company_id=self.branch_b,
             )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
         with freeze_time('2024-08-06'):
             move_2 = self._create_invoice_one_line(
                 price_unit=31000,
                 company_id=self.branch_c,
             )
-        self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
         with freeze_time('2024-09-06'):
             move_3 = self._create_invoice_one_line(
@@ -259,14 +249,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=5000,
                 company_id=self.branch_a,
             )
-        self.assertEqual(move_3.l10n_in_warning, False)
+        self.assertFalse(move_3.l10n_in_warning)
 
         with freeze_time('2024-10-07'):
             move_4 = self._create_invoice_one_line(
                 price_unit=20000,
                 company_id=self.branch_b,
             )
-        self.assertEqual(move_4.l10n_in_warning, False)
+        self.assertFalse(move_4.l10n_in_warning)
 
         with freeze_time('2024-11-08'):
             move_5 = self._create_invoice_one_line(
@@ -274,7 +264,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 price_unit=25000,
                 company_id=self.branch_c,
             )
-        self.assertEqual(move_5.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move_5.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_on_case_of_credit_note(self):
         '''
@@ -286,7 +276,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.internet_account
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         move_1 = self._create_invoice_one_line(
             partner_id=self.partner_b,
@@ -296,14 +286,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self._reverse_invoice(move, date='2024-09-01')
 
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
         move_2 = self._create_invoice_one_line(
             price_unit=2000,
             company_id=self.branch_a,
             account_id=self.internet_account
         )
-        self.assertEqual(move_2.l10n_in_warning, False)
+        self.assertFalse(move_2.l10n_in_warning)
 
     def test_tcs_tds_warning_cleared_on_available_tax(self):
         '''
@@ -314,11 +304,11 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         move = self._create_invoice_one_line(
             move_type='out_invoice',
             price_unit=710000,
-            tax_ids=self.tax_206c1g_r,
+            tax_ids=self.tax_394_1_7_b,
             company_id=self.branch_a,
         )
 
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_for_multiple_accounts_in_lines(self):
         '''
@@ -344,10 +334,10 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 self._prepare_invoice_line(price_unit=710000, quantity=10, account_id=self.purchase_account),
             ],
         )
-        self.tds_wizard_entry(move=move_1, lines=[(self.tax_194ib, 100000), (self.tax_194j, 100000), (self.tax_194c, 100000)])
+        self.tds_wizard_entry(move=move_1, lines=[(self.tax_393_1_2_ii_b, 100000), (self.tax_393_1_6_iii_b, 100000), (self.tax_393_1_6_i_a, 100000)])
         move_1.button_draft()
         move_1.action_post()
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
     def test_tcs_tds_warning_for_if_line_has_price_zero(self):
         '''
@@ -360,13 +350,13 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 self._prepare_invoice_line(price_unit=0),
             ],
         )
-        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
         move_1 = self._create_invoice_one_line(
             price_unit=0,
             company_id=self.branch_a,
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
     def test_tcs_tds_warning_for_all_lines_do_not_have_taxes(self):
         '''
@@ -379,10 +369,10 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 self._prepare_invoice_line(price_unit=6000, quantity=16),
             ],
         )
-        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
-        self.tds_wizard_entry(move=move, lines=[(self.tax_194c, 100000)])
+        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.tds_wizard_entry(move=move, lines=[(self.tax_393_1_6_i_a, 100000)])
         move.line_ids.remove_move_reconcile()
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_for_company_branches(self):
         '''
@@ -410,7 +400,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
         )
 
-        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_tcs_use_in_bill(self):
         '''
@@ -422,7 +412,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company_id=self.branch_a,
             account_id=self.sale_account
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_tds_use_in_invoice(self):
         '''
@@ -434,7 +424,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             price_unit=110000,
             company_id=self.branch_a,
         )
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
     def test_tcs_tds_warning_for_multiple_accounts_same_section_in_lines(self):
         '''
@@ -449,7 +439,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 self._prepare_invoice_line(price_unit=14000, account_id=self.purchase_account),
             ],
         )
-        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
         move_1 = self._create_invoice(
             company_id=self.branch_a,
@@ -458,20 +448,20 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
                 self._prepare_invoice_line(price_unit=13000, account_id=self.purchase_account),
             ],
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
         move_2 = self._create_invoice_one_line(
             price_unit=30000,
             company_id=self.branch_a,
             account_id=self.house_expense_account,
         )
-        self.assertEqual(move_2.l10n_in_warning, False)
+        self.assertFalse(move_2.l10n_in_warning)
 
         move_3 = self._create_invoice_one_line(
             price_unit=10000,
             company_id=self.branch_a,
         )
-        self.assertEqual(move_3.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move_3.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_for_not_consider_draft_cancel_invoices_for_aggregate(self):
         '''
@@ -485,21 +475,21 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             account_id=self.purchase_account,
         )
         move.button_cancel()
-        self.assertEqual(move.l10n_in_warning, False)
+        self.assertFalse(move.l10n_in_warning)
 
         move_1 = self._create_invoice_one_line(
             price_unit=25000,
             company_id=self.branch_a,
             account_id=self.purchase_account,
         )
-        self.assertEqual(move_1.l10n_in_warning, False)
+        self.assertFalse(move_1.l10n_in_warning)
 
         move_2 = self._create_invoice_one_line(
             price_unit=85000,
             company_id=self.branch_a,
             account_id=self.purchase_account,
         )
-        self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
+        self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_if_some_lines_has_tax(self):
         '''
@@ -510,12 +500,12 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             move_type='out_invoice',
             company_id=self.branch_a,
             invoice_line_ids=[
-                self._prepare_invoice_line(price_unit=710000, tax_ids=self.tax_206c1g_r),
+                self._prepare_invoice_line(price_unit=710000, tax_ids=self.tax_394_1_7_b),
                 self._prepare_invoice_line(price_unit=710000),
             ],
         )
 
-        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to collect TCS u/s 206C(1G) Remittance on this transaction.")
+        self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to collect TCS u/s 394(1)7(b) Remittance (Other) on this transaction.")
 
     def test_l10n_in_section_alert_access_rights(self):
         '''
