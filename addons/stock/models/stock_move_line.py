@@ -84,7 +84,7 @@ class StockMoveLine(models.Model):
     is_scrap = fields.Boolean(related='move_id.scrapped')
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id')
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id')
-    reference = fields.Char(related='move_id.reference', readonly=False)
+    reference = fields.Char(related='move_id.reference')
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
