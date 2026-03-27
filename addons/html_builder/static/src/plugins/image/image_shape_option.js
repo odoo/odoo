@@ -1,6 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { toRatio } from "@html_builder/utils/utils";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { deepCopy } from "@web/core/utils/objects";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
@@ -21,7 +20,6 @@ export class ImageShapeOption extends BaseOptionComponent {
         super.setup();
         this.customizeTabPlugin = this.dependencies.customizeTab;
         this.imageShapeOption = this.dependencies.imageShapeOption;
-        this.toRatio = toRatio;
         this.state = useDomState(async (editingElement) => {
             const { originalSrc } = editingElement.dataset.originalSrc
                 ? editingElement.dataset

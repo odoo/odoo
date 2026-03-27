@@ -28,7 +28,7 @@ test("should commit changes", async () => {
     });
     addBuilderOption({
         selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'"/>`,
     });
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
@@ -61,11 +61,11 @@ test("range input should step up or down with arrow keys", async () => {
     });
     addBuilderOption({
         selector: ".test-integer-step",
-        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'" step="2"/>`,
     });
     addBuilderOption({
         selector: ".test-fractional-step",
-        template: xml`<BuilderRange action="'customAction'" step="0.15" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'" step="0.15"/>`,
     });
     await setupHTMLBuilder(`
         <div class="test-integer-step">10</div>
@@ -153,7 +153,7 @@ test("keeping an arrow key pressed should commit only once", async () => {
     });
     addBuilderOption({
         selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'" step="2"/>`,
     });
     freezeTime();
     await setupHTMLBuilder(`

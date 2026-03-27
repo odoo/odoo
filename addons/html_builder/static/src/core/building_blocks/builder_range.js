@@ -22,8 +22,6 @@ export class BuilderRange extends Component {
         max: { type: Number, optional: true },
         step: { type: Number, optional: true },
         default: { type: Number, optional: true },
-        displayRangeValue: { type: Boolean, optional: true },
-        computedOutput: { type: Function, optional: true },
         unit: { type: String, optional: true },
         saveUnit: { type: String, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
@@ -36,7 +34,6 @@ export class BuilderRange extends Component {
         max: 100,
         step: 1,
         default: 0,
-        displayRangeValue: false,
         applyWithUnit: true,
         withNumberInput: false,
         displayNormalizedValue: false,
@@ -111,9 +108,6 @@ export class BuilderRange extends Component {
 
     onInputRange(e) {
         this.preview(e.target.value);
-        if (this.props.displayRangeValue) {
-            this.state.value = this.parseDisplayValue(e.target.value);
-        }
     }
 
     onKeydownRange(e) {
@@ -158,16 +152,6 @@ export class BuilderRange extends Component {
 
     get inputValueRange() {
         return this.formatRawValue(this.state.value || this.min);
-    }
-
-    get displayValueRange() {
-        let value = this.inputValueRange;
-        if (this.props.computedOutput) {
-            value = this.props.computedOutput(value);
-        } else if (this.props.unit) {
-            value = `${value}${this.props.unit}`;
-        }
-        return value;
     }
 
     get displayValueNumber() {
