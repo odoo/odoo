@@ -45,10 +45,10 @@
                             <field name="retry_count"/>
                         </group>
                     </group>
-                    <group string="Error" attrs="{'invisible': [('state', '!=', 'error')]}">
+                    <group string="Error" invisible="state != 'error'">
                         <field name="error_message" nolabel="1"/>
                     </group>
-                    <group string="Notes" attrs="{'invisible': [('notes', '=', False)]}">
+                    <group string="Notes" invisible="not notes">
                         <field name="notes" nolabel="1"/>
                     </group>
                     <group string="Raw Payload">
@@ -81,13 +81,11 @@
                 <separator/>
                 <filter name="filter_today" string="Today"
                         domain="[('create_date','&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_by_state" string="State"
                             context="{'group_by': 'state'}"/>
                     <filter name="group_by_type" string="Object Type"
                             context="{'group_by': 'object_type'}"/>
-                    <filter name="group_by_backend" string="Backend"
-                            context="{'group_by': 'backend_ref'}"/>
                 </group>
             </search>
         </field>

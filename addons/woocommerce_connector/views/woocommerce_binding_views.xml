@@ -47,7 +47,7 @@
                             <field name="sync_state"/>
                             <field name="last_sync"/>
                             <field name="sync_error"
-                                   attrs="{'invisible': [('sync_state', '!=', 'error')]}"/>
+                                   invisible="sync_state != 'error'"/>
                         </group>
                     </group>
                 </sheet>

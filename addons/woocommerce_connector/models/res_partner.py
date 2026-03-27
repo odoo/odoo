@@ -17,7 +17,7 @@ class ResPartner(models.Model):
         copy=False,
     )
     woo_customer_binding_count = fields.Integer(
-        string='WooCommerce Bindings',
+        string='WooCommerce Binding Count',
         compute='_compute_woo_customer_binding_count',
     )
 

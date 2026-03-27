@@ -38,15 +38,15 @@
                             groups="woocommerce_connector.group_woocommerce_manager"/>
                     <button name="action_open_sync_wizard" string="Sync Now…"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'connected')]}"
+                            invisible="state != 'connected'"
                             groups="woocommerce_connector.group_woocommerce_manager"/>
                     <button name="action_open_retry_wizard" string="Retry Errors…"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'connected')]}"
+                            invisible="state != 'connected'"
                             groups="woocommerce_connector.group_woocommerce_manager"/>
                     <button name="action_register_webhooks" string="Register Webhooks"
                             type="object"
-                            attrs="{'invisible': [('state', '!=', 'connected')]}"
+                            invisible="state != 'connected'"
                             groups="woocommerce_connector.group_woocommerce_manager"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,connected"/>
@@ -57,19 +57,19 @@
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_product_bindings"
                                 type="object" class="oe_stat_button" icon="fa-cubes"
-                                attrs="{'invisible': [('product_binding_count', '=', 0)]}">
+                                invisible="product_binding_count == 0">
                             <field name="product_binding_count" widget="statinfo"
                                    string="Products"/>
                         </button>
                         <button name="action_view_order_bindings"
                                 type="object" class="oe_stat_button" icon="fa-shopping-cart"
-                                attrs="{'invisible': [('order_binding_count', '=', 0)]}">
+                                invisible="order_binding_count == 0">
                             <field name="order_binding_count" widget="statinfo"
                                    string="Orders"/>
                         </button>
                         <button name="action_view_customer_bindings"
                                 type="object" class="oe_stat_button" icon="fa-users"
-                                attrs="{'invisible': [('customer_binding_count', '=', 0)]}">
+                                invisible="customer_binding_count == 0">
                             <field name="customer_binding_count" widget="statinfo"
                                    string="Customers"/>
                         </button>
@@ -83,7 +83,7 @@
 
                     <widget name="web_ribbon" title="Archived"
                             bg_color="bg-danger"
-                            attrs="{'invisible': [('active', '=', True)]}"/>
+                            invisible="active"/>
 
                     <div class="oe_title">
                         <h1>
@@ -106,7 +106,7 @@
                         <group string="Status">
                             <field name="state" readonly="1"/>
                             <field name="last_connection_error" readonly="1"
-                                   attrs="{'invisible': [('last_connection_error', '=', False)]}"/>
+                                   invisible="not last_connection_error"/>
                             <field name="last_products_sync" readonly="1"/>
                             <field name="last_orders_sync" readonly="1"/>
                             <field name="last_customers_sync" readonly="1"/>

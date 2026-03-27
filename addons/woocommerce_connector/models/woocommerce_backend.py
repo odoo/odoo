@@ -131,10 +131,10 @@ class WooCommerceBackend(models.Model):
 
     # ── Constraints ───────────────────────────────────────────────────────────
 
-    _sql_constraints = [
-        ('unique_url_company', 'UNIQUE(url, company_id)',
-         'A backend for this store URL already exists for this company.'),
-    ]
+    _unique_url_company = models.Constraint(
+        'UNIQUE(url, company_id)',
+        'A backend for this store URL already exists for this company.',
+    )
 
     # ── Computes ──────────────────────────────────────────────────────────────
 

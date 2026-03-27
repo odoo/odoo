@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
         copy=False,
     )
     woo_binding_count = fields.Integer(
-        string='WooCommerce Bindings',
+        string='WooCommerce Binding Count',
         compute='_compute_woo_binding_count',
     )
     woo_sync_state = fields.Selection(

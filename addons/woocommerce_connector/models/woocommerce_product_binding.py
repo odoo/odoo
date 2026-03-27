@@ -70,10 +70,10 @@ class WooCommerceProductBinding(models.Model):
 
     # ── Constraints ───────────────────────────────────────────────────────────
 
-    _sql_constraints = [
-        ('unique_backend_external', 'UNIQUE(backend_id, external_id)',
-         'A binding for this WooCommerce product already exists on this backend.'),
-    ]
+    _unique_backend_external = models.Constraint(
+        'UNIQUE(backend_id, external_id)',
+        'A binding for this WooCommerce product already exists on this backend.',
+    )
 
     # ── Import Orchestration ──────────────────────────────────────────────────
 
@@ -450,7 +450,7 @@ class WooCommerceProductVariantBinding(models.Model):
         index=True,
     )
 
-    _sql_constraints = [
-        ('unique_backend_external', 'UNIQUE(backend_id, external_id)',
-         'A variant binding for this WooCommerce variation already exists.'),
-    ]
+    _unique_backend_external = models.Constraint(
+        'UNIQUE(backend_id, external_id)',
+        'A variant binding for this WooCommerce variation already exists.',
+    )

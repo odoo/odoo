@@ -55,10 +55,10 @@ class WooCommerceCustomerBinding(models.Model):
 
     # ── Constraints ───────────────────────────────────────────────────────────
 
-    _sql_constraints = [
-        ('unique_backend_external', 'UNIQUE(backend_id, external_id)',
-         'A binding for this WooCommerce customer already exists on this backend.'),
-    ]
+    _unique_backend_external = models.Constraint(
+        'UNIQUE(backend_id, external_id)',
+        'A binding for this WooCommerce customer already exists on this backend.',
+    )
 
     # ── Import ────────────────────────────────────────────────────────────────
 

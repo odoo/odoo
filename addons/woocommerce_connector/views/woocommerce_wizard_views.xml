@@ -12,7 +12,7 @@
             <form string="WooCommerce Manual Sync">
                 <sheet>
                     <!-- Draft: configure -->
-                    <group attrs="{'invisible': [('state', '!=', 'draft')]}">
+                    <group invisible="state != 'draft'">
                         <group string="Backend">
                             <field name="backend_id"/>
                         </group>
@@ -25,10 +25,10 @@
                         <group string="Options">
                             <field name="force_full_sync"/>
                             <field name="orders_from_date"
-                                   attrs="{'invisible': [('sync_orders', '=', False)]}"/>
+                                   invisible="not sync_orders"/>
                         </group>
                         <div class="alert alert-warning" role="alert"
-                             attrs="{'invisible': [('force_full_sync', '=', False)]}">
+                             invisible="not force_full_sync">
                             <strong>Full re-sync enabled.</strong> All records will be
                             re-fetched from WooCommerce, ignoring previous sync timestamps.
                             This may take several minutes for large stores.
@@ -36,7 +36,7 @@
                     </group>
 
                     <!-- Done: results -->
-                    <group attrs="{'invisible': [('state', '!=', 'done')]}">
+                    <group invisible="state != 'done'">
                         <div class="alert alert-success" role="alert">
                             <strong>Sync complete.</strong>
                         </div>
@@ -48,13 +48,13 @@
                 <footer>
                     <button name="action_run_sync" string="Run Sync Now"
                             type="object" class="btn-primary"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
                     <button name="action_close" string="Close"
                             type="object" class="btn-secondary"
-                            attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            invisible="state != 'done'"/>
                     <button string="Cancel" class="btn-secondary"
                             special="cancel"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
                 </footer>
             </form>
         </field>
@@ -77,24 +77,24 @@
         <field name="arch" type="xml">
             <form string="Retry Failed Syncs">
                 <sheet>
-                    <group attrs="{'invisible': [('state', '!=', 'draft')]}">
+                    <group invisible="state != 'draft'">
                         <group string="Scope">
                             <field name="backend_id"/>
                             <field name="object_type"/>
                             <field name="error_count" readonly="1"/>
                         </group>
                         <div class="alert alert-info" role="alert"
-                             attrs="{'invisible': [('error_count', '=', 0)]}">
+                             invisible="error_count == 0">
                             <strong><field name="error_count" readonly="1" nolabel="1"/> failed record(s)</strong>
                             will be re-fetched from WooCommerce and re-imported.
                         </div>
                         <div class="alert alert-success" role="alert"
-                             attrs="{'invisible': [('error_count', '!=', 0)]}">
+                             invisible="error_count != 0">
                             No failed sync records found for this selection.
                         </div>
                     </group>
 
-                    <group attrs="{'invisible': [('state', '!=', 'done')]}">
+                    <group invisible="state != 'done'">
                         <field name="result_summary" nolabel="1" readonly="1"/>
                     </group>
 
@@ -103,13 +103,13 @@
                 <footer>
                     <button name="action_retry" string="Retry Now"
                             type="object" class="btn-primary"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
                     <button name="action_close" string="Close"
                             type="object" class="btn-secondary"
-                            attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            invisible="state != 'done'"/>
                     <button string="Cancel" class="btn-secondary"
                             special="cancel"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
                 </footer>
             </form>
         </field>
