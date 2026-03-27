@@ -375,10 +375,13 @@ class DiscussChannelMember(models.Model):
             partner_fields=lambda res: (
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields"),
+                res.from_method("_store_im_status_fields", internal=True),
                 res.from_method("_store_mention_fields"),
             ),
-            guest_fields="_store_guest_fields",
+            guest_fields=lambda res: (
+                res.from_method("_store_avatar_fields"),
+                res.from_method("_store_im_status_fields", internal=True),
+            ),
         )
 
     def _store_guest_dynamic_fields(self, res: Store.FieldList):
@@ -395,7 +398,10 @@ class DiscussChannelMember(models.Model):
                 res.from_method("_store_partner_fields"),
                 res.from_method("_store_mention_fields"),
             ),
-            guest_fields="_store_guest_fields",
+            guest_fields=lambda res: (
+                res.from_method("_store_avatar_fields"),
+                res.from_method("_store_im_status_fields", internal=True),
+            ),
         )
 
     def _store_identifying_fields(self, res: Store.FieldList):

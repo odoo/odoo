@@ -391,8 +391,15 @@ class ResUsers(models.Model):
             res.one("self_user", "_store_init_fields", value=self)
             res.attr("settings", settings._res_users_settings_format())
         if guest := self.env["mail.guest"]._get_guest_from_context():
-            # sudo: mail.guest - guest can read its own init fields
-            res.one("self_guest", "_store_avatar_fields", value=guest.sudo())
+            res.one(
+                "self_guest",
+                lambda res: (
+                    res.from_method("_store_avatar_fields"),
+                    res.from_method("_store_im_status_fields"),
+                ),
+                # sudo: mail.guest - guest can read its own init fields
+                value=guest.sudo(),
+            )
 
     def _store_init_fields(self, res: Store.FieldList):
         res.one(

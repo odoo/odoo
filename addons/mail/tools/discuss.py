@@ -286,6 +286,9 @@ class Store:
         self.is_executing_operation_queue = False
         self.operation_queue = []
         self.target = Store.Target(bus_channel, bus_subchannel)
+        self._internal_store = None
+        if bus_channel and bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
+            self._internal_store = Store(bus_channel=bus_channel, bus_subchannel="internal_users")
 
     @store_enqueue
     def add(self, records, fields, *, as_thread=False, fields_params=None):
@@ -360,16 +363,17 @@ class Store:
         Use case: to add fields from inside _to_store() methods to avoid recursive code.
         Note: in all other cases, Store.add() should be called instead.
         """
-        if not field_list or not field_list.records:
-            return self
-        for record, record_data_list in self._get_records_data_list(field_list).items():
-            for record_data in record_data_list:
-                if as_thread:
-                    self.add_model_values(
-                        "mail.thread", {"id": record.id, "model": record._name, **record_data},
-                    )
-                else:
-                    self.add_model_values(record._name, {"id": record.id, **record_data})
+        if field_list and field_list.records:
+            for record, record_data_list in self._get_records_data_list(field_list).items():
+                for record_data in record_data_list:
+                    if as_thread:
+                        self.add_model_values(
+                            "mail.thread", {"id": record.id, "model": record._name, **record_data},
+                        )
+                    else:
+                        self.add_model_values(record._name, {"id": record.id, **record_data})
+        if self._internal_store:
+            self._internal_store.add_records_fields(field_list._internal_field_list, as_thread)
         return self
 
     @store_enqueue
@@ -438,6 +442,8 @@ class Store:
         )
         if res := self.get_result():
             self.target.channel._bus_send(notification_type, res, subchannel=self.target.subchannel)
+        if self._internal_store:
+            self._internal_store.bus_send()
 
     @store_enqueue
     def resolve_data_request(self, values=None, *, data_id=None):
@@ -484,6 +490,8 @@ class Store:
             field_list.extend(Store.Attr(self, key, value) for key, value in fields.items())
         elif isinstance(fields, (list, tuple, Store.FieldList)):
             field_list.extend(fields)  # prevent mutation of original list
+            if isinstance(fields, Store.FieldList) and fields._internal_field_list:
+                field_list.extend(fields._internal_field_list, internal=True)
         else:
             raise TypeError(f"unexpected fields format: '{fields}' for records: '{records}'")
         return field_list
@@ -861,37 +869,62 @@ class Store:
             # records for which the field list will apply. Useful to pre-compute values in batch.
             self.records = records
             self.store = store
+            self._internal_field_list = None
+            if store._internal_store:
+                self._internal_field_list = Store.FieldList(store._internal_store, records)
 
         @property
         def target(self):
             """Store.Target of the field list. Useful to adapt fields depending on the receivers."""
             return self.store.target
 
-        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False):
+        def append(self, field, *, internal=False):
+            if not internal or self.is_for_internal_users():
+                super().append(field)
+            elif self._internal_field_list is not None:
+                self._internal_field_list.append(field)
+
+        def extend(self, fields, *, internal=False):
+            if not internal or self.is_for_internal_users():
+                super().extend(fields)
+            elif self._internal_field_list is not None:
+                self._internal_field_list.extend(fields)
+
+        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False, internal=False):
             """Add an attribute to the field list."""
             if self.records is not None and value is NO_VALUE and predicate is None and not sudo:
-                self.append(field_name)
+                self.append(field_name, internal=internal)
             else:
                 self.append(
                     Store.Attr(self.store, field_name, value=value, predicate=predicate, sudo=sudo),
+                    internal=internal,
                 )
 
-        def from_method(self, method_name, **fields_params):
+        def from_method(self, method_name, *, internal=False, **fields_params):
             """Add fields coming from a method on the records to the field list."""
             if (method := Store._get_fields_method(self.records, method_name)):
-                method(self, **fields_params)
+                if not internal or self.is_for_internal_users():
+                    method(self, **fields_params)
+                elif self._internal_field_list is not None:
+                    method(self._internal_field_list, **fields_params)
             else:
                 raise TypeError(
                     f"unexpected method name format: '{method_name}' for records: '{self.records}'",
                 )
 
-        def one(self, record_or_field_name, fields, /, *args, **kwargs):
+        def one(self, record_or_field_name, fields, /, *args, internal=False, **kwargs):
             """Add a x2one relation to the field list."""
-            self.append(Store.One(self.store, record_or_field_name, fields, *args, **kwargs))
+            self.append(
+                Store.One(self.store, record_or_field_name, fields, *args, **kwargs),
+                internal=internal,
+            )
 
-        def many(self, records_or_field_name, fields, /, *args, **kwargs):
+        def many(self, records_or_field_name, fields, /, *args, internal=False, **kwargs):
             """Add a x2many relation to the field list."""
-            self.append(Store.Many(self.store, records_or_field_name, fields, *args, **kwargs))
+            self.append(
+                Store.Many(self.store, records_or_field_name, fields, *args, **kwargs),
+                internal=internal,
+            )
 
         def is_for_current_user(self):
             """Return whether the current target is the current user or guest of the given env.
@@ -954,7 +987,13 @@ class Store:
             return records if isinstance(records, env.registry["res.users"]) else env["res.users"]
 
         def _identity(self):
-            return ("FieldList", self.records.env, self.records, tuple(self))
+            return (
+                "FieldList",
+                self.records.env,
+                self.records,
+                tuple(self),
+                *(self._internal_field_list._identity() if self._internal_field_list is not None else ()),
+            )
 
     class FieldListManager:
         """Similar API as Store.FieldList but for multiple field lists at once.

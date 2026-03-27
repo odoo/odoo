@@ -63,7 +63,14 @@ class WebClient(WebclientController):
                 value=user,
             )
         if guest:
-            res.one("self_guest", "_store_guest_fields", value=guest)
+            res.one(
+                "self_guest",
+                lambda res: (
+                    res.from_method("_store_avatar_fields"),
+                    res.from_method("_store_im_status_fields"),
+                ),
+                value=guest,
+            )
         # sudo - im_livechat.channel: allow access to live chat channel to
         # check if operators are available.
         channel = request.env["im_livechat.channel"].sudo().search([("id", "=", params)])

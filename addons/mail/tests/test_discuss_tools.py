@@ -2,11 +2,12 @@
 
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests import TransactionCase
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests.common import new_test_user
+from odoo.addons.bus.tests.common import BusResult
 
 
-class TestDiscussTools(TransactionCase):
+class TestDiscussTools(MailCase):
     """Test class for discuss tools."""
 
     # 0xx generic tests (key not in ids_by_model)
@@ -258,6 +259,111 @@ class TestDiscussTools(TransactionCase):
         data = store.get_result()
         self.assertEqual(data["res.partner"][0]["email"], "test_user_355_a@example.com")
         self.assertNotIn("email", data["res.partner"][1])
+
+    def test_360_internal_fields(self):
+        public_category = self.env["discuss.category"].create({"name": "Public Channels"})
+        public_channel = self.env["discuss.channel"].create(
+            {
+                "name": "Public Channel",
+                "description": "secret",
+                "group_public_id": False,
+                "discuss_category_id": public_category.id,
+            },
+        )
+        odoobot_partner = self.env.ref("base.partner_root")
+        odoobot_member = public_channel.channel_member_ids.filtered(
+            lambda m: m.partner_id == odoobot_partner,
+        )
+        bob_user = new_test_user(self.env, "bob_user", name="Bob", email="bob@secret.com")
+        bob_member = public_channel._add_members(users=bob_user)
+        portal_user = new_test_user(self.env, login="portal_user", groups="base.group_portal")
+        test_message = public_channel.message_post(body="Test Message")
+
+        def _get_fields(res):
+            res.attr("name")
+            res.attr("description", internal=True)
+            res.many(
+                "channel_member_ids",
+                lambda res: (
+                    res.one(
+                        "partner_id",
+                        lambda res: (
+                            res.attr("name"),
+                            res.extend(["email", "phone"], internal=True),
+                        ),
+                    ),
+                    res.attr("seen_message_id"),
+                ),
+            )
+            res.many("message_ids", ["author_id"], internal=True)
+            res.one(
+                "discuss_category_id",
+                lambda res: (
+                    res.attr("id"),
+                    res.from_method("_store_category_fields", internal=True),
+                ),
+            )
+
+        non_internal_payload = {
+            "discuss.category": [{"id": public_category.id}],
+            "discuss.channel": [
+                {
+                    "channel_member_ids": public_channel.channel_member_ids.ids,
+                    "discuss_category_id": public_category.id,
+                    "id": public_channel.id,
+                    "name": "Public Channel",
+                },
+            ],
+            "discuss.channel.member": [
+                {
+                    "id": odoobot_member.id,
+                    "partner_id": odoobot_partner.id,
+                    "seen_message_id": test_message.id,
+                },
+                {
+                    "id": bob_member.id,
+                    "partner_id": bob_user.partner_id.id,
+                    "seen_message_id": False,
+                },
+            ],
+            "res.partner": [
+                {"id": odoobot_partner.id, "name": "OdooBot"},
+                {"id": bob_user.partner_id.id, "name": "Bob"},
+            ],
+        }
+        internal_payload = {
+            "discuss.channel": [
+                {
+                    "description": "secret",
+                    "id": public_channel.id,
+                    "message_ids": [test_message.id],
+                },
+            ],
+            "discuss.category": [
+                {
+                    "bus_channel_access_token": public_category._get_bus_channel_access_token(),
+                    "id": public_category.id,
+                    "name": "Public Channels",
+                    "sequence": public_category.sequence,
+                },
+            ],
+            "mail.message": [{"id": test_message.id, "author_id": odoobot_partner.id}],
+            "res.partner": [
+                {"id": odoobot_partner.id, "email": "odoobot@example.com", "phone": False},
+                {"id": bob_user.partner_id.id, "email": "bob@secret.com", "phone": False},
+            ],
+        }
+        with self.assertBus([
+            BusResult(public_channel, "mail.record/insert", non_internal_payload),
+            BusResult((public_channel, "internal_users"), "mail.record/insert", internal_payload),
+        ]):
+            store = Store(bus_channel=public_channel)
+            store.add(public_channel, _get_fields)
+            store.bus_send()
+        with self.assertBus([BusResult(portal_user, "mail.record/insert", non_internal_payload)]):
+            store = Store(bus_channel=portal_user)
+            store.add(public_channel, _get_fields)
+            store.bus_send()
 
     def test_390_add_no_loop(self):
         """Test that store.add() does not loop indefinitely but it is still allowed to process

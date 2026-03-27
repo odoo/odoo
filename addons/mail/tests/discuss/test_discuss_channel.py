@@ -82,6 +82,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
             return [
                 BusResult(test_group),
+                BusResult((test_group, "internal_users")),
                 BusResult(self.test_user),
                 BusResult(self.user_employee),
                 BusResult(
@@ -180,8 +181,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "active": True,
                                 "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                 "id": self.test_partner.id,
-                                "im_status": "offline",
-                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                 "is_company": False,
                                 "main_user_id": self.test_user.id,
                                 "mention_token": self.test_partner._get_mention_token(),
@@ -195,6 +194,29 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "id": self.test_user.id,
                                 "partner_id": self.test_partner.id,
                                 "share": False,
+                            },
+                        ),
+                    },
+                ),
+                BusResult(
+                    (test_group, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "email": "test_customer@example.com",
+                                "id": self.test_partner.id,
+                                "im_status": "offline",
+                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
+                                "main_user_id": self.test_user.id,
+                                "tz": False,
+                            },
+                        ),
+                        "res.users": self._filter_users_fields(
+                            {
+                                "employee_ids": [],
+                                "id": self.test_user.id,
+                                "partner_id": self.test_partner.id,
                             },
                         ),
                     },
@@ -449,13 +471,75 @@ class TestChannelInternals(MailCommon, HttpCase):
         member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.test_user.partner_id)
         member.seen_message_id = read_message
 
-        def get_mark_as_read_notifs(for_internal_user):
-            user_data = {"id": self.test_user.id, "partner_id": self.test_partner.id}
-            if for_internal_user:
-                user_data["employee_ids"] = []
-            return [
+        with self.assertBus(
+            [
                 BusResult(
-                    self.test_user if for_internal_user else chat,
+                    chat,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            {
+                                "id": member.id,
+                                "partner_id": self.test_partner.id,
+                                "seen_message_id": msg_1.id,
+                                "channel_id": chat.id,
+                            },
+                        ],
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
+                                "id": self.test_partner.id,
+                                "mention_token": self.test_partner._get_mention_token(),
+                                "name": self.test_partner.name,
+                                "write_date": fields.Datetime.to_string(self.test_partner.write_date),
+                            },
+                        ),
+                    },
+                ),
+                BusResult(
+                    (chat, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "id": self.test_partner.id,
+                                "im_status": self.test_partner.im_status,
+                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
+                                "main_user_id": self.test_user.id,
+                            },
+                        ),
+                        "res.users": self._filter_users_fields(
+                            {
+                                "employee_ids": [],
+                                "id": self.test_user.id,
+                                "partner_id": self.test_partner.id,
+                            },
+                        ),
+                    },
+                ),
+                BusResult(
+                    self.test_user,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel.member": [
+                            {
+                                "channel_id": chat.id,
+                                "id": member.id,
+                                "message_unread_counter": 0,
+                                "message_unread_counter_bus_id": 0,
+                                "new_message_separator": msg_1.id + 1,
+                                "partner_id": self.test_partner.id,
+                            },
+                        ],
+                    },
+                ),
+            ],
+        ):
+            member._mark_as_read(msg_1.id)
+        with self.assertBus(
+            [
+                BusResult(
+                    self.test_user,
                     "mail.record/insert",
                     {
                         "discuss.channel.member": [
@@ -478,7 +562,13 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "write_date": fields.Datetime.to_string(self.test_partner.write_date),
                             },
                         ),
-                        "res.users": self._filter_users_fields(user_data),
+                        "res.users": self._filter_users_fields(
+                            {
+                                "employee_ids": [],
+                                "id": self.test_user.id,
+                                "partner_id": self.test_partner.id,
+                            },
+                        ),
                     },
                 ),
                 BusResult(
@@ -497,11 +587,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ],
                     },
                 ),
-            ]
-
-        with self.assertBus(get_mark_as_read_notifs(for_internal_user=False)):
-            member._mark_as_read(msg_1.id)
-        with self.assertBus(get_mark_as_read_notifs(for_internal_user=True)):
+            ],
+        ):
             member._mark_as_read(msg_1.id)
 
     def test_channel_message_post_should_not_allow_adding_wrong_parent(self):

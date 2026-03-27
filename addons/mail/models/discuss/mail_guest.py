@@ -117,12 +117,10 @@ class MailGuest(models.Model):
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
     def _store_avatar_fields(self, res: Store.FieldList):
-        """Same as _store_guest_fields but without im_status fields to reduce queries when im_status is not needed."""
         res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())
         res.extend(["name", "write_date"])
 
-    def _store_guest_fields(self, res: Store.FieldList):
-        self._store_avatar_fields(res)
+    def _store_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
         res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
 

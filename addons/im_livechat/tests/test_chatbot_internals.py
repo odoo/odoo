@@ -365,6 +365,27 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     },
                 ),
                 BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "email": "e.e@example.com",
+                                "id": self.partner_employee.id,
+                                "im_status": "offline",
+                                "im_status_access_token": self.partner_employee._get_im_status_access_token(),
+                                "main_user_id": self.user_employee.id,
+                                "tz": False,
+                            },
+                        ),
+                        "res.users": self._filter_users_fields({
+                            "employee_ids": [],
+                            "id": self.user_employee.id,
+                            "partner_id": self.partner_employee.id,
+                        }),
+                    },
+                ),
+                BusResult(
                     discuss_channel,
                     "mail.record/insert",
                     {
