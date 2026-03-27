@@ -279,7 +279,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
 
                 await Promise.all(proms);
                 this._onProductUpdate();
-                saleOrderRecord.data.order_line.leaveEditMode();
             },
             discard: () => {
                 if (!selectedComboItems.length) {

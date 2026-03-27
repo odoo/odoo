@@ -3,12 +3,19 @@
 <templates xml:space="preserve">
 
     <t t-name="sale.SaleProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+        <xpath expr="//Many2One" position="attributes">
+            <attribute name="cssClass">'flex-grow-1'</attribute>
+        </xpath>
+        <xpath expr="//button[@id='labelVisibilityButtonId']" position="attributes">
+            <attribute name="style">--btn-active-border-color: transparent;</attribute>
+        </xpath>
         <xpath expr="//Many2One" position="after">
             <!-- Show configuration button for custom lines/products -->
             <button
                 t-if="!this.props.readonly and this.hasConfigurationButton"
                 type="button"
-                class="btn btn-secondary fa fa-pencil px-2"
+                class="btn fa fa-pencil px-2"
+                style="--btn-active-border-color: transparent;"
                 tabindex="-1"
                 draggable="false"
                 t-att-aria-label="this.configurationButtonHelp"

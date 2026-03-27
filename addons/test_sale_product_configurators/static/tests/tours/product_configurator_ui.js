@@ -47,6 +47,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
         configuratorTourUtils.addOptionalProduct("Conference Chair (TEST)"),
         configuratorTourUtils.addOptionalProduct("Chair floor protection (TEST)"),
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         // check that 3 products were added to the SO
         {
             trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',

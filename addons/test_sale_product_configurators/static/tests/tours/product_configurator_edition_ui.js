@@ -17,6 +17,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Aluminium, White)"))',
         },
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         tourUtils.editLineMatching("Customizable Desk (TEST) (Aluminium, White)", ""),
         tourUtils.editConfiguration(),
         {
@@ -45,10 +46,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             trigger: 'div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Custom, Black)")',
         },
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: nice custom value"),
         tourUtils.editConfiguration(),
         configuratorTourUtils.setCustomAttribute("Customizable Desk", "Legs", "another nice custom value"),
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: another nice custom value"),
         tourUtils.editConfiguration(),
         {
@@ -60,6 +63,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
         // Mr Tajine Saucisse uses the pricelist that has a rule when 2 or more products. Price is 600
         configuratorTourUtils.assertPriceTotal("1,200.00"),
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         {
             // check quantity
             trigger: 'td.o_data_cell:contains("2.00")',
