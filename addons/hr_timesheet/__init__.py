@@ -48,6 +48,9 @@ def _uninstall_hook(env):
 
     env['ir.model.data'].search([('name', 'ilike', 'internal_project_default_stage')]).unlink()
 
+    if rule := env.ref('project.account_analytic_line_rule_manager', raise_if_not_found=False):
+        rule.active = True
+
 
 def _pre_init_hook(env):
     """

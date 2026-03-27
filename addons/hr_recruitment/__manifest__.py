@@ -49,6 +49,7 @@
         'data/hr_recruitment_demo.xml',
     ],
     'application': True,
+    "uninstall_hook": "uninstall_hook",
     'assets': {
         'web.assets_backend': [
             'hr_recruitment/static/src/**/*.js',
