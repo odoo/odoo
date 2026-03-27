@@ -315,6 +315,11 @@ class Website(models.Model):
 
     # === BUSINESS METHODS ===#
 
+    def get_cta_data(self, website_purpose, website_type):
+        cta_data = super().get_cta_data(website_purpose, website_type)
+        cta_data['shop_btn_href'] = '/shop'
+        return cta_data
+
     @api.model
     def get_configurator_shop_page_styles(self):  # noqa: PLR6301
         """Format and return the ids and images of each shop page style for website onboarding.
