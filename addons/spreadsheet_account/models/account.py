@@ -69,14 +69,19 @@ class AccountAccount(models.Model):
                     return default_domain
                 default_domain = Domain('account_type', 'in', ['liability_payable', 'asset_receivable'])
 
+            # ODOO.ACCOUNT.GROUP returns type tokens (e.g. "__type__income") instead of
+            # individual account codes to avoid passing thousands of codes to the server.
+            account_types = [c[len("__type__"):] for c in codes if c.startswith("__type__")]
+            codes = [c for c in codes if not c.startswith("__type__")]
+
             # It is more optimized to (like) search for code directly in account.account than in account_move_line
             code_domain = Domain.OR(
                 Domain("code", "=like", f"{code}%")
                 for code in codes
             )
-            account_domain = code_domain | default_domain
-            account_ids = self.env["account.account"].with_company(company_id).search(account_domain).ids
-            account_id_domain = [("account_id", "in", account_ids)]
+            type_domain = Domain("account_type", "in", account_types) if account_types else Domain.FALSE
+            account_domain = (code_domain | type_domain | default_domain) & Domain(self._check_company_domain(company))
+            account_id_domain = Domain("account_id", "any", account_domain)
         else:
             account_id_domain = Domain.FALSE
 
@@ -189,16 +194,11 @@ class AccountAccount(models.Model):
 
     @api.model
     def get_account_group(self, account_types):
-        data = self._read_group(
-            [
-                *self._check_company_domain(self.env.company),
-                ("account_type", "in", account_types),
-            ],
-            ['account_type'],
-            ['code:array_agg'],
-        )
-        mapped = dict(data)
-        return [mapped.get(account_type, []) for account_type in account_types]
+        # Return a lightweight type token for each requested type.
+        # The token is recognised by _build_spreadsheet_formula_domain and converted
+        # into an efficient account_id.account_type IN (...) condition, avoiding the
+        # need to fetch and round-trip thousands of individual account codes.
+        return [[f"__type__{account_type}"] for account_type in account_types]
 
     @api.model
     def spreadsheet_fetch_balance_tag(self, args_list):
