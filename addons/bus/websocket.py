@@ -745,13 +745,17 @@ class Websocket:
             env = new_env(cr, self._session, set_lang=True)
             for callback in self.__event_callbacks[event_type]:
                 try:
-                    retrying(functools.partial(callback, env, self), env)
+                    retrying(functools.partial(callback, env, self), env, close_on_commit=False)
                 except Exception:
                     _logger.warning(
                         "Error during Websocket %s callback",
                         LifecycleEvent(event_type).name,
                         exc_info=True,
                     )
+                finally:
+                    # retrying leaves the cursor in a bad state state, and since
+                    # we continue to use it, we must rollback
+                    cr.rollback()
 
     def _assert_session_validity(self):
         """Ensure the current session exists and validate it using
