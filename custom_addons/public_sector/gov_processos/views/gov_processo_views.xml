@@ -420,10 +420,16 @@
                         <page name="dossie" string="Dossiê">
                             <div class="mb-3 d-flex gap-2 align-items-center">
                                 <button
-                                    name="%(action_gov_processo_doc_new)d"
-                                    string="Novo Documento"
-                                    type="action"
+                                    name="action_novo_documento_typst"
+                                    string="Novo Documento Typst"
+                                    type="object"
                                     class="btn-primary"
+                                />
+                                <button
+                                    name="%(action_gov_processo_doc_new)d"
+                                    string="Documento Livre"
+                                    type="action"
+                                    class="btn-secondary"
                                 />
                                 <button
                                     string="Novo Checklist Manual"

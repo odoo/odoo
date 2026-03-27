@@ -1,4 +1,5 @@
 from .gov_odoo_bridge import GovOdooBridge
 from .gov_template_registry import GovTemplateRegistry
+from .gov_typst_document_builder import GovTypstDocumentBuilder
 from .gov_typst_serializer import GovTypstSerializer
 from .gov_typst_workspace import GovTypstWorkspace

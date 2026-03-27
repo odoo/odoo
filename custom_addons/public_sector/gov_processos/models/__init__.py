@@ -30,6 +30,7 @@ from . import gov_processo_tramite_wizard
 from . import gov_timbre
 from . import gov_processo_vinculo
 from . import gov_processo_wizard
+from . import gov_processo_doc_typst_wizard
 from . import gov_siafi_service
 from . import gov_siafi_wizard
 from . import gov_execucao_wizard

@@ -41,6 +41,7 @@
         "views/gov_siafi_wizard_views.xml",
         "views/gov_execucao_wizard_views.xml",
         "views/gov_processo_wizard.xml",
+        "views/gov_processo_doc_typst_wizard_views.xml",
         "views/gov_processo_tramite_wizard.xml",
         "views/gov_processo_menus.xml",
         "data/gov_processo_sequence.xml",

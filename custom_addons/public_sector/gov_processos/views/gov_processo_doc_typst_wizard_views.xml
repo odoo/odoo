@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_doc_typst_wizard_form" model="ir.ui.view">
+        <field name="name">gov.processo.doc.typst.wizard.form</field>
+        <field name="model">gov.processo.doc.typst.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Novo Documento Typst">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="processo_id"/>
+                            <field name="modelo_typst"/>
+                            <field name="doc_type"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="titulo"/>
+                            <field name="subtitulo"/>
+                            <field name="referencia"/>
+                            <field name="base_legal"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Conteudo">
+                            <group>
+                                <field name="area_requisitante"/>
+                                <field name="objeto"/>
+                                <field name="justificativa"/>
+                                <field name="fatos_relevantes"/>
+                                <field name="pontos_chave"/>
+                                <field name="quadro_resumo"/>
+                                <field name="encaminhamento"/>
+                                <field name="observacoes_finais"/>
+                            </group>
+                        </page>
+                        <page string="Assinatura">
+                            <group>
+                                <field name="incluir_assinatura" widget="boolean_toggle"/>
+                                <field name="assinante_nome" invisible="not incluir_assinatura"/>
+                                <field name="assinante_cargo" invisible="not incluir_assinatura"/>
+                                <field name="gerar_pdf_imediatamente" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                        <page string="Previa Typst">
+                            <div class="alert alert-info" role="alert">
+                                O conteudo abaixo sera gravado em <code>typst_source</code> no documento do processo.
+                            </div>
+                            <field
+                                name="typst_preview"
+                                nolabel="1"
+                                widget="ace"
+                                readonly="1"
+                                options="{'mode': 'text'}"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_criar_documento"
+                        string="Criar Documento"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_processo_doc_typst_wizard" model="ir.actions.act_window">
+        <field name="name">Novo Documento Typst</field>
+        <field name="res_model">gov.processo.doc.typst.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

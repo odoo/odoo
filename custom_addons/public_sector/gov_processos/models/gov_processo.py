@@ -976,6 +976,19 @@ class GovProcesso(models.Model):
             },
         }
 
+    def action_novo_documento_typst(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Novo Documento Typst",
+            "res_model": "gov.processo.doc.typst.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_processo_id": self.id,
+            },
+        }
+
     def action_avancar_fase(self):
         self.ensure_one()
         proximo = self._FASE_NEXT.get(self.state)
