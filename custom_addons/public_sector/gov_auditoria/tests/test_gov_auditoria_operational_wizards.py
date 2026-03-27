@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.tests.common import TransactionCase
 
 
@@ -53,6 +55,30 @@ class TestGovAuditoriaOperationalWizards(TransactionCase):
         self.assertEqual(ciclo.state, "diligencia")
         self.assertTrue(ciclo.evento_ids.filtered(lambda evento: evento.tipo == "diligencia_emitida"))
         self.assertTrue(ciclo.prazo_ids.filtered(lambda prazo: prazo.descricao == "Prazo de resposta a diligencia"))
+
+    def test_cycle_can_generate_typst_diligencia_notification(self):
+        ciclo = self._create_cycle("em_analise")
+        wizard = self.env["gov.auditoria.diligencia.wizard"].create(
+            {
+                "ciclo_id": ciclo.id,
+                "descricao": "Diligencia para notificacao Typst",
+                "prazo_dias": 7,
+                "criar_prazo": True,
+            }
+        )
+        wizard.action_confirm()
+
+        with patch(
+            "odoo.addons.gov_auditoria.models.gov_auditoria_ciclo.GovTypstService.compile",
+            return_value=b"%PDF-1.4 fake diligencia",
+        ):
+            ciclo.action_generate_diligencia_typst()
+
+        doc = ciclo.documento_ids.filtered(lambda item: item.nome == f"Notificacao de Diligencia - {ciclo.name}")
+        self.assertTrue(doc)
+        self.assertEqual(doc.tipo, "notificacao")
+        self.assertTrue(doc.event_id)
+        self.assertTrue(doc.source_attachment_id)
 
     def test_acordao_wizard_creates_decision_and_document(self):
         ciclo = self._create_cycle("julgamento")
@@ -192,3 +218,49 @@ class TestGovAuditoriaOperationalWizards(TransactionCase):
                 lambda doc: doc.tipo == "certidao" and doc.protocolo_externo == "PROTO-2026-001"
             )
         )
+
+    def test_apontamento_can_generate_typst_defense_document(self):
+        ciclo = self._create_cycle("defesa")
+        apontamento = self.env["gov.auditoria.apontamento"].create(
+            {
+                "ciclo_id": ciclo.id,
+                "codigo": "AP-TYPST",
+                "descricao": "Apontamento para Typst",
+                "resposta": "Manifestacao formal consolidada.",
+                "data_resposta": "2026-03-20",
+            }
+        )
+
+        with patch(
+            "odoo.addons.gov_auditoria.models.gov_auditoria_ciclo.GovTypstService.compile",
+            return_value=b"%PDF-1.4 fake defesa",
+        ):
+            apontamento.action_generate_resposta_typst()
+
+        doc = apontamento.documento_resposta_ids.filtered(lambda item: item.nome == "Defesa Typst - AP-TYPST")
+        self.assertTrue(doc)
+        self.assertEqual(doc.tipo, "defesa")
+        self.assertTrue(doc.attachment_id)
+        self.assertTrue(doc.source_attachment_id)
+
+    def test_decisao_can_generate_typst_acordao_document(self):
+        ciclo = self._create_cycle("acordao")
+        decisao = self.env["gov.auditoria.decisao"].create(
+            {
+                "ciclo_id": ciclo.id,
+                "tipo": "regular_com_ressalvas",
+                "numero_acordao": "777/2026",
+                "ementa": "Decisao para emissao Typst",
+            }
+        )
+
+        with patch(
+            "odoo.addons.gov_auditoria.models.gov_auditoria_ciclo.GovTypstService.compile",
+            return_value=b"%PDF-1.4 fake acordao",
+        ):
+            decisao.action_generate_acordao_typst()
+
+        doc = ciclo.documento_ids.filtered(lambda item: item.nome == "Acordao Typst - 777/2026")
+        self.assertTrue(doc)
+        self.assertEqual(doc.tipo, "acordao")
+        self.assertTrue(decisao.attachment_ids)

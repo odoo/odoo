@@ -31,12 +31,30 @@
                 <field name="state"/>
                 <field name="modo_dados"/>
                 <filter name="f_ativos" string="Em andamento" domain="[('state', 'not in', ['encerrado', 'arquivado'])]"/>
+                <filter name="f_exec" string="Painel Executivo" domain="[('has_pendencia_operacional', '=', True)]"/>
+                <filter name="f_criticos" string="Criticos" domain="[('has_pendencia_critica', '=', True)]"/>
                 <filter name="f_acordao" string="Aguardando Acordao" domain="[('state', 'in', ['em_analise', 'julgamento', 'recurso'])]"/>
+                <filter name="f_docs_pendentes" string="Docs Pendentes" domain="[('has_documento_pendente', '=', True)]"/>
+                <filter name="f_prazo_vencido" string="Prazo Vencido" domain="[('has_prazo_vencido', '=', True)]"/>
+                <filter name="f_apontamento_aberto" string="Apontamento Aberto" domain="[('has_apontamento_aberto', '=', True)]"/>
+                <filter name="f_cumprimento_pendente" string="Cumprimento Pendente" domain="[('has_determinacao_pendente', '=', True)]"/>
                 <filter name="f_empresa" string="Minhas Empresas" domain="[('company_id', 'in', allowed_company_ids)]"/>
                 <filter name="g_company" string="UG" context="{'group_by': 'company_id'}"/>
                 <filter name="g_state" string="Estado" context="{'group_by': 'state'}"/>
                 <filter name="g_orgao" string="Orgao" context="{'group_by': 'orgao_id'}"/>
             </search>
+        </field>
+    </record>
+
+    <record id="view_gov_auditoria_ciclo_pivot" model="ir.ui.view">
+        <field name="name">gov.auditoria.ciclo.pivot</field>
+        <field name="model">gov.auditoria.ciclo</field>
+        <field name="arch" type="xml">
+            <pivot string="Painel Executivo">
+                <field name="company_id" type="row"/>
+                <field name="orgao_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
         </field>
     </record>
 
@@ -54,11 +72,13 @@
                     <button name="action_to_em_analise" string="Em Analise" type="object" class="btn-secondary" invisible="state not in ('remessa','defesa','recurso')"/>
                     <button name="action_to_diligencia" string="Diligencia" type="object" class="btn-secondary" invisible="state not in ('em_analise',)"/>
                     <button name="action_open_diligencia_wizard" string="Registrar Diligencia" type="object" class="btn-secondary" invisible="state not in ('em_analise','diligencia','defesa')"/>
+                    <button name="action_generate_diligencia_typst" string="Gerar Diligencia Typst" type="object" class="btn-secondary" invisible="state not in ('diligencia','defesa')"/>
                     <button name="action_open_checklist" string="Abrir Checklist" type="object" class="btn-secondary" invisible="not orgao_id"/>
                     <button name="action_to_defesa" string="Defesa" type="object" class="btn-secondary" invisible="state != 'diligencia'"/>
                     <button name="action_to_julgamento" string="Julgamento" type="object" class="btn-secondary" invisible="state not in ('em_analise',)"/>
                     <button name="action_to_acordao" string="Acordao" type="object" class="btn-secondary" invisible="state not in ('julgamento','recurso')"/>
                     <button name="action_open_acordao_wizard" string="Registrar Acordao" type="object" class="btn-secondary" invisible="state not in ('em_analise','julgamento','recurso','acordao')"/>
+                    <button name="action_generate_dossier_typst" string="Gerar Dossie Typst" type="object" class="btn-secondary" invisible="state in ('rascunho',)"/>
                     <button name="action_to_recurso" string="Recurso" type="object" class="btn-secondary" invisible="state != 'acordao'"/>
                     <button name="action_to_cumprimento" string="Cumprimento" type="object" class="btn-secondary" invisible="state != 'acordao'"/>
                     <button name="action_to_encerrado" string="Encerrar" type="object" class="btn-secondary" invisible="state not in ('cumprimento','acordao')"/>
@@ -66,6 +86,20 @@
                     <button name="action_generate_mvp_annexes" string="Gerar Anexos MVP" type="object" class="btn-primary" invisible="not reporting_ready"/>
                 </header>
                 <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_open_overdue_deadlines" type="object" class="oe_stat_button" icon="fa-clock-o">
+                            <field name="prazo_vencido_count" string="Prazos Vencidos" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_pending_documents" type="object" class="oe_stat_button" icon="fa-files-o">
+                            <field name="documento_pendente_count" string="Docs Pendentes" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_open_findings" type="object" class="oe_stat_button" icon="fa-exclamation-triangle">
+                            <field name="apontamento_aberto_count" string="Apontamentos" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_pending_determinations" type="object" class="oe_stat_button" icon="fa-gavel" invisible="not decisao_id">
+                            <field name="determinacao_pendente_count" string="Determinacoes" widget="statinfo"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="name" readonly="1"/>
@@ -98,6 +132,7 @@
                         <field name="documento_enviado_count" readonly="1"/>
                         <field name="documento_pendente_count" readonly="1"/>
                         <field name="apontamento_aberto_count" readonly="1"/>
+                        <field name="determinacao_pendente_count" readonly="1"/>
                         <field name="ultimo_evento_em" readonly="1"/>
                         <field name="native_empenho_count" readonly="1"/>
                         <field name="native_liquidacao_count" readonly="1"/>
@@ -193,5 +228,13 @@
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="gov_auditoria.view_gov_auditoria_ciclo_search"/>
         <field name="context">{'default_company_id': allowed_company_ids and allowed_company_ids[0]}</field>
+    </record>
+
+    <record id="action_gov_auditoria_ciclo_executivo" model="ir.actions.act_window">
+        <field name="name">Painel Executivo</field>
+        <field name="res_model">gov.auditoria.ciclo</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="gov_auditoria.view_gov_auditoria_ciclo_search"/>
+        <field name="context">{'search_default_f_ativos': 1, 'search_default_f_exec': 1, 'search_default_g_company': 1}</field>
     </record>
 </odoo>

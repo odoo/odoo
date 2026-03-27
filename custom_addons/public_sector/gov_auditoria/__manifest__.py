@@ -21,6 +21,7 @@
         "security/gov_auditoria_rules.xml",
         "data/gov_auditoria_orgao_data.xml",
         "data/gov_auditoria_checklist_tmpl.xml",
+        "data/gov_auditoria_cron.xml",
         "views/gov_auditoria_ciclo_views.xml",
         "views/gov_auditoria_support_views.xml",
         "views/gov_auditoria_orgao_views.xml",

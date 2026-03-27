@@ -36,6 +36,7 @@
                         </group>
                         <group>
                             <field name="attachment_id"/>
+                            <field name="source_attachment_id"/>
                             <field name="protocolo_externo"/>
                             <field name="data_envio"/>
                             <field name="versao"/>
@@ -184,6 +185,7 @@
             <form string="Apontamento">
                 <header>
                     <button name="action_open_resposta_wizard" string="Registrar Resposta" type="object" class="btn-primary" invisible="state in ('acatado', 'rejeitado')"/>
+                    <button name="action_generate_resposta_typst" string="Gerar Defesa Typst" type="object" class="btn-secondary" invisible="not resposta"/>
                     <button name="action_mark_acatado" string="Acatar" type="object" class="btn-secondary" invisible="state == 'acatado'"/>
                     <button name="action_mark_rejeitado" string="Rejeitar" type="object" class="btn-secondary" invisible="state == 'rejeitado'"/>
                     <field name="state" widget="statusbar" statusbar_visible="aberto,respondido,acatado,rejeitado"/>
@@ -232,6 +234,7 @@
         <field name="arch" type="xml">
             <form string="Decisao">
                 <header>
+                    <button name="action_generate_acordao_typst" string="Gerar Acordao Typst" type="object" class="btn-secondary"/>
                     <button name="action_mark_transitado" string="Marcar Transitada" type="object" class="btn-primary" invisible="state == 'transitado'"/>
                     <field name="state" widget="statusbar" statusbar_visible="minuta,publicado,transitado"/>
                 </header>
@@ -266,6 +269,47 @@
                             <field name="state"/>
                         </list>
                     </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_determinacao_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.determinacao.list</field>
+        <field name="model">gov.auditoria.determinacao</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="decisao_id"/>
+                <field name="descricao"/>
+                <field name="prazo_cumprimento"/>
+                <field name="prazo_id"/>
+                <field name="data_cumprimento"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_determinacao_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.determinacao.form</field>
+        <field name="model">gov.auditoria.determinacao</field>
+        <field name="arch" type="xml">
+            <form string="Determinacao">
+                <header>
+                    <button name="action_mark_cumprido" string="Marcar Cumprido" type="object" class="btn-primary" invisible="state == 'cumprido'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pendente,parcial,cumprido,descumprido"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="decisao_id"/>
+                            <field name="descricao"/>
+                            <field name="prazo_cumprimento"/>
+                        </group>
+                        <group>
+                            <field name="prazo_id" readonly="1"/>
+                            <field name="responsavel_id"/>
+                            <field name="data_cumprimento"/>
+                        </group>
+                    </group>
+                    <field name="evidencia_ids" widget="many2many_binary"/>
                 </sheet>
             </form>
         </field>
@@ -391,6 +435,11 @@
     <record id="action_gov_auditoria_decisao" model="ir.actions.act_window">
         <field name="name">Decisoes</field>
         <field name="res_model">gov.auditoria.decisao</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_gov_auditoria_determinacao" model="ir.actions.act_window">
+        <field name="name">Determinacoes</field>
+        <field name="res_model">gov.auditoria.determinacao</field>
         <field name="view_mode">list,form</field>
     </record>
     <record id="action_gov_auditoria_checklist_template" model="ir.actions.act_window">

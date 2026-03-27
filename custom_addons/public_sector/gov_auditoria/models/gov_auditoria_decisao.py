@@ -67,6 +67,91 @@ class GovAuditoriaDecisao(models.Model):
             )
             rec.ciclo_id.action_to_acordao()
 
+    def action_generate_acordao_typst(self):
+        for rec in self:
+            rec._generate_acordao_document()
+        return True
+
+    def _build_acordao_typst_source(self):
+        self.ensure_one()
+        bindings = {
+            "decisao": {
+                "tipo": dict(self._fields["tipo"].selection).get(self.tipo, self.tipo),
+                "numero": self.numero_acordao or "-",
+                "data_acordao": self.ciclo_id._fmt_date(self.data_acordao),
+                "data_publicacao": self.ciclo_id._fmt_date(self.data_publicacao),
+                "data_limite_recurso": self.ciclo_id._fmt_date(self.data_limite_recurso),
+                "ementa": self.ementa or "-",
+                "valor_condenacao": f"{self.valor_condenacao:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+                if self.valor_condenacao
+                else "0,00",
+            },
+            "ciclo": {
+                "nome": self.ciclo_id.name,
+                "company": self.ciclo_id.company_id.display_name,
+                "orgao": self.ciclo_id.orgao_id.display_name,
+            },
+            "determinacoes": [
+                {
+                    "descricao": item.descricao,
+                    "prazo": self.ciclo_id._fmt_date(item.prazo_cumprimento),
+                    "state": dict(self.env["gov.auditoria.determinacao"]._fields["state"].selection).get(item.state, item.state),
+                }
+                for item in self.determination_ids
+            ],
+        }
+        body = r"""
+#grid(columns: (1fr, 1fr, 1fr), gutter: 10pt,
+  [#stat("Acordao", decisao.numero)],
+  [#stat("Tipo", decisao.tipo)],
+  [#stat("Limite recurso", decisao.data_limite_recurso)],
+)
+
+= Contexto institucional
+- Ciclo: #ciclo.nome
+- UG: #ciclo.company
+- Orgao julgador: #ciclo.orgao
+- Data do acordao: #decisao.data_acordao
+- Data da publicacao: #decisao.data_publicacao
+
+= Ementa
+#note_box([Ementa], [#decisao.ementa])
+
+= Condenacao e recurso
+- Valor de condenacao: #decisao.valor_condenacao
+- Prazo limite recursal: #decisao.data_limite_recurso
+
+= Determinacoes
+#if len(determinacoes) == 0 [
+  #text(fill: ink)[Nao ha determinacoes registradas para esta decisao.]
+] else [
+  #for item in determinacoes [
+    - #item.descricao | Prazo: #item.prazo | Estado: #item.state
+  ]
+]
+"""
+        return self.ciclo_id._render_typst_document(
+            bindings,
+            body,
+            title=f"Acordao {self.numero_acordao or '-'}",
+            eyebrow="ESPELHO DECISORIO",
+            subtitle="Documento institucional da decisao registrada no ciclo",
+        )
+
+    def _generate_acordao_document(self):
+        self.ensure_one()
+        typst_source = self._build_acordao_typst_source()
+        document = self.ciclo_id._create_generated_document_from_typst(
+            nome=f"Acordao Typst - {self.numero_acordao or self.ciclo_id.name}",
+            tipo="acordao",
+            typst_source=typst_source,
+            resumo="Espelho decisorio gerado em Typst para o acordao do ciclo.",
+            source_name=f"acordao_{self.ciclo_id.id}_{self.id}.typ",
+            pdf_name=f"acordao_{self.ciclo_id.id}_{self.id}.pdf",
+        )
+        self.attachment_ids = [(4, document.attachment_id.id), (4, document.source_attachment_id.id)]
+        return document
+
 
 class GovAuditoriaDeterminacao(models.Model):
     _name = "gov.auditoria.determinacao"
@@ -105,10 +190,12 @@ class GovAuditoriaDeterminacao(models.Model):
 
     def _sync_deadline_records(self):
         Prazo = self.env["gov.auditoria.prazo"]
+        cycles = self.env["gov.auditoria.ciclo"]
         for rec in self:
             ciclo = rec.decisao_id.ciclo_id
             if not ciclo:
                 continue
+            cycles |= ciclo
             if rec.prazo_cumprimento:
                 prazo_vals = {
                     "ciclo_id": ciclo.id,
@@ -127,6 +214,7 @@ class GovAuditoriaDeterminacao(models.Model):
 
             if rec.prazo_id and rec.state == "cumprido":
                 rec.prazo_id.write({"state": "cumprido"})
+        cycles._sync_operational_activities()
 
     def action_mark_cumprido(self):
         for rec in self:
@@ -147,4 +235,5 @@ class GovAuditoriaDeterminacao(models.Model):
                     "state": "concluido",
                 }
             )
+        self.mapped("decisao_id.ciclo_id")._sync_operational_activities()
         return True

@@ -64,12 +64,14 @@ class GovAuditoriaPrazo(models.Model):
         records = super().create(vals_list)
         if not self.env.context.get("skip_state_refresh"):
             records._refresh_state_by_dates()
+        records.mapped("ciclo_id")._sync_operational_activities()
         return records
 
     def write(self, vals):
         result = super().write(vals)
         if not self.env.context.get("skip_state_refresh"):
             self._refresh_state_by_dates()
+        self.mapped("ciclo_id")._sync_operational_activities()
         return result
 
     def _refresh_state_by_dates(self):

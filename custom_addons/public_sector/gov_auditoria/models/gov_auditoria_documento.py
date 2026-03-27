@@ -47,6 +47,7 @@ class GovAuditoriaDocumento(models.Model):
         default="manual",
     )
     attachment_id = fields.Many2one("ir.attachment", ondelete="set null")
+    source_attachment_id = fields.Many2one("ir.attachment", ondelete="set null")
     hash_sha256 = fields.Char(copy=False)
     data_envio = fields.Datetime()
     protocolo_externo = fields.Char()
@@ -74,12 +75,14 @@ class GovAuditoriaDocumento(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records._compute_attachment_hash()
+        records.mapped("ciclo_id")._sync_operational_activities()
         return records
 
     def write(self, vals):
         result = super().write(vals)
         if "attachment_id" in vals:
             self._compute_attachment_hash()
+        self.mapped("ciclo_id")._sync_operational_activities()
         return result
 
     def _compute_attachment_hash(self):
@@ -96,3 +99,4 @@ class GovAuditoriaDocumento(models.Model):
                     "data_envio": rec.data_envio or now,
                 }
             )
+        self.mapped("ciclo_id")._sync_operational_activities()
