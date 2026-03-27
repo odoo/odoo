@@ -43,6 +43,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
             trigger: ".modal button:contains(Confirm)",
             run: "click",
         },
+        ...tourUtils.clickSomewhereElse(),
         {
             trigger: 'div[name="sale_warning_text"]:contains("Conference Chair"):contains("sold")',
         },

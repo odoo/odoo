@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
 import { formatCurrency } from '@web/core/currency';
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
@@ -72,6 +73,8 @@ export class ProductConfiguratorDialog extends Component {
         this.createProductUrl = '/sale/product_configurator/create_product';
         this.updateCombinationUrl = '/sale/product_configurator/update_combination';
         this.getOptionalProductsUrl = '/sale/product_configurator/get_optional_products';
+
+        useHotkey("enter", this.onEnterKeyPress.bind(this), { bypassEditableProtection: true });
 
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
@@ -497,6 +500,18 @@ export class ProductConfiguratorDialog extends Component {
             options,
         );
         this.props.close();
+    }
+
+    /**
+     * Confirm on pressing enter
+     */
+    onEnterKeyPress() {
+        const activeEl = document.activeElement;
+        if (activeEl && activeEl.tagName === "BUTTON") {
+            activeEl.click();
+        } else {
+            this.onConfirm({});
+        }
     }
 
     /**
