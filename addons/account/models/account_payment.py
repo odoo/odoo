@@ -473,6 +473,7 @@ class AccountPayment(models.Model):
                     if move.company_currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) else
                     'paid'
                 )
+<<<<<<< 0da97694f76ab2b96d76276e53d35e7a1d5b063e
             all_invoices_paid = payment.reconciled_invoice_ids and all(inv.payment_state == 'paid' for inv in payment.reconciled_invoice_ids)
             all_bills_paid = payment.reconciled_bill_ids and all(bill.payment_state == 'paid' for bill in payment.reconciled_bill_ids)
             if (
@@ -481,6 +482,13 @@ class AccountPayment(models.Model):
                 and (all_invoices_paid or all_bills_paid)
             ):
                 payment.state = 'reconciled'
+||||||| 9e2f6b04efaeeb1d6d90d16772f4e24e9b654b93
+            if payment.state == 'in_process' and payment.reconciled_invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids):
+                payment.state = 'paid'
+=======
+            if payment.state == 'in_process' and (moves := (payment.reconciled_invoice_ids | payment.reconciled_bill_ids)) and all(invoice.payment_state == 'paid' for invoice in moves):
+                payment.state = 'paid'
+>>>>>>> 80d7a63eede40bdd698f11efa244f836ab6807af
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
     def _compute_reconciliation_status(self):
