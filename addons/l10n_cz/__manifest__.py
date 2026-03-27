@@ -30,7 +30,6 @@ Tento modul definuje:
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
         'views/account_move_views.xml',
-        'views/report_template.xml',
     ],
     'demo': [
         'data/demo_company.xml',
