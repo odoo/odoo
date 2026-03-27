@@ -11,6 +11,10 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="gamification.gamification_badge_user_access" model="ir.rule">
+        <field name="active">False</field>
+    </record>
+
     <record id="hr_gamification_badge_base_user_owned_access" model="ir.rule">
         <field name="name">Base group user granted badge write/unlink access</field>
         <field name="model_id" ref="gamification.model_gamification_badge_user"/>

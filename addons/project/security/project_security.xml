@@ -148,6 +148,12 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
+    <record model="ir.rule" id="account_analytic_line_rule_manager">
+        <field name="name">Analytic Line: full access for manager</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
+
     <record model="ir.rule" id="report_project_task_user_report_comp_rule">
         <field name="name">Task Analysis multi-company</field>
         <field name="model_id" ref="model_report_project_task_user"/>

@@ -81,6 +81,10 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
+    <!-- Replace the following rule to restrict its domain. -->
+    <record id="base.res_partner_bank_rule_user" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
     <record id="ir_rule_res_partner_bank_internal_users" model="ir.rule">
         <field name="name">HR: Prevent non HR officers from accessing employee bank accounts</field>
         <field name="model_id" ref="base.model_res_partner_bank"/>
