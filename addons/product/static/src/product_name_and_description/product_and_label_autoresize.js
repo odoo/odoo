@@ -17,20 +17,40 @@ export function useProductAndLabelAutoresize(ref, options = {}) {
     });
 }
 
+
+const pendingHeightUpdates = new Map(); // element → height string
+let flushScheduled = false;
+
+function flushHeightUpdates() {
+  for (const [el, height] of pendingHeightUpdates) {
+    el.style.height = height;
+  }
+  pendingHeightUpdates.clear();
+  flushScheduled = false;
+}
+
 export function productAndLabelResizeTextArea(textarea, options = {}) {
+  if (options.targetParentName) {
     const style = window.getComputedStyle(textarea);
-    if (options.targetParentName) {
-        let target = textarea.parentElement;
-        while (target) {
-            if (target.getAttribute("name") === options.targetParentName) {
-                break;
-            }
-            const totalParentHeight = Array.from(target.children).reduce((total, child) => {
-                const childHeight = child.style.height || style.lineHeight;
-                return total + parseFloat(childHeight);
-            }, 0);
-            target.style.height = `${totalParentHeight}px`;
-            target = target.parentElement;
-        }
+    let target = textarea.parentElement;
+    while (target) {
+      if (target.getAttribute("name") === options.targetParentName) {
+        break;
+      }
+
+      const totalParentHeight = Array.from(target.children).reduce((total, child) => {
+        const childHeight = child.style.height || style.lineHeight;
+        return total + parseFloat(childHeight);
+      }, 0);
+
+      pendingHeightUpdates.set(target, `${totalParentHeight}px`); // deferred
+
+      target = target.parentElement;
     }
+
+    if (!flushScheduled) {
+      flushScheduled = true;
+      queueMicrotask(flushHeightUpdates);
+    }
+  }
 }
