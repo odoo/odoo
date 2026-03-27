@@ -83,11 +83,11 @@ class ResCompany(models.Model):
 
     def _inverse_l10n_in_tds_feature(self):
         for company in self:
-            self._activate_l10n_in_taxes(['tds_group'], company, company.l10n_in_tds_feature)
+            self._activate_l10n_in_taxes(['tds_it_act_25_group'], company, company.l10n_in_tds_feature)
 
     def _inverse_l10n_in_tcs_feature(self):
         for company in self:
-            self._activate_l10n_in_taxes(['tcs_group'], company, company.l10n_in_tcs_feature)
+            self._activate_l10n_in_taxes(['tcs_it_act_25_group'], company, company.l10n_in_tcs_feature)
 
     def _inverse_l10n_in_is_gst_registered(self):
         for company in self:
