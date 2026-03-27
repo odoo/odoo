@@ -719,7 +719,8 @@ registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos_make_order"
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("Whiteboard Pen", "1", "100"),
-            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
             ProductScreen.saveOrder(),
         ].flat(),
 });
@@ -732,6 +733,11 @@ registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos", {
             Chrome.clickMenuOption("Orders"),
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
-            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

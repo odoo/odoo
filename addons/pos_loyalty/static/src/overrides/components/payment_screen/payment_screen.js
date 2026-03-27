@@ -22,7 +22,7 @@ patch(PaymentScreen.prototype, {
             }
         }
         for (const line of this.currentOrder._get_reward_lines()) {
-            if (line.coupon_id.id < 1) {
+            if (!line.coupon_id || line.coupon_id.id < 1) {
                 continue;
             }
             if (!pointChanges[line.coupon_id.id]) {
