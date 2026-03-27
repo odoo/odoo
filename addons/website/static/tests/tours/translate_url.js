@@ -1,22 +1,30 @@
-import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { addLanguage, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+
+const enterPageProperties = [
+    {
+        content: "Click on the 'Site' button",
+        trigger: "button:contains('Site')",
+        run: "click",
+    },
+    {
+        content: "Click on the 'Properties' button",
+        trigger: "a:contains('Properties')",
+        run: "click",
+    },
+];
+
+const enterPagePropertiesAndClickOnInputUrl = [
+    ...enterPageProperties,
+    {
+        content: "Click on the input url",
+        trigger: "[name=url] input.o_input",
+        run: "click",
+    },
+];
 
 const translateUrl = function (newUrl) {
     return [
-        {
-            content: "Click on the 'Site' button",
-            trigger: "button:contains('Site')",
-            run: "click",
-        },
-        {
-            content: "Click on the 'Properties' button",
-            trigger: "a:contains('Properties')",
-            run: "click",
-        },
-        {
-            content: "Click on the input url",
-            trigger: "[name=url] input.o_input",
-            run: "click",
-        },
+        ...enterPagePropertiesAndClickOnInputUrl,
         {
             content: "Click on the translate button",
             trigger: "button.o_field_translate:contains('EN')",
@@ -58,16 +66,7 @@ registerWebsitePreviewTour("translate_url_exists_in_same_language", {}, () => [
 registerWebsitePreviewTour("update_homepage_url", {}, () => [...translateUrl("/contactus-fr")]);
 
 registerWebsitePreviewTour("set_homepage_property_of_a_page", {}, () => [
-    {
-        content: "Click on the 'Site' button",
-        trigger: "button:contains('Site')",
-        run: "click",
-    },
-    {
-        content: "Click on the 'Properties' button",
-        trigger: "a:contains('Properties')",
-        run: "click",
-    },
+    ...enterPageProperties,
     {
         content: "Click on the 'Is Homepage' button",
         trigger: "#is_homepage_0",
@@ -81,5 +80,14 @@ registerWebsitePreviewTour("set_homepage_property_of_a_page", {}, () => [
     {
         content: "Wait for the load operation to finish",
         trigger: "body.o_web_client:not(.modal-open)",
+    },
+]);
+
+registerWebsitePreviewTour("add_language_and_translate_url", { edition: true }, () => [
+    ...addLanguage("Parseltongue", "pa-GB"),
+    ...enterPagePropertiesAndClickOnInputUrl,
+    {
+        content: "Check that the translate button is visible",
+        trigger: "button.o_field_translate:contains('EN')",
     },
 ]);
