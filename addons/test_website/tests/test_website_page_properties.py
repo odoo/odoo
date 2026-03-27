@@ -28,3 +28,6 @@ class TestWebsitePageProperties(HttpCase):
 
     def test_change_page_url_and_set_as_homepage(self):
         self.start_tour('/', 'change_page_url_and_set_as_homepage', login='admin')
+
+    def test_set_homepage_and_change_page_url(self):
+        self.start_tour('/test_view', 'set_homepage_and_change_page_url', login='admin')

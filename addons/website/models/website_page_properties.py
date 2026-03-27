@@ -157,6 +157,7 @@ class WebsitePageProperties(models.TransientModel):
     visibility_password_display = fields.Char(related='target_model_id.visibility_password_display', readonly=False)
     group_ids = fields.Many2many(related='target_model_id.group_ids', readonly=False)
     is_new_page_template = fields.Boolean(related='target_model_id.is_new_page_template', readonly=False)
+    is_homepage = fields.Boolean(related='target_model_id.is_homepage', inverse='_inverse_is_homepage', string='Homepage')
 
     old_url = fields.Char()
     redirect_old_url = fields.Boolean(default=False, store=False)
@@ -169,17 +170,6 @@ class WebsitePageProperties(models.TransientModel):
         store=False,
         required=True,
     )
-
-    @api.depends('url', 'website_id.homepage_url')
-    def _compute_is_homepage(self):
-        """
-        Don't match is_homepage when url is '/' as this model's url is not the
-        accessed route's url.
-        """
-        for record in self:
-            url = record.url
-            current_homepage_url = record.website_id.homepage_url or '/'
-            record.is_homepage = url == current_homepage_url
 
     @api.model_create_multi
     def create(self, vals_list):

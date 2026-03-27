@@ -406,3 +406,31 @@ registerWebsitePreviewTour(
         ...clickOnSaveButtonStep,
     ]
 );
+
+registerWebsitePreviewTour(
+    "set_homepage_and_change_page_url",
+    {
+        url: "/",
+    },
+    () => [
+        ...openPagePropertiesDialog,
+        {
+            content: "Set as homepage",
+            trigger: "#is_homepage_0",
+            run: "check",
+        },
+        {
+            content: "Change url to /cool-page",
+            trigger: "#url_0",
+            run: `edit cool-page && press Enter`,
+        },
+        {
+            content: "Check that the 'Redirect Old URL' appeared",
+            trigger: "[name='redirect_old_url']",
+        },
+        {
+            content: "Check that the page is still set as the homepage",
+            trigger: "#is_homepage_0:checked",
+        },
+    ]
+);
