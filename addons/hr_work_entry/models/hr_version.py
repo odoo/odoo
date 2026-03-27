@@ -98,6 +98,9 @@ class HrVersion(models.Model):
         self.ensure_one()
         if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id[:1]:
             return interval[2].work_entry_type_id[:1]
+        interval[2]._compute_work_entry_type_id()
+        if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id[:1]:
+            return interval[2].work_entry_type_id[:1]
         return self.env['hr.work.entry.type'].browse(self._get_default_work_entry_type_id())
 
     def _get_valid_leave_intervals(self, attendances, interval):
