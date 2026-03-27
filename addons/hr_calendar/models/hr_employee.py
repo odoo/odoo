@@ -23,26 +23,28 @@ class HrEmployee(models.Model):
 
             for day in DAYS:
                 work_locations_by_employee[employee.id][day] = {
-                    'location_type': employee[day]["location_type"],
-                    'location_name': employee[day]["name"],
+                    'location_type': employee[day].location_type,
+                    'location_name': employee[day].name,
                     'work_location_id': employee[day].id,
                 }
 
-        exceptions_for_period = self.env['hr.employee.location'].search_read([
-            ('employee_id', 'in', self.ids),
-            ('date', '>=', start_date),
-            ('date', '<=', end_date)
-        ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
+        exceptions_for_period = self.env['hr.employee.location']
+        if exceptions_for_period.has_access('read'):
+            exceptions_for_period = self.env['hr.employee.location'].search_fetch([
+                ('employee_id', 'in', self.ids),
+                ('date', '>=', start_date),
+                ('date', '<=', end_date)
+            ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
 
         for exception in exceptions_for_period:
-            date = exception["date"].strftime(DEFAULT_SERVER_DATE_FORMAT)
+            date = exception.date.strftime(DEFAULT_SERVER_DATE_FORMAT)
             exception_value = {
-                'hr_employee_location_id': exception["id"],
-                'location_type': exception['work_location_type'],
-                'location_name': exception['work_location_name'],
-                'work_location_id': exception['work_location_id'][0],
+                'hr_employee_location_id': exception.id,
+                'location_type': exception.work_location_type,
+                'location_name': exception.work_location_name,
+                'work_location_id': exception.work_location_id.id,
             }
-            employee_id = exception["employee_id"][0]
+            employee_id = exception.employee_id.id
             if "exceptions" not in work_locations_by_employee[employee_id]:
                 work_locations_by_employee[employee_id]["exceptions"] = {}
             work_locations_by_employee[employee_id]["exceptions"][date] = exception_value
