@@ -270,3 +270,94 @@ test("Moving Optional Sections to exclude some template lines should set quantit
     await clickSave();
     await expect.verifySteps(['web_save']);
 })
+
+test("Setting section optional should reset quantity", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual(
+            {
+                sale_order_template_line_ids: [
+                    [1, 5, { is_optional: true }],
+                    [1, 6, { product_uom_qty: 0 }],
+                    [1, 7, { product_uom_qty: 0 }],
+                    [1, 9, { product_uom_qty: 0 }],
+                    [1, 11, { product_uom_qty: 0 }],
+                ],
+            },
+            {
+                message:
+                    "Subsections reset collapse_* fields' value and product lines reset qty/price when section becomes optional",
+            }
+        );
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.template",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec3) .o_list_section_options button").click();
+    await contains(".o-dropdown-item:contains(Set Optional)").click();
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
+test("Unsetting optional section should reset quantity", async () => {
+    SaleOrderTemplateLine._records.find((record) => record.name === "Sec3").is_optional = true;
+    SaleOrderTemplateLine._records.find((record) => record.name === "Sec3-r1").product_uom_qty = 0;
+    SaleOrderTemplateLine._records.find((record) => record.name === "Sec3-r2").product_uom_qty = 0;
+    SaleOrderTemplateLine._records.find(
+        (record) => record.name === "Sec3-sub1-r1"
+    ).product_uom_qty = 0;
+    // This line should not be reset
+    SaleOrderTemplateLine._records.find(
+        (record) => record.name === "Sec3-sub2-r1"
+    ).product_uom_qty = 5;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual(
+            {
+                sale_order_template_line_ids: [
+                    [1, 5, { is_optional: false }],
+                    [1, 6, { product_uom_qty: 1 }],
+                    [1, 7, { product_uom_qty: 1 }],
+                    [1, 9, { product_uom_qty: 1 }],
+                    [1, 11, { product_uom_qty: 5 }],
+                ],
+            },
+            {
+                message:
+                    "The subsections should reset products lines with 0 quantity with 1 as soon as section becomes non optional",
+            }
+        );
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.template",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    expect(".o_data_row:contains(Sec3-r1)").toHaveClass("text-primary", {
+        message: "Line under optional section should be text-primary",
+    });
+    expect(".o_data_row:contains(Sec3-sub1)").toHaveClass("text-primary", {
+        message: "Subsection under optional section should be text-primary",
+    });
+    expect(".o_data_row:contains(Sec3-sub1-r1)").toHaveClass("text-primary", {
+        message: "Line under subsection(which is under optional section) should be text-primary",
+    });
+
+    await contains(".o_data_row:contains(Sec3) .o_list_section_options button").click();
+    await contains(".o-dropdown-item:contains(Unset Optional)").click();
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
