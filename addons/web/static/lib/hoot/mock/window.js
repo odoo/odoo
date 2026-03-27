@@ -203,6 +203,10 @@ function getWatchedEventTargets(view) {
         EventBus.prototype,
         MockEventTarget.prototype,
         view.MediaDevices.prototype,
+        view.MediaStreamTrack.prototype,
+        view.RTCPeerConnection.prototype,
+        view.RTCDataChannel.prototype,
+        view.BaseAudioContext.prototype,
     ];
 }
 
