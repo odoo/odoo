@@ -1585,3 +1585,22 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 60.0},
             {'account_id': self.account_expense.id, 'debit': 60.0, 'credit': 0.0},
         ])
+
+    def test_multi_steps_partially_delivered(self):
+        """Checks that when there is multi steps delivery, if one of the moves of the chain
+        is validated but not the other(s) we fallback on the standard price for the cogs.
+        """
+        self.warehouse.delivery_steps = 'pick_ship'
+        self._make_in_move(self.product_avco_auto, 1, 10)
+        # create a SO
+        sale_order = self._so_deliver(self.product_avco_auto, 1, 1, picking=False)
+        # validate only the first picking of the chain
+        sale_order.picking_ids.button_validate()
+        # validate invoice
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
+        ])
