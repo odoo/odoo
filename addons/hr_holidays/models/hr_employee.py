@@ -260,7 +260,9 @@ class HrEmployee(models.Model):
         return [('id', 'in', holidays.employee_id.ids)]
 
     def _search_part_of_department(self, operator, value):
-        versions = self.env['hr.version'].sudo().search([('member_of_department', operator, value)])
+        versions = self.env['hr.version'].sudo().search([
+            ('member_of_department', operator, value),
+        ]).filtered(lambda v: v.is_current)
         return [('id', 'in', versions.employee_id.ids)]
 
     @api.model_create_multi
