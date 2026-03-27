@@ -66,6 +66,10 @@
         <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
     </record>
 
+    <record id="hr.access_hr_job_user" model="ir.model.access">
+        <field name="active" eval="False"/>
+    </record>
+
     <record id="hr_job_user_rule" model="ir.rule">
         <field name="name">User: All Applicants</field>
         <field name="model_id" ref="model_hr_job"/>

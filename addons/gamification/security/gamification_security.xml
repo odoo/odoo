@@ -33,4 +33,10 @@
             <field name="domain_force">[('user_id.company_id', 'in', company_ids)]</field>
         </record>
 
+        <record id="gamification_badge_user_access" model="ir.rule">
+            <field name="name">User can access gamification badges</field>
+            <field name="model_id" ref="model_gamification_badge_user"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
 </odoo>
