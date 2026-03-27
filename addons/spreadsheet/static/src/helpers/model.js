@@ -12,6 +12,7 @@ import {
     isMarkdownIrMenuIdUrl,
     isIrMenuXmlUrl,
 } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
+import { getNeutralizedLink } from "./neutralized_link";
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
     const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
@@ -91,7 +92,7 @@ export async function freezeOdooData(model) {
                 }
             }
             if (containsLinkToOdoo(evaluatedCell.link)) {
-                cell.content = evaluatedCell.link.label;
+                cell.content = `[${evaluatedCell.link.label}](${getNeutralizedLink()})`;
             }
         }
         for (const figure of sheet.figures) {
